@@ -37,6 +37,7 @@ export function CloudBuilderCreatePage() {
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // Discovery create form (UI only)
   const isDiscovery = slug === 'discovery';
@@ -52,14 +53,50 @@ export function CloudBuilderCreatePage() {
   const [serial, setSerial] = useState('');
   const [macPrimary, setMacPrimary] = useState('');
   const [location, setLocation] = useState('');
-  const [mgmtIp, setMgmtIp] = useState('');
   const [nicPrimaryName, setNicPrimaryName] = useState('');
-  const [purpose, setPurpose] = useState('');
   const [role, setRole] = useState('');
-  const [frontierNet, setFrontierNet] = useState('');
-  const [notes, setNotes] = useState('');
+  const [providerNetwork, setProviderNetwork] = useState('');
+  const [domain, setDomain] = useState('');
 
   const pageTitle = isDiscovery ? 'Register discovery' : `Create ${config.title}`;
+
+  const isValidMac = (v: string) => /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(v.trim());
+
+  const isValidProviderNetwork = (v: string) => {
+    const s = v.trim();
+    const m = /^VLAN\s+(\d{1,4})\s*\/\s*(\d{1,3}(?:\.\d{1,3}){3})(?:\/(\d{1,2}))?$/.exec(s);
+    if (!m) return false;
+    const vlan = Number(m[1]);
+    if (!Number.isFinite(vlan) || vlan < 1 || vlan > 4094) return false;
+    const ip = m[2];
+    const parts = ip.split('.').map((x) => Number(x));
+    if (parts.length !== 4) return false;
+    if (parts.some((n) => !Number.isFinite(n) || n < 0 || n > 255)) return false;
+    const cidr = m[3] ? Number(m[3]) : null;
+    if (cidr !== null && (!Number.isFinite(cidr) || cidr < 0 || cidr > 32)) return false;
+    return true;
+  };
+
+  const serverFormErrors = useMemo(() => {
+    if (!isServerLike) return {};
+    const errs: Record<string, string> = {};
+    if (!serial.trim()) errs.serial = 'Serial Number는 필수입니다.';
+    if (!macPrimary.trim()) errs.macPrimary = 'MAC (Primary)는 필수입니다.';
+    else if (!isValidMac(macPrimary))
+      errs.macPrimary = 'MAC 형식이 올바르지 않습니다. 예) 00:1A:2B:3C:4D:5E';
+    if (!nicPrimaryName.trim()) errs.nicPrimaryName = 'NIC (Primary Name)은 필수입니다.';
+    if (!location.trim()) errs.location = 'Location은 필수입니다.';
+    if (!providerNetwork.trim()) errs.providerNetwork = 'Provider Network는 필수입니다.';
+    else if (!isValidProviderNetwork(providerNetwork)) {
+      errs.providerNetwork =
+        '형식이 올바르지 않습니다. 예) VLAN 120 / 10.0.20.12 또는 VLAN 120 / 10.0.20.12/24';
+    }
+    if (!role) errs.role = 'Role을 선택하세요.';
+    if (!domain) errs.domain = 'Domain을 선택하세요.';
+    return errs;
+  }, [domain, isServerLike, location, macPrimary, nicPrimaryName, providerNetwork, role, serial]);
+
+  const canSubmitServerForm = isServerLike && Object.values(serverFormErrors).every((v) => !v);
 
   const breadcrumbItems = [
     { label: 'Proj-1', href: '/project' },
@@ -105,14 +142,9 @@ export function CloudBuilderCreatePage() {
     >
       <VStack gap={6} className="min-w-[1176px]">
         <DetailHeader>
-          <div className="text-body-md text-[var(--color-text-subtle)]">
-            <span className="text-[var(--color-text-subtle)]">Discovery</span>
-            <span className="mx-1">{'>'}</span>
-            <span className="text-[var(--color-text-subtle)]">Register discovery</span>
-          </div>
           <DetailHeader.Title>{pageTitle}</DetailHeader.Title>
           <Button as={Link} to={`/cloudbuilder/${slug}`} variant="link">
-            Back{' '}
+            Back
           </Button>
           {isDiscovery && (
             <div className="text-body-md text-[var(--color-text-subtle)]">
@@ -126,7 +158,7 @@ export function CloudBuilderCreatePage() {
             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
               <div className="px-6 py-5">
                 <div className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                  Endpoint{' '}
+                  Endpoint
                 </div>
                 <div className="mt-1 text-body-md text-[var(--color-text-subtle)]">
                   엔드포인트를 입력하고 불러오기를 누르면 Serial/MAC/IP/Location을 채웁니다. (데모)
@@ -145,13 +177,13 @@ export function CloudBuilderCreatePage() {
                     <Button
                       fullWidth
                       onClick={() => {
-                        // UI only: simulate fetching discovered values setDiscoverySerial('SN2001');
+                        setDiscoverySerial('SN2001');
                         setDiscoveryMacPrimary('00:1A:2B:3C:4D:5E');
                         setDiscoveryLocation('R1-U18');
                         setDiscoveryMgmtIp('10.0.0.12');
                       }}
                     >
-                      Fetch{' '}
+                      Fetch
                     </Button>
                   </div>
                 </div>
@@ -161,16 +193,16 @@ export function CloudBuilderCreatePage() {
 
               <div className="px-6 py-5">
                 <div className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                  Basic{' '}
+                  Basic
                 </div>
 
                 <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
                   <div className="col-span-4">
                     <div className="text-label-md text-[var(--color-text-default)]">
-                      Serial <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      Serial <span className="text-[var(--color-state-danger)]">*</span>
                     </div>
                     <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
-                      현장 휴면 식별용 시리얼{' '}
+                      현장 휴면 식별용 시리얼
                     </div>
                   </div>
                   <div className="col-span-8">
@@ -183,7 +215,7 @@ export function CloudBuilderCreatePage() {
 
                   <div className="col-span-4">
                     <div className="text-label-md text-[var(--color-text-default)]">
-                      MAC (Primary) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      MAC (Primary) <span className="text-[var(--color-state-danger)]">*</span>
                     </div>
                     <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
                       대표 MAC(자산 식별 키)
@@ -199,10 +231,10 @@ export function CloudBuilderCreatePage() {
 
                   <div className="col-span-4">
                     <div className="text-label-md text-[var(--color-text-default)]">
-                      Location <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      Location <span className="text-[var(--color-state-danger)]">*</span>
                     </div>
                     <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
-                      랙/유닛 등 물리 위치{' '}
+                      랙/유닛 등 물리 위치
                     </div>
                   </div>
                   <div className="col-span-8">
@@ -231,7 +263,7 @@ export function CloudBuilderCreatePage() {
                   </div>
 
                   <div className="col-span-4">
-                    <div className="text-label-md text-[var(--color-text-default)]">Notes </div>
+                    <div className="text-label-md text-[var(--color-text-default)]">Notes</div>
                     <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
                       메모(선택)
                     </div>
@@ -248,7 +280,7 @@ export function CloudBuilderCreatePage() {
 
                 <div className="mt-6 flex items-center justify-end gap-2">
                   <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
-                    Cancel{' '}
+                    Cancel
                   </Button>
                   <Button size="md" onClick={() => setConfirmOpen(true)}>
                     Create
@@ -260,117 +292,112 @@ export function CloudBuilderCreatePage() {
         ) : isServerLike ? (
           <>
             <SectionCard>
-              <SectionCard.Header title="Basic information" />
-              <SectionCard.Content gap={4}>
-                <div className="grid grid-cols-12 gap-6">
-                  <div className="col-span-6">
-                    <Input
-                      label="Serial"
-                      placeholder="e.g. SN1001"
-                      value={serial}
-                      onChange={(e) => setSerial(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Input
-                      label="MAC (Primary)"
-                      placeholder="e.g. 00:11:22:33:44:55"
-                      value={macPrimary}
-                      onChange={(e) => setMacPrimary(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Input
-                      label="Location"
-                      placeholder="e.g. R1-U10"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Input
-                      label="Mgmt IP"
-                      placeholder="e.g. 10.0.1.10"
-                      value={mgmtIp}
-                      onChange={(e) => setMgmtIp(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Input
-                      label="NIC (Primary Name)"
-                      placeholder="e.g. eno1"
-                      value={nicPrimaryName}
-                      onChange={(e) => setNicPrimaryName(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Input
-                      label="Purpose"
-                      placeholder="e.g. Hypervisor"
-                      value={purpose}
-                      onChange={(e) => setPurpose(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Select
-                      label="Role"
-                      placeholder="Select role"
-                      value={role}
-                      onChange={setRole}
-                      fullWidth
-                      options={[
-                        { value: 'controller', label: 'controller' },
-                        { value: 'compute', label: 'compute' },
-                        { value: 'master', label: 'master' },
-                        { value: 'worker', label: 'worker' },
-                        { value: 'ceph-mon', label: 'ceph-mon' },
-                        { value: 'ceph-mgr', label: 'ceph-mgr' },
-                        { value: 'ceph-mds', label: 'ceph-mds' },
-                        { value: 'ceph-osd', label: 'ceph-osd' },
-                      ]}
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <Select
-                      label="Frontier NET"
-                      placeholder="Select status"
-                      value={frontierNet}
-                      onChange={setFrontierNet}
-                      fullWidth
-                      options={[
-                        { value: 'OK', label: 'OK' },
-                        { value: 'Missing', label: 'Missing' },
-                        { value: 'Invalid', label: 'Invalid' },
-                      ]}
-                    />
-                  </div>
-                </div>
-              </SectionCard.Content>
-            </SectionCard>
-
-            <SectionCard>
-              <SectionCard.Header title="Notes" />
-              <SectionCard.Content gap={3}>
-                <Textarea
-                  label="Description"
-                  placeholder="Optional notes (UI only)"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+              <SectionCard.Header title="Basic Information" />
+              <SectionCard.Content>
+                <Input
+                  label="Serial Number"
+                  placeholder="e.g. SN1234"
+                  value={serial}
+                  onChange={(e) => setSerial(e.target.value)}
+                  required
+                  error={submitted ? (serverFormErrors as any).serial : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="MAC (Primary)"
+                  placeholder="e.g. 00:1A:2B:3C:4D:5E"
+                  value={macPrimary}
+                  onChange={(e) => setMacPrimary(e.target.value)}
+                  required
+                  error={submitted ? (serverFormErrors as any).macPrimary : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="NIC (Primary Name)"
+                  placeholder="e.g. eno1"
+                  value={nicPrimaryName}
+                  onChange={(e) => setNicPrimaryName(e.target.value)}
+                  required
+                  error={submitted ? (serverFormErrors as any).nicPrimaryName : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="Location"
+                  placeholder="e.g. R1-U18"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  required
+                  helperText={'placement: { rack, rack_offset_u } 로 매핑'}
+                  error={submitted ? (serverFormErrors as any).location : undefined}
+                  fullWidth
+                />
+                <Input
+                  label="Provider Network"
+                  placeholder="e.g. VLAN 120 / 10.0.20.12 또는 VLAN 120 / 10.0.20.12/24"
+                  value={providerNetwork}
+                  onChange={(e) => setProviderNetwork(e.target.value)}
+                  required
+                  helperText={'유효성 검사 불가: 형식만 검증합니다. (VLAN ID + IP 또는 IP/CIDR)'}
+                  error={submitted ? (serverFormErrors as any).providerNetwork : undefined}
+                  fullWidth
+                />
+                <Select
+                  label="Role"
+                  placeholder="Select role"
+                  value={role}
+                  onChange={setRole}
+                  required
+                  error={submitted ? (serverFormErrors as any).role : undefined}
+                  fullWidth
+                  options={[
+                    { value: 'controller', label: 'controller' },
+                    ...Array.from({ length: 24 }, (_, idx) => ({
+                      value: `compute${idx + 1}`,
+                      label: `compute${idx + 1}`,
+                    })),
+                    { value: 'master1', label: 'master1' },
+                    { value: 'master2', label: 'master2' },
+                    { value: 'master3', label: 'master3' },
+                    ...Array.from({ length: 24 }, (_, idx) => ({
+                      value: `worker${idx + 1}`,
+                      label: `worker${idx + 1}`,
+                    })),
+                    { value: 'ceph-mon', label: 'ceph-mon' },
+                    { value: 'ceph-mgr', label: 'ceph-mgr' },
+                    { value: 'ceph-mds', label: 'ceph-mds' },
+                    { value: 'ceph-osd', label: 'ceph-osd' },
+                  ]}
+                />
+                <Select
+                  label="Domain"
+                  placeholder="Select domain"
+                  value={domain}
+                  onChange={setDomain}
+                  required
+                  error={submitted ? (serverFormErrors as any).domain : undefined}
+                  helperText="thaki suite 내 도메인을 선택값으로 불러옴 (UI mock)"
+                  fullWidth
+                  options={[
+                    { value: 'thaki-prod', label: 'thaki-prod' },
+                    { value: 'thaki-stage', label: 'thaki-stage' },
+                    { value: 'thaki-dev', label: 'thaki-dev' },
+                    { value: 'thaki-lab', label: 'thaki-lab' },
+                  ]}
                 />
               </SectionCard.Content>
             </SectionCard>
 
             <div className="flex items-center justify-end gap-2">
               <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
-                Cancel{' '}
+                Cancel
               </Button>
-              <Button size="md" onClick={() => setConfirmOpen(true)}>
+              <Button
+                onClick={() => {
+                  setSubmitted(true);
+                  if (!canSubmitServerForm) return;
+                  setConfirmOpen(true);
+                }}
+              >
                 Create
               </Button>
             </div>
@@ -391,7 +418,7 @@ export function CloudBuilderCreatePage() {
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {
           setConfirmOpen(false);
-          // UI-only: go back to list navigate(`/cloudbuilder/${slug}`);
+          navigate(`/cloudbuilder/${slug}`);
         }}
       />
     </PageShell>

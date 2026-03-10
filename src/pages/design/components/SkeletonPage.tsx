@@ -462,7 +462,6 @@ export function SkeletonPage() {
         },
         { label: 'Table', path: '/design/components/table', description: 'Table skeleton 사용' },
       ]}
-      notionPageId="31d9eddc34e68074be2cd28d94c52799"
     />
   );
 }

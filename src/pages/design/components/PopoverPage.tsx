@@ -396,6 +396,11 @@ export function PopoverPage() {
         </div>
       }
       apiReference={popoverProps}
+      keyboardInteractions={[
+        { key: 'Enter / Space', description: '트리거 요소로 Popover 열기/닫기' },
+        { key: 'Escape', description: 'Popover를 닫고 트리거 요소로 포커스 복원' },
+        { key: 'Tab', description: 'Popover 내 포커스 가능 요소 간 이동' },
+      ]}
       relatedLinks={[
         { label: 'Tooltip', path: '/design/components/tooltip', description: 'Hover-only info' },
         {

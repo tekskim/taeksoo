@@ -587,6 +587,42 @@ export function ContextMenuPage() {
         </div>
       }
       apiReference={contextMenuProps}
+      accessibility={
+        <VStack gap={4} align="stretch">
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            Context Menu는 키보드로 완전히 조작 가능해야 하며, 스크린 리더가 메뉴 구조를 인식할 수
+            있어야 합니다.
+          </p>
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">ARIA 속성</h4>
+            <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
+              <li>
+                <code>role="menu"</code> — 메뉴 컨테이너에 적용
+              </li>
+              <li>
+                <code>role="menuitem"</code> — 각 메뉴 항목에 적용
+              </li>
+            </ul>
+          </VStack>
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">키보드 탐색</h4>
+            <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
+              <li>Arrow Up/Down — 메뉴 항목 간 이동</li>
+              <li>Home/End — 첫 번째/마지막 항목으로 이동</li>
+              <li>Enter/Space — 포커스된 항목 활성화</li>
+              <li>Escape — 메뉴 닫기 및 트리거 요소로 포커스 복원</li>
+            </ul>
+          </VStack>
+        </VStack>
+      }
+      keyboardInteractions={[
+        { key: 'ArrowDown', description: '다음 메뉴 아이템으로 포커스 이동' },
+        { key: 'ArrowUp', description: '이전 메뉴 아이템으로 포커스 이동' },
+        { key: 'Home', description: '첫 번째 메뉴 아이템으로 포커스 이동' },
+        { key: 'End', description: '마지막 메뉴 아이템으로 포커스 이동' },
+        { key: 'Enter / Space', description: '포커스된 메뉴 아이템 활성화' },
+        { key: 'Escape', description: '메뉴를 닫고 트리거 요소로 포커스 복원' },
+      ]}
       relatedLinks={[
         {
           label: 'UX Writing Guide',
@@ -629,7 +665,6 @@ export function ContextMenuPage() {
           description: '리스트/테이블 항목 컨텍스트에서 Context Menu 사용 빈도가 높음',
         },
       ]}
-      notionPageId="30d9eddc34e680fcb270e14cf16ced60"
     />
   );
 }

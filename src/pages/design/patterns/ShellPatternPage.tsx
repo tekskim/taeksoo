@@ -422,7 +422,6 @@ export function ShellPatternPage() {
         </VStack>
       }
       relatedLinks={[{ label: 'App Window', path: '/design/components/app-window' }]}
-      notionPageId="2c99eddc34e6803f92d4ddd2c7229384"
     />
   );
 }

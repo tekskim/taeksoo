@@ -250,6 +250,82 @@ describe('ComponentName a11y', () => {
           />
         </VStack>
       </DocSection>
+
+      <DocSection
+        id="component-maturity"
+        title="Component maturity"
+        description="컴포넌트 성숙도 단계와 각 단계별 기준"
+      >
+        <VStack gap={4} align="stretch">
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            TDS는 GitHub Primer를 참고하여 3단계 성숙도 체계를 운영합니다. 각 컴포넌트 문서 페이지
+            제목 옆에 성숙도 배지가 표시됩니다.
+          </p>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-body-md text-[var(--color-text-default)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  {['단계', '기준', '사용 권장'].map((h) => (
+                    <th
+                      key={h}
+                      className="text-left text-label-sm text-[var(--color-text-subtle)] px-3 py-2 font-medium"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="px-3 py-2">
+                    <Badge variant="warning" size="sm">
+                      Draft
+                    </Badge>
+                  </td>
+                  <td className="px-3 py-2">
+                    초기 구현 단계. API가 변경될 수 있고, 접근성·테스트가 불완전할 수 있음
+                  </td>
+                  <td className="px-3 py-2">프로토타입·내부 도구에서만 사용</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="px-3 py-2">
+                    <Badge variant="info" size="sm">
+                      Beta
+                    </Badge>
+                  </td>
+                  <td className="px-3 py-2">
+                    기능 완성. API 안정화 진행 중. 접근성 기본 요건 충족. 피드백 수렴 단계
+                  </td>
+                  <td className="px-3 py-2">제품에서 사용 가능하나 마이너 변경 주의</td>
+                </tr>
+                <tr className="border-b border-[var(--color-border-subtle)]">
+                  <td className="px-3 py-2">
+                    <Badge variant="success" size="sm">
+                      Stable
+                    </Badge>
+                  </td>
+                  <td className="px-3 py-2">
+                    API 확정. 접근성 AA 준수. 문서·테스트·가이드라인 완비. Semver 정책 적용
+                  </td>
+                  <td className="px-3 py-2">모든 제품에서 적극 사용 권장</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <CodeBlock
+            code={`// ComponentPageTemplate에 maturity prop 사용
+<ComponentPageTemplate
+  title="DatePicker"
+  description="날짜 선택"
+  maturity="beta"  // 'draft' | 'beta' | 'stable'
+  ...
+/>`}
+            language="tsx"
+          />
+        </VStack>
+      </DocSection>
     </VStack>
   );
 }

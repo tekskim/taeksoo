@@ -317,7 +317,6 @@ export function EmptyStatesPage() {
         { label: 'Button', path: '/design/components/button' },
         { label: 'Skeleton', path: '/design/components/skeleton' },
       ]}
-      notionPageId="30d9eddc34e680d3b618fe7071bbfb0f"
     />
   );
 }

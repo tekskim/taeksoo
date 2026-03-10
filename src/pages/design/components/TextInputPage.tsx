@@ -504,7 +504,6 @@ export function TextInputPage() {
         { label: 'Textarea', path: '/design/components/textarea' },
         { label: 'Select', path: '/design/components/select' },
       ]}
-      notionPageId="31b9eddc34e6803aabf1feb398340364"
     />
   );
 }

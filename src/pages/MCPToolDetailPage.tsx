@@ -92,7 +92,7 @@ function MCPToolHeader({
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
             >
               {isFavorite ? (
-                <IconStarFilled size={22} className="text-yellow-500" />
+                <IconStarFilled size={22} className="text-[var(--primitive-color-yellow400)]" />
               ) : (
                 <IconStar size={22} stroke={1} className="text-[var(--color-border-default)]" />
               )}

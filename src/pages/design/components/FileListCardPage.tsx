@@ -150,6 +150,15 @@ export function FileListCardPage() {
     <ComponentPageTemplate
       title="FileListCard"
       description="업로드된 파일 목록을 카드 형태로 보여주는 컴포넌트. 파일 이름, 메타 정보, 제거 기능을 제공합니다."
+      whenToUse={[
+        '파일 목록을 카드 형태로 표시할 때',
+        '파일 업로드 결과를 보여줄 때',
+        '첨부 파일 목록을 관리할 때',
+      ]}
+      whenNotToUse={[
+        '파일이 아닌 일반 데이터 목록인 경우 → Table 사용',
+        '단일 파일 업로드 UI인 경우 → Input type="file" 사용',
+      ]}
       preview={
         <ComponentPreview
           code={`import { FileListCard } from '@/design-system';

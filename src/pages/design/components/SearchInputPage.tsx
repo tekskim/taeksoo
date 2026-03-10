@@ -461,12 +461,15 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
           </VStack>
         </VStack>
       }
+      keyboardInteractions={[
+        { key: 'Escape', description: '입력 필드 내용 지우기' },
+        { key: 'Enter', description: '검색 실행' },
+      ]}
       relatedLinks={[
         { label: 'List Page', path: '/design/patterns/list-page' },
         { label: 'Chip', path: '/design/components/chip' },
         { label: 'Table', path: '/design/components/table' },
       ]}
-      notionPageId="31b9eddc34e68088a758c3b614dc2c0f"
     />
   );
 }

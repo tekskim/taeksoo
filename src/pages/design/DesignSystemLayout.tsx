@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, type RefObject } from 'react';
 import { Outlet, Link, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { VStack, Button } from '@/design-system';
-import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { VStack, Disclosure } from '@/design-system';
 import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
 import { navGroups, allNavItems } from './_shared/navigationData';
 
@@ -58,6 +57,20 @@ export function DesignSystemLayout() {
 
   const currentPath = location.pathname;
 
+  const [openGroups, setOpenGroups] = useState<Set<string>>(() => {
+    const activeGroup = navGroups.find((g) =>
+      g.items.some((item) => item.path === location.pathname)
+    );
+    return new Set(activeGroup ? [activeGroup.title] : []);
+  });
+
+  useEffect(() => {
+    const activeGroup = navGroups.find((g) => g.items.some((item) => item.path === currentPath));
+    if (activeGroup && !openGroups.has(activeGroup.title)) {
+      setOpenGroups((prev) => new Set([...prev, activeGroup.title]));
+    }
+  }, [currentPath]);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
@@ -65,9 +78,7 @@ export function DesignSystemLayout() {
         <div className="p-4 overflow-hidden">
           {/* Logo */}
           <Link to="/design" className="flex items-center mb-4">
-            <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">
-              TDS
-            </span>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">TDS</span>
           </Link>
 
           {/* EntryPage Link */}
@@ -150,32 +161,57 @@ export function DesignSystemLayout() {
           </div>
 
           {/* Navigation Groups */}
-          <VStack gap={4}>
-            {navGroups.map((group) => (
-              <VStack key={group.title} gap={1} className="w-[166px]">
-                <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                  {group.title}
-                </span>
-                {group.items.map(({ id, label, icon: Icon, path }) => (
-                  <button
-                    key={id}
-                    onClick={() => navigate(path)}
-                    className={`
-                      w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                      text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
-                      ${
-                        currentPath === path
-                          ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                          : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                      }
-                    `}
+          <VStack gap={1} className="w-[166px]">
+            {navGroups.map((group) => {
+              const isOpen = openGroups.has(group.title);
+              return (
+                <div key={group.title}>
+                  <Disclosure
+                    open={isOpen}
+                    onChange={(open) => {
+                      setOpenGroups((prev) => {
+                        const next = new Set(prev);
+                        if (open) next.add(group.title);
+                        else next.delete(group.title);
+                        return next;
+                      });
+                    }}
                   >
-                    <Icon size={16} stroke={1.5} />
-                    {label}
-                  </button>
-                ))}
-              </VStack>
-            ))}
+                    <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] uppercase tracking-wide hover:!text-[var(--color-text-muted)]">
+                      {group.title}
+                      <span className="text-body-xs text-[var(--color-text-disabled)] ml-auto font-normal normal-case tracking-normal">
+                        {group.items.length}
+                      </span>
+                    </Disclosure.Trigger>
+                    <Disclosure.Panel>
+                      <VStack gap={0} className="mb-1">
+                        {group.items.map(({ id, label, icon: Icon, path }) => (
+                          <button
+                            key={id}
+                            onClick={() => navigate(path)}
+                            className={`
+                              w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
+                              ${
+                                currentPath === path
+                                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
+                              }
+                            `}
+                          >
+                            <Icon size={16} stroke={1.5} />
+                            {label}
+                          </button>
+                        ))}
+                      </VStack>
+                    </Disclosure.Panel>
+                  </Disclosure>
+                  {group.title === 'Graphs' && (
+                    <div className="w-full h-px bg-[var(--color-border-subtle)] my-2" />
+                  )}
+                </div>
+              );
+            })}
           </VStack>
         </div>
       </nav>
@@ -188,30 +224,7 @@ export function DesignSystemLayout() {
         <div className="py-12 px-8 overflow-x-auto">
           <div className="min-w-[var(--layout-content-min-width)]">
             <div className="max-w-[1000px] mx-auto">
-              <VStack gap={12} align="stretch">
-                {/* Header */}
-                <div className="flex items-center justify-between w-full">
-                  <VStack gap={2} align="start">
-                    <h1 className="text-[length:var(--font-size-40)] font-semibold text-[var(--color-text-default)]">
-                      Thaki Design System
-                    </h1>
-                    <p className="text-[length:var(--font-size-16)] text-[var(--color-text-muted)]">
-                      Design tokens and components built with a 3-tier token architecture
-                    </p>
-                  </VStack>
-                  <div className="flex items-center gap-3">
-                    <DarkModeToggle size="sm" scrollContainerRef={mainRef} />
-                    <Link to="/">
-                      <Button variant="secondary" size="sm">
-                        Entry page →
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Page Content */}
-                <Outlet context={{ mainRef }} />
-              </VStack>
+              <Outlet context={{ mainRef }} />
             </div>
           </div>
         </div>

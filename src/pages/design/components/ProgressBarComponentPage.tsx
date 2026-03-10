@@ -384,7 +384,6 @@ export function ProgressBarComponentPage() {
         { label: 'Toast', path: '/design/components/toast', description: '작업 완료 알림' },
         { label: 'Snackbar', path: '/design/components/snackbar', description: '작업 결과 알림' },
       ]}
-      notionPageId="31b9eddc34e68032a221eebd2ea18568"
     />
   );
 }

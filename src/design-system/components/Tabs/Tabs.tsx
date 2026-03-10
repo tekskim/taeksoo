@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
@@ -129,7 +129,48 @@ export function Tabs({
    ---------------------------------------- */
 
 export function TabList({ children, className = '' }: TabListProps) {
-  const { variant } = useTabsContext();
+  const { variant, setActiveTab } = useTabsContext();
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const tablist = e.currentTarget;
+      const tabs = Array.from(
+        tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])')
+      );
+      if (tabs.length === 0) return;
+
+      const currentIndex = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      if (currentIndex < 0) return;
+
+      let nextIndex: number | null = null;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+          break;
+        case 'Home':
+          e.preventDefault();
+          nextIndex = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          nextIndex = tabs.length - 1;
+          break;
+      }
+
+      if (nextIndex !== null) {
+        tabs[nextIndex].focus();
+        const tabValue = tabs[nextIndex].getAttribute('data-tab-value');
+        if (tabValue) setActiveTab(tabValue);
+      }
+    },
+    [setActiveTab]
+  );
 
   const variantStyles = {
     underline:
@@ -148,7 +189,11 @@ export function TabList({ children, className = '' }: TabListProps) {
   };
 
   return (
-    <div role="tablist" className={twMerge(variantStyles[variant], className)}>
+    <div
+      role="tablist"
+      className={twMerge(variantStyles[variant], className)}
+      onKeyDown={handleKeyDown}
+    >
       {children}
     </div>
   );
@@ -173,6 +218,8 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
       <button
         role="tab"
         type="button"
+        data-tab-value={value}
+        tabIndex={isActive ? 0 : -1}
         aria-selected={isActive}
         aria-disabled={disabled}
         disabled={disabled}
@@ -217,6 +264,8 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
     <button
       role="tab"
       type="button"
+      data-tab-value={value}
+      tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
       aria-disabled={disabled}
       disabled={disabled}

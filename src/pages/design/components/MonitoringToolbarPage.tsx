@@ -356,7 +356,6 @@ export function MonitoringToolbarPage() {
           description: '데이터 표시 가이드',
         },
       ]}
-      notionPageId="2cc9eddc34e68005a38ae6a6c29cf9cc"
     />
   );
 }
