@@ -22,6 +22,7 @@ const STATUS_GUIDELINES = `## Overview
 | 텍스트 색상 | 기본 검은색 |
 | 아이콘 | 없음 |
 | 표시 형식 | Label Only |
+| 테이블 내 최대 너비 | 80px (truncate + Tooltip) |
 
 ### 2. Defined
 사전에 정의된 특수 상태에 한해 아이콘·컬러·레이블 텍스트를 코딩하여 표시한다.
@@ -40,7 +41,7 @@ const STATUS_GUIDELINES = `## Overview
 | --- | --- | --- |
 | Icon + Label | 아이콘 + 텍스트 레이블 | Defined 상태의 기본 형식 |
 | Icon Only | 아이콘만 표시 | 테이블 Status 컬럼 등 공간이 제한적인 경우 |
-| Label Only | 텍스트 레이블만 표시 | Container 앱의 Default 상태 기본 형식 |
+| Label Only | 텍스트 레이블만 표시 | Container 앱의 Default 상태 기본 형식. 테이블 내 최대 너비 80px, 초과 시 truncate + Tooltip |
 
 ---
 

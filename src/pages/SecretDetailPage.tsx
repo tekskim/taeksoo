@@ -15,6 +15,8 @@ import {
   FormField,
   ContextMenu,
   DetailHeader,
+  Badge,
+  Tooltip,
   PageShell,
   CopyButton,
   type ContextMenuItem,
@@ -352,13 +354,14 @@ export function SecretDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={secretData.status}
-              status={
-                secretData.status === 'Active'
-                  ? 'active'
-                  : secretData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={secretData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {secretData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard

@@ -14,6 +14,8 @@ import {
   ContextMenu,
   PageShell,
   DetailHeader,
+  Badge,
+  Tooltip,
   Select,
   Input,
   NumberInput,
@@ -515,13 +517,14 @@ export function PodDisruptionBudgetDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={pdbData.status}
-              status={
-                pdbData.status === 'Active'
-                  ? 'active'
-                  : pdbData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={pdbData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {pdbData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard

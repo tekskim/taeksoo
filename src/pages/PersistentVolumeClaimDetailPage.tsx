@@ -20,12 +20,14 @@ import {
   NumberInput,
   FormField,
   Badge,
+  Tooltip,
   Checkbox,
   Table,
   Pagination,
   SearchInput,
   PageShell,
   type ContextMenuItem,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -553,13 +555,14 @@ export function PersistentVolumeClaimDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={pvcData.status === 'Bound' ? 'Active' : pvcData.status}
-              status={
-                pvcData.status === 'Bound'
-                  ? 'active'
-                  : pvcData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={pvcData.status === 'Bound' ? 'Active' : pvcData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {pvcData.status === 'Bound' ? 'Active' : pvcData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard
@@ -578,18 +581,44 @@ export function PersistentVolumeClaimDetailPage() {
               label={`Labels (${labelsCount})`}
               value={
                 labelsCount > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                  <div className="flex items-center gap-1 min-w-0">
                     {Object.entries(pvcData.labels)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {`${key}: ${val}`}
                         </Badge>
                       ))}
                     {labelsCount > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{labelsCount - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Labels ({labelsCount})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(pvcData.labels).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{`${k}: ${v}`}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{labelsCount - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (
@@ -601,18 +630,44 @@ export function PersistentVolumeClaimDetailPage() {
               label={`Annotations (${annotationsCount})`}
               value={
                 annotationsCount > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                  <div className="flex items-center gap-1 min-w-0">
                     {Object.entries(pvcData.annotations)
                       .slice(0, 1)
                       .map(([key, val]) => (
-                        <Badge key={key} theme="white" size="sm" className="max-w-full truncate">
+                        <Badge
+                          key={key}
+                          theme="white"
+                          size="sm"
+                          className="min-w-0 truncate justify-start text-left"
+                        >
                           {`${key}: ${val}`}
                         </Badge>
                       ))}
                     {annotationsCount > 1 && (
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{annotationsCount - 1})
-                      </span>
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Annotations ({annotationsCount})
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              {Object.entries(pvcData.annotations).map(([k, v]) => (
+                                <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                                  <span className="break-all">{`${k}: ${v}`}</span>
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          (+{annotationsCount - 1})
+                        </span>
+                      </Popover>
                     )}
                   </div>
                 ) : (

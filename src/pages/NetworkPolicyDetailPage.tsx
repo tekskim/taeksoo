@@ -13,6 +13,8 @@ import {
   Button,
   ContextMenu,
   DetailHeader,
+  Badge,
+  Tooltip,
   Select,
   Input,
   Pagination,
@@ -396,13 +398,14 @@ export function NetworkPolicyDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
-              value={networkPolicyData.status}
-              status={
-                networkPolicyData.status === 'Active'
-                  ? 'active'
-                  : networkPolicyData.status === 'Pending'
-                    ? 'pending'
-                    : 'error'
+              value={
+                <Tooltip content={networkPolicyData.status}>
+                  <span className="max-w-[80px] truncate">
+                    <Badge theme="white" size="sm">
+                      {networkPolicyData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard
