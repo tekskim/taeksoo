@@ -79,15 +79,15 @@ describe('ProgressBar', () => {
       expect(filledBar).toBeInTheDocument();
     });
 
-    it('auto-computes color based on percentage for default variant', () => {
+    it('uses action-primary color for default variant', () => {
       const { container } = render(<ProgressBar value={50} max={100} />);
-      const filledBar = container.querySelector('[style*="var(--color-state-success)"]');
+      const filledBar = container.querySelector('[style*="var(--color-action-primary)"]');
       expect(filledBar).toBeInTheDocument();
     });
 
-    it('applies custom status color', () => {
+    it('uses action-primary color for default variant with status prop', () => {
       const { container } = render(<ProgressBar value={50} max={100} status="success" />);
-      const filledBar = container.querySelector('[style*="var(--color-state-success)"]');
+      const filledBar = container.querySelector('[style*="var(--color-action-primary)"]');
       expect(filledBar).toBeInTheDocument();
     });
   });

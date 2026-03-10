@@ -631,7 +631,7 @@ export function ComputeAdminImageDetailPage() {
                 <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
                   {/* Title */}
                   <div className="h-8 flex items-center">
-                    <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                    <span className="text-heading-h5 text-[var(--color-text-default)]">
                       Metadata
                     </span>
                   </div>
