@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, NumberInput, Toggle, Checkbox, FormField } from '@/design-system';
+import {
+  Drawer,
+  Button,
+  Input,
+  Textarea,
+  NumberInput,
+  Toggle,
+  Checkbox,
+  FormField,
+} from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { RadioGroup, Radio } from '@/design-system/components/Radio';
 import { IconChevronDown, IconChevronRight, IconCirclePlus, IconX } from '@tabler/icons-react';
@@ -205,20 +214,24 @@ export function EditListenerDrawer({
         <FormField>
           <FormField.Label>Description</FormField.Label>
           <FormField.Control>
-            <Input
+            <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. NIC for frontend instance"
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
         {/* Protocol (Read-only) */}
         <FormField>
           <FormField.Label>Protocol</FormField.Label>
           <FormField.Control>
-            <Input value={listener.protocol} readOnly disabled fullWidth />
+            <Input value={listener.protocol} readOnly fullWidth />
           </FormField.Control>
         </FormField>
 
@@ -226,12 +239,12 @@ export function EditListenerDrawer({
         <FormField>
           <FormField.Label>Port</FormField.Label>
           <FormField.Control>
-            <Input value={String(listener.port)} readOnly disabled fullWidth />
+            <Input value={String(listener.port)} readOnly fullWidth />
           </FormField.Control>
         </FormField>
 
         {/* Connection limit */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Connection limit</FormField.Label>
           <FormField.Control>
             <VStack gap={3} className="w-full">
@@ -256,6 +269,20 @@ export function EditListenerDrawer({
           </FormField.Control>
         </FormField>
 
+        {/* Listener Admin State */}
+        <FormField
+          label="Admin state"
+          description="Set the administrative state of the listener. 'UP' enables traffic handling, while 'DOWN' disables it."
+          spacing="loose"
+        >
+          <HStack gap={2} className="items-center">
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              {adminStateUp ? 'Up' : 'Down'}
+            </span>
+          </HStack>
+        </FormField>
+
         {/* Advanced Section (Collapsible) */}
         <VStack gap={2} className="w-full">
           <button
@@ -269,9 +296,6 @@ export function EditListenerDrawer({
               <IconChevronRight size={16} stroke={1} />
             )}
             Advanced
-            <span className="text-body-md text-[var(--color-text-subtle)] font-normal">
-              (Optional)
-            </span>
           </button>
 
           {isAdvancedExpanded && (
@@ -279,6 +303,9 @@ export function EditListenerDrawer({
               {/* Custom Headers */}
               <FormField>
                 <FormField.Label>Custom Headers</FormField.Label>
+                <FormField.Description>
+                  Defines custom header values to be forwarded to backend servers.
+                </FormField.Description>
                 <FormField.Control>
                   <VStack gap={3}>
                     <Checkbox
@@ -407,19 +434,6 @@ export function EditListenerDrawer({
                     </div>
                   </VStack>
                 </FormField.Control>
-              </FormField>
-
-              {/* Listener Admin State */}
-              <FormField label="Listener admin state" spacing="loose">
-                <HStack gap={2} className="items-center">
-                  <Toggle
-                    checked={adminStateUp}
-                    onChange={(e) => setAdminStateUp(e.target.checked)}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {adminStateUp ? 'Up' : 'Down'}
-                  </span>
-                </HStack>
               </FormField>
             </VStack>
           )}

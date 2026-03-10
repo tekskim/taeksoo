@@ -201,7 +201,12 @@ export function CreateServerGroupDrawer({
         </FormField>
 
         {/* Policy Radio */}
-        <FormField label="Create type" spacing="loose">
+        <FormField
+          label="Policy"
+          description="Select the placement policy to apply to the server group."
+          spacing="loose"
+          required
+        >
           <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
             <VStack gap={2}>
               <PolicyRadioOption

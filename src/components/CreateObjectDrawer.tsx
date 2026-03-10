@@ -185,7 +185,7 @@ export function CreateObjectDrawer({
             handleUploadClick();
             if (filesError) setFilesError(null);
           }}
-          uploadLabel="Upload a File"
+          uploadLabel="Choose file"
           uploadIcon={<IconUpload size={12} stroke={1.5} />}
           error={filesError}
           emptyMessage=""

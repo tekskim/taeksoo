@@ -50,7 +50,7 @@ const fileListSectionProps: PropDef[] = [
   {
     name: 'uploadLabel',
     type: 'string',
-    default: "'Upload a File'",
+    default: "'Choose file'",
     required: false,
     description: '업로드 버튼 텍스트',
   },

@@ -6,24 +6,30 @@ import { HStack, VStack } from '@/design-system/layouts';
    Types
    ---------------------------------------- */
 
-export interface VolumeInfo {
+export interface ChangeVolumeTypeInfo {
   id: string;
   name: string;
   currentType: string;
 }
 
-export interface VolumeTypeOption {
-  value: string;
-  label: string;
-}
-
 export interface ChangeVolumeTypeDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  volume: VolumeInfo | null;
-  volumeTypes?: VolumeTypeOption[];
-  onSubmit?: (newVolumeType: string) => void;
+  volume: ChangeVolumeTypeInfo | null;
+  volumeTypes?: { value: string; label: string }[];
+  onSubmit?: (newType: string) => void;
 }
+
+/* ----------------------------------------
+   Default Data
+   ---------------------------------------- */
+
+const defaultVolumeTypes = [
+  { value: 'ssd', label: 'SSD' },
+  { value: 'hdd', label: 'HDD' },
+  { value: 'nvme', label: 'NVMe' },
+  { value: 'high-iops', label: 'High IOPS' },
+];
 
 /* ----------------------------------------
    ChangeVolumeTypeDrawer Component
@@ -33,32 +39,33 @@ export function ChangeVolumeTypeDrawer({
   isOpen,
   onClose,
   volume,
-  volumeTypes = [
-    { value: 'ssd', label: 'SSD' },
-    { value: 'hdd', label: 'HDD' },
-    { value: 'nvme', label: 'NVMe' },
-  ],
+  volumeTypes = defaultVolumeTypes,
   onSubmit,
 }: ChangeVolumeTypeDrawerProps) {
-  const [selectedType, setSelectedType] = useState('');
+  const [newType, setNewType] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [typeError, setTypeError] = useState<string | null>(null);
 
-  // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedType('');
+      setNewType('');
       setHasAttemptedSubmit(false);
+      setTypeError(null);
     }
   }, [isOpen]);
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    if (!selectedType) return;
+    if (!newType) {
+      setTypeError('Please select a volume type.');
+      return;
+    }
+    setTypeError(null);
 
     setIsSubmitting(true);
     try {
-      await onSubmit?.(selectedType);
+      await onSubmit?.(newType);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -67,29 +74,27 @@ export function ChangeVolumeTypeDrawer({
 
   const handleClose = () => {
     setHasAttemptedSubmit(false);
+    setTypeError(null);
     onClose();
   };
-
-  // Filter out current type from available options
-  const availableTypes = volumeTypes.filter((type) => type.value !== volume?.currentType);
 
   return (
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
       title="Change Type"
-      description="Change the storage type of this volume to another available volume type. The operation may take some time."
+      description="Change the storage type of this volume to another available volume type. This operation may take some time."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="flex-1">
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex-1"
+            className="flex-1 h-8"
           >
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
@@ -97,34 +102,31 @@ export function ChangeVolumeTypeDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-        <VStack gap={3}>
-          {/* Warning Box */}
-          <InlineMessage variant="error">
-            For data consistency, stop all write operations on the instance before retyping.
-          </InlineMessage>
+        <InlineMessage variant="error">
+          For data consistency, stop all write operations on the instance before retrying.
+        </InlineMessage>
 
-          <InfoBox.Group>
-            <InfoBox label="Volume" value={volume?.name ?? '-'} />
-            <InfoBox label="Current volume type" value={volume?.currentType ?? '-'} />
-          </InfoBox.Group>
-        </VStack>
+        <InfoBox.Group>
+          <InfoBox label="Volume" value={volume?.name || '-'} />
+          <InfoBox label="Current Volume Type" value={volume?.currentType || '-'} />
+        </InfoBox.Group>
 
-        {/* New Volume Type Select */}
-        <FormField required error={hasAttemptedSubmit && !selectedType}>
+        <FormField required error={hasAttemptedSubmit && !!typeError}>
           <FormField.Label>New volume type</FormField.Label>
           <FormField.Control>
             <Select
-              value={selectedType}
-              onChange={(value) => setSelectedType(value)}
-              options={availableTypes}
+              options={volumeTypes}
+              value={newType}
+              onChange={(val) => {
+                setNewType(val);
+                if (typeError) setTypeError(null);
+              }}
               placeholder="Please select a volume type"
               fullWidth
-              error={hasAttemptedSubmit && !selectedType}
             />
           </FormField.Control>
-          {hasAttemptedSubmit && !selectedType && (
-            <FormField.ErrorMessage>Please select a volume type</FormField.ErrorMessage>
+          {hasAttemptedSubmit && typeError && (
+            <FormField.ErrorMessage>{typeError}</FormField.ErrorMessage>
           )}
         </FormField>
       </VStack>

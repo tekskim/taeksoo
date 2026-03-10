@@ -158,7 +158,12 @@ export function CreateKeyPairDrawer({
         {/* Header */}
 
         {/* Create Type Radio */}
-        <FormField label="Create type" spacing="loose">
+        <FormField
+          label="Create type"
+          description="Choose how to create the key pair."
+          spacing="loose"
+          required
+        >
           <RadioGroup
             value={createType}
             onChange={(value) => setCreateType(value as 'create' | 'import')}
@@ -172,7 +177,7 @@ export function CreateKeyPairDrawer({
 
         {/* Key Pair Name Input */}
         <FormField required error={hasAttemptedSubmit && !keyPairName.trim()}>
-          <FormField.Label>Key pair name</FormField.Label>
+          <FormField.Label>Name</FormField.Label>
           <FormField.Control>
             <Input
               value={keyPairName}
@@ -195,7 +200,6 @@ export function CreateKeyPairDrawer({
             <FormField.Label>Public key</FormField.Label>
             <FormField.Control>
               <VStack gap={2} className="w-full">
-                {/* Hidden file input */}
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -203,7 +207,6 @@ export function CreateKeyPairDrawer({
                   onChange={handleFileUpload}
                   className="hidden"
                 />
-                {/* Upload Button */}
                 <Button
                   variant="secondary"
                   size="sm"
@@ -211,9 +214,8 @@ export function CreateKeyPairDrawer({
                   leftIcon={<IconUpload size={12} stroke={1.5} />}
                   className="w-fit"
                 >
-                  Upload a File
+                  Choose file
                 </Button>
-                {/* Textarea */}
                 <textarea
                   value={publicKey}
                   onChange={(e) => setPublicKey(e.target.value)}

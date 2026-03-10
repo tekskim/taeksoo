@@ -131,10 +131,7 @@ import {
   DisassociateFloatingIPDrawer,
   type InstanceInfo as DisassociateFloatingIPInstanceInfo,
 } from '@/components/DisassociateFloatingIPDrawer';
-import {
-  ManageSecurityGroupsDrawer,
-  type InstanceInfo as ManageSecurityGroupsInstanceInfo,
-} from '@/components/ManageSecurityGroupsDrawer';
+import { ManageSecurityGroupsDrawer } from '@/components/ManageSecurityGroupsDrawer';
 import {
   ManageTagsDrawer,
   type InstanceInfo as ManageTagsInstanceInfo,
@@ -154,6 +151,8 @@ import {
 import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolumeBackupWithSelectionDrawer';
 import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
+import { AttachInstanceDrawer } from '@/components/AttachInstanceDrawer';
+import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
 import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
@@ -381,8 +380,9 @@ const mockDetachInterfaceInstance: DetachInterfaceInstanceInfo = {
   name: 'web-server-10',
 };
 
-const mockAssociateFloatingIP = {
-  address: '172.24.4.228',
+const mockAssociateFloatingIPPort = {
+  id: 'port-30',
+  name: 'port-30',
 };
 
 const mockDisassociateFloatingIPInstance: DisassociateFloatingIPInstanceInfo = {
@@ -390,9 +390,9 @@ const mockDisassociateFloatingIPInstance: DisassociateFloatingIPInstanceInfo = {
   name: 'tk-test',
 };
 
-const mockManageSecurityGroupsInstance: ManageSecurityGroupsInstanceInfo = {
-  id: 'inst-001',
-  name: 'web-server-10',
+const mockManageSecurityGroupsInstance = {
+  id: 'inst-01',
+  name: 'web-server-01',
 };
 
 const mockManageTagsInstance: ManageTagsInstanceInfo = {
@@ -641,7 +641,7 @@ export function DrawersPage() {
                       Drawers{' '}
                     </span>
                     <span className="text-body-md text-[var(--color-text-subtle)]">
-                      (71 drawers)
+                      (73 drawers)
                     </span>
                   </div>
                 </div>
@@ -781,6 +781,22 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('attach-volume')}
                         linked
                         linkedTo="Instance list, Volumes"
+                      />
+                      <DrawerCard
+                        title="Attach instance"
+                        description="Attach an instance to a volume by selecting from available instances."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('attach-instance')}
+                        linked
+                        linkedTo="Instance list, Volumes"
+                      />
+                      <DrawerCard
+                        title="Change type"
+                        description="Change the storage type of a volume to another available volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('change-volume-type')}
+                        linked
+                        linkedTo="Volumes"
                       />
                       <DrawerCard
                         title="Create subnet"
@@ -2240,7 +2256,7 @@ export function DrawersPage() {
       <AssociateFloatingIPDrawer
         isOpen={openDrawer === 'associate-floating-i-p'}
         onClose={closeDrawer}
-        floatingIP={mockAssociateFloatingIP}
+        port={mockAssociateFloatingIPPort}
         onSubmit={(data) => {
           console.log('Associate floating IP:', data);
         }}
@@ -2259,8 +2275,9 @@ export function DrawersPage() {
         isOpen={openDrawer === 'manage-security-groups'}
         onClose={closeDrawer}
         instance={mockManageSecurityGroupsInstance}
-        onSave={(interfaceId, securityGroupIds) => {
-          console.log('Manage security groups:', { interfaceId, securityGroupIds });
+        portName="port-01"
+        onSave={(securityGroupIds, portSecurityEnabled) => {
+          console.log('Manage security groups:', { securityGroupIds, portSecurityEnabled });
         }}
       />
 
@@ -2336,6 +2353,24 @@ export function DrawersPage() {
         }}
       />
 
+      <AttachInstanceDrawer
+        isOpen={openDrawer === 'attach-instance'}
+        onClose={closeDrawer}
+        volume={{ id: 'vol-03', name: 'vol-03' }}
+        onAttach={(instanceId) => {
+          console.log('Attach instance:', { instanceId });
+        }}
+      />
+
+      <ChangeVolumeTypeDrawer
+        isOpen={openDrawer === 'change-volume-type'}
+        onClose={closeDrawer}
+        volume={{ id: 'vol-05', name: 'vol-05', currentType: 'DEFAULT' }}
+        onSubmit={(newType) => {
+          console.log('Change volume type:', { newType });
+        }}
+      />
+
       <CreateSubnetDrawer
         isOpen={openDrawer === 'create-subnet'}
         onClose={closeDrawer}
@@ -2393,6 +2428,7 @@ export function DrawersPage() {
       <ChangeServerCertificateDrawer
         isOpen={openDrawer === 'change-server-certificate'}
         onClose={closeDrawer}
+        listenerName="listener-http-80"
         currentCertificate={{
           name: 'server-cert-1',
           expiresAt: 'Oct 10, 2025',
@@ -2405,6 +2441,7 @@ export function DrawersPage() {
       <ChangeCACertificateDrawer
         isOpen={openDrawer === 'change-c-a-certificate'}
         onClose={closeDrawer}
+        listenerName="listener-http-80"
         currentCertificate={{
           name: 'ca-cert-1',
           expiredOn: 'Oct 10, 2025',
@@ -2417,6 +2454,7 @@ export function DrawersPage() {
       <ManageSNICertificateDrawer
         isOpen={openDrawer === 'manage-s-n-i-certificate'}
         onClose={closeDrawer}
+        listenerName="listener-http-80"
         initialSniEnabled={true}
         onSubmit={(data) => {
           console.log('Manage SNI certificate:', data);

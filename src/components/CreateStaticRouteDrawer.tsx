@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, FormField, InfoBox } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -84,10 +84,6 @@ export function CreateStaticRouteDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Header */}
-
-        <InfoBox label="Router name" value={router.name} />
-
         {/* Destination CIDR Input */}
         <FormField required error={hasAttemptedSubmit && !destinationCidr.trim()}>
           <FormField.Label>Destination CIDR</FormField.Label>

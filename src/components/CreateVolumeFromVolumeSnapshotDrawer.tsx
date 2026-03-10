@@ -156,6 +156,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Create Volume from Snapshot"
+      description="Creates a new volume based on the selected snapshot."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -253,7 +254,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Capacity (GiB)
+            Capacity (GiB)<span className="ml-1 text-[var(--color-state-danger)]">*</span>
           </label>
           <VStack gap={2} className="w-full">
             <HStack gap={3} align="center" className="w-full">

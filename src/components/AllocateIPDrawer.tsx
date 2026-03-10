@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, FormField } from '@/design-system';
+import { Drawer, Button, Input, Select, FormField, InfoBox } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -46,7 +45,6 @@ export function AllocateIPDrawer({
   subnets,
   onSubmit,
 }: AllocateIPDrawerProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
   const [selectedSubnetId, setSelectedSubnetId] = useState('');
   const [assignmentType, setAssignmentType] = useState<IPAssignmentType>('auto');
   const [manualIpAddress, setManualIpAddress] = useState('');
@@ -56,7 +54,6 @@ export function AllocateIPDrawer({
   // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
-      setIsExpanded(true);
       setSelectedSubnetId('');
       setAssignmentType('auto');
       setManualIpAddress('');
@@ -129,97 +126,55 @@ export function AllocateIPDrawer({
       <VStack gap={6}>
         {/* Header */}
 
-        {/* Port (Read-only) */}
-        <FormField>
-          <FormField.Label>Port</FormField.Label>
+        <InfoBox.Group>
+          <InfoBox label="Port" value={port.name} />
+          <InfoBox label="Owned network" value={port.networkName} />
+        </InfoBox.Group>
+
+        {/* Fixed IP */}
+        <FormField required error={hasAttemptedSubmit && !selectedSubnetId}>
+          <FormField.Label>Fixed IP</FormField.Label>
+          <FormField.Description>
+            Select a subnet and choose whether to auto-allocate a fixed IP or enter one manually.
+          </FormField.Description>
           <FormField.Control>
-            <Input value={port.name} readOnly disabled fullWidth />
-          </FormField.Control>
-        </FormField>
-
-        {/* Owned Network (Read-only) */}
-        <FormField>
-          <FormField.Label>Owned network</FormField.Label>
-          <FormField.Control>
-            <Input value={port.networkName} readOnly disabled fullWidth />
-          </FormField.Control>
-        </FormField>
-
-        {/* IP Settings (Collapsible) */}
-        <VStack gap={2} className="w-full">
-          <button
-            type="button"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
-          >
-            {isExpanded ? (
-              <IconChevronDown size={16} stroke={1} />
-            ) : (
-              <IconChevronRight size={16} stroke={1} />
-            )}
-            IP Settings
-          </button>
-
-          {isExpanded && (
-            <VStack gap={2} className="w-full pt-2">
-              {/* Subnet Select */}
-              <FormField required error={hasAttemptedSubmit && !selectedSubnetId}>
-                <FormField.Label>Subnet</FormField.Label>
-                <FormField.Control>
-                  <Select
-                    value={selectedSubnetId}
-                    onChange={(value) => setSelectedSubnetId(value)}
-                    options={subnetOptions}
-                    fullWidth
-                    error={hasAttemptedSubmit && !selectedSubnetId}
-                  />
-                </FormField.Control>
-                {hasAttemptedSubmit && !selectedSubnetId && (
-                  <FormField.ErrorMessage>Please select a subnet</FormField.ErrorMessage>
-                )}
-              </FormField>
-
-              {/* Assignment Type */}
-              <FormField>
-                <FormField.Label>Assignment type</FormField.Label>
-                <FormField.Control>
-                  <Select
-                    value={assignmentType}
-                    onChange={(value) => setAssignmentType(value as IPAssignmentType)}
-                    options={assignmentOptions}
-                    fullWidth
-                  />
-                </FormField.Control>
-              </FormField>
-
-              {/* Manual IP Input (shown when manual is selected) */}
+            <VStack gap={2} className="w-full">
+              <Select
+                value={selectedSubnetId}
+                onChange={(value) => setSelectedSubnetId(value)}
+                options={subnetOptions}
+                fullWidth
+                error={hasAttemptedSubmit && !selectedSubnetId}
+              />
+              <Select
+                value={assignmentType}
+                onChange={(value) => setAssignmentType(value as IPAssignmentType)}
+                options={assignmentOptions}
+                fullWidth
+              />
               {assignmentType === 'manual' && (
-                <FormField required error={hasAttemptedSubmit && !manualIpAddress.trim()}>
-                  <FormField.Label>IP address</FormField.Label>
-                  <FormField.Control>
-                    <Input
-                      value={manualIpAddress}
-                      onChange={(e) => setManualIpAddress(e.target.value)}
-                      placeholder="e.g. 10.62.0.50"
-                      fullWidth
-                      error={hasAttemptedSubmit && !manualIpAddress.trim()}
-                    />
-                  </FormField.Control>
-                  {hasAttemptedSubmit && !manualIpAddress.trim() && (
-                    <FormField.ErrorMessage>IP address is required</FormField.ErrorMessage>
-                  )}
-                </FormField>
-              )}
-
-              {/* IP Range Helper Text */}
-              {selectedSubnetId && ipRangeText && (
-                <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                  {ipRangeText}
-                </p>
+                <Input
+                  value={manualIpAddress}
+                  onChange={(e) => setManualIpAddress(e.target.value)}
+                  placeholder="e.g. 10.62.0.50"
+                  fullWidth
+                  error={hasAttemptedSubmit && !manualIpAddress.trim()}
+                />
               )}
             </VStack>
+          </FormField.Control>
+          {hasAttemptedSubmit && !selectedSubnetId && (
+            <FormField.ErrorMessage>Please select a subnet</FormField.ErrorMessage>
           )}
-        </VStack>
+          {hasAttemptedSubmit && assignmentType === 'manual' && !manualIpAddress.trim() && (
+            <FormField.ErrorMessage>IP address is required</FormField.ErrorMessage>
+          )}
+        </FormField>
+
+        {/* IP Range Helper Text */}
+        {selectedSubnetId && ipRangeText && (
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">{ipRangeText}</p>
+        )}
       </VStack>
     </Drawer>
   );

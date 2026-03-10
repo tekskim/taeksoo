@@ -344,7 +344,7 @@ export function CertificatesPage() {
             <div className="flex items-center gap-1">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
               {row.listenerCount > 0 && (
-                <span className="text-body-md text-[var(--color-text-subtle)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   (+{row.listenerCount})
                 </span>
               )}

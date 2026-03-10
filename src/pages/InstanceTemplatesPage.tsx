@@ -377,19 +377,21 @@ export function InstanceTemplatesPage() {
         </div>
       ),
       render: (_, row) => (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite(row.id);
-          }}
-          className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
-        >
-          {row.favorite ? (
-            <IconStarFilled size={16} className="text-[var(--primitive-color-yellow400)]" />
-          ) : (
-            <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-          )}
-        </button>
+        <div className="flex items-center justify-center w-full">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFavorite(row.id);
+            }}
+            className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
+          >
+            {row.favorite ? (
+              <IconStarFilled size={14} className="text-[var(--primitive-color-yellow400)]" />
+            ) : (
+              <IconStar size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+            )}
+          </button>
+        </div>
       ),
     },
     {
