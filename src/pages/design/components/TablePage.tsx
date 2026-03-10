@@ -229,6 +229,33 @@ const tableProps: PropDef[] = [
     required: false,
     description: 'Empty state message',
   },
+  {
+    name: 'resizable',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'Enable column resizing via drag handles',
+  },
+  {
+    name: 'columnResizeMode',
+    type: "'onChange' | 'onEnd'",
+    default: "'onEnd'",
+    required: false,
+    description: "Resize timing: 'onChange' updates in real-time, 'onEnd' updates after drag ends",
+  },
+  {
+    name: 'onColumnResize',
+    type: '(columnKey: string, width: number) => void',
+    required: false,
+    description: 'Callback when a column width changes via resize',
+  },
+  {
+    name: 'minColumnWidth',
+    type: 'number',
+    default: '50',
+    required: false,
+    description: 'Global minimum column width in px',
+  },
 ];
 
 const tableColumnProps: PropDef[] = [
@@ -245,6 +272,14 @@ const tableColumnProps: PropDef[] = [
     description: 'Content alignment',
   },
   { name: 'sortable', type: 'boolean', required: false, description: 'Enable column sorting' },
+  {
+    name: 'resizable',
+    type: 'boolean',
+    required: false,
+    description:
+      'Per-column resize override. Defaults to true for flex columns, false for fixed-width columns',
+  },
+  { name: 'maxWidth', type: 'string', required: false, description: 'Maximum column width' },
   {
     name: 'render',
     type: '(value, row, index) => ReactNode',
@@ -277,7 +312,7 @@ export function TablePage() {
   return (
     <ComponentPageTemplate
       title="Table"
-      description="여러 개의 데이터 항목을 행(Row)과 열(Column) 구조로 정렬하여 표시하는 데이터 표시 컴포넌트. 리소스 목록, 로그 데이터, 정책 목록 등 대량 데이터를 탐색하고 관리하는 UI로 사용된다."
+      description="여러 개의 데이터 항목을 행(Row)과 열(Column) 구조로 정렬하여 표시하는 데이터 표시 컴포넌트. 리소스 목록, 로그 데이터, 정책 목록 등 대량 데이터를 탐색하고 관리하는 UI로 사용된다. 정렬, 선택, 컬럼 리사이즈, 고정 헤더, 텍스트 말줄임, 수평 스크롤을 지원한다."
       whenToUse={['리소스 목록 표시', '설정 목록 표시', '로그 또는 이벤트 조회', '데이터 관리 UI']}
       whenNotToUse={['데이터 구조가 단순할 경우 (→ List)']}
       preview={
@@ -325,11 +360,19 @@ const columns = [
       apiReference={tableProps}
       subComponentApis={[{ name: 'TableColumn', props: tableColumnProps }]}
       accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Table uses semantic <code>table</code>, <code>thead</code>, <code>tbody</code>,{' '}
-          <code>th</code>, <code>td</code>. Sortable columns expose sort direction. Selectable rows
-          use checkbox with proper aria-checked. Keyboard: Tab to navigate, Space to select rows.
-        </p>
+        <VStack gap={2}>
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            Sortable columns expose sort direction. Selectable rows use checkbox with proper
+            aria-checked. Keyboard: Tab to navigate, Space to select rows.
+          </p>
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            리사이즈 핸들은 <code className="text-body-sm">role=&quot;separator&quot;</code>,{' '}
+            <code className="text-body-sm">aria-orientation=&quot;vertical&quot;</code>,{' '}
+            <code className="text-body-sm">aria-valuenow</code>,{' '}
+            <code className="text-body-sm">aria-valuemin</code> 속성을 제공합니다. Tab 키로 핸들에
+            포커스할 수 있으며, ArrowLeft/ArrowRight 키로 10px 단위 너비 조절이 가능합니다.
+          </p>
+        </VStack>
       }
       relatedLinks={[
         {

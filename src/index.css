@@ -655,6 +655,8 @@ html.theme-transition *::after {
   --table-row-hover-bg: var(--color-surface-subtle);
   --table-checkbox-width: 40px;
   --table-empty-padding-y: var(--spacing-8);
+  --table-resize-handle-width: 4px;
+  --table-resize-handle-hover-color: var(--color-action-primary);
 
   /* ----------------------------------------
      Component - TabBar
