@@ -206,6 +206,140 @@ export function ModalPage() {
         </VStack>
       }
       apiReference={modalProps}
+      accessibility={
+        <VStack gap={4} align="stretch">
+          <p className="text-body-md text-[var(--color-text-muted)]">
+            Modal은 사용자의 주의를 강제로 집중시키는 컴포넌트이므로, 접근성 요구사항이 특히
+            중요합니다.
+          </p>
+
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">ARIA 속성</h4>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-body-md text-[var(--color-text-default)]">
+                <thead>
+                  <tr className="border-b border-[var(--color-border-default)]">
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      속성
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      상태
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      설명
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    {
+                      attr: 'role="dialog"',
+                      status: 'Gap',
+                      desc: '모달 컨테이너에 dialog role 필요',
+                    },
+                    {
+                      attr: 'aria-modal="true"',
+                      status: 'Gap',
+                      desc: '배경 콘텐츠가 비활성임을 스크린 리더에 전달',
+                    },
+                    {
+                      attr: 'aria-labelledby',
+                      status: 'Gap',
+                      desc: '모달 타이틀 요소의 id를 참조하여 모달의 목적 전달',
+                    },
+                    {
+                      attr: 'aria-describedby',
+                      status: 'Gap',
+                      desc: 'description이 있을 경우 해당 요소 id 참조',
+                    },
+                  ].map((r) => (
+                    <tr key={r.attr} className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 px-3 font-mono text-body-sm">{r.attr}</td>
+                      <td className="py-2 px-3">
+                        <span className="text-body-sm text-[var(--color-state-warning)]">
+                          {r.status}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-body-sm text-[var(--color-text-muted)]">
+                        {r.desc}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </VStack>
+
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">Focus management</h4>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-body-md text-[var(--color-text-default)]">
+                <thead>
+                  <tr className="border-b border-[var(--color-border-default)]">
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      요구사항
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      상태
+                    </th>
+                    <th className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3">
+                      설명
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    {
+                      req: 'Focus trap',
+                      status: 'Gap',
+                      desc: 'Tab/Shift+Tab 키로 모달 내부에서만 포커스가 순환해야 함',
+                    },
+                    {
+                      req: 'Initial focus',
+                      status: 'Gap',
+                      desc: '모달 열릴 때 첫 번째 포커스 가능 요소로 포커스 이동',
+                    },
+                    {
+                      req: 'Focus restore',
+                      status: 'Gap',
+                      desc: '모달 닫힐 때 트리거 요소로 포커스 복원',
+                    },
+                  ].map((r) => (
+                    <tr key={r.req} className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 px-3 text-label-sm">{r.req}</td>
+                      <td className="py-2 px-3">
+                        <span className="text-body-sm text-[var(--color-state-warning)]">
+                          {r.status}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-body-sm text-[var(--color-text-muted)]">
+                        {r.desc}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </VStack>
+
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-state-info-bg)]">
+            <p className="text-body-sm text-[var(--color-text-default)]">
+              <strong>참조:</strong> WAI-ARIA Authoring Practices 1.2 — Dialog (Modal) Pattern. 위
+              Gap 항목은 인식된 개선 과제이며, 접근성 로드맵에 따라 순차적으로 구현 예정입니다.
+            </p>
+          </div>
+        </VStack>
+      }
+      keyboardInteractions={[
+        { key: 'Escape', description: '모달을 닫고 트리거 요소로 포커스 복원' },
+        { key: 'Tab', description: '모달 내 다음 포커스 가능 요소로 이동 (trap 구현 시)' },
+        {
+          key: 'Shift + Tab',
+          description: '모달 내 이전 포커스 가능 요소로 이동 (trap 구현 시)',
+        },
+        { key: 'Enter', description: '포커스된 버튼 활성화' },
+        { key: 'Space', description: '포커스된 버튼 활성화' },
+      ]}
       relatedLinks={[
         { label: 'Button', path: '/design/components/button' },
         { label: 'Drawer', path: '/design/components/drawer' },

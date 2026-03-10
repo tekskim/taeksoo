@@ -102,6 +102,70 @@ tokens/dark.json ───┘                            ├── src/styles/to
       </DocSection>
 
       <DocSection
+        id="typography-units"
+        title="Typography units (px vs rem)"
+        description="Figma 토큰과 런타임 CSS의 타이포그래피 단위 차이"
+      >
+        <VStack gap={4} align="stretch">
+          <div className="overflow-x-auto">
+            <table className="w-full text-body-md text-[var(--color-text-default)]">
+              <thead>
+                <tr className="border-b border-[var(--color-border-default)]">
+                  {['파일', '변수명', '단위', '예시'].map((h) => (
+                    <th
+                      key={h}
+                      className="text-left text-label-sm text-[var(--color-text-subtle)] py-2 px-3"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    file: 'light.css (Figma build)',
+                    varName: '--primitive-font-size-12',
+                    unit: 'rem',
+                    example: '0.75rem',
+                  },
+                  {
+                    file: 'src/index.css (runtime)',
+                    varName: '--font-size-12',
+                    unit: 'px',
+                    example: '12px',
+                  },
+                  {
+                    file: 'Utility class',
+                    varName: '.text-body-md',
+                    unit: 'CSS var 참조',
+                    example: 'font-size: var(--font-size-12)',
+                  },
+                ].map((r) => (
+                  <tr key={r.file} className="border-b border-[var(--color-border-subtle)]">
+                    <td className="py-2 px-3 text-label-sm">{r.file}</td>
+                    <td className="py-2 px-3 font-mono text-body-sm">{r.varName}</td>
+                    <td className="py-2 px-3">{r.unit}</td>
+                    <td className="py-2 px-3 font-mono text-body-sm">{r.example}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">의도</h4>
+            <p className="text-body-md text-[var(--color-text-muted)]">
+              Figma 토큰 빌드는 디자인 도구의 관례에 따라 rem 단위를 출력합니다. 그러나 TDS 런타임
+              CSS(<code className="text-body-sm">src/index.css</code>)는 px 단위로 재정의하여,
+              엔터프라이즈 대시보드 환경에서 브라우저 기본 폰트 크기 설정에 관계없이 일관된
+              레이아웃을 보장합니다. Spacing과 Radius도 동일한 이유로 px 단위를 사용합니다.
+            </p>
+          </VStack>
+        </VStack>
+      </DocSection>
+
+      <DocSection
         id="dark-mode"
         title="Dark mode"
         description="다크 모드 동작 방식과 DarkModeProvider"
@@ -370,25 +434,73 @@ export default {
         title="Compatibility layer"
         description="코드에서 사용하는 --color-* 별칭과 semantic 토큰의 관계"
       >
-        <VStack gap={3} align="stretch">
-          <p className="text-body-md text-[var(--color-text-muted)]">
-            compatibility.css가 <code className="text-body-sm">--color-*</code> 별칭을{' '}
-            <code className="text-body-sm">var(--semantic-color-*)</code>로 매핑합니다. semantic
-            토큰을 오버라이드하면 별칭도 자동 반영됩니다.
-          </p>
-          <CodeBlock
-            code={`/* compatibility.css (auto-generated) */
-:root, [data-theme="light"], [data-theme="dark"] {
-  --color-text-default: var(--semantic-color-text);
-  --color-action-primary: var(--semantic-color-primary);
-  --color-surface-default: var(--semantic-color-surface);
-  --color-border-default: var(--semantic-color-border);
-  /* ... */
-}
+        <VStack gap={6} align="stretch">
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">역할</h4>
+            <p className="text-body-md text-[var(--color-text-muted)]">
+              <code className="text-body-sm">compatibility.css</code>는 토큰 빌드 시 자동 생성되는
+              브릿지 파일입니다. Figma 토큰 빌드 산출물(
+              <code className="text-body-sm">light.css</code>
+              )이 사용하는 <code className="text-body-sm">--semantic-color-*</code> 네이밍을, 코드
+              에서 실제로 사용하는 <code className="text-body-sm">--color-*</code> 별칭으로
+              매핑합니다.
+            </p>
+          </VStack>
 
-/* ⚠️ 별칭을 직접 오버라이드하지 마세요. 항상 --semantic-color-* 를 오버라이드하세요. */`}
-            language="css"
-          />
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+              왜 이중 네이밍인가?
+            </h4>
+            <p className="text-body-md text-[var(--color-text-muted)]">
+              Figma 토큰 JSON은 <code className="text-body-sm">semantic.color.primary</code> 구조를
+              사용하며, 빌드 시 <code className="text-body-sm">--semantic-color-primary</code>로
+              변환됩니다. 그러나 실제 코드에서는{' '}
+              <code className="text-body-sm">--color-action-primary</code> 같은 역할 기반 이름이 더
+              직관적이므로, compatibility.css가 이 두 네이밍을 연결합니다.
+            </p>
+          </VStack>
+
+          <VStack gap={2} align="start">
+            <h4 className="text-heading-h6 text-[var(--color-text-default)]">매핑 구조</h4>
+            <CodeBlock
+              code={`/* compatibility.css (auto-generated — DO NOT EDIT) */
+:root, [data-theme="light"], [data-theme="dark"] {
+  /* Text */
+  --color-text-default: var(--semantic-color-text);
+  --color-text-muted: var(--semantic-color-text-muted);
+  --color-text-subtle: var(--semantic-color-text-subtle);
+
+  /* Action */
+  --color-action-primary: var(--semantic-color-primary);
+  --color-action-primary-hover: var(--semantic-color-primary-hover);
+
+  /* Surface */
+  --color-surface-default: var(--semantic-color-surface);
+  --color-surface-subtle: var(--semantic-color-surface-muted);
+
+  /* Border */
+  --color-border-default: var(--semantic-color-border);
+  --color-border-focus: var(--semantic-color-border-focus);
+
+  /* State */
+  --color-state-info: var(--semantic-color-state-info);
+  --color-state-danger: var(--semantic-color-state-danger);
+  /* ... */
+}`}
+              language="css"
+            />
+          </VStack>
+
+          <div className="p-3 rounded-[var(--radius-md)] bg-[var(--color-state-warning-bg)] border border-[var(--color-border-default)]">
+            <p className="text-body-md text-[var(--color-text-default)]">
+              <strong>커스텀 테마 적용 시:</strong> 별칭(
+              <code className="text-body-sm">--color-*</code>
+              )을 직접 오버라이드하지 마세요. 항상{' '}
+              <code className="text-body-sm">--semantic-color-*</code>를 오버라이드하면
+              compatibility.css의 <code className="text-body-sm">var()</code> 참조를 통해 별칭도
+              자동 반영됩니다.
+            </p>
+          </div>
         </VStack>
       </DocSection>
     </VStack>

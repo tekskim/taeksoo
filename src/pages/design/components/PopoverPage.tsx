@@ -268,6 +268,17 @@ export function PopoverPage() {
     <ComponentPageTemplate
       title="Popover"
       description="Interactive overlay that can contain complex content"
+      whenToUse={[
+        '버튼 클릭 시 폼, 메뉴, 설정 등 인터랙티브 콘텐츠를 표시할 때',
+        '컨텍스트에 따라 추가 정보를 제공하면서 사용자 인터랙션(입력, 선택)이 필요할 때',
+        '메인 콘텐츠를 가리지 않으면서 보조 콘텐츠를 트리거 요소 근처에 표시할 때',
+      ]}
+      whenNotToUse={[
+        '텍스트만 표시하고 인터랙션이 필요 없는 경우 → Tooltip 사용',
+        '전체 화면을 차단하고 중요한 확인이 필요한 경우 → Modal 사용',
+        '메뉴 아이템 목록만 표시하는 경우 → ContextMenu 사용',
+        '긴 폼이나 상세 정보를 표시하는 경우 → Drawer 사용',
+      ]}
       preview={
         <ComponentPreview
           code={`<Popover
