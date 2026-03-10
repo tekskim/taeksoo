@@ -67,7 +67,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 | Snackbar 클릭 | 읽음 |
 | Snackbar 닫기/자동 종료/View details | 안읽음 유지 |
 
-- 스낵바로 노출되는 메세지는 모두 알림센터에 기록된다.
+- 스낵바로 노출되는 메시지는 모두 알림센터에 기록된다.
 
 ### 3) Global Notification Panel
 - 모든 앱의 안읽은 알림 집계 뷰, 최신순 정렬
@@ -189,7 +189,7 @@ export function NotificationCenterPage() {
       ]}
       whenNotToUse={[
         '단순 UI 피드백 (→ Toast)',
-        '지속 경고 메세지 (→ Inline)',
+        '지속 경고 메시지 (→ Inline)',
         '사용자 확인이 필요한 작업 (→ Modal)',
         '모든 앱의 알림을 한 번에 확인 (→ Global notification panel)',
       ]}

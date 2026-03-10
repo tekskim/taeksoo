@@ -204,7 +204,7 @@ function DetailHeaderGuidelines() {
           </ul>
         </Prose>
 
-        <SubSectionTitle>InfoGrid 배치 규칙 (갯수별 자동 레이아웃)</SubSectionTitle>
+        <SubSectionTitle>InfoGrid 배치 규칙 (개수별 자동 레이아웃)</SubSectionTitle>
         <Prose>
           <p>
             InfoCard 개수에 따라 행 배치가 자동으로 결정된다. 한 행에 최대 4개까지 배치되며, 5개
@@ -214,7 +214,7 @@ function DetailHeaderGuidelines() {
         <TableWrapper>
           <thead>
             <tr>
-              <Th className="w-[100px]">갯수</Th>
+              <Th className="w-[100px]">개수</Th>
               <Th className="w-[140px]">레이아웃</Th>
               <Th>설명</Th>
             </tr>
@@ -329,7 +329,7 @@ function DetailHeaderGuidelines() {
               <Td>
                 <code>info-grid.gap</code>
               </Td>
-              <Td>8px</Td>
+              <Td>12px</Td>
             </tr>
             <tr>
               <Td>
@@ -627,7 +627,7 @@ export function DetailHeaderPage() {
               <Td>
                 <code>info-grid.gap</code>
               </Td>
-              <Td>8px</Td>
+              <Td>12px</Td>
             </tr>
             <tr>
               <Td>

@@ -70,7 +70,7 @@ function PopoverPageGuidelines() {
                 </Td>
               </tr>
               <tr>
-                <Td>간단한 인터랙티브 콘텐츠 (폼 1~2개, 버튼)</Td>
+                <Td>간단한 인터랙티브 콘텐츠 (폼 1~3개, 버튼)</Td>
                 <Td>
                   <strong>Popover</strong>
                 </Td>

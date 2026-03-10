@@ -122,7 +122,7 @@ function ErrorAlertGuidelines() {
                   사용자의 작업 진행에 영향을 줄 수 있는 상태 변화 또는 추가 행동이 필요한 상황.
                   사용자의 주의를 환기하지만 작업을 강제로 중단하지는 않음
                 </Td>
-                <Td>스낵바, 인라인 메세지</Td>
+                <Td>스낵바, 인라인 메시지</Td>
               </tr>
               <tr>
                 <Td>
@@ -168,7 +168,7 @@ function ErrorAlertGuidelines() {
               </tr>
               <tr>
                 <Td>지속적인 상태 경고</Td>
-                <Td>인라인 메세지</Td>
+                <Td>인라인 메시지</Td>
               </tr>
             </tbody>
           </TableWrapper>
@@ -229,12 +229,12 @@ function ErrorAlertGuidelines() {
                       실제 알림 기록 저장소는 앱 내부의 <strong>Notification Center</strong>
                     </li>
                     <li>
-                      내역이 남지 않고 휘발되는 메세지와 알림 센터에 기록이 남는 메세지가 구분 됨
+                      내역이 남지 않고 휘발되는 메시지와 알림 센터에 기록이 남는 메시지가 구분 됨
                     </li>
                   </ul>
                 </Td>
                 <Td>개별 서비스 앱</Td>
-                <Td>Validation, 인라인 메세지, 토스트, 스낵바, 알림 센터</Td>
+                <Td>Validation, 인라인 메시지, 토스트, 스낵바, 알림 센터</Td>
               </tr>
               <tr>
                 <Td>
@@ -273,9 +273,9 @@ function ErrorAlertGuidelines() {
           </TableWrapper>
         </VStack>
 
-        {/* 2) 메세지 유형 */}
+        {/* 2) 메시지 유형 */}
         <VStack gap={3}>
-          <SubSectionTitle>2) 메세지 유형</SubSectionTitle>
+          <SubSectionTitle>2) 메시지 유형</SubSectionTitle>
           <Prose>
             <p>
               메시지는 <strong>어떤 상황에서 발생했는지</strong>에 따라 분류한다.
@@ -295,7 +295,7 @@ function ErrorAlertGuidelines() {
                 <Td>
                   <strong>필드 검증</strong>
                 </Td>
-                <Td>입력/선택 과정 중 발생하는 오류 응답 또는 가이드 메세지</Td>
+                <Td>입력/선택 과정 중 발생하는 오류 응답 또는 가이드 메시지</Td>
                 <Td>필수 입력, 형식 오류</Td>
                 <Td>Validation</Td>
               </tr>
@@ -321,13 +321,13 @@ function ErrorAlertGuidelines() {
                 </Td>
                 <Td>사용자의 의도 없이 시스템이 주도하는 상태 변화</Td>
                 <Td>Active → Error 전환</Td>
-                <Td>스낵바, 인라인 메세지</Td>
+                <Td>스낵바, 인라인 메시지</Td>
               </tr>
               <tr>
                 <Td>
                   <strong>권한 피드백</strong>
                 </Td>
-                <Td>정책 또는 권한 위반으로 사용자의 진행을 막거나 제한하는 메세지</Td>
+                <Td>정책 또는 권한 위반으로 사용자의 진행을 막거나 제한하는 메시지</Td>
                 <Td>&quot;권한이 부족합니다.&quot;</Td>
                 <Td>토스트/스낵바, 모달</Td>
               </tr>
@@ -345,7 +345,7 @@ function ErrorAlertGuidelines() {
                 </Td>
                 <Td>시스템에 문제가 발생해 사용자 개입이 필수적인 상황 알림</Td>
                 <Td>비정상 로그인 감지, 인프라 장애</Td>
-                <Td>인라인 메세지, 알림 센터, 이메일</Td>
+                <Td>인라인 메시지, 알림 센터, 이메일</Td>
               </tr>
             </tbody>
           </TableWrapper>
@@ -386,7 +386,7 @@ function ErrorAlertGuidelines() {
                 </Td>
                 <Td>성공/실패 확인 등 액션에 대한 가벼운 피드백으로 화면 구석에 팝업으로 나타남</Td>
                 <Td>단발성 피드백</Td>
-                <Td>3~5초 후 휘발</Td>
+                <Td>3초 후 휘발</Td>
                 <Td>없음</Td>
               </tr>
               <tr>
@@ -406,7 +406,7 @@ function ErrorAlertGuidelines() {
               </tr>
               <tr>
                 <Td>
-                  <strong>인라인 메세지(Inline message)</strong>
+                  <strong>인라인 메시지(Inline message)</strong>
                 </Td>
                 <Td>
                   서비스 점검, 용량 부족 등 지속적인 주의가 요구되어 화면 상단 또는 특정 세션 상단에
@@ -509,7 +509,7 @@ function ErrorAlertGuidelines() {
                 <Td>
                   <strong>소멸 방식</strong>
                 </Td>
-                <Td>3~5초 후 자동 휘발</Td>
+                <Td>3초 후 자동 휘발</Td>
                 <Td>자동 소멸 또는 사용자 처리 후 삭제</Td>
               </tr>
               <tr>
@@ -560,7 +560,7 @@ function ErrorAlertGuidelines() {
             <tbody>
               <tr>
                 <Td>
-                  <strong>기록되는 메세지 유형</strong>
+                  <strong>기록되는 메시지 유형</strong>
                 </Td>
                 <Td>
                   <ul className="list-disc pl-4 space-y-1">

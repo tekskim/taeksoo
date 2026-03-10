@@ -106,7 +106,7 @@ function ProgressBarGuidelines() {
               <Td>
                 <strong>b. Fill</strong>
               </Td>
-              <Td>현재 진행률에 비례한 채워진 Bar. 기본 색상은 Black</Td>
+              <Td>현재 진행률에 비례한 채워진 Bar. Primary 색상 사용</Td>
               <Td>항상</Td>
             </tr>
             <tr>
@@ -144,8 +144,8 @@ function ProgressBarGuidelines() {
               <Td>pill (full round)</Td>
             </tr>
             <tr>
-              <Td>Fill 기본 색상</Td>
-              <Td>Black</Td>
+              <Td>Fill 색상</Td>
+              <Td>action-primary (#2563eb)</Td>
             </tr>
           </tbody>
         </TableWrapper>

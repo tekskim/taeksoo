@@ -2,7 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
 const SYSTEM_ERROR_GUIDELINES = `## Overview
-인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태 메세지. 일반적으로 전체 페이지 단위로 표시된다.
+인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태 메시지. 일반적으로 전체 페이지 단위로 표시된다.
 
 ### 공통 원칙 (Tone & UX Writing)
 - 전문적이고 중립적인 문체 사용
@@ -91,7 +91,7 @@ export function SystemErrorPage() {
   return (
     <ComponentPageTemplate
       title="System Error"
-      description="인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태 메세지. 일반적으로 전체 페이지 단위로 표시된다."
+      description="인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태 메시지. 일반적으로 전체 페이지 단위로 표시된다."
       whenToUse={[
         '인증되지 않은 사용자가 인증이 필요한 페이지에 접근한 경우',
         '인증은 되었으나 해당 리소스에 대한 권한이 없는 경우',
