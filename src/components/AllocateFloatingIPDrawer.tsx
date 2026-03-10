@@ -9,7 +9,6 @@ import {
   SelectionIndicator,
   Disclosure,
   Input,
-  Select,
   NumberInput,
   Table,
   FormField,
@@ -35,15 +34,12 @@ interface AllocateFloatingIPDrawerProps {
   onClose: () => void;
   networks?: NetworkItem[];
   floatingIPQuota?: { used: number; total: number };
-  dnsOptions?: { value: string; label: string }[];
   onSubmit?: (data: {
     description?: string;
     networkId: string;
     allocationMode: AllocationMode;
     manualIPAddress?: string;
     count?: number;
-    dnsDomain?: string;
-    dnsName?: string;
   }) => void;
 }
 
@@ -91,12 +87,6 @@ const mockNetworks: NetworkItem[] = [
   },
 ];
 
-const mockDnsOptions = [
-  { value: '', label: 'No domain selected' },
-  { value: 'thakicloud.com', label: 'thakicloud.com' },
-  { value: 'example.com', label: 'example.com' },
-];
-
 const ITEMS_PER_PAGE = 5;
 
 export function AllocateFloatingIPDrawer({
@@ -104,7 +94,6 @@ export function AllocateFloatingIPDrawer({
   onClose,
   networks = mockNetworks,
   floatingIPQuota = { used: 2, total: 10 },
-  dnsOptions = mockDnsOptions,
   onSubmit,
 }: AllocateFloatingIPDrawerProps) {
   // Form state
@@ -113,8 +102,6 @@ export function AllocateFloatingIPDrawer({
   const [allocationMode, setAllocationMode] = useState<AllocationMode>('automatic-single');
   const [manualIPAddress, setManualIPAddress] = useState('');
   const [count, setCount] = useState(1);
-  const [dnsDomain, setDnsDomain] = useState('');
-  const [dnsName, setDnsName] = useState('');
 
   // Search and pagination
   const [searchQuery, setSearchQuery] = useState('');
@@ -122,7 +109,6 @@ export function AllocateFloatingIPDrawer({
 
   // Disclosure states
   const [isAllocationExpanded, setIsAllocationExpanded] = useState(true);
-  const [isDnsExpanded, setIsDnsExpanded] = useState(false);
 
   // Sort state
   const [sortColumn, setSortColumn] = useState<string>('name');
@@ -136,8 +122,6 @@ export function AllocateFloatingIPDrawer({
     setAllocationMode('automatic-single');
     setManualIPAddress('');
     setCount(1);
-    setDnsDomain('');
-    setDnsName('');
     setSearchQuery('');
     setCurrentPage(1);
     setHasAttemptedSubmit(false);
@@ -240,13 +224,9 @@ export function AllocateFloatingIPDrawer({
       allocationMode,
       manualIPAddress: allocationMode === 'manual-single' ? manualIPAddress : undefined,
       count: allocationMode === 'automatic-batch' ? count : undefined,
-      dnsDomain: dnsDomain || undefined,
-      dnsName: dnsName || undefined,
     });
     handleClose();
   };
-
-  const fqdn = dnsName && dnsDomain ? `${dnsName}.${dnsDomain}` : '';
 
   return (
     <Drawer
@@ -301,13 +281,22 @@ export function AllocateFloatingIPDrawer({
               fullWidth
             />
           </FormField.Control>
+          <FormField.HelperText>
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
+          </FormField.HelperText>
         </FormField>
 
         {/* External Network Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            External Network
-          </h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              External Network<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select the network to allocate the floating IP.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -356,24 +345,30 @@ export function AllocateFloatingIPDrawer({
           <Disclosure.Trigger>Allocation</Disclosure.Trigger>
           <Disclosure.Panel>
             <VStack gap={3} className="pt-3">
-              <FormField label="Allocation mode" spacing="loose">
-                <VStack gap={2}>
-                  <Radio
-                    checked={allocationMode === 'automatic-single'}
-                    onChange={() => setAllocationMode('automatic-single')}
-                    label="Automatic (single)"
-                  />
-                  <Radio
-                    checked={allocationMode === 'manual-single'}
-                    onChange={() => setAllocationMode('manual-single')}
-                    label="Manual (single)"
-                  />
-                  <Radio
-                    checked={allocationMode === 'automatic-batch'}
-                    onChange={() => setAllocationMode('automatic-batch')}
-                    label="Automatic (batch)"
-                  />
-                </VStack>
+              <FormField spacing="loose">
+                <FormField.Label>Allocation mode</FormField.Label>
+                <FormField.Description>
+                  Choose the allocation mode for the floating IP.
+                </FormField.Description>
+                <FormField.Control>
+                  <VStack gap={2}>
+                    <Radio
+                      checked={allocationMode === 'automatic-single'}
+                      onChange={() => setAllocationMode('automatic-single')}
+                      label="Automatic (single)"
+                    />
+                    <Radio
+                      checked={allocationMode === 'manual-single'}
+                      onChange={() => setAllocationMode('manual-single')}
+                      label="Manual (single)"
+                    />
+                    <Radio
+                      checked={allocationMode === 'automatic-batch'}
+                      onChange={() => setAllocationMode('automatic-batch')}
+                      label="Automatic (batch)"
+                    />
+                  </VStack>
+                </FormField.Control>
               </FormField>
 
               {/* Manual IP Address Input */}
@@ -410,47 +405,6 @@ export function AllocateFloatingIPDrawer({
                   </FormField>
                 </div>
               )}
-            </VStack>
-          </Disclosure.Panel>
-        </Disclosure>
-
-        {/* DNS Settings Section */}
-        <Disclosure open={isDnsExpanded} onChange={setIsDnsExpanded}>
-          <Disclosure.Trigger>DNS</Disclosure.Trigger>
-          <Disclosure.Panel className="pb-[var(--primitive-spacing-5)]">
-            <VStack gap={4} className="pt-3 w-full">
-              {/* DNS Domain */}
-              <FormField>
-                <FormField.Label>DNS Domain</FormField.Label>
-                <FormField.Control>
-                  <Select
-                    value={dnsDomain}
-                    onChange={setDnsDomain}
-                    options={dnsOptions}
-                    placeholder="No domain selected"
-                    fullWidth
-                  />
-                </FormField.Control>
-              </FormField>
-
-              {/* DNS Name */}
-              <FormField>
-                <FormField.Label>DNS Name</FormField.Label>
-                <FormField.Control>
-                  <Input
-                    value={dnsName}
-                    onChange={(e) => setDnsName(e.target.value)}
-                    placeholder="e.g. my-web"
-                    disabled={!dnsDomain}
-                    fullWidth
-                  />
-                </FormField.Control>
-                {fqdn && <FormField.HelperText>FQDN : {fqdn}</FormField.HelperText>}
-                <FormField.HelperText>
-                  Allowed: 1–63 characters; lowercase letters, numbers, &quot;-&quot;; no
-                  leading/trailing hyphens.
-                </FormField.HelperText>
-              </FormField>
             </VStack>
           </Disclosure.Panel>
         </Disclosure>

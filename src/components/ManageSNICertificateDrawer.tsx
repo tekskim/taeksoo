@@ -9,6 +9,7 @@ import {
   FormField,
   StatusIndicator,
   SelectionIndicator,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -30,6 +31,7 @@ export interface SNICertificateItem {
 export interface ManageSNICertificateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  listenerName?: string;
   initialSniEnabled?: boolean;
   initialSelectedIds?: string[];
   certificates?: SNICertificateItem[];
@@ -90,6 +92,7 @@ const certificateColumns: TableColumn<SNICertificateItem>[] = [
 export function ManageSNICertificateDrawer({
   isOpen,
   onClose,
+  listenerName,
   initialSniEnabled = true,
   initialSelectedIds = [],
   certificates = defaultCertificates,
@@ -200,7 +203,7 @@ export function ManageSNICertificateDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Header */}
+        {listenerName && <InfoBox label="Listener" value={listenerName} />}
         {/* SNI Toggle Section */}
         <FormField
           label="SNI"
@@ -217,7 +220,7 @@ export function ManageSNICertificateDrawer({
         {/* SNI Certificates Section */}
         <VStack gap={3} className="w-full pb-5">
           <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            SNI Certificates
+            New server certificate
           </h3>
 
           {/* Search */}

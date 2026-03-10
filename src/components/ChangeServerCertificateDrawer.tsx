@@ -36,6 +36,7 @@ export interface CurrentCertificateInfo {
 export interface ChangeServerCertificateDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  listenerName?: string;
   currentCertificate: CurrentCertificateInfo;
   certificates?: ServerCertificateItem[];
   onChangeCertificate?: (certificateId: string) => void;
@@ -64,6 +65,7 @@ const ITEMS_PER_PAGE = 5;
 export function ChangeServerCertificateDrawer({
   isOpen,
   onClose,
+  listenerName,
   currentCertificate,
   certificates = defaultCertificates,
   onChangeCertificate,
@@ -126,6 +128,7 @@ export function ChangeServerCertificateDrawer({
     {
       key: 'name',
       label: 'Name',
+      sortable: true,
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
@@ -144,16 +147,17 @@ export function ChangeServerCertificateDrawer({
         </div>
       ),
     },
-    { key: 'domain', label: 'Domain' },
+    { key: 'domain', label: 'SAN', sortable: true },
     {
       key: 'listeners',
       label: 'Listeners',
+      sortable: true,
       render: (_value, row) =>
         row.listenersCount && row.listenersCount > 0
           ? `${row.listeners} (+${row.listenersCount})`
           : row.listeners,
     },
-    { key: 'expiresAt', label: 'Expires at' },
+    { key: 'expiresAt', label: 'Expires at', sortable: true },
   ];
 
   const handleChange = async () => {
@@ -203,10 +207,13 @@ export function ChangeServerCertificateDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        <InfoBox
-          label="Current server certificate"
-          value={`${currentCertificate.name} (expired on ${currentCertificate.expiresAt})`}
-        />
+        <InfoBox.Group>
+          {listenerName && <InfoBox label="Listener" value={listenerName} />}
+          <InfoBox
+            label="Current server certificate"
+            value={`${currentCertificate.name} (expired on ${currentCertificate.expiresAt})`}
+          />
+        </InfoBox.Group>
 
         {/* New Server Certificate Section */}
         <VStack gap={3} className="pb-5">
