@@ -46,6 +46,14 @@ export function SelectionIndicatorPage() {
     <ComponentPageTemplate
       title="SelectionIndicator"
       description="Display component for showing table selection state. Supports error state for required selection validation."
+      whenToUse={[
+        '테이블이나 리스트에서 선택된 항목 수를 표시할 때',
+        '벌크 액션 영역에서 현재 선택 상태를 알려줄 때',
+      ]}
+      whenNotToUse={[
+        '단순 카운트만 표시하는 경우 → Badge 사용',
+        '진행률을 표시하는 경우 → ProgressBar 사용',
+      ]}
       preview={
         <ComponentPreview
           code={`<SelectionIndicator

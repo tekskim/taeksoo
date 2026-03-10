@@ -554,6 +554,15 @@ export function DatePickerPage() {
           <li>Tab: Move focus</li>
         </ul>
       }
+      keyboardInteractions={[
+        { key: 'ArrowRight', description: '다음 날짜로 이동' },
+        { key: 'ArrowLeft', description: '이전 날짜로 이동' },
+        { key: 'ArrowDown', description: '다음 주 같은 요일로 이동' },
+        { key: 'ArrowUp', description: '이전 주 같은 요일로 이동' },
+        { key: 'Home', description: '현재 월의 첫째 날로 이동' },
+        { key: 'End', description: '현재 월의 마지막 날로 이동' },
+        { key: 'Enter / Space', description: '포커스된 날짜 선택' },
+      ]}
       relatedLinks={[
         {
           label: 'Input Field',

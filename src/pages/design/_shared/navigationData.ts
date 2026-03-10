@@ -142,6 +142,12 @@ const foundationItems: NavItem[] = [
 ];
 
 const formControlItems: NavItem[] = [
+  {
+    id: 'form-field-spacing',
+    label: 'Form Field Spacing',
+    icon: IconLayoutGrid,
+    path: '/design/components/form-field',
+  },
   { id: 'button', label: 'Button', icon: IconClick, path: '/design/components/button' },
   { id: 'input', label: 'Input (All)', icon: IconForms, path: '/design/components/input' },
   { id: 'text-input', label: 'Text Input', icon: IconForms, path: '/design/components/text-input' },
@@ -157,18 +163,6 @@ const formControlItems: NavItem[] = [
     label: 'Search Input',
     icon: IconForms,
     path: '/design/components/search-input',
-  },
-  {
-    id: 'form-field-spacing',
-    label: 'Form Field Spacing',
-    icon: IconLayoutGrid,
-    path: '/design/components/form-field',
-  },
-  {
-    id: 'form-field-pattern',
-    label: 'Form Field',
-    icon: IconForms,
-    path: '/design/patterns/form-field-pattern',
   },
   {
     id: 'filter-search-input',
@@ -191,15 +185,6 @@ const formControlItems: NavItem[] = [
 
 const dataDisplayItems: NavItem[] = [
   { id: 'table', label: 'Table', icon: IconList, path: '/design/components/table' },
-  { id: 'badge', label: 'Badge', icon: IconTag, path: '/design/components/badge' },
-  { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
-  { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
-  {
-    id: 'status-indicator',
-    label: 'Status indicator',
-    icon: IconActivity,
-    path: '/design/components/status-indicator',
-  },
   {
     id: 'pagination',
     label: 'Pagination',
@@ -207,11 +192,20 @@ const dataDisplayItems: NavItem[] = [
     path: '/design/components/pagination',
   },
   {
+    id: 'status-indicator',
+    label: 'Status indicator',
+    icon: IconActivity,
+    path: '/design/components/status-indicator',
+  },
+  {
     id: 'selection-indicator',
     label: 'SelectionIndicator',
     icon: IconSquareCheck,
     path: '/design/components/selection-indicator',
   },
+  { id: 'badge', label: 'Badge', icon: IconTag, path: '/design/components/badge' },
+  { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
+  { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
   {
     id: 'file-list-card',
     label: 'FileListCard',
@@ -274,17 +268,34 @@ const navigationItems: NavItem[] = [
     icon: IconChevronRight,
     path: '/design/components/breadcrumb',
   },
-];
-
-const overlayItems: NavItem[] = [
-  { id: 'tooltip', label: 'Tooltip', icon: IconMessage2, path: '/design/components/tooltip' },
-  { id: 'popover', label: 'Popover', icon: IconMessage2, path: '/design/components/popover' },
   {
     id: 'menu',
     label: 'Side Navigation Bar (Menu)',
     icon: IconMenu2,
     path: '/design/components/menu',
   },
+];
+
+const notificationItems: NavItem[] = [
+  { id: 'toast', label: 'Toast', icon: IconBell, path: '/design/components/toast' },
+  { id: 'snackbar', label: 'Snackbar', icon: IconBell, path: '/design/components/snackbar' },
+  {
+    id: 'notification-center',
+    label: 'Notification center',
+    icon: IconBell,
+    path: '/design/components/notification-center',
+  },
+  {
+    id: 'global-notification-panel',
+    label: 'Global notification panel',
+    icon: IconBell,
+    path: '/design/components/global-notification-panel',
+  },
+];
+
+const overlayItems: NavItem[] = [
+  { id: 'tooltip', label: 'Tooltip', icon: IconMessage2, path: '/design/components/tooltip' },
+  { id: 'popover', label: 'Popover', icon: IconMessage2, path: '/design/components/popover' },
   {
     id: 'context-menu',
     label: 'Context Menu',
@@ -293,20 +304,6 @@ const overlayItems: NavItem[] = [
   },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid, path: '/design/components/modal' },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid, path: '/design/components/drawer' },
-  {
-    id: 'notification-center',
-    label: 'Notification center',
-    icon: IconBell,
-    path: '/design/components/notification-center',
-  },
-  { id: 'snackbar', label: 'Snackbar', icon: IconBell, path: '/design/components/snackbar' },
-  { id: 'toast', label: 'Toast', icon: IconBell, path: '/design/components/toast' },
-  {
-    id: 'global-notification-panel',
-    label: 'Global notification panel',
-    icon: IconBell,
-    path: '/design/components/global-notification-panel',
-  },
   {
     id: 'floating-card',
     label: 'Floating card',
@@ -378,6 +375,12 @@ const patternItems: NavItem[] = [
     label: 'Common patterns',
     icon: IconTemplate,
     path: '/design/patterns/common',
+  },
+  {
+    id: 'form-field-pattern',
+    label: 'Form Field',
+    icon: IconForms,
+    path: '/design/patterns/form-field-pattern',
   },
   {
     id: 'wizard',
@@ -521,6 +524,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Form Controls', items: formControlItems },
   { title: 'Data Display', items: dataDisplayItems },
   { title: 'Feedback', items: feedbackItems },
+  { title: 'Notifications', items: notificationItems },
   { title: 'Navigation', items: navigationItems },
   { title: 'Overlay', items: overlayItems },
   { title: 'Layout Components', items: layoutComponentItems },

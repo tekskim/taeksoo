@@ -26,4 +26,30 @@
   --color-state-warning-bg: var(--semantic-color-state-warning-bg);
   --color-state-danger: var(--semantic-color-state-danger);
   --color-state-danger-bg: var(--semantic-color-state-danger-bg);
+
+  /* Text state colors */
+  --color-text-success: var(--semantic-color-state-success);
+  --color-text-warning: var(--semantic-color-state-warning);
+  --color-text-danger: var(--semantic-color-state-danger);
+  --color-text-info: var(--semantic-color-state-info);
+
+  /* Surface additional */
+  --color-surface-hover: var(--semantic-color-surface-hover);
+  --color-surface-contrast: var(--semantic-color-on-primary);
+  --color-surface-sunken: var(--semantic-color-surface-muted);
+
+  /* Border additional */
+  --color-border-muted: var(--semantic-color-border-subtle);
+
+  /* State text colors */
+  --color-state-info-text: var(--semantic-color-state-info);
+  --color-state-success-text: var(--semantic-color-state-success);
+  --color-state-warning-text: var(--semantic-color-state-warning);
+  --color-state-danger-text: var(--semantic-color-state-danger);
+
+  /* Action additional */
+  --color-action-primary-subtle: var(--semantic-color-state-info-bg);
+  --color-action-primary-active: var(--semantic-color-primary-focus);
+  --color-state-danger-hover: var(--semantic-color-state-danger);
+  --color-state-danger-active: var(--semantic-color-state-danger);
 }

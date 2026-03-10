@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 /* ----------------------------------------
    Types
@@ -51,9 +52,9 @@ export function Drawer({
   footer,
   className,
 }: DrawerProps) {
-  // State to manage mount/unmount with animation
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
+  const focusTrapRef = useFocusTrap<HTMLElement>(isOpen);
 
   // Handle mount/unmount with animation
   useEffect(() => {
@@ -131,6 +132,7 @@ export function Drawer({
 
       {/* Drawer Panel */}
       <aside
+        ref={focusTrapRef}
         className={drawerClasses}
         style={{ width: widthValue }}
         role="dialog"

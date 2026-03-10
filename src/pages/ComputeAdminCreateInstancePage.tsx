@@ -3788,7 +3788,7 @@ function TemplatesSection({
       render: (_, row) => (
         <div className="flex items-center justify-center">
           {row.isFavorite ? (
-            <IconStarFilled size={14} className="text-yellow-500" />
+            <IconStarFilled size={14} className="text-[var(--primitive-color-yellow400)]" />
           ) : (
             <IconStar size={14} stroke={1.5} className="text-[var(--color-text-subtle)]" />
           )}

@@ -305,6 +305,11 @@ export function DrawerSectionPage() {
         </div>
       }
       apiReference={drawerProps}
+      keyboardInteractions={[
+        { key: 'Escape', description: 'Drawer를 닫고 트리거 요소로 포커스 복원' },
+        { key: 'Tab', description: 'Drawer 내 다음 포커스 가능 요소로 이동 (focus trap)' },
+        { key: 'Shift + Tab', description: 'Drawer 내 이전 포커스 가능 요소로 이동' },
+      ]}
       relatedLinks={[
         { label: 'Modal', path: '/design/components/modal', description: 'Dialog overlay' },
         {

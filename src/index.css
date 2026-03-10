@@ -1034,6 +1034,14 @@ html.theme-transition *::after {
   --chart-color-neutral: var(--component-chart-color-neutral);
   --chart-color-grid: var(--component-chart-color-grid);
   --chart-color-text: var(--component-chart-color-text);
+
+  /* Chart layout tokens */
+  --chart-card-height: 338px;
+  --chart-header-height: 28px;
+  --chart-padding-y: 20px;
+  --chart-area-height: calc(
+    var(--chart-card-height) - var(--chart-header-height) - var(--chart-padding-y)
+  );
 }
 
 /* Override Tailwind's default gray/zinc to use our values */
@@ -1561,18 +1569,18 @@ html.theme-transition *::after {
 }
 
 .shell-scroll::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--color-text-muted);
   border-radius: var(--radius-full);
 }
 
 .shell-scroll::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: var(--color-text-subtle);
 }
 
 /* Firefox */
 .shell-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #475569 transparent;
+  scrollbar-color: var(--color-text-muted) transparent;
 }
 
 /* YAML Editor Scrollbar */
@@ -1615,17 +1623,10 @@ input[type='search']::-webkit-search-decoration {
    - Chart area: 338 - 20 - 28 = 290px
 */
 .chartCard {
-  --chart-card-height: 338px;
-  --chart-header-height: 28px;
-  --chart-padding-y: 20px;
-  --chart-area-height: calc(
-    var(--chart-card-height) - var(--chart-header-height) - var(--chart-padding-y)
-  );
-
   background: var(--color-surface-default);
   border: 1px solid var(--color-border-default);
-  border-radius: 8px;
-  padding: 12px 20px 8px 20px;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3) var(--spacing-5) var(--spacing-2) var(--spacing-5);
   height: var(--chart-card-height);
   width: 100%;
   min-width: 0;
@@ -1637,11 +1638,11 @@ input[type='search']::-webkit-search-decoration {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-2);
   height: auto;
   min-height: 20px;
   flex-shrink: 0;
-  gap: 16px;
+  gap: var(--spacing-4);
 }
 
 .chartHeaderCenter {
@@ -1660,7 +1661,7 @@ input[type='search']::-webkit-search-decoration {
 .chartBody {
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: var(--spacing-4);
   align-items: stretch;
   flex: 1;
   min-height: 0;
@@ -1686,9 +1687,9 @@ input[type='search']::-webkit-search-decoration {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 6px;
-  padding-top: 24px;
-  padding-right: 8px;
+  gap: var(--spacing-1-5);
+  padding-top: var(--spacing-6);
+  padding-right: var(--spacing-2);
   min-width: 100px;
   max-height: 240px;
   overflow-y: auto;
@@ -1711,8 +1712,8 @@ input[type='search']::-webkit-search-decoration {
 .legendItem {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
+  gap: var(--spacing-1-5);
+  font-size: var(--font-size-11);
   color: var(--color-text-muted);
   cursor: pointer;
   transition: opacity 0.2s;
@@ -1728,8 +1729,8 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .legendDot {
-  width: 8px;
-  height: 8px;
+  width: var(--spacing-2);
+  height: var(--spacing-2);
   border-radius: 9999px;
   flex-shrink: 0;
 }
@@ -1738,15 +1739,15 @@ input[type='search']::-webkit-search-decoration {
 .chartControls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-1-5);
 }
 
 .toggleBtn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  font-size: 10px;
+  gap: var(--spacing-1-5);
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-10);
   font-weight: 400;
   color: var(--color-text-muted);
   background: transparent;
@@ -1759,11 +1760,11 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .toggleSwitch {
-  width: 24px;
-  height: 12px;
+  width: var(--spacing-6);
+  height: var(--spacing-3);
   background: transparent;
   border: 1px solid var(--color-border-default);
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   position: relative;
   transition:
     background 0.2s,
@@ -1773,8 +1774,8 @@ input[type='search']::-webkit-search-decoration {
 .toggleSwitch::after {
   content: '';
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: var(--spacing-2);
+  height: var(--spacing-2);
   background: var(--color-text-muted);
   border-radius: 50%;
   top: 1px;
@@ -1811,7 +1812,7 @@ input[type='search']::-webkit-search-decoration {
   height: 28px;
   background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   color: var(--color-text-muted);
 }
@@ -1983,8 +1984,8 @@ input[type='search']::-webkit-search-decoration {
   display: flex;
   align-items: center;
   gap: 0;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   padding: 0;
 }
@@ -1998,7 +1999,7 @@ input[type='search']::-webkit-search-decoration {
   padding: 4px 12px;
   font-size: 11px;
   font-weight: 500;
-  color: #0f172a;
+  color: var(--color-text-default);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -2025,7 +2026,7 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .timeSegment:hover {
-  color: #1e293b;
+  color: var(--color-text-default);
 }
 
 .dark .timeSegment:hover {
@@ -2055,9 +2056,9 @@ input[type='search']::-webkit-search-decoration {
   height: 30px;
   font-size: 11px;
   font-weight: 500;
-  color: #0f172a;
-  background: white;
-  border: 1px solid #e2e8f0;
+  color: var(--color-text-default);
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -2076,8 +2077,8 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .periodButton:hover {
-  border-color: #cbd5e1;
-  background: #f8fafc;
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-subtle);
 }
 
 .dark .periodButton:hover {
@@ -2091,8 +2092,8 @@ input[type='search']::-webkit-search-decoration {
   gap: 8px;
   padding: 4px 8px 4px 12px;
   height: 30px;
-  background: #3b82f6;
-  color: white;
+  background: var(--color-border-focus);
+  color: var(--color-surface-default);
   border: none;
   border-radius: 8px;
   font-size: 11px;
@@ -2120,7 +2121,7 @@ input[type='search']::-webkit-search-decoration {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  color: white;
+  color: var(--color-surface-default);
   transition: background 0.15s ease;
   padding: 0;
 }
@@ -2146,8 +2147,8 @@ input[type='search']::-webkit-search-decoration {
   font-size: 11px;
   font-weight: 500;
   color: var(--color-text-muted);
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -2166,8 +2167,8 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .customPeriodBtn:hover {
-  border-color: #cbd5e1;
-  color: #1e293b;
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
 }
 
 .dark .customPeriodBtn:hover {
@@ -2176,8 +2177,8 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .customPeriodBtnActive {
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: var(--color-action-primary);
+  color: var(--color-action-primary);
 }
 
 .dark .customPeriodBtnActive {
@@ -2235,8 +2236,8 @@ input[type='search']::-webkit-search-decoration {
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 16px;
@@ -2259,7 +2260,7 @@ input[type='search']::-webkit-search-decoration {
 .datePickerRow label {
   font-size: 12px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--color-text-subtle);
   min-width: 40px;
 }
 
@@ -2271,11 +2272,11 @@ input[type='search']::-webkit-search-decoration {
   flex: 1;
   padding: 6px 10px;
   font-size: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border-default);
   border-radius: 4px;
   outline: none;
-  background: white;
-  color: #1e293b;
+  background: var(--color-surface-default);
+  color: var(--color-text-default);
 }
 
 .dark .datePickerRow input {
@@ -2285,8 +2286,8 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .datePickerRow input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 2px var(--color-action-primary-subtle);
 }
 
 .datePickerActions {
@@ -2295,7 +2296,7 @@ input[type='search']::-webkit-search-decoration {
   gap: 8px;
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--color-surface-muted);
 }
 
 .dark .datePickerActions {
@@ -2306,9 +2307,9 @@ input[type='search']::-webkit-search-decoration {
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--color-text-subtle);
   background: transparent;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border-default);
   border-radius: 4px;
   cursor: pointer;
 }
@@ -2319,7 +2320,7 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .datePickerCancel:hover {
-  background: #f8fafc;
+  background: var(--color-surface-subtle);
 }
 
 .dark .datePickerCancel:hover {
@@ -2330,15 +2331,15 @@ input[type='search']::-webkit-search-decoration {
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: white;
-  background: #3b82f6;
+  color: var(--color-surface-default);
+  background: var(--color-border-focus);
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .datePickerApply:hover {
-  background: #2563eb;
+  background: var(--color-action-primary);
 }
 
 /* ============== Calendar Dropdown ============== */
@@ -2637,8 +2638,8 @@ input[type='search']::-webkit-search-decoration {
   justify-content: center;
   width: 28px;
   height: 28px;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
   cursor: pointer;
   color: var(--color-text-default);
@@ -2652,8 +2653,8 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .refreshButton:hover {
-  border-color: #cbd5e1;
-  color: #1e293b;
+  border-color: var(--color-border-strong);
+  color: var(--color-text-default);
 }
 
 .dark .refreshButton:hover {

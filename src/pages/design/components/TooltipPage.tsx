@@ -270,6 +270,10 @@ export function TooltipPage() {
         </div>
       }
       apiReference={tooltipProps}
+      keyboardInteractions={[
+        { key: 'Focus (Tab)', description: '트리거 요소에 포커스 시 Tooltip 표시' },
+        { key: 'Escape', description: 'Tooltip 닫기' },
+      ]}
       relatedLinks={[
         { label: 'Popover', path: '/design/components/popover' },
         { label: 'Button', path: '/design/components/button' },
