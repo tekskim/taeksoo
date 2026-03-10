@@ -234,6 +234,7 @@ export function ConnectSubnetDrawer({
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
@@ -275,6 +276,7 @@ export function ConnectSubnetDrawer({
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
@@ -335,7 +337,9 @@ export function ConnectSubnetDrawer({
 
         {/* Network Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Network</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Network<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+          </h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -381,7 +385,9 @@ export function ConnectSubnetDrawer({
 
         {/* Subnet Section */}
         <VStack gap={3} className="w-full pb-6">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Subnet</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+            Subnet<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+          </h3>
 
           {/* Search */}
           <div className="w-[280px]">

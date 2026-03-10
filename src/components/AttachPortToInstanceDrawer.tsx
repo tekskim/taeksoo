@@ -8,6 +8,7 @@ import {
   StatusIndicator,
   SelectionIndicator,
   Table,
+  InfoBox,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
@@ -146,6 +147,7 @@ export function AttachPortToInstanceDrawer({
     {
       key: 'name',
       label: 'Name',
+      sortable: true,
       render: (_value, row) => (
         <div className="flex flex-col gap-0.5">
           <HStack gap={1.5} align="center">
@@ -206,21 +208,18 @@ export function AttachPortToInstanceDrawer({
       }
     >
       <VStack gap={6} className="h-full">
-        {/* Port Info */}
-        <div className="w-full bg-[var(--color-surface-muted)] rounded-lg px-4 py-3">
-          <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Port name
-            </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {portName}
-            </span>
-          </VStack>
-        </div>
+        <InfoBox label="Port name" value={portName} />
 
         {/* Instances Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
+          <VStack gap={1}>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
+              Instances<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </h3>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Choose whether to attach an instance to the port.
+            </span>
+          </VStack>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -228,7 +227,7 @@ export function AttachPortToInstanceDrawer({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
-              placeholder="Search instance by attributes"
+              placeholder="Search instances by attributes"
               size="sm"
               fullWidth
             />

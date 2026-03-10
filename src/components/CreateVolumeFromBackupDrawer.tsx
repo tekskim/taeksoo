@@ -165,6 +165,7 @@ export function CreateVolumeFromBackupDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Create Volume from Backup"
+      description="Creates a new volume based on the selected backup."
       width={360}
       footer={
         <VStack gap={6} className="w-full">
@@ -260,7 +261,7 @@ export function CreateVolumeFromBackupDrawer({
         </FormField>
 
         {/* Capacity Slider */}
-        <FormField>
+        <FormField required>
           <FormField.Label>Capacity (GiB)</FormField.Label>
           <FormField.Control>
             <HStack gap={3} align="center" className="w-full">
@@ -302,7 +303,7 @@ export function CreateVolumeFromBackupDrawer({
         </FormField>
 
         {/* AZ Select */}
-        <FormField>
+        <FormField required>
           <FormField.Label>AZ</FormField.Label>
           <FormField.Control>
             <Select

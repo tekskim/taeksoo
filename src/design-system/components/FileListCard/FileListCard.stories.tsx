@@ -157,7 +157,7 @@ export const SectionWithError: Story = {
       required
       files={[]}
       onUpload={() => {}}
-      uploadLabel="Upload a File"
+      uploadLabel="Choose file"
       uploadIcon={<IconUpload size={12} />}
       error="At least one file is required."
       emptyMessage="No files uploaded yet"
@@ -172,7 +172,7 @@ export const SectionEmpty: Story = {
       label="Attachments"
       files={[]}
       onUpload={() => {}}
-      uploadLabel="Upload a File"
+      uploadLabel="Choose file"
       uploadIcon={<IconUpload size={12} />}
     />
   ),

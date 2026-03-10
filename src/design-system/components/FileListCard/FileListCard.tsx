@@ -96,7 +96,7 @@ export function FileListSection({
   files,
   onRemove,
   onUpload,
-  uploadLabel = 'Upload a File',
+  uploadLabel = 'Choose file',
   uploadIcon,
   error,
   emptyMessage,

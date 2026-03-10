@@ -83,7 +83,7 @@ function FileUploadSection({
             leftIcon={<IconUpload size={12} stroke={1.5} />}
             className="w-fit"
           >
-            Upload a File
+            Choose file
           </Button>
           <textarea
             value={value}
@@ -170,7 +170,7 @@ function CollapsibleSection({
             leftIcon={<IconUpload size={12} stroke={1.5} />}
             className="w-fit"
           >
-            Upload a File
+            Choose file
           </Button>
           <textarea
             value={value}

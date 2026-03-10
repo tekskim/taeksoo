@@ -1924,7 +1924,7 @@ export function InstanceListPage() {
           setIsAssociateFloatingIPDrawerOpen(false);
           setSelectedInstanceForAssociateFloatingIP(null);
         }}
-        floatingIP={{ id: 'fip-001', address: '203.0.113.10', status: 'DOWN' }}
+        port={{ id: 'port-001', name: 'port-001' }}
         onSubmit={() => {
           // TODO: Implement associate floating IP API call
         }}
