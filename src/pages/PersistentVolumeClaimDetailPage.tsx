@@ -912,7 +912,7 @@ export function PersistentVolumeClaimDetailPage() {
                   size="sm"
                   className="w-[var(--search-input-width)]"
                 />
-                <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                <div className="w-px h-5 bg-[var(--color-border-default)]" />
                 <HStack gap={1}>
                   <Button
                     variant="muted"

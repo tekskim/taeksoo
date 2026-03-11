@@ -197,7 +197,6 @@ function DetailHeaderInfoCard({
       )}
       {...props}
     >
-      {/* Status indicator positioned at top-right - large circular style */}
       {status && (
         <div className="absolute top-1/2 right-3 -translate-y-1/2">
           <StatusIndicator status={status} layout="icon-only" size="lg" />

@@ -147,7 +147,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     return {
       slug,
       title: 'Discovery',
-      searchPlaceholder: 'Search discovered assets',
+      searchPlaceholder: 'Search discovered assets by attributes',
       detailHrefBase,
       linkifyColumnKeys: ['serial'],
       createLabel: 'Create',
@@ -305,12 +305,9 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     return {
       slug,
       title: 'Switch',
-      searchPlaceholder: 'Search switches',
+      searchPlaceholder: 'Search switches by attributes',
       detailHrefBase,
       columns: [
-        { key: 'name', label: 'Switch', sortable: true },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
-        { key: 'model', label: 'Model', sortable: true },
         {
           key: 'status',
           label: 'Status',
@@ -318,6 +315,9 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: { Up: 'success', Down: 'neutral' },
         },
+        { key: 'name', label: 'Switch', sortable: true },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
+        { key: 'model', label: 'Model', sortable: true },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -481,7 +481,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     const tabComputeHosts = {
       id: 'compute-hosts',
       label: 'Compute Hosts',
-      searchPlaceholder: 'Search compute hosts',
+      searchPlaceholder: 'Search compute hosts by attributes',
       showActionColumn: true,
       showCheckboxColumn: false,
       showBulkDelete: false,
@@ -494,9 +494,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: true,
       },
       columns: [
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service Status',
@@ -511,6 +508,9 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: { Up: 'success', Down: 'danger' },
         },
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'host', label: 'Host', sortable: true },
+        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -533,7 +533,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     const tabHypervisors = {
       id: 'hypervisors',
       label: 'Hypervisors',
-      searchPlaceholder: 'Search hypervisors',
+      searchPlaceholder: 'Search hypervisors by attributes',
       showActionColumn: false,
       showCheckboxColumn: false,
       showBulkDelete: false,
@@ -567,7 +567,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     const tabResourceProvider = {
       id: 'resource-provider',
       label: 'Resource Provider',
-      searchPlaceholder: 'Search resource providers',
+      searchPlaceholder: 'Search resource providers by attributes',
       showActionColumn: false,
       showCheckboxColumn: false,
       showBulkDelete: false,
@@ -753,7 +753,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     return {
       slug,
       title: 'Network Agents',
-      searchPlaceholder: 'Search neutron agents',
+      searchPlaceholder: 'Search neutron agents by attributes',
       detailHrefBase,
       linkifyColumnKeys: ['name'],
       showCheckboxColumn: false,
@@ -768,11 +768,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: false,
       },
       columns: [
-        { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
-        { key: 'name', label: 'Name', sortable: true, width: columnMinWidths.name },
-        { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
-        { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service Status',
@@ -787,6 +782,11 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: { Up: 'success', Down: 'neutral' },
         },
+        { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
+        { key: 'name', label: 'Name', sortable: true, width: columnMinWidths.name },
+        { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
+        { key: 'host', label: 'Host', sortable: true },
+        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -823,7 +823,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     const tabBlockStorage = {
       id: 'block-storage',
       label: 'Block Storage',
-      searchPlaceholder: 'Search block storage services',
+      searchPlaceholder: 'Search block storage services by attributes',
       showActionColumn: true,
       showCheckboxColumn: false,
       showBulkDelete: false,
@@ -836,11 +836,11 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: false,
       },
       columns: [
+        { key: 'serviceStatus', label: 'Service Status', sortable: true },
+        { key: 'serviceState', label: 'Service State', sortable: true },
         { key: 'name', label: 'Name', sortable: true },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
-        { key: 'serviceStatus', label: 'Service Status', sortable: true },
-        { key: 'serviceState', label: 'Service State', sortable: true },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -873,7 +873,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     const tabStorageBackends = {
       id: 'storage-backends',
       label: 'Storage Backends',
-      searchPlaceholder: 'Search storage backends',
+      searchPlaceholder: 'Search storage backends by attributes',
       showActionColumn: false,
       showCheckboxColumn: false,
       showBulkDelete: false,
@@ -885,7 +885,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'storageCapacityGiB',
           label: 'Storage Capacity(GiB)',
           sortable: true,
-          align: 'center',
           width: columnMinWidths.storageCapacity,
         },
       ],
@@ -929,15 +928,15 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
     return {
       slug,
       title: 'Orchestration Services',
-      searchPlaceholder: 'Search orchestration services',
+      searchPlaceholder: 'Search orchestration services by attributes',
       showActionColumn: false,
       showCheckboxColumn: false,
       showBulkDelete: false,
       columns: [
+        { key: 'status', label: 'Status', sortable: true, width: columnMinWidths.statusLg },
         { key: 'name', label: 'Name', sortable: true },
         { key: 'engineId', label: 'Engine ID', sortable: true, kind: 'mono' },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'status', label: 'Status', sortable: true, width: columnMinWidths.statusLg },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(5, (i) => ({
@@ -954,7 +953,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
   return {
     slug,
     title: 'Cloud Builder',
-    searchPlaceholder: 'Search',
+    searchPlaceholder: 'Search by attributes',
     showActionColumn: false,
     showCheckboxColumn: false,
     showBulkDelete: false,

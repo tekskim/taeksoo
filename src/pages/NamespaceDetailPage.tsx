@@ -608,7 +608,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Resources</h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Workloads</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
