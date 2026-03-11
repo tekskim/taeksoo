@@ -97,16 +97,33 @@ function buildTableColumns(
       return column;
     }
 
-    // Service-like statuses rendered as white badges
-    if (c.key === 'serviceStatus' || c.key === 'serviceState' || c.key === 'status') {
-      column.render = (value) => {
-        const v = String(value ?? '') || '-';
-        return (
-          <Badge theme="white" size="sm">
-            {v}
-          </Badge>
-        );
-      };
+    if (c.kind === 'nameWithSub') {
+      const shouldLinkName = !!linkifyColumnKeys?.includes(c.key);
+      column.render = (value, row) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          {shouldLinkName ? (
+            <button
+              type="button"
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-left truncate"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRowAction('open-detail', row);
+              }}
+            >
+              {String(value ?? '-') || '-'}
+            </button>
+          ) : (
+            <span className="text-label-md text-[var(--color-text-default)] truncate">
+              {String(value ?? '-') || '-'}
+            </span>
+          )}
+          {c.subKey && (
+            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+              {c.subLabel ?? c.subKey} : {row[c.subKey] ?? '-'}
+            </span>
+          )}
+        </div>
+      );
       return column;
     }
 
@@ -296,12 +313,11 @@ export function CloudBuilderConsolePage() {
       width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
-        // compute-services 화면은 어떤 탭이든 동일하게 Enable/Disable 액션을 제공한다 (UI only).
         const statusKey = statusAction?.statusKey ?? config.statusAction?.statusKey;
         const currentStatus = statusKey ? row[statusKey] : undefined;
 
         const items: ContextMenuItem[] =
-          config.slug === 'compute-services'
+          config.slug === 'compute-services' || statusAction
             ? currentStatus === 'Enabled'
               ? [
                   {
@@ -317,38 +333,22 @@ export function CloudBuilderConsolePage() {
                     onClick: () => onRowAction('set-status-enabled', row),
                   },
                 ]
-            : statusAction
-              ? currentStatus === 'Enabled'
-                ? [
-                    {
-                      id: 'disable',
-                      label: 'Disable',
-                      onClick: () => onRowAction('set-status-disabled', row),
-                    },
-                  ]
-                : [
-                    {
-                      id: 'enable',
-                      label: 'Enable',
-                      onClick: () => onRowAction('set-status-enabled', row),
-                    },
-                  ]
-              : (viewConfig.actionMenu?.items ?? []).map((it) => {
-                  if (it.kind === 'link') {
-                    return {
-                      id: it.id,
-                      label: it.label,
-                      status: it.status,
-                      onClick: () => navigate(it.href),
-                    };
-                  }
+            : (viewConfig.actionMenu?.items ?? []).map((it) => {
+                if (it.kind === 'link') {
                   return {
                     id: it.id,
                     label: it.label,
                     status: it.status,
-                    onClick: () => onRowAction(it.actionId, row),
+                    onClick: () => navigate(it.href),
                   };
-                });
+                }
+                return {
+                  id: it.id,
+                  label: it.label,
+                  status: it.status,
+                  onClick: () => onRowAction(it.actionId, row),
+                };
+              });
 
         if (items.length === 0) return <span className="text-[var(--color-text-muted)]">-</span>;
 

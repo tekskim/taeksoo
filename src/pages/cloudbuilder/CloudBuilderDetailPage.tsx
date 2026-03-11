@@ -22,7 +22,7 @@ import {
   Breadcrumb,
   type TableColumn,
 } from '@/design-system';
-import { IconCopy, IconBell, IconBan } from '@tabler/icons-react';
+import { IconCopy, IconBell, IconBan, IconCheck, IconPower } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
@@ -31,6 +31,31 @@ import {
   type CloudBuilderSlug,
   CLOUD_BUILDER_SLUGS,
 } from './consoleListConfig';
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <Button
+      variant="secondary"
+      size="sm"
+      leftIcon={
+        copied ? (
+          <IconCheck size={12} className="text-[var(--color-state-success)]" />
+        ) : (
+          <IconCopy size={12} stroke={1.5} />
+        )
+      }
+      onClick={() => {
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }}
+    >
+      {copied ? 'Copied' : 'Copy'}
+    </Button>
+  );
+}
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -429,7 +454,9 @@ export function CloudBuilderDetailPage() {
               <Button
                 variant="secondary"
                 size="sm"
-                leftIcon={<IconBan size={12} />}
+                leftIcon={
+                  serviceStatus === 'Disabled' ? <IconPower size={12} /> : <IconBan size={12} />
+                }
                 onClick={() => {
                   const current = serviceStatus || 'Enabled';
                   const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
@@ -443,14 +470,28 @@ export function CloudBuilderDetailPage() {
             </DetailHeader.Actions>
             <DetailHeader.InfoGrid className="flex-wrap">
               <DetailHeader.InfoCard
-                label="Service status"
-                value={serviceStatus || 'Enabled'}
-                status={(serviceStatus || 'Enabled') === 'Enabled' ? 'active' : 'deactivated'}
+                label="Service Status"
+                value={
+                  <Badge
+                    theme={(serviceStatus || 'Enabled') === 'Enabled' ? 'green' : 'gray'}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {serviceStatus || 'Enabled'}
+                  </Badge>
+                }
               />
               <DetailHeader.InfoCard
-                label="Service state"
-                value={row?.serviceState ?? 'Up'}
-                status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'down'}
+                label="Service State"
+                value={
+                  <Badge
+                    theme={(row?.serviceState ?? 'Up') === 'Up' ? 'green' : 'red'}
+                    type="subtle"
+                    size="sm"
+                  >
+                    {row?.serviceState ?? 'Up'}
+                  </Badge>
+                }
               />
               <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
               <DetailHeader.InfoCard
@@ -540,20 +581,7 @@ export function CloudBuilderDetailPage() {
             <SectionCard>
               <SectionCard.Header
                 title="Configuration"
-                actions={
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCopy size={12} stroke={1.5} />}
-                    onClick={() => {
-                      const text = networkAgentMeta?.configurationText ?? '';
-                      if (!text) return;
-                      navigator.clipboard.writeText(text);
-                    }}
-                  >
-                    Copy
-                  </Button>
-                }
+                actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
               />
               <SectionCard.Content gap={3}>
                 <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
@@ -799,18 +827,7 @@ export function CloudBuilderDetailPage() {
                     <SectionCard>
                       <SectionCard.Header
                         title="server_info.json"
-                        actions={
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCopy size={12} stroke={1.5} />}
-                            onClick={() => {
-                              navigator.clipboard.writeText(serverInfoJsonText);
-                            }}
-                          >
-                            Copy
-                          </Button>
-                        }
+                        actions={<CopyButton text={serverInfoJsonText} />}
                       />
                       <SectionCard.Content gap={3}>
                         <pre className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
@@ -829,20 +846,7 @@ export function CloudBuilderDetailPage() {
                   <SectionCard>
                     <SectionCard.Header
                       title="Configuration"
-                      actions={
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCopy size={12} stroke={1.5} />}
-                          onClick={() => {
-                            const text = networkAgentMeta?.configurationText ?? '';
-                            if (!text) return;
-                            navigator.clipboard.writeText(text);
-                          }}
-                        >
-                          Copy
-                        </Button>
-                      }
+                      actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
                     />
                     <SectionCard.Content gap={3}>
                       <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">

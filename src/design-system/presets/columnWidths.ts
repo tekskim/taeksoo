@@ -482,7 +482,7 @@ export const columnMinWidths = {
 
   // 서비스 --------------------------------------------------------------------
   service: '120px',
-  serviceState: '100px',
+  serviceState: '120px',
   serviceStatus: '120px',
   engineId: '120px',
   endpoints: '150px',
