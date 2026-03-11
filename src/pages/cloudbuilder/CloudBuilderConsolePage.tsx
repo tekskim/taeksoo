@@ -89,37 +89,22 @@ function buildTableColumns(
         const safeUsed = Number.isFinite(used) ? used : 0;
         const safeTotal = Number.isFinite(total) ? total : 0;
         return (
-          <div className="flex flex-col gap-2 w-full">
-            <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
-            <div className="text-body-md text-[var(--color-text-default)]">
-              {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
-            </div>
+          <div className="w-full">
+            <ProgressBar variant="quota" label="Storage (GiB)" value={safeUsed} max={safeTotal} />
           </div>
         );
       };
       return column;
     }
 
-    // Service-like statuses should be rendered as dot + text (like OpenStack UIs)
+    // Service-like statuses rendered as white badges
     if (c.key === 'serviceStatus' || c.key === 'serviceState' || c.key === 'status') {
       column.render = (value) => {
         const v = String(value ?? '') || '-';
-        // Only apply for typical state words; fall back to raw text otherwise.
-        const isKnown = v === 'Enabled' || v === 'Disabled' || v === 'Up' || v === 'Down';
-        if (!isKnown) {
-          return <span className="text-body-md text-[var(--color-text-default)]">{v}</span>;
-        }
-        const isGood = v === 'Enabled' || v === 'Up';
         return (
-          <div className="inline-flex items-center gap-2">
-            <span
-              className={`inline-block size-2 rounded-full ${
-                isGood ? 'bg-[var(--color-state-success)]' : 'bg-[var(--color-border-strong)]'
-              }`}
-              aria-hidden="true"
-            />
-            <span className="text-body-md text-[var(--color-text-default)]">{v}</span>
-          </div>
+          <Badge theme="white" size="sm">
+            {v}
+          </Badge>
         );
       };
       return column;

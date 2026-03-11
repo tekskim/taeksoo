@@ -877,7 +877,7 @@ export function PodDisruptionBudgetDetailPage() {
                     size="sm"
                     className="w-[280px]"
                   />
-                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <div className="w-px h-5 bg-[var(--color-border-default)]" />
                   <HStack gap={1}>
                     <Button
                       variant="outline"
