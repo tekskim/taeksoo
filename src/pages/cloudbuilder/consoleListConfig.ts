@@ -1,7 +1,7 @@
 import { columnMinWidths } from '@/design-system';
 
 export type BadgeTone = 'success' | 'neutral' | 'blue' | 'warning' | 'danger';
-export type ColumnKind = 'text' | 'badge' | 'mono';
+export type ColumnKind = 'text' | 'badge' | 'mono' | 'nameWithSub';
 
 export type ListColumn = {
   key: string;
@@ -9,6 +9,9 @@ export type ListColumn = {
   kind?: ColumnKind;
   sortable?: boolean;
   badgeTones?: Record<string, BadgeTone>;
+  /** Secondary key displayed below the primary value (used with kind: 'nameWithSub') */
+  subKey?: string;
+  subLabel?: string;
   width?: string;
   align?: 'left' | 'center' | 'right';
 };
@@ -179,6 +182,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'frontierNet',
           label: 'Frontier NET',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: frontierTones,
         },
@@ -234,15 +238,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           width: columnMinWidths.macAddress,
         },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'updatedAt', label: 'Updated at', sortable: true, width: columnMinWidths.updatedAt },
         { key: 'nicPrimaryName', label: 'NIC (primary name)', sortable: true },
-        {
-          key: 'frontierNet',
-          label: 'Frontier NET',
-          sortable: true,
-          kind: 'badge',
-          badgeTones: frontierTones,
-        },
         {
           key: 'mgmtIp',
           label: 'Mgmt IP',
@@ -250,10 +246,21 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'mono',
           width: columnMinWidths.ip,
         },
+        { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
+        { key: 'purpose', label: 'Purpose', sortable: true },
+        {
+          key: 'frontierNet',
+          label: 'Frontier NET',
+          sortable: true,
+          width: columnMinWidths.serviceStatus,
+          kind: 'badge',
+          badgeTones: frontierTones,
+        },
         {
           key: 'observedHealth',
           label: 'Observed health',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: observedHealthTones,
         },
@@ -261,11 +268,11 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'provisionStatus',
           label: 'Provision status',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: provisionStatusTones,
         },
-        { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
-        { key: 'purpose', label: 'Purpose', sortable: true },
+        { key: 'updatedAt', label: 'Updated at', sortable: true, width: columnMinWidths.updatedAt },
       ],
       rows: makeRows(COUNT, (i) => {
         const frontierNet = i % 11 === 0 ? 'Invalid' : i % 7 === 0 ? 'Missing' : 'OK';
@@ -308,23 +315,24 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       searchPlaceholder: 'Search switches by attributes',
       detailHrefBase,
       columns: [
+        { key: 'name', label: 'Switch', sortable: true },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
+        { key: 'model', label: 'Model', sortable: true },
         {
           key: 'status',
           label: 'Status',
           sortable: true,
+          width: columnMinWidths.serviceState,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'neutral' },
+          badgeTones: { Up: 'success', Down: 'danger' },
         },
-        { key: 'name', label: 'Switch', sortable: true },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
-        { key: 'model', label: 'Model', sortable: true },
         { key: 'updatedAt', label: 'Updated at', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
         name: `spine-${(i % 6) + 1}`,
         mgmtIp: randIp(i + 50),
         model: i % 2 === 0 ? 'X9300' : 'N9300',
-        status: i % 14 === 0 ? 'Down' : 'Up',
+        status: i % 4 === 0 ? 'Down' : 'Up',
         updatedAt: dateTime(i),
       })),
     };
@@ -366,15 +374,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           width: columnMinWidths.macAddress,
         },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'updatedAt', label: 'Updated at', sortable: true, width: columnMinWidths.updatedAt },
         { key: 'nicPrimaryName', label: 'NIC (primary name)', sortable: true },
-        {
-          key: 'frontierNet',
-          label: 'Frontier NET',
-          sortable: true,
-          kind: 'badge',
-          badgeTones: frontierTones,
-        },
         {
           key: 'mgmtIp',
           label: 'Mgmt IP',
@@ -382,10 +382,21 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'mono',
           width: columnMinWidths.ip,
         },
+        { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
+        { key: 'purpose', label: 'Purpose', sortable: true },
+        {
+          key: 'frontierNet',
+          label: 'Frontier NET',
+          sortable: true,
+          width: columnMinWidths.serviceStatus,
+          kind: 'badge',
+          badgeTones: frontierTones,
+        },
         {
           key: 'observedHealth',
           label: 'Observed health',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: observedHealthTones,
         },
@@ -393,11 +404,11 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'provisionStatus',
           label: 'Provision status',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: provisionStatusTones,
         },
-        { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
-        { key: 'purpose', label: 'Purpose', sortable: true },
+        { key: 'updatedAt', label: 'Updated at', sortable: true, width: columnMinWidths.updatedAt },
       ],
       rows: makeRows(COUNT, (i) => {
         const frontierNet = i % 11 === 0 ? 'Invalid' : i % 7 === 0 ? 'Missing' : 'OK';
@@ -494,10 +505,14 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: true,
       },
       columns: [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'host', label: 'Host', sortable: true },
+        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service status',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
@@ -505,20 +520,18 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'serviceState',
           label: 'Service state',
           sortable: true,
+          width: columnMinWidths.serviceState,
           kind: 'badge',
           badgeTones: { Up: 'success', Down: 'danger' },
         },
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         { key: 'lastUpdated', label: 'Last updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
         name: serviceNames[i % serviceNames.length],
         host: `bdv2kr1-${i % 3 === 0 ? 'ctrl' : i % 3 === 1 ? 'compute' : 'gcompute'}${String((i % 24) + 1).padStart(2, '0')}`,
         availabilityZone: i % 3 === 0 ? 'internal' : 'nova',
-        serviceStatus: i % 9 === 0 ? 'Disabled' : 'Enabled',
-        serviceState: i % 12 === 0 ? 'Down' : 'Up',
+        serviceStatus: i % 4 < 2 ? 'Enabled' : 'Disabled',
+        serviceState: i % 4 === 0 || i % 4 === 2 ? 'Up' : 'Down',
         lastUpdated:
           i % 4 === 0
             ? 'a few seconds ago'
@@ -769,9 +782,22 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
+          key: 'name',
+          label: 'Name',
+          sortable: true,
+          width: columnMinWidths.name,
+          kind: 'nameWithSub',
+          subKey: 'id',
+          subLabel: 'ID',
+        },
+        { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
+        { key: 'host', label: 'Host', sortable: true },
+        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
+        {
           key: 'serviceStatus',
           label: 'Service status',
           sortable: true,
+          width: columnMinWidths.serviceStatus,
           kind: 'badge',
           badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
@@ -779,14 +805,10 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'serviceState',
           label: 'Service state',
           sortable: true,
+          width: columnMinWidths.serviceState,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'neutral' },
+          badgeTones: { Up: 'success', Down: 'danger' },
         },
-        { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
-        { key: 'name', label: 'Name', sortable: true, width: columnMinWidths.name },
-        { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
-        { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         { key: 'lastUpdated', label: 'Last updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -812,8 +834,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
             ? 'bdv2kr1-ctrl01'
             : `bdv2kr1-gcompute${String((i % 24) + 1).padStart(2, '0')}`,
         availabilityZone: i % 5 === 0 ? '-' : 'nova',
-        serviceStatus: i % 9 === 0 ? 'Disabled' : 'Enabled',
-        serviceState: i % 11 === 0 ? 'Down' : 'Up',
+        serviceStatus: i % 4 < 2 ? 'Enabled' : 'Disabled',
+        serviceState: i % 4 === 0 || i % 4 === 2 ? 'Up' : 'Down',
         lastUpdated: i % 6 === 0 ? 'a minute ago' : 'a few minutes ago',
       })),
     };
@@ -836,11 +858,25 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: false,
       },
       columns: [
-        { key: 'serviceStatus', label: 'Service status', sortable: true },
-        { key: 'serviceState', label: 'Service state', sortable: true },
         { key: 'name', label: 'Name', sortable: true },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability zone', sortable: true },
+        {
+          key: 'serviceStatus',
+          label: 'Service status',
+          sortable: true,
+          width: columnMinWidths.serviceStatus,
+          kind: 'badge',
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
+        },
+        {
+          key: 'serviceState',
+          label: 'Service state',
+          sortable: true,
+          width: columnMinWidths.serviceState,
+          kind: 'badge',
+          badgeTones: { Up: 'success', Down: 'danger' },
+        },
         { key: 'lastUpdated', label: 'Last updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -863,8 +899,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
                   ? 'bdv2kr1-ctrl01@ceph2-rbd'
                   : 'bdv2kr1-ctrl01',
         availabilityZone: 'nova',
-        serviceStatus: i % 11 === 0 ? 'Disabled' : 'Enabled',
-        serviceState: i % 13 === 0 ? 'Down' : 'Up',
+        serviceStatus: i % 4 < 2 ? 'Enabled' : 'Disabled',
+        serviceState: i % 4 === 0 || i % 4 === 2 ? 'Up' : 'Down',
         lastUpdated:
           i % 7 === 0 ? 'a few seconds ago' : i % 7 === 1 ? '3 months ago' : 'a few seconds ago',
       })),
@@ -933,17 +969,24 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       showCheckboxColumn: false,
       showBulkDelete: false,
       columns: [
-        { key: 'status', label: 'Status', sortable: true, width: columnMinWidths.statusLg },
         { key: 'name', label: 'Name', sortable: true },
         { key: 'engineId', label: 'Engine ID', sortable: true, kind: 'mono' },
         { key: 'host', label: 'Host', sortable: true },
+        {
+          key: 'status',
+          label: 'Status',
+          sortable: true,
+          width: columnMinWidths.serviceState,
+          kind: 'badge',
+          badgeTones: { Up: 'success', Down: 'danger' },
+        },
         { key: 'lastUpdated', label: 'Last updated', sortable: true },
       ],
       rows: makeRows(5, (i) => ({
         name: 'heat-engine',
         engineId: uuidLike(i),
         host: 'bdv2kr1-ctrl01',
-        status: 'Up',
+        status: i % 3 === 2 ? 'Down' : 'Up',
         lastUpdated: i === 1 ? 'a minute ago' : 'a few seconds ago',
       })),
     };
