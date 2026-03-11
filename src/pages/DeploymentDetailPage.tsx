@@ -456,6 +456,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
           size="sm"
           className="w-[var(--search-input-width)]"
         />
+        <div className="w-px h-5 bg-[var(--color-border-default)]" />
         <HStack gap={1}>
           <Button variant="muted" size="sm" disabled={selectedKeys.length === 0}>
             <IconDownload size={14} stroke={1.5} />
@@ -836,6 +837,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
           size="sm"
           className="w-[var(--search-input-width)]"
         />
+        <div className="w-px h-5 bg-[var(--color-border-default)]" />
         <HStack gap={1}>
           <Button variant="muted" size="sm" disabled={selectedKeys.length === 0}>
             <IconDownload size={14} stroke={1.5} />

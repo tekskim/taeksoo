@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   Badge,
   Button,
@@ -22,7 +22,7 @@ import {
   Breadcrumb,
   type TableColumn,
 } from '@/design-system';
-import { IconCopy, IconBell } from '@tabler/icons-react';
+import { IconCopy, IconBell, IconCircleX } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
@@ -184,7 +184,6 @@ export function CloudBuilderDetailPage() {
   const basePrefix = location.pathname.startsWith('/cloud-builder')
     ? '/cloud-builder'
     : '/cloudbuilder';
-  const backToListHref = `${basePrefix}/${slug}`;
 
   const isServer = slug === 'servers' || slug === 'severs0.7';
 
@@ -426,17 +425,7 @@ export function CloudBuilderDetailPage() {
 
   return (
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-      <VStack gap={6} className="min-w-[1176px]">
-        <div className="flex items-center justify-between h-8">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">{config.title}</h1>
-          <Link
-            to={backToListHref}
-            className="text-[length:var(--font-size-12)] text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          >
-            Back
-          </Link>
-        </div>
-
+      <VStack gap={4} className="min-w-[1176px]">
         {isNetworkAgent ? (
           <DetailHeader>
             <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
@@ -444,6 +433,7 @@ export function CloudBuilderDetailPage() {
               <Button
                 variant="secondary"
                 size="sm"
+                leftIcon={<IconCircleX size={12} />}
                 onClick={() => {
                   const current = serviceStatus || 'Enabled';
                   const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
@@ -456,7 +446,6 @@ export function CloudBuilderDetailPage() {
               </Button>
             </DetailHeader.Actions>
             <DetailHeader.InfoGrid className="flex-wrap">
-              <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
               <DetailHeader.InfoCard
                 label="Service Status"
                 value={serviceStatus || 'Enabled'}
@@ -467,6 +456,7 @@ export function CloudBuilderDetailPage() {
                 value={row?.serviceState ?? 'Up'}
                 status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'down'}
               />
+              <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
               <DetailHeader.InfoCard
                 label="Created At"
                 value={networkAgentMeta?.createdAt ?? '-'}
@@ -525,12 +515,6 @@ export function CloudBuilderDetailPage() {
             <SectionCard>
               <SectionCard.Header title="Basic Information" />
               <SectionCard.Content>
-                <SectionCard.DataRow
-                  label="Agent Name"
-                  value={row?.name ?? '-'}
-                  showDivider={false}
-                  className="hidden"
-                />
                 <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
                 <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
                 <SectionCard.DataRow
