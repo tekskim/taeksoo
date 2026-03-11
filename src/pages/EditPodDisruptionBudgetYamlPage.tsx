@@ -116,7 +116,7 @@ export function EditPodDisruptionBudgetYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Edit ${pdbName || 'PodDisruptionBudget'} (YAML)`);
+    updateActiveTabLabel(`Edit ${pdbName || 'pod disruption budget'} (YAML)`);
   }, [updateActiveTabLabel, pdbName]);
 
   const tabBarTabs = tabs.map((tab) => ({

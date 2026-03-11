@@ -376,7 +376,7 @@ export function ContainerNamespacesPage() {
               items={[
                 {
                   id: 'create-form',
-                  label: 'Create as Form',
+                  label: 'Create as form',
                   onClick: () => navigate('/container/namespaces/create'),
                 },
                 {
@@ -393,7 +393,7 @@ export function ContainerNamespacesPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={16} stroke={1.5} />}
               >
-                Create Namespace
+                Create namespace
               </Button>
             </ContextMenu>
           }
@@ -406,7 +406,7 @@ export function ContainerNamespacesPage() {
             {/* Search */}
             <HStack gap={1} align="center">
               <SearchInput
-                placeholder="Search Namespaces by attributes"
+                placeholder="Search namespaces by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
@@ -466,7 +466,7 @@ export function ContainerNamespacesPage() {
                 onClick={handleClearFilters}
                 className="text-label-sm text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

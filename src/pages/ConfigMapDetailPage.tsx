@@ -213,7 +213,8 @@ export function ConfigMapDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/configmaps/${configMap.name}/edit-yaml`),
+      onClick: () =>
+        navigate(`/container/configmaps/${configMapData?.name ?? configMapId}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -342,7 +343,7 @@ export function ConfigMapDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -454,7 +455,7 @@ export function ConfigMapDetailPage() {
                 <VStack gap={3}>
                   {/* Section Header */}
                   <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                    Binary Data
+                    Binary data
                   </span>
 
                   {/* Binary Data Entries */}

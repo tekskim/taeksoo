@@ -38,7 +38,7 @@ type SectionStep = 'basic-info' | 'data' | 'selector' | 'labels-annotations';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   data: 'Budget',
   selector: 'Selector',
   'labels-annotations': 'Labels & Annotations',
@@ -736,7 +736,7 @@ export function CreatePodDisruptionBudgetPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Pod Disruption Budget');
+    updateActiveTabLabel('Create pod disruption budget');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -855,7 +855,7 @@ export function CreatePodDisruptionBudgetPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Pod disruption budgets', href: '/container/pdb' },
-                { label: 'Create Pod Disruption Budget' },
+                { label: 'Create pod disruption budget' },
               ]}
             />
           }
@@ -886,7 +886,7 @@ export function CreatePodDisruptionBudgetPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-            Create Pod Disruption Budget
+            Create pod disruption budget
           </h1>
           <p className="text-body-md text-[var(--color-text-muted)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available

@@ -298,7 +298,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     },
     {
       key: 'initContainer',
-      label: 'Init Container',
+      label: 'Init container',
       flex: 1,
       minWidth: columnMinWidths.initContainer,
       sortable: true,
@@ -529,7 +529,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Recent Events</h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Recent events</h3>
       <HStack gap={2} align="center">
         <SearchInput
           placeholder="Search events by attributes"
@@ -747,7 +747,7 @@ export function PodDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -829,7 +829,7 @@ export function PodDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(pod.labels).length})
+                            All labels ({Object.keys(pod.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(pod.labels).map(([k, v]) => (
@@ -876,7 +876,7 @@ export function PodDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(pod.annotations).length})
+                            All annotations ({Object.keys(pod.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(pod.annotations).map(([k, v]) => (
@@ -904,7 +904,7 @@ export function PodDetailPage() {
           <TabList>
             <Tab value="containers">Containers</Tab>
             <Tab value="conditions">Conditions</Tab>
-            <Tab value="events">Recent Events</Tab>
+            <Tab value="events">Recent events</Tab>
           </TabList>
 
           <TabPanel value="containers">

@@ -212,7 +212,10 @@ export function NetworkPolicyDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/network-policies/${networkPolicy.name}/edit-yaml`),
+      onClick: () =>
+        navigate(
+          `/container/network-policies/${networkPolicyData?.name ?? networkPolicyId}/edit-yaml`
+        ),
     },
     {
       id: 'download-yaml',
@@ -319,7 +322,7 @@ export function NetworkPolicyDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Network Policies', href: '/container/network-policies' },
+                { label: 'Network policies', href: '/container/network-policies' },
                 { label: networkPolicyData.name },
               ]}
             />
@@ -391,7 +394,7 @@ export function NetworkPolicyDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -446,17 +449,17 @@ export function NetworkPolicyDetailPage() {
         {/* Tabs */}
         <Tabs value={activeTab} onChange={setActiveTab} size="sm">
           <TabList>
-            <Tab value="ingress-rules">Ingress Rules</Tab>
-            <Tab value="egress-rules">Egress Rules</Tab>
+            <Tab value="ingress-rules">Ingress rules</Tab>
+            <Tab value="egress-rules">Egress rules</Tab>
             <Tab value="selectors">Selectors</Tab>
-            <Tab value="labels-annotations">Labels & Annotations</Tab>
+            <Tab value="labels-annotations">Labels & annotations</Tab>
           </TabList>
 
           {/* Ingress Rules Tab */}
           <TabPanel value="ingress-rules">
             <VStack gap={4}>
               <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                Ingress Rules
+                Ingress rules
               </h3>
 
               <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
@@ -486,7 +489,7 @@ export function NetworkPolicyDetailPage() {
                       ))}
                       <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
                         <IconCirclePlus size={12} stroke={1.5} />
-                        Add Rule
+                        Add rule
                       </button>
                     </VStack>
                   </div>
@@ -631,7 +634,7 @@ export function NetworkPolicyDetailPage() {
                         {/* Matching Pods */}
                         <VStack gap={3} className="mt-4">
                           <h4 className="text-label-lg text-[var(--color-text-default)]">
-                            Matching Pods ({networkPolicyData.matchingPods.length}/10)
+                            Matching pods ({networkPolicyData.matchingPods.length}/10)
                           </h4>
 
                           <Pagination
@@ -652,7 +655,7 @@ export function NetworkPolicyDetailPage() {
                         {/* Allowed Ports */}
                         <VStack gap={3} className="mt-4">
                           <h4 className="text-label-lg text-[var(--color-text-default)]">
-                            Allowed Ports
+                            Allowed ports
                           </h4>
 
                           <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
@@ -699,7 +702,7 @@ export function NetworkPolicyDetailPage() {
           <TabPanel value="egress-rules">
             <VStack gap={4}>
               <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                Egress Rules
+                Egress rules
               </h3>
 
               <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
@@ -729,7 +732,7 @@ export function NetworkPolicyDetailPage() {
                       ))}
                       <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
                         <IconCirclePlus size={12} stroke={1.5} />
-                        Add Rule
+                        Add rule
                       </button>
                     </VStack>
                   </div>
@@ -879,7 +882,7 @@ export function NetworkPolicyDetailPage() {
                         {/* Matching Pods */}
                         <VStack gap={3} className="mt-4">
                           <h4 className="text-label-lg text-[var(--color-text-default)]">
-                            Matching Pods ({networkPolicyData.matchingPods.length}/10)
+                            Matching pods ({networkPolicyData.matchingPods.length}/10)
                           </h4>
 
                           <Pagination
@@ -900,7 +903,7 @@ export function NetworkPolicyDetailPage() {
                         {/* Allowed Ports */}
                         <VStack gap={3} className="mt-4">
                           <h4 className="text-label-lg text-[var(--color-text-default)]">
-                            Allowed Ports
+                            Allowed ports
                           </h4>
 
                           <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
@@ -1023,7 +1026,7 @@ export function NetworkPolicyDetailPage() {
                 {/* Matching Pods Section */}
                 <VStack gap={3}>
                   <span className="text-label-lg text-[var(--color-text-default)]">
-                    Matching Pods ({networkPolicyData.matchingPods.length}/10)
+                    Matching pods ({networkPolicyData.matchingPods.length}/10)
                   </span>
 
                   <Pagination
@@ -1050,7 +1053,7 @@ export function NetworkPolicyDetailPage() {
               <VStack gap={6}>
                 {/* Section Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                  Labels & Annotations
+                  Labels & annotations
                 </h3>
 
                 {/* Labels */}

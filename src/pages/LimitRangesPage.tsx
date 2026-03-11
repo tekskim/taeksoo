@@ -115,7 +115,7 @@ export function LimitRangesPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Limit Ranges');
+    updateActiveTabLabel('Limit ranges');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -245,7 +245,7 @@ export function LimitRangesPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/limit-ranges/create'),
     },
     {
@@ -280,7 +280,7 @@ export function LimitRangesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Limit Ranges' }]}
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'Limit ranges' }]}
             />
           }
           actions={
@@ -343,7 +343,7 @@ export function LimitRangesPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Limit Ranges"
+          title="Limit ranges"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button
@@ -351,7 +351,7 @@ export function LimitRangesPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Limit Range
+                Create limit range
               </Button>
             </ContextMenu>
           }
@@ -424,7 +424,7 @@ export function LimitRangesPage() {
                 onClick={handleClearFilters}
                 className="text-label-sm text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

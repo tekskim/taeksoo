@@ -364,7 +364,7 @@ export function PodDisruptionBudgetDetailPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu
             items={[
-              { id: 'view', label: 'View Details', onClick: () => console.log('View:', row.id) },
+              { id: 'view', label: 'View details', onClick: () => console.log('View:', row.id) },
               {
                 id: 'delete',
                 label: 'Delete',
@@ -510,7 +510,7 @@ export function PodDisruptionBudgetDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -569,8 +569,8 @@ export function PodDisruptionBudgetDetailPage() {
               <Tab value="budget">Budget</Tab>
               <Tab value="selector">Selector</Tab>
               <Tab value="conditions">Conditions</Tab>
-              <Tab value="labels-annotations">Labels & Annotations</Tab>
-              <Tab value="recent-events">Recent Events</Tab>
+              <Tab value="labels-annotations">Labels & annotations</Tab>
+              <Tab value="recent-events">Recent events</Tab>
             </TabList>
 
             {/* Budget Tab */}
@@ -585,7 +585,7 @@ export function PodDisruptionBudgetDetailPage() {
                     {/* Min. available Pods */}
                     <VStack gap={2}>
                       <span className="text-label-lg text-[var(--color-text-default)]">
-                        Min. available Pods
+                        Min. available pods
                       </span>
                       <HStack gap={3} align="center">
                         <NumberInput
@@ -602,7 +602,7 @@ export function PodDisruptionBudgetDetailPage() {
                     {/* Max. unavailable Pods */}
                     <VStack gap={2}>
                       <span className="text-label-lg text-[var(--color-text-default)]">
-                        Max. unavailable Pods
+                        Max. unavailable pods
                       </span>
                       <HStack gap={3} align="center">
                         <NumberInput
@@ -700,7 +700,7 @@ export function PodDisruptionBudgetDetailPage() {
                   {/* Matching Pods Section */}
                   <VStack gap={3}>
                     <span className="text-label-lg text-[var(--color-text-default)]">
-                      Matching Pods ({pdbData.matchingPods.length}/10)
+                      Matching pods ({pdbData.matchingPods.length}/10)
                     </span>
 
                     <Pagination
@@ -755,7 +755,7 @@ export function PodDisruptionBudgetDetailPage() {
                 <VStack gap={6}>
                   {/* Section Title */}
                   <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                    Labels & Annotations
+                    Labels & annotations
                   </h3>
 
                   {/* Labels */}
@@ -867,7 +867,7 @@ export function PodDisruptionBudgetDetailPage() {
             <TabPanel value="recent-events">
               <VStack gap={3}>
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                  Recent Events
+                  Recent events
                 </h3>
 
                 {/* Search and Actions */}

@@ -222,7 +222,7 @@ export function ClusterDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'kubectl-shell',
-      label: 'Kubectl Shell',
+      label: 'Kubectl shell',
       onClick: () => console.log('Kubectl Shell'),
     },
     {
@@ -232,12 +232,12 @@ export function ClusterDetailPage() {
     },
     {
       id: 'copy-kubeconfig',
-      label: 'Copy KubeConfig to Clipboard',
+      label: 'Copy KubeConfig to clipboard',
       onClick: () => console.log('Copy KubeConfig'),
     },
     {
       id: 'edit',
-      label: 'Edit Cluster',
+      label: 'Edit cluster',
       onClick: () => navigate(`/container/cluster-management/${clusterData.id}/edit`),
     },
     {
@@ -276,7 +276,7 @@ export function ClusterDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Cluster Management', href: '/container/cluster-management' },
+                { label: 'Cluster management', href: '/container/cluster-management' },
                 { label: 'Clusters', href: '/container/cluster-management' },
                 { label: clusterData.name },
               ]}
@@ -344,11 +344,11 @@ export function ClusterDetailPage() {
                 </div>
               </div>
 
-              {/* Kubernetes Version */}
+              {/* Kubernetes version */}
               <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                 <VStack gap={1}>
                   <span className="text-label-sm text-[var(--color-text-subtle)]">
-                    Kubernetes Version
+                    Kubernetes version
                   </span>
                   <span className="text-body-md text-[var(--color-text-default)]">
                     {clusterData.kubernetesVersion}
@@ -356,11 +356,11 @@ export function ClusterDetailPage() {
                 </VStack>
               </div>
 
-              {/* Container Network */}
+              {/* Container network */}
               <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                 <VStack gap={1}>
                   <span className="text-label-sm text-[var(--color-text-subtle)]">
-                    Container Network
+                    Container network
                   </span>
                   <span className="text-body-md text-[var(--color-text-default)]">
                     {clusterData.containerNetwork}
@@ -385,7 +385,7 @@ export function ClusterDetailPage() {
         <Tabs value={activeTab} onChange={setActiveTab}>
           <TabList>
             <Tab value="networking">Networking</Tab>
-            <Tab value="node-config">Node Configuration</Tab>
+            <Tab value="node-config">Node configuration</Tab>
           </TabList>
 
           <TabPanel value="networking">

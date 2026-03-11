@@ -313,7 +313,7 @@ export function JobsPage() {
   const createMenuItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/jobs/create'),
     },
     {
@@ -417,7 +417,7 @@ export function JobsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Job
+                Create job
               </Button>
             </ContextMenu>
           }
@@ -428,7 +428,7 @@ export function JobsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search Jobs by attributes"
+                placeholder="Search jobs by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />

@@ -107,7 +107,7 @@ export function CreatePodDisruptionBudgetYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create PodDisruptionBudget (YAML)');
+    updateActiveTabLabel('Create pod disruption budget (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -188,7 +188,7 @@ export function CreatePodDisruptionBudgetYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'PodDisruptionBudgets', href: '/container/podDisruptionBudgets' },
-                { label: 'Create PodDisruptionBudget' },
+                { label: 'Create pod disruption budget' },
               ]}
             />
           }
@@ -219,7 +219,7 @@ export function CreatePodDisruptionBudgetYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-            Create PodDisruptionBudget
+            Create pod disruption budget
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available

@@ -826,7 +826,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent Events
+        Recent events
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
@@ -939,7 +939,7 @@ export function DeploymentDetailPage() {
     },
     {
       id: 'pause-orchestration',
-      label: 'Pause Orchestration',
+      label: 'Pause orchestration',
       onClick: () => console.log('Pause Orchestration'),
     },
     {
@@ -1056,7 +1056,7 @@ export function DeploymentDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -1131,7 +1131,7 @@ export function DeploymentDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(deployment.labels).length})
+                            All labels ({Object.keys(deployment.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(deployment.labels).map(([k, v]) => (
@@ -1178,7 +1178,7 @@ export function DeploymentDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(deployment.annotations).length})
+                            All annotations ({Object.keys(deployment.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(deployment.annotations).map(([k, v]) => (
@@ -1207,7 +1207,7 @@ export function DeploymentDetailPage() {
             <Tab value="pods">Pods</Tab>
             <Tab value="services">Services</Tab>
             <Tab value="conditions">Conditions</Tab>
-            <Tab value="events">Recent Events</Tab>
+            <Tab value="events">Recent events</Tab>
           </TabList>
 
           <TabPanel value="pods">

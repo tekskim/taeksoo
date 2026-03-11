@@ -144,7 +144,7 @@ export function PersistentVolumeClaimsPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Persistent Volume Claims');
+    updateActiveTabLabel('Persistent volume claims');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -263,13 +263,13 @@ export function PersistentVolumeClaimsPage() {
     },
     {
       key: 'accessModes',
-      label: 'Access Modes',
+      label: 'Access modes',
       flex: 1,
       minWidth: columnMinWidths.accessModes,
     },
     {
       key: 'storageClass',
-      label: 'Storage Class',
+      label: 'Storage class',
       flex: 1,
       minWidth: columnMinWidths.storageClass,
     },
@@ -322,7 +322,7 @@ export function PersistentVolumeClaimsPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/pvc/create'),
     },
     {
@@ -359,7 +359,7 @@ export function PersistentVolumeClaimsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Persistent Volume Claims' },
+                { label: 'Persistent volume claims' },
               ]}
             />
           }
@@ -431,7 +431,7 @@ export function PersistentVolumeClaimsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Persistent Volume Claim
+                Create persistent volume claim
               </Button>
             </ContextMenu>
           }

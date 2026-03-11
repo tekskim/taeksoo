@@ -7129,7 +7129,7 @@ export function CreateStatefulSetPage() {
                                         {{
                                           csi: 'CSI',
                                           pvc: 'Persistent Volume Claim',
-                                          'create-pvc': 'Persistent Volume Claim',
+                                          'create-pvc': 'Create persistent volume claim',
                                           configmap: 'ConfigMap',
                                           secret: 'Secret',
                                           emptyDir: 'Empty Dir',

@@ -253,7 +253,7 @@ export function CreateHPAYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-            Create Horizontal Pod Autoscaler
+            Create horizontal pod autoscaler
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscalers automatically scale the number of pods in a deployment,
