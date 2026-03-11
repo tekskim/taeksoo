@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Badge,
   Button,
@@ -189,7 +189,9 @@ export function CloudBuilderConsolePage() {
   const breadcrumbItems = [{ label: 'Proj-1', href: '/project' }, { label: config.title }];
 
   const hasTabs = !!config.tabs && config.tabs.length > 0;
-  const [activeTabId, setActiveTabId] = useState<string>(config.tabs?.[0]?.id ?? '');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTabId = searchParams.get('tab') || config.tabs?.[0]?.id || '';
+  const setActiveTabId = (tabId: string) => setSearchParams({ tab: tabId }, { replace: true });
 
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -219,7 +221,7 @@ export function CloudBuilderConsolePage() {
     setStatusModalOpen(false);
     setStatusModal(null);
     setDisableReason('');
-    setActiveTabId(config.tabs?.[0]?.id ?? '');
+    setSearchParams({}, { replace: true });
   }, [config.rows, config.slug]);
 
   const activeTab = useMemo(() => {

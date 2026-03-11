@@ -507,7 +507,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       columns: [
         { key: 'name', label: 'Name', sortable: true },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
+        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service status',
@@ -792,7 +792,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         },
         { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
+        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service status',
