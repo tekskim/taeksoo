@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Button,
@@ -16,6 +16,7 @@ import {
   PageShell,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconCirclePlus,
@@ -116,7 +117,7 @@ const statusIndicatorMap: Record<SnapshotStatus, 'active' | 'building' | 'error'
 export function VolumeSnapshotDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -152,7 +153,7 @@ export function VolumeSnapshotDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -169,7 +170,7 @@ export function VolumeSnapshotDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate('/volume-snapshots')}
           onForward={() => window.history.forward()}

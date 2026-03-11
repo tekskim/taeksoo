@@ -27,7 +27,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPlay,
   IconPlayerStop,
-  IconRefresh,
   IconTrash,
   IconChevronDown,
   IconChevronUp,
@@ -38,6 +37,7 @@ import {
   IconCopy,
   IconSelector,
   IconLock,
+  IconPower,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -446,7 +446,7 @@ export function ComputeAdminBareMetalDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
               Stop
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
               Reboot
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>

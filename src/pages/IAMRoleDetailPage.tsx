@@ -24,7 +24,13 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconTrash,
+  IconChevronDown,
+  IconChevronRight,
+  IconSettings,
+} from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -680,7 +686,7 @@ export default function IAMRoleDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Policies
                   </h2>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                     Manage policies
                   </Button>
                 </HStack>

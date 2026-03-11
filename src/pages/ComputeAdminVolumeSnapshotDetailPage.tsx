@@ -23,6 +23,7 @@ import {
   IconEdit,
   IconBell,
   IconExternalLink,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -195,7 +196,7 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
               Update status
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage metadata
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>

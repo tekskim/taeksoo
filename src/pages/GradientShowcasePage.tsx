@@ -1,4 +1,5 @@
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { VStack } from '@/design-system';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -192,11 +193,11 @@ function GradientCard({ gradient }: { gradient: GradientItem }) {
 
 export function GradientShowcasePage() {
   const [selectedGradient, setSelectedGradient] = useState(GRADIENTS[0]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
 
   return (
     <div className="flex h-screen bg-[var(--color-surface-default)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       <div className="flex flex-col items-stretch justify-start gap-4 flex-1 overflow-hidden ml-[200px]">
         <div className="flex-1 overflow-auto p-6 space-y-8">
