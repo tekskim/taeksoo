@@ -126,7 +126,7 @@ export const WithCustomValue: Story = {
             </HStack>
           }
         />
-        <DetailHeader.InfoCard label="Created" value="2024-01-15 10:30" />
+        <DetailHeader.InfoCard label="Created" value="Jan 15, 2024 10:30" />
       </DetailHeader.InfoGrid>
     </DetailHeader>
   ),

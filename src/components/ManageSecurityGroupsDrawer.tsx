@@ -47,7 +47,7 @@ const defaultSecurityGroups: SecurityGroupItem[] = Array.from({ length: 15 }, (_
   id: `sg-${i + 1}`,
   name: i === 0 ? 'default_sg' : `internal-${String(i + 1).padStart(2, '0')}`,
   description: '-',
-  createdAt: i % 2 === 0 ? '2025-09-23' : '2025-08-23',
+  createdAt: i % 2 === 0 ? 'Sep 23, 2025' : 'Aug 23, 2025',
 }));
 
 const ITEMS_PER_PAGE = 5;

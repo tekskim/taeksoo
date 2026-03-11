@@ -118,7 +118,6 @@ function QuotaCard({
 }: QuotaItem & { showPercentage?: boolean; coloredGauge?: boolean }) {
   const percentage = Math.round((used / limit) * 100);
 
-  // Map percentage thresholds to Badge themes
   const getBadgeTheme = (): 'red' | 'yellow' | 'green' => {
     if (percentage >= 100) return 'red';
     if (percentage >= 70) return 'yellow';
@@ -127,7 +126,6 @@ function QuotaCard({
 
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg py-4 px-5 flex-1 min-w-0 h-[112px] flex flex-col justify-between">
-      {/* Header with label and percentage badge */}
       <div className="flex items-center justify-between">
         <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
         {showPercentage && (
@@ -137,7 +135,6 @@ function QuotaCard({
         )}
       </div>
 
-      {/* Value display */}
       <div className="flex items-baseline">
         <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-subtle)]">
@@ -146,7 +143,6 @@ function QuotaCard({
         </span>
       </div>
 
-      {/* Progress bar */}
       <ProgressBar
         value={used}
         max={limit}
