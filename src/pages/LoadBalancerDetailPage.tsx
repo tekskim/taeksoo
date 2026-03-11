@@ -26,6 +26,7 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconUnlink,
@@ -161,14 +162,14 @@ const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
   error: 'error',
 };
 
-// Mock pools data
+// Mock pools data - IDs synced with PoolDetailPage (29fg234XX format)
 const mockPools: Pool[] = Array.from({ length: 13 }, (_, i) => ({
-  id: `29tgj234${String(i).padStart(2, '0')}`,
+  id: `29fg234${String(i).padStart(2, '0')}`,
   name: `pool-http`,
   status: ['online', 'online', 'online', 'offline', 'error'][i % 5] as PoolStatus,
   protocol: ['HTTP', 'HTTPS', 'TCP', 'UDP'][i % 4],
   algorithm: ['Round Robin', 'Least Connections', 'Source IP'][i % 3],
-  listener: { name: 'listener', id: `29tgj234${String(i).padStart(2, '0')}` },
+  listener: { name: 'listener', id: `29fg234${String(i).padStart(2, '0')}` },
   members: (i % 5) + 1,
   adminState: i % 7 === 0 ? 'Down' : 'Up',
 }));
@@ -188,7 +189,7 @@ export function LoadBalancerDetailPage() {
   const activeTab = searchParams.get('tab') || 'details';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [isCopied, setIsCopied] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Listeners state
@@ -483,7 +484,7 @@ export function LoadBalancerDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -500,7 +501,7 @@ export function LoadBalancerDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -678,7 +679,7 @@ export function LoadBalancerDetailPage() {
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
                     <Button
-                      variant="secondary"
+                      variant="muted"
                       size="sm"
                       leftIcon={<IconTrash size={12} />}
                       disabled={selectedListeners.length === 0}
@@ -737,7 +738,7 @@ export function LoadBalancerDetailPage() {
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
                     <Button
-                      variant="secondary"
+                      variant="muted"
                       size="sm"
                       leftIcon={<IconTrash size={12} />}
                       disabled={selectedPools.length === 0}

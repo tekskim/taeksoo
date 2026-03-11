@@ -24,6 +24,7 @@ import {
   type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
@@ -37,6 +38,7 @@ import {
   IconBell,
   IconExternalLink,
   IconCube,
+  IconBinaryTree,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -209,7 +211,7 @@ const filterFields: FilterField[] = [
 
 export function FloatingIPsPage() {
   const [selectedFloatingIPs, setSelectedFloatingIPs] = useState<string[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [floatingIPs] = useState(mockFloatingIPs);
@@ -466,7 +468,7 @@ export function FloatingIPsPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -483,7 +485,7 @@ export function FloatingIPsPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -507,7 +509,12 @@ export function FloatingIPsPage() {
         <PageHeader
           title="Floating IPs"
           actions={
-            <Button variant="primary" size="md" onClick={() => setIsAllocateDrawerOpen(true)}>
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconBinaryTree size={12} />}
+              onClick={() => setIsAllocateDrawerOpen(true)}
+            >
               Allocate Floating IP
             </Button>
           }

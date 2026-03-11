@@ -26,7 +26,18 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconChevronDown, IconBell, IconRefresh } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconTrash,
+  IconChevronDown,
+  IconBell,
+  IconRefresh,
+  IconSettings,
+  IconReload,
+  IconLock,
+  IconCircleX,
+  IconCircleMinus,
+} from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -875,10 +886,10 @@ export function IAMUserDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
               Delete
             </Button>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
               Lock setting
             </Button>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" leftIcon={<IconReload size={12} />}>
               Reset password
             </Button>
             <Button
@@ -926,7 +937,7 @@ export function IAMUserDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     User groups
                   </h2>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                     Manage user groups
                   </Button>
                 </HStack>
@@ -960,7 +971,7 @@ export function IAMUserDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Roles
                   </h2>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                     Manage roles
                   </Button>
                 </HStack>
@@ -994,7 +1005,7 @@ export function IAMUserDetailPage() {
                   <SectionCard.Header
                     title="Password"
                     actions={
-                      <Button variant="secondary" size="sm">
+                      <Button variant="secondary" size="sm" leftIcon={<IconReload size={12} />}>
                         Reset password
                       </Button>
                     }
@@ -1012,7 +1023,11 @@ export function IAMUserDetailPage() {
                   <SectionCard.Header
                     title="OTP MFA"
                     actions={
-                      <Button variant="secondary" size="sm">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconCircleMinus size={12} />}
+                      >
                         Remove
                       </Button>
                     }
@@ -1067,7 +1082,7 @@ export function IAMUserDetailPage() {
                     icon={<IconRefresh size={12} stroke={1.5} />}
                     aria-label="Refresh"
                   />
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm" leftIcon={<IconCircleX size={12} />}>
                     Terminate all sessions
                   </Button>
                 </HStack>

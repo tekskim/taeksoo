@@ -67,6 +67,7 @@ import {
   IconCircleCheck,
   IconCheck,
   IconShieldCheck,
+  IconShieldX,
   IconAlertCircle,
   IconAlertTriangle,
   IconAlertOctagon,
@@ -227,17 +228,20 @@ import {
   IconRoute,
   IconMessages,
   IconPuzzle,
+  // Recently added action icons
+  IconBinaryTree,
+  IconLinkPlus,
+  IconCircleMinus,
+  IconReload,
+  IconRestore,
 } from '@tabler/icons-react';
 import {
-  IconExpandOff,
-  IconExpandOn,
   IconTimeout,
   IconHistory2,
-  IconRobotCustom,
-  IconAction,
-  IconAddRobot,
   IconUbuntu2,
   IconRocky2,
+  IconWindowActive,
+  IconWindowMinimized,
 } from '@/design-system/components/Icons/CustomIcons';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -273,7 +277,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconRefreshDot, name: 'IconRefreshDot', label: 'Reboot' },
       { icon: IconRotate, name: 'IconRotate', label: 'Rotate' },
       { icon: IconRotateClockwise, name: 'IconRotateClockwise', label: 'Retry' },
-      { icon: IconPower, name: 'IconPower', label: 'Power' },
+      { icon: IconPower, name: 'IconPower', label: 'Reboot' },
       { icon: IconCircleX, name: 'IconCircleX', label: 'Terminate' },
     ],
   },
@@ -281,13 +285,15 @@ const iconCategories: IconCategory[] = [
     title: 'Actions - CRUD',
     items: [
       { icon: IconPlus, name: 'IconPlus', label: 'Add' },
-      { icon: IconCirclePlus, name: 'IconCirclePlus', label: 'Add Circle' },
-      { icon: IconSquarePlus, name: 'IconSquarePlus', label: 'Add Square' },
+      { icon: IconCirclePlus, name: 'IconCirclePlus', label: 'Create / Add' },
+      { icon: IconSquarePlus, name: 'IconSquarePlus', label: 'Attach' },
       { icon: IconMinus, name: 'IconMinus', label: 'Remove' },
       { icon: IconPencil, name: 'IconPencil', label: 'Edit' },
       { icon: IconTrash, name: 'IconTrash', label: 'Delete' },
       { icon: IconTrashX, name: 'IconTrashX', label: 'Deleting' },
       { icon: IconCopy, name: 'IconCopy', label: 'Copy' },
+      { icon: IconRestore, name: 'IconRestore', label: 'Restore' },
+      { icon: IconReload, name: 'IconReload', label: 'Reset' },
     ],
   },
   {
@@ -301,7 +307,10 @@ const iconCategories: IconCategory[] = [
       { icon: IconLink, name: 'IconLink', label: 'Link' },
       { icon: IconUnlink, name: 'IconUnlink', label: 'Unlink' },
       { icon: IconLinkOff, name: 'IconLinkOff', label: 'Link Off' },
+      { icon: IconLinkPlus, name: 'IconLinkPlus', label: 'Associate' },
       { icon: IconExternalLink, name: 'IconExternalLink', label: 'External' },
+      { icon: IconBinaryTree, name: 'IconBinaryTree', label: 'Allocate' },
+      { icon: IconCircleMinus, name: 'IconCircleMinus', label: 'Remove' },
     ],
   },
   {
@@ -324,8 +333,6 @@ const iconCategories: IconCategory[] = [
     items: [
       { icon: IconArrowsMaximize, name: 'IconArrowsMaximize', label: 'Maximize' },
       { icon: IconArrowsMinimize, name: 'IconArrowsMinimize', label: 'Minimize' },
-      { icon: IconExpandOff, name: 'IconExpandOff', label: 'Expand Off', library: 'custom' },
-      { icon: IconExpandOn, name: 'IconExpandOn', label: 'Expand On', library: 'custom' },
       {
         icon: IconLayoutSidebarLeftCollapse,
         name: 'IconLayoutSidebarLeftCollapse',
@@ -342,6 +349,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconCircleCheck, name: 'IconCircleCheck', label: 'Success' },
       { icon: IconCheck, name: 'IconCheck', label: 'Check' },
       { icon: IconShieldCheck, name: 'IconShieldCheck', label: 'Verified' },
+      { icon: IconShieldX, name: 'IconShieldX', label: 'Sec Error' },
       { icon: IconAlertCircle, name: 'IconAlertCircle', label: 'Error' },
       { icon: IconAlertTriangle, name: 'IconAlertTriangle', label: 'Warning' },
       { icon: IconAlertOctagon, name: 'IconAlertOctagon', label: 'Critical' },
@@ -367,7 +375,7 @@ const iconCategories: IconCategory[] = [
     items: [
       { icon: IconSearch, name: 'IconSearch', label: 'Search' },
       { icon: IconFilter, name: 'IconFilter', label: 'Filter' },
-      { icon: IconSettings, name: 'IconSettings', label: 'Settings' },
+      { icon: IconSettings, name: 'IconSettings', label: 'Manage' },
       { icon: IconHome, name: 'IconHome', label: 'Home' },
       { icon: IconX, name: 'IconX', label: 'Close' },
       { icon: IconList, name: 'IconList', label: 'List' },
@@ -583,15 +591,22 @@ const iconCategories: IconCategory[] = [
     ],
   },
   {
-    title: 'Custom Icons (TDS)',
+    title: 'Custom Icons',
     items: [
-      { icon: IconExpandOff, name: 'IconExpandOff', label: 'Expand Off', library: 'custom' },
-      { icon: IconExpandOn, name: 'IconExpandOn', label: 'Expand On', library: 'custom' },
-      { icon: IconAction, name: 'IconAction', label: 'Action', library: 'custom' },
+      {
+        icon: IconWindowActive,
+        name: 'IconWindowActive',
+        label: 'Window Active',
+        library: 'custom',
+      },
+      {
+        icon: IconWindowMinimized,
+        name: 'IconWindowMinimized',
+        label: 'Window Min',
+        library: 'custom',
+      },
       { icon: IconTimeout, name: 'IconTimeout', label: 'Timeout', library: 'custom' },
       { icon: IconHistory2, name: 'IconHistory2', label: 'History', library: 'custom' },
-      { icon: IconRobotCustom, name: 'IconRobotCustom', label: 'Robot', library: 'custom' },
-      { icon: IconAddRobot, name: 'IconAddRobot', label: 'Add Robot', library: 'custom' },
     ],
   },
 ];
@@ -814,7 +829,7 @@ export function IconographyPage() {
               <SearchInput
                 placeholder="Search icons..."
                 value={searchQuery}
-                onChange={setSearchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 size="sm"
               />
             </div>

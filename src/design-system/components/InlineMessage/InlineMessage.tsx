@@ -54,7 +54,7 @@ const variantStyles: Record<InlineMessageVariant, { bg: string; icon: ReactNode 
   warning: {
     bg: 'bg-[var(--inline-message-warning-bg)]',
     icon: (
-      <IconAlertTriangle
+      <IconAlertCircle
         size={16}
         className="text-[var(--inline-message-warning-icon)]"
         strokeWidth={1.5}
@@ -64,7 +64,7 @@ const variantStyles: Record<InlineMessageVariant, { bg: string; icon: ReactNode 
   error: {
     bg: 'bg-[var(--inline-message-error-bg)]',
     icon: (
-      <IconAlertCircle
+      <IconAlertTriangle
         size={16}
         className="text-[var(--inline-message-error-icon)]"
         strokeWidth={1.5}

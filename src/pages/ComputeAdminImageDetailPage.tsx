@@ -23,7 +23,7 @@ import {
   IconBell,
   IconCopy,
   IconCheck,
-  IconCirclePlus,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -508,10 +508,10 @@ export function ComputeAdminImageDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{image.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage metadata
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage access
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>

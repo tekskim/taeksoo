@@ -32,6 +32,7 @@ import {
   IconBell,
 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   CLOUD_BUILDER_SLUGS,
@@ -169,7 +170,7 @@ export function CloudBuilderConsolePage() {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const {
     tabs,
     activeTabId: shellActiveTabId,
@@ -427,7 +428,7 @@ export function CloudBuilderConsolePage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarOpen ? 200 : 0}
       tabBar={
         <TabBar
@@ -445,7 +446,7 @@ export function CloudBuilderConsolePage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}

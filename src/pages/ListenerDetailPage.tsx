@@ -26,6 +26,7 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -34,6 +35,7 @@ import {
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconCertificate,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -262,7 +264,7 @@ export default function ListenerDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -676,7 +678,7 @@ export default function ListenerDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -696,7 +698,7 @@ export default function ListenerDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          onSidebarToggle={openSidebar}
           actions={
             <TopBarAction
               icon={<IconBell size={16} stroke={1.5} />}
@@ -890,7 +892,7 @@ export default function ListenerDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedL7Policies.length === 0}
@@ -933,7 +935,7 @@ export default function ListenerDetailPage() {
                     <Button variant="secondary" size="sm">
                       Change CA certificate
                     </Button>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                       Manage SNI Certificates
                     </Button>
                   </div>
