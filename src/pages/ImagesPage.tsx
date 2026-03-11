@@ -10,6 +10,7 @@ import {
   TopBarAction,
   Breadcrumb,
   ProgressBar,
+  STATUS_THRESHOLDS,
   PageShell,
   PageHeader,
   columnMinWidths,
@@ -173,18 +174,15 @@ interface UsageCellProps {
 }
 
 function UsageCell({ usage }: UsageCellProps) {
-  // Determine status based on usage percentage
-  const getStatus = (): 'success' | 'warning' | 'danger' => {
-    if (usage >= 90) return 'danger';
-    if (usage >= 70) return 'warning';
-    return 'success';
-  };
-
   return (
-    <div className="flex flex-col gap-1 w-[110px]">
-      <span className="text-body-md text-[var(--color-text-default)]">{usage.toFixed(2)}%</span>
-      <ProgressBar value={usage} max={100} size="sm" status={getStatus()} />
-    </div>
+    <ProgressBar
+      variant="quota"
+      value={usage}
+      max={100}
+      showValue
+      size="sm"
+      thresholds={STATUS_THRESHOLDS.storage}
+    />
   );
 }
 

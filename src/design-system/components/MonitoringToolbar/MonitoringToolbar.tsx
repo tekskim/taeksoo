@@ -61,12 +61,27 @@ const defaultTimeRangeOptions: TimeRangeOption[] = [
    Helper Functions
    ---------------------------------------- */
 
+const MONTH_ABBR = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const formatDateForDisplay = (date: Date | null): string => {
   if (!date) return '';
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const month = MONTH_ABBR[date.getMonth()];
   const day = date.getDate().toString().padStart(2, '0');
-  return `${year}.${month}.${day}`;
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
 };
 
 /* ----------------------------------------

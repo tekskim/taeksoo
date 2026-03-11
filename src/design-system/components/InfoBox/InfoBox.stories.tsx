@@ -53,7 +53,7 @@ export const Group: Story = {
     <InfoBox.Group>
       <InfoBox label="Resource Name" value="my-deployment" />
       <InfoBox label="Namespace" value="default" />
-      <InfoBox label="Created at" value="2026-02-06 14:30:00" />
+      <InfoBox label="Created at" value="Feb 06, 2026 14:30:00" />
     </InfoBox.Group>
   ),
 };

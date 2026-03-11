@@ -32,8 +32,8 @@ import {
   IconChevronRight,
   IconFolder,
   IconFile,
-  IconDotsVertical,
-  IconPlus,
+  IconDotsCircleHorizontal,
+  IconCirclePlus,
   IconCopy,
   IconCheck,
   IconLayoutSidebar,
@@ -209,7 +209,7 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
           className={`p-0.5 rounded opacity-0 group-hover:opacity-100 shrink-0 ${isSelected ? 'hover:bg-white/20' : 'hover:bg-[var(--color-surface-muted)]'}`}
           onClick={(e) => e.stopPropagation()}
         >
-          <IconDotsVertical size={14} stroke={1.5} />
+          <IconDotsCircleHorizontal size={14} stroke={1.5} />
         </button>
       </div>
 
@@ -351,7 +351,11 @@ function ObjectRow({
         {/* Action */}
         <div className="w-[60px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded">
-            <IconDotsVertical size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
+            <IconDotsCircleHorizontal
+              size={14}
+              stroke={1.5}
+              className="text-[var(--color-text-muted)]"
+            />
           </button>
         </div>
       </div>
@@ -767,13 +771,11 @@ export function BucketDetailPage() {
                       <h2 className="text-heading-h5 text-[var(--color-text-default)]">Objects</h2>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="secondary" size="sm">
-                        <IconPlus size={12} stroke={1.5} />
+                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                         Create folder
                       </Button>
-                      <Button variant="secondary" size="sm">
-                        <IconPlus size={12} stroke={1.5} />
-                        Create Object
+                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        Create object
                       </Button>
                     </div>
                   </div>

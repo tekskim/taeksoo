@@ -155,12 +155,27 @@ function OSDMonitoringTimeControls({
     onTimeRangeChange?.('30m');
   };
 
+  const MONTH_ABBR = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
   const formatDateForDisplay = (date: Date | null) => {
     if (!date) return '';
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const month = MONTH_ABBR[date.getMonth()];
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}.${month}.${day}`;
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -1108,35 +1123,29 @@ export function OSDDetailPage() {
                   </h2>
 
                   {/* Sub-tab Switcher */}
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1 flex gap-2">
-                    <button
-                      onClick={() => setHealthSubTab('device-info')}
-                      className={`
-                              flex-1 py-2.5 px-4 rounded-md text-label-lg text-center border
-                              transition-colors duration-[var(--duration-fast)]
-                              ${
-                                healthSubTab === 'device-info'
-                                  ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                  : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
-                              }
-                            `}
-                    >
-                      Device information
-                    </button>
-                    <button
-                      onClick={() => setHealthSubTab('smart')}
-                      className={`
-                              flex-1 py-2.5 px-4 rounded-md text-label-lg text-center border
-                              transition-colors duration-[var(--duration-fast)]
-                              ${
-                                healthSubTab === 'smart'
-                                  ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                  : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
-                              }
-                            `}
-                    >
-                      SMART
-                    </button>
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1 w-fit">
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => setHealthSubTab('device-info')}
+                        className={`py-2.5 px-4 rounded-md text-label-lg text-center border transition-colors duration-[var(--duration-fast)] ${
+                          healthSubTab === 'device-info'
+                            ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                            : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                        }`}
+                      >
+                        Device information
+                      </button>
+                      <button
+                        onClick={() => setHealthSubTab('smart')}
+                        className={`py-2.5 px-4 rounded-md text-label-lg text-center border transition-colors duration-[var(--duration-fast)] ${
+                          healthSubTab === 'smart'
+                            ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                            : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                        }`}
+                      >
+                        SMART
+                      </button>
+                    </div>
                   </div>
 
                   {/* Content based on sub-tab */}
@@ -1191,7 +1200,7 @@ export function OSDDetailPage() {
 
                 {/* OSD Performance Section */}
                 <SectionCard>
-                  <SectionCardHeader title="OSD PERFORMANCE" />
+                  <SectionCardHeader title="OSD performance" />
                   <SectionCardContent>
                     <div className="flex flex-col gap-4">
                       {/* Top row - 2 charts */}
@@ -1257,7 +1266,7 @@ export function OSDDetailPage() {
 
                 {/* Physical Device Data Section */}
                 <SectionCard>
-                  <SectionCardHeader title={`PHYSICAL DEVICE DATA FOR OSD.${osdId}`} />
+                  <SectionCardHeader title={`Physical device data for OSD.${osdId}`} />
                   <SectionCardContent>
                     <div className="flex flex-col gap-4">
                       {/* Top row - 2 charts */}

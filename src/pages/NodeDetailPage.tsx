@@ -341,20 +341,16 @@ interface ResourceUsageProps {
 }
 
 function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
-  const percentage = Math.round((used / total) * 100);
+  const suffix = unit ? ` ${unit}` : '';
 
   return (
     <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <HStack justify="between" align="center" className="mb-1">
-        <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>
-        <span className="text-body-sm text-[var(--color-text-subtle)]">
-          {used} of {total} {unit} / {percentage}% Used
-        </span>
-      </HStack>
       <ProgressBar
-        value={percentage}
-        max={100}
-        showValue={false}
+        variant="quota"
+        label={`${label}${suffix}`}
+        value={used}
+        max={total}
+        showValue
         size="sm"
         thresholds={STATUS_THRESHOLDS.container}
       />

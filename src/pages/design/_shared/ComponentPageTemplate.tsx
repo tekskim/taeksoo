@@ -162,7 +162,25 @@ export function ComponentPageTemplate({
             <div className="flex items-center gap-1.5 mt-1">
               <IconClock size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Last updated {lastUpdated.split(' ')[0]}
+                Last updated{' '}
+                {(() => {
+                  const [y, m, d] = lastUpdated.split(' ')[0].split('-');
+                  const months = [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                  ];
+                  return `${months[parseInt(m) - 1]} ${d}, ${y}`;
+                })()}
               </span>
             </div>
           )}

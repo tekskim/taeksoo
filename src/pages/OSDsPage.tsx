@@ -166,19 +166,15 @@ interface UsageCellProps {
 }
 
 function UsageCell({ usage }: UsageCellProps) {
-  // Determine status based on storage thresholds (85 warning, 95 danger)
-  const getUsageStatus = (percent: number): 'success' | 'warning' | 'danger' => {
-    const { warning, danger } = STATUS_THRESHOLDS.storage;
-    if (percent >= danger) return 'danger';
-    if (percent >= warning) return 'warning';
-    return 'success';
-  };
-
   return (
-    <div className="flex flex-col gap-1.5 w-[105px]">
-      <span className="text-body-md text-[var(--color-text-default)]">{usage.toFixed(2)}%</span>
-      <ProgressBar value={usage} max={100} status={getUsageStatus(usage)} />
-    </div>
+    <ProgressBar
+      variant="quota"
+      value={usage}
+      max={100}
+      showValue
+      size="sm"
+      thresholds={STATUS_THRESHOLDS.storage}
+    />
   );
 }
 

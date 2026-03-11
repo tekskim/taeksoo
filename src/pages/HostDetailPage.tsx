@@ -112,12 +112,27 @@ const CloseIcon = () => (
   </svg>
 );
 
+const MONTH_ABBR = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const formatDateForDisplay = (date: Date | null) => {
   if (!date) return '';
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const month = MONTH_ABBR[date.getMonth()];
   const day = date.getDate().toString().padStart(2, '0');
-  return `${year}.${month}.${day}`;
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
 };
 
 interface HostMonitoringTimeControlsProps {
@@ -1620,11 +1635,11 @@ export default function HostDetailPage() {
                       </h3>
 
                       {/* Tab Switcher */}
-                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
-                        <div className="flex gap-2">
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1 w-fit">
+                        <div className="grid grid-cols-2 gap-2">
                           <button
                             onClick={() => setDeviceHealthTab('device-info')}
-                            className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
+                            className={`py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
                               deviceHealthTab === 'device-info'
                                 ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                 : 'border-transparent text-[var(--color-text-default)]'
@@ -1634,7 +1649,7 @@ export default function HostDetailPage() {
                           </button>
                           <button
                             onClick={() => setDeviceHealthTab('smart')}
-                            className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
+                            className={`py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
                               deviceHealthTab === 'smart'
                                 ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                 : 'border-transparent text-[var(--color-text-default)]'
@@ -1737,8 +1752,8 @@ export default function HostDetailPage() {
 
                 {/* System Overview Section */}
                 <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                  <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
-                    SYSTEM OVERVIEW
+                  <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
+                    System overview
                   </h3>
 
                   {/* Stat Cards Row */}
