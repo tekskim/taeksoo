@@ -371,7 +371,7 @@ export function Table<T extends Record<string, any>>({
                       'rounded-[var(--table-row-radius)] overflow-hidden',
                       'border border-[var(--color-border-default)]',
                       isSelected
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
+                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                         : 'bg-[var(--color-surface-default)]'
                     )}
                   >
@@ -425,7 +425,7 @@ export function Table<T extends Record<string, any>>({
                             <div
                               className={cn(
                                 'truncate w-full min-w-0',
-                                align === 'center' && 'text-center',
+                                align === 'center' && 'text-center flex justify-center',
                                 align === 'right' && 'text-right'
                               )}
                             >

@@ -25,12 +25,12 @@ import {
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconTerminal2,
   IconPlayerPlay,
   IconPlayerStop,
-  IconRefresh,
   IconTrash,
   IconChevronDown,
   IconChevronUp,
@@ -38,6 +38,10 @@ import {
   IconEdit,
   IconBell,
   IconCirclePlus,
+  IconSquarePlus,
+  IconLinkPlus,
+  IconSettings,
+  IconPower,
   IconDotsCircleHorizontal,
   IconDownload,
   IconSearch,
@@ -833,7 +837,7 @@ const mockActionLogs: ActionLog[] = [
 
 export function InstanceDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -941,7 +945,7 @@ export function InstanceDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -955,7 +959,7 @@ export function InstanceDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -994,7 +998,7 @@ export function InstanceDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
               Stop
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
               Reboot
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
@@ -1158,7 +1162,7 @@ export function InstanceDetailPage() {
                   <SectionCard.Header
                     title="Advanced"
                     actions={
-                      <Button variant="secondary" size="sm">
+                      <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                         Manage tags
                       </Button>
                     }
@@ -1183,7 +1187,7 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
                     Attach volume
                   </Button>
                 </div>
@@ -1342,7 +1346,7 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
                     Attach interface
                   </Button>
                 </div>
@@ -1503,7 +1507,7 @@ export function InstanceDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button variant="secondary" size="sm" leftIcon={<IconLinkPlus size={12} />}>
                     Associate floating IP
                   </Button>
                 </div>
@@ -1616,7 +1620,7 @@ export function InstanceDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Security groups
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
                     Attach Security group
                   </Button>
                 </div>

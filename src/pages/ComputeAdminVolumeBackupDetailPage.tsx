@@ -17,7 +17,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconEdit, IconBell } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -299,7 +299,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
               Update status
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage metadata
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>

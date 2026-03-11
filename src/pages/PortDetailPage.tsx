@@ -25,6 +25,7 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -35,7 +36,10 @@ import {
   IconCopy,
   IconDotsCircleHorizontal,
   IconCirclePlus,
+  IconLinkPlus,
   IconAlertCircle,
+  IconBinaryTree,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -261,7 +265,7 @@ export default function PortDetailPage() {
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -595,7 +599,7 @@ export default function PortDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -612,7 +616,7 @@ export default function PortDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -799,10 +803,10 @@ export default function PortDetailPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Fixed IPs</h3>
                   <div className="flex items-center gap-1">
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconBinaryTree size={12} />}>
                       Allocate IP
                     </Button>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconLinkPlus size={12} />}>
                       Associate floating IP
                     </Button>
                   </div>
@@ -888,7 +892,7 @@ export default function PortDetailPage() {
                     <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                       Security groups
                     </h3>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                       Manage security Group
                     </Button>
                   </div>
