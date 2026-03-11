@@ -466,6 +466,12 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             tooltip="Home"
           />
           <IconSidebarItem
+            icon={<FolderCog size={16} strokeWidth={1.5} />}
+            active={location.pathname.startsWith('/container/cluster-management')}
+            onClick={() => navigate('/container/cluster-management')}
+            tooltip="Cluster management"
+          />
+          <IconSidebarItem
             icon={<IconAffiliate size={16} stroke={1.5} />}
             active={activeIconSection === 'cluster'}
             onClick={() => navigate('/container/dashboard')}
@@ -483,20 +489,10 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             tooltip="Add New"
           />
         </div>
-
-        {/* Cluster Management at bottom */}
-        <div className="border-t border-[var(--color-border-subtle)] py-1 flex flex-col items-center gap-1">
-          <IconSidebarItem
-            icon={<FolderCog size={16} strokeWidth={1.5} />}
-            active={location.pathname.startsWith('/container/cluster-management')}
-            onClick={() => navigate('/container/cluster-management')}
-            tooltip="Cluster management"
-          />
-        </div>
       </aside>
 
-      {/* Menu Sidebar (200px) - Toggleable */}
-      {isOpen && (
+      {/* Menu Sidebar (200px) - Toggleable, hidden on Home page */}
+      {isOpen && activeIconSection !== 'home' && (
         <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
           {/* Logo */}
           <div className="h-[33px] px-3 flex items-center justify-between">

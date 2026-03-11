@@ -129,7 +129,6 @@ const clustersData: ClusterRow[] = [
    ---------------------------------------- */
 
 export function ContainerHomePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -140,8 +139,8 @@ export function ContainerHomePage() {
     updateActiveTabLabel('Home');
   }, [updateActiveTabLabel]);
 
-  // Calculate sidebar width (40px icon sidebar always visible + 200px menu sidebar when open)
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  // Home page only shows icon sidebar (40px), menu sidebar is hidden
+  const sidebarWidth = 40;
 
   // Table columns
   const columns: TableColumn<ClusterRow>[] = [
@@ -195,9 +194,7 @@ export function ContainerHomePage() {
 
   return (
     <PageShell
-      sidebar={
-        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      }
+      sidebar={<ContainerSidebar isOpen={true} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -211,8 +208,7 @@ export function ContainerHomePage() {
       }
       topBar={
         <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showSidebarToggle={false}
           breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
           actions={
             <>
