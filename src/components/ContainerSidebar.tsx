@@ -240,11 +240,11 @@ function NamespaceSelector() {
   // Get display text for button
   const getButtonText = () => {
     if (allSelected) {
-      return 'All Namespaces';
+      return 'All namespaces';
     }
     if (selectedIds.length === 1) {
       const ns = namespaces.find((n) => n.id === selectedIds[0]);
-      return ns?.name || 'Select Namespace';
+      return ns?.name || 'Select namespace';
     }
     return `${selectedIds.length} items selected`;
   };
@@ -315,7 +315,7 @@ function NamespaceSelector() {
               >
                 {allSelected && <IconCheck size={12} className="text-white" stroke={2} />}
               </div>
-              <span className="text-body-md text-[var(--color-text-default)]">All Namespaces</span>
+              <span className="text-body-md text-[var(--color-text-default)]">All namespaces</span>
             </button>
 
             {/* Divider */}
@@ -486,7 +486,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           <IconSidebarItem
             icon={<IconPlus size={16} stroke={1.5} />}
             active={false}
-            tooltip="Add New"
+            tooltip="Add new"
           />
         </div>
       </aside>
@@ -527,7 +527,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                 className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-body-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
               >
                 <IconArrowLeft size={16} stroke={1.5} />
-                <span>All Services</span>
+                <span>All services</span>
               </Link>
 
               {/* Bookmarks */}

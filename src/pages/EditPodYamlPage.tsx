@@ -116,7 +116,7 @@ export function EditPodYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Edit ${podName || 'Pod'} (YAML)`);
+    updateActiveTabLabel(`Edit ${podName || 'pod'} (YAML)`);
   }, [updateActiveTabLabel, podName]);
 
   const tabBarTabs = tabs.map((tab) => ({

@@ -37,7 +37,7 @@ type SectionStep = 'basic-info' | 'data' | 'labels-annotations';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   data: 'Resource Quotas',
   'labels-annotations': 'Labels & Annotations',
 };
@@ -624,7 +624,7 @@ export function CreateResourceQuotaPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Resource Quota');
+    updateActiveTabLabel('Create resource quota');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -755,7 +755,7 @@ export function CreateResourceQuotaPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Resource Quotas', href: '/container/resource-quotas' },
-                { label: 'Create Resource Quota' },
+                { label: 'Create resource quota' },
               ]}
             />
           }
@@ -787,7 +787,7 @@ export function CreateResourceQuotaPage() {
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create Resource Quota
+              Create resource quota
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">

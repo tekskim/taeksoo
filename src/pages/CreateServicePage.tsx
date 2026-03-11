@@ -52,13 +52,13 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 
 // Section labels for display
 const SERVICE_SECTION_LABELS: Record<ServiceSectionStep, string> = {
-  'basic-info': 'Basic Information',
-  'external-name': 'External Name',
-  'service-ports': 'Service Ports',
-  'ip-addresses': 'IP Addresses',
+  'basic-info': 'Basic information',
+  'external-name': 'External name',
+  'service-ports': 'Service ports',
+  'ip-addresses': 'IP addresses',
   selectors: 'Selectors',
-  'session-affinity': 'Session Affinity',
-  'labels-annotations': 'Labels & Annotations',
+  'session-affinity': 'Session affinity',
+  'labels-annotations': 'Labels & annotations',
 };
 
 // Section order for navigation
@@ -278,7 +278,7 @@ export function CreateServicePage() {
     { id: '1', name: '', listeningPort: '', protocol: 'TCP', targetPort: '', nodePort: '' },
   ]);
 
-  // External Traffic Policy state
+  // External traffic policy state
   const [externalTrafficPolicy, setExternalTrafficPolicy] = useState('Cluster');
 
   // IP Addresses state
@@ -323,7 +323,7 @@ export function CreateServicePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Service');
+    updateActiveTabLabel('Create service');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -519,7 +519,7 @@ export function CreateServicePage() {
               items={[
                 { label: 'Container', href: '/container' },
                 { label: 'Services', href: '/container/services' },
-                { label: 'Create Service' },
+                { label: 'Create service' },
               ]}
             />
           }
@@ -561,7 +561,7 @@ export function CreateServicePage() {
                 <VStack gap={6}>
                   {/* Service Type */}
                   <FormField
-                    label="Service Type"
+                    label="Service type"
                     required
                     helperText={SERVICE_TYPE_DESCRIPTIONS[serviceType]}
                   >
@@ -668,20 +668,20 @@ export function CreateServicePage() {
                             }`}
                           >
                             <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Port Name <span className="text-[#ea580c]">*</span>
+                              Port name <span className="text-[#ea580c]">*</span>
                             </span>
                             <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Listening Port <span className="text-[#ea580c]">*</span>
+                              Listening port <span className="text-[#ea580c]">*</span>
                             </span>
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Protocol
                             </span>
                             <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Target Port <span className="text-[#ea580c]">*</span>
+                              Target port <span className="text-[#ea580c]">*</span>
                             </span>
                             {showNodePort && (
                               <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Node Port
+                                Node port
                               </span>
                             )}
                             <div className="w-5" />
@@ -748,7 +748,7 @@ export function CreateServicePage() {
                           </div>
                         ))}
 
-                        {/* Add Port Button */}
+                        {/* Add port Button */}
                         <div className="w-fit">
                           <Button
                             variant="secondary"
@@ -756,7 +756,7 @@ export function CreateServicePage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addPort}
                           >
-                            Add Port
+                            Add port
                           </Button>
                         </div>
                       </VStack>
@@ -781,20 +781,20 @@ export function CreateServicePage() {
                                 }`}
                               >
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port Name <span className="text-[#ea580c]">*</span>
+                                  Port name <span className="text-[#ea580c]">*</span>
                                 </span>
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening Port <span className="text-[#ea580c]">*</span>
+                                  Listening port <span className="text-[#ea580c]">*</span>
                                 </span>
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Protocol
                                 </span>
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target Port <span className="text-[#ea580c]">*</span>
+                                  Target port <span className="text-[#ea580c]">*</span>
                                 </span>
                                 {showNodePort && (
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node Port
+                                    Node port
                                   </span>
                                 )}
                                 <div className="w-5" />
@@ -867,7 +867,7 @@ export function CreateServicePage() {
                               </div>
                             ))}
 
-                            {/* Add Port Button */}
+                            {/* Add port Button */}
                             <div className="w-fit">
                               <Button
                                 variant="secondary"
@@ -875,16 +875,16 @@ export function CreateServicePage() {
                                 leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                 onClick={addPort}
                               >
-                                Add Port
+                                Add port
                               </Button>
                             </div>
                           </VStack>
                         </div>
 
-                        {/* External Traffic Policy */}
+                        {/* External traffic policy */}
                         <VStack gap={2}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
-                            External Traffic Policy{' '}
+                            External traffic policy{' '}
                             <span className="text-[var(--color-state-danger)]">*</span>
                           </span>
                           <RadioGroup
@@ -907,7 +907,7 @@ export function CreateServicePage() {
 
                   <VStack gap={2}>
                     <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Node Port
+                      Node port
                     </span>
                     <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                       <VStack gap={6}>
@@ -923,17 +923,17 @@ export function CreateServicePage() {
                                 }`}
                               >
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port Name <span className="text-[#ea580c]">*</span>
+                                  Port name <span className="text-[#ea580c]">*</span>
                                 </span>
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening Port <span className="text-[#ea580c]">*</span>
+                                  Listening port <span className="text-[#ea580c]">*</span>
                                 </span>
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target Port <span className="text-[#ea580c]">*</span>
+                                  Target port <span className="text-[#ea580c]">*</span>
                                 </span>
                                 {showNodePort && (
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node Port
+                                    Node port
                                   </span>
                                 )}
                                 <div className="w-5" />
@@ -1000,7 +1000,7 @@ export function CreateServicePage() {
                               </div>
                             ))}
 
-                            {/* Add Port Button */}
+                            {/* Add port Button */}
                             <div className="w-fit">
                               <Button
                                 variant="secondary"
@@ -1008,16 +1008,16 @@ export function CreateServicePage() {
                                 leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                 onClick={addPort}
                               >
-                                Add Port
+                                Add port
                               </Button>
                             </div>
                           </VStack>
                         </div>
 
-                        {/* External Traffic Policy */}
+                        {/* External traffic policy */}
                         <VStack gap={2}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
-                            External Traffic Policy{' '}
+                            External traffic policy{' '}
                             <span className="text-[var(--color-state-danger)]">*</span>
                           </span>
                           <RadioGroup
@@ -1043,7 +1043,7 @@ export function CreateServicePage() {
 
             {/* IP Addresses Section */}
             <SectionCard className="pb-4">
-              <SectionCard.Header title="IP Addresses" />
+              <SectionCard.Header title="IP addresses" />
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Cluster IP */}
@@ -1057,7 +1057,7 @@ export function CreateServicePage() {
                   </FormField>
 
                   {/* Load Balancer IP */}
-                  <FormField label="Load Balancer IP">
+                  <FormField label="Load balancer IP">
                     <Input
                       placeholder="e.g. 1.1.1.1"
                       value={loadBalancerIP}
@@ -1142,7 +1142,7 @@ export function CreateServicePage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addSelector}
                           >
-                            Add Rule
+                            Add rule
                           </Button>
                           <Button variant="secondary" size="sm">
                             Read from File
@@ -1200,7 +1200,7 @@ export function CreateServicePage() {
                               leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                               onClick={addSelector}
                             >
-                              Add Rule
+                              Add rule
                             </Button>
                             <Button variant="secondary" size="sm">
                               Read from File
@@ -1266,7 +1266,7 @@ export function CreateServicePage() {
                   {(isV2 || sessionAffinity === 'ClientIP') && (
                     <VStack gap={3}>
                       <label className="text-label-lg text-[var(--color-text-default)]">
-                        Session Sticky Time
+                        Session sticky time
                       </label>
                       <HStack gap={3} align="center">
                         <Slider
@@ -1295,7 +1295,7 @@ export function CreateServicePage() {
 
             {/* Labels & Annotations Section */}
             <SectionCard className="pb-4">
-              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Header title="Labels & annotations" />
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Labels */}
@@ -1358,7 +1358,7 @@ export function CreateServicePage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addLabel}
                           >
-                            Add Label
+                            Add label
                           </Button>
                         </div>
                       </VStack>
@@ -1428,7 +1428,7 @@ export function CreateServicePage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addAnnotation}
                           >
-                            Add Annotation
+                            Add annotation
                           </Button>
                         </div>
                       </VStack>

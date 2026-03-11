@@ -688,7 +688,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent Events
+        Recent events
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
@@ -909,7 +909,7 @@ export function DaemonSetDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -936,7 +936,7 @@ export function DaemonSetDetailPage() {
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={1}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Pod Restarts
+                  Pod restarts
                 </span>
                 <span className="text-label-md text-[var(--color-text-default)]">
                   {daemonset.podRestarts}
@@ -980,7 +980,7 @@ export function DaemonSetDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(daemonset.labels).length})
+                            All labels ({Object.keys(daemonset.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(daemonset.labels).map(([k, v]) => (
@@ -1027,7 +1027,7 @@ export function DaemonSetDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(daemonset.annotations).length})
+                            All annotations ({Object.keys(daemonset.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(daemonset.annotations).map(([k, v]) => (
@@ -1056,7 +1056,7 @@ export function DaemonSetDetailPage() {
             <Tab value="pods">Pods</Tab>
             <Tab value="services">Services</Tab>
             <Tab value="conditions">Conditions</Tab>
-            <Tab value="events">Recent Events</Tab>
+            <Tab value="events">Recent events</Tab>
           </TabList>
 
           <TabPanel value="pods">

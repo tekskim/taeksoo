@@ -116,7 +116,7 @@ export function EditJobYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Edit ${jobName || 'Job'} (YAML)`);
+    updateActiveTabLabel(`Edit ${jobName || 'job'} (YAML)`);
   }, [updateActiveTabLabel, jobName]);
 
   const tabBarTabs = tabs.map((tab) => ({

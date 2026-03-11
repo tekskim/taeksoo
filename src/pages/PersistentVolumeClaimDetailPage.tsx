@@ -474,7 +474,7 @@ export function PersistentVolumeClaimDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Persistent Volume Claims', href: '/container/pvc' },
+                { label: 'Persistent volume claims', href: '/container/pvc' },
                 { label: pvcData.name },
               ]}
             />
@@ -548,7 +548,7 @@ export function PersistentVolumeClaimDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -603,7 +603,7 @@ export function PersistentVolumeClaimDetailPage() {
                         content={
                           <div className="p-3 min-w-[120px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Labels ({labelsCount})
+                              All labels ({labelsCount})
                             </div>
                             <div className="flex flex-col gap-1">
                               {Object.entries(pvcData.labels).map(([k, v]) => (
@@ -652,7 +652,7 @@ export function PersistentVolumeClaimDetailPage() {
                         content={
                           <div className="p-3 min-w-[120px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Annotations ({annotationsCount})
+                              All annotations ({annotationsCount})
                             </div>
                             <div className="flex flex-col gap-1">
                               {Object.entries(pvcData.annotations).map(([k, v]) => (
@@ -681,11 +681,11 @@ export function PersistentVolumeClaimDetailPage() {
         {/* Tabs */}
         <Tabs value={activeTab} onChange={setActiveTab} size="sm" className="w-full">
           <TabList>
-            <Tab value="volume-claim">Volume Claim</Tab>
+            <Tab value="volume-claim">Volume claim</Tab>
             <Tab value="customize">Customize</Tab>
             <Tab value="conditions">Conditions</Tab>
-            <Tab value="labels-annotations">Labels & Annotations</Tab>
-            <Tab value="recent-events">Recent Events</Tab>
+            <Tab value="labels-annotations">Labels & annotations</Tab>
+            <Tab value="recent-events">Recent events</Tab>
           </TabList>
 
           {/* Volume Claim Tab */}
@@ -695,7 +695,7 @@ export function PersistentVolumeClaimDetailPage() {
               <VStack gap={6}>
                 {/* Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                  Volume Claim
+                  Volume claim
                 </h3>
                 {/* Source */}
                 <VStack gap={3} align="start">
@@ -757,7 +757,7 @@ export function PersistentVolumeClaimDetailPage() {
                 </h3>
                 {/* Access Modes */}
                 <VStack gap={3} align="start">
-                  <h4 className="text-label-lg text-[var(--color-text-default)]">Access Modes</h4>
+                  <h4 className="text-label-lg text-[var(--color-text-default)]">Access modes</h4>
                   <VStack gap={2} align="start">
                     <Checkbox
                       label="Single node read-write"
@@ -846,7 +846,7 @@ export function PersistentVolumeClaimDetailPage() {
               <VStack gap={4}>
                 {/* Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                  Labels & Annotations
+                  Labels & annotations
                 </h3>
                 {/* Labels Section */}
                 <VStack gap={2} align="start" className="w-full">
@@ -902,7 +902,7 @@ export function PersistentVolumeClaimDetailPage() {
             <VStack gap={3}>
               {/* Title */}
               <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                Recent Events
+                Recent events
               </h3>
 
               {/* Search and Actions */}

@@ -44,9 +44,9 @@ type NetworkPolicySectionStep =
 
 // Section labels for display
 const NETWORK_POLICY_SECTION_LABELS: Record<NetworkPolicySectionStep, string> = {
-  'basic-info': 'Basic Information',
-  'ingress-rules': 'Ingress Rules',
-  'egress-rules': 'Egress Rules',
+  'basic-info': 'Basic information',
+  'ingress-rules': 'Ingress rules',
+  'egress-rules': 'Egress rules',
   selector: 'Selector',
   'labels-annotations': 'Labels & Annotations',
 };
@@ -1205,7 +1205,7 @@ export function CreateNetworkPolicyPage() {
     useTabs();
 
   useEffect(() => {
-    updateActiveTabLabel('Create Network Policy');
+    updateActiveTabLabel('Create network policy');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -1403,7 +1403,7 @@ export function CreateNetworkPolicyPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Network Policies', href: '/container/network-policies' },
-                { label: 'Create Network Policy' },
+                { label: 'Create network policy' },
               ]}
             />
           }

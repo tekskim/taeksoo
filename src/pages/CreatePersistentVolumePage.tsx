@@ -39,7 +39,7 @@ type SectionStep = 'basic-info' | 'storage-config' | 'labels-annotations';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   'storage-config': 'Customize',
   'labels-annotations': 'Labels & Annotations',
 };
@@ -778,7 +778,7 @@ export function CreatePersistentVolumePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Persistent Volume');
+    updateActiveTabLabel('Create persistent volume');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -934,7 +934,7 @@ export function CreatePersistentVolumePage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
-                { label: 'Create Persistent Volume' },
+                { label: 'Create persistent volume' },
               ]}
             />
           }
@@ -966,7 +966,7 @@ export function CreatePersistentVolumePage() {
         <VStack gap={6}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create Persistent Volume
+              Create persistent volume
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">

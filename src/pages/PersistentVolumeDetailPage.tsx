@@ -261,7 +261,7 @@ export function PersistentVolumeDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
+                { label: 'Persistent volumes', href: '/container/persistent-volumes' },
                 { label: pvData.name },
               ]}
             />
@@ -335,7 +335,7 @@ export function PersistentVolumeDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -378,7 +378,7 @@ export function PersistentVolumeDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({labelsCount})
+                            All labels ({labelsCount})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(pvData.labels).map(([k, v]) => (
@@ -423,7 +423,7 @@ export function PersistentVolumeDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({annotationsCount})
+                            All annotations ({annotationsCount})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(pvData.annotations).map(([k, v]) => (
@@ -460,7 +460,7 @@ export function PersistentVolumeDetailPage() {
                 <VStack gap={6}>
                   {/* Access Modes */}
                   <VStack gap={2} align="start">
-                    <h3 className="text-label-lg text-[var(--color-text-default)]">Access Modes</h3>
+                    <h3 className="text-label-lg text-[var(--color-text-default)]">Access modes</h3>
                     <VStack gap={1.5} align="start">
                       <Checkbox
                         label="Single node read-write"
@@ -484,7 +484,7 @@ export function PersistentVolumeDetailPage() {
                   </VStack>
 
                   {/* Assign to Storage Class */}
-                  <FormField label="Assign to Storage Class" disabled className="w-full">
+                  <FormField label="Assign to StorageClass" disabled className="w-full">
                     <Select
                       options={[
                         { value: 'None', label: 'None' },
@@ -501,7 +501,7 @@ export function PersistentVolumeDetailPage() {
                   {/* Mount Options */}
                   <VStack gap={2} align="start" className="w-full">
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
-                      Mount Options
+                      Mount options
                     </h3>
                     <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
                       <FormField label="Value" disabled className="w-full">
@@ -518,7 +518,7 @@ export function PersistentVolumeDetailPage() {
                   {/* Node Selectors */}
                   <VStack gap={2} align="start" className="w-full">
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
-                      Node Selectors
+                      Node selectors
                     </h3>
                     <VStack gap={2} className="w-full">
                       {pvData.nodeSelectors.map((group) => (

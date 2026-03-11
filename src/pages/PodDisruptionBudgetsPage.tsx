@@ -132,7 +132,7 @@ export function PodDisruptionBudgetsPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Pod Disruption Budgets');
+    updateActiveTabLabel('Pod disruption budgets');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -284,7 +284,7 @@ export function PodDisruptionBudgetsPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/pdb/create'),
     },
     {
@@ -385,7 +385,7 @@ export function PodDisruptionBudgetsPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Pod Disruption Budgets"
+          title="Pod disruption budgets"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button
@@ -393,7 +393,7 @@ export function PodDisruptionBudgetsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Pod Disruption Budget
+                Create pod disruption budget
               </Button>
             </ContextMenu>
           }

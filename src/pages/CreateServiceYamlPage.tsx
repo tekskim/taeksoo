@@ -141,7 +141,7 @@ export function CreateServiceYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Service (YAML)');
+    updateActiveTabLabel('Create service (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -222,7 +222,7 @@ export function CreateServiceYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Services', href: '/container/services' },
-                { label: 'Create Service' },
+                { label: 'Create service' },
               ]}
             />
           }

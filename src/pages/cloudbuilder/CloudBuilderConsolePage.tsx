@@ -297,33 +297,42 @@ export function CloudBuilderConsolePage() {
       align: 'center',
       render: (_, row) => {
         // compute-services 화면은 어떤 탭이든 동일하게 Enable/Disable 액션을 제공한다 (UI only).
+        const statusKey = statusAction?.statusKey ?? config.statusAction?.statusKey;
+        const currentStatus = statusKey ? row[statusKey] : undefined;
+
         const items: ContextMenuItem[] =
           config.slug === 'compute-services'
-            ? [
-                {
-                  id: 'enable',
-                  label: 'Enable',
-                  onClick: () => onRowAction('set-status-enabled', row),
-                },
-                {
-                  id: 'disable',
-                  label: 'Disable',
-                  onClick: () => onRowAction('set-status-disabled', row),
-                },
-              ]
-            : statusAction
+            ? currentStatus === 'Enabled'
               ? [
-                  {
-                    id: 'enable',
-                    label: 'Enable',
-                    onClick: () => onRowAction('set-status-enabled', row),
-                  },
                   {
                     id: 'disable',
                     label: 'Disable',
                     onClick: () => onRowAction('set-status-disabled', row),
                   },
                 ]
+              : [
+                  {
+                    id: 'enable',
+                    label: 'Enable',
+                    onClick: () => onRowAction('set-status-enabled', row),
+                  },
+                ]
+            : statusAction
+              ? currentStatus === 'Enabled'
+                ? [
+                    {
+                      id: 'disable',
+                      label: 'Disable',
+                      onClick: () => onRowAction('set-status-disabled', row),
+                    },
+                  ]
+                : [
+                    {
+                      id: 'enable',
+                      label: 'Enable',
+                      onClick: () => onRowAction('set-status-enabled', row),
+                    },
+                  ]
               : (viewConfig.actionMenu?.items ?? []).map((it) => {
                   if (it.kind === 'link') {
                     return {

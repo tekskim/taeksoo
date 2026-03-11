@@ -255,7 +255,7 @@ export function SecretsPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/secrets/create'),
     },
     {
@@ -361,7 +361,7 @@ export function SecretsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Secret{' '}
+                Create secret
               </Button>
             </ContextMenu>
           }

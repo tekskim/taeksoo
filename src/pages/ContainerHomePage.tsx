@@ -282,7 +282,7 @@ export function ContainerHomePage() {
             <SectionCard.Content>
               <VStack gap={4}>
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create a Cluster
+                  Create a cluster
                 </h3>
                 <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
                   Create a Kubernetes cluster to start running and managing your containerized
@@ -290,7 +290,7 @@ export function ContainerHomePage() {
                 </p>
                 <div className="w-full flex justify-end">
                   <Button variant="primary" size="md">
-                    Create Cluster
+                    Create cluster
                   </Button>
                 </div>
               </VStack>

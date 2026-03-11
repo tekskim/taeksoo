@@ -121,7 +121,7 @@ export function NetworkPoliciesPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Network Policies');
+    updateActiveTabLabel('Network policies');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -218,7 +218,7 @@ export function NetworkPoliciesPage() {
     },
     {
       key: 'podSelector',
-      label: 'Pod-Selector',
+      label: 'Pod selector',
       flex: 1,
       render: (value: string) => (
         <span className="text-[var(--color-text-default)] truncate" title={value}>
@@ -265,7 +265,7 @@ export function NetworkPoliciesPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/network-policies/create'),
     },
     {
@@ -300,7 +300,7 @@ export function NetworkPoliciesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Network Policies' }]}
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'Network policies' }]}
             />
           }
           actions={
@@ -363,7 +363,7 @@ export function NetworkPoliciesPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Network Policies"
+          title="Network policies"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button
@@ -371,7 +371,7 @@ export function NetworkPoliciesPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Network Policy
+                Create network policy
               </Button>
             </ContextMenu>
           }
@@ -444,7 +444,7 @@ export function NetworkPoliciesPage() {
                 onClick={handleClearFilters}
                 className="text-label-sm text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

@@ -206,7 +206,7 @@ export function SecretDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/secrets/${secret.name}/edit-yaml`),
+      onClick: () => navigate(`/container/secrets/${secretData?.name ?? secretId}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -347,7 +347,7 @@ export function SecretDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>

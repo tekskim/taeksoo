@@ -42,12 +42,12 @@ type IngressSectionStep =
 
 // Section labels for display
 const INGRESS_SECTION_LABELS: Record<IngressSectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   rules: 'Rules',
-  'default-backend': 'Default Backend',
+  'default-backend': 'Default backend',
   certificates: 'Certificates',
-  'ingress-class': 'Ingress Class',
-  'labels-annotations': 'Labels & Annotations',
+  'ingress-class': 'Ingress class',
+  'labels-annotations': 'Labels & annotations',
 };
 
 // Section order for navigation
@@ -76,7 +76,7 @@ const PATH_TYPE_OPTIONS = [
   { value: 'ImplementationSpecific', label: 'ImplementationSpecific' },
 ];
 
-// Target Service options
+// Target service options
 const TARGET_SERVICE_OPTIONS = [
   { value: '', label: '' },
   { value: 'nginx-service', label: 'nginx-service' },
@@ -85,7 +85,7 @@ const TARGET_SERVICE_OPTIONS = [
   { value: 'api-service', label: 'api-service' },
 ];
 
-// Ingress Class options
+// Ingress class options
 const INGRESS_CLASS_OPTIONS = [
   { value: '', label: 'None' },
   { value: 'nginx', label: 'nginx' },
@@ -217,7 +217,7 @@ export default function CreateIngressPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Ingress');
+    updateActiveTabLabel('Create ingress');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -261,7 +261,7 @@ export default function CreateIngressPage() {
     { id: 'initial-cert', secretName: '', hosts: [''] },
   ]);
 
-  // Ingress Class state
+  // Ingress class state
   const [ingressClass, setIngressClass] = useState('');
 
   // Labels & Annotations state
@@ -438,7 +438,7 @@ export default function CreateIngressPage() {
               items={[
                 { label: 'Service Discovery', href: '/container/services' },
                 { label: 'Ingresses', href: '/container/ingresses' },
-                { label: 'Create Ingress' },
+                { label: 'Create ingress' },
               ]}
             />
           }
@@ -541,11 +541,11 @@ export default function CreateIngressPage() {
                       className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                     >
                       <VStack gap={6}>
-                        {/* Request Host with close button */}
+                        {/* Request host with close button */}
                         <VStack gap={2} className="w-full">
                           <HStack className="w-full" align="center" justify="between">
                             <label className="text-label-lg text-[var(--color-text-default)]">
-                              Request Host
+                              Request host
                             </label>
                             <button
                               onClick={() => removeRule(rule.id)}
@@ -579,7 +579,7 @@ export default function CreateIngressPage() {
                                     Path
                                   </span>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Target Service
+                                    Target service
                                   </span>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Port
@@ -648,7 +648,7 @@ export default function CreateIngressPage() {
                                   leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                   onClick={() => addPath(rule.id)}
                                 >
-                                  Add Path
+                                  Add path
                                 </Button>
                               </div>
                             </VStack>
@@ -683,11 +683,11 @@ export default function CreateIngressPage() {
                     Warning: Default backend is used globally for the entire cluster.
                   </InlineMessage>
 
-                  {/* Target Service and Port */}
+                  {/* Target service and Port */}
                   <HStack gap={4} className="w-full">
                     <VStack gap={2} className="flex-1">
                       <label className="text-label-lg text-[var(--color-text-default)]">
-                        Target Service
+                        Target service
                       </label>
                       <Select
                         options={[{ value: '', label: 'None' }, ...TARGET_SERVICE_OPTIONS.slice(1)]}
@@ -728,7 +728,7 @@ export default function CreateIngressPage() {
                           <VStack gap={1}>
                             <HStack className="w-full" align="center" justify="between">
                               <span className="text-label-sm text-[var(--color-text-default)]">
-                                Secret Name
+                                Secret name
                               </span>
                               <button
                                 onClick={() => removeCertificate(cert.id)}
@@ -817,13 +817,13 @@ export default function CreateIngressPage() {
               </SectionCard.Content>
             </SectionCard>
 
-            {/* Ingress Class Section */}
+            {/* Ingress class Section */}
             <SectionCard>
               <SectionCard.Header title="Ingress class" />
               <SectionCard.Content>
                 <VStack gap={2}>
                   <label className="text-label-lg text-[var(--color-text-default)]">
-                    Ingress Class
+                    Ingress class
                   </label>
                   <Select
                     options={INGRESS_CLASS_OPTIONS}
@@ -837,7 +837,7 @@ export default function CreateIngressPage() {
 
             {/* Labels & Annotations Section */}
             <SectionCard>
-              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Header title="Labels & annotations" />
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Labels */}
@@ -900,7 +900,7 @@ export default function CreateIngressPage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addLabel}
                           >
-                            Add Label
+                            Add label
                           </Button>
                         </div>
                       </VStack>
@@ -972,7 +972,7 @@ export default function CreateIngressPage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addAnnotation}
                           >
-                            Add Annotation
+                            Add annotation
                           </Button>
                         </div>
                       </VStack>
