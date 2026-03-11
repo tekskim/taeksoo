@@ -27,6 +27,8 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 | Success | 작업이 성공적으로 완료됨 |
 | Info | 일반적인 상태 알림 |
 
+> **Note**: Toast는 Success와 Info만 지원한다. Error/Warning 수준의 알림은 사용자의 확인이나 후속 액션이 필요하므로, Snackbar(기록형 알림) 또는 Inline Message(영속적 경고)를 사용한다.
+
 ---
 
 ## States

@@ -87,7 +87,17 @@ function DrawerSectionPageGuidelines() {
               <tr>
                 <Td>복잡한 리소스 생성 (많은 필드)</Td>
                 <Td>
-                  <strong>별도 Create 페이지</strong>
+                  <strong>별도 Create 페이지</strong>{' '}
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    (
+                    <a
+                      href="/design/patterns/wizard"
+                      className="underline hover:text-[var(--color-action-primary)]"
+                    >
+                      Wizard 패턴
+                    </a>{' '}
+                    참고)
+                  </span>
                 </Td>
               </tr>
             </tbody>
@@ -137,7 +147,7 @@ function DrawerSectionPageGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>
                 <strong>헤더</strong>: <code>title</code> prop으로 타이틀 설정. Close 버튼과
-                border-bottom은 제거됨.
+                border-bottom은 제거됨. <code>showCloseButton</code> prop은 deprecated이며 무시된다.
               </li>
               <li>
                 <strong>Footer</strong>: 액션 버튼은 footer prop에 배치. Cancel(secondary) 왼쪽,
@@ -166,7 +176,7 @@ function DrawerSectionPageGuidelines() {
         ]}
         dontItems={[
           'Drawer 안에서 또 다른 Drawer를 열지 않습니다.',
-          '필드 6개 이상을 Drawer에 넣지 않습니다 (별도 Create 페이지 사용).',
+          '필드 6개 이상을 Drawer에 넣지 않습니다 (별도 Create 페이지(Wizard 패턴) 사용).',
           'Drawer를 전체 화면 너비로 사용하지 않습니다.',
         ]}
       />
@@ -319,7 +329,7 @@ export function DrawerSectionPage() {
         },
         {
           label: 'Form Field',
-          path: '/design/components/form-field',
+          path: '/design/patterns/form-field',
           description: 'Form in drawer',
         },
       ]}

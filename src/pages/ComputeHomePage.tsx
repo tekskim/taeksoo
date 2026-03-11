@@ -70,6 +70,7 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
         </div>
       </div>
       <ProgressBar
+        variant="quota"
         value={used}
         max={total}
         showValue={false}
@@ -134,6 +135,7 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
       <ProgressBar
+        variant="quota"
         value={used}
         max={total}
         showValue={false}

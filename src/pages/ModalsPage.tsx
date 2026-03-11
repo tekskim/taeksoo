@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, VStack, HStack, Badge, PageShell, TopBar } from '@/design-system';
+import { Button, VStack, HStack, PageShell, TopBar } from '@/design-system';
 import {
   IconAlertCircle,
   IconChevronDown,
+  IconChevronRight,
   IconCopy,
   IconCheck,
   IconArrowLeft,
@@ -36,21 +37,30 @@ function ModalPreview({ title, description, children }: ModalPreviewProps) {
 
 function CategorySection({
   title,
-  variant,
   children,
+  defaultOpen = true,
 }: {
   title: string;
-  variant: 'info' | 'purple' | 'success' | 'warning' | 'danger' | 'gray';
   children: React.ReactNode;
+  defaultOpen?: boolean;
 }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
     <VStack gap={4}>
-      <div className="flex items-center gap-3 px-1">
-        <Badge variant={variant} className="shrink-0">
-          {title}
-        </Badge>
-      </div>
-      <div className="flex flex-wrap items-start gap-4">{children}</div>
+      <button
+        className="flex items-center gap-2 px-1 cursor-pointer bg-transparent border-none outline-none"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        {isOpen ? (
+          <IconChevronDown size={14} className="text-[var(--color-text-muted)]" />
+        ) : (
+          <IconChevronRight size={14} className="text-[var(--color-text-muted)]" />
+        )}
+        <span className="text-heading-h6 text-[var(--color-text-default)]">{title}</span>
+      </button>
+      {isOpen && <div className="flex flex-wrap items-start gap-4">{children}</div>}
     </VStack>
   );
 }
@@ -97,7 +107,7 @@ export function ModalsPage() {
         {/* ============================================================
            COMPUTE MODALS
            ============================================================ */}
-        <CategorySection title="Compute" variant="info">
+        <CategorySection title="Compute">
           {/* Delete Snapshot Modal */}
           <ModalPreview
             title="Delete snapshot"
@@ -719,7 +729,7 @@ export function ModalsPage() {
         {/* ============================================================
            IAM MODALS
            ============================================================ */}
-        <CategorySection title="IAM" variant="purple">
+        <CategorySection title="IAM">
           {/* Delete User Modal */}
           <ModalPreview
             title="Delete user"
@@ -1945,7 +1955,7 @@ export function ModalsPage() {
         {/* ============================================================
            STORAGE MODALS
            ============================================================ */}
-        <CategorySection title="Storage" variant="warning">
+        <CategorySection title="Storage">
           {/* Delete Bucket Modal */}
           <ModalPreview title="Delete bucket">
             {/* Warning Alert Box */}
@@ -1979,7 +1989,7 @@ export function ModalsPage() {
         {/* ============================================================
            CONTAINER MODALS
            ============================================================ */}
-        <CategorySection title="Container" variant="success">
+        <CategorySection title="Container">
           <ModalPreview
             title="Delete cluster"
             description="Removing the selected instances is permanent and cannot be undone."
@@ -2248,7 +2258,7 @@ export function ModalsPage() {
         {/* ============================================================
            COMPUTE ADMIN MODALS
            ============================================================ */}
-        <CategorySection title="Compute Admin" variant="danger">
+        <CategorySection title="Compute Admin">
           {/* Stop Instance Modal */}
           <ModalPreview title="Stop instance" description="This action stops the instance.">
             <div className="flex flex-col gap-2">
@@ -4816,9 +4826,55 @@ export function ModalsPage() {
         </CategorySection>
 
         {/* ============================================================
+           CLOUD BUILDER MODALS
+           ============================================================ */}
+        <CategorySection title="Cloud Builder">
+          {/* Enable Compute Service Modal */}
+          <ModalPreview
+            title="Enable compute service"
+            description="Change this service status to Enabled?"
+          >
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" className="flex-1">
+                Cancel{' '}
+              </Button>
+              <Button variant="primary" className="flex-1">
+                Enable{' '}
+              </Button>
+            </div>
+          </ModalPreview>
+
+          {/* Disable Compute Service Modal */}
+          <ModalPreview
+            title="Disable compute service"
+            description="Change this service status to Disabled?"
+          >
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
+                <span className="text-label-lg text-[var(--color-text-default)]">
+                  Reason <span className="text-[var(--color-state-danger)]">*</span>
+                </span>
+                <textarea
+                  className="w-full min-h-[80px] px-3 py-2 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] resize-y outline-none focus:border-[var(--color-border-focus)] focus:ring-1 focus:ring-[var(--color-border-focus)]"
+                  defaultValue="test"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" className="flex-1">
+                Cancel{' '}
+              </Button>
+              <Button variant="primary" className="flex-1">
+                Disable{' '}
+              </Button>
+            </div>
+          </ModalPreview>
+        </CategorySection>
+
+        {/* ============================================================
            AI AGENT MODALS
            ============================================================ */}
-        <CategorySection title="AI Agent" variant="gray">
+        <CategorySection title="AI Agent">
           <ModalPreview
             title="Delete agent source"
             description="Are you sure you want to delete this agent source? This action cannot be undone."

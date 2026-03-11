@@ -532,7 +532,7 @@ export function FloatingCardPage() {
       apiReference={floatingCardProps}
       relatedLinks={[
         { label: 'Create Page', path: '/design/patterns/wizard' },
-        { label: 'Section Card', path: '/design/components/section-card' },
+        { label: 'Section Card', path: '/design/patterns/section-card' },
         { label: 'Usage Chart', path: '/design/charts/usage-chart' },
       ]}
     />

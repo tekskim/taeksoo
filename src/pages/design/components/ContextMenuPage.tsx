@@ -626,7 +626,7 @@ export function ContextMenuPage() {
       relatedLinks={[
         {
           label: 'UX Writing Guide',
-          path: '/design/foundation/ux-writing',
+          path: '/design/policies/ux-writing',
           description: '메뉴 레이블 문장 스타일/금칙어/일관성 규칙 준수',
         },
         {

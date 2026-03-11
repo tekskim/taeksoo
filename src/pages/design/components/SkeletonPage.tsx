@@ -353,7 +353,7 @@ function SkeletonGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>실제 콘텐츠와 동일한 spacing을 갖는다.</li>
               <li>동일한 높이와 너비 유지한다.</li>
-              <li>레이아웃 점프(layout shift)를 지양한다.</li>
+              <li>레이아웃 점프(layout shift)를 피한다.</li>
             </ul>
           </Prose>
         </VStack>

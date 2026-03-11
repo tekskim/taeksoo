@@ -494,7 +494,7 @@ Table
         { label: 'Table', path: '/design/components/table' },
         { label: 'Pagination', path: '/design/components/pagination' },
         { label: 'View Preferences', path: '/design/patterns/view-preferences' },
-        { label: 'List Download', path: '/design/components/csv-download' },
+        { label: 'List Download', path: '/design/policies/csv-download' },
       ]}
     />
   );

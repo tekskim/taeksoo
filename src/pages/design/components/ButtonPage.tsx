@@ -37,8 +37,9 @@ const BUTTON_GUIDELINES = `## Overview
 | Ghost | 낮은 강조의 보조 액션 | Retry |
 | Muted | 매우 낮은 중요도의 보조 액션 | Copy ID |
 | Danger | 파괴적 액션 | Delete |
+| Warning | 주의가 필요한 비파괴적 액션. Danger와 달리 되돌릴 수 있는 경우에 사용한다. | Force Restart, Suspend |
 | Link | 내부 페이지로 이동 | View details |
-| Anchor Link | 외부 링크 | |
+| Anchor Link | 외부 링크. 새 탭에서 열리며 외부 아이콘을 함께 표시한다. | Documentation, External API |
 
 **정책**
 - 한 화면/컨테이너(모달, 카드, 섹션) 내 Primary는 기본 1개만 허용한다.
@@ -55,7 +56,7 @@ const BUTTON_GUIDELINES = `## Overview
 | LG | 36px | 80px | 페이지 주요 CTA |
 
 **정렬 규칙**
-- 같은 영역의 버튼은 동일한 사이즈를 사용한다.
+- 같은 행(row) 또는 같은 컨테이너 내 버튼은 동일한 사이즈를 사용한다.
 
 ---
 
@@ -715,12 +716,12 @@ export function ButtonPage() {
       }
       relatedLinks={[
         { label: 'Tooltip', path: '/design/components/tooltip' },
-        { label: 'Validation', path: '/design/components/form-field' },
+        { label: 'Validation', path: '/design/patterns/form-field' },
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Context Menu', path: '/design/components/context-menu' },
         { label: 'Card', path: '/design/components/card' },
         { label: 'Create Page', path: '/design/patterns/wizard' },
-        { label: 'UX Writing Guide', path: '/design/foundation/ux-writing' },
+        { label: 'UX Writing Guide', path: '/design/policies/ux-writing' },
       ]}
     />
   );

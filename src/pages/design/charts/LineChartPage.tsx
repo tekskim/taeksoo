@@ -649,7 +649,7 @@ export function LineChartPage() {
         { label: 'Tooltip', path: '/design/components/tooltip', description: '데이터 설명' },
         {
           label: 'Monitoring Toolbar',
-          path: '/design/components/monitoring-toolbar',
+          path: '/design/patterns/monitoring-toolbar',
           description: '시간 범위 제어',
         },
       ]}

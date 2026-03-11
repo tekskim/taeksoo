@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Modal, ConfirmModal } from './Modal';
 import { Button } from '../Button';
 import { Input } from '../Input';
+import { FormField } from '../FormField';
 import { useState } from 'react';
 
 const meta: Meta<typeof Modal> = {
@@ -209,8 +210,12 @@ export const WithForm: Story = {
           description="Update your profile information."
         >
           <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
-            <Input label="Name" placeholder="Enter your name" fullWidth />
-            <Input label="Email" type="email" placeholder="Enter your email" fullWidth />
+            <FormField label="Name">
+              <Input placeholder="Enter your name" fullWidth />
+            </FormField>
+            <FormField label="Email">
+              <Input type="email" placeholder="Enter your email" fullWidth />
+            </FormField>
             <div className="flex gap-[var(--primitive-spacing-2)] mt-[var(--primitive-spacing-2)]">
               <Button variant="outline" onClick={() => setIsOpen(false)} fullWidth>
                 Cancel

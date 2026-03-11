@@ -129,7 +129,7 @@ function TabsGuidelines() {
       <VStack gap={4}>
         <SectionTitle>Variants</SectionTitle>
         <Prose>
-          <p>같은 컴포넌트가 2가지 이상의 형태로 존재하므로 포함한다.</p>
+          <p>Tabs 컴포넌트는 2가지 이상의 형태(Variant)를 제공한다.</p>
         </Prose>
         <TableWrapper>
           <thead>
@@ -208,7 +208,9 @@ function TabsGuidelines() {
       <VStack gap={4}>
         <SectionTitle>States</SectionTitle>
         <Prose>
-          <p>사용자가 직접 클릭·포커스·키보드 인터랙션을 하는 컴포넌트이므로 포함한다.</p>
+          <p>
+            사용자가 직접 클릭·포커스·키보드 인터랙션을 하는 컴포넌트이므로 다음 상태를 정의한다.
+          </p>
         </Prose>
         <TableWrapper>
           <thead>

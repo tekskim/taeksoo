@@ -152,7 +152,13 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                       Variant
                     </th>
                     <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      컴포넌트
+                    </th>
+                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
                       설명
+                    </th>
+                    <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+                      사용 시점
                     </th>
                   </tr>
                 </thead>
@@ -161,16 +167,29 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                     <td className="p-2 border border-[var(--color-border-default)]">
                       Keyword search
                     </td>
+                    <td className="p-2 border border-[var(--color-border-default)]">
+                      <code className="text-body-sm">SearchInput</code>
+                    </td>
                     <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
-                      텍스트 기반 검색
+                      텍스트 기반 검색. 입력된 키워드로 전체 데이터를 필터링한다.
+                    </td>
+                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      단순 이름/키워드 검색만 필요한 경우
                     </td>
                   </tr>
                   <tr>
                     <td className="p-2 border border-[var(--color-border-default)]">
                       Filter search
                     </td>
+                    <td className="p-2 border border-[var(--color-border-default)]">
+                      <code className="text-body-sm">FilterSearchInput</code>
+                    </td>
                     <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
-                      필터 키 기반 검색
+                      필터 키 기반 구조화된 검색. 필터 키를 선택한 후 값을 입력 또는 선택하여 조건을
+                      생성한다.
+                    </td>
+                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      여러 속성(Status, Type 등)으로 복합 필터링이 필요한 경우
                     </td>
                   </tr>
                 </tbody>

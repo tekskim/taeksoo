@@ -131,7 +131,7 @@ export function CommonPatternsPage() {
         },
         {
           label: 'Detail header',
-          path: '/design/components/detail-header',
+          path: '/design/patterns/detail-header',
           description: 'Page header for detail views',
         },
         {

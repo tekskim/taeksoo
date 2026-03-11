@@ -411,6 +411,7 @@ function HostUsageCard({
                 </div>
               </div>
               <ProgressBar
+                variant="quota"
                 value={used}
                 max={total}
                 showValue={false}

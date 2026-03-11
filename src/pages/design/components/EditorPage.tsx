@@ -334,6 +334,7 @@ export function EditorPage() {
   return (
     <ComponentPageTemplate
       title="Editor"
+      tags={['AI Component']}
       description="앱 내 리소스(파이프라인, 워크플로우 등)를 시각적으로 구성하고 편집하기 위한 캔버스 기반의 편집 환경이다. 블록을 배치·연결하고, 각 블록의 속성을 구성하는 빌더(Builder) 기능을 포함한다."
       whenToUse={[
         '사용자가 리소스 간의 흐름이나 구조를 시각적으로 정의해야 할 때',

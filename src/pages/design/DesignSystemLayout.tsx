@@ -177,7 +177,7 @@ export function DesignSystemLayout() {
                       });
                     }}
                   >
-                    <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] uppercase tracking-wide hover:!text-[var(--color-text-muted)]">
+                    <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] tracking-wide hover:!text-[var(--color-text-muted)]">
                       {group.title}
                       <span className="text-body-xs text-[var(--color-text-disabled)] ml-auto font-normal normal-case tracking-normal">
                         {group.items.length}

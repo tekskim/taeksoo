@@ -116,6 +116,12 @@ const SELECT_GUIDELINES = `## Overview
 
 ## Usage Guidelines
 
+- 선택지가 3~15개인 경우 Select를 사용한다. 2개 이하이면 Radio, 15개 초과이면 검색 가능한 Select(SearchSelect)를 고려한다.
+- Boolean 값(On/Off, Yes/No)에는 Select 대신 Toggle 또는 Checkbox를 사용한다.
+- 다중 선택이 필요한 경우 CheckboxGroup 또는 Multi-Select를 사용한다.
+- 기본 선택값이 있는 경우 \`defaultValue\`로 명시하고, 선택 해제가 가능해야 하면 placeholder를 제공한다.
+- 폼에서 사용 시 반드시 \`FormField\`로 감싸 label을 연결한다.
+
 ---
 
 ## Related

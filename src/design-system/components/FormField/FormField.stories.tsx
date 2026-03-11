@@ -3,6 +3,7 @@ import { FormField } from './FormField';
 import { Input } from '../Input/Input';
 import { Select } from '../Select/Select';
 import { Checkbox } from '../Checkbox/Checkbox';
+import { Toggle } from '../Toggle/Toggle';
 
 /**
  * # FormField
@@ -329,5 +330,27 @@ export const CompleteForm: Story = {
         <FormField.HelperText>Choose the appropriate access level.</FormField.HelperText>
       </FormField>
     </div>
+  ),
+};
+
+/* ----------------------------------------
+   spacing="loose" Examples
+   ---------------------------------------- */
+
+export const SpacingLooseCheckbox: Story = {
+  name: 'spacing="loose" - Checkbox',
+  render: () => (
+    <FormField label="Favorite" spacing="loose">
+      <Checkbox label="Mark as Favorite" />
+    </FormField>
+  ),
+};
+
+export const SpacingLooseToggle: Story = {
+  name: 'spacing="loose" - Toggle',
+  render: () => (
+    <FormField label="Enable notifications" spacing="loose">
+      <Toggle />
+    </FormField>
   ),
 };

@@ -330,7 +330,7 @@ function PaginationGuidelines() {
             </ul>
             <p>
               페이지 이동 후 콘텐츠 영역(테이블/리스트)의 상단으로 스크롤하거나, 테이블 헤더로
-              포커스를 이동한다(선택 1개를 서비스 기본으로 고정 권장).
+              포커스를 이동한다. 두 가지 중 하나를 서비스 전체에서 일관되게 적용한다.
             </p>
             <ul className="list-disc pl-5 space-y-1">
               <li>&quot;이동했는데 화면은 그대로&quot;인 상황을 방지한다.</li>
@@ -537,7 +537,7 @@ export function PaginationPage() {
         },
         {
           label: 'UX Writing Guide',
-          path: '/design/foundation/ux-writing',
+          path: '/design/policies/ux-writing',
           description: 'Result summary, aria-label 등 문구/표기 규칙 준수',
         },
       ]}

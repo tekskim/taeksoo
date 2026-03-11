@@ -661,7 +661,7 @@ export function ErrorAlertPage() {
           label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',
         },
-        { label: 'System Error', path: '/design/foundation/system-error' },
+        { label: 'System Error', path: '/design/policies/system-error' },
       ]}
     />
   );

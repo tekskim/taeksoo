@@ -22,7 +22,7 @@ import {
   Breadcrumb,
   type TableColumn,
 } from '@/design-system';
-import { IconCopy, IconBell, IconCircleX } from '@tabler/icons-react';
+import { IconCopy, IconBell, IconBan } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
@@ -180,10 +180,6 @@ export function CloudBuilderDetailPage() {
   }, [isNetworkAgent, slug, id, row?.name]);
 
   const hasDetail = slug !== 'services' && slug !== 'compute-services';
-
-  const basePrefix = location.pathname.startsWith('/cloud-builder')
-    ? '/cloud-builder'
-    : '/cloudbuilder';
 
   const isServer = slug === 'servers' || slug === 'severs0.7';
 
@@ -433,7 +429,7 @@ export function CloudBuilderDetailPage() {
               <Button
                 variant="secondary"
                 size="sm"
-                leftIcon={<IconCircleX size={12} />}
+                leftIcon={<IconBan size={12} />}
                 onClick={() => {
                   const current = serviceStatus || 'Enabled';
                   const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
