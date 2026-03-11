@@ -116,7 +116,7 @@ function RulesTab({ rules }: RulesTabProps) {
   const columns: TableColumn<RuleRow>[] = [
     {
       key: 'pathType',
-      label: 'Path Type',
+      label: 'Path type',
       flex: 1,
       minWidth: columnMinWidths.pathType,
       sortable: true,
@@ -135,7 +135,7 @@ function RulesTab({ rules }: RulesTabProps) {
     },
     {
       key: 'targetService',
-      label: 'Target Service',
+      label: 'Target service',
       flex: 1,
       sortable: true,
       render: (value: string) => (
@@ -342,7 +342,7 @@ export function ContainerIngressDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -393,7 +393,7 @@ export function ContainerIngressDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(ingress.labels).length})
+                            All labels ({Object.keys(ingress.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(ingress.labels).map(([k, v]) => (
@@ -440,7 +440,7 @@ export function ContainerIngressDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(ingress.annotations).length})
+                            All annotations ({Object.keys(ingress.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(ingress.annotations).map(([k, v]) => (

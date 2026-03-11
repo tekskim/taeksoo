@@ -114,7 +114,7 @@ export function ContainerIngressesPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/ingresses/create'),
     },
     {
@@ -209,7 +209,7 @@ export function ContainerIngressesPage() {
     },
     {
       key: 'ingressClass',
-      label: 'Ingress Class',
+      label: 'Ingress class',
       flex: 1,
       minWidth: columnMinWidths.ingressClass,
       sortable: true,
@@ -370,7 +370,7 @@ export function ContainerIngressesPage() {
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
-                Create Ingress
+                Create ingress
               </Button>
             </ContextMenu>
           }

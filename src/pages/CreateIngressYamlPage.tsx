@@ -146,7 +146,7 @@ export function CreateIngressYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Ingress (YAML)');
+    updateActiveTabLabel('Create ingress (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -227,7 +227,7 @@ export function CreateIngressYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Ingresses', href: '/container/ingresses' },
-                { label: 'Create Ingress' },
+                { label: 'Create ingress' },
               ]}
             />
           }

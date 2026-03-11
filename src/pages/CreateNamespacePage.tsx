@@ -421,7 +421,7 @@ export function CreateNamespacePage() {
 
             {/* Labels & Annotations Section */}
             <SectionCard className="pb-4">
-              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Header title="Labels & annotations" />
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Labels */}
@@ -556,7 +556,7 @@ export function CreateNamespacePage() {
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                             onClick={addAnnotation}
                           >
-                            Add Annotation
+                            Add annotation
                           </Button>
                         </div>
                       </VStack>

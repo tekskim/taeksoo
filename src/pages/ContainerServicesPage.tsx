@@ -125,7 +125,7 @@ export function ContainerServicesPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/services/create'),
     },
     {
@@ -391,7 +391,7 @@ export function ContainerServicesPage() {
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
-                Create Service
+                Create service
               </Button>
             </ContextMenu>
           }
@@ -464,7 +464,7 @@ export function ContainerServicesPage() {
                 onClick={handleClearFilters}
                 className="text-label-sm text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

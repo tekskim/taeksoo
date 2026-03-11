@@ -337,7 +337,7 @@ export function DaemonSetsPage() {
   const createMenuItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/daemonsets/create'),
     },
     {
@@ -454,7 +454,7 @@ export function DaemonSetsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search daemonSets by attributes"
+                placeholder="Search DaemonSets by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />

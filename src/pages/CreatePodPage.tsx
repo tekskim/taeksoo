@@ -1280,7 +1280,7 @@ export function CreatePodPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Pod');
+    updateActiveTabLabel('Create pod');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -1754,7 +1754,7 @@ export function CreatePodPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create Pod
+            Create pod
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a Pod to run one or more containers as the smallest deployable unit in
@@ -3500,7 +3500,7 @@ export function CreatePodPage() {
                                 {volume.type === 'configmap' && 'ConfigMap'}
                                 {volume.type === 'secret' && 'Secret'}
                                 {volume.type === 'pvc' && 'Persistent Volume Claim'}
-                                {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
+                                {volume.type === 'create-pvc' && 'Create persistent volume claim'}
                               </h6>
                               <button
                                 onClick={() => removeVolume(index)}
@@ -6907,7 +6907,7 @@ export function CreatePodPage() {
                                         {{
                                           csi: 'CSI',
                                           pvc: 'Persistent Volume Claim',
-                                          'create-pvc': 'Persistent Volume Claim',
+                                          'create-pvc': 'Create persistent volume claim',
                                           configmap: 'ConfigMap',
                                           secret: 'Secret',
                                           emptyDir: 'Empty Dir',

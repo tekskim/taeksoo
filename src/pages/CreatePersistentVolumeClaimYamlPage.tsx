@@ -107,7 +107,7 @@ export function CreatePersistentVolumeClaimYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create PersistentVolumeClaim (YAML)');
+    updateActiveTabLabel('Create persistent volume claim (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -188,7 +188,7 @@ export function CreatePersistentVolumeClaimYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'PersistentVolumeClaims', href: '/container/persistentVolumeClaims' },
-                { label: 'Create PersistentVolumeClaim' },
+                { label: 'Create persistent volume claim' },
               ]}
             />
           }
@@ -219,7 +219,7 @@ export function CreatePersistentVolumeClaimYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-            Create PersistentVolumeClaim
+            Create persistent volume claim
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Persistent Volume Claim is a user request for persistent storage that defines the

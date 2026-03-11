@@ -175,7 +175,7 @@ export function EditServiceYamlPage() {
   // Update tab label
   useEffect(() => {
     if (serviceName) {
-      updateActiveTabLabel(`Edit Service: ${serviceName}`);
+      updateActiveTabLabel(`Edit service: ${serviceName}`);
     }
   }, [serviceName, updateActiveTabLabel]);
 
@@ -257,7 +257,7 @@ export function EditServiceYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Services', href: '/container/services' },
-                { label: serviceName || 'Edit Service' },
+                { label: serviceName || 'Edit service' },
               ]}
             />
           }
@@ -288,10 +288,10 @@ export function EditServiceYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-            Service: {serviceName}
+            service: {serviceName}
           </h1>
           <InlineMessage variant="warning">
-            This Service is managed by a Helm app; changes made here will likely be overwritten the
+            This service is managed by a Helm app; changes made here will likely be overwritten the
             next time Helm runs.
           </InlineMessage>
         </VStack>

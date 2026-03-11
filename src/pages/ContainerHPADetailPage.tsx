@@ -199,7 +199,7 @@ function MetricsTab() {
           <SectionCard.Header title="Current metrics" />
           <SectionCard.Content>
             <span className="text-body-md font-normal leading-[16px] text-[var(--color-text-default)]">
-              No Current Metrics
+              No current metrics
             </span>
           </SectionCard.Content>
         </SectionCard>
@@ -424,7 +424,7 @@ export function ContainerHPADetailPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
+                { label: 'Horizontal pod autoscalers', href: '/container/hpa' },
                 { label: hpa.name },
               ]}
             />
@@ -479,7 +479,7 @@ export function ContainerHPADetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -530,7 +530,7 @@ export function ContainerHPADetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(hpa.labels).length})
+                            All labels ({Object.keys(hpa.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(hpa.labels).map(([k, v]) => (
@@ -577,7 +577,7 @@ export function ContainerHPADetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(hpa.annotations).length})
+                            All annotations ({Object.keys(hpa.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(hpa.annotations).map(([k, v]) => (

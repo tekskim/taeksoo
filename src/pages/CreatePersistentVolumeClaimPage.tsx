@@ -41,10 +41,10 @@ type SectionStep = 'basic-info' | 'volume-claim' | 'storage-config' | 'labels-an
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
-  'volume-claim': 'Volume Claim',
+  'basic-info': 'Basic information',
+  'volume-claim': 'Volume claim',
   'storage-config': 'Customize',
-  'labels-annotations': 'Labels & Annotations',
+  'labels-annotations': 'Labels & annotations',
 };
 
 // Section order for sidebar
@@ -673,7 +673,7 @@ export function CreatePersistentVolumeClaimPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Persistent Volume Claim');
+    updateActiveTabLabel('Create persistent volume claim');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -839,7 +839,7 @@ export function CreatePersistentVolumeClaimPage() {
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create Persistent Volume Claim
+              Create persistent volume claim
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">

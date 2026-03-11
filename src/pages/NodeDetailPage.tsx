@@ -752,7 +752,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent Events
+        Recent events
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
@@ -918,7 +918,7 @@ export function NodeDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -1014,7 +1014,7 @@ export function NodeDetailPage() {
                         content={
                           <div className="p-3 min-w-[120px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Annotations ({Object.keys(node.annotations).length})
+                              All annotations ({Object.keys(node.annotations).length})
                             </div>
                             <div className="flex flex-col gap-1">
                               {Object.entries(node.annotations).map(([k, v]) => (
@@ -1044,7 +1044,7 @@ export function NodeDetailPage() {
         {/* Condition Cards */}
         <HStack gap={3} className="w-full">
           <ConditionCard
-            title="PID Pressure"
+            title="PID pressure"
             status={node.conditions.pidPressure ? 'NotReady' : 'Ready'}
             tooltip="PID pressure indicates whether the node is running low on available process IDs."
           />
@@ -1085,7 +1085,7 @@ export function NodeDetailPage() {
             <Tab value="images">Images</Tab>
             <Tab value="taints">Taints</Tab>
             <Tab value="conditions">Conditions</Tab>
-            <Tab value="events">Recent Events</Tab>
+            <Tab value="events">Recent events</Tab>
           </TabList>
 
           <TabPanel value="pods">

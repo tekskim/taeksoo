@@ -309,7 +309,7 @@ export function StatefulSetsPage() {
   const createMenuItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/statefulsets/create'),
     },
     {

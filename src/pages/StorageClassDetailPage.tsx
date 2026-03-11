@@ -182,7 +182,7 @@ export function StorageClassDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'set-default',
-      label: 'Set as Default',
+      label: 'Set as default',
       onClick: () => console.log('Set as default'),
     },
     {
@@ -193,7 +193,8 @@ export function StorageClassDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/storage-classes/${scData.name}/edit-yaml`),
+      onClick: () =>
+        navigate(`/container/storage-classes/${scData?.name ?? storageClassId}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -245,7 +246,7 @@ export function StorageClassDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Storage Classes', href: '/container/storage-classes' },
+                { label: 'Storage classes', href: '/container/storage-classes' },
                 { label: scData.name },
               ]}
             />
@@ -317,7 +318,7 @@ export function StorageClassDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -362,7 +363,7 @@ export function StorageClassDetailPage() {
                         content={
                           <div className="p-3 min-w-[120px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Labels ({labelsCount})
+                              All labels ({labelsCount})
                             </div>
                             <div className="flex flex-col gap-1">
                               {Object.entries(scData.labels).map(([k, v]) => (
@@ -411,7 +412,7 @@ export function StorageClassDetailPage() {
                         content={
                           <div className="p-3 min-w-[120px] max-w-[320px]">
                             <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Annotations ({annotationsCount})
+                              All annotations ({annotationsCount})
                             </div>
                             <div className="flex flex-col gap-1">
                               {Object.entries(scData.annotations).map(([k, v]) => (
@@ -494,7 +495,7 @@ export function StorageClassDetailPage() {
                 {/* Reclaim Policy */}
                 <VStack gap={3} align="start">
                   <label className="text-label-lg text-[var(--color-text-default)]">
-                    Reclaim Policy
+                    Reclaim policy
                   </label>
                   <VStack gap={2} align="start">
                     <Radio
@@ -515,7 +516,7 @@ export function StorageClassDetailPage() {
                 {/* Allow Volume Expansion */}
                 <VStack gap={3} align="start">
                   <label className="text-label-lg text-[var(--color-text-default)]">
-                    Allow Volume Expansion
+                    Allow volume expansion
                   </label>
                   <VStack gap={2} align="start">
                     <Radio
@@ -536,7 +537,7 @@ export function StorageClassDetailPage() {
                 {/* Volume Binding Mode */}
                 <VStack gap={3} align="start">
                   <label className="text-label-lg text-[var(--color-text-default)]">
-                    Volume Binding Mode
+                    Volume binding mode
                   </label>
                   <VStack gap={2} align="start">
                     <Radio
@@ -557,7 +558,7 @@ export function StorageClassDetailPage() {
                 {/* Mount Options */}
                 <VStack gap={3} align="start" className="w-full">
                   <label className="text-label-lg text-[var(--color-text-default)]">
-                    Mount Options
+                    Mount options
                   </label>
                   {scData.mountOptions.length > 0 ? (
                     <VStack gap={2} className="w-full">

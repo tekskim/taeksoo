@@ -364,7 +364,7 @@ export function CloudBuilderDetailPage() {
       { key: 'capacity', label: 'Capacity', sortable: true, width: '120px' },
       { key: 'interface', label: 'Interface', sortable: true, width: '110px' },
       { key: 'media', label: 'Media', sortable: true, width: '90px' },
-      { key: 'formFactor', label: 'Form Factor', sortable: true, width: '120px' },
+      { key: 'formFactor', label: 'Form factor', sortable: true, width: '120px' },
       { key: 'miscellaneous', label: 'Miscellaneous', sortable: false, width: '180px' },
     ],
     []
@@ -443,18 +443,18 @@ export function CloudBuilderDetailPage() {
             </DetailHeader.Actions>
             <DetailHeader.InfoGrid className="flex-wrap">
               <DetailHeader.InfoCard
-                label="Service Status"
+                label="Service status"
                 value={serviceStatus || 'Enabled'}
                 status={(serviceStatus || 'Enabled') === 'Enabled' ? 'active' : 'deactivated'}
               />
               <DetailHeader.InfoCard
-                label="Service State"
+                label="Service state"
                 value={row?.serviceState ?? 'Up'}
                 status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'down'}
               />
               <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
               <DetailHeader.InfoCard
-                label="Created At"
+                label="Created at"
                 value={networkAgentMeta?.createdAt ?? '-'}
               />
             </DetailHeader.InfoGrid>
@@ -473,7 +473,7 @@ export function CloudBuilderDetailPage() {
               {isServer ? (
                 <>
                   <DetailHeader.InfoCard
-                    label="Observed Health"
+                    label="Observed health"
                     value={renderStatusBadge(
                       columns,
                       'observedHealth',
@@ -481,7 +481,7 @@ export function CloudBuilderDetailPage() {
                     )}
                   />
                   <DetailHeader.InfoCard
-                    label="Provision Status"
+                    label="Provision status"
                     value={renderStatusBadge(
                       columns,
                       'provisionStatus',
@@ -497,7 +497,7 @@ export function CloudBuilderDetailPage() {
                     )}
                   />
                   <DetailHeader.InfoCard
-                    label="Power State"
+                    label="Power state"
                     value={renderPowerStateBadge(serverDerived?.bmc.powerState ?? '-')}
                   />
                 </>
@@ -509,25 +509,25 @@ export function CloudBuilderDetailPage() {
         {isNetworkAgent ? (
           <>
             <SectionCard>
-              <SectionCard.Header title="Basic Information" />
+              <SectionCard.Header title="Basic information" />
               <SectionCard.Content>
                 <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
                 <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
                 <SectionCard.DataRow
-                  label="Availability Zone"
+                  label="Availability zone"
                   value={row?.availabilityZone ?? '-'}
                 />
                 <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
                 <SectionCard.DataRow
-                  label="Resources Synced"
+                  label="Resources synced"
                   value={networkAgentMeta?.resourcesSynced ?? '-'}
                 />
                 <SectionCard.DataRow
-                  label="Heartbeat Timestamp"
+                  label="Heartbeat timestamp"
                   value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
                 />
                 <SectionCard.DataRow
-                  label="Started At"
+                  label="Started at"
                   value={networkAgentMeta?.startedAt ?? '-'}
                 />
                 <SectionCard.DataRow
@@ -637,7 +637,7 @@ export function CloudBuilderDetailPage() {
             <TabList>
               <Tab value="details">Details</Tab>
               {isServer ? <Tab value="disk">Disk</Tab> : null}
-              {isServer ? <Tab value="bmc-info">BMC INFO</Tab> : null}
+              {isServer ? <Tab value="bmc-info">BMC info</Tab> : null}
               {isNetworkAgent ? <Tab value="configuration">Configuration</Tab> : null}
             </TabList>
 
@@ -645,7 +645,7 @@ export function CloudBuilderDetailPage() {
               {isServer ? (
                 <VStack gap={6}>
                   <SectionCard>
-                    <SectionCard.Header title="Basic Info" />
+                    <SectionCard.Header title="Basic info" />
                     <SectionCard.Content>
                       <SectionCard.DataRow
                         label="Type"
@@ -657,7 +657,7 @@ export function CloudBuilderDetailPage() {
                         value={String((row as any)?.macPrimary ?? '-') || '-'}
                       />
                       <SectionCard.DataRow
-                        label="NIC (Primary Name)"
+                        label="NIC (primary name)"
                         value={String((row as any)?.nicPrimaryName ?? '-') || '-'}
                       />
                       <SectionCard.DataRow
@@ -665,7 +665,7 @@ export function CloudBuilderDetailPage() {
                         value={String((row as any)?.location ?? '-') || '-'}
                       />
                       <SectionCard.DataRow
-                        label="Provider Network"
+                        label="Provider network"
                         value={serverDerived?.providerNetwork ?? '-'}
                       />
                       <SectionCard.DataRow
@@ -673,11 +673,11 @@ export function CloudBuilderDetailPage() {
                         value={String((row as any)?.mgmtIp ?? '-') || '-'}
                       />
                       <SectionCard.DataRow
-                        label="Created At"
+                        label="Created at"
                         value={serverDerived?.createdAt ?? '-'}
                       />
                       <SectionCard.DataRow
-                        label="Updated At"
+                        label="Updated at"
                         value={serverDerived?.updatedAt ?? '-'}
                       />
                       <SectionCard.DataRow label="Domain" value={serverDerived?.domain ?? '-'} />
@@ -746,7 +746,7 @@ export function CloudBuilderDetailPage() {
               <TabPanel value="disk" className="pt-4">
                 <VStack gap={6}>
                   <SectionCard>
-                    <SectionCard.Header title="Storage Detail" />
+                    <SectionCard.Header title="Storage detail" />
                     <SectionCard.Content gap={3}>
                       <div className="text-[13px] font-medium text-[var(--color-text-default)]">
                         Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI Slot
@@ -777,11 +777,11 @@ export function CloudBuilderDetailPage() {
                           showDivider={false}
                         />
                         <SectionCard.DataRow
-                          label="Machine Type"
+                          label="Machine type"
                           value={serverDerived?.bmc.machineType ?? '-'}
                         />
                         <SectionCard.DataRow
-                          label="Power State"
+                          label="Power state"
                           value={serverDerived?.bmc.powerState ?? '-'}
                         />
                         <SectionCard.DataRow
@@ -789,7 +789,7 @@ export function CloudBuilderDetailPage() {
                           value={serverDerived?.bmc.bmcIp ?? '-'}
                         />
                         <SectionCard.DataRow
-                          label="Manager Ethernet Interface"
+                          label="Manager ethernet interface"
                           value={serverDerived?.bmc.managerEthernetInterface ?? '-'}
                         />
                       </SectionCard.Content>

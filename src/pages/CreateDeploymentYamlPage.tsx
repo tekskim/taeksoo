@@ -107,7 +107,7 @@ export function CreateDeploymentYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Deployment (YAML)');
+    updateActiveTabLabel('Create deployment (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -188,7 +188,7 @@ export function CreateDeploymentYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Deployments', href: '/container/deployments' },
-                { label: 'Create Deployment' },
+                { label: 'Create deployment' },
               ]}
             />
           }
@@ -218,7 +218,7 @@ export function CreateDeploymentYamlPage() {
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Deployment</h1>
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create deployment</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Deployment manage the lifecycle of your application Pods, enabling rolling updates and
             automated recovery.

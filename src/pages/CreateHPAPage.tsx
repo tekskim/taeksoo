@@ -38,11 +38,11 @@ type HPASectionStep = 'basic-info' | 'target' | 'behavior' | 'metrics' | 'labels
 
 // Section labels for display
 const HPA_SECTION_LABELS: Record<HPASectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   target: 'Target',
   behavior: 'Behavior',
   metrics: 'Metrics',
-  'labels-annotations': 'Labels & Annotations',
+  'labels-annotations': 'Labels & annotations',
 };
 
 // Section order for navigation
@@ -63,7 +63,7 @@ const NAMESPACE_OPTIONS = [
   { value: 'production', label: 'production' },
 ];
 
-// Target Reference options
+// Target reference options
 const TARGET_REFERENCE_OPTIONS = [
   { value: '', label: '' },
   { value: 'deployment/nginx', label: 'Deployment/nginx' },
@@ -548,7 +548,7 @@ export default function CreateHPAPage() {
               items={[
                 { label: 'Service Discovery', href: '/container' },
                 { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
-                { label: 'Create', href: '/container/hpa/create' },
+                { label: 'Create horizontal pod autoscaler', href: '/container/hpa/create' },
               ]}
             />
           }
@@ -573,7 +573,7 @@ export default function CreateHPAPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-            Create Horizontal Pod Autoscaler
+            Create horizontal pod autoscaler
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
@@ -643,9 +643,9 @@ export default function CreateHPAPage() {
               <SectionCard.Header title="Target" />
               <SectionCard.Content>
                 <VStack gap={6}>
-                  {/* Target Reference */}
+                  {/* Target reference */}
                   <FormField required>
-                    <FormField.Label>Target Reference</FormField.Label>
+                    <FormField.Label>Target reference</FormField.Label>
                     <FormField.Control>
                       <Select
                         options={TARGET_REFERENCE_OPTIONS}
@@ -658,7 +658,7 @@ export default function CreateHPAPage() {
 
                   {/* Min/Max Replicas */}
                   <VStack gap={6}>
-                    <FormField label="Minimum Replicas" required>
+                    <FormField label="Minimum replicas" required>
                       <NumberInput
                         value={minReplicas}
                         onChange={setMinReplicas}
@@ -756,13 +756,13 @@ export default function CreateHPAPage() {
                                 leftIcon={<IconCirclePlus size={12} />}
                                 onClick={addScaleDownPolicy}
                               >
-                                Add Policy
+                                Add policy
                               </Button>
                             </div>
                           </VStack>
                         </div>
 
-                        <FormField label="Select Policy">
+                        <FormField label="Select policy">
                           <Select
                             options={SELECT_POLICY_OPTIONS}
                             value={scaleDownSelectPolicy}
@@ -854,13 +854,13 @@ export default function CreateHPAPage() {
                                 leftIcon={<IconCirclePlus size={12} />}
                                 onClick={addScaleUpPolicy}
                               >
-                                Add Policy
+                                Add policy
                               </Button>
                             </div>
                           </VStack>
                         </div>
 
-                        <FormField label="Select Policy">
+                        <FormField label="Select policy">
                           <Select
                             options={SELECT_POLICY_OPTIONS}
                             value={scaleUpSelectPolicy}
@@ -942,7 +942,7 @@ export default function CreateHPAPage() {
 
                         {/* Resource Name (for Resource source) */}
                         {metric.source === 'Resource' && (
-                          <FormField label="Resource Name">
+                          <FormField label="Resource name">
                             <Select
                               options={RESOURCE_NAME_OPTIONS}
                               value={metric.resourceName}
@@ -985,7 +985,7 @@ export default function CreateHPAPage() {
                           <>
                             <VStack gap={2}>
                               <label className="text-label-lg text-[var(--color-text-default)]">
-                                Referent API Version{' '}
+                                Referent API version{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </label>
                               <Input
@@ -1000,7 +1000,7 @@ export default function CreateHPAPage() {
 
                             <VStack gap={2}>
                               <label className="text-label-lg text-[var(--color-text-default)]">
-                                Referent Kind{' '}
+                                Referent kind{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </label>
                               <Input
@@ -1015,7 +1015,7 @@ export default function CreateHPAPage() {
 
                             <VStack gap={2}>
                               <label className="text-label-lg text-[var(--color-text-default)]">
-                                Referent Name{' '}
+                                Referent name{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </label>
                               <Input
@@ -1035,7 +1035,7 @@ export default function CreateHPAPage() {
                           <>
                             <VStack gap={2}>
                               <label className="text-label-lg text-[var(--color-text-default)]">
-                                Metric Name{' '}
+                                Metric name{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </label>
                               <Input
@@ -1132,7 +1132,7 @@ export default function CreateHPAPage() {
                                       leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                       onClick={() => addMetricSelector(metric.id)}
                                     >
-                                      Add Rule
+                                      Add rule
                                     </Button>
                                   </div>
                                 </VStack>
@@ -1161,7 +1161,7 @@ export default function CreateHPAPage() {
 
             {/* Labels & Annotations Section */}
             <SectionCard className="pb-4">
-              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Header title="Labels & annotations" />
               <SectionCard.Content>
                 <VStack gap={6}>
                   {/* Labels */}
@@ -1223,7 +1223,7 @@ export default function CreateHPAPage() {
                               leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                               onClick={addLabel}
                             >
-                              Add Label
+                              Add label
                             </Button>
                           </div>
                         </VStack>
@@ -1294,7 +1294,7 @@ export default function CreateHPAPage() {
                               leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                               onClick={addAnnotation}
                             >
-                              Add Annotation
+                              Add annotation
                             </Button>
                           </div>
                         </VStack>

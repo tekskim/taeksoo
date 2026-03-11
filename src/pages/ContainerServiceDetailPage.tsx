@@ -738,7 +738,7 @@ export function ContainerServiceDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -794,7 +794,7 @@ export function ContainerServiceDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(service.labels).length})
+                            All labels ({Object.keys(service.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(service.labels).map(([k, v]) => (
@@ -841,7 +841,7 @@ export function ContainerServiceDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(service.annotations).length})
+                            All annotations ({Object.keys(service.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(service.annotations).map(([k, v]) => (

@@ -112,7 +112,7 @@ export function StorageClassesPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Storage Classes');
+    updateActiveTabLabel('Storage classes');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -149,7 +149,7 @@ export function StorageClassesPage() {
     if (!row.isDefault) {
       items.push({
         id: 'set-default',
-        label: 'Set as Default',
+        label: 'Set as default',
         onClick: () => console.log('Set as default:', row.id),
       });
     }
@@ -268,7 +268,7 @@ export function StorageClassesPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/storage-classes/create'),
     },
     {
@@ -303,7 +303,7 @@ export function StorageClassesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Storage Classes' }]}
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'Storage classes' }]}
             />
           }
           actions={
@@ -366,7 +366,7 @@ export function StorageClassesPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Storage Classes"
+          title="Storage classes"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button
@@ -374,7 +374,7 @@ export function StorageClassesPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Storage Class{' '}
+                Create storage class
               </Button>
             </ContextMenu>
           }
@@ -385,7 +385,7 @@ export function StorageClassesPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search Storage Classes by attributes"
+                placeholder="Search storage classes by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />

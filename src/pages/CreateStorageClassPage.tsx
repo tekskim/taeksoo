@@ -37,7 +37,7 @@ type SectionStep = 'basic-info' | 'storage-config' | 'customize';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   'storage-config': 'Parameters',
   customize: 'Customize',
 };
@@ -499,7 +499,7 @@ export function CreateStorageClassPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Storage Class');
+    updateActiveTabLabel('Create storage class');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -583,7 +583,7 @@ export function CreateStorageClassPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Storage Classes', href: '/container/storage-classes' },
-                { label: 'Create Storage Class' },
+                { label: 'Create storage class' },
               ]}
             />
           }
@@ -615,7 +615,7 @@ export function CreateStorageClassPage() {
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create Storage Class
+              Create storage class
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
