@@ -197,7 +197,7 @@ export function EditIngressYamlPage() {
   // Update tab label
   useEffect(() => {
     if (ingressName) {
-      updateActiveTabLabel(`Edit Ingress: ${ingressName}`);
+      updateActiveTabLabel(`Edit ingress: ${ingressName}`);
     }
   }, [ingressName, updateActiveTabLabel]);
 
@@ -279,7 +279,7 @@ export function EditIngressYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Ingresses', href: '/container/ingresses' },
-                { label: ingressName || 'Edit Ingress' },
+                { label: ingressName || 'Edit ingress' },
               ]}
             />
           }
@@ -310,10 +310,10 @@ export function EditIngressYamlPage() {
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-            Ingress: {ingressName}
+            ingress: {ingressName}
           </h1>
           <InlineMessage variant="warning">
-            This Ingress is managed by a Helm app; changes made here will likely be overwritten the
+            This ingress is managed by a Helm app; changes made here will likely be overwritten the
             next time Helm runs.
           </InlineMessage>
         </VStack>

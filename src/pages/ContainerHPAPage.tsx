@@ -119,7 +119,7 @@ export function ContainerHPAPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/hpa/create'),
     },
     {
@@ -200,21 +200,21 @@ export function ContainerHPAPage() {
     },
     {
       key: 'minReplicas',
-      label: 'Minimum Replicas',
+      label: 'Minimum replicas',
       flex: 1,
       minWidth: columnMinWidths.minReplicas,
       sortable: true,
     },
     {
       key: 'maxReplicas',
-      label: 'Maximum Replicas',
+      label: 'Maximum replicas',
       flex: 1,
       minWidth: columnMinWidths.maxReplicas,
       sortable: true,
     },
     {
       key: 'currentReplicas',
-      label: 'Current Replicas',
+      label: 'Current replicas',
       flex: 1,
       minWidth: columnMinWidths.currentReplicas,
       sortable: true,
@@ -283,7 +283,7 @@ export function ContainerHPAPage() {
   };
 
   const handleCreateForm = () => {
-    console.log('Create as Form');
+    console.log('Create as form');
   };
 
   const handleCreateYaml = () => {
@@ -317,7 +317,7 @@ export function ContainerHPAPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal Pod Autoscalers' },
+                { label: 'Horizontal pod autoscalers' },
               ]}
             />
           }
@@ -382,11 +382,11 @@ export function ContainerHPAPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Horizontal Pod Autoscalers"
+          title="Horizontal pod autoscalers"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
-                Create Horizontal Pod Autoscaler
+                Create horizontal pod autoscaler
               </Button>
             </ContextMenu>
           }

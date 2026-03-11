@@ -111,6 +111,12 @@ export function ClusterManagementSidebar({
             tooltip="Home"
           />
           <IconSidebarItem
+            icon={<FolderCog size={16} strokeWidth={1.5} />}
+            active={activeIconSection === 'cluster-management'}
+            onClick={() => navigate('/container/cluster-management')}
+            tooltip="Cluster management"
+          />
+          <IconSidebarItem
             icon={<IconAffiliate size={16} stroke={1.5} />}
             active={activeIconSection === 'cluster'}
             onClick={() => navigate('/container/dashboard')}
@@ -119,17 +125,7 @@ export function ClusterManagementSidebar({
           <IconSidebarItem
             icon={<IconPlus size={16} stroke={1.5} />}
             active={false}
-            tooltip="Add New"
-          />
-        </div>
-
-        {/* Cluster Management at bottom */}
-        <div className="border-t border-[var(--color-border-subtle)] py-1 flex flex-col items-center gap-1">
-          <IconSidebarItem
-            icon={<FolderCog size={16} strokeWidth={1.5} />}
-            active={activeIconSection === 'cluster-management'}
-            onClick={() => navigate('/container/cluster-management')}
-            tooltip="Cluster management"
+            tooltip="Add new"
           />
         </div>
       </aside>
@@ -163,7 +159,7 @@ export function ClusterManagementSidebar({
                 className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-[length:var(--font-size-11)] transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
               >
                 <IconArrowLeft size={16} stroke={1.5} />
-                <span>All Services</span>
+                <span>All services</span>
               </Link>
 
               {/* Bookmarks */}

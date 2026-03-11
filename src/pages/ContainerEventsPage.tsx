@@ -342,7 +342,7 @@ export function ContainerEventsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'view-details',
-            label: 'View Details',
+            label: 'View details',
             onClick: () => console.log('View Details:', row.id),
           },
           {

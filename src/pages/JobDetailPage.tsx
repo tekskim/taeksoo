@@ -547,7 +547,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent Events
+        Recent events
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
@@ -747,7 +747,7 @@ export function JobDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -808,7 +808,7 @@ export function JobDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Labels ({Object.keys(job.labels).length})
+                            All labels ({Object.keys(job.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(job.labels).map(([k, v]) => (
@@ -855,7 +855,7 @@ export function JobDetailPage() {
                       content={
                         <div className="p-3 min-w-[120px] max-w-[320px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All Annotations ({Object.keys(job.annotations).length})
+                            All annotations ({Object.keys(job.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(job.annotations).map(([k, v]) => (
@@ -883,7 +883,7 @@ export function JobDetailPage() {
           <TabList>
             <Tab value="pods">Pods</Tab>
             <Tab value="conditions">Conditions</Tab>
-            <Tab value="events">Recent Events</Tab>
+            <Tab value="events">Recent events</Tab>
           </TabList>
 
           <TabPanel value="pods">

@@ -127,7 +127,7 @@ export function ResourceQuotasPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Resource Quotas');
+    updateActiveTabLabel('Resource quotas');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -261,7 +261,7 @@ export function ResourceQuotasPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/resource-quotas/create'),
     },
     {
@@ -296,7 +296,7 @@ export function ResourceQuotasPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Resource Quotas' }]}
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'Resource quotas' }]}
             />
           }
           actions={
@@ -359,7 +359,7 @@ export function ResourceQuotasPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Resource Quotas"
+          title="Resource quotas"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button
@@ -367,7 +367,7 @@ export function ResourceQuotasPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Resource Quota
+                Create resource quota
               </Button>
             </ContextMenu>
           }
@@ -440,7 +440,7 @@ export function ResourceQuotasPage() {
                 onClick={handleClearFilters}
                 className="text-label-sm text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

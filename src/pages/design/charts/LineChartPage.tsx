@@ -242,14 +242,31 @@ function LineChartGuidelines() {
         <VStack gap={3}>
           <SubSectionTitle>6) Zoom 인터랙션</SubSectionTitle>
           <Prose>
-            <p>차트 영역을 마우스 스크롤을 이용해 시간 범위를 확대/축소할 수 있다.</p>
+            <p>
+              차트 영역을 세로 <strong>스크롤을 이용해 시간 범위를 확대/축소할 수 있다.</strong>
+            </p>
             <ul className="list-disc pl-5 space-y-1">
+              <li>
+                차트 영역은 가로 스크롤 또는 드래그 앤 드롭으로 시간 범위를 이동할 수 있다.
+                <ul className="list-disc pl-5 space-y-1 mt-1">
+                  <li>차트가 확대 상태일 때만 가능</li>
+                </ul>
+              </li>
               <li>
                 여러 Line 차트가 함께 있는 모니터링 화면에서는 Zoom 동작이 동기화되어 시간 범위가
                 동일하게 변경된다.
+                <ul className="list-disc pl-5 space-y-1 mt-1">
+                  <li>동일 시간 구간 비교 가능</li>
+                  <li>모니터링 분석 용이</li>
+                </ul>
               </li>
-              <li>Zoom은 마우스 커서 위치를 중심으로 동작한다.</li>
+              <li>
+                Zoom은 <strong>마우스 커서 위치를 중심으로 동작한다.</strong>
+              </li>
             </ul>
+          </Prose>
+          <Prose>
+            <p>Zoom은 다음 범위를 권장한다.</p>
           </Prose>
           <TableWrapper>
             <thead>
@@ -260,7 +277,7 @@ function LineChartGuidelines() {
             </thead>
             <tbody>
               <tr>
-                <Td>1 minute</Td>
+                <Td>5 minute</Td>
                 <Td>7 days</Td>
               </tr>
             </tbody>
@@ -312,6 +329,22 @@ function LineChartGuidelines() {
               <li>Multi-series 차트의 경우 CSV에는 모든 series가 포함된다.</li>
               <li>
                 파일명: <code>{'{chart-title}_{time-range}.csv'}</code>
+                <ul className="list-disc pl-5 space-y-1 mt-1">
+                  <li>
+                    예시:
+                    <ul className="list-disc pl-5 space-y-1 mt-1">
+                      <li>
+                        프리셋 선택 시: <code>cpu-usage_24h.csv</code>
+                      </li>
+                      <li>
+                        기간 커스텀 시: <code>cpu-usage_20260311_to_20260312.csv</code>
+                        <ul className="list-disc pl-5 space-y-1 mt-1">
+                          <li>언어설정과 관계없이 YYYYMMDD 형식 사용</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
               </li>
               <li>포함 데이터: timestamp, series label, value</li>
             </ul>

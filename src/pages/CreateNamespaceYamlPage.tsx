@@ -107,7 +107,7 @@ export function CreateNamespaceYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Namespace (YAML)');
+    updateActiveTabLabel('Create namespace (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -188,7 +188,7 @@ export function CreateNamespaceYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
-                { label: 'Create Namespace' },
+                { label: 'Create namespace' },
               ]}
             />
           }
@@ -218,7 +218,7 @@ export function CreateNamespaceYamlPage() {
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}
         <VStack gap={2} className="flex-shrink-0">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Namespace</h1>
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create namespace</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Namespace is a logical partition within a cluster that isolates and organizes resources
             for easier management and access control.

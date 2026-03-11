@@ -253,7 +253,7 @@ export function DeploymentsPage() {
     },
     {
       key: 'upToDate',
-      label: 'Up-To-Date',
+      label: 'Up to date',
       width: '100px',
     },
     {
@@ -282,7 +282,7 @@ export function DeploymentsPage() {
           },
           {
             id: 'pause-orchestration',
-            label: 'Pause Orchestration',
+            label: 'Pause orchestration',
             onClick: () => console.log('Pause Orchestration:', row.id),
           },
           {
@@ -346,7 +346,7 @@ export function DeploymentsPage() {
   const createMenuItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/deployments/create'),
     },
     {
@@ -452,7 +452,7 @@ export function DeploymentsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Deployment
+                Create deployment
               </Button>
             </ContextMenu>
           }

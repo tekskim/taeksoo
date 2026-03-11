@@ -293,10 +293,10 @@ export function CloudBuilderCreatePage() {
         ) : isServerLike ? (
           <>
             <SectionCard>
-              <SectionCard.Header title="Basic Information" />
+              <SectionCard.Header title="Basic information" />
               <SectionCard.Content>
                 <Input
-                  label="Serial Number"
+                  label="Serial number"
                   placeholder="e.g. SN1234"
                   value={serial}
                   onChange={(e) => setSerial(e.target.value)}
@@ -314,7 +314,7 @@ export function CloudBuilderCreatePage() {
                   fullWidth
                 />
                 <Input
-                  label="NIC (Primary Name)"
+                  label="NIC (primary name)"
                   placeholder="e.g. eno1"
                   value={nicPrimaryName}
                   onChange={(e) => setNicPrimaryName(e.target.value)}
@@ -333,7 +333,7 @@ export function CloudBuilderCreatePage() {
                   fullWidth
                 />
                 <Input
-                  label="Provider Network"
+                  label="Provider network"
                   placeholder="e.g. VLAN 120 / 10.0.20.12 또는 VLAN 120 / 10.0.20.12/24"
                   value={providerNetwork}
                   onChange={(e) => setProviderNetwork(e.target.value)}

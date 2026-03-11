@@ -125,7 +125,6 @@ export function ClusterManagementPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'center',
       render: (status) => (
         <Tooltip content={status}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -155,7 +154,7 @@ export function ClusterManagementPage() {
     },
     {
       key: 'kubernetesVersion',
-      label: 'Kubernetes Version',
+      label: 'Kubernetes version',
       flex: 1,
       minWidth: columnMinWidths.version,
       sortable: true,
@@ -225,7 +224,7 @@ export function ClusterManagementPage() {
   const createMenuItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/cluster-management/create'),
     },
   ];
@@ -259,7 +258,7 @@ export function ClusterManagementPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Cluster Management', href: '/container/cluster-management' },
+                { label: 'Cluster management', href: '/container/cluster-management' },
                 { label: 'Clusters' },
               ]}
             />
@@ -297,7 +296,7 @@ export function ClusterManagementPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Cluster
+                Create cluster
               </Button>
             </ContextMenu>
           }
@@ -330,7 +329,7 @@ export function ClusterManagementPage() {
             {/* Actions */}
             <HStack gap={1} align="center">
               <Button
-                variant="secondary"
+                variant="muted"
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedClusters.length === 0}
@@ -338,7 +337,7 @@ export function ClusterManagementPage() {
                 Download KubeConfig
               </Button>
               <Button
-                variant="secondary"
+                variant="muted"
                 size="sm"
                 leftIcon={<IconDownload size={12} stroke={1.5} />}
                 disabled={selectedClusters.length === 0}
@@ -346,7 +345,7 @@ export function ClusterManagementPage() {
                 Download YAML
               </Button>
               <Button
-                variant="secondary"
+                variant="muted"
                 size="sm"
                 leftIcon={<IconTrash size={12} stroke={1.5} />}
                 disabled={selectedClusters.length === 0}
@@ -378,7 +377,7 @@ export function ClusterManagementPage() {
                 onClick={handleClearFilters}
                 className="text-[11px] text-label-md text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

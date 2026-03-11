@@ -343,7 +343,7 @@ export function PodsPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/pods/create'),
     },
     {
@@ -447,7 +447,7 @@ export function PodsPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Pod
+                Create pod
               </Button>
             </ContextMenu>
           }

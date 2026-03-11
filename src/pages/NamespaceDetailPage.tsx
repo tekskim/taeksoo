@@ -438,7 +438,7 @@ function getWorkloadMenuItems(
         },
         {
           id: 'pause-orchestration',
-          label: 'Pause Orchestration',
+          label: 'Pause orchestration',
           onClick: () => onAction('pause-orchestration', workload),
         },
         { id: 'redeploy', label: 'Redeploy', onClick: () => onAction('redeploy', workload) },
@@ -463,7 +463,7 @@ function getWorkloadMenuItems(
           label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
-        { id: 'run-now', label: 'Run Now', onClick: () => onAction('run-now', workload) },
+        { id: 'run-now', label: 'Run now', onClick: () => onAction('run-now', workload) },
         { id: 'suspend', label: 'Suspend', onClick: () => onAction('suspend', workload) },
         ...commonItems,
       ];
@@ -824,7 +824,7 @@ export function NamespaceDetailPage() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>

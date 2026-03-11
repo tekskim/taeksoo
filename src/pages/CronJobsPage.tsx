@@ -194,8 +194,8 @@ export function CronJobsPage() {
   const createMenuItems = (row: CronJobRow): ContextMenuItem[] => [
     {
       id: 'run-now',
-      label: 'Run Now',
-      onClick: () => console.log('Run Now:', row.id),
+      label: 'Run now',
+      onClick: () => console.log('Run now:', row.id),
     },
     {
       id: 'suspend',
@@ -325,7 +325,7 @@ export function CronJobsPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/cronjobs/create'),
     },
     {
@@ -462,7 +462,7 @@ export function CronJobsPage() {
                 leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
               >
-                Run Now
+                Run now
               </Button>
               <Button
                 variant="muted"

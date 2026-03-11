@@ -242,7 +242,7 @@ export function ConfigMapsPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/configmaps/create'),
     },
     {

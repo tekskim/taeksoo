@@ -116,7 +116,7 @@ export function EditDeploymentYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(`Edit ${deploymentName || 'Deployment'} (YAML)`);
+    updateActiveTabLabel(`Edit ${deploymentName || 'deployment'} (YAML)`);
   }, [updateActiveTabLabel, deploymentName]);
 
   const tabBarTabs = tabs.map((tab) => ({

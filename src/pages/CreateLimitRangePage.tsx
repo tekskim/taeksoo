@@ -38,7 +38,7 @@ type SectionStep = 'basic-info' | 'data' | 'labels-annotations';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   data: 'Container Resource Limit',
   'labels-annotations': 'Labels & Annotations',
 };
@@ -590,7 +590,7 @@ export function CreateLimitRangePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Limit Range');
+    updateActiveTabLabel('Create limit range');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -722,7 +722,7 @@ export function CreateLimitRangePage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Limit Ranges', href: '/container/limit-ranges' },
-                { label: 'Create Limit Range' },
+                { label: 'Create limit range' },
               ]}
             />
           }
@@ -753,7 +753,7 @@ export function CreateLimitRangePage() {
         {/* Page Header */}
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Limit Range</h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create limit range</h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             LimitRanges define default resource requests and limits for Pods and containers within a

@@ -107,7 +107,7 @@ export function CreateSecretYamlPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Secret (YAML)');
+    updateActiveTabLabel('Create secret (YAML)');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({

@@ -194,7 +194,7 @@ export function CreateClusterPage() {
   // Node Configuration
   const [nodeType, setNodeType] = useState<'instance' | 'baremetal'>('instance');
 
-  // Control Planes
+  // Control planes
   const [cpImage, setCpImage] = useState('ubuntu-24.04-tk-base');
   const [cpFlavor, setCpFlavor] = useState('th-tiny');
   const [cpNodeCount, setCpNodeCount] = useState(3);
@@ -276,7 +276,7 @@ export function CreateClusterPage() {
       network.subnetCidr.toLowerCase().includes(tenantNetworkSearch.toLowerCase())
   );
 
-  // External Network columns
+  // External network columns
   const externalNetworkColumns: TableColumn<NetworkRow>[] = [
     {
       key: 'select',
@@ -294,7 +294,7 @@ export function CreateClusterPage() {
     { key: 'subnetCidr', label: 'SubnetCIDR', sortable: true },
   ];
 
-  // Tenant Network columns
+  // Tenant network columns
   const tenantNetworkColumns: TableColumn<NetworkRow>[] = [
     {
       key: 'select',
@@ -427,9 +427,9 @@ export function CreateClusterPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Cluster Management', href: '/container/cluster-management' },
+                { label: 'Cluster management', href: '/container/cluster-management' },
                 { label: 'Clusters', href: '/container/cluster-management' },
-                { label: 'Create Cluster' },
+                { label: 'Create cluster' },
               ]}
             />
           }
@@ -440,7 +440,7 @@ export function CreateClusterPage() {
       {/* Header */}
       <VStack gap={2} className="mb-6">
         <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
-          Create Cluster
+          Create cluster
         </h1>
         <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
           Cluster is a group of machines that work together to run containerized applications with
@@ -472,7 +472,7 @@ export function CreateClusterPage() {
 
                 {/* Kubernetes Version */}
                 <FormField required>
-                  <FormField.Label>Kubernetes Version</FormField.Label>
+                  <FormField.Label>Kubernetes version</FormField.Label>
                   <FormField.Description>
                     Select the Kubernetes version to apply to the cluster. Choosing the latest
                     supported version is recommended for improved stability and security unless your
@@ -490,7 +490,7 @@ export function CreateClusterPage() {
 
                 {/* Container Network */}
                 <FormField required>
-                  <FormField.Label>Container Network</FormField.Label>
+                  <FormField.Label>Container network</FormField.Label>
                   <FormField.Description>
                     Select the container network (CNI) plugin that manages internal cluster traffic.
                   </FormField.Description>
@@ -537,14 +537,14 @@ export function CreateClusterPage() {
             <SectionCard.Header title="Networking" />
             <SectionCard.Content>
               <VStack gap={6}>
-                {/* External Network */}
+                {/* External network */}
                 <FormField>
                   <FormField.Label>
                     <HStack gap={1} align="center">
-                      External Network
+                      External network
                       <span className="text-[var(--color-state-danger)]">*</span>
                       <Tooltip
-                        content="Displays the list of External Networks created in the user domain for enabling external access for the cluster."
+                        content="Displays the list of External networks created in the user domain for enabling external access for the cluster."
                         position="right"
                       >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
@@ -594,14 +594,14 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
-                {/* Tenant Network */}
+                {/* Tenant network */}
                 <FormField>
                   <FormField.Label>
                     <HStack gap={1} align="center">
-                      Tenant Network
+                      Tenant network
                       <span className="text-[var(--color-state-danger)]">*</span>
                       <Tooltip
-                        content="Displays the internal networks available to the project. Only networks with a router open to External gateway for the selected External Network."
+                        content="Displays the internal networks available to the project. Only networks with a router open to External gateway for the selected External network."
                         position="right"
                       >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
@@ -653,7 +653,7 @@ export function CreateClusterPage() {
                       Subnet
                       <span className="text-[var(--color-state-danger)]">*</span>
                       <Tooltip
-                        content="Displays the subnets within the selected Tenant Network. Only subnets connected to a router open to External Gateway for the selected External Network are shown."
+                        content="Displays the subnets within the selected Tenant network. Only subnets connected to a router open to External Gateway for the selected External network are shown."
                         position="right"
                       >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
@@ -683,7 +683,7 @@ export function CreateClusterPage() {
               <VStack gap={6}>
                 {/* Node Type */}
                 <FormField required>
-                  <FormField.Label>Node Type</FormField.Label>
+                  <FormField.Label>Node type</FormField.Label>
                   <FormField.Description>
                     Select the type of nodes to use for your cluster. Instance is used for VM-based
                     clusters and BareMetal is used for physical server clusters.
@@ -699,10 +699,10 @@ export function CreateClusterPage() {
                   </FormField.Control>
                 </FormField>
 
-                {/* Control Planes */}
+                {/* Control planes */}
                 <div>
                   <h6 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
-                    Control Planes
+                    Control planes
                   </h6>
                   <VStack gap={6}>
                     {/* Image */}
@@ -828,7 +828,7 @@ export function CreateClusterPage() {
 
                     {/* etcd Volume type */}
                     <FormField required>
-                      <FormField.Label>etcd Volume type</FormField.Label>
+                      <FormField.Label>etcd volume type</FormField.Label>
                       <FormField.Description>
                         Specify the volume type for the etcd data disk
                       </FormField.Description>
@@ -848,7 +848,7 @@ export function CreateClusterPage() {
 
                     {/* etcd Volume Size */}
                     <FormField required>
-                      <FormField.Label>etcd Volume Size</FormField.Label>
+                      <FormField.Label>etcd volume size</FormField.Label>
                       <FormField.Description>
                         Specify the volume size for the etcd data disk.
                       </FormField.Description>
@@ -920,7 +920,7 @@ export function CreateClusterPage() {
                                     ]
                                   : []
                               }
-                              emptyText="No item Selected"
+                              emptyText="No item selected"
                               onRemove={() => setSelectedKeyPair('')}
                             />
                           </VStack>
@@ -929,7 +929,7 @@ export function CreateClusterPage() {
                         {/* Password section */}
                         <VStack gap={6} className="pt-6">
                           <FormField>
-                            <FormField.Label>Login Name</FormField.Label>
+                            <FormField.Label>Login name</FormField.Label>
                             <FormField.Control>
                               <Input
                                 placeholder="Enter login name"
@@ -966,7 +966,7 @@ export function CreateClusterPage() {
                             </FormField.Control>
                           </FormField>
                           <FormField>
-                            <FormField.Label>Confirm Password</FormField.Label>
+                            <FormField.Label>Confirm password</FormField.Label>
                             <FormField.Control>
                               <Input
                                 type={showConfirmPassword ? 'text' : 'password'}
@@ -997,7 +997,7 @@ export function CreateClusterPage() {
 
                     {/* Node Count */}
                     <FormField required>
-                      <FormField.Label>Node Count</FormField.Label>
+                      <FormField.Label>Node count</FormField.Label>
                       <FormField.Description>
                         Select the number of nodes to create.
                       </FormField.Description>
@@ -1030,7 +1030,7 @@ export function CreateClusterPage() {
 
           {/* Worker Nodes */}
           <SectionCard className="pb-4">
-            <SectionCard.Header title="Worker Nodes" />
+            <SectionCard.Header title="Worker nodes" />
             <SectionCard.Content>
               <VStack gap={6}>
                 {/* Image */}
@@ -1150,7 +1150,7 @@ export function CreateClusterPage() {
                                 ]
                               : []
                           }
-                          emptyText="No item Selected"
+                          emptyText="No item selected"
                           onRemove={() => setWorkerSelectedKeyPair('')}
                         />
                       </VStack>
@@ -1159,7 +1159,7 @@ export function CreateClusterPage() {
                     {/* Password section */}
                     <VStack gap={6} className="pt-6">
                       <FormField>
-                        <FormField.Label>Login Name</FormField.Label>
+                        <FormField.Label>Login name</FormField.Label>
                         <FormField.Control>
                           <Input
                             placeholder="Enter login name"
@@ -1196,7 +1196,7 @@ export function CreateClusterPage() {
                         </FormField.Control>
                       </FormField>
                       <FormField>
-                        <FormField.Label>Confirm Password</FormField.Label>
+                        <FormField.Label>Confirm password</FormField.Label>
                         <FormField.Control>
                           <Input
                             type={workerShowConfirmPassword ? 'text' : 'password'}
@@ -1229,7 +1229,7 @@ export function CreateClusterPage() {
 
                 {/* Node Count */}
                 <FormField required>
-                  <FormField.Label>Node Count</FormField.Label>
+                  <FormField.Label>Node count</FormField.Label>
                   <FormField.Description>
                     Select the number of worker nodes to create.
                   </FormField.Description>
@@ -1254,7 +1254,7 @@ export function CreateClusterPage() {
 
           {/* Labels & Annotations */}
           <SectionCard className="pb-4">
-            <SectionCard.Header title="Labels & Annotations" />
+            <SectionCard.Header title="Labels & annotations" />
             <SectionCard.Content>
               <VStack gap={6}>
                 {/* Labels */}
@@ -1317,7 +1317,7 @@ export function CreateClusterPage() {
                           leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                           onClick={addLabel}
                         >
-                          Add Label
+                          Add label
                         </Button>
                       </div>
                     </VStack>
@@ -1388,7 +1388,7 @@ export function CreateClusterPage() {
                           leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                           onClick={addAnnotation}
                         >
-                          Add Annotation
+                          Add annotation
                         </Button>
                       </div>
                     </VStack>
@@ -1408,7 +1408,7 @@ export function CreateClusterPage() {
                 { key: 'basic-info', label: 'Basic information', status: 'active' },
                 { key: 'networking', label: 'Networking', status: 'active' },
                 { key: 'node-config', label: 'Node configuration', status: 'done' },
-                { key: 'labels', label: 'Labels & Annotations', status: 'done' },
+                { key: 'labels', label: 'Labels & annotations', status: 'done' },
               ]}
             />
 

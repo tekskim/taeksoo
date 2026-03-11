@@ -1231,7 +1231,7 @@ export function CreateJobPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Job');
+    updateActiveTabLabel('Create job');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -1752,7 +1752,7 @@ export function CreateJobPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create Job
+            Create job
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a Job to run a batch task that executes one or more Pods to completion.
@@ -3509,7 +3509,7 @@ export function CreateJobPage() {
                                 {volume.type === 'configmap' && 'ConfigMap'}
                                 {volume.type === 'secret' && 'Secret'}
                                 {volume.type === 'pvc' && 'Persistent Volume Claim'}
-                                {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
+                                {volume.type === 'create-pvc' && 'Create persistent volume claim'}
                               </h6>
                               <button
                                 onClick={() => removeVolume(index)}
@@ -6911,7 +6911,7 @@ export function CreateJobPage() {
                                         {{
                                           csi: 'CSI',
                                           pvc: 'Persistent Volume Claim',
-                                          'create-pvc': 'Persistent Volume Claim',
+                                          'create-pvc': 'Create persistent volume claim',
                                           configmap: 'ConfigMap',
                                           secret: 'Secret',
                                           emptyDir: 'Empty Dir',

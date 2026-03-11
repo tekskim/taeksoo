@@ -509,7 +509,7 @@ export function ContainerDashboardPage() {
         title="Events & Secrets"
         actions={
           <Button variant="secondary" size="sm">
-            Full Events List
+            Full events list
           </Button>
         }
       >

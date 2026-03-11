@@ -152,7 +152,7 @@ export function PersistentVolumesPage() {
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
-    updateActiveTabLabel('Persistent Volumes');
+    updateActiveTabLabel('Persistent volumes');
   }, [updateActiveTabLabel]);
 
   // Shell Panel state
@@ -318,7 +318,7 @@ export function PersistentVolumesPage() {
   const createDropdownItems: ContextMenuItem[] = [
     {
       id: 'create-form',
-      label: 'Create as Form',
+      label: 'Create as form',
       onClick: () => navigate('/container/persistent-volumes/create'),
     },
     {
@@ -355,7 +355,7 @@ export function PersistentVolumesPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Persistent Volumes' },
+                { label: 'Persistent volumes' },
               ]}
             />
           }
@@ -419,7 +419,7 @@ export function PersistentVolumesPage() {
       <VStack gap={3}>
         {/* Header */}
         <PageHeader
-          title="Persistent Volumes"
+          title="Persistent volumes"
           actions={
             <ContextMenu items={createDropdownItems} trigger="click" align="right">
               <Button
@@ -427,7 +427,7 @@ export function PersistentVolumesPage() {
                 size="md"
                 rightIcon={<IconChevronDown size={14} stroke={1.5} />}
               >
-                Create Persistent Volume
+                Create persistent volume
               </Button>
             </ContextMenu>
           }

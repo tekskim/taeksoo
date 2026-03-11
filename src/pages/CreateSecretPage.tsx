@@ -37,9 +37,9 @@ type SectionStep = 'basic-info' | 'data' | 'labels-annotations';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
+  'basic-info': 'Basic information',
   data: 'Data',
-  'labels-annotations': 'Labels & Annotations',
+  'labels-annotations': 'Labels & annotations',
 };
 
 // Section order for navigation
@@ -920,7 +920,7 @@ export function CreateSecretPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Secret');
+    updateActiveTabLabel('Create secret');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -1091,7 +1091,7 @@ export function CreateSecretPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Secret</h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create secret</h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Secret is a Kubernetes resource used to securely store sensitive information such as

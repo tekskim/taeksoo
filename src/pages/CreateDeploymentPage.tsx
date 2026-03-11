@@ -1520,7 +1520,7 @@ export function CreateDeploymentPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create Deployment');
+    updateActiveTabLabel('Create deployment');
   }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -2013,7 +2013,7 @@ export function CreateDeploymentPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Deployments', href: '/container/deployments' },
-                { label: 'Create Deployment' },
+                { label: 'Create deployment' },
               ]}
             />
           }
@@ -2044,7 +2044,7 @@ export function CreateDeploymentPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create Deployment
+            Create deployment
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Deployment manage the lifecycle of your application Pods, enabling rolling updates and
@@ -3811,7 +3811,7 @@ export function CreateDeploymentPage() {
                                 {volume.type === 'configmap' && 'ConfigMap'}
                                 {volume.type === 'secret' && 'Secret'}
                                 {volume.type === 'pvc' && 'Persistent Volume Claim'}
-                                {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
+                                {volume.type === 'create-pvc' && 'Create persistent volume claim'}
                               </h6>
                               <button
                                 onClick={() => removeVolume(index)}
@@ -7400,7 +7400,7 @@ export function CreateDeploymentPage() {
                                         {{
                                           csi: 'CSI',
                                           pvc: 'Persistent Volume Claim',
-                                          'create-pvc': 'Persistent Volume Claim',
+                                          'create-pvc': 'Create persistent volume claim',
                                           configmap: 'ConfigMap',
                                           secret: 'Secret',
                                           emptyDir: 'Empty Dir',
@@ -7569,7 +7569,7 @@ export function CreateDeploymentPage() {
                                 const typeLabels: Record<string, string> = {
                                   csi: 'CSI',
                                   pvc: 'Persistent Volume Claim',
-                                  'create-pvc': 'Persistent Volume Claim',
+                                  'create-pvc': 'Create persistent volume claim',
                                   configmap: 'ConfigMap',
                                   secret: 'Secret',
                                   emptyDir: 'Empty Dir',
