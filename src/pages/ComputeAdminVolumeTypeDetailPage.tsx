@@ -35,6 +35,7 @@ import {
   IconChevronDown,
   IconDownload,
   IconDotsCircleHorizontal,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -384,7 +385,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{volumeType.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage QoS Spec
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>

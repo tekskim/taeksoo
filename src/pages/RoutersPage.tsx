@@ -23,6 +23,7 @@ import {
   type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
@@ -221,7 +222,7 @@ const filterFields: FilterField[] = [
 
 export function RoutersPage() {
   const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [routers] = useState(mockRouters);
@@ -409,7 +410,7 @@ export function RoutersPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -426,7 +427,7 @@ export function RoutersPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}

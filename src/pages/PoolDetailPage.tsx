@@ -25,7 +25,8 @@ import {
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -33,9 +34,9 @@ import {
   IconBell,
   IconChevronDown,
   IconDotsCircleHorizontal,
-  IconUsers,
   IconCopy,
   IconExternalLink,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -199,8 +200,7 @@ export default function PoolDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -390,9 +390,7 @@ export default function PoolDetailPage() {
   // Health Monitor columns
   return (
     <PageShell
-      sidebar={
-        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-      }
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -412,7 +410,7 @@ export default function PoolDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          onSidebarToggle={openSidebar}
           actions={
             <TopBarAction
               icon={<IconBell size={16} stroke={1.5} />}
@@ -433,7 +431,7 @@ export default function PoolDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage Members
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
@@ -554,7 +552,7 @@ export default function PoolDetailPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Members</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                     Manage Members
                   </Button>
                 </div>

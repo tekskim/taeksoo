@@ -24,6 +24,7 @@ import {
 } from '@/design-system';
 import { IconCopy, IconBell } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   getCloudBuilderListConfig,
@@ -127,7 +128,7 @@ export function CloudBuilderDetailPage() {
   const params = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'discovery';
   const id = params.id ?? '';
@@ -381,7 +382,7 @@ export function CloudBuilderDetailPage() {
   ];
 
   const shellProps = {
-    sidebar: <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />,
+    sidebar: <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />,
     sidebarWidth: sidebarOpen ? 200 : 0,
     tabBar: (
       <TabBar
@@ -399,7 +400,7 @@ export function CloudBuilderDetailPage() {
     topBar: (
       <TopBar
         showSidebarToggle={!sidebarOpen}
-        onSidebarToggle={() => setSidebarOpen(true)}
+        onSidebarToggle={openSidebar}
         showNavigation={true}
         onBack={() => window.history.back()}
         onForward={() => window.history.forward()}

@@ -20,7 +20,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconEdit, IconTrash, IconUsers, IconBell } from '@tabler/icons-react';
+import { IconCirclePlus, IconEdit, IconTrash, IconBell, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -308,7 +308,7 @@ export default function ComputeAdminTenantDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
               Manage member
             </Button>
           </DetailHeader.Actions>

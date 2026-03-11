@@ -26,7 +26,13 @@ import {
 import { IconAction } from '@/design-system/components/Icons';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconTrash,
+  IconChevronDown,
+  IconChevronRight,
+  IconSettings,
+} from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -760,7 +766,7 @@ export default function IAMPolicyDetailPage() {
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Roles
                   </h2>
-                  <Button variant="secondary" size="sm">
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                     Manage roles
                   </Button>
                 </HStack>

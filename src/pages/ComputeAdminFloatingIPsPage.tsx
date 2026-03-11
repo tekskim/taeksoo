@@ -34,6 +34,7 @@ import {
   IconDownload,
   IconBell,
   IconCube,
+  IconBinaryTree,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -543,7 +544,12 @@ export function ComputeAdminFloatingIPsPage() {
         <PageHeader
           title="Floating IPs"
           actions={
-            <Button variant="primary" size="md" onClick={() => setIsAllocateDrawerOpen(true)}>
+            <Button
+              variant="primary"
+              size="md"
+              leftIcon={<IconBinaryTree size={12} />}
+              onClick={() => setIsAllocateDrawerOpen(true)}
+            >
               Allocate Floating IP
             </Button>
           }

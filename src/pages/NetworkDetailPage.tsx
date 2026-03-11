@@ -26,6 +26,7 @@ import {
   columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconCirclePlus,
@@ -380,7 +381,7 @@ export default function NetworkDetailPage() {
     moveTab,
   } = useTabs();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -720,7 +721,7 @@ export default function NetworkDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -736,6 +737,8 @@ export default function NetworkDetailPage() {
       }
       topBar={
         <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -843,7 +846,7 @@ export default function NetworkDetailPage() {
             <TabPanel value="subnets" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between h-7">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Subnets</h3>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                     Create subnet
@@ -851,7 +854,7 @@ export default function NetworkDetailPage() {
                 </div>
 
                 {/* Search */}
-                <div className="w-[var(--search-input-width)]">
+                <div className="flex items-center gap-1">
                   <SearchInput
                     value={subnetSearchTerm}
                     onChange={(e) => {
@@ -859,6 +862,8 @@ export default function NetworkDetailPage() {
                       setSubnetCurrentPage(1);
                     }}
                     placeholder="Search subnet by attributes"
+                    size="sm"
+                    className="w-[280px]"
                   />
                 </div>
 
@@ -892,12 +897,12 @@ export default function NetworkDetailPage() {
             <TabPanel value="ports" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between h-7">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                 </div>
 
                 {/* Search */}
-                <div className="w-[var(--search-input-width)]">
+                <div className="flex items-center gap-1">
                   <SearchInput
                     value={portSearchTerm}
                     onChange={(e) => {
@@ -905,6 +910,8 @@ export default function NetworkDetailPage() {
                       setPortCurrentPage(1);
                     }}
                     placeholder="Search port by attributes"
+                    size="sm"
+                    className="w-[280px]"
                   />
                 </div>
 

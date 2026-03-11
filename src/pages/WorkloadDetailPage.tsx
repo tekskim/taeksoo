@@ -23,7 +23,6 @@ import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPause,
-  IconTrash,
   IconBell,
   IconCopy,
   IconCheck,
@@ -34,6 +33,7 @@ import {
   IconCircleCheck,
   IconAlertCircle,
   IconInfoCircle,
+  IconCircleX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -382,7 +382,7 @@ export function WorkloadDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerPause size={12} />}>
               Stop
             </Button>
-            <Button variant="danger" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button variant="danger" size="sm" leftIcon={<IconCircleX size={12} />}>
               Terminate
             </Button>
             <ContextMenu

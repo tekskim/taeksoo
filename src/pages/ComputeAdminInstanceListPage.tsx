@@ -35,12 +35,12 @@ import {
   IconPlayerPlay,
   IconPlayerStop,
   IconTrash,
-  IconRefresh,
   IconArrowUp,
   IconBell,
   IconDownload,
   IconLock,
   IconTerminal2,
+  IconPower,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
@@ -1271,7 +1271,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actions,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1428,7 +1428,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actions,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1575,7 +1575,7 @@ export function ComputeAdminInstanceListPage() {
               <Button
                 variant="muted"
                 size="sm"
-                leftIcon={<IconRefresh size={12} />}
+                leftIcon={<IconPower size={12} />}
                 disabled={
                   activeTab === 'vm'
                     ? selectedInstances.length === 0

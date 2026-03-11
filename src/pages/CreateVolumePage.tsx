@@ -31,6 +31,7 @@ import {
 } from '@/design-system';
 import type { TableColumn, WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -284,7 +285,7 @@ function SummarySidebar({
 export function CreateVolumePage() {
   const navigate = useNavigate();
   const isV2 = useIsV2();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Basic information state
@@ -602,7 +603,7 @@ export function CreateVolumePage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -618,7 +619,7 @@ export function CreateVolumePage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}

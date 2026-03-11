@@ -35,7 +35,7 @@ import {
   IconPlayerPlay,
   IconPlayerStop,
   IconTrash,
-  IconRefresh,
+  IconPower,
   IconBell,
   IconDownload,
   IconLock,
@@ -1331,7 +1331,9 @@ export function InstanceListPage() {
       sortable: false,
       render: (_, row) =>
         row.locked ? (
-          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          <div className="flex items-center justify-center w-full">
+            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          </div>
         ) : null,
     },
     {
@@ -1428,7 +1430,7 @@ export function InstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actionsDouble,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1585,7 +1587,7 @@ export function InstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actionsDouble,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1736,7 +1738,7 @@ export function InstanceListPage() {
               <Button
                 variant="muted"
                 size="sm"
-                leftIcon={<IconRefresh size={12} />}
+                leftIcon={<IconPower size={12} />}
                 disabled={
                   activeTab === 'vm'
                     ? selectedInstances.length === 0

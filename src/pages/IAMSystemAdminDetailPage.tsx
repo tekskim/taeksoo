@@ -25,7 +25,15 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconChevronDown, IconRefresh } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconTrash,
+  IconChevronDown,
+  IconRefresh,
+  IconCircleX,
+  IconLock,
+  IconReload,
+} from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 
 /* ----------------------------------------
@@ -431,7 +439,7 @@ export default function IAMSystemAdminDetailPage() {
               <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                 Delete
               </Button>
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
                 Lock setting
               </Button>
               <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
@@ -482,7 +490,7 @@ export default function IAMSystemAdminDetailPage() {
                 <SectionCard.Header
                   title="Password"
                   actions={
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconReload size={12} />}>
                       Reset password
                     </Button>
                   }
@@ -531,7 +539,7 @@ export default function IAMSystemAdminDetailPage() {
                   />
                 </HStack>
                 <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                <Button variant="secondary" size="sm">
+                <Button variant="secondary" size="sm" leftIcon={<IconCircleX size={12} />}>
                   Terminate all sessions
                 </Button>
               </HStack>

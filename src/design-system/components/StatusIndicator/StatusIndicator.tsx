@@ -12,7 +12,7 @@ import {
   IconCircleDashedCheck,
   IconLivePhotoOff,
   IconTool,
-  IconCircleX,
+  IconAlertCircle,
   IconAlertHexagon,
   IconShieldExclamation,
   IconCircleMinus,
@@ -140,7 +140,7 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   },
   down: {
     label: 'Down',
-    icon: <IconCircleX size={ICON_SIZE} strokeWidth={2} />,
+    icon: <IconAlertCircle size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-warning-bg)]',
   },
   maintenance: {

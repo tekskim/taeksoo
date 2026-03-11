@@ -24,6 +24,7 @@ import {
   columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -174,7 +175,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
 
 export default function SecurityGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'rules';
@@ -416,7 +417,7 @@ export default function SecurityGroupDetailPage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
       sidebarWidth={sidebarWidth}
       tabBar={
         <TabBar
@@ -433,7 +434,7 @@ export default function SecurityGroupDetailPage() {
       topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
+          onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
@@ -543,7 +544,7 @@ export default function SecurityGroupDetailPage() {
                   </div>
                   <div className="w-px h-4 bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedRules.length === 0}
