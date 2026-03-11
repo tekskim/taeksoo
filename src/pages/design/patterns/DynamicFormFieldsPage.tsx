@@ -1383,7 +1383,7 @@ export function DynamicFormFieldsPage() {
       relatedLinks={[
         {
           label: 'Form Field',
-          path: '/design/components/form-field',
+          path: '/design/patterns/form-field',
           description: 'Label + input + helper text composition',
         },
         {

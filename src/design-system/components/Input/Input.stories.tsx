@@ -75,23 +75,24 @@ import { Input, FormField } from '@thaki/tds';
     },
     label: {
       control: 'text',
-      description: '입력 필드 라벨',
+      description: '@deprecated FormField의 label prop을 사용하세요.',
       table: {
         type: { summary: 'string' },
       },
     },
     helperText: {
       control: 'text',
-      description: '도움말 텍스트 (라벨 아래 표시)',
+      description: '@deprecated FormField의 helperText prop을 사용하세요.',
       table: {
         type: { summary: 'string' },
       },
     },
     error: {
       control: 'text',
-      description: '에러 메시지 (표시 시 빨간색 테두리)',
+      description:
+        '에러 상태 (빨간색 테두리). 에러 메시지는 FormField의 errorMessage를 사용하세요.',
       table: {
-        type: { summary: 'string' },
+        type: { summary: 'string | boolean' },
       },
     },
     disabled: {

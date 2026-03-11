@@ -136,7 +136,7 @@ export function GlobalNotificationPanelPage() {
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Toast', path: '/design/components/toast' },
         { label: 'Notification Center', path: '/design/components/notification-center' },
-        { label: 'Error & Alert', path: '/design/foundation/error-alert' },
+        { label: 'Error & Alert', path: '/design/policies/error-alert' },
         { label: 'Desktop UI', path: '/design/patterns/desktop-grid' },
       ]}
     />

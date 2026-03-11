@@ -196,15 +196,19 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     return (
       <div className={`flex flex-col gap-1.5 w-full ${className}`}>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          {label && <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>}
-          {showValue && (
-            <div className="flex items-center text-body-sm text-[var(--color-text-default)]">
-              <span>{value + newValue}/</span>
-              {isUnlimited ? <IconInfinity size={12} stroke={1} /> : <span>{max}</span>}
-            </div>
-          )}
-        </div>
+        {(label || showValue) && (
+          <div className="flex items-center justify-between">
+            {label && (
+              <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>
+            )}
+            {showValue && (
+              <div className="flex items-center text-body-sm text-[var(--color-text-default)]">
+                <span>{value + newValue}/</span>
+                {isUnlimited ? <IconInfinity size={12} stroke={1} /> : <span>{max}</span>}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Progress Bar */}
         <div

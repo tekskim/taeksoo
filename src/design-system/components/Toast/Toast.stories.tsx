@@ -23,9 +23,11 @@ const meta: Meta<typeof Toast> = {
 
 ### Variants
 - **success**: 성공 메시지 (녹색)
-- **warning**: 경고 메시지 (노란색)
-- **error**: 에러 메시지 (빨간색)
 - **info**: 정보 메시지 (파란색)
+- **warning**: 경고 메시지 (노란색) — 디자인 가이드라인에서는 Snackbar 사용 권장
+- **error**: 에러 메시지 (빨간색) — 디자인 가이드라인에서는 Snackbar/InlineMessage 사용 권장
+
+> **디자인 가이드라인**: Toast는 가벼운 피드백(Success/Info)에 사용합니다. Error/Warning 수준의 알림은 사용자의 확인이나 후속 액션이 필요하므로 Snackbar 또는 InlineMessage를 권장합니다.
 
 ### 사용법
 \`\`\`tsx

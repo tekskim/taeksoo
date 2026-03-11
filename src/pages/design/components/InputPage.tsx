@@ -3,7 +3,15 @@ import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Input, Textarea, NumberInput, SearchInput, VStack, HStack } from '@/design-system';
+import {
+  Input,
+  Textarea,
+  NumberInput,
+  SearchInput,
+  VStack,
+  HStack,
+  FormField,
+} from '@/design-system';
 import { IconSearch, IconMail } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
@@ -378,19 +386,15 @@ export function InputPage() {
           <VStack gap={3}>
             <Label>Labels & Validation</Label>
             <div className="flex flex-wrap gap-4 items-start">
-              <Input label="Label" placeholder="Enter text..." width="md" />
-              <Input
-                label="With helper"
-                placeholder="Email"
-                helperText="We'll never share your email"
-                width="md"
-              />
-              <Input
-                label="With error"
-                placeholder="Username"
-                error="Username is required"
-                width="md"
-              />
+              <FormField label="Label">
+                <Input placeholder="Enter text..." width="md" />
+              </FormField>
+              <FormField label="With helper" helperText="We'll never share your email">
+                <Input placeholder="Email" width="md" />
+              </FormField>
+              <FormField label="With error" error errorMessage="Username is required">
+                <Input placeholder="Username" error width="md" />
+              </FormField>
             </div>
           </VStack>
 
@@ -643,7 +647,7 @@ export function InputPage() {
       relatedLinks={[
         {
           label: 'Form Field Spacing',
-          path: '/design/components/form-field',
+          path: '/design/patterns/form-field',
           description: 'Label and input combinations',
         },
         {

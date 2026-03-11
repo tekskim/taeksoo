@@ -788,7 +788,7 @@ export function SectionCardPage() {
       relatedLinks={[
         {
           label: 'Detail Header',
-          path: '/design/components/detail-header',
+          path: '/design/patterns/detail-header',
           description: '상세 페이지 헤더',
         },
         {

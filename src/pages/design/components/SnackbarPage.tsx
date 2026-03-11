@@ -187,8 +187,8 @@ export function SnackbarPage() {
           label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',
         },
-        { label: 'UX Writing Guide', path: '/design/foundation/ux-writing' },
-        { label: 'Error & Alert', path: '/design/foundation/error-alert' },
+        { label: 'UX Writing Guide', path: '/design/policies/ux-writing' },
+        { label: 'Error & Alert', path: '/design/policies/error-alert' },
       ]}
     />
   );

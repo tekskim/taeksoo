@@ -248,7 +248,7 @@ export function WizardPage() {
         },
         {
           label: 'Section card',
-          path: '/design/components/section-card',
+          path: '/design/patterns/section-card',
           description: 'Input card container',
         },
         {

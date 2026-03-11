@@ -91,11 +91,19 @@ const STATUS_GUIDELINES = `## Overview
 - Action 타입(building, deleting, pending 등)의 아이콘은 스피너 형태로 회전하여 진행 중임을 시각적으로 표현한다.
 - 레이블 텍스트는 줄바꿈 없이 한 줄로 유지한다.
 
-### 3) 반응형 대응
+### 3) Layout 형식
+
+| Layout | 설명 | 사용 시점 |
+| --- | --- | --- |
+| default | Icon + Label (pill) | 일반적인 상태 표시. 테이블, DetailHeader 등 |
+| icon-only | 아이콘만 표시 | 테이블 컬럼 너비가 좁은 경우 |
+| badge | Icon + Label (square, radius-sm) | 카드나 태그 스타일로 상태를 표시할 때 |
+
+### 4) 반응형 대응
 - 테이블 Status 컬럼 등 공간이 제한적인 경우 Display Type을 Icon Only로 전환할 수 있다.
 - Icon Only 사용 시 설계 시점에서 명시적으로 선택한다.
 
-### 4) 접근성
+### 5) 접근성
 - Icon Only 형식 사용 시 \`aria-label\` 또는 \`title\` 속성으로 상태명을 제공해야 한다.
 - 색상만으로 상태를 전달하지 않고 아이콘과 레이블을 함께 사용한다.
 
@@ -109,6 +117,30 @@ const STATUS_GUIDELINES = `## Overview
 | --- | --- |
 | Default | 서버 응답 상태값을 가공 없이 그대로 표시한다. |
 | Defined | 별도 기획 문서에서 정의한 레이블 텍스트를 사용한다. |
+
+### 전체 Defined 상태 매핑
+
+| 시맨틱 타입 | status 값 | 기본 레이블 | 설명 |
+| --- | --- | --- | --- |
+| Active (Green) | active | Active | 정상 동작 중 |
+| Error (Red) | error | Error | 오류 발생 |
+| Processing (Blue) | building | Building... | 생성 중 (스피너) |
+| Processing (Blue) | deleting | Deleting... | 삭제 중 |
+| Processing (Blue) | pending | Pending | 대기 중 |
+| Warning (Orange) | verify-resized | Verify Resized | 리사이즈 확인 필요 |
+| Warning (Orange) | degraded | Degraded | 성능 저하 |
+| Warning (Orange) | no-monitor | No Monitor | 모니터 없음 |
+| Warning (Orange) | down | Down | 다운 상태 |
+| Warning (Orange) | maintenance | Maintenance | 유지보수 중 |
+| Muted (Gray) | suspended | Suspended | 일시 중지 |
+| Muted (Gray) | shelved | Shelved Offloaded | 보관됨 (오프로드) |
+| Muted (Gray) | shelved-offloaded | Shelved Offloaded | 보관됨 (오프로드) |
+| Muted (Gray) | mounted | Mounted | 마운트됨 |
+| Muted (Gray) | shutoff | Shutoff | 종료됨 |
+| Muted (Gray) | paused | Paused | 일시 정지 |
+| Muted (Gray) | draft | Draft | 초안 |
+| Muted (Gray) | deactivated | Deactivated | 비활성화 |
+| Muted (Gray) | in-use | In-use | 사용 중 |
 
 ### 특수 상태 정의 문서 관리 원칙
 
@@ -456,7 +488,7 @@ export function StatusIndicatorPage() {
       relatedLinks={[
         { label: 'Badge', path: '/design/components/badge' },
         { label: 'Table', path: '/design/components/table' },
-        { label: 'Detail Header', path: '/design/components/detail-header' },
+        { label: 'Detail Header', path: '/design/patterns/detail-header' },
       ]}
     />
   );

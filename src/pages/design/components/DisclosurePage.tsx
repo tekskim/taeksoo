@@ -175,12 +175,12 @@ export function DisclosurePage() {
       relatedLinks={[
         {
           label: 'Section card',
-          path: '/design/components/section-card',
+          path: '/design/patterns/section-card',
           description: 'Container for grouping related content',
         },
         {
           label: 'Detail header',
-          path: '/design/components/detail-header',
+          path: '/design/patterns/detail-header',
           description: 'Page header for resource detail views',
         },
       ]}

@@ -523,12 +523,12 @@ export function DetailPagePatternPage() {
         { label: 'Tabs', path: '/design/components/tabs', description: '콘텐츠 탭 전환' },
         {
           label: 'Section Card',
-          path: '/design/components/section-card',
+          path: '/design/patterns/section-card',
           description: '정보 그룹화 카드',
         },
         {
           label: 'Detail Header',
-          path: '/design/components/detail-header',
+          path: '/design/patterns/detail-header',
           description: '상세 페이지 헤더',
         },
       ]}

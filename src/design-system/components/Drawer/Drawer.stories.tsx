@@ -4,6 +4,7 @@ import { Button } from '../Button';
 import { Input } from '../Input';
 import { Select } from '../Select';
 import { Toggle } from '../Toggle';
+import { FormField } from '../FormField';
 import { useState } from 'react';
 
 const meta: Meta<typeof Drawer> = {
@@ -36,7 +37,7 @@ const meta: Meta<typeof Drawer> = {
 - ESC 키로 닫기 지원
 - 포커스 트랩 (Drawer 내에서만 Tab 이동)
 - aria-modal, role="dialog" 자동 적용
-- 닫기 버튼 제공
+- ESC 키, 배경 클릭으로 닫기 지원 (Close 버튼은 제거됨)
 
 ### 예시
 \`\`\`tsx
@@ -93,7 +94,7 @@ import { Drawer } from '@thaki/tds';
     },
     showCloseButton: {
       control: 'boolean',
-      description: '헤더에 닫기 버튼 표시',
+      description: '@deprecated Close 버튼이 제거되어 이 prop은 무시됩니다.',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'true' },
@@ -208,8 +209,12 @@ export const WithFooter: Story = {
           }
         >
           <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
-            <Input label="Name" placeholder="Enter name" fullWidth />
-            <Input label="Description" placeholder="Enter description" fullWidth />
+            <FormField label="Name">
+              <Input placeholder="Enter name" fullWidth />
+            </FormField>
+            <FormField label="Description">
+              <Input placeholder="Enter description" fullWidth />
+            </FormField>
           </div>
         </Drawer>
       </>
@@ -242,17 +247,20 @@ export const EditForm: Story = {
           <div className="flex flex-col gap-[var(--primitive-spacing-6)]">
             <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
               <h3 className="text-label-lg text-[var(--color-text-default)]">General</h3>
-              <Input label="Instance Name" defaultValue="my-instance-01" fullWidth />
-              <Select
-                label="Region"
-                options={[
-                  { value: 'us-east', label: 'US East' },
-                  { value: 'us-west', label: 'US West' },
-                  { value: 'eu-west', label: 'EU West' },
-                ]}
-                defaultValue="us-east"
-                fullWidth
-              />
+              <FormField label="Instance Name">
+                <Input defaultValue="my-instance-01" fullWidth />
+              </FormField>
+              <FormField label="Region">
+                <Select
+                  options={[
+                    { value: 'us-east', label: 'US East' },
+                    { value: 'us-west', label: 'US West' },
+                    { value: 'eu-west', label: 'EU West' },
+                  ]}
+                  defaultValue="us-east"
+                  fullWidth
+                />
+              </FormField>
             </div>
 
             <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
@@ -291,10 +299,18 @@ export const WideDrawer: Story = {
               This drawer is wider than the default to accommodate more content.
             </p>
             <div className="grid grid-cols-2 gap-[var(--primitive-spacing-4)]">
-              <Input label="First Name" placeholder="John" />
-              <Input label="Last Name" placeholder="Doe" />
-              <Input label="Email" placeholder="john@example.com" />
-              <Input label="Phone" placeholder="+1 234 567 890" />
+              <FormField label="First Name">
+                <Input placeholder="John" fullWidth />
+              </FormField>
+              <FormField label="Last Name">
+                <Input placeholder="Doe" fullWidth />
+              </FormField>
+              <FormField label="Email">
+                <Input placeholder="john@example.com" fullWidth />
+              </FormField>
+              <FormField label="Phone">
+                <Input placeholder="+1 234 567 890" fullWidth />
+              </FormField>
             </div>
           </div>
         </Drawer>

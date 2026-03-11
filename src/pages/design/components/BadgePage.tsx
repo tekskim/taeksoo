@@ -535,6 +535,55 @@ function BadgeGuidelines() {
           </ul>
         </Prose>
 
+        <SubSectionTitle>Semantic ↔ Theme 매핑</SubSectionTitle>
+        <Prose>
+          <p>
+            Badge의 <code>variant</code>(semantic)와 <code>theme</code>(색상)은 다음과 같이
+            매핑된다. Semantic variant 사용 시 자동으로 대응되는 theme 색상이 적용된다.
+          </p>
+        </Prose>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th>Semantic Variant</Th>
+              <Th>Theme</Th>
+              <Th>용도</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>info</Td>
+              <Td>blue</Td>
+              <Td>정보성 레이블, 카운트 뱃지</Td>
+            </tr>
+            <tr>
+              <Td>success</Td>
+              <Td>green</Td>
+              <Td>완료·승인 등 긍정적 상태</Td>
+            </tr>
+            <tr>
+              <Td>warning</Td>
+              <Td>yellow</Td>
+              <Td>주의·베타 등 경고성 레이블</Td>
+            </tr>
+            <tr>
+              <Td>danger</Td>
+              <Td>red</Td>
+              <Td>실패·만료 등 오류/위험 레이블</Td>
+            </tr>
+            <tr>
+              <Td>—</Td>
+              <Td>white (기본값)</Td>
+              <Td>중립 레이블, 카테고리 분류</Td>
+            </tr>
+            <tr>
+              <Td>—</Td>
+              <Td>gray</Td>
+              <Td>비활성·보관 등 약한 강조</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
         <DosDonts
           doItems={[
             '레이블은 1–3단어 이내의 짧은 텍스트로 작성한다.',

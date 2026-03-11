@@ -375,7 +375,7 @@ function DatePickerGuidelines() {
         <SectionTitle>Usage Guidelines</SectionTitle>
         <DosDonts
           doItems={[
-            '기간 필터(로그/리포트)에는 Date Range + Presets를 권장한다.',
+            '기간 필터(로그/리포트)에는 Date Range + Presets를 권장한다. (Presets 기능은 구현 예정)',
             '값이 필수인 경우 라벨과 required 표시를 명확히 한다.',
             'min/max, 기간 제한 같은 정책이 있으면 입력 영역 근처에 안내한다.',
             '기본값이 있는 경우(예: 최근 7일) 명확히 노출한다.',
@@ -571,7 +571,7 @@ export function DatePickerPage() {
         },
         {
           label: 'Monitoring Toolbar',
-          path: '/design/components/monitoring-toolbar',
+          path: '/design/patterns/monitoring-toolbar',
           description: 'Trigger 표현과 상태 스타일',
         },
         {
@@ -587,7 +587,7 @@ export function DatePickerPage() {
         },
         {
           label: 'UX Writing Guide',
-          path: '/design/foundation/ux-writing',
+          path: '/design/policies/ux-writing',
           description: '버튼/날짜 표기 규칙',
         },
       ]}

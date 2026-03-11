@@ -641,7 +641,7 @@ export function OpenFormPage() {
         },
         {
           label: 'Section card',
-          path: '/design/components/section-card',
+          path: '/design/patterns/section-card',
           description: 'Container component for form sections',
         },
         {

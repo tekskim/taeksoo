@@ -320,7 +320,6 @@ import { AppIconsPage } from '@/pages/design/foundation/AppIconsPage';
 import { UXWritingGuidePage } from '@/pages/design/foundation/UXWritingGuidePage';
 import { AccessibilityPage } from '@/pages/design/foundation/AccessibilityPage';
 import { ThemingPage } from '@/pages/design/foundation/ThemingPage';
-import { ContributingPage } from '@/pages/design/foundation/ContributingPage';
 import { ErrorAlertPage } from '@/pages/design/foundation/ErrorAlertPage';
 import { SystemErrorPage } from '@/pages/design/foundation/SystemErrorPage';
 import { ButtonPage } from '@/pages/design/components/ButtonPage';
@@ -343,7 +342,6 @@ import { CardPage } from '@/pages/design/components/CardPage';
 import { ChipPage } from '@/pages/design/components/ChipPage';
 import { StatusIndicatorPage } from '@/pages/design/components/StatusIndicatorPage';
 import { PaginationPage } from '@/pages/design/components/PaginationPage';
-import { SelectionIndicatorPage } from '@/pages/design/components/SelectionIndicatorPage';
 import { FileListCardPage } from '@/pages/design/components/FileListCardPage';
 import { ExpandableChecklistPage } from '@/pages/design/components/ExpandableChecklistPage';
 import { InlineMessagePage } from '@/pages/design/components/InlineMessagePage';
@@ -391,6 +389,8 @@ import { ShellPatternPage } from '@/pages/design/patterns/ShellPatternPage';
 import { EmptyStatesPage } from '@/pages/design/patterns/EmptyStatesPage';
 import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePrototypePage';
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
+import { DesignAuditPage } from '@/pages/design/DesignAuditPage';
+import { DesignTodoPage } from '@/pages/design/DesignTodoPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
@@ -990,12 +990,11 @@ function AppRoutes() {
         <Route path="foundation/transitions" element={<TransitionsPage />} />
         <Route path="foundation/icons" element={<IconsPage />} />
         <Route path="foundation/app-icons" element={<AppIconsPage />} />
-        <Route path="foundation/ux-writing" element={<UXWritingGuidePage />} />
-        <Route path="foundation/accessibility" element={<AccessibilityPage />} />
-        <Route path="foundation/theming" element={<ThemingPage />} />
-        <Route path="foundation/contributing" element={<ContributingPage />} />
-        <Route path="foundation/error-alert" element={<ErrorAlertPage />} />
-        <Route path="foundation/system-error" element={<SystemErrorPage />} />
+        <Route path="policies/ux-writing" element={<UXWritingGuidePage />} />
+        <Route path="policies/accessibility" element={<AccessibilityPage />} />
+        <Route path="policies/theming" element={<ThemingPage />} />
+        <Route path="policies/error-alert" element={<ErrorAlertPage />} />
+        <Route path="policies/system-error" element={<SystemErrorPage />} />
         <Route path="foundation/*" element={<DesignOverviewPage />} />
         <Route path="components/button" element={<ButtonPage />} />
         <Route path="components/input" element={<InputPage />} />
@@ -1003,7 +1002,7 @@ function AppRoutes() {
         <Route path="components/number-input" element={<NumberInputPage />} />
         <Route path="components/textarea" element={<TextareaPage />} />
         <Route path="components/search-input" element={<SearchInputPage />} />
-        <Route path="components/form-field" element={<FormFieldPage />} />
+        <Route path="patterns/form-field" element={<FormFieldPage />} />
         <Route path="components/filter-search-input" element={<FilterSearchInputPage />} />
         <Route path="components/select" element={<SelectPage />} />
         <Route path="components/datepicker" element={<DatePickerPage />} />
@@ -1017,7 +1016,6 @@ function AppRoutes() {
         <Route path="components/chip" element={<ChipPage />} />
         <Route path="components/status-indicator" element={<StatusIndicatorPage />} />
         <Route path="components/pagination" element={<PaginationPage />} />
-        <Route path="components/selection-indicator" element={<SelectionIndicatorPage />} />
         <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />
         <Route path="components/inline-message" element={<InlineMessagePage />} />
@@ -1046,12 +1044,12 @@ function AppRoutes() {
         <Route path="components/disclosure" element={<DisclosurePage />} />
         <Route path="components/window-control" element={<WindowControlPage />} />
         <Route path="components/scrollbar" element={<ScrollbarPage />} />
-        <Route path="components/detail-header" element={<DetailHeaderPage />} />
-        <Route path="components/editor" element={<EditorPage />} />
-        <Route path="components/section-card" element={<SectionCardPage />} />
-        <Route path="components/monitoring-toolbar" element={<MonitoringToolbarPage />} />
-        <Route path="components/csv-download" element={<CsvDownloadPage />} />
-        <Route path="components/app-window" element={<AppWindowPage />} />
+        <Route path="patterns/detail-header" element={<DetailHeaderPage />} />
+        <Route path="patterns/editor" element={<EditorPage />} />
+        <Route path="patterns/section-card" element={<SectionCardPage />} />
+        <Route path="patterns/monitoring-toolbar" element={<MonitoringToolbarPage />} />
+        <Route path="policies/csv-download" element={<CsvDownloadPage />} />
+        <Route path="policies/app-window" element={<AppWindowPage />} />
         <Route path="components/*" element={<DesignOverviewPage />} />
         <Route path="patterns/common" element={<CommonPatternsPage />} />
         <Route path="patterns/wizard" element={<WizardPage />} />
@@ -1059,7 +1057,7 @@ function AppRoutes() {
         <Route path="patterns/layout" element={<LayoutPage />} />
         <Route path="patterns/desktop-grid" element={<DesktopGridPage />} />
         <Route path="patterns/dynamic-form-fields" element={<DynamicFormFieldsPage />} />
-        <Route path="patterns/form-validation" element={<FormValidationPage />} />
+        <Route path="policies/form-validation" element={<FormValidationPage />} />
         <Route path="patterns/list-page" element={<ListPagePatternPage />} />
         <Route path="patterns/detail-page" element={<DetailPagePatternPage />} />
         <Route path="patterns/list-selector" element={<ListSelectorPage />} />
@@ -1069,6 +1067,8 @@ function AppRoutes() {
         <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
         {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
+        <Route path="audit" element={<DesignAuditPage />} />
+        <Route path="todo" element={<DesignTodoPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />

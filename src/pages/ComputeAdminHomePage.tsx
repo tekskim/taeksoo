@@ -57,6 +57,7 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
         </div>
       </div>
       <ProgressBar
+        variant="quota"
         value={used}
         max={total}
         showValue={false}
@@ -116,6 +117,7 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
         <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
       <ProgressBar
+        variant="quota"
         value={used}
         max={total}
         showValue={false}

@@ -665,7 +665,7 @@ export function DetailHeaderPage() {
       relatedLinks={[
         {
           label: 'Section Card',
-          path: '/design/components/section-card',
+          path: '/design/patterns/section-card',
           description: '정보 그룹화 카드 컨테이너',
         },
         { label: 'Tabs', path: '/design/components/tabs', description: '콘텐츠 탭 전환' },

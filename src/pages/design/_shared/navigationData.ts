@@ -39,7 +39,6 @@ import {
   IconAccessible,
   IconBrush,
   IconChecklist,
-  IconUsers,
   IconBook,
   IconComponents,
   IconDeviceDesktop,
@@ -103,57 +102,9 @@ const foundationItems: NavItem[] = [
   },
   { id: 'icons', label: 'Icons', icon: IconStar, path: '/design/foundation/icons' },
   { id: 'app-icons', label: 'App icons', icon: IconApps, path: '/design/foundation/app-icons' },
-  {
-    id: 'ux-writing-guide',
-    label: 'UX Writing Guide',
-    icon: IconPencil,
-    path: '/design/foundation/ux-writing',
-  },
-  {
-    id: 'accessibility',
-    label: 'Accessibility',
-    icon: IconAccessible,
-    path: '/design/foundation/accessibility',
-  },
-  {
-    id: 'theming',
-    label: 'Theming',
-    icon: IconBrush,
-    path: '/design/foundation/theming',
-  },
-  {
-    id: 'contributing',
-    label: 'Contributing',
-    icon: IconUsers,
-    path: '/design/foundation/contributing',
-  },
-  {
-    id: 'error-alert',
-    label: 'Error & Alert',
-    icon: IconAlertTriangle,
-    path: '/design/foundation/error-alert',
-  },
-  {
-    id: 'system-error',
-    label: 'System Error',
-    icon: IconAlertTriangle,
-    path: '/design/foundation/system-error',
-  },
 ];
 
 const formControlItems: NavItem[] = [
-  {
-    id: 'form-field-pattern',
-    label: 'Form Field',
-    icon: IconForms,
-    path: '/design/patterns/form-field-pattern',
-  },
-  {
-    id: 'form-field-spacing',
-    label: 'Form Field Spacing',
-    icon: IconLayoutGrid,
-    path: '/design/components/form-field',
-  },
   { id: 'button', label: 'Button', icon: IconClick, path: '/design/components/button' },
   { id: 'input', label: 'Input (All)', icon: IconForms, path: '/design/components/input' },
   { id: 'text-input', label: 'Text Input', icon: IconForms, path: '/design/components/text-input' },
@@ -203,12 +154,6 @@ const dataDisplayItems: NavItem[] = [
     icon: IconActivity,
     path: '/design/components/status-indicator',
   },
-  {
-    id: 'selection-indicator',
-    label: 'SelectionIndicator',
-    icon: IconSquareCheck,
-    path: '/design/components/selection-indicator',
-  },
   { id: 'badge', label: 'Badge', icon: IconTag, path: '/design/components/badge' },
   { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
   { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
@@ -223,6 +168,12 @@ const dataDisplayItems: NavItem[] = [
     label: 'Expandable Checklist',
     icon: IconChecklist,
     path: '/design/components/expandable-checklist',
+  },
+  {
+    id: 'disclosure',
+    label: 'Disclosure',
+    icon: IconSelector,
+    path: '/design/components/disclosure',
   },
 ];
 
@@ -257,6 +208,20 @@ const feedbackItems: NavItem[] = [
     icon: IconLoader2,
     path: '/design/components/spinner',
   },
+  { id: 'toast', label: 'Toast', icon: IconBell, path: '/design/components/toast' },
+  { id: 'snackbar', label: 'Snackbar', icon: IconBell, path: '/design/components/snackbar' },
+  {
+    id: 'notification-center',
+    label: 'Notification center',
+    icon: IconBell,
+    path: '/design/components/notification-center',
+  },
+  {
+    id: 'global-notification-panel',
+    label: 'Global notification panel',
+    icon: IconBell,
+    path: '/design/components/global-notification-panel',
+  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -280,22 +245,17 @@ const navigationItems: NavItem[] = [
     icon: IconMenu2,
     path: '/design/components/menu',
   },
-];
-
-const notificationItems: NavItem[] = [
-  { id: 'toast', label: 'Toast', icon: IconBell, path: '/design/components/toast' },
-  { id: 'snackbar', label: 'Snackbar', icon: IconBell, path: '/design/components/snackbar' },
   {
-    id: 'notification-center',
-    label: 'Notification center',
-    icon: IconBell,
-    path: '/design/components/notification-center',
+    id: 'window-control',
+    label: 'Window Control',
+    icon: IconAppWindow,
+    path: '/design/components/window-control',
   },
   {
-    id: 'global-notification-panel',
-    label: 'Global notification panel',
-    icon: IconBell,
-    path: '/design/components/global-notification-panel',
+    id: 'scrollbar',
+    label: 'Scrollbar',
+    icon: IconLayoutSidebar,
+    path: '/design/components/scrollbar',
   },
 ];
 
@@ -318,81 +278,14 @@ const overlayItems: NavItem[] = [
   },
 ];
 
-const layoutComponentItems: NavItem[] = [
-  {
-    id: 'disclosure',
-    label: 'Disclosure',
-    icon: IconSelector,
-    path: '/design/components/disclosure',
-  },
-  {
-    id: 'window-control',
-    label: 'Window Control',
-    icon: IconAppWindow,
-    path: '/design/components/window-control',
-  },
-  {
-    id: 'scrollbar',
-    label: 'Scrollbar',
-    icon: IconLayoutSidebar,
-    path: '/design/components/scrollbar',
-  },
-  {
-    id: 'detail-header',
-    label: 'Detail header',
-    icon: IconLayoutNavbar,
-    path: '/design/components/detail-header',
-  },
-  {
-    id: 'section-card',
-    label: 'Section card',
-    icon: IconLayoutGrid,
-    path: '/design/components/section-card',
-  },
-  {
-    id: 'monitoring-toolbar',
-    label: 'Monitoring toolbar',
-    icon: IconRefresh,
-    path: '/design/components/monitoring-toolbar',
-  },
-  {
-    id: 'csv-download',
-    label: 'List Download (CSV Export)',
-    icon: IconDownload,
-    path: '/design/components/csv-download',
-  },
-  {
-    id: 'app-window',
-    label: 'App Window',
-    icon: IconTerminal2,
-    path: '/design/components/app-window',
-  },
-  {
-    id: 'editor',
-    label: 'Editor',
-    icon: IconTemplate,
-    path: '/design/components/editor',
-  },
-];
-
 const patternItems: NavItem[] = [
+  // Page-level patterns
+  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
-    id: 'common-patterns',
-    label: 'Common patterns',
-    icon: IconTemplate,
-    path: '/design/patterns/common',
-  },
-  {
-    id: 'wizard',
-    label: 'Wizard (Create Flow)',
-    icon: IconListNumbers,
-    path: '/design/patterns/wizard',
-  },
-  {
-    id: 'open-form',
-    label: 'Open Form (Create Flow)',
-    icon: IconLayoutList,
-    path: '/design/patterns/open-form',
+    id: 'shell-pattern',
+    label: 'Shell',
+    icon: IconTerminal2,
+    path: '/design/patterns/shell',
   },
   {
     id: 'list-page',
@@ -407,6 +300,64 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/detail-page',
   },
   {
+    id: 'empty-states',
+    label: 'Empty States',
+    icon: IconTemplate,
+    path: '/design/patterns/empty-states',
+  },
+  // Section/Component patterns
+  {
+    id: 'detail-header',
+    label: 'Detail header',
+    icon: IconLayoutNavbar,
+    path: '/design/patterns/detail-header',
+  },
+  {
+    id: 'section-card',
+    label: 'Section card',
+    icon: IconLayoutGrid,
+    path: '/design/patterns/section-card',
+  },
+  {
+    id: 'common-patterns',
+    label: 'Common patterns',
+    icon: IconTemplate,
+    path: '/design/patterns/common',
+  },
+  // Form patterns
+  {
+    id: 'form-field-pattern',
+    label: 'Form Field',
+    icon: IconForms,
+    path: '/design/patterns/form-field-pattern',
+  },
+  {
+    id: 'form-field-spacing',
+    label: 'Form Field Spacing',
+    icon: IconLayoutGrid,
+    path: '/design/patterns/form-field',
+  },
+  {
+    id: 'dynamic-form-fields',
+    label: 'Dynamic Form Fields',
+    icon: IconForms,
+    path: '/design/patterns/dynamic-form-fields',
+  },
+  // Create flow patterns
+  {
+    id: 'wizard',
+    label: 'Wizard (Create Flow)',
+    icon: IconListNumbers,
+    path: '/design/patterns/wizard',
+  },
+  {
+    id: 'open-form',
+    label: 'Open Form (Create Flow)',
+    icon: IconLayoutList,
+    path: '/design/patterns/open-form',
+  },
+  // Specialized patterns
+  {
     id: 'list-selector',
     label: 'List Selector',
     icon: IconList,
@@ -419,18 +370,11 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/view-preferences',
   },
   {
-    id: 'shell-pattern',
-    label: 'Shell',
-    icon: IconTerminal2,
-    path: '/design/patterns/shell',
+    id: 'monitoring-toolbar',
+    label: 'Monitoring toolbar',
+    icon: IconRefresh,
+    path: '/design/patterns/monitoring-toolbar',
   },
-  {
-    id: 'empty-states',
-    label: 'Empty States',
-    icon: IconTemplate,
-    path: '/design/patterns/empty-states',
-  },
-  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
     id: 'desktop-grid',
     label: 'Desktop Icon Grid',
@@ -438,16 +382,61 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/desktop-grid',
   },
   {
-    id: 'dynamic-form-fields',
-    label: 'Dynamic Form Fields',
-    icon: IconForms,
-    path: '/design/patterns/dynamic-form-fields',
+    id: 'editor',
+    label: 'Editor',
+    icon: IconTemplate,
+    path: '/design/patterns/editor',
+  },
+];
+
+const policyItems: NavItem[] = [
+  {
+    id: 'accessibility',
+    label: 'Accessibility',
+    icon: IconAccessible,
+    path: '/design/policies/accessibility',
+  },
+  {
+    id: 'ux-writing-guide',
+    label: 'UX Writing Guide',
+    icon: IconPencil,
+    path: '/design/policies/ux-writing',
+  },
+  {
+    id: 'csv-download',
+    label: 'List Download (CSV Export)',
+    icon: IconDownload,
+    path: '/design/policies/csv-download',
+  },
+  {
+    id: 'app-window',
+    label: 'App Window',
+    icon: IconTerminal2,
+    path: '/design/policies/app-window',
+  },
+  {
+    id: 'theming',
+    label: 'Theming',
+    icon: IconBrush,
+    path: '/design/policies/theming',
+  },
+  {
+    id: 'error-alert',
+    label: 'Error & Alert',
+    icon: IconAlertTriangle,
+    path: '/design/policies/error-alert',
+  },
+  {
+    id: 'system-error',
+    label: 'System Error',
+    icon: IconAlertTriangle,
+    path: '/design/policies/system-error',
   },
   {
     id: 'form-validation',
     label: 'Form Validation',
     icon: IconChecklist,
-    path: '/design/patterns/form-validation',
+    path: '/design/policies/form-validation',
   },
 ];
 
@@ -510,6 +499,21 @@ const prototypeItems: NavItem[] = [
   },
 ];
 
+const auditItems: NavItem[] = [
+  {
+    id: 'audit-checklist',
+    label: 'Audit Checklist',
+    icon: IconChecklist,
+    path: '/design/audit',
+  },
+  {
+    id: 'project-todo',
+    label: 'Project TODO',
+    icon: IconListNumbers,
+    path: '/design/todo',
+  },
+];
+
 const testItems: NavItem[] = [
   {
     id: 'nested-box-test',
@@ -524,13 +528,13 @@ export const navGroups: NavGroup[] = [
   { title: 'Form Controls', items: formControlItems },
   { title: 'Data Display', items: dataDisplayItems },
   { title: 'Feedback', items: feedbackItems },
-  { title: 'Notifications', items: notificationItems },
   { title: 'Navigation', items: navigationItems },
   { title: 'Overlay', items: overlayItems },
-  { title: 'Layout Components', items: layoutComponentItems },
   { title: 'Patterns', items: patternItems },
+  { title: 'Policies', items: policyItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Figma Migration', items: figmaItems },
+  { title: 'Audit', items: auditItems },
   { title: 'Prototype', items: prototypeItems },
   { title: 'Test', items: testItems },
 ];
@@ -549,12 +553,11 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/foundation/transitions': '2026-02-25 14:00:00',
   '/design/foundation/icons': '2026-02-25 14:00:00',
   '/design/foundation/app-icons': '2026-03-01 10:30:00',
-  '/design/foundation/ux-writing': '2026-03-05 13:00:00',
-  '/design/foundation/accessibility': '2026-02-25 14:00:00',
-  '/design/foundation/theming': '2026-02-25 14:00:00',
-  '/design/foundation/contributing': '2026-02-25 14:00:00',
-  '/design/foundation/error-alert': '2026-03-09 10:30:00',
-  '/design/foundation/system-error': '2026-03-09 10:30:00',
+  '/design/policies/ux-writing': '2026-03-05 13:00:00',
+  '/design/policies/accessibility': '2026-02-25 14:00:00',
+  '/design/policies/theming': '2026-02-25 14:00:00',
+  '/design/policies/error-alert': '2026-03-09 10:30:00',
+  '/design/policies/system-error': '2026-03-09 10:30:00',
   // Form Controls
   '/design/components/button': '2026-03-09 10:30:00',
   '/design/components/input': '2026-03-01 10:30:00',
@@ -562,7 +565,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/number-input': '2026-03-09 15:00:00',
   '/design/components/textarea': '2026-03-09 15:00:00',
   '/design/components/search-input': '2026-03-09 15:00:00',
-  '/design/components/form-field': '2026-03-01 10:30:00',
+  '/design/patterns/form-field': '2026-03-01 10:30:00',
   '/design/components/filter-search-input': '2026-03-09 10:30:00',
   '/design/components/select': '2026-03-09 10:30:00',
   '/design/components/datepicker': '2026-03-09',
@@ -577,7 +580,6 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/chip': '2026-03-09',
   '/design/components/status-indicator': '2026-03-09 10:30:00',
   '/design/components/pagination': '2026-03-09',
-  '/design/components/selection-indicator': '2026-03-01 10:30:00',
   '/design/components/file-list-card': '2026-03-01 10:30:00',
   '/design/components/expandable-checklist': '2026-03-09 10:30:00',
   // Feedback
@@ -586,6 +588,10 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/progress-bar': '2026-03-09',
   '/design/components/skeleton': '2026-03-09',
   '/design/components/spinner': '2026-03-09',
+  '/design/components/toast': '2026-03-09 10:30:00',
+  '/design/components/snackbar': '2026-03-09 10:30:00',
+  '/design/components/notification-center': '2026-03-09 10:30:00',
+  '/design/components/global-notification-panel': '2026-03-09 10:30:00',
   // Navigation
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',
@@ -598,28 +604,24 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/context-menu': '2026-03-09',
   '/design/components/modal': '2026-03-09 10:30:00',
   '/design/components/drawer': '2026-03-09 10:30:00',
-  '/design/components/notification-center': '2026-03-09 10:30:00',
-  '/design/components/snackbar': '2026-03-09 10:30:00',
-  '/design/components/toast': '2026-03-09 10:30:00',
-  '/design/components/global-notification-panel': '2026-03-09 10:30:00',
   '/design/components/floating-card': '2026-03-05 13:00:00',
   // Layout & Patterns
   '/design/components/disclosure': '2026-03-03 18:45:00',
   '/design/components/window-control': '2026-03-09',
   '/design/components/scrollbar': '2026-03-05 13:00:00',
   '/design/patterns/common': '2026-03-01 10:30:00',
-  '/design/components/detail-header': '2026-03-09',
-  '/design/components/section-card': '2026-03-09',
+  '/design/patterns/detail-header': '2026-03-09',
+  '/design/patterns/section-card': '2026-03-09',
   '/design/patterns/wizard': '2026-03-05 13:00:00',
   '/design/patterns/open-form': '2026-03-01 10:30:00',
-  '/design/components/monitoring-toolbar': '2026-03-09',
-  '/design/components/csv-download': '2026-03-09 15:00:00',
-  '/design/components/app-window': '2026-03-09 10:30:00',
+  '/design/patterns/monitoring-toolbar': '2026-03-09',
+  '/design/policies/csv-download': '2026-03-09 15:00:00',
+  '/design/policies/app-window': '2026-03-09 10:30:00',
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
   '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
-  '/design/patterns/form-validation': '2026-03-01 10:30:00',
-  '/design/components/editor': '2026-03-09',
+  '/design/policies/form-validation': '2026-03-01 10:30:00',
+  '/design/patterns/editor': '2026-03-09',
   '/design/patterns/list-page': '2026-03-09 15:00:00',
   '/design/patterns/detail-page': '2026-03-09',
   '/design/patterns/list-selector': '2026-03-09 10:30:00',
@@ -640,6 +642,9 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/figma/components': '2026-03-01 10:30:00',
   // Prototype
   '/design/prototype/ai-workspace': '2026-03-05 14:00:00',
+  // Audit
+  '/design/audit': '2026-03-11 10:00:00',
+  '/design/todo': '2026-03-11 12:00:00',
   // Test
   '/design/test/nested-box': '2026-03-05 01:30:00',
 };

@@ -15,9 +15,9 @@ import { StatusIndicator, type StatusType } from './StatusIndicator';
  * ## 상태 카테고리
  * - **Success (녹색)**: active
  * - **Danger (빨강)**: error
- * - **Info (파랑)**: building, deleting
- * - **Warning (주황)**: verify-resized, degraded, no-monitor
- * - **Muted (회색)**: suspended, shelved, shutoff, paused, pending, draft 등
+ * - **Info (파랑)**: building, deleting, pending
+ * - **Warning (주황)**: verify-resized, degraded, no-monitor, down, maintenance
+ * - **Muted (회색)**: suspended, shelved, shelved-offloaded, mounted, shutoff, paused, draft, deactivated, in-use
  *
  * ## 레이아웃
  * - **icon-only**: 아이콘만 표시 (원형 배경)
@@ -199,6 +199,7 @@ export const InfoStatuses: Story = {
     <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="building" layout="default" />
       <StatusIndicator status="deleting" layout="default" />
+      <StatusIndicator status="pending" layout="default" />
     </div>
   ),
 };
@@ -210,6 +211,8 @@ export const WarningStatuses: Story = {
       <StatusIndicator status="verify-resized" layout="default" />
       <StatusIndicator status="degraded" layout="default" />
       <StatusIndicator status="no-monitor" layout="default" />
+      <StatusIndicator status="down" layout="default" />
+      <StatusIndicator status="maintenance" layout="default" />
     </div>
   ),
 };
@@ -220,15 +223,13 @@ export const MutedStatuses: Story = {
     <div className="flex flex-wrap gap-[var(--primitive-spacing-3)]">
       <StatusIndicator status="suspended" layout="default" />
       <StatusIndicator status="shelved" layout="default" />
+      <StatusIndicator status="shelved-offloaded" layout="default" />
       <StatusIndicator status="mounted" layout="default" />
       <StatusIndicator status="shutoff" layout="default" />
       <StatusIndicator status="paused" layout="default" />
-      <StatusIndicator status="pending" layout="default" />
       <StatusIndicator status="draft" layout="default" />
       <StatusIndicator status="deactivated" layout="default" />
       <StatusIndicator status="in-use" layout="default" />
-      <StatusIndicator status="maintenance" layout="default" />
-      <StatusIndicator status="down" layout="default" />
     </div>
   ),
 };

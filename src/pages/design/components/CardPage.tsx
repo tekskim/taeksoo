@@ -74,6 +74,7 @@ export function CardPage() {
   return (
     <ComponentPageTemplate
       title="Card"
+      tags={['AI Component']}
       description="Card는 단일 항목(리소스, 서비스, 앱 등)의 핵심 정보를 시각적으로 묶어 표현하는 컴포넌트. 항목을 탐색하고 선택하는 진입점으로 사용된다."
       whenToUse={[
         '동일한 유형의 항목을 격자 형태로 나열하여 한눈에 비교·탐색해야 할 때',
@@ -103,7 +104,7 @@ export function CardPage() {
         </div>
       }
       relatedLinks={[
-        { label: 'Section Card', path: '/design/components/section-card' },
+        { label: 'Section Card', path: '/design/patterns/section-card' },
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Chip', path: '/design/components/chip' },
       ]}

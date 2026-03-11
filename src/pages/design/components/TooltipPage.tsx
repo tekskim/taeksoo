@@ -86,7 +86,7 @@ const TOOLTIP_GUIDELINES = `## Overview
 | 기준 | Tooltip | Popover |
 | --- | --- | --- |
 | 콘텐츠 | 텍스트만 (1~2줄) | 인터랙티브 (폼, 버튼, 메뉴 등) |
-| 트리거 | Hover 전용 | Click 또는 Hover |
+| 트리거 | Hover 및 키보드 포커스 | Click 또는 Hover |
 | 인터랙션 | 비인터랙티브 (읽기 전용) | 인터랙티브 (클릭, 입력 가능) |
 | 접근성 역할 | role="tooltip" | aria-haspopup="dialog" |
 

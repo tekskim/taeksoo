@@ -261,7 +261,7 @@ import type { FileItem } from '@/design-system';
         },
         {
           label: 'FormField',
-          path: '/design/components/form-field',
+          path: '/design/patterns/form-field',
           description: '폼 필드 스페이싱 및 레이아웃',
         },
       ]}

@@ -338,7 +338,7 @@ export function NotificationCenterPage() {
           label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',
         },
-        { label: 'Error & Alert', path: '/design/foundation/error-alert' },
+        { label: 'Error & Alert', path: '/design/policies/error-alert' },
       ]}
     />
   );

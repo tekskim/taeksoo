@@ -421,7 +421,7 @@ export function ShellPatternPage() {
           </VStack>
         </VStack>
       }
-      relatedLinks={[{ label: 'App Window', path: '/design/components/app-window' }]}
+      relatedLinks={[{ label: 'App Window', path: '/design/policies/app-window' }]}
     />
   );
 }

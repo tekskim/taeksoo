@@ -143,8 +143,13 @@ function FormFieldPageGuidelines() {
                 <strong>그룹핑</strong>: 관련 필드를 SectionCard 또는 Disclosure로 묶어 구조화.
               </li>
               <li>
-                <strong>spacing=&quot;loose&quot;</strong>: 복잡한 필드(탭, 테이블 포함)에는
-                spacing=&quot;loose&quot;로 12px 간격을 적용.
+                <strong>spacing=&quot;loose&quot;</strong>: Label ↔ Control 간격을 12px로 넓힌다.
+                다음 컨트롤을 FormField로 감쌀 때 반드시 사용:
+                <ul className="list-disc pl-5 space-y-0.5 mt-1">
+                  <li>Checkbox (단독)</li>
+                  <li>Radio / CheckboxGroup</li>
+                  <li>Toggle</li>
+                </ul>
               </li>
               <li>
                 <strong>필드 순서</strong>: 필수 필드를 먼저, 선택 필드를 나중에 배치합니다.

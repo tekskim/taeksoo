@@ -201,6 +201,15 @@ export function TextareaPage() {
                       Notes
                     </td>
                   </tr>
+                  <tr>
+                    <td className="p-2 border border-[var(--color-border-default)]">Code</td>
+                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      모노스페이스 폰트 적용, 코드/스크립트 입력에 최적화
+                    </td>
+                    <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
+                      User data script, YAML, JSON
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>

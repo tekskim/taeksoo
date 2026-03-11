@@ -3,7 +3,7 @@ import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Chip, VStack } from '@/design-system';
+import { Chip, SelectionIndicator, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -504,6 +504,42 @@ export function ChipPage() {
               />
             </div>
           </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>SelectionIndicator</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                테이블/리스트에서 선택된 항목을 Chip으로 표시하는 전용 컴포넌트. 에러 상태 및 개별
+                제거를 지원한다.
+              </span>
+            </VStack>
+            <VStack
+              gap={4}
+              className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]"
+            >
+              <VStack gap={1}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Empty</span>
+                <SelectionIndicator />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">With Selection</span>
+                <SelectionIndicator
+                  selectedItems={[
+                    { id: '1', label: 'default-sg' },
+                    { id: '2', label: 'web-server-sg' },
+                    { id: '3', label: 'database-sg' },
+                  ]}
+                  onRemove={() => {}}
+                />
+              </VStack>
+              <VStack gap={1}>
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Error State</span>
+                <SelectionIndicator error errorMessage="Selection is required" />
+              </VStack>
+            </VStack>
+          </VStack>
         </VStack>
       }
       guidelines={<ChipGuidelines />}
@@ -546,6 +582,11 @@ export function ChipPage() {
           label: 'Tooltip',
           path: '/design/components/tooltip',
           description: '말줄임 처리된 Chip의 전체 텍스트 표시',
+        },
+        {
+          label: 'Table',
+          path: '/design/components/table',
+          description: 'SelectionIndicator와 함께 사용하는 데이터 테이블',
         },
       ]}
     />

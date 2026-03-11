@@ -36,6 +36,7 @@ interface ComponentPageTemplateProps {
   description: string;
   category?: string;
   maturity?: ComponentMaturity;
+  tags?: string[];
   preview?: ReactNode;
   usage?: { code: string; description?: string };
   examples?: ReactNode;
@@ -74,6 +75,7 @@ export function ComponentPageTemplate({
   title,
   description,
   maturity,
+  tags,
   preview,
   usage,
   examples,
@@ -143,6 +145,18 @@ export function ComponentPageTemplate({
               </span>
             )}
           </div>
+          {tags && tags.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center px-2 py-0.5 rounded-full text-body-xs font-medium bg-[var(--color-state-info-bg)] text-[var(--color-state-info)] border border-[var(--color-state-info)]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
           <p className="text-body-lg text-[var(--color-text-muted)]">{description}</p>
           {lastUpdated && (
             <div className="flex items-center gap-1.5 mt-1">

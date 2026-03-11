@@ -93,6 +93,7 @@ export function ExpandableChecklistPage() {
   return (
     <ComponentPageTemplate
       title="Expandable Checklist"
+      tags={['AI Component']}
       description="여러 개의 항목을 그룹 단위로 접고 펼칠 수 있으며, 각 항목의 선택 상태와 상태 레이블을 함께 표시하는 컴포넌트."
       whenToUse={[
         '복수의 리소스를 선택하여 콘텐츠(예: 모니터링 차트)에 반영해야 할 때',

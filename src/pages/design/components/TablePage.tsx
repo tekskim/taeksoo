@@ -119,6 +119,13 @@ Table은 일반적으로 다음 패턴과 함께 사용된다.
 
 ## Usage Guidelines
 
+- 데이터가 5행 이상인 리스트에서 Table을 사용한다. 5행 미만이면 SectionCard DataRow를 고려한다.
+- 정렬 가능한 컬럼은 \`sortable\`을 활성화하고, 기본 정렬 기준(예: 생성일 내림차순)을 설정한다.
+- 다중 선택이 필요한 경우 \`selectable\`을 사용하고, ListToolbar의 Bulk Actions와 연동한다.
+- 컬럼 정렬: 텍스트/이름은 왼쪽, 숫자/날짜는 오른쪽, 상태/액션은 중앙 정렬한다.
+- 배열 데이터(Labels, Tags 등)를 뱃지로 표시할 때는 반드시 \`BadgeList\` 컴포넌트를 사용한다.
+- 빈 상태는 \`emptyMessage\` 또는 \`EmptyState\` 컴포넌트로 안내한다.
+
 ---
 
 ## Content Guidelines

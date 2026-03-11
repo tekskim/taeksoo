@@ -20,6 +20,9 @@ const meta: Meta<typeof Button> = {
 - **Outline**: 덜 강조되는 액션
 - **Ghost**: 텍스트처럼 보이지만 클릭 가능한 영역이 필요할 때
 - **Danger**: 삭제, 제거 등 위험한 액션
+- **Warning**: 주의가 필요한 비파괴적 액션 (Force Restart, Suspend 등)
+- **Link**: 내부 페이지로 이동
+- **Anchor Link**: 외부 링크 (새 탭에서 열림)
 
 ### 사이즈 가이드라인
 

@@ -943,7 +943,16 @@ export function UXWritingGuidePage() {
             <VStack gap={3}>
               <SubSectionTitle>4-3. 인풋 필드</SubSectionTitle>
               <Prose>
-                <p>인풋 필드의 작성 규칙은 별도 문서를 참고하세요.</p>
+                <p>
+                  인풋 필드의 작성 규칙은{' '}
+                  <a
+                    href="/design/patterns/form-field"
+                    className="underline text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)]"
+                  >
+                    Form Field 패턴
+                  </a>{' '}
+                  문서를 참고하세요.
+                </p>
               </Prose>
             </VStack>
 
@@ -951,7 +960,16 @@ export function UXWritingGuidePage() {
             <VStack gap={3}>
               <SubSectionTitle>4-4. 모달</SubSectionTitle>
               <Prose>
-                <p>모달의 작성 규칙은 별도 문서를 참고하세요.</p>
+                <p>
+                  모달의 작성 규칙은{' '}
+                  <a
+                    href="/design/components/modal"
+                    className="underline text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)]"
+                  >
+                    Modal
+                  </a>{' '}
+                  문서를 참고하세요.
+                </p>
               </Prose>
             </VStack>
           </VStack>
