@@ -57,6 +57,7 @@ import {
   SNBMenuItem,
   SelectionIndicator,
   WindowControl,
+  WindowControls,
   VStack,
   HStack,
 } from '@/design-system';
@@ -103,6 +104,15 @@ const SubTitle = ({ children }: { children: React.ReactNode }) => (
 
 const StateLabel = ({ children }: { children: React.ReactNode }) => (
   <span className="text-body-xs text-[var(--color-text-subtle)]">{children}</span>
+);
+
+const FigmaFrame = ({ name, children }: { name: string; children: React.ReactNode }) => (
+  <div className="inline-flex flex-col items-start gap-1" data-figma-name={name}>
+    <span className="text-[10px] font-mono text-[var(--color-text-disabled)] leading-tight whitespace-nowrap select-all">
+      {name}
+    </span>
+    {children}
+  </div>
 );
 
 const PropertyTypeBadge = ({ type }: { type: string }) => {
@@ -618,11 +628,13 @@ export function FigmaComponentsPage() {
         {buttonSizes.map((size) => (
           <div key={size} className="flex flex-col gap-2">
             <StateLabel>Size: {size}</StateLabel>
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap gap-3 items-end">
               {buttonVariants.map((variant) => (
-                <Button key={`${variant}-${size}`} variant={variant} size={size}>
-                  {variant}
-                </Button>
+                <FigmaFrame key={`${variant}-${size}`} name={`Button/${variant}/${size}/default`}>
+                  <Button variant={variant} size={size}>
+                    {variant}
+                  </Button>
+                </FigmaFrame>
               ))}
             </div>
           </div>
@@ -630,67 +642,133 @@ export function FigmaComponentsPage() {
       </div>
 
       <SubTitle>Variants × Hover</SubTitle>
-      <div className="flex flex-wrap gap-2 items-center">
-        {buttonVariants.map((variant) => (
-          <Button
-            key={`hover-${variant}`}
-            variant={variant}
-            size="md"
-            className={buttonHoverClasses[variant]}
-          >
-            {variant}
-          </Button>
+      <div className="flex flex-col gap-4">
+        {buttonSizes.map((size) => (
+          <div key={`hover-${size}`} className="flex flex-col gap-2">
+            <StateLabel>Hover — Size: {size}</StateLabel>
+            <div className="flex flex-wrap gap-3 items-end">
+              {buttonVariants.map((variant) => (
+                <FigmaFrame
+                  key={`hover-${variant}-${size}`}
+                  name={`Button/${variant}/${size}/hover`}
+                >
+                  <Button variant={variant} size={size} className={buttonHoverClasses[variant]}>
+                    {variant}
+                  </Button>
+                </FigmaFrame>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 
-      <SubTitle>Icon Buttons</SubTitle>
-      <div className="flex flex-wrap gap-3 items-center">
-        <Button variant="primary" size="sm" leftIcon={<IconPlus size={12} />}>
-          Create
-        </Button>
-        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-          Edit
-        </Button>
-        <Button variant="danger" size="sm" leftIcon={<IconTrash size={12} />}>
-          Delete
-        </Button>
-        <Button
-          variant="secondary"
-          size="sm"
-          icon={<IconDownload size={12} />}
-          aria-label="Download"
-        />
-        <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} />}>
-          Dropdown
-        </Button>
+      <SubTitle>Icon Buttons — Default</SubTitle>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Button/primary/sm/icon-left/default">
+          <Button variant="primary" size="sm" leftIcon={<IconPlus size={12} />}>
+            Create
+          </Button>
+        </FigmaFrame>
+        <FigmaFrame name="Button/secondary/sm/icon-left/default">
+          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            Edit
+          </Button>
+        </FigmaFrame>
+        <FigmaFrame name="Button/danger/sm/icon-left/default">
+          <Button variant="danger" size="sm" leftIcon={<IconTrash size={12} />}>
+            Delete
+          </Button>
+        </FigmaFrame>
+        <FigmaFrame name="Button/secondary/sm/icon-only/default">
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<IconDownload size={12} />}
+            aria-label="Download"
+          />
+        </FigmaFrame>
+        <FigmaFrame name="Button/primary/md/icon-right/default">
+          <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} />}>
+            Dropdown
+          </Button>
+        </FigmaFrame>
+      </div>
+
+      <SubTitle>Icon Buttons — Hover</SubTitle>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Button/primary/sm/icon-left/hover">
+          <Button
+            variant="primary"
+            size="sm"
+            leftIcon={<IconPlus size={12} />}
+            className={buttonHoverClasses.primary}
+          >
+            Create
+          </Button>
+        </FigmaFrame>
+        <FigmaFrame name="Button/secondary/sm/icon-left/hover">
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconEdit size={12} />}
+            className={buttonHoverClasses.secondary}
+          >
+            Edit
+          </Button>
+        </FigmaFrame>
+        <FigmaFrame name="Button/danger/sm/icon-left/hover">
+          <Button
+            variant="danger"
+            size="sm"
+            leftIcon={<IconTrash size={12} />}
+            className={buttonHoverClasses.danger}
+          >
+            Delete
+          </Button>
+        </FigmaFrame>
+        <FigmaFrame name="Button/secondary/sm/icon-only/hover">
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<IconDownload size={12} />}
+            aria-label="Download"
+            className={buttonHoverClasses.secondary}
+          />
+        </FigmaFrame>
+        <FigmaFrame name="Button/primary/md/icon-right/hover">
+          <Button
+            variant="primary"
+            size="md"
+            rightIcon={<IconChevronDown size={14} />}
+            className={buttonHoverClasses.primary}
+          >
+            Dropdown
+          </Button>
+        </FigmaFrame>
       </div>
 
       <SubTitle>States</SubTitle>
-      <div className="flex flex-wrap gap-3 items-center">
-        <VStack gap={1} align="center">
-          <StateLabel>Default</StateLabel>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Button/primary/md/default">
           <Button variant="primary" size="md">
             Default
           </Button>
-        </VStack>
-        <VStack gap={1} align="center">
-          <StateLabel>Hover</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Button/primary/md/hover">
           <Button variant="primary" size="md" className="bg-[var(--color-action-primary-hover)]">
             Hover
           </Button>
-        </VStack>
-        <VStack gap={1} align="center">
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Button/primary/md/disabled">
           <Button variant="primary" size="md" disabled>
             Disabled
           </Button>
-        </VStack>
-        <VStack gap={1} align="center">
-          <StateLabel>Loading</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Button/primary/md/loading">
           <Button variant="primary" size="md" loading>
             Loading
           </Button>
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -737,54 +815,45 @@ export function FigmaComponentsPage() {
       {/* ════════════════ INPUT ════════════════ */}
       <SectionTitle>Input</SectionTitle>
 
-      <SubTitle>Sizes</SubTitle>
-      <div className="flex flex-col gap-3 max-w-md">
-        <VStack gap={1}>
-          <StateLabel>SM</StateLabel>
-          <Input size="sm" placeholder="Small input" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>MD</StateLabel>
-          <Input size="md" placeholder="Medium input" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>LG</StateLabel>
-          <Input size="lg" placeholder="Large input" />
-        </VStack>
-      </div>
-
-      <SubTitle>States</SubTitle>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-3xl">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
-          <Input placeholder="Placeholder" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>With Value</StateLabel>
-          <Input defaultValue="Some value" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Focus</StateLabel>
-          <Input
-            placeholder="Focused"
-            className="border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]"
-          />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
-          <Input placeholder="Disabled" disabled />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Error</StateLabel>
-          <Input placeholder="Error state" error />
-        </VStack>
+      <SubTitle>Sizes × States</SubTitle>
+      <div className="flex flex-col gap-4">
+        {(['sm', 'md'] as const).map((size) => (
+          <div key={size} className="flex flex-col gap-2">
+            <StateLabel>Size: {size}</StateLabel>
+            <div className="flex flex-wrap gap-3 items-end">
+              <FigmaFrame name={`Input/${size}/placeholder`}>
+                <Input size={size} placeholder="Placeholder" />
+              </FigmaFrame>
+              <FigmaFrame name={`Input/${size}/with-value`}>
+                <Input size={size} defaultValue="Some value" />
+              </FigmaFrame>
+              <FigmaFrame name={`Input/${size}/focus`}>
+                <Input
+                  size={size}
+                  placeholder="Focused"
+                  className="border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]"
+                />
+              </FigmaFrame>
+              <FigmaFrame name={`Input/${size}/disabled`}>
+                <Input size={size} placeholder="Disabled" disabled />
+              </FigmaFrame>
+              <FigmaFrame name={`Input/${size}/error`}>
+                <Input size={size} placeholder="Error state" error />
+              </FigmaFrame>
+            </div>
+          </div>
+        ))}
       </div>
 
       <FigmaGuide
         figmaName="TDS/Form/Input"
         properties={[
-          { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
-          { name: 'State', type: 'Variant', values: 'default | focus | error | disabled' },
+          { name: 'Size', type: 'Variant', values: 'sm | md' },
+          {
+            name: 'State',
+            type: 'Variant',
+            values: 'placeholder | with-value | focus | disabled | error',
+          },
           { name: 'Placeholder', type: 'Text', values: '"Enter value..."' },
           { name: 'Value', type: 'Text', values: '(editable)' },
           { name: 'LeftElement', type: 'Boolean', values: 'true | false' },
@@ -793,7 +862,6 @@ export function FigmaComponentsPage() {
         autoLayout={[
           { label: 'SM', direction: 'H', gap: '—', padding: '0 10px', height: '28px' },
           { label: 'MD', direction: 'H', gap: '—', padding: '0 10px', height: '32px' },
-          { label: 'LG', direction: 'H', gap: '—', padding: '0 10px', height: '40px' },
         ]}
         radius="6px (--primitive-radius-md)"
         tokens={[
@@ -814,18 +882,25 @@ export function FigmaComponentsPage() {
       {/* ════════════════ NUMBER INPUT ════════════════ */}
       <SectionTitle>NumberInput</SectionTitle>
       <div className="flex flex-wrap gap-4 items-end">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
+        <FigmaFrame name="NumberInput/default">
           <NumberInput min={0} max={100} value={numberVal} onChange={setNumberVal} width="xs" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>With Suffix</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="NumberInput/arrow-hover">
+          <NumberInput
+            min={0}
+            max={100}
+            value={numberVal}
+            onChange={setNumberVal}
+            width="xs"
+            className="[&_button:first-of-type]:text-[var(--color-text-default)] [&_button:first-of-type]:bg-[var(--color-surface-muted)]"
+          />
+        </FigmaFrame>
+        <FigmaFrame name="NumberInput/suffix">
           <NumberInput min={0} max={1000} value={256} onChange={() => {}} width="xs" suffix="GiB" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="NumberInput/disabled">
           <NumberInput min={0} max={100} value={10} onChange={() => {}} width="xs" disabled />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -855,8 +930,28 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ SEARCH INPUT ════════════════ */}
       <SectionTitle>SearchInput</SectionTitle>
-      <div className="max-w-sm">
-        <SearchInput placeholder="Search resources..." size="sm" />
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="SearchInput/sm/empty">
+          <SearchInput placeholder="Search resources..." size="sm" />
+        </FigmaFrame>
+        <FigmaFrame name="SearchInput/sm/with-value">
+          <SearchInput
+            placeholder="Search resources..."
+            size="sm"
+            value="kubernetes"
+            onChange={() => {}}
+          />
+        </FigmaFrame>
+        <FigmaFrame name="SearchInput/sm/focus">
+          <SearchInput
+            placeholder="Search resources..."
+            size="sm"
+            className="[&_input]:border-[var(--input-border-focus)] [&_input]:shadow-[0_0_0_1px_var(--input-border-focus)]"
+          />
+        </FigmaFrame>
+        <FigmaFrame name="SearchInput/sm/disabled">
+          <SearchInput placeholder="Search resources..." size="sm" disabled />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -885,15 +980,25 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TEXTAREA ════════════════ */}
       <SectionTitle>Textarea</SectionTitle>
-      <div className="grid grid-cols-2 gap-4 max-w-2xl">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
+      <div className="flex flex-wrap gap-4 items-start">
+        <FigmaFrame name="Textarea/placeholder">
           <Textarea placeholder="Enter description..." />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Textarea/with-value">
+          <Textarea defaultValue="Some description text here" />
+        </FigmaFrame>
+        <FigmaFrame name="Textarea/focus">
+          <Textarea
+            placeholder="Focused"
+            className="border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]"
+          />
+        </FigmaFrame>
+        <FigmaFrame name="Textarea/disabled">
           <Textarea placeholder="Disabled" disabled />
-        </VStack>
+        </FigmaFrame>
+        <FigmaFrame name="Textarea/error">
+          <Textarea placeholder="Error state" error="This field is required" />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -913,59 +1018,63 @@ export function FigmaComponentsPage() {
       {/* ════════════════ SELECT ════════════════ */}
       <SectionTitle>Select</SectionTitle>
       <div className="grid grid-cols-2 gap-6 max-w-2xl">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
+        <FigmaFrame name="Select/default">
           <Select options={sampleSelectOptions} placeholder="Select..." fullWidth />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>With Value</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Select/with-value">
           <Select options={sampleSelectOptions} value="option1" onChange={() => {}} fullWidth />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Select/disabled">
           <Select options={sampleSelectOptions} placeholder="Disabled" disabled fullWidth />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Error</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Select/error">
           <Select options={sampleSelectOptions} placeholder="Error" error fullWidth />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <SubTitle>Open (Dropdown) — Static</SubTitle>
-      <div className="relative w-[240px] mb-[120px]">
-        <Select options={sampleSelectOptions} value="option1" onChange={() => {}} fullWidth />
-        <div className="absolute top-full left-0 w-full mt-1 bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] z-10 overflow-hidden">
-          {sampleSelectOptions.map((opt, idx) => {
-            const isSelected = opt.value === 'option1';
-            return (
-              <div
-                key={opt.value}
-                className={[
-                  'flex items-center justify-between',
-                  'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
-                  'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-[number:var(--font-weight-regular)]',
-                  idx < sampleSelectOptions.length - 1
-                    ? 'border-b border-[var(--color-border-subtle)]'
-                    : '',
-                  isSelected
-                    ? 'bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)]'
-                    : 'text-[var(--color-text-default)]',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                <span>{opt.label}</span>
-                {isSelected && (
-                  <IconCheck
-                    size={14}
-                    className="shrink-0 text-[var(--select-item-selected-text)]"
-                  />
-                )}
-              </div>
-            );
-          })}
+      <FigmaFrame name="Select/open">
+        <div className="relative w-[240px] mb-[120px]">
+          <Select
+            options={sampleSelectOptions}
+            value="option1"
+            onChange={() => {}}
+            fullWidth
+            className="[&_button]:border-[var(--input-border-focus)] [&_button]:shadow-[0_0_0_1px_var(--input-border-focus)]"
+          />
+          <div className="absolute top-full left-0 w-full mt-1 bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] z-10 overflow-hidden">
+            {sampleSelectOptions.map((opt, idx) => {
+              const isSelected = opt.value === 'option1';
+              return (
+                <div
+                  key={opt.value}
+                  className={[
+                    'flex items-center justify-between',
+                    'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
+                    'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-[number:var(--font-weight-regular)]',
+                    idx < sampleSelectOptions.length - 1
+                      ? 'border-b border-[var(--color-border-subtle)]'
+                      : '',
+                    isSelected
+                      ? 'bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)]'
+                      : 'text-[var(--color-text-default)]',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  <span>{opt.label}</span>
+                  {isSelected && (
+                    <IconCheck
+                      size={14}
+                      className="shrink-0 text-[var(--select-item-selected-text)]"
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Form/Select"
@@ -998,34 +1107,28 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ CHECKBOX ════════════════ */}
       <SectionTitle>Checkbox</SectionTitle>
-      <div className="flex flex-wrap gap-8 items-start">
-        <VStack gap={1}>
-          <StateLabel>Unchecked</StateLabel>
+      <div className="flex flex-wrap gap-8 items-end">
+        <FigmaFrame name="Checkbox/unchecked">
           <Checkbox label="Option" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Checked</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Checkbox/checked">
           <Checkbox label="Option" checked onChange={() => {}} />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Indeterminate</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Checkbox/indeterminate">
           <Checkbox label="Option" indeterminate onChange={() => {}} />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Hover</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Checkbox/hover">
           <Checkbox
             label="Option"
             className="[&_span:first-of-type]:border-[var(--checkbox-border-hover)]"
           />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Checkbox/disabled">
           <Checkbox label="Disabled" disabled />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled Checked</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Checkbox/disabled-checked">
           <Checkbox label="Disabled" checked disabled onChange={() => {}} />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1053,19 +1156,16 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ RADIO ════════════════ */}
       <SectionTitle>Radio</SectionTitle>
-      <div className="flex flex-wrap gap-8 items-start">
-        <VStack gap={1}>
-          <StateLabel>Unselected</StateLabel>
+      <div className="flex flex-wrap gap-8 items-end">
+        <FigmaFrame name="Radio/unselected">
           <Radio value="a" label="Option A" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Selected</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Radio/selected">
           <Radio value="b" label="Option B" checked onChange={() => {}} />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Radio/disabled">
           <Radio value="c" label="Disabled" disabled />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1091,19 +1191,16 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TOGGLE ════════════════ */}
       <SectionTitle>Toggle</SectionTitle>
-      <div className="flex flex-wrap gap-8 items-start">
-        <VStack gap={1}>
-          <StateLabel>Off</StateLabel>
+      <div className="flex flex-wrap gap-8 items-end">
+        <FigmaFrame name="Toggle/off">
           <Toggle label="Feature" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>On</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Toggle/on">
           <Toggle label="Feature" checked onChange={() => {}} />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Toggle/disabled">
           <Toggle label="Disabled" disabled />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1130,21 +1227,18 @@ export function FigmaComponentsPage() {
       {/* ════════════════ SLIDER ════════════════ */}
       <SectionTitle>Slider</SectionTitle>
       <div className="flex flex-col gap-6">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
+        <FigmaFrame name="Slider/default">
           <Slider min={0} max={100} value={sliderVal} onChange={setSliderVal} />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>With NumberInput</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Slider/with-input">
           <HStack gap={3} align="center">
             <Slider min={0} max={100} value={sliderVal} onChange={setSliderVal} />
             <NumberInput min={0} max={100} value={sliderVal} onChange={setSliderVal} width="xs" />
           </HStack>
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Slider/disabled">
           <Slider min={0} max={100} value={30} onChange={() => {}} disabled />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1181,22 +1275,29 @@ export function FigmaComponentsPage() {
       {badgeSizes.map((size) => (
         <div key={`subtle-${size}`} className="mb-3">
           <StateLabel>Size: {size}</StateLabel>
-          <div className="flex flex-wrap gap-2 mt-1">
+          <div className="flex flex-wrap gap-3 mt-1 items-end">
             {badgeThemes.map((theme) => (
-              <Badge key={`subtle-${size}-${theme}`} type="subtle" theme={theme} size={size}>
-                {theme}
-              </Badge>
+              <FigmaFrame
+                key={`subtle-${size}-${theme}`}
+                name={`Badge/subtle/${size}/${theme}/text-only`}
+              >
+                <Badge type="subtle" theme={theme} size={size}>
+                  {theme}
+                </Badge>
+              </FigmaFrame>
             ))}
           </div>
         </div>
       ))}
 
       <SubTitle>Solid (white/gray 중심 사용)</SubTitle>
-      <div className="flex flex-wrap gap-2 mb-3">
+      <div className="flex flex-wrap gap-3 mb-3 items-end">
         {(['white', 'gray'] as const).map((theme) => (
-          <Badge key={`solid-${theme}`} type="solid" theme={theme} size="md">
-            {theme}
-          </Badge>
+          <FigmaFrame key={`solid-${theme}`} name={`Badge/solid/md/${theme}/text-only`}>
+            <Badge type="solid" theme={theme} size="md">
+              {theme}
+            </Badge>
+          </FigmaFrame>
         ))}
       </div>
       <div className="p-3 bg-[var(--color-state-info-bg)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-state-info)] mb-4">
@@ -1204,7 +1305,7 @@ export function FigmaComponentsPage() {
       </div>
 
       <SubTitle>Semantic Color 매핑</SubTitle>
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="grid grid-cols-3 gap-3 mb-4">
         {[
           { semantic: 'info', theme: 'blue' as const },
           { semantic: 'success', theme: 'green' as const },
@@ -1213,40 +1314,47 @@ export function FigmaComponentsPage() {
           { semantic: 'neutral', theme: 'gray' as const },
           { semantic: 'default', theme: 'white' as const },
         ].map(({ semantic, theme }) => (
-          <HStack key={semantic} gap={2} align="center" className="py-1">
+          <FigmaFrame key={semantic} name={`Badge/subtle/sm/${theme}/semantic-${semantic}`}>
             <Badge type="subtle" theme={theme} size="sm">
               {theme}
             </Badge>
-            <span className="text-body-xs text-[var(--color-text-subtle)]">← {semantic}</span>
-          </HStack>
+          </FigmaFrame>
         ))}
       </div>
 
       <SubTitle>With Icons</SubTitle>
-      <div className="flex flex-wrap gap-2 items-center">
-        <Badge theme="blue" type="subtle" size="sm" leftIcon={<IconTag size={10} />}>
-          Left Icon
-        </Badge>
-        <Badge theme="green" type="subtle" size="sm" rightIcon={<IconCheck size={10} />}>
-          Right Icon
-        </Badge>
-        <Badge
-          theme="gray"
-          type="subtle"
-          size="md"
-          leftIcon={<IconSettings size={10} />}
-          rightIcon={<IconChevronDown size={10} />}
-        >
-          Both Icons
-        </Badge>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Badge/subtle/sm/blue/icon-left">
+          <Badge theme="blue" type="subtle" size="sm" leftIcon={<IconTag size={10} />}>
+            Left Icon
+          </Badge>
+        </FigmaFrame>
+        <FigmaFrame name="Badge/subtle/sm/green/icon-right">
+          <Badge theme="green" type="subtle" size="sm" rightIcon={<IconCheck size={10} />}>
+            Right Icon
+          </Badge>
+        </FigmaFrame>
+        <FigmaFrame name="Badge/subtle/md/gray/icon-both">
+          <Badge
+            theme="gray"
+            type="subtle"
+            size="md"
+            leftIcon={<IconSettings size={10} />}
+            rightIcon={<IconChevronDown size={10} />}
+          >
+            Both Icons
+          </Badge>
+        </FigmaFrame>
       </div>
 
       <SubTitle>With Dot</SubTitle>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-3 items-end">
         {badgeThemes.map((theme) => (
-          <Badge key={`dot-${theme}`} theme={theme} type="subtle" size="sm" dot>
-            {theme}
-          </Badge>
+          <FigmaFrame key={`dot-${theme}`} name={`Badge/subtle/sm/${theme}/dot`}>
+            <Badge theme={theme} type="subtle" size="sm" dot>
+              {theme}
+            </Badge>
+          </FigmaFrame>
         ))}
       </div>
 
@@ -1286,23 +1394,19 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ CHIP ════════════════ */}
       <SectionTitle>Chip</SectionTitle>
-      <div className="flex flex-wrap gap-3 items-center">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Chip/default">
           <Chip label="Label" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Selected</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Chip/selected">
           <Chip label="Selected" selected />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Removable</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Chip/removable">
           <Chip label="Removable" onRemove={() => {}} />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Chip/disabled">
           <Chip label="Disabled" disabled />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1330,21 +1434,22 @@ export function FigmaComponentsPage() {
       {/* ════════════════ STATUS INDICATOR ════════════════ */}
       <SectionTitle>StatusIndicator</SectionTitle>
       <SubTitle>All Statuses (icon-only)</SubTitle>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 items-end">
         {statusTypes.map((status) => (
-          <VStack key={status} gap={1} align="center">
+          <FigmaFrame key={status} name={`StatusIndicator/icon-only/${status}`}>
             <Tooltip content={status}>
               <StatusIndicator status={status} />
             </Tooltip>
-            <StateLabel>{status}</StateLabel>
-          </VStack>
+          </FigmaFrame>
         ))}
       </div>
       <SubTitle>With Label</SubTitle>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 items-end">
         {(['active', 'error', 'building', 'pending', 'shutoff', 'paused'] as const).map(
           (status) => (
-            <StatusIndicator key={`label-${status}`} status={status} layout="dot-label" />
+            <FigmaFrame key={`label-${status}`} name={`StatusIndicator/dot-label/${status}`}>
+              <StatusIndicator status={status} layout="dot-label" />
+            </FigmaFrame>
           )
         )}
       </div>
@@ -1382,15 +1487,19 @@ export function FigmaComponentsPage() {
       {/* ════════════════ PAGINATION ════════════════ */}
       <SectionTitle>Pagination</SectionTitle>
       <SubTitle>Page 1 (first)</SubTitle>
-      <Pagination
-        currentPage={1}
-        totalPages={10}
-        onPageChange={() => {}}
-        totalItems={100}
-        showSettings
-      />
+      <FigmaFrame name="Pagination/first-page/with-settings">
+        <Pagination
+          currentPage={1}
+          totalPages={10}
+          onPageChange={() => {}}
+          totalItems={100}
+          showSettings
+        />
+      </FigmaFrame>
       <SubTitle>Page 5 (middle — active item visible)</SubTitle>
-      <Pagination currentPage={5} totalPages={10} onPageChange={() => {}} totalItems={100} />
+      <FigmaFrame name="Pagination/middle-page">
+        <Pagination currentPage={5} totalPages={10} onPageChange={() => {}} totalItems={100} />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Data/Pagination"
@@ -1418,22 +1527,18 @@ export function FigmaComponentsPage() {
       {/* ════════════════ PROGRESS BAR ════════════════ */}
       <SectionTitle>ProgressBar</SectionTitle>
       <div className="flex flex-col gap-4 max-w-md">
-        <VStack gap={1}>
-          <StateLabel>Info (50%)</StateLabel>
+        <FigmaFrame name="ProgressBar/info/50">
           <ProgressBar value={50} status="info" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Success (50%)</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/success/50">
           <ProgressBar value={50} status="success" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Warning (70%)</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/warning/70">
           <ProgressBar value={70} status="warning" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Danger (95%)</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/danger/95">
           <ProgressBar value={95} status="danger" />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1473,32 +1578,36 @@ export function FigmaComponentsPage() {
       <SectionTitle>Tabs</SectionTitle>
 
       <SubTitle>Underline</SubTitle>
-      <Tabs value="tab1" onChange={() => {}} variant="underline" size="sm">
-        <TabList>
-          <Tab value="tab1">Active</Tab>
-          <Tab value="tab2">Inactive</Tab>
-          <Tab value="tab3" className="text-[var(--tabs-hover-color)]">
-            Hover
-          </Tab>
-        </TabList>
-        <TabPanel value="tab1">
-          <div className="p-4 text-body-md text-[var(--color-text-muted)]">Tab content area</div>
-        </TabPanel>
-      </Tabs>
+      <FigmaFrame name="Tabs/underline/sm">
+        <Tabs value="tab1" onChange={() => {}} variant="underline" size="sm">
+          <TabList>
+            <Tab value="tab1">Active</Tab>
+            <Tab value="tab2">Inactive</Tab>
+            <Tab value="tab3" className="text-[var(--tabs-hover-color)]">
+              Hover
+            </Tab>
+          </TabList>
+          <TabPanel value="tab1">
+            <div className="p-4 text-body-md text-[var(--color-text-muted)]">Tab content area</div>
+          </TabPanel>
+        </Tabs>
+      </FigmaFrame>
 
       <SubTitle>Boxed</SubTitle>
-      <Tabs value="tab1" onChange={() => {}} variant="boxed" size="sm">
-        <TabList>
-          <Tab value="tab1">Active</Tab>
-          <Tab value="tab2">Inactive</Tab>
-          <Tab value="tab3" className="bg-[var(--color-surface-default)]">
-            Hover
-          </Tab>
-        </TabList>
-        <TabPanel value="tab1">
-          <div className="p-4 text-body-md text-[var(--color-text-muted)]">Tab content area</div>
-        </TabPanel>
-      </Tabs>
+      <FigmaFrame name="Tabs/boxed/sm">
+        <Tabs value="tab1" onChange={() => {}} variant="boxed" size="sm">
+          <TabList>
+            <Tab value="tab1">Active</Tab>
+            <Tab value="tab2">Inactive</Tab>
+            <Tab value="tab3" className="bg-[var(--color-surface-default)]">
+              Hover
+            </Tab>
+          </TabList>
+          <TabPanel value="tab1">
+            <div className="p-4 text-body-md text-[var(--color-text-muted)]">Tab content area</div>
+          </TabPanel>
+        </Tabs>
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Navigation/Tabs"
@@ -1536,13 +1645,15 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ BREADCRUMB ════════════════ */}
       <SectionTitle>Breadcrumb</SectionTitle>
-      <Breadcrumb
-        items={[
-          { label: 'Project-1', href: '#' },
-          { label: 'Compute', href: '#' },
-          { label: 'Instances' },
-        ]}
-      />
+      <FigmaFrame name="Breadcrumb/3-items">
+        <Breadcrumb
+          items={[
+            { label: 'Project-1', href: '#' },
+            { label: 'Compute', href: '#' },
+            { label: 'Instances' },
+          ]}
+        />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Navigation/Breadcrumb"
@@ -1575,9 +1686,9 @@ export function FigmaComponentsPage() {
       <SectionTitle>InlineMessage</SectionTitle>
       <div className="flex flex-col gap-3 max-w-lg">
         {inlineMessageVariants.map((variant) => (
-          <InlineMessage key={variant} variant={variant}>
-            This is a {variant} inline message.
-          </InlineMessage>
+          <FigmaFrame key={variant} name={`InlineMessage/${variant}`}>
+            <InlineMessage variant={variant}>This is a {variant} inline message.</InlineMessage>
+          </FigmaFrame>
         ))}
       </div>
 
@@ -1607,10 +1718,16 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ LOADING ════════════════ */}
       <SectionTitle>Loading</SectionTitle>
-      <div className="flex gap-6 items-center">
-        <Loading size="sm" />
-        <Loading size="md" />
-        <Loading size="lg" />
+      <div className="flex gap-6 items-end">
+        <FigmaFrame name="Loading/sm">
+          <Loading size="sm" />
+        </FigmaFrame>
+        <FigmaFrame name="Loading/md">
+          <Loading size="md" />
+        </FigmaFrame>
+        <FigmaFrame name="Loading/lg">
+          <Loading size="lg" />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1635,22 +1752,26 @@ export function FigmaComponentsPage() {
       {/* ════════════════ EMPTY STATE ════════════════ */}
       <SectionTitle>EmptyState</SectionTitle>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <EmptyState
-          icon={<IconDatabase size={48} stroke={1} />}
-          title="No instances found"
-          description="Create your first instance to get started."
-          action={
-            <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
-              Create Instance
-            </Button>
-          }
-        />
-        <EmptyState
-          variant="inline"
-          icon={<IconSearch size={48} stroke={1} />}
-          title="No results found"
-          description="Try adjusting your search or filter criteria."
-        />
+        <FigmaFrame name="EmptyState/card/with-action">
+          <EmptyState
+            icon={<IconDatabase size={48} stroke={1} />}
+            title="No instances found"
+            description="Create your first instance to get started."
+            action={
+              <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
+                Create Instance
+              </Button>
+            }
+          />
+        </FigmaFrame>
+        <FigmaFrame name="EmptyState/inline/no-action">
+          <EmptyState
+            variant="inline"
+            icon={<IconSearch size={48} stroke={1} />}
+            title="No results found"
+            description="Try adjusting your search or filter criteria."
+          />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1694,16 +1815,18 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ ERROR STATE ════════════════ */}
       <SectionTitle>ErrorState</SectionTitle>
-      <ErrorState
-        icon={<IconAlertTriangle size={48} stroke={1} />}
-        title="Something went wrong"
-        description="An unexpected error occurred. Please try again later."
-        action={
-          <Button variant="secondary" size="md">
-            Retry
-          </Button>
-        }
-      />
+      <FigmaFrame name="ErrorState/with-action">
+        <ErrorState
+          icon={<IconAlertTriangle size={48} stroke={1} />}
+          title="Something went wrong"
+          description="An unexpected error occurred. Please try again later."
+          action={
+            <Button variant="secondary" size="md">
+              Retry
+            </Button>
+          }
+        />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Feedback/ErrorState"
@@ -1732,25 +1855,31 @@ export function FigmaComponentsPage() {
       {/* ════════════════ FORM FIELD ════════════════ */}
       <SectionTitle>FormField</SectionTitle>
       <div className="flex flex-col gap-6 max-w-md">
-        <FormField label="Instance Name" helperText="2-64 characters" required>
-          <Input placeholder="Enter name" fullWidth />
-        </FormField>
-        <FormField
-          label="Region"
-          description="Select your preferred region"
-          helperText="Changes after creation are not allowed"
-          required
-        >
-          <Select options={sampleSelectOptions} placeholder="Select region" fullWidth />
-        </FormField>
-        <FormField
-          label="Password"
-          errorMessage="Password must be at least 8 characters."
-          error
-          required
-        >
-          <Input type="password" fullWidth error />
-        </FormField>
+        <FigmaFrame name="FormField/default/with-helper">
+          <FormField label="Instance Name" helperText="2-64 characters" required>
+            <Input placeholder="Enter name" fullWidth />
+          </FormField>
+        </FigmaFrame>
+        <FigmaFrame name="FormField/with-description/with-helper">
+          <FormField
+            label="Region"
+            description="Select your preferred region"
+            helperText="Changes after creation are not allowed"
+            required
+          >
+            <Select options={sampleSelectOptions} placeholder="Select region" fullWidth />
+          </FormField>
+        </FigmaFrame>
+        <FigmaFrame name="FormField/error">
+          <FormField
+            label="Password"
+            errorMessage="Password must be at least 8 characters."
+            error
+            required
+          >
+            <Input type="password" fullWidth error />
+          </FormField>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1776,29 +1905,33 @@ export function FigmaComponentsPage() {
       {/* ════════════════ SECTION CARD ════════════════ */}
       <SectionTitle>SectionCard</SectionTitle>
       <div className="flex flex-col gap-4">
-        <SectionCard>
-          <SectionCard.Header
-            title="Basic Information"
-            actions={
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                Edit
-              </Button>
-            }
-          />
-          <SectionCard.Content>
-            <SectionCard.DataRow label="Name" value="instance-01" />
-            <SectionCard.DataRow label="Status">
-              <StatusIndicator status="active" layout="dot-label" />
-            </SectionCard.DataRow>
-            <SectionCard.DataRow label="Created" value="Feb 20, 2026 14:30:00" />
-          </SectionCard.Content>
-        </SectionCard>
-        <SectionCard isActive>
-          <SectionCard.Header title="Active Section (Wizard)" />
-          <SectionCard.Content>
-            <SectionCard.DataRow label="Setting A" value="Configured" />
-          </SectionCard.Content>
-        </SectionCard>
+        <FigmaFrame name="SectionCard/default/with-actions">
+          <SectionCard>
+            <SectionCard.Header
+              title="Basic Information"
+              actions={
+                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                  Edit
+                </Button>
+              }
+            />
+            <SectionCard.Content>
+              <SectionCard.DataRow label="Name" value="instance-01" />
+              <SectionCard.DataRow label="Status">
+                <StatusIndicator status="active" layout="dot-label" />
+              </SectionCard.DataRow>
+              <SectionCard.DataRow label="Created" value="2026-02-20 14:30:00" />
+            </SectionCard.Content>
+          </SectionCard>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/active/wizard">
+          <SectionCard isActive>
+            <SectionCard.Header title="Active Section (Wizard)" />
+            <SectionCard.Content>
+              <SectionCard.DataRow label="Setting A" value="Configured" />
+            </SectionCard.Content>
+          </SectionCard>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -1822,28 +1955,30 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ DETAIL HEADER ════════════════ */}
       <SectionTitle>DetailHeader</SectionTitle>
-      <DetailHeader>
-        <DetailHeader.Title>instance-production-01</DetailHeader.Title>
-        <DetailHeader.Actions>
-          <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
-            Console
-          </Button>
-          <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
-            Start
-          </Button>
-          <ContextMenu items={contextMenuItems} trigger="click">
-            <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-              More Actions
+      <FigmaFrame name="DetailHeader/4-cards/with-actions">
+        <DetailHeader>
+          <DetailHeader.Title>instance-production-01</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+              Console
             </Button>
-          </ContextMenu>
-        </DetailHeader.Actions>
-        <DetailHeader.InfoGrid>
-          <DetailHeader.InfoCard label="Status" status="active" />
-          <DetailHeader.InfoCard label="ID" value="i-0123456789abcdef" copyable />
-          <DetailHeader.InfoCard label="Host" value="compute-node-03" />
-          <DetailHeader.InfoCard label="Created at" value="Feb 20, 2026 14:30" />
-        </DetailHeader.InfoGrid>
-      </DetailHeader>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+              Start
+            </Button>
+            <ContextMenu items={contextMenuItems} trigger="click">
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" status="active" />
+            <DetailHeader.InfoCard label="ID" value="i-0123456789abcdef" copyable />
+            <DetailHeader.InfoCard label="Host" value="compute-node-03" />
+            <DetailHeader.InfoCard label="Created at" value="2026-02-20 14:30" />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Layout/DetailHeader"
@@ -1875,14 +2010,16 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ PAGE HEADER ════════════════ */}
       <SectionTitle>PageHeader</SectionTitle>
-      <PageHeader
-        title="Instances"
-        actions={
-          <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
-            Create Instance
-          </Button>
-        }
-      />
+      <FigmaFrame name="PageHeader/with-actions">
+        <PageHeader
+          title="Instances"
+          actions={
+            <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
+              Create Instance
+            </Button>
+          }
+        />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Layout/PageHeader"
@@ -1902,11 +2039,13 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ INFO BOX ════════════════ */}
       <SectionTitle>InfoBox</SectionTitle>
-      <InfoBox.Group>
-        <InfoBox label="Resource Name" value="my-deployment" />
-        <InfoBox label="Namespace" value="default" />
-        <InfoBox label="Created at" value="Feb 06, 2026 14:30:00" />
-      </InfoBox.Group>
+      <FigmaFrame name="InfoBox/group/3-items">
+        <InfoBox.Group>
+          <InfoBox label="Resource Name" value="my-deployment" />
+          <InfoBox label="Namespace" value="default" />
+          <InfoBox label="Created at" value="2026-02-06 14:30:00" />
+        </InfoBox.Group>
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Data/InfoBox"
@@ -1930,11 +2069,13 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ METRIC CARD ════════════════ */}
       <SectionTitle>MetricCard</SectionTitle>
-      <MetricCard.Group>
-        <MetricCard title="Pod restarts" value={3} tooltip="Total restarts." />
-        <MetricCard title="CPU usage" value="45%" tooltip="Current CPU utilization." />
-        <MetricCard title="Memory" value="1.2 GB" tooltip="Current memory." />
-      </MetricCard.Group>
+      <FigmaFrame name="MetricCard/group/3-items">
+        <MetricCard.Group>
+          <MetricCard title="Pod restarts" value={3} tooltip="Total restarts." />
+          <MetricCard title="CPU usage" value="45%" tooltip="Current CPU utilization." />
+          <MetricCard title="Memory" value="1.2 GB" tooltip="Current memory." />
+        </MetricCard.Group>
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Data/MetricCard"
@@ -1961,37 +2102,39 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ LIST TOOLBAR ════════════════ */}
       <SectionTitle>ListToolbar</SectionTitle>
-      <ListToolbar
-        primaryActions={
-          <ListToolbar.Actions>
-            <FilterSearchInput
-              filters={filterFields}
-              appliedFilters={appliedFilters}
-              onFiltersChange={setAppliedFilters}
-              placeholder="Search by attributes"
-              size="sm"
-              className="w-[var(--search-input-width)]"
-              hideAppliedFilters
-            />
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<IconDownload size={12} />}
-              aria-label="Download"
-            />
-          </ListToolbar.Actions>
-        }
-        bulkActions={
-          <ListToolbar.Actions>
-            <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
-              Start
-            </Button>
-            <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
-              Delete
-            </Button>
-          </ListToolbar.Actions>
-        }
-      />
+      <FigmaFrame name="ListToolbar/with-search/with-bulk">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
+                Start
+              </Button>
+              <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Layout/ListToolbar"
@@ -2014,11 +2157,13 @@ export function FigmaComponentsPage() {
       {/* ════════════════ CONTEXT MENU ════════════════ */}
       <SectionTitle>ContextMenu</SectionTitle>
       <div className="flex gap-4">
-        <ContextMenu items={contextMenuItems} trigger="click">
-          <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-            Actions
-          </Button>
-        </ContextMenu>
+        <FigmaFrame name="ContextMenu/click/with-divider">
+          <ContextMenu items={contextMenuItems} trigger="click">
+            <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+              Actions
+            </Button>
+          </ContextMenu>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2059,32 +2204,42 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TOOLTIP ════════════════ */}
       <SectionTitle>Tooltip</SectionTitle>
-      <div className="flex flex-wrap gap-6 items-center">
-        <Tooltip content="기본 위치 (top)">
-          <Button variant="secondary" size="sm">
-            Top
-          </Button>
-        </Tooltip>
-        <Tooltip content="아래쪽 표시" position="bottom">
-          <Button variant="secondary" size="sm">
-            Bottom
-          </Button>
-        </Tooltip>
-        <Tooltip content="왼쪽 표시" position="left">
-          <Button variant="secondary" size="sm">
-            Left
-          </Button>
-        </Tooltip>
-        <Tooltip content="오른쪽 표시" position="right">
-          <Button variant="secondary" size="sm">
-            Right
-          </Button>
-        </Tooltip>
-        <Tooltip content="비활성 상태" disabled>
-          <Button variant="secondary" size="sm">
-            Disabled
-          </Button>
-        </Tooltip>
+      <div className="flex flex-wrap gap-6 items-end">
+        <FigmaFrame name="Tooltip/top">
+          <Tooltip content="기본 위치 (top)">
+            <Button variant="secondary" size="sm">
+              Top
+            </Button>
+          </Tooltip>
+        </FigmaFrame>
+        <FigmaFrame name="Tooltip/bottom">
+          <Tooltip content="아래쪽 표시" position="bottom">
+            <Button variant="secondary" size="sm">
+              Bottom
+            </Button>
+          </Tooltip>
+        </FigmaFrame>
+        <FigmaFrame name="Tooltip/left">
+          <Tooltip content="왼쪽 표시" position="left">
+            <Button variant="secondary" size="sm">
+              Left
+            </Button>
+          </Tooltip>
+        </FigmaFrame>
+        <FigmaFrame name="Tooltip/right">
+          <Tooltip content="오른쪽 표시" position="right">
+            <Button variant="secondary" size="sm">
+              Right
+            </Button>
+          </Tooltip>
+        </FigmaFrame>
+        <FigmaFrame name="Tooltip/disabled">
+          <Tooltip content="비활성 상태" disabled>
+            <Button variant="secondary" size="sm">
+              Disabled
+            </Button>
+          </Tooltip>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2113,47 +2268,53 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ POPOVER ════════════════ */}
       <SectionTitle>Popover</SectionTitle>
-      <div className="flex flex-wrap gap-4 items-start">
-        <Popover
-          trigger="click"
-          position="bottom"
-          content={
-            <div className="p-3">
-              <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-default)]">Quick Info</span>
-                <span className="text-body-sm text-[var(--color-text-muted)]">
-                  인터랙티브 콘텐츠를 담을 수 있는 팝오버입니다.
-                </span>
-                <Button variant="primary" size="sm">
-                  Action
-                </Button>
-              </VStack>
-            </div>
-          }
-        >
-          <Button variant="secondary" size="sm">
-            Click Popover
-          </Button>
-        </Popover>
-        <Popover
-          trigger="hover"
-          position="top"
-          content={<div className="p-3 text-body-sm">Hover로 표시되는 팝오버</div>}
-        >
-          <Button variant="secondary" size="sm">
-            Hover Popover
-          </Button>
-        </Popover>
-        <Popover
-          trigger="click"
-          position="bottom"
-          showArrow={false}
-          content={<div className="p-3 text-body-sm">Arrow 없는 팝오버</div>}
-        >
-          <Button variant="outline" size="sm">
-            No Arrow
-          </Button>
-        </Popover>
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="Popover/click/bottom/arrow">
+          <Popover
+            trigger="click"
+            position="bottom"
+            content={
+              <div className="p-3">
+                <VStack gap={2}>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Quick Info</span>
+                  <span className="text-body-sm text-[var(--color-text-muted)]">
+                    인터랙티브 콘텐츠를 담을 수 있는 팝오버입니다.
+                  </span>
+                  <Button variant="primary" size="sm">
+                    Action
+                  </Button>
+                </VStack>
+              </div>
+            }
+          >
+            <Button variant="secondary" size="sm">
+              Click Popover
+            </Button>
+          </Popover>
+        </FigmaFrame>
+        <FigmaFrame name="Popover/hover/top/arrow">
+          <Popover
+            trigger="hover"
+            position="top"
+            content={<div className="p-3 text-body-sm">Hover로 표시되는 팝오버</div>}
+          >
+            <Button variant="secondary" size="sm">
+              Hover Popover
+            </Button>
+          </Popover>
+        </FigmaFrame>
+        <FigmaFrame name="Popover/click/bottom/no-arrow">
+          <Popover
+            trigger="click"
+            position="bottom"
+            showArrow={false}
+            content={<div className="p-3 text-body-sm">Arrow 없는 팝오버</div>}
+          >
+            <Button variant="outline" size="sm">
+              No Arrow
+            </Button>
+          </Popover>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2182,9 +2343,13 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ MODAL ════════════════ */}
       <SectionTitle>Modal / ConfirmModal</SectionTitle>
-      <div className="flex flex-wrap gap-4">
-        <ModalDemo />
-        <ConfirmModalDemo />
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="Modal/sm/form">
+          <ModalDemo />
+        </FigmaFrame>
+        <FigmaFrame name="ConfirmModal/sm/danger">
+          <ConfirmModalDemo />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2220,7 +2385,9 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ DRAWER ════════════════ */}
       <SectionTitle>Drawer</SectionTitle>
-      <DrawerDemo />
+      <FigmaFrame name="Drawer/right/360/with-footer">
+        <DrawerDemo />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Overlay/Drawer"
@@ -2256,7 +2423,9 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TOAST ════════════════ */}
       <SectionTitle>Toast</SectionTitle>
-      <ToastDemo />
+      <FigmaFrame name="Toast/trigger">
+        <ToastDemo />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Feedback/Toast"
@@ -2293,7 +2462,9 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TABLE ════════════════ */}
       <SectionTitle>Table</SectionTitle>
-      <TableDemo />
+      <FigmaFrame name="Table/selectable/resizable">
+        <TableDemo />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Data/Table"
@@ -2332,15 +2503,13 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ DATE PICKER ════════════════ */}
       <SectionTitle>DatePicker</SectionTitle>
-      <div className="flex flex-wrap gap-8 items-start">
-        <VStack gap={1}>
-          <StateLabel>Single Date</StateLabel>
+      <div className="flex flex-wrap gap-8 items-end">
+        <FigmaFrame name="DatePicker/single">
           <DatePicker mode="single" />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Range</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="DatePicker/range">
           <DatePicker mode="range" />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2376,7 +2545,9 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TAB BAR ════════════════ */}
       <SectionTitle>TabBar</SectionTitle>
-      <TabBarDemo />
+      <FigmaFrame name="TabBar/with-add/3-tabs">
+        <TabBarDemo />
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Navigation/TabBar"
@@ -2412,34 +2583,39 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ TOP BAR ════════════════ */}
       <SectionTitle>TopBar</SectionTitle>
-      <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
-        <TopBar
-          showSidebarToggle
-          onSidebarToggle={() => {}}
-          showNavigation
-          onBack={() => {}}
-          onForward={() => {}}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Project-1', href: '#' },
-                { label: 'Compute', href: '#' },
-                { label: 'Instances' },
-              ]}
-            />
-          }
-          actions={
-            <>
-              <TopBarAction icon={<IconTerminal2 size={16} stroke={1.5} />} aria-label="Console" />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge
+      <FigmaFrame name="TopBar/with-nav/with-actions">
+        <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+          <TopBar
+            showSidebarToggle
+            onSidebarToggle={() => {}}
+            showNavigation
+            onBack={() => {}}
+            onForward={() => {}}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Project-1', href: '#' },
+                  { label: 'Compute', href: '#' },
+                  { label: 'Instances' },
+                ]}
               />
-            </>
-          }
-        />
-      </div>
+            }
+            actions={
+              <>
+                <TopBarAction
+                  icon={<IconTerminal2 size={16} stroke={1.5} />}
+                  aria-label="Console"
+                />
+                <TopBarAction
+                  icon={<IconBell size={16} stroke={1.5} />}
+                  aria-label="Notifications"
+                  badge
+                />
+              </>
+            }
+          />
+        </div>
+      </FigmaFrame>
 
       <FigmaGuide
         figmaName="TDS/Navigation/TopBar"
@@ -2479,25 +2655,23 @@ export function FigmaComponentsPage() {
       <div className="flex flex-col gap-6">
         <SubTitle>Basic Variants</SubTitle>
         <div className="flex flex-wrap gap-6 items-end">
-          <VStack gap={1}>
-            <StateLabel>Text (3 lines)</StateLabel>
+          <FigmaFrame name="Skeleton/text/3-lines">
             <SkeletonText lines={3} />
-          </VStack>
-          <VStack gap={1}>
-            <StateLabel>Rectangular</StateLabel>
+          </FigmaFrame>
+          <FigmaFrame name="Skeleton/rectangular">
             <Skeleton variant="rectangular" width={120} height={80} />
-          </VStack>
-          <VStack gap={1}>
-            <StateLabel>Circular</StateLabel>
+          </FigmaFrame>
+          <FigmaFrame name="Skeleton/circular">
             <Skeleton variant="circular" size={48} />
-          </VStack>
-          <VStack gap={1}>
-            <StateLabel>Rounded</StateLabel>
+          </FigmaFrame>
+          <FigmaFrame name="Skeleton/rounded">
             <Skeleton variant="rounded" width={120} height={40} />
-          </VStack>
+          </FigmaFrame>
         </div>
         <SubTitle>Table Skeleton</SubTitle>
-        <SkeletonTable rows={3} columns={4} />
+        <FigmaFrame name="Skeleton/table/3x4">
+          <SkeletonTable rows={3} columns={4} />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2528,37 +2702,65 @@ export function FigmaComponentsPage() {
       <SectionTitle>Tag</SectionTitle>
       <div className="flex flex-col gap-4">
         <SubTitle>Variants</SubTitle>
-        <div className="flex flex-wrap gap-2 items-center">
-          <Tag variant="default">Default</Tag>
-          <Tag variant="primary">Primary</Tag>
-          <Tag variant="success">Success</Tag>
-          <Tag variant="warning">Warning</Tag>
-          <Tag variant="danger">Danger</Tag>
-          <Tag variant="info">Info</Tag>
+        <div className="flex flex-wrap gap-3 items-end">
+          <FigmaFrame name="Tag/default/md">
+            <Tag variant="default">Default</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/primary/md">
+            <Tag variant="primary">Primary</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/success/md">
+            <Tag variant="success">Success</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/warning/md">
+            <Tag variant="warning">Warning</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/danger/md">
+            <Tag variant="danger">Danger</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/info/md">
+            <Tag variant="info">Info</Tag>
+          </FigmaFrame>
         </div>
         <SubTitle>Features</SubTitle>
-        <div className="flex flex-wrap gap-2 items-center">
-          <Tag variant="primary" closable onClose={() => {}}>
-            Closable
-          </Tag>
-          <Tag variant="default" icon={<IconTag size={12} />}>
-            With Icon
-          </Tag>
-          <Tag variant="primary" rounded>
-            Rounded
-          </Tag>
-          <Tag variant="default" outline>
-            Outline
-          </Tag>
-          <Tag variant="default" disabled>
-            Disabled
-          </Tag>
+        <div className="flex flex-wrap gap-3 items-end">
+          <FigmaFrame name="Tag/primary/closable">
+            <Tag variant="primary" closable onClose={() => {}}>
+              Closable
+            </Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/default/with-icon">
+            <Tag variant="default" icon={<IconTag size={12} />}>
+              With Icon
+            </Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/primary/rounded">
+            <Tag variant="primary" rounded>
+              Rounded
+            </Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/default/outline">
+            <Tag variant="default" outline>
+              Outline
+            </Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/default/disabled">
+            <Tag variant="default" disabled>
+              Disabled
+            </Tag>
+          </FigmaFrame>
         </div>
         <SubTitle>Sizes</SubTitle>
-        <div className="flex flex-wrap gap-2 items-center">
-          <Tag size="sm">Small</Tag>
-          <Tag size="md">Medium</Tag>
-          <Tag size="lg">Large</Tag>
+        <div className="flex flex-wrap gap-3 items-end">
+          <FigmaFrame name="Tag/default/sm">
+            <Tag size="sm">Small</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/default/md">
+            <Tag size="md">Medium</Tag>
+          </FigmaFrame>
+          <FigmaFrame name="Tag/default/lg">
+            <Tag size="lg">Large</Tag>
+          </FigmaFrame>
         </div>
       </div>
 
@@ -2606,16 +2808,27 @@ export function FigmaComponentsPage() {
       {/* ════════════════ DISCLOSURE ════════════════ */}
       <SectionTitle>Disclosure</SectionTitle>
       <div className="max-w-lg flex flex-col gap-4">
-        <Disclosure title="Default (collapsed)">
-          <div className="text-body-md text-[var(--color-text-muted)]">
-            접기/펼치기가 가능한 콘텐츠 영역입니다.
+        <FigmaFrame name="Disclosure/collapsed">
+          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
+            <Disclosure>
+              <Disclosure.Trigger>Volume details</Disclosure.Trigger>
+            </Disclosure>
           </div>
-        </Disclosure>
-        <Disclosure title="Default Open" defaultOpen>
-          <div className="text-body-md text-[var(--color-text-muted)]">
-            기본으로 열려있는 Disclosure입니다. 접기 가능합니다.
+        </FigmaFrame>
+        <FigmaFrame name="Disclosure/expanded">
+          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
+            <Disclosure defaultOpen>
+              <Disclosure.Trigger>Volume details</Disclosure.Trigger>
+              <Disclosure.Panel>
+                <div className="mt-3 pl-[18px] text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
+                  <p>Name: vol-12345</p>
+                  <p>Size: 100 GiB</p>
+                  <p>Status: Available</p>
+                </div>
+              </Disclosure.Panel>
+            </Disclosure>
           </div>
-        </Disclosure>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2648,18 +2861,26 @@ export function FigmaComponentsPage() {
       <SectionTitle>CopyButton / Copyable</SectionTitle>
       <div className="flex flex-col gap-4">
         <SubTitle>CopyButton</SubTitle>
-        <div className="flex flex-wrap gap-4 items-center">
-          <CopyButton value="copied-text" variant="ghost" size="sm" />
-          <CopyButton value="copied-text" variant="outline" size="sm" label="Copy ID" />
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="CopyButton/ghost/sm/icon-only">
+            <CopyButton value="copied-text" variant="ghost" size="sm" />
+          </FigmaFrame>
+          <FigmaFrame name="CopyButton/outline/sm/with-label">
+            <CopyButton value="copied-text" variant="outline" size="sm" label="Copy ID" />
+          </FigmaFrame>
         </div>
         <SubTitle>Copyable (텍스트 + 복사 버튼)</SubTitle>
         <div className="flex flex-col gap-2">
-          <Copyable value="i-0123456789abcdef" />
-          <Copyable
-            value="very-long-resource-identifier-that-should-be-truncated"
-            truncate
-            maxWidth="200px"
-          />
+          <FigmaFrame name="Copyable/default">
+            <Copyable value="i-0123456789abcdef" />
+          </FigmaFrame>
+          <FigmaFrame name="Copyable/truncate">
+            <Copyable
+              value="very-long-resource-identifier-that-should-be-truncated"
+              truncate
+              maxWidth="200px"
+            />
+          </FigmaFrame>
         </div>
       </div>
 
@@ -2690,18 +2911,15 @@ export function FigmaComponentsPage() {
       {/* ════════════════ PASSWORD ════════════════ */}
       <SectionTitle>Password</SectionTitle>
       <div className="flex flex-col gap-4 max-w-sm">
-        <VStack gap={1}>
-          <StateLabel>Default</StateLabel>
+        <FigmaFrame name="Password/default">
           <Password placeholder="Enter password" fullWidth />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>With Value</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Password/with-value">
           <Password defaultValue="mypassword123" fullWidth />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Disabled</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="Password/disabled">
           <Password placeholder="Disabled" disabled fullWidth />
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2731,23 +2949,21 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ SNB MENU ITEM ════════════════ */}
       <SectionTitle>SNBMenuItem</SectionTitle>
-      <div className="flex gap-6 items-start">
-        <VStack gap={2}>
-          <StateLabel>Icon Type — States</StateLabel>
+      <div className="flex gap-6 items-end">
+        <FigmaFrame name="SNBMenuItem/icon/all-states">
           <div className="flex gap-2 bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)]">
             <SNBMenuItem type="icon" icon={<IconHome size={20} />} status="default" />
             <SNBMenuItem type="icon" icon={<IconServer size={20} />} status="hover" />
             <SNBMenuItem type="icon" icon={<IconBrandDocker size={20} />} status="selected" />
           </div>
-        </VStack>
-        <VStack gap={2}>
-          <StateLabel>Text Type — States</StateLabel>
+        </FigmaFrame>
+        <FigmaFrame name="SNBMenuItem/text/all-states">
           <div className="flex flex-col gap-1 bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)] w-[200px]">
             <SNBMenuItem type="text" text="Instances" status="default" />
             <SNBMenuItem type="text" text="Volumes" status="hover" />
             <SNBMenuItem type="text" text="Networks" status="selected" />
           </div>
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2782,19 +2998,22 @@ export function FigmaComponentsPage() {
       {/* ════════════════ SELECTION INDICATOR ════════════════ */}
       <SectionTitle>SelectionIndicator</SectionTitle>
       <div className="flex flex-col gap-4 max-w-lg">
-        <VStack gap={1}>
-          <StateLabel>With Selected Items</StateLabel>
+        <FigmaFrame name="SelectionIndicator/empty">
+          <SelectionIndicator />
+        </FigmaFrame>
+        <FigmaFrame name="SelectionIndicator/with-selection">
           <SelectionIndicator
             selectedItems={[
-              { id: '1', label: 'nginx-pod-01' },
-              { id: '2', label: 'redis-cache' },
+              { id: '1', label: 'default-sg' },
+              { id: '2', label: 'web-server-sg' },
+              { id: '3', label: 'database-sg' },
             ]}
+            onRemove={() => {}}
           />
-        </VStack>
-        <VStack gap={1}>
-          <StateLabel>Empty</StateLabel>
-          <SelectionIndicator selectedItems={[]} emptyText="No items selected" />
-        </VStack>
+        </FigmaFrame>
+        <FigmaFrame name="SelectionIndicator/error">
+          <SelectionIndicator error errorMessage="Selection is required" />
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
@@ -2824,49 +3043,57 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ WINDOW CONTROL ════════════════ */}
       <SectionTitle>WindowControl</SectionTitle>
-      <div className="flex flex-wrap gap-8 items-start">
-        <VStack gap={2}>
-          <StateLabel>Individual Controls</StateLabel>
-          <div className="flex gap-2 items-center bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)]">
-            <WindowControl type="close" />
+      <div className="flex flex-col gap-6">
+        <SubTitle>Individual Controls</SubTitle>
+        <div className="flex gap-6 items-end">
+          <FigmaFrame name="WindowControl/minimize">
             <WindowControl type="minimize" />
+          </FigmaFrame>
+          <FigmaFrame name="WindowControl/maximize">
             <WindowControl type="maximize" />
+          </FigmaFrame>
+          <FigmaFrame name="WindowControl/close">
+            <WindowControl type="close" />
+          </FigmaFrame>
+        </div>
+
+        <SubTitle>Controls Group</SubTitle>
+        <FigmaFrame name="WindowControls/group">
+          <WindowControls />
+        </FigmaFrame>
+
+        <SubTitle>Title Bar Context</SubTitle>
+        <FigmaFrame name="WindowControls/title-bar">
+          <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
+            <span className="text-body-md font-medium text-[var(--color-text-default)]">
+              Application Title
+            </span>
+            <WindowControls />
           </div>
-        </VStack>
-        <VStack gap={2}>
-          <StateLabel>Disabled</StateLabel>
-          <div className="flex gap-2 items-center bg-[var(--color-surface-subtle)] p-3 rounded-[var(--primitive-radius-lg)]">
-            <WindowControl type="close" disabled />
-            <WindowControl type="minimize" disabled />
-            <WindowControl type="maximize" disabled />
-          </div>
-        </VStack>
+        </FigmaFrame>
       </div>
 
       <FigmaGuide
         figmaName="TDS/Navigation/WindowControl"
-        properties={[
-          { name: 'Type', type: 'Variant', values: 'close | minimize | maximize' },
-          { name: 'Disabled', type: 'Boolean', values: 'true | false' },
-        ]}
+        properties={[{ name: 'Type', type: 'Variant', values: 'close | minimize | maximize' }]}
         autoLayout={[
-          { label: 'Controls Group', direction: 'H', gap: '8px', padding: '0' },
-          { label: 'Button', direction: 'H', gap: '0', padding: '0', height: '12px' },
+          { label: 'Controls Group', direction: 'H', gap: '4px', padding: '0' },
+          { label: 'Button', direction: 'H', gap: '0', padding: '0', height: '24px' },
         ]}
-        radius="9999px (circle)"
+        radius="4px (--primitive-radius-sm)"
         tokens={[
-          { label: 'Close', value: '#FF5F57 (macOS red)' },
-          { label: 'Minimize', value: '#FEBC2E (macOS yellow)' },
-          { label: 'Maximize', value: '#28C840 (macOS green)' },
-          { label: 'Disabled', value: '--color-border-default (gray)' },
-          { label: 'Size', value: '12px × 12px' },
+          { label: 'Size', value: '24px × 24px' },
+          { label: 'Icon', value: '12px' },
+          { label: 'Gap', value: '4px' },
+          { label: 'Hover bg', value: '--color-surface-hover' },
+          { label: 'Close hover bg', value: '--color-state-danger' },
         ]}
         tips={[
-          'macOS 스타일의 창 컨트롤 버튼 (빨강/노랑/초록 원형)',
-          'TabBar 좌측에 배치되는 것이 일반적 (WindowControls 그룹)',
-          'Hover 시 아이콘(X, −, ↗) 표시. 기본은 색상 원만 표시',
-          'Disabled: 모든 버튼이 동일한 회색으로 변경. 비활성 창 표현',
-          'Figma에서 12×12px 원형 프레임. 각 Type별 색상 + hover 상태에서 아이콘 overlay',
+          '데스크탑 UI 창 컨트롤 버튼 (Minimize, Maximize, Close)',
+          '구조: 3개 버튼이 gap 4px 간격으로 그룹 배치. Title Bar 우측에 위치',
+          'Hover 시 배경색 변경. Close 버튼은 빨간색 hover',
+          'Maximize/Restore 토글: 창 상태에 따라 아이콘 전환',
+          'Figma에서 24×24px 프레임. Type별 아이콘 + hover 상태 Variant',
         ]}
       />
     </div>

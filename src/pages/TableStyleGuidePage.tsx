@@ -118,9 +118,11 @@ export function TableStyleGuidePage() {
     { id: 'row-height', label: '3. 행 높이 정책' },
     { id: 'column-alignment', label: '4. 컬럼 정렬 정책' },
     { id: 'text-handling', label: '5. 텍스트 처리 정책' },
-    { id: 'comparison', label: '6. thaki-ui 비교' },
-    { id: 'migration', label: '7. 마이그레이션 가이드' },
-    { id: 'faq', label: '8. FAQ' },
+    { id: 'column-resize', label: '6. 컬럼 리사이즈' },
+    { id: 'cloudbuilder', label: '7. Cloud Builder 적용 사례' },
+    { id: 'comparison', label: '8. thaki-ui 비교' },
+    { id: 'migration', label: '9. 마이그레이션 가이드' },
+    { id: 'faq', label: '10. FAQ' },
     { id: 'appendix', label: '부록' },
   ];
 
@@ -202,9 +204,9 @@ export function TableStyleGuidePage() {
         <main className="flex-1 min-w-0 space-y-8">
           {/* Version Info */}
           <div className="flex items-center gap-4 text-body-md text-[var(--color-text-subtle)]">
-            <span>버전: 1.0</span>
+            <span>버전: 1.1</span>
             <span>•</span>
-            <span>최종 업데이트: Jan 27, 2026</span>
+            <span>최종 업데이트: Mar 11, 2026</span>
           </div>
 
           {/* Section 1: Overview */}
@@ -279,6 +281,7 @@ export function TableStyleGuidePage() {
                   headers={['키', '너비', '용도', '예시']}
                   rows={[
                     ['`status`', '64px', '상태 아이콘', 'StatusIndicator'],
+                    ['`statusLabel`', '120px', '상태 아이콘 + 라벨', 'StatusIndicator + Label'],
                     ['`select`', '40px', '선택 체크박스', 'Checkbox'],
                     ['`checkbox`', '40px', '체크박스', 'Checkbox'],
                     ['`radio`', '40px', '라디오 버튼', 'Radio'],
@@ -323,6 +326,12 @@ export function TableStyleGuidePage() {
                     ['', '`role`', '100px', '역할'],
                     ['', '`mfa`', '80px', 'MFA 상태'],
                     ['', '`fingerprint`', '360px', 'SSH 키 fingerprint'],
+                    ['Cloud Builder', '`service`', '120px', '서비스명'],
+                    ['', '`serviceState`', '120px', '서비스 상태 (Badge)'],
+                    ['', '`endpoints`', '150px', '엔드포인트'],
+                    ['', '`engineId`', '320px', '엔진 ID (UUID)'],
+                    ['', '`rpName`', '120px', '리소스 프로바이더명'],
+                    ['', '`backendName`', '150px', '백엔드명'],
                   ]}
                 />
               </div>
@@ -617,12 +626,256 @@ export function TableStyleGuidePage() {
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 6: Comparison with thaki-ui */}
+          {/* Section 6: Column Resize */}
+          <SectionCard id="column-resize">
+            <SectionCard.Header title="6. 컬럼 리사이즈" />
+            <SectionCard.Content className="space-y-6">
+              <p className="text-[13px] text-[var(--color-text-default)]">
+                Table 컴포넌트는 기본적으로 컬럼 리사이즈를 지원합니다. 사용자가 헤더 경계를
+                드래그하여 컬럼 너비를 조절할 수 있습니다.
+              </p>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.1 기본 동작</h4>
+                <GuideTable
+                  headers={['항목', '값', '설명']}
+                  rows={[
+                    ['resizable', '`true` (기본값)', '테이블 전체 리사이즈 활성화'],
+                    ['columnResizeMode', '`onEnd` (기본값)', '드래그 종료 후 업데이트'],
+                    ['minColumnWidth', '50px (기본값)', '리사이즈 시 최소 너비'],
+                  ]}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.2 컬럼별 리사이즈 규칙</h4>
+                <GuideTable
+                  headers={['컬럼 타입', 'resizable 기본값', '설명']}
+                  rows={[
+                    ['유연 컬럼 (flex)', '`true`', 'width 없는 컬럼은 자동으로 리사이즈 가능'],
+                    [
+                      '고정 컬럼 (width)',
+                      '`false`',
+                      'width가 설정된 컬럼은 기본적으로 리사이즈 불가',
+                    ],
+                    ['명시적 설정', '-', '`column.resizable`로 개별 컬럼 오버라이드 가능'],
+                  ]}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.3 인터랙션</h4>
+                <GuideTable
+                  headers={['동작', '설명']}
+                  rows={[
+                    ['드래그', '헤더 경계를 드래그하여 컬럼 너비 조절'],
+                    ['더블클릭', '컬럼 내용에 맞춰 자동 너비 조절 (auto-fit)'],
+                    ['키보드', 'ArrowLeft/Right로 10px 단위 조절'],
+                  ]}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.4 스냅샷 메커니즘</h4>
+                <p className="text-body-md text-[var(--color-text-muted)] mb-3">
+                  첫 번째 리사이즈 시, 모든 유연 컬럼의 현재 렌더링 너비를 픽셀로 스냅샷합니다. 이후
+                  리사이즈된 컬럼만 고정 너비로 전환되고, 나머지는 스냅샷 너비를 유지합니다.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.5 CSS 변수</h4>
+                <CodeBlock
+                  code={`--table-resize-handle-width: 4px;
+--table-resize-handle-hover-color: var(--color-action-primary);`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.6 사용 예시</h4>
+                <CodeBlock
+                  code={`// 기본 (리사이즈 활성화 — 기본값)
+<Table columns={columns} data={data} rowKey="id" />
+
+// 리사이즈 비활성화
+<Table columns={columns} data={data} rowKey="id" resizable={false} />
+
+// 실시간 업데이트 모드 + 콜백
+<Table
+  columns={columns}
+  data={data}
+  rowKey="id"
+  columnResizeMode="onChange"
+  onColumnResize={(key, width) => console.log(\`\${key}: \${width}px\`)}
+/>
+
+// 특정 컬럼만 리사이즈 비활성화
+const columns = [
+  { key: 'name', label: 'Name', minWidth: columnMinWidths.name },
+  { key: 'description', label: 'Description', minWidth: '200px', resizable: false },
+  { key: 'status', label: 'Status', width: fixedColumns.status, resizable: true },
+];`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.7 useColumnResize Hook</h4>
+                <p className="text-body-md text-[var(--color-text-muted)] mb-3">
+                  고급 사용 시 직접 hook을 사용할 수 있습니다.
+                </p>
+                <CodeBlock
+                  code={`import { useColumnResize } from '@/design-system';
+
+const {
+  columnWidths,       // Record<string, number> — 현재 컬럼 너비
+  isResizing,         // boolean — 리사이즈 중 여부
+  resizingColumnKey,  // string | null — 현재 리사이즈 중인 컬럼 키
+  resetColumnWidth,   // (key: string) => void — 특정 컬럼 초기화
+  resetAllColumnWidths, // () => void — 전체 초기화
+  hasResizedColumns,  // boolean — 리사이즈 발생 여부
+} = useColumnResize({
+  mode: 'onEnd',
+  onColumnResize: (key, width) => {},
+  minColumnWidth: 50,
+  resizableColumnKeys: ['name', 'type', 'createdAt'],
+});`}
+                />
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Section 7: Cloud Builder */}
+          <SectionCard id="cloudbuilder">
+            <SectionCard.Header title="7. Cloud Builder 적용 사례" />
+            <SectionCard.Content className="space-y-6">
+              <p className="text-[13px] text-[var(--color-text-default)]">
+                Cloud Builder System Info 페이지들에 적용된 테이블 설정 사례입니다.
+              </p>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.1 적용 원칙</h4>
+                <GuideTable
+                  headers={['항목', '설명']}
+                  rows={[
+                    [
+                      '`width` vs `minWidth`',
+                      'width는 고정 너비(flex 비활성), minWidth는 최소 너비(flex 유지)',
+                    ],
+                    ['고정 컬럼', 'StatusIndicator, Action 컬럼만 width 사용'],
+                    ['프리셋 미존재 시', "적절한 프리셋이 없으면 직접 값 지정 (예: '150px')"],
+                    ['정렬', "고정 컬럼만 align: 'center', 유연 컬럼은 기본 왼쪽 정렬"],
+                  ]}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.2 Services</h4>
+                <CodeBlock
+                  code={`// /cloudbuilder/services — 4개 유연 컬럼, Action 없음
+columns: [
+  { key: 'name', minWidth: columnMinWidths.name },           // 180px
+  { key: 'service', minWidth: columnMinWidths.service },     // 120px
+  { key: 'region', minWidth: columnMinWidths.region },       // 100px
+  { key: 'endpoints', minWidth: columnMinWidths.endpoints }, // 150px
+]`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">
+                  7.3 Compute Services — Compute hosts
+                </h4>
+                <CodeBlock
+                  code={`// /cloudbuilder/compute-services — 고정(status) + 유연 5개 + Action
+columns: [
+  { key: 'serviceStatus', width: fixedColumns.status, align: 'center' }, // 고정 64px
+  { key: 'name', minWidth: columnMinWidths.name },                       // 180px
+  { key: 'host', minWidth: columnMinWidths.host },                       // 300px
+  { key: 'availabilityZone', minWidth: columnMinWidths.availabilityZone }, // 80px
+  { key: 'serviceState', minWidth: columnMinWidths.serviceState },       // 120px
+  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated },         // 140px
+]`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.4 Compute Services — Hypervisors</h4>
+                <CodeBlock
+                  code={`// 8개 유연 컬럼 (숫자 데이터도 왼쪽 정렬)
+columns: [
+  { key: 'name', minWidth: columnMinWidths.name },                             // 180px
+  { key: 'id', minWidth: columnMinWidths.id },                                 // 64px
+  { key: 'type', minWidth: columnMinWidths.type },                             // 100px
+  { key: 'vcpuCore', minWidth: columnMinWidths.vcpuCore },                     // 100px
+  { key: 'configuredMemoryGiB', minWidth: columnMinWidths.configuredMemoryGiB }, // 140px
+  { key: 'instances', minWidth: columnMinWidths.instances },                   // 100px
+  { key: 'gpuUsage', minWidth: columnMinWidths.gpuUsage },                     // 100px
+  { key: 'pcpuUsage', minWidth: columnMinWidths.pcpuUsage },                   // 100px
+]`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.5 Network Agents</h4>
+                <CodeBlock
+                  code={`// /cloudbuilder/network-agents — 고정(status) + 유연 6개 + Action
+columns: [
+  { key: 'serviceStatus', width: fixedColumns.status, align: 'center' }, // 고정 64px
+  { key: 'name', minWidth: columnMinWidths.name },                       // 180px
+  { key: 'type', minWidth: columnMinWidths.typeXl },                     // 200px
+  { key: 'host', minWidth: columnMinWidths.host },                       // 300px
+  { key: 'availabilityZone', minWidth: columnMinWidths.availabilityZone }, // 80px
+  { key: 'serviceState', minWidth: columnMinWidths.serviceState },       // 120px
+  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated },         // 140px
+]`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.6 Block Storage Services</h4>
+                <CodeBlock
+                  code={`// Block storage 탭 — 고정(status) + 유연 5개 + Action
+columns: [
+  { key: 'serviceStatus', width: fixedColumns.status, align: 'center' }, // 고정 64px
+  { key: 'name', minWidth: columnMinWidths.name },                       // 180px
+  { key: 'host', minWidth: columnMinWidths.host },                       // 300px
+  { key: 'availabilityZone', minWidth: columnMinWidths.availabilityZone }, // 80px
+  { key: 'serviceState', minWidth: columnMinWidths.serviceState },       // 120px
+  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated },         // 140px
+]
+
+// Storage backends 탭 — 유연 4개, 프리셋 없는 경우 직접 지정
+columns: [
+  { key: 'name', minWidth: columnMinWidths.name },             // 180px
+  { key: 'protocol', minWidth: columnMinWidths.protocol },     // 90px
+  { key: 'backendName', minWidth: columnMinWidths.backendName }, // 150px
+  { key: 'storageCapacityGiB', minWidth: '150px' },           // 직접 지정
+]`}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.7 Orchestration Services</h4>
+                <CodeBlock
+                  code={`// /cloudbuilder/orchestration-services — 유연 5개, Action 없음
+columns: [
+  { key: 'name', minWidth: columnMinWidths.name },             // 180px
+  { key: 'engineId', minWidth: columnMinWidths.engineId },     // 320px
+  { key: 'host', minWidth: columnMinWidths.host },             // 300px
+  { key: 'status', minWidth: columnMinWidths.serviceState },   // 120px
+  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated }, // 140px
+]`}
+                />
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Section 8: Comparison with thaki-ui */}
           <SectionCard id="comparison">
-            <SectionCard.Header title="6. thaki-ui와의 비교" />
+            <SectionCard.Header title="8. thaki-ui와의 비교" />
             <SectionCard.Content className="space-y-6">
               <div>
-                <h4 className="text-[13px] font-medium mb-2">6.1 컬럼 사이징 방식 비교</h4>
+                <h4 className="text-[13px] font-medium mb-2">8.1 컬럼 사이징 방식 비교</h4>
                 <GuideTable
                   headers={['항목', 'TDS (SSOT)', 'thaki-ui']}
                   rows={[
@@ -641,7 +894,7 @@ export function TableStyleGuidePage() {
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">6.2 컬럼 정의 비교</h4>
+                <h4 className="text-[13px] font-medium mb-2">8.2 컬럼 정의 비교</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-label-sm text-[var(--color-text-muted)] mb-2">TDS (SSOT)</p>
@@ -668,7 +921,7 @@ export function TableStyleGuidePage() {
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">6.3 thaki-ui 문제점과 TDS 해결책</h4>
+                <h4 className="text-[13px] font-medium mb-2">8.3 thaki-ui 문제점과 TDS 해결책</h4>
                 <GuideTable
                   headers={['문제', 'thaki-ui', 'TDS 해결책']}
                   rows={[
@@ -711,12 +964,12 @@ export function TableStyleGuidePage() {
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 7: Migration */}
+          {/* Section 9: Migration */}
           <SectionCard id="migration">
-            <SectionCard.Header title="7. 마이그레이션 가이드" />
+            <SectionCard.Header title="9. 마이그레이션 가이드" />
             <SectionCard.Content className="space-y-6">
               <div>
-                <h4 className="text-[13px] font-medium mb-2">7.1 Import 변경</h4>
+                <h4 className="text-[13px] font-medium mb-2">9.1 Import 변경</h4>
                 <CodeBlock
                   code={`// Before
 import { columnWidths } from '@/design-system';
@@ -727,7 +980,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">7.2 고정 컬럼 변환</h4>
+                <h4 className="text-[13px] font-medium mb-2">9.2 고정 컬럼 변환</h4>
                 <CodeBlock
                   code={`// Before
 {
@@ -746,7 +999,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">7.3 유연 컬럼 변환</h4>
+                <h4 className="text-[13px] font-medium mb-2">9.3 유연 컬럼 변환</h4>
                 <CodeBlock
                   code={`// Before
 {
@@ -766,9 +1019,9 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 8: FAQ */}
+          {/* Section 10: FAQ */}
           <SectionCard id="faq">
-            <SectionCard.Header title="8. FAQ" />
+            <SectionCard.Header title="10. FAQ" />
             <SectionCard.Content className="space-y-4">
               {[
                 {
@@ -811,6 +1064,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
   radio: '40px',
   favorite: '40px',
   status: '64px',
+  statusLabel: '120px',
   locked: '64px',
   actions: '64px',
   action: '64px',
@@ -852,6 +1106,16 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
   role: '100px',
   mfa: '80px',
   fingerprint: '360px',
+  
+  // Cloud Builder
+  serial: '120px',
+  service: '120px',
+  serviceState: '120px',
+  serviceStatus: '120px',
+  endpoints: '150px',
+  backendName: '150px',
+  rpName: '120px',
+  engineId: '320px',
   // ... (전체 목록은 columnWidths.ts 참조)
 } as const;`}
                 />

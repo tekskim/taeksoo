@@ -40,8 +40,10 @@ export const fixedColumns = {
   radio: '40px',
   favorite: '40px',
 
-  // 상태 아이콘
+  // 상태 (Icon only)
   status: '64px',
+  // 상태 (Icon + Label pill)
+  statusLabel: '120px',
 
   // 잠금
   locked: '64px',
@@ -73,7 +75,7 @@ export const columnMinWidths = {
   nameWide: '220px',
   nameXl: '300px',
   nameXxl: '250px',
-  hostname: '150px',
+  hostname: '180px',
   node: '150px',
 
   // 상태 (텍스트 포함) ---------------------------------------------------------
@@ -117,11 +119,14 @@ export const columnMinWidths = {
 
   // 텍스트 --------------------------------------------------------------------
   description: '200px',
-  labels: '300px',
+  labels: '180px',
   annotations: '300px',
   key: '300px',
   value: '300px',
   owner: '160px',
+
+  // 서버 그룹/키페어 -----------------------------------------------------------
+  fingerprint: '360px',
 
   // ============================================================================
   // Compute
@@ -159,7 +164,6 @@ export const columnMinWidths = {
 
   // 서버 그룹/키페어 -----------------------------------------------------------
   policy: '120px',
-  fingerprint: '360px',
 
   // Flavor 상세 ---------------------------------------------------------------
   gpuType: '120px',
@@ -168,7 +172,7 @@ export const columnMinWidths = {
   cpuThreadPolicy: '140px',
 
   // 호스트 하드웨어 ------------------------------------------------------------
-  model: '120px',
+  model: '250px',
   cpus: '80px',
   cores: '80px',
   totalMemory: '120px',
@@ -183,11 +187,11 @@ export const columnMinWidths = {
   deviceId: '100px',
   deviceName: '150px',
   devicePath: '150px',
-  daemons: '100px',
+  daemons: '160px',
   daemonName: '150px',
   daemonEvents: '100px',
   osd: '80px',
-  osds: '80px',
+  osds: '160px',
 
   // ============================================================================
   // Network
@@ -478,9 +482,9 @@ export const columnMinWidths = {
 
   // 서비스 --------------------------------------------------------------------
   service: '120px',
-  serviceState: '100px',
+  serviceState: '120px',
   serviceStatus: '120px',
-  engineId: '120px',
+  engineId: '320px',
   endpoints: '150px',
   backendName: '150px',
   rpName: '120px',

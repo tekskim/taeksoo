@@ -484,7 +484,7 @@ export const columnMinWidths = {
   service: '120px',
   serviceState: '120px',
   serviceStatus: '120px',
-  engineId: '120px',
+  engineId: '320px',
   endpoints: '150px',
   backendName: '150px',
   rpName: '120px',
