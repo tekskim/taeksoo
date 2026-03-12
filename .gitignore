@@ -16,6 +16,9 @@ dist
 dist-ssr
 *.local
 
+# MCP config (may contain Notion API token)
+.cursor/mcp.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -91,6 +91,11 @@ import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
 import { ContainerHomePage } from '@/pages/ContainerHomePage';
 import { ContainerNamespacesPage } from '@/pages/ContainerNamespacesPage';
 import { ContainerConsolePage } from '@/pages/ContainerConsolePage';
+import { AppCatalogPage } from '@/pages/AppCatalogPage';
+import { AppInstallPage } from '@/pages/AppInstallPage';
+import { AppEditPage } from '@/pages/AppEditPage';
+import { InstalledAppsPage } from '@/pages/InstalledAppsPage';
+import { InstalledAppDetailPage } from '@/pages/InstalledAppDetailPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -268,6 +273,11 @@ function AppRoutes() {
         <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
         <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
         <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
+        <Route path="/container/apps/catalog" element={<AppCatalogPage />} />
+        <Route path="/container/apps/catalog/:chartName/install" element={<AppInstallPage />} />
+        <Route path="/container/apps/installed-apps" element={<InstalledAppsPage />} />
+        <Route path="/container/apps/installed-apps/:appId/edit" element={<AppEditPage />} />
+        <Route path="/container/apps/installed-apps/:appId" element={<InstalledAppDetailPage />} />
         <Route path="/container/*" element={<ContainerDashboardPage />} />
 
         {/* IAM Routes */}
