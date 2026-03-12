@@ -541,7 +541,7 @@ export function ImageDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Pool" value={imageData.pool} status="active" />
+            <DetailHeader.InfoCard label="Pool" value={imageData.pool} />
             <DetailHeader.InfoCard label="Size" value={imageData.size} />
             <DetailHeader.InfoCard label="Objects" value={String(imageData.objects)} />
             <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />

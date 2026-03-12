@@ -28,7 +28,6 @@ import {
   IconDotsCircleHorizontal,
   IconDownload,
   IconBell,
-  IconChevronRight,
   IconChevronDown,
 } from '@tabler/icons-react';
 
@@ -67,7 +66,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'cpu_allocation_ratio', value: '16.0' },
       { key: 'ram_allocation_ratio', value: '1.5' },
     ],
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 09:15:33',
   },
   {
     id: 'ha-002',
@@ -78,7 +77,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'gpu', value: 'nvidia-a100' },
       { key: 'gpu_count', value: '8' },
     ],
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:42:18',
   },
   {
     id: 'ha-003',
@@ -89,7 +88,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'memory', value: 'high' },
       { key: 'ram_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 14:08:52',
   },
   {
     id: 'ha-004',
@@ -100,7 +99,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'storage', value: 'nvme' },
       { key: 'disk_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 16:25:41',
   },
   {
     id: 'ha-005',
@@ -108,7 +107,7 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-c',
     hosts: ['bm-host-1'],
     metadata: [{ key: 'bare-metal', value: 'true' }],
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 17:53:27',
   },
 ];
 
@@ -340,126 +339,87 @@ export function ComputeAdminHostAggregatesPage() {
               />
             )}
 
-            {/* Expandable Table */}
-            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-              {/* Table Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
-                  <span>Name</span>
-                </div>
-                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                  <span>Availability Zone</span>
-                </div>
-                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                  <span>Hosts</span>
-                </div>
-                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                  <span>Created at</span>
-                </div>
-                <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[64px] border-l border-[var(--color-border-default)]">
-                  <span>Action</span>
-                </div>
-              </div>
-
-              {/* Table Rows */}
-              {paginatedItems.map((row) => {
-                const isExpanded = expandedRows.includes(row.id);
-                const firstHost = row.hosts[0];
-                const additionalHosts = row.hosts.length - 1;
-
-                return (
-                  <div
-                    key={row.id}
-                    className="flex flex-col w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
-                  >
-                    {/* Row Content */}
-                    <div className="flex items-center min-h-[var(--table-row-height)] w-full">
-                      {/* Name Cell with Expand Icon */}
-                      <div className="flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                        <button
-                          onClick={() => toggleRowExpansion(row.id)}
-                          className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                        >
-                          {isExpanded ? (
-                            <IconChevronDown
-                              size={16}
-                              stroke={1.5}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          ) : (
-                            <IconChevronRight
-                              size={16}
-                              stroke={1.5}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          )}
-                        </button>
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {row.name}
-                        </span>
-                      </div>
-
-                      {/* Availability Zone Cell */}
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {row.availabilityZone}
-                        </span>
-                      </div>
-
-                      {/* Hosts Cell */}
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {firstHost}
-                          {additionalHosts > 0 && ` (+${additionalHosts})`}
-                        </span>
-                      </div>
-
-                      {/* Created at Cell */}
-                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                        <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                          {row.createdAt}
-                        </span>
-                      </div>
-
-                      {/* Action Cell */}
-                      <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] w-[64px]">
-                        <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-                          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                            <IconDotsCircleHorizontal
-                              size={16}
-                              stroke={1.5}
-                              className="text-[var(--action-icon-color)]"
-                            />
-                          </button>
-                        </ContextMenu>
-                      </div>
-                    </div>
-
-                    {/* Expanded Metadata Table */}
-                    {isExpanded && row.metadata.length > 0 && (
-                      <div className="border-t border-[var(--color-border-default)] p-3">
-                        <Table
-                          columns={[
-                            { key: 'key', label: 'Metadata', flex: 1 },
-                            { key: 'value', label: 'Value', flex: 1 },
-                          ]}
-                          data={row.metadata}
-                          rowKey="key"
-                          className="[&_[data-column-key=value]]:border-l [&_[data-column-key=value]]:border-[var(--color-border-default)]"
+            {/* Table */}
+            <Table<HostAggregate>
+              columns={[
+                {
+                  key: 'name',
+                  label: 'Name',
+                  flex: 1,
+                  render: (_: string, row: HostAggregate) => {
+                    const isExpanded = expandedRows.includes(row.id);
+                    return (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleRowExpansion(row.id);
+                        }}
+                        className="flex items-center gap-2 w-full"
+                      >
+                        <IconChevronDown
+                          size={16}
+                          stroke={1.5}
+                          className={`shrink-0 text-[var(--color-text-default)] transition-transform ${isExpanded ? '' : '-rotate-90'}`}
                         />
-                      </div>
-                    )}
+                        <span>{row.name}</span>
+                      </button>
+                    );
+                  },
+                },
+                { key: 'availabilityZone', label: 'Availability Zone', flex: 1 },
+                {
+                  key: 'hosts',
+                  label: 'Hosts',
+                  flex: 1,
+                  render: (_: string[], row: HostAggregate) => {
+                    const first = row.hosts[0];
+                    const rest = row.hosts.length - 1;
+                    return (
+                      <span>
+                        {first}
+                        {rest > 0 && ` (+${rest})`}
+                      </span>
+                    );
+                  },
+                },
+                { key: 'createdAt', label: 'Created at', flex: 1 },
+                {
+                  key: 'actions' as keyof HostAggregate,
+                  label: 'Action',
+                  width: '64px',
+                  align: 'center' as const,
+                  render: (_: unknown, row: HostAggregate) => (
+                    <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
+                      <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                        <IconDotsCircleHorizontal
+                          size={16}
+                          stroke={1.5}
+                          className="text-[var(--action-icon-color)]"
+                        />
+                      </button>
+                    </ContextMenu>
+                  ),
+                },
+              ]}
+              data={paginatedItems}
+              rowKey="id"
+              emptyMessage="No host aggregates found"
+              expandedContent={(row) => {
+                if (!expandedRows.includes(row.id) || row.metadata.length === 0) return null;
+                return (
+                  <div className="p-3">
+                    <Table
+                      columns={[
+                        { key: 'key', label: 'Metadata', flex: 1 },
+                        { key: 'value', label: 'Value', flex: 1 },
+                      ]}
+                      data={row.metadata}
+                      rowKey="key"
+                    />
                   </div>
                 );
-              })}
-
-              {/* Empty State */}
-              {paginatedItems.length === 0 && (
-                <div className="flex items-center justify-center py-8 text-[var(--color-text-muted)]">
-                  No host aggregates found
-                </div>
-              )}
-            </div>
+              }}
+            />
           </>
         )}
 
@@ -494,67 +454,35 @@ export function ComputeAdminHostAggregatesPage() {
             )}
 
             {/* Availability Zones Table */}
-            <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
-              {/* Table Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                <div className="flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
-                  <span>Name</span>
-                  <IconChevronDown
-                    size={16}
-                    stroke={1.5}
-                    className="text-[var(--color-text-default)]"
-                  />
-                </div>
-                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                  <span>Hosts</span>
-                </div>
-                <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
-                  <span>Available</span>
-                </div>
-              </div>
-
-              {/* Table Rows */}
-              {paginatedAZs.map((az) => {
-                const firstHost = az.hosts[0];
-                const additionalHosts = az.hosts.length - 1;
-
-                return (
-                  <div
-                    key={az.id}
-                    className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
-                  >
-                    {/* Name Cell */}
-                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {az.name}
+            <Table<AvailabilityZone>
+              columns={[
+                { key: 'name', label: 'Name', flex: 1, sortable: true },
+                {
+                  key: 'hosts',
+                  label: 'Hosts',
+                  flex: 1,
+                  render: (_: string[], row: AvailabilityZone) => {
+                    const first = row.hosts[0];
+                    const rest = row.hosts.length - 1;
+                    return (
+                      <span>
+                        {first}
+                        {rest > 0 && ` (+${rest})`}
                       </span>
-                    </div>
-
-                    {/* Hosts Cell */}
-                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {firstHost}
-                        {additionalHosts > 0 && ` (+${additionalHosts})`}
-                      </span>
-                    </div>
-
-                    {/* Available Cell */}
-                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                        {az.available ? 'Yes' : 'No'}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Empty State */}
-              {paginatedAZs.length === 0 && (
-                <div className="flex items-center justify-center py-8 text-[var(--color-text-muted)]">
-                  No availability zones found
-                </div>
-              )}
-            </div>
+                    );
+                  },
+                },
+                {
+                  key: 'available',
+                  label: 'Available',
+                  flex: 1,
+                  render: (value: boolean) => <span>{value ? 'Yes' : 'No'}</span>,
+                },
+              ]}
+              data={paginatedAZs}
+              rowKey="id"
+              emptyMessage="No availability zones found"
+            />
           </>
         )}
       </VStack>

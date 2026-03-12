@@ -64,7 +64,7 @@ const mockPolicies: BackupPolicy[] = [
     targetCount: 3,
     lastRun: 'Nov 10, 2025 02:00',
     nextRun: 'Nov 11, 2025 02:00',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: 'bp-002',
@@ -75,7 +75,7 @@ const mockPolicies: BackupPolicy[] = [
     targetCount: 12,
     lastRun: 'Nov 9, 2025 00:00',
     nextRun: 'Nov 16, 2025 00:00',
-    createdAt: 'Sep 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
   },
   {
     id: 'bp-003',
@@ -86,7 +86,7 @@ const mockPolicies: BackupPolicy[] = [
     targetCount: 2,
     lastRun: 'Nov 10, 2025 14:00',
     nextRun: 'Nov 10, 2025 15:00',
-    createdAt: 'Oct 20, 2025',
+    createdAt: 'Oct 20, 2025 23:27:51',
   },
   {
     id: 'bp-004',
@@ -97,7 +97,7 @@ const mockPolicies: BackupPolicy[] = [
     targetCount: 8,
     lastRun: 'Nov 1, 2025 03:00',
     nextRun: '-',
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
   {
     id: 'bp-005',
@@ -108,7 +108,7 @@ const mockPolicies: BackupPolicy[] = [
     targetCount: 5,
     lastRun: 'Nov 9, 2025 04:00',
     nextRun: 'Nov 11, 2025 04:00',
-    createdAt: 'Oct 10, 2025',
+    createdAt: 'Oct 10, 2025 01:17:01',
   },
   {
     id: 'bp-006',
@@ -119,7 +119,7 @@ const mockPolicies: BackupPolicy[] = [
     targetCount: 4,
     lastRun: 'Nov 10, 2025 12:00',
     nextRun: 'Nov 10, 2025 18:00',
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 10:20:28',
   },
 ];
 
@@ -241,6 +241,7 @@ export function BackupPoliciesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

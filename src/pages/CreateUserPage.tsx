@@ -74,7 +74,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 08:15:22',
   },
   {
     id: 'group-2',
@@ -82,7 +82,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 09:32:44',
   },
   {
     id: 'group-3',
@@ -90,7 +90,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 10:48:17',
   },
   {
     id: 'group-4',
@@ -98,7 +98,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 11:55:33',
   },
   {
     id: 'group-5',
@@ -106,7 +106,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 13:22:08',
   },
   {
     id: 'group-6',
@@ -114,7 +114,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Custom',
     roles: 'FullAccess (+2)',
     userCount: 45,
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 14:40:51',
   },
   {
     id: 'group-7',
@@ -122,7 +122,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Custom',
     roles: 'ReadOnly',
     userCount: 200,
-    createdAt: 'Jul 22, 2025',
+    createdAt: 'Jul 22, 2025 16:18:26',
   },
 ];
 

@@ -68,7 +68,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 09:22:14',
   },
   {
     id: 'net-002',
@@ -81,7 +81,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 24, 2025',
+    createdAt: 'Dec 24, 2025 14:38:57',
   },
   {
     id: 'net-003',
@@ -94,7 +94,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 23, 2025',
+    createdAt: 'Dec 23, 2025 07:51:26',
   },
   {
     id: 'net-004',
@@ -107,7 +107,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'building',
-    createdAt: 'Dec 22, 2025',
+    createdAt: 'Dec 22, 2025 16:04:43',
   },
   {
     id: 'net-005',
@@ -120,7 +120,7 @@ const mockNetworks: Network[] = [
     adminState: 'Down',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 21, 2025',
+    createdAt: 'Dec 21, 2025 10:19:08',
   },
   {
     id: 'net-006',
@@ -133,7 +133,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 20, 2025',
+    createdAt: 'Dec 20, 2025 13:45:32',
   },
   {
     id: 'net-007',
@@ -146,7 +146,7 @@ const mockNetworks: Network[] = [
     adminState: 'Down',
     diskTag: 'Project',
     status: 'error',
-    createdAt: 'Dec 19, 2025',
+    createdAt: 'Dec 19, 2025 08:27:51',
   },
   {
     id: 'net-008',
@@ -159,7 +159,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 18, 2025',
+    createdAt: 'Dec 18, 2025 11:56:39',
   },
   {
     id: 'net-009',
@@ -172,7 +172,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Shared',
     status: 'active',
-    createdAt: 'Dec 17, 2025',
+    createdAt: 'Dec 17, 2025 15:12:24',
   },
   {
     id: 'net-010',
@@ -185,7 +185,7 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'External',
     status: 'active',
-    createdAt: 'Dec 16, 2025',
+    createdAt: 'Dec 16, 2025 17:33:47',
   },
 ];
 
@@ -438,6 +438,7 @@ export function ComputeAdminNetworksPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

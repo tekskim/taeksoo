@@ -83,7 +83,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
     routerName: 'router-01',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01 (+3)',
@@ -100,7 +100,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
     routerName: 'main-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -117,7 +117,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
     routerName: 'dev-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -134,7 +134,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
     routerName: 'prod-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -151,7 +151,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
     routerName: 'test-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-03',
@@ -168,7 +168,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
     routerName: 'backup-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -185,7 +185,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
     routerName: 'dmz-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -202,7 +202,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
     routerName: 'internal-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -219,7 +219,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
     routerName: 'edge-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -236,7 +236,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
     routerName: 'vpn-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -473,6 +473,7 @@ export default function RouterDetailPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',
@@ -691,7 +692,7 @@ export default function RouterDetailPage() {
                   />
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedPorts.length === 0}
@@ -753,7 +754,7 @@ export default function RouterDetailPage() {
                   />
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedRoutes.length === 0}

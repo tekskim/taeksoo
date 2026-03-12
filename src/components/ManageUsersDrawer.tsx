@@ -48,7 +48,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-2',
@@ -56,7 +56,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-3',
@@ -64,7 +64,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-4',
@@ -72,7 +72,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-5',
@@ -80,7 +80,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-6',
@@ -88,7 +88,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-7',
@@ -96,7 +96,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-8',
@@ -104,7 +104,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-9',
@@ -112,7 +112,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
     hasWarning: true,
   },
   {
@@ -121,7 +121,7 @@ const defaultUsers: UserItem[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   ...Array.from({ length: 15 }, (_, i) => ({
     id: `user-${i + 11}`,
@@ -129,7 +129,7 @@ const defaultUsers: UserItem[] = [
     status: 'active' as const,
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   })),
 ];
 

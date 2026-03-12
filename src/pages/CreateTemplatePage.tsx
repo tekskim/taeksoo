@@ -339,11 +339,11 @@ const mockNetworks: NetworkRow[] = [
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
-  { id: 'sg1', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
-  { id: 'sg3', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
-  { id: 'sg4', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
-  { id: 'sg5', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  { id: 'sg1', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
+  { id: 'sg3', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
+  { id: 'sg4', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
+  { id: 'sg5', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
 ];
 
 const mockPorts: PortRow[] = [
@@ -395,9 +395,24 @@ const mockPorts: PortRow[] = [
 ];
 
 const mockKeyPairs: KeyPairRow[] = [
-  { id: 'kp1', name: 'dev-keypair', fingerprint: 'a1:b2:c3:d4:e5', createdAt: 'Jan 1, 2025' },
-  { id: 'kp2', name: 'prod-keypair', fingerprint: 'f6:g7:h8:i9:j0', createdAt: 'Jan 15, 2025' },
-  { id: 'kp3', name: 'staging-keypair', fingerprint: 'k1:l2:m3:n4:o5', createdAt: 'Feb 1, 2025' },
+  {
+    id: 'kp1',
+    name: 'dev-keypair',
+    fingerprint: 'a1:b2:c3:d4:e5',
+    createdAt: 'Jan 1, 2025 10:20:28',
+  },
+  {
+    id: 'kp2',
+    name: 'prod-keypair',
+    fingerprint: 'f6:g7:h8:i9:j0',
+    createdAt: 'Jan 15, 2025 12:22:26',
+  },
+  {
+    id: 'kp3',
+    name: 'staging-keypair',
+    fingerprint: 'k1:l2:m3:n4:o5',
+    createdAt: 'Feb 1, 2025 10:20:28',
+  },
 ];
 
 const mockServerGroups: ServerGroupRow[] = [
@@ -1733,7 +1748,12 @@ function NetworkSection({
       ),
     },
     { key: 'description', label: 'Description', sortable: true },
-    { key: 'createdAt', label: 'Created at', sortable: true },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+    },
   ];
 
   // Port table columns
@@ -2222,6 +2242,7 @@ function AuthenticationSection({
       sortable: true,
       flex: 1,
       minWidth: columnMinWidths.createdAt,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

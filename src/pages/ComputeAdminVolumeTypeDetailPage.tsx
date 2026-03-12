@@ -501,7 +501,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                 <SectionCard.Header
                   title="Encryption"
                   actions={
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                       Delete encryption
                     </Button>
                   }

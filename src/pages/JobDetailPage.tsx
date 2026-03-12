@@ -103,7 +103,7 @@ const mockJobData: Record<string, JobData> = {
     status: 'OK',
     namespace: 'default',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 16:45:11',
     duration: '36 days',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -122,7 +122,7 @@ const mockJobData: Record<string, JobData> = {
     status: 'True',
     namespace: 'database',
     image: 'migration-tool:v2.1',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 09:12:33',
     duration: '2h 15m',
     labels: {
       'app.kubernetes.io/name': 'migration',
@@ -144,7 +144,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 16:45:11',
     containers: [
       'container-0',
       'container-1',
@@ -163,7 +163,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 16:49:33',
     containers: ['container-0'],
   },
   {
@@ -175,7 +175,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 16:45:11',
     containers: ['container-0'],
   },
 ];
@@ -325,6 +325,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',

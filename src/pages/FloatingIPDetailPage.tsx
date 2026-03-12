@@ -18,7 +18,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconEdit, IconLinkOff } from '@tabler/icons-react';
+import { IconBell, IconEdit, IconLinkOff, IconUnlink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -52,7 +52,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-001',
     floatingIp: '172.24.4.228',
     status: 'active',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'web-01', id: 'inst-001' },
@@ -64,7 +64,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
     status: 'active',
-    createdAt: 'Oct 2, 2025',
+    createdAt: 'Oct 2, 2025 17:33:45',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'app-server', id: 'inst-002' },
@@ -76,7 +76,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
     status: 'down',
-    createdAt: 'Oct 3, 2025',
+    createdAt: 'Oct 3, 2025 00:46:02',
     description: 'Unassociated',
     resourceType: null,
     resource: null,
@@ -88,7 +88,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
     status: 'active',
-    createdAt: 'Sep 28, 2025',
+    createdAt: 'Sep 28, 2025 07:11:07',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'db-server', id: 'inst-003' },
@@ -100,7 +100,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
     status: 'active',
-    createdAt: 'Sep 25, 2025',
+    createdAt: 'Sep 25, 2025 10:32:16',
     description: '-',
     resourceType: 'Load balancer',
     resource: { name: 'load-balancer', id: 'lb-001' },
@@ -112,7 +112,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
     status: 'error',
-    createdAt: 'Sep 20, 2025',
+    createdAt: 'Sep 20, 2025 23:27:51',
     description: 'Error state',
     resourceType: null,
     resource: null,
@@ -124,7 +124,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
     status: 'active',
-    createdAt: 'Sep 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'monitoring', id: 'inst-004' },
@@ -136,7 +136,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
     status: 'active',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
     description: '-',
     resourceType: 'VPN Gateway',
     resource: { name: 'vpn-gateway', id: 'vpn-001' },
@@ -148,7 +148,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
     status: 'down',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
     description: 'Unassociated',
     resourceType: null,
     resource: null,
@@ -160,7 +160,7 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
     status: 'active',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
     description: '-',
     resourceType: 'Instance',
     resource: { name: 'backup-server', id: 'inst-005' },
@@ -288,7 +288,7 @@ export default function FloatingIPDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button variant="secondary" size="sm" leftIcon={<IconUnlink size={12} />}>
               Release
             </Button>
           </DetailHeader.Actions>

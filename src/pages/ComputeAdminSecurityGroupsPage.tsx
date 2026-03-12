@@ -60,7 +60,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Web server access group',
     ingressRules: 3,
     egressRules: 3,
-    createdAt: 'Jan 15, 2024',
+    createdAt: 'Jan 15, 2024 12:22:26',
     status: 'active',
   },
   {
@@ -71,7 +71,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Default security group',
     ingressRules: 2,
     egressRules: 2,
-    createdAt: 'Jan 10, 2024',
+    createdAt: 'Jan 10, 2024 01:17:01',
     status: 'active',
   },
   {
@@ -82,7 +82,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Database access group',
     ingressRules: 5,
     egressRules: 1,
-    createdAt: 'Feb 1, 2024',
+    createdAt: 'Feb 1, 2024 10:20:28',
     status: 'active',
   },
   {
@@ -93,7 +93,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Application server security group',
     ingressRules: 8,
     egressRules: 4,
-    createdAt: 'Feb 15, 2024',
+    createdAt: 'Feb 15, 2024 12:22:26',
     status: 'active',
   },
   {
@@ -104,7 +104,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Load balancer security group',
     ingressRules: 4,
     egressRules: 2,
-    createdAt: 'Mar 1, 2024',
+    createdAt: 'Mar 1, 2024 10:20:28',
     status: 'active',
   },
   {
@@ -115,7 +115,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Cache server access group',
     ingressRules: 2,
     egressRules: 1,
-    createdAt: 'Mar 10, 2024',
+    createdAt: 'Mar 10, 2024 01:17:01',
     status: 'active',
   },
   {
@@ -126,7 +126,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Monitoring access group',
     ingressRules: 6,
     egressRules: 3,
-    createdAt: 'Apr 1, 2024',
+    createdAt: 'Apr 1, 2024 10:20:28',
     status: 'error',
   },
   {
@@ -137,7 +137,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'VPN access group',
     ingressRules: 10,
     egressRules: 5,
-    createdAt: 'Apr 15, 2024',
+    createdAt: 'Apr 15, 2024 12:22:26',
     status: 'active',
   },
   {
@@ -148,7 +148,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Admin access group',
     ingressRules: 15,
     egressRules: 8,
-    createdAt: 'May 1, 2024',
+    createdAt: 'May 1, 2024 10:20:28',
     status: 'active',
   },
   {
@@ -159,7 +159,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Test environment security group',
     ingressRules: 1,
     egressRules: 1,
-    createdAt: 'May 10, 2024',
+    createdAt: 'May 10, 2024 01:17:01',
     status: 'active',
   },
 ];
@@ -340,6 +340,7 @@ export function ComputeAdminSecurityGroupsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

@@ -99,7 +99,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'cert-manager',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -163,7 +163,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'data-postgres-0',
     status: 'OK',
     namespace: 'database',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
     labels: {
       app: 'postgres',
     },
@@ -208,7 +208,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'redis-data',
     status: 'True',
     namespace: 'cache',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
     labels: {
       app: 'redis',
     },
@@ -251,7 +251,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'pending-claim',
     status: 'Raw',
     namespace: 'default',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
     labels: {},
     annotations: {},
     source: 'storage-class',
@@ -304,7 +304,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'elasticsearch-data-0',
     status: 'OK',
     namespace: 'logging',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
     labels: {
       app: 'elasticsearch',
     },

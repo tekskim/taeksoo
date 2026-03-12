@@ -15,6 +15,8 @@ import {
   Button,
   Pagination,
   PageShell,
+  Badge,
+  Tooltip,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -27,6 +29,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
+  IconHelpCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -482,24 +485,41 @@ export function ContainerDashboardPage() {
       <div className="mb-6">
         <Card title="Control plane components">
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard
-              label="Etcd"
-              value="Uptime: 15d 4h 23m"
-              status="active"
-              tooltip="etcd is a distributed key-value store used by Kubernetes to store all cluster state and configuration data."
-            />
-            <DetailHeader.InfoCard
-              label="Scheduler"
-              value="Uptime: 15d 4h 23m"
-              status="active"
-              tooltip="Scheduler assigns pods to nodes based on resource requirements, constraints, and scheduling policies."
-            />
-            <DetailHeader.InfoCard
-              label="Controller manager"
-              value="Uptime: 15d 4h 23m"
-              status="active"
-              tooltip="Controller manager runs background controllers that ensure cluster resources reach their desired state."
-            />
+            {(['Etcd', 'Scheduler', 'Controller manager'] as const).map((name) => {
+              const tooltips: Record<string, string> = {
+                Etcd: 'etcd is a distributed key-value store used by Kubernetes to store all cluster state and configuration data.',
+                Scheduler:
+                  'Scheduler assigns pods to nodes based on resource requirements, constraints, and scheduling policies.',
+                'Controller manager':
+                  'Controller manager runs background controllers that ensure cluster resources reach their desired state.',
+              };
+              return (
+                <div
+                  key={name}
+                  className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative min-w-0"
+                >
+                  <div className="absolute top-1/2 right-3 -translate-y-1/2">
+                    <Badge theme="white" size="sm">
+                      Active
+                    </Badge>
+                  </div>
+                  <div className="flex flex-col gap-1.5 min-w-0 pr-14">
+                    <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
+                      {name}
+                      <Tooltip content={tooltips[name]} position="top">
+                        <IconHelpCircle
+                          size={12}
+                          className="text-[var(--color-text-subtle)] cursor-help"
+                        />
+                      </Tooltip>
+                    </span>
+                    <span className="text-body-md leading-4 font-normal truncate text-[var(--color-text-default)]">
+                      Uptime: 15d 4h 23m
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </DetailHeader.InfoGrid>
         </Card>
       </div>

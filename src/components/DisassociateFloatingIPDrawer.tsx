@@ -48,7 +48,7 @@ const defaultFloatingIps: FloatingIPItem[] = Array.from({ length: 115 }, (_, i) 
   floatingIp: '203.0.113.25',
   status: 'active',
   fixedIp: '10.0.0.5',
-  createdAt: 'Sep 1, 2025',
+  createdAt: 'Sep 1, 2025 10:20:28',
 }));
 
 const ITEMS_PER_PAGE = 5;
@@ -143,7 +143,12 @@ export function DisassociateFloatingIPDrawer({
       ),
     },
     { key: 'fixedIp', label: 'Fixed IP', sortable: true },
-    { key: 'createdAt', label: 'Created at', sortable: true },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+    },
   ];
 
   return (

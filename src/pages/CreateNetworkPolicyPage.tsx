@@ -1601,6 +1601,7 @@ export function CreateNetworkPolicyPage() {
                         {
                           key: 'createdAt',
                           label: 'Created at',
+                          render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                         },
                       ]}
                       data={MOCK_MATCHING_PODS}

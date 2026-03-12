@@ -112,7 +112,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: 'Sep 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
     networkName: 'net-01',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -131,7 +131,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
     networkName: 'internal-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -150,7 +150,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
     networkName: 'dev-network',
     availabilityZone: 'keystone',
     availabilityZoneHint: '-',
@@ -169,7 +169,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
     networkName: 'prod-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -188,7 +188,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Down',
     access: 'Project',
     external: false,
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
     networkName: 'test-network',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -207,7 +207,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
     networkName: 'dmz-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -226,7 +226,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Down',
     access: 'Project',
     external: false,
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
     networkName: 'management-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -245,7 +245,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
     networkName: 'backup-network',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -264,7 +264,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Shared',
     external: true,
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 14:12:36',
     networkName: 'external-gateway',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -283,7 +283,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'External',
     external: true,
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 10:20:28',
     networkName: 'provider-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -325,7 +325,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   gatewayIp: '192.168.11',
   dhcpEnabled: true,
   portCount: 2,
-  createdAt: 'Jan 15, 2025',
+  createdAt: 'Jan 15, 2025 12:22:26',
 }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -381,7 +381,7 @@ export default function NetworkDetailPage() {
     moveTab,
   } = useTabs();
 
-  const { isOpen: sidebarOpen, toggle: toggleSidebar } = useSidebar();
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
@@ -562,6 +562,7 @@ export default function NetworkDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

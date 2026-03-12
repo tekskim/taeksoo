@@ -63,7 +63,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '1',
     maxUnavailable: 'N/A',
     allowedDisruption: '0',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -73,7 +73,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '2',
     maxUnavailable: 'N/A',
     allowedDisruption: '1',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -83,7 +83,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: 'N/A',
     maxUnavailable: '1',
     allowedDisruption: '2',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '4',
@@ -93,7 +93,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '50%',
     maxUnavailable: 'N/A',
     allowedDisruption: '0',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '5',
@@ -103,7 +103,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: 'N/A',
     maxUnavailable: '25%',
     allowedDisruption: '1',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
 ];
 
@@ -250,6 +250,7 @@ export function PodDisruptionBudgetsPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',
