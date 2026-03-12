@@ -91,7 +91,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     status: 'active',
     adminState: 'Up',
     vipAddress: '192.168.10.13',
-    createdAt: 'Oct 3, 2025',
+    createdAt: 'Oct 3, 2025 00:46:02',
     description: '-',
     provider: 'ovn',
     ownedNetwork: { name: 'net-02', id: 'net-002' },
@@ -104,7 +104,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     status: 'active',
     adminState: 'Up',
     vipAddress: '192.168.10.14',
-    createdAt: 'Oct 2, 2025',
+    createdAt: 'Oct 2, 2025 17:33:45',
     description: 'API Load balancer',
     provider: 'ovn',
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -117,7 +117,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     status: 'pending',
     adminState: 'Up',
     vipAddress: '192.168.10.15',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
     description: 'Application Load balancer',
     provider: 'ovn',
     ownedNetwork: { name: 'net-03', id: 'net-003' },
@@ -662,13 +662,16 @@ export function ComputeAdminLoadBalancerDetailPage() {
                           placeholder="Search listener by attributes"
                         />
                       </div>
-                      <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                        <IconDownload size={12} stroke={1.5} />
-                      </button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
                     <Button
-                      variant="secondary"
+                      variant="muted"
                       size="sm"
                       leftIcon={<IconTrash size={12} />}
                       disabled={selectedListeners.length === 0}
@@ -721,13 +724,16 @@ export function ComputeAdminLoadBalancerDetailPage() {
                           placeholder="Search pool by attributes"
                         />
                       </div>
-                      <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                        <IconDownload size={12} stroke={1.5} />
-                      </button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
                     <Button
-                      variant="secondary"
+                      variant="muted"
                       size="sm"
                       leftIcon={<IconTrash size={12} />}
                       disabled={selectedPools.length === 0}

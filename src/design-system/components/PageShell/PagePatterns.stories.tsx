@@ -238,7 +238,7 @@ const listData: ListItem[] = [
     status: 'active',
     type: 'Medium',
     region: 'us-east-1',
-    createdAt: 'Jan 10, 2026',
+    createdAt: 'Jan 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -246,7 +246,7 @@ const listData: ListItem[] = [
     status: 'active',
     type: 'Large',
     region: 'us-east-1',
-    createdAt: 'Jan 9, 2026',
+    createdAt: 'Jan 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -254,7 +254,7 @@ const listData: ListItem[] = [
     status: 'building',
     type: 'Small',
     region: 'eu-west-1',
-    createdAt: 'Jan 10, 2026',
+    createdAt: 'Jan 10, 2026 01:17:01',
   },
   {
     id: '4',
@@ -262,7 +262,7 @@ const listData: ListItem[] = [
     status: 'error',
     type: 'XLarge',
     region: 'ap-northeast-1',
-    createdAt: 'Jan 8, 2026',
+    createdAt: 'Jan 8, 2026 11:51:27',
   },
   {
     id: '5',
@@ -270,7 +270,7 @@ const listData: ListItem[] = [
     status: 'active',
     type: 'Medium',
     region: 'us-east-1',
-    createdAt: 'Jan 7, 2026',
+    createdAt: 'Jan 7, 2026 04:38:10',
   },
 ];
 
@@ -303,6 +303,7 @@ const listColumns: TableColumn<ListItem>[] = [
     minWidth: 100,
     align: 'right' as const,
     sortable: true,
+    render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
   },
 ];
 

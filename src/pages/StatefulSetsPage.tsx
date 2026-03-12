@@ -60,7 +60,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'default',
     image: 'nginx',
     ready: '1/1',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -69,7 +69,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'database',
     image: 'mysql:8.0',
     ready: '1/1',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -78,7 +78,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'logging',
     image: 'elasticsearch:8.10.2',
     ready: '3/3',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '4',
@@ -87,7 +87,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'database',
     image: 'mongo:7.0',
     ready: '0/3',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '5',
@@ -96,7 +96,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'messaging',
     image: 'confluentinc/cp-kafka:7.5.0',
     ready: '3/3',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '6',
@@ -105,7 +105,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'messaging',
     image: 'zookeeper:3.9',
     ready: '0/3',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '7',
@@ -114,7 +114,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'cache',
     image: 'redis:7.2-alpine',
     ready: '6/6',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
   {
     id: '8',
@@ -123,7 +123,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'database',
     image: 'cockroachdb/cockroach:v23.1.11',
     ready: '3/3',
-    createdAt: 'Nov 5, 2025',
+    createdAt: 'Nov 5, 2025 14:12:36',
   },
 ];
 
@@ -239,6 +239,7 @@ export function StatefulSetsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

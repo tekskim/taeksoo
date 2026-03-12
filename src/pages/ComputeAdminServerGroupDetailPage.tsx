@@ -79,7 +79,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.30',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
   },
   {
     id: '29tgj235',
@@ -91,7 +91,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.31',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
   },
   {
     id: '29tgj236',
@@ -103,7 +103,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.32',
     az: 'zone-b',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
   },
   {
     id: '29tgj237',
@@ -115,7 +115,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '-',
     az: 'zone-b',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
   },
   {
     id: '29tgj238',
@@ -127,7 +127,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.34',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
   },
 ];
 
@@ -271,6 +271,7 @@ export function ComputeAdminServerGroupDetailPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

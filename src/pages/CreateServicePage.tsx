@@ -148,7 +148,7 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
   {
     id: '1',
     name: 'deploymentName-77f6bb9c69-4ww7f',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
 ];
 
@@ -1238,6 +1238,7 @@ export function CreateServicePage() {
                           key: 'createdAt',
                           label: 'Created at',
                           sortable: true,
+                          render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                         },
                       ]}
                       data={MOCK_MATCHING_PODS}

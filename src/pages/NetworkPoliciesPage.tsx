@@ -60,7 +60,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
     name: 'networkpolicyName',
     namespace: 'default',
     podSelector: 'foo1=bar1 (+6)',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -68,7 +68,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
     name: 'networkpolicyName2',
     namespace: 'default',
     podSelector: '-',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '3',
@@ -76,7 +76,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
     name: 'deny-all-ingress',
     namespace: 'production',
     podSelector: 'app=web',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '4',
@@ -84,7 +84,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
     name: 'allow-frontend',
     namespace: 'kube-system',
     podSelector: 'tier=frontend (+2)',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '5',
@@ -92,7 +92,7 @@ const networkPoliciesData: NetworkPolicyRow[] = [
     name: 'restrict-egress',
     namespace: 'staging',
     podSelector: 'env=staging',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
 ];
 
@@ -231,6 +231,7 @@ export function NetworkPoliciesPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

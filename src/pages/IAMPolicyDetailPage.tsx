@@ -89,7 +89,7 @@ const mockPoliciesMap: Record<string, PolicyDetail> = {
     type: 'Custom',
     condition: '-',
     editedAt: 'Jul 25, 2025',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   'p-002': {
     id: 'p-002',
@@ -98,7 +98,7 @@ const mockPoliciesMap: Record<string, PolicyDetail> = {
     type: 'Built-in',
     condition: 'MFA Required',
     editedAt: 'Aug 15, 2025',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
   'p-003': {
     id: 'p-003',
@@ -107,7 +107,7 @@ const mockPoliciesMap: Record<string, PolicyDetail> = {
     type: 'Built-in',
     condition: '-',
     editedAt: 'Aug 15, 2025',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
 };
 
@@ -176,7 +176,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Built-in',
     userGroupCount: 5,
     policies: 'FullAccess (+2)',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
   {
     id: 'role-002',
@@ -184,7 +184,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Built-in',
     userGroupCount: 3,
     policies: 'ComputeAccess',
-    createdAt: 'Jun 15, 2025',
+    createdAt: 'Jun 15, 2025 12:22:26',
   },
   {
     id: 'role-003',
@@ -192,7 +192,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Built-in',
     userGroupCount: 8,
     policies: 'ReadOnly (+1)',
-    createdAt: 'Jul 1, 2025',
+    createdAt: 'Jul 1, 2025 10:20:28',
   },
   {
     id: 'role-004',
@@ -200,7 +200,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Custom',
     userGroupCount: 4,
     policies: 'NetworkAccess (+1)',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
 ];
 
@@ -517,6 +517,7 @@ export default function IAMPolicyDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',

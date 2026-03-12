@@ -22,7 +22,7 @@ const sampleData = [
     status: 'Running',
     type: 'm5.large',
     ip: '10.0.1.12',
-    createdAt: 'Feb 15, 2026',
+    createdAt: 'Feb 15, 2026 09:30:00',
   },
   {
     id: 'i-002',
@@ -30,7 +30,7 @@ const sampleData = [
     status: 'Running',
     type: 'm5.xlarge',
     ip: '10.0.1.34',
-    createdAt: 'Feb 18, 2026',
+    createdAt: 'Feb 18, 2026 11:22:35',
   },
   {
     id: 'i-003',
@@ -38,7 +38,7 @@ const sampleData = [
     status: 'Stopped',
     type: 'r5.2xlarge',
     ip: '10.0.2.5',
-    createdAt: 'Jan 22, 2026',
+    createdAt: 'Jan 22, 2026 14:45:12',
   },
   {
     id: 'i-004',
@@ -46,7 +46,7 @@ const sampleData = [
     status: 'Running',
     type: 'r5.large',
     ip: '10.0.1.88',
-    createdAt: 'Mar 01, 2026',
+    createdAt: 'Mar 01, 2026 08:18:55',
   },
   {
     id: 'i-005',
@@ -54,7 +54,7 @@ const sampleData = [
     status: 'Running',
     type: 'c5.xlarge',
     ip: '10.0.3.41',
-    createdAt: 'Mar 04, 2026',
+    createdAt: 'Mar 04, 2026 16:33:40',
   },
 ];
 

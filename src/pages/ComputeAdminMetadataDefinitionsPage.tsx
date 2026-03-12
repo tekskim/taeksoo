@@ -259,7 +259,12 @@ export default function ComputeAdminMetadataDefinitionsPage() {
             </button>
           </div>
           <div className="h-4 w-px bg-[var(--color-border-default)]" />
-          <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />}>
+          <Button
+            variant="muted"
+            size="sm"
+            leftIcon={<IconTrash size={12} />}
+            disabled={selectedMetadata.length === 0}
+          >
             Delete
           </Button>
         </div>

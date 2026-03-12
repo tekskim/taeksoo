@@ -99,7 +99,7 @@ const mockServerCertificate: ServerCertificateDetail = {
   type: 'Wildcard',
   domain: '.domain.com',
   expiresAt: 'Sep 25, 2025',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   // Certificate Metadata
   classification: 'Server Certificate',
@@ -116,7 +116,7 @@ const mockCACertificate: CACertificateDetail = {
   status: 'valid',
   certificateType: 'ca',
   expiresAt: 'Sep 25, 2025',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   // Certificate Metadata
   classification: 'CA Certificate',

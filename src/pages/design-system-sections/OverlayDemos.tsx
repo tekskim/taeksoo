@@ -681,7 +681,7 @@ export function ConnectDataSourceDrawer({
       source: 'AWS S3',
       category: 'Storage',
       tags: ['docs'],
-      createdAt: 'Nov 11, 2025',
+      createdAt: 'Nov 11, 2025 08:30:18',
       status: 'active',
     },
     {
@@ -690,7 +690,7 @@ export function ConnectDataSourceDrawer({
       source: 'PostgreSQL',
       category: 'Database',
       tags: ['knowledge'],
-      createdAt: 'Nov 10, 2025',
+      createdAt: 'Nov 10, 2025 01:17:01',
       status: 'active',
     },
     {
@@ -699,7 +699,7 @@ export function ConnectDataSourceDrawer({
       source: 'MongoDB',
       category: 'Database',
       tags: ['faq'],
-      createdAt: 'Nov 9, 2025',
+      createdAt: 'Nov 9, 2025 18:04:44',
       status: 'active',
     },
     {
@@ -708,7 +708,7 @@ export function ConnectDataSourceDrawer({
       source: 'Redis',
       category: 'Cache',
       tags: ['product'],
-      createdAt: 'Nov 8, 2025',
+      createdAt: 'Nov 8, 2025 11:51:27',
       status: 'active',
     },
   ];
@@ -894,7 +894,7 @@ export function ConnectMCPServerDrawer({
       server: 'Slack',
       category: 'Communication',
       tags: ['messaging'],
-      createdAt: 'Nov 11, 2025',
+      createdAt: 'Nov 11, 2025 08:30:18',
       status: 'active',
     },
     {
@@ -903,7 +903,7 @@ export function ConnectMCPServerDrawer({
       server: 'GitHub',
       category: 'Development',
       tags: ['code'],
-      createdAt: 'Nov 10, 2025',
+      createdAt: 'Nov 10, 2025 01:17:01',
       status: 'active',
     },
     {
@@ -912,7 +912,7 @@ export function ConnectMCPServerDrawer({
       server: 'Jira',
       category: 'Project Management',
       tags: ['tickets'],
-      createdAt: 'Nov 9, 2025',
+      createdAt: 'Nov 9, 2025 18:04:44',
       status: 'active',
     },
     {
@@ -921,7 +921,7 @@ export function ConnectMCPServerDrawer({
       server: 'PostgreSQL',
       category: 'Database',
       tags: ['sql'],
-      createdAt: 'Nov 8, 2025',
+      createdAt: 'Nov 8, 2025 11:51:27',
       status: 'active',
     },
   ];
@@ -1117,7 +1117,7 @@ export function AgentLogDetailDrawer({
 - **2분기**: 0.5%
 - **3분기**: 1.6% (예상)
 - **4분기**: 1.5% (예상)`,
-    createdAt: 'Sep 26, 2025',
+    createdAt: 'Sep 26, 2025 17:45:33',
     responseTime: '29.4s',
     steps: 6,
     status: 'Completed',

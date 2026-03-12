@@ -276,9 +276,9 @@ const OPERATOR_OPTIONS = [
 
 // Mock matching pods data
 const MOCK_MATCHING_PODS: MatchingPod[] = [
-  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: 'Jul 25, 2025' },
-  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: 'Jul 25, 2025' },
-  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2025' },
+  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: 'Jul 25, 2025 10:32:16' },
+  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: 'Jul 25, 2025 10:32:16' },
+  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2025 10:32:16' },
 ];
 
 /* ----------------------------------------
@@ -525,6 +525,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                 {
                   key: 'createdAt',
                   label: 'Created at',
+                  render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                 },
               ]}
               data={paginatedPods}

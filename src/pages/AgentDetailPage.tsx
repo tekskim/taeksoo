@@ -725,7 +725,7 @@ function ExecutionLogsTab() {
 한국은행의 "2025년 8월 경제전망보고서"에 따르면, 2025년 한국 GDP 성장률은 "0.9%"로 전망됩니다.`,
     steps: ['데이터 수집', '분석', '결과 생성'],
     status: 'completed' as const,
-    createdAt: 'Sep 28, 2025',
+    createdAt: 'Sep 28, 2025 07:11:07',
     responseTime: '29.4s',
     stepsCount: 8,
   }));

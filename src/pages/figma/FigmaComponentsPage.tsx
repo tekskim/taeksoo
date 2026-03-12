@@ -1975,7 +1975,7 @@ export function FigmaComponentsPage() {
             <DetailHeader.InfoCard label="Status" status="active" />
             <DetailHeader.InfoCard label="ID" value="i-0123456789abcdef" copyable />
             <DetailHeader.InfoCard label="Host" value="compute-node-03" />
-            <DetailHeader.InfoCard label="Created at" value="2026-02-20 14:30" />
+            <DetailHeader.InfoCard label="Created at" value="Feb 20, 2026 14:30:00" />
           </DetailHeader.InfoGrid>
         </DetailHeader>
       </FigmaFrame>

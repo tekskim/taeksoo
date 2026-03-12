@@ -66,7 +66,7 @@ const hpaData: HPARow[] = [
     minReplicas: 1,
     maxReplicas: 10,
     currentReplicas: 5,
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 10:15:33',
   },
   {
     id: '2',
@@ -77,7 +77,7 @@ const hpaData: HPARow[] = [
     minReplicas: 2,
     maxReplicas: 20,
     currentReplicas: 8,
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 15:28:47',
   },
   {
     id: '3',
@@ -88,7 +88,7 @@ const hpaData: HPARow[] = [
     minReplicas: 3,
     maxReplicas: 15,
     currentReplicas: 3,
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 08:52:19',
   },
   {
     id: '4',
@@ -99,7 +99,7 @@ const hpaData: HPARow[] = [
     minReplicas: 1,
     maxReplicas: 5,
     currentReplicas: 1,
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 13:44:26',
   },
 ];
 
@@ -225,6 +225,7 @@ export function ContainerHPAPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',

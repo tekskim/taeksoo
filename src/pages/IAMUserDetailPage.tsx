@@ -99,7 +99,7 @@ const mockUsersMap: Record<string, UserDetail> = {
     email: 'thaki.kim@example.com',
     status: 'online',
     locked: false,
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 09:14:33',
   },
   'alex.johnson': {
     username: 'alex.johnson',
@@ -107,63 +107,63 @@ const mockUsersMap: Record<string, UserDetail> = {
     email: 'alex.johnson@example.com',
     status: 'online',
     locked: true, // This user is locked
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 11:42:18',
   },
   'sara.connor': {
     username: 'sara.connor',
     displayName: 'Sara Connor',
     email: 'sara.connor@example.com',
     status: 'offline',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 14:28:45',
   },
   'john.doe': {
     username: 'john.doe',
     displayName: 'John Doe',
     email: 'john.doe@example.com',
     status: 'offline',
-    createdAt: 'Jun 10, 2025',
+    createdAt: 'Jun 10, 2025 08:35:22',
   },
   'jane.smith': {
     username: 'jane.smith',
     displayName: 'Jane Smith',
     email: 'jane.smith@example.com',
     status: 'online',
-    createdAt: 'Jan 5, 2025',
+    createdAt: 'Jan 5, 2025 10:18:51',
   },
   'mike.wilson': {
     username: 'mike.wilson',
     displayName: 'Mike Wilson',
     email: 'mike.wilson@example.com',
     status: 'offline',
-    createdAt: 'Apr 18, 2025',
+    createdAt: 'Apr 18, 2025 16:52:07',
   },
   'emily.chen': {
     username: 'emily.chen',
     displayName: 'Emily Chen',
     email: 'emily.chen@example.com',
     status: 'online',
-    createdAt: 'Mar 22, 2025',
+    createdAt: 'Mar 22, 2025 13:25:38',
   },
   'david.lee': {
     username: 'david.lee',
     displayName: 'David Lee',
     email: 'david.lee@example.com',
     status: 'online',
-    createdAt: 'Feb 14, 2025',
+    createdAt: 'Feb 14, 2025 09:42:14',
   },
   'lisa.park': {
     username: 'lisa.park',
     displayName: 'Lisa Park',
     email: 'lisa.park@example.com',
     status: 'offline',
-    createdAt: 'May 30, 2025',
+    createdAt: 'May 30, 2025 11:18:52',
   },
   'chris.taylor': {
     username: 'chris.taylor',
     displayName: 'Chris Taylor',
     email: 'chris.taylor@example.com',
     status: 'online',
-    createdAt: 'Jan 28, 2025',
+    createdAt: 'Jan 28, 2025 15:33:27',
   },
 };
 
@@ -205,7 +205,7 @@ const mockAccessKeys: AccessKey[] = [
     keyId: 'AKIA112AK3IALQI2',
     description: '-',
     lastUsed: 'Sep 12, 2025',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 08:22:15',
     status: 'active',
   },
 ];
@@ -332,7 +332,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Built-in',
     policies: 'ReadCompute (+2)',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 09:22:18',
   },
   {
     id: 'r-002',
@@ -340,7 +340,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'ComputeFullAccess (+5)',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 11:35:42',
   },
   {
     id: 'r-003',
@@ -348,7 +348,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'StorageReadOnly',
-    createdAt: 'Jul 15, 2025',
+    createdAt: 'Jul 15, 2025 14:48:27',
   },
   {
     id: 'r-004',
@@ -356,7 +356,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'NetworkFullAccess (+3)',
-    createdAt: 'Jun 10, 2025',
+    createdAt: 'Jun 10, 2025 08:52:15',
   },
   {
     id: 'r-005',
@@ -364,7 +364,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Built-in',
     policies: 'IAMReadOnly (+1)',
-    createdAt: 'May 5, 2025',
+    createdAt: 'May 5, 2025 16:18:33',
   },
   {
     id: 'r-006',
@@ -372,7 +372,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'SecurityAudit (+2)',
-    createdAt: 'Apr 1, 2025',
+    createdAt: 'Apr 1, 2025 10:25:48',
   },
   {
     id: 'r-007',
@@ -380,7 +380,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'BillingReadOnly',
-    createdAt: 'Mar 15, 2025',
+    createdAt: 'Mar 15, 2025 13:42:19',
   },
   {
     id: 'r-008',
@@ -388,7 +388,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'DevAccess (+4)',
-    createdAt: 'Feb 20, 2025',
+    createdAt: 'Feb 20, 2025 09:55:32',
   },
   {
     id: 'r-009',
@@ -396,7 +396,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'OperatorAccess (+2)',
-    createdAt: 'Jan 10, 2025',
+    createdAt: 'Jan 10, 2025 15:28:44',
   },
   {
     id: 'r-010',
@@ -404,7 +404,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'SupportAccess (+1)',
-    createdAt: 'Dec 5, 2024',
+    createdAt: 'Dec 5, 2024 11:12:27',
   },
   {
     id: 'r-011',
@@ -412,7 +412,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Built-in',
     policies: 'DataReadOnly (+3)',
-    createdAt: 'Nov 20, 2024',
+    createdAt: 'Nov 20, 2024 08:35:51',
   },
   {
     id: 'r-012',
@@ -420,7 +420,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Custom',
     policies: 'DatabaseAdmin (+4)',
-    createdAt: 'Oct 15, 2024',
+    createdAt: 'Oct 15, 2024 14:22:38',
   },
   {
     id: 'r-013',
@@ -428,7 +428,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Built-in',
     policies: 'ContainerFullAccess',
-    createdAt: 'Sep 10, 2024',
+    createdAt: 'Sep 10, 2024 10:48:15',
   },
   {
     id: 'r-014',
@@ -436,7 +436,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'MonitoringRead (+2)',
-    createdAt: 'Aug 5, 2024',
+    createdAt: 'Aug 5, 2024 16:35:42',
   },
   {
     id: 'r-015',
@@ -444,7 +444,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'LogReadOnly (+1)',
-    createdAt: 'Jul 1, 2024',
+    createdAt: 'Jul 1, 2024 09:18:55',
   },
   {
     id: 'r-016',
@@ -452,7 +452,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'BackupAccess (+2)',
-    createdAt: 'Jun 15, 2024',
+    createdAt: 'Jun 15, 2024 12:42:18',
   },
 ];
 
@@ -700,6 +700,7 @@ export function IAMUserDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',
@@ -760,6 +761,7 @@ export function IAMUserDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',
@@ -892,13 +894,35 @@ export function IAMUserDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconReload size={12} />}>
               Reset password
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+            <ContextMenu
+              items={[
+                {
+                  id: 'manage-user-groups',
+                  label: 'Manage user groups',
+                  onClick: () => console.log('Manage user groups'),
+                },
+                {
+                  id: 'manage-roles',
+                  label: 'Manage roles',
+                  onClick: () => console.log('Manage roles'),
+                },
+                {
+                  id: 'reset-password',
+                  label: 'Reset password',
+                  onClick: () => console.log('Reset password'),
+                },
+              ]}
+              trigger="click"
+              align="right"
             >
-              More Actions
-            </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
           </HStack>
 
           {/* Info Cards */}
@@ -1068,7 +1092,7 @@ export function IAMUserDetailPage() {
                 </h2>
 
                 {/* Action Bar */}
-                <HStack gap={2} align="center">
+                <div className="flex items-center gap-2">
                   <SearchInput
                     placeholder="Search session by attributes"
                     value={sessionsSearchQuery}
@@ -1076,16 +1100,18 @@ export function IAMUserDetailPage() {
                     className="w-[var(--search-input-width)]"
                   />
                   <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconRefresh size={12} stroke={1.5} />}
-                    aria-label="Refresh"
-                  />
-                  <Button variant="secondary" size="sm" leftIcon={<IconCircleX size={12} />}>
-                    Terminate all sessions
-                  </Button>
-                </HStack>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconRefresh size={12} stroke={1.5} />}
+                      aria-label="Refresh"
+                    />
+                    <Button variant="secondary" size="sm" leftIcon={<IconCircleX size={12} />}>
+                      Terminate all sessions
+                    </Button>
+                  </div>
+                </div>
 
                 {/* Pagination */}
                 <Pagination

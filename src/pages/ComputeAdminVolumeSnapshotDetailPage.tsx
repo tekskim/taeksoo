@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -17,14 +17,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconExternalLink,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -53,7 +46,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'db-data-snap',
     status: 'available',
     size: '1500 GiB',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
     description: '-',
     sourceVolume: 'web-server-10',
     sourceVolumeId: 'vol-001',
@@ -63,7 +56,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'app-storage-snap',
     status: 'available',
     size: '500 GiB',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
     description: 'Application storage snapshot',
     sourceVolume: 'app-volume-1',
     sourceVolumeId: 'vol-002',
@@ -73,7 +66,7 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     name: 'backup-vol-snap',
     status: 'available',
     size: '2000 GiB',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
     description: 'Backup volume snapshot',
     sourceVolume: 'backup-storage',
     sourceVolumeId: 'vol-003',
@@ -86,7 +79,7 @@ const defaultSnapshot: VolumeSnapshotDetail = {
   name: 'vol-snap-1',
   status: 'available',
   size: '1500 GiB',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   sourceVolume: 'web-server-10',
   sourceVolumeId: 'vol-001',
@@ -247,21 +240,12 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Source" />
                   <SectionCard.Content>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Volume
-                        </span>
-                        <Link
-                          to={`/compute-admin/volumes/${snapshot.sourceVolumeId}`}
-                          className="inline-flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                        >
-                          {snapshot.sourceVolume}
-                          <IconExternalLink size={12} stroke={1.5} />
-                        </Link>
-                      </div>
-                    </div>
+                    <SectionCard.DataRow
+                      label="Volume"
+                      value={snapshot.sourceVolume}
+                      isLink
+                      linkHref={`/compute-admin/volumes/${snapshot.sourceVolumeId}`}
+                    />
                   </SectionCard.Content>
                 </SectionCard>
 

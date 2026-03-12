@@ -62,7 +62,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
     namespace: 'namespaceName',
     request: '-',
     limit: '-',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -71,7 +71,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
     namespace: 'default',
     request: 'cpu: 4, memory: 8Gi',
     limit: 'cpu: 8, memory: 16Gi',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -80,7 +80,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
     namespace: 'kube-system',
     request: 'storage: 100Gi',
     limit: 'storage: 500Gi',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '4',
@@ -89,7 +89,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
     namespace: 'production',
     request: 'pods: 10, services: 5',
     limit: 'pods: 50, services: 20',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '5',
@@ -98,7 +98,7 @@ const resourceQuotasData: ResourceQuotaRow[] = [
     namespace: 'monitoring',
     request: 'cpu: 2, memory: 4Gi',
     limit: 'cpu: 4, memory: 8Gi',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
 ];
 
@@ -227,6 +227,7 @@ export function ResourceQuotasPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',
