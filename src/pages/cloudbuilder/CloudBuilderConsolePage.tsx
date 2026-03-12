@@ -23,6 +23,8 @@ import {
   type ContextMenuItem,
   type TableColumn,
   fixedColumns,
+  StatusIndicator,
+  Tooltip,
 } from '@/design-system';
 import {
   IconDotsCircleHorizontal,
@@ -142,6 +144,19 @@ function buildTableColumns(
           <Badge theme={toneToBadgeTheme(tone)} type="subtle" size="sm">
             {v || '-'}
           </Badge>
+        );
+      };
+      return column;
+    }
+
+    if (c.kind === 'statusIndicator') {
+      column.render = (value) => {
+        const v = String(value ?? '');
+        const statusType = c.statusMap?.[v] ?? v.toLowerCase();
+        return (
+          <Tooltip content={v}>
+            <StatusIndicator status={statusType as never} layout="icon-only" />
+          </Tooltip>
         );
       };
       return column;

@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   Button,
@@ -770,9 +770,11 @@ function UsageExample({
 export function IconographyPage() {
   const navigate = useNavigate();
   const { isDark } = useDarkMode();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activeTab, setActiveTab] = useState('icons');
+  const activeTab = searchParams.get('tab') || 'icons';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Get all unique category titles
   const categoryTitles = useMemo(() => ['all', ...iconCategories.map((c) => c.title)], []);
