@@ -4856,7 +4856,7 @@ export function ModalsPage() {
                 </span>
                 <textarea
                   className="w-full min-h-[80px] px-3 py-2 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] resize-y outline-none focus:border-[var(--color-border-focus)] focus:ring-1 focus:ring-[var(--color-border-focus)]"
-                  defaultValue="test"
+                  placeholder="Enter a reason for disabling"
                 />
               </div>
             </div>

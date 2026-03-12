@@ -304,6 +304,13 @@ export function EntryPage() {
                 >
                   AI Workspace Setup{' '}
                 </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => navigate('/design/cloudbuilder-modals')}
+                >
+                  Cloud Builder Modals{' '}
+                </Button>
               </div>
             </div>
           </div>
