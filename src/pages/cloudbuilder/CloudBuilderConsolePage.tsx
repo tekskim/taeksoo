@@ -81,6 +81,7 @@ function buildTableColumns(
       label: c.label,
       sortable: c.sortable,
       width: c.width,
+      minWidth: c.minWidth,
       align: c.align,
     };
 
