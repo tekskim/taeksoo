@@ -1090,7 +1090,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           key: 'storageCapacityGiB',
           label: 'Storage capacity (GiB)',
           sortable: true,
-          minWidth: columnMinWidths.storageCapacity,
+          minWidth: '150px',
         },
       ],
       rows: [
