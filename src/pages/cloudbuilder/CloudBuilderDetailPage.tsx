@@ -555,46 +555,62 @@ export function CloudBuilderDetailPage() {
 
         {isNetworkAgent ? (
           <>
-            <SectionCard>
-              <SectionCard.Header title="Basic information" />
-              <SectionCard.Content>
-                <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
-                <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
-                <SectionCard.DataRow
-                  label="Availability zone"
-                  value={row?.availabilityZone ?? '-'}
-                />
-                <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
-                <SectionCard.DataRow
-                  label="Resources synced"
-                  value={networkAgentMeta?.resourcesSynced ?? '-'}
-                />
-                <SectionCard.DataRow
-                  label="Heartbeat timestamp"
-                  value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
-                />
-                <SectionCard.DataRow
-                  label="Started at"
-                  value={networkAgentMeta?.startedAt ?? '-'}
-                />
-                <SectionCard.DataRow
-                  label="Description"
-                  value={networkAgentMeta?.description ?? '-'}
-                />
-              </SectionCard.Content>
-            </SectionCard>
+            <Tabs
+              value={activeDetailTab}
+              onChange={(v) => setActiveDetailTab(v as any)}
+              variant="underline"
+              size="sm"
+            >
+              <TabList>
+                <Tab value="details">Details</Tab>
+                <Tab value="configuration">Configuration</Tab>
+              </TabList>
 
-            <SectionCard>
-              <SectionCard.Header
-                title="Configuration"
-                actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
-              />
-              <SectionCard.Content gap={3}>
-                <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                  {networkAgentMeta?.configurationText ?? ''}
-                </pre>
-              </SectionCard.Content>
-            </SectionCard>
+              <TabPanel value="details" className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
+                    <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
+                    <SectionCard.DataRow
+                      label="Availability zone"
+                      value={row?.availabilityZone ?? '-'}
+                    />
+                    <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
+                    <SectionCard.DataRow
+                      label="Resources synced"
+                      value={networkAgentMeta?.resourcesSynced ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Heartbeat timestamp"
+                      value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Started at"
+                      value={networkAgentMeta?.startedAt ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Description"
+                      value={networkAgentMeta?.description ?? '-'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </TabPanel>
+
+              <TabPanel value="configuration" className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Configuration"
+                    actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
+                  />
+                  <SectionCard.Content gap={3}>
+                    <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
+                      {networkAgentMeta?.configurationText ?? ''}
+                    </pre>
+                  </SectionCard.Content>
+                </SectionCard>
+              </TabPanel>
+            </Tabs>
 
             <Modal
               isOpen={statusModalOpen}
