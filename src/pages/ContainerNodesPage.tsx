@@ -154,16 +154,14 @@ const nodesData: NodeRow[] = [
 
 function ProgressCell({ value }: { value: number }) {
   return (
-    <div className="flex flex-col gap-0.5 min-w-0 w-24">
-      <span className="text-body-md leading-[16px] text-[var(--color-text-default)]">{value}%</span>
-      <ProgressBar
-        value={value}
-        max={100}
-        showValue={false}
-        size="sm"
-        thresholds={STATUS_THRESHOLDS.container}
-      />
-    </div>
+    <ProgressBar
+      variant="quota"
+      value={value}
+      max={100}
+      showValue
+      size="sm"
+      thresholds={STATUS_THRESHOLDS.container}
+    />
   );
 }
 
@@ -284,7 +282,7 @@ export function ContainerNodesPage() {
                 size="sm"
                 variant="ghost"
                 iconOnly
-                className="!ring-0 !ring-offset-0 !outline-none !border-transparent"
+                className="!ring-0 !ring-offset-0 !outline-none !border-transparent text-[var(--color-action-primary)]"
               />
             </span>
           </span>
@@ -538,7 +536,7 @@ export function ContainerNodesPage() {
                 onClick={handleClearFilters}
                 className="text-label-sm text-[var(--color-action-primary)] hover:underline"
               >
-                Clear Filters
+                Clear filters
               </button>
             </HStack>
           )}

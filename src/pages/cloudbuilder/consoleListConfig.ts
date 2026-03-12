@@ -1,7 +1,7 @@
 import { columnMinWidths } from '@/design-system';
 
 export type BadgeTone = 'success' | 'neutral' | 'blue' | 'warning' | 'danger';
-export type ColumnKind = 'text' | 'badge' | 'mono' | 'nameWithSub';
+export type ColumnKind = 'text' | 'badge' | 'mono' | 'nameWithSub' | 'statusIndicator';
 
 export type ListColumn = {
   key: string;
@@ -9,6 +9,8 @@ export type ListColumn = {
   kind?: ColumnKind;
   sortable?: boolean;
   badgeTones?: Record<string, BadgeTone>;
+  /** Maps cell values to StatusIndicator status types (used with kind: 'statusIndicator') */
+  statusMap?: Record<string, string>;
   /** Secondary key displayed below the primary value (used with kind: 'nameWithSub') */
   subKey?: string;
   subLabel?: string;
@@ -505,17 +507,18 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: true,
       },
       columns: [
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service status',
           sortable: true,
-          width: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
+          width: '64px',
+          align: 'center',
+          kind: 'statusIndicator',
+          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
         },
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'host', label: 'Host', sortable: true },
+        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         {
           key: 'serviceState',
           label: 'Service state',
@@ -782,6 +785,15 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
+          key: 'serviceStatus',
+          label: 'Service status',
+          sortable: true,
+          width: '64px',
+          align: 'center',
+          kind: 'statusIndicator',
+          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+        },
+        {
           key: 'name',
           label: 'Name',
           sortable: true,
@@ -793,14 +805,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability zone', sortable: true },
-        {
-          key: 'serviceStatus',
-          label: 'Service status',
-          sortable: true,
-          width: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
-        },
         {
           key: 'serviceState',
           label: 'Service state',
@@ -858,17 +862,18 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         requireDisableReason: false,
       },
       columns: [
-        { key: 'name', label: 'Name', sortable: true },
-        { key: 'host', label: 'Host', sortable: true },
-        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         {
           key: 'serviceStatus',
           label: 'Service status',
           sortable: true,
-          width: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
+          width: '64px',
+          align: 'center',
+          kind: 'statusIndicator',
+          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
         },
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'host', label: 'Host', sortable: true },
+        { key: 'availabilityZone', label: 'Availability zone', sortable: true },
         {
           key: 'serviceState',
           label: 'Service state',

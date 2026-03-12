@@ -80,7 +80,7 @@ function DetailPagePreview() {
           <DetailHeader.InfoCard label="Status" status="active" />
           <DetailHeader.InfoCard label="ID" value="i-0a1b2c3d4e5f" copyable />
           <DetailHeader.InfoCard label="Host" value="compute-node-03" />
-          <DetailHeader.InfoCard label="Created at" value="2026-02-15 09:30" />
+          <DetailHeader.InfoCard label="Created at" value="Feb 15, 2026 09:30" />
         </DetailHeader.InfoGrid>
       </DetailHeader>
 

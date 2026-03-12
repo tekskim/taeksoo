@@ -29,11 +29,11 @@ const STATUS_GUIDELINES = `## Overview
 
 | 타입 | 색상 | 사용 상황 예시 |
 | --- | --- | --- |
-| Active | Green | active |
+| Active | Green | active, enabled |
 | Error | Red | error |
 | Processing | Blue | building, deleting, pending |
 | Warning | Orange | degraded, down, maintenance |
-| Muted | Gray | suspended, paused, draft, in-use |
+| Muted | Gray | suspended, paused, draft, in-use, disabled |
 
 ### 표시 형식 (Display Type)
 
@@ -123,6 +123,7 @@ const STATUS_GUIDELINES = `## Overview
 | 시맨틱 타입 | status 값 | 기본 레이블 | 설명 |
 | --- | --- | --- | --- |
 | Active (Green) | active | Active | 정상 동작 중 |
+| Active (Green) | enabled | Enabled | 활성화됨 |
 | Error (Red) | error | Error | 오류 발생 |
 | Processing (Blue) | building | Building... | 생성 중 (스피너) |
 | Processing (Blue) | deleting | Deleting... | 삭제 중 |
@@ -141,6 +142,7 @@ const STATUS_GUIDELINES = `## Overview
 | Muted (Gray) | draft | Draft | 초안 |
 | Muted (Gray) | deactivated | Deactivated | 비활성화 |
 | Muted (Gray) | in-use | In-use | 사용 중 |
+| Muted (Gray) | disabled | Disabled | 비활성화됨 |
 
 ### 특수 상태 정의 문서 관리 원칙
 
@@ -164,7 +166,7 @@ const STATUS_GUIDELINES = `## Overview
 const statusIndicatorProps: PropDef[] = [
   {
     name: 'status',
-    type: "'active' | 'error' | 'building' | 'deleting' | 'suspended' | 'shutoff' | 'paused' | 'pending' | 'draft' | 'degraded' | 'down' | 'maintenance' | ...",
+    type: "'active' | 'enabled' | 'error' | 'building' | 'deleting' | 'suspended' | 'shutoff' | 'paused' | 'pending' | 'draft' | 'disabled' | 'degraded' | 'down' | 'maintenance' | ...",
     required: true,
     description: '상태 타입. Defined 목록에 없으면 Default(White Badge)로 렌더링',
   },
@@ -271,6 +273,7 @@ export function StatusIndicatorPage() {
             <Label>Defined — Active (Success / Green)</Label>
             <div className="flex flex-wrap gap-3 items-center">
               <StatusIndicator status="active" />
+              <StatusIndicator status="enabled" />
             </div>
           </VStack>
           <VStack gap={3}>
@@ -305,6 +308,7 @@ export function StatusIndicatorPage() {
               <StatusIndicator status="paused" />
               <StatusIndicator status="draft" />
               <StatusIndicator status="in-use" />
+              <StatusIndicator status="disabled" />
             </div>
           </VStack>
 
@@ -326,6 +330,12 @@ export function StatusIndicatorPage() {
                       <StatusIndicator status="active" layout="icon-only" />
                     </Tooltip>
                     <span className="text-body-xs text-[var(--color-text-subtle)]">active</span>
+                  </VStack>
+                  <VStack gap={1} align="center">
+                    <Tooltip content="enabled">
+                      <StatusIndicator status="enabled" layout="icon-only" />
+                    </Tooltip>
+                    <span className="text-body-xs text-[var(--color-text-subtle)]">enabled</span>
                   </VStack>
                 </div>
               </VStack>
@@ -414,6 +424,12 @@ export function StatusIndicatorPage() {
                       <StatusIndicator status="in-use" layout="icon-only" />
                     </Tooltip>
                     <span className="text-body-xs text-[var(--color-text-subtle)]">in-use</span>
+                  </VStack>
+                  <VStack gap={1} align="center">
+                    <Tooltip content="disabled">
+                      <StatusIndicator status="disabled" layout="icon-only" />
+                    </Tooltip>
+                    <span className="text-body-xs text-[var(--color-text-subtle)]">disabled</span>
                   </VStack>
                 </div>
               </VStack>

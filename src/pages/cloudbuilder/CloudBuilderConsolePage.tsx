@@ -23,6 +23,8 @@ import {
   type ContextMenuItem,
   type TableColumn,
   fixedColumns,
+  StatusIndicator,
+  Tooltip,
 } from '@/design-system';
 import {
   IconDotsCircleHorizontal,
@@ -147,6 +149,19 @@ function buildTableColumns(
       return column;
     }
 
+    if (c.kind === 'statusIndicator') {
+      column.render = (value) => {
+        const v = String(value ?? '');
+        const statusType = c.statusMap?.[v] ?? v.toLowerCase();
+        return (
+          <Tooltip content={v}>
+            <StatusIndicator status={statusType as never} layout="icon-only" />
+          </Tooltip>
+        );
+      };
+      return column;
+    }
+
     // 기본 text (필요한 경우에만 linkify)
     const shouldLink = !!linkifyColumnKeys?.includes(c.key);
     if (shouldLink) {
@@ -221,7 +236,8 @@ export function CloudBuilderConsolePage() {
     setStatusModalOpen(false);
     setStatusModal(null);
     setDisableReason('');
-    setSearchParams({}, { replace: true });
+    const currentTab = searchParams.get('tab');
+    setSearchParams(currentTab ? { tab: currentTab } : {}, { replace: true });
   }, [config.rows, config.slug]);
 
   const activeTab = useMemo(() => {

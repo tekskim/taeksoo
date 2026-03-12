@@ -16,6 +16,7 @@ import {
   IconShieldExclamation,
   IconCircleMinus,
   IconLivePhoto,
+  IconBan,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -24,6 +25,7 @@ import {
 
 export type StatusType =
   | 'active'
+  | 'enabled'
   | 'error'
   | 'building'
   | 'deleting'
@@ -37,6 +39,7 @@ export type StatusType =
   | 'draft'
   | 'verify-resized'
   | 'deactivated'
+  | 'disabled'
   | 'in-use'
   | 'maintenance'
   | 'degraded'
@@ -78,6 +81,11 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   active: {
     label: 'Active',
     icon: <IconLivePhoto size={ICON_SIZE} strokeWidth={2} />,
+    bgColor: 'bg-[var(--status-success-bg)]',
+  },
+  enabled: {
+    label: 'Enabled',
+    icon: <IconPower size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-success-bg)]',
   },
   // Danger (Red) - using semantic color
@@ -167,6 +175,11 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   deactivated: {
     label: 'Deactivated',
     icon: <IconLivePhotoOff size={ICON_SIZE} strokeWidth={2} />,
+    bgColor: 'bg-[var(--status-muted-bg)]',
+  },
+  disabled: {
+    label: 'Disabled',
+    icon: <IconBan size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-muted-bg)]',
   },
   'in-use': {

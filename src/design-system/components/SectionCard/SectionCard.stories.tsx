@@ -77,7 +77,7 @@ export const Default: Story = {
       <SectionCard.Content>
         <SectionCard.DataRow label="Name" value="my-instance-01" />
         <SectionCard.DataRow label="Description" value="Production server for web application" />
-        <SectionCard.DataRow label="Created" value="2024-01-15 10:30:00" />
+        <SectionCard.DataRow label="Created" value="Jan 15, 2024 10:30:00" />
       </SectionCard.Content>
     </SectionCard>
   ),

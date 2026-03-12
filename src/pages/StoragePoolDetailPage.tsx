@@ -89,12 +89,27 @@ const CloseIcon = () => (
 );
 
 // Helper function for date formatting
+const MONTH_ABBR = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const formatDateForDisplay = (date: Date | null) => {
   if (!date) return '';
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const month = MONTH_ABBR[date.getMonth()];
   const day = date.getDate().toString().padStart(2, '0');
-  return `${year}.${month}.${day}`;
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
 };
 
 interface MonitoringTimeControlsProps {
@@ -1084,11 +1099,7 @@ export function StoragePoolDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{pool.name}</DetailHeader.Title>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard
-              label="Data protection"
-              value={pool.dataProtection}
-              status="active"
-            />
+            <DetailHeader.InfoCard label="Data protection" value={pool.dataProtection} />
             <DetailHeader.InfoCard label="Applications" value={pool.applications} copyable />
             <DetailHeader.InfoCard label="PG Status" value={pool.pgStatus} />
             <DetailHeader.InfoCard label="Crush ruleset" value={pool.crushRuleset} />
@@ -1211,14 +1222,14 @@ export function StoragePoolDetailPage() {
                 <div className="grid grid-cols-2 gap-4">
                   {/* Capacity Used */}
                   <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                    <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
+                    <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                       Capacity used
                     </h4>
                     <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
                   </div>
                   {/* Time Till Full */}
                   <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                    <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
+                    <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                       Time till full
                     </h4>
                     <TimeTillFull value={12.3} unit="weeks" />

@@ -2183,13 +2183,13 @@ function DatePickerSection() {
                 <h4 className="text-heading-h6 text-[var(--color-text-default)]">날짜 형식 규칙</h4>
                 <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                   <li>
-                    표시 형식: <code>YYYY-MM-DD</code> (예: 2026-02-09)
+                    축약형: <code>Mth DD, YYYY</code> (예: Feb 09, 2026)
                   </li>
                   <li>
-                    시간 포함 시: <code>YYYY-MM-DD HH:mm</code> (예: 2026-02-09 14:30)
+                    표준형: <code>Mth DD, YYYY HH:mm:ss</code> (예: Feb 09, 2026 14:30:00)
                   </li>
                   <li>
-                    범위 표시: <code>YYYY-MM-DD ~ YYYY-MM-DD</code>
+                    범위 표시: <code>Mth DD–Mth DD, YYYY</code> (같은 연도)
                   </li>
                   <li>미선택 상태: placeholder로 형식 안내 (예: &quot;Select date&quot;)</li>
                 </ul>
