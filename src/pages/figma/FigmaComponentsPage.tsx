@@ -510,9 +510,9 @@ const demoTableColumns: TableColumn<{
 ];
 
 const demoTableData = [
-  { id: '1', name: 'web-server-01', status: 'Running', created: '2026-03-01' },
-  { id: '2', name: 'db-primary', status: 'Running', created: '2026-02-28' },
-  { id: '3', name: 'cache-node', status: 'Error', created: '2026-02-25' },
+  { id: '1', name: 'web-server-01', status: 'Running', created: 'Mar 01, 2026' },
+  { id: '2', name: 'db-primary', status: 'Running', created: 'Feb 28, 2026' },
+  { id: '3', name: 'cache-node', status: 'Error', created: 'Feb 25, 2026' },
 ];
 
 function TableDemo() {
@@ -1790,7 +1790,7 @@ export function FigmaComponentsPage() {
             <SectionCard.DataRow label="Status">
               <StatusIndicator status="active" layout="dot-label" />
             </SectionCard.DataRow>
-            <SectionCard.DataRow label="Created" value="2026-02-20 14:30:00" />
+            <SectionCard.DataRow label="Created" value="Feb 20, 2026 14:30:00" />
           </SectionCard.Content>
         </SectionCard>
         <SectionCard isActive>
@@ -1841,7 +1841,7 @@ export function FigmaComponentsPage() {
           <DetailHeader.InfoCard label="Status" status="active" />
           <DetailHeader.InfoCard label="ID" value="i-0123456789abcdef" copyable />
           <DetailHeader.InfoCard label="Host" value="compute-node-03" />
-          <DetailHeader.InfoCard label="Created at" value="2026-02-20 14:30" />
+          <DetailHeader.InfoCard label="Created at" value="Feb 20, 2026 14:30" />
         </DetailHeader.InfoGrid>
       </DetailHeader>
 
@@ -1905,7 +1905,7 @@ export function FigmaComponentsPage() {
       <InfoBox.Group>
         <InfoBox label="Resource Name" value="my-deployment" />
         <InfoBox label="Namespace" value="default" />
-        <InfoBox label="Created at" value="2026-02-06 14:30:00" />
+        <InfoBox label="Created at" value="Feb 06, 2026 14:30:00" />
       </InfoBox.Group>
 
       <FigmaGuide

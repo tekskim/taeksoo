@@ -397,7 +397,7 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
   image: ['Ubuntu24.04', 'CentOS8', 'Debian12', 'Rocky9'][i % 4],
   fixedIP: `10.62.0.${30 + i}`,
   az: ['zone-a', 'zone-b', 'zone-o'][i % 3],
-  createdAt: `2025-09-${String(30 - (i % 28)).padStart(2, '0')}`,
+  createdAt: `Sep ${String(30 - (i % 28)).padStart(2, '0')}, 2025`,
 }));
 
 /* ----------------------------------------

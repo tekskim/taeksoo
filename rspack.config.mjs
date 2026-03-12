@@ -82,6 +82,9 @@ export default defineConfig({
     ],
   },
   plugins: [
+    new rspack.CopyRspackPlugin({
+      patterns: [{ from: 'public', to: '.', globOptions: { ignore: ['**/.*'] } }],
+    }),
     new rspack.HtmlRspackPlugin({
       template: './index.html',
       filename: 'index.html',
