@@ -551,8 +551,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       showCheckboxColumn: false,
       showBulkDelete: false,
       columns: [
-        { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
         { key: 'name', label: 'Name', sortable: true },
+        { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
         { key: 'type', label: 'Type', sortable: true },
         { key: 'vcpuCore', label: 'VCPU (Core)', sortable: true, kind: 'mono' },
         {

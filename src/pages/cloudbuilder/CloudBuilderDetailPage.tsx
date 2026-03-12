@@ -154,7 +154,8 @@ export function CloudBuilderDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
   const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'discovery';
   const id = params.id ?? '';
 
@@ -163,6 +164,11 @@ export function CloudBuilderDetailPage() {
     () => (id ? findRowWithColumns(config, id) : { row: null, columns: config.columns }),
     [config, id]
   );
+
+  useEffect(() => {
+    const name = row?.name ?? row?.hostname;
+    if (name) updateActiveTabLabel(String(name));
+  }, [row, updateActiveTabLabel]);
 
   const isNetworkAgent = slug === 'network-agents';
   const [activeDetailTab, setActiveDetailTab] = useState<
