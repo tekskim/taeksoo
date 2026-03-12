@@ -301,6 +301,7 @@ import { CloudBuilderDetailPage } from '@/pages/cloudbuilder/CloudBuilderDetailP
 import { DesignSystemPage } from '@/pages/DesignSystemPage';
 import { DrawersPage } from '@/pages/DrawersPage';
 import { ModalsPage } from '@/pages/ModalsPage';
+import { CloudBuilderModalsPage } from '@/pages/CloudBuilderModalsPage';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
@@ -1097,6 +1098,7 @@ function AppRoutes() {
       <Route path="/design/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
       <Route path="/design/drawers" element={<DrawersPage />} />
       <Route path="/design/modals" element={<ModalsPage />} />
+      <Route path="/design/cloudbuilder-modals" element={<CloudBuilderModalsPage />} />
       <Route path="/design/gradients" element={<GradientShowcasePage />} />
       <Route path="/design/colors" element={<ColorPalettePage />} />
       <Route path="/design/metallic" element={<MetallicPalettePage />} />
