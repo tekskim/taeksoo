@@ -59,7 +59,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'app-config',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
     labels: {},
     annotations: {},
     data: {
@@ -76,7 +76,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'nginx-config',
     status: 'True',
     namespace: 'nginx-ingress',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
     labels: {
       app: 'nginx',
     },
@@ -93,7 +93,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'kube-root-ca.crt',
     status: 'Raw',
     namespace: 'kube-system',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
     labels: {},
     annotations: {},
     data: {
@@ -106,7 +106,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'coredns',
     status: 'None',
     namespace: 'kube-system',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
     labels: {
       'k8s-app': 'kube-dns',
     },
@@ -124,7 +124,7 @@ const mockConfigMapData: Record<string, ConfigMapData> = {
     name: 'prometheus-config',
     status: 'OK',
     namespace: 'monitoring',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
     labels: {
       app: 'prometheus',
     },

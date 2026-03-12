@@ -168,19 +168,19 @@ const sampleKeyPairData: KeyPairData[] = [
     id: 'kp-001',
     name: 'tk-keypair',
     fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
     id: 'kp-002',
     name: 'dev-keypair',
     fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
   },
   {
     id: 'kp-003',
     name: 'prod-keypair',
     fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
 ];
 

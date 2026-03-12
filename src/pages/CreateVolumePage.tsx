@@ -178,7 +178,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-01',
     volumeType: '_DEFAULT_',
     size: '50 GiB',
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 10:20:28',
     status: 'active',
   },
   {
@@ -186,7 +186,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-02',
     volumeType: '_DEFAULT_',
     size: '0.0 GiB',
-    createdAt: 'Nov 20, 2025',
+    createdAt: 'Nov 20, 2025 23:27:51',
     status: 'active',
   },
   {
@@ -194,7 +194,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-03',
     volumeType: '_DEFAULT_',
     size: '10 GiB',
-    createdAt: 'Nov 20, 2025',
+    createdAt: 'Nov 20, 2025 23:27:51',
     status: 'active',
   },
   {
@@ -202,7 +202,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-04',
     volumeType: '_DEFAULT_',
     size: '68 GiB',
-    createdAt: 'Nov 20, 2025',
+    createdAt: 'Nov 20, 2025 23:27:51',
     status: 'active',
   },
   {
@@ -210,7 +210,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-05',
     volumeType: '_DEFAULT_',
     size: '68 GiB',
-    createdAt: 'Nov 30, 2025',
+    createdAt: 'Nov 30, 2025 21:37:41',
     status: 'active',
   },
 ];
@@ -585,6 +585,7 @@ export function CreateVolumePage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

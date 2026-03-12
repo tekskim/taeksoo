@@ -56,35 +56,35 @@ const storageClassesData: StorageClassRow[] = [
     status: 'OK',
     name: 'ceph-rbd-high-performance-ssd-storage-class',
     isDefault: true,
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
     status: 'True',
     name: 'nfs-shared-persistent-general-purpose-storage',
     isDefault: false,
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '3',
     status: 'None',
     name: 'ceph-rbd-block-storage-replicated-storage-class',
     isDefault: false,
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '4',
     status: 'CreateContainerConfigError',
     name: 'nfs-client-provisioner-shared-storage-class',
     isDefault: false,
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '5',
     status: 'ImagePullBackOff',
     name: 'local-path-provisioner-single-node-storage',
     isDefault: false,
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
 ];
 
@@ -234,6 +234,7 @@ export function StorageClassesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

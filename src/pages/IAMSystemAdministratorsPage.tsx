@@ -47,7 +47,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: true,
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP / Email',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 08:15:22',
   },
   {
     id: 'admin-002',
@@ -56,7 +56,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: 'Sep 11, 2025',
     mfa: 'OTP',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 10:42:38',
   },
   {
     id: 'admin-003',
@@ -65,7 +65,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: 'Sep 10, 2025',
     mfa: 'Email',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 14:28:15',
   },
   {
     id: 'admin-004',
@@ -74,7 +74,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: true,
     lastSignIn: 'Aug 25, 2025',
     mfa: '-',
-    createdAt: 'Jun 10, 2025',
+    createdAt: 'Jun 10, 2025 09:55:42',
   },
   {
     id: 'admin-005',
@@ -83,7 +83,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP / Email',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 16:18:33',
   },
   {
     id: 'admin-006',
@@ -92,7 +92,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: 'Sep 8, 2025',
     mfa: 'OTP',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 11:32:47',
   },
   {
     id: 'admin-007',
@@ -101,7 +101,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: '-',
     mfa: '-',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 13:45:21',
   },
   {
     id: 'admin-008',
@@ -110,7 +110,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: true,
     lastSignIn: 'Sep 5, 2025',
     mfa: 'Email',
-    createdAt: 'Jul 5, 2025',
+    createdAt: 'Jul 5, 2025 10:22:55',
   },
   {
     id: 'admin-009',
@@ -119,7 +119,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 15:48:12',
   },
   {
     id: 'admin-010',
@@ -128,7 +128,7 @@ const mockSystemAdmins: SystemAdmin[] = [
     locked: false,
     lastSignIn: 'Sep 11, 2025',
     mfa: 'OTP / Email',
-    createdAt: 'May 15, 2025',
+    createdAt: 'May 15, 2025 08:35:39',
   },
 ];
 
@@ -240,6 +240,7 @@ export default function IAMSystemAdministratorsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',

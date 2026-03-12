@@ -58,35 +58,35 @@ const limitRangesData: LimitRangeRow[] = [
     status: 'OK',
     name: 'limitrangeName',
     namespace: 'namespaceName',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 09:23:41',
   },
   {
     id: '2',
     status: 'True',
     name: 'cpu-memory-limits',
     namespace: 'default',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 14:07:22',
   },
   {
     id: '3',
     status: 'None',
     name: 'storage-limits',
     namespace: 'kube-system',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:45:33',
   },
   {
     id: '4',
     status: 'CreateContainerConfigError',
     name: 'container-limits',
     namespace: 'production',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 16:52:08',
   },
   {
     id: '5',
     status: 'ImagePullBackOff',
     name: 'pod-limits',
     namespace: 'monitoring',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 08:30:15',
   },
 ];
 
@@ -211,6 +211,7 @@ export function LimitRangesPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

@@ -160,7 +160,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.tiny',
     description: '-',
     visibility: 'Private',
-    createdAt: 'Nov 19, 2025',
+    createdAt: 'Nov 19, 2025 16:14:34',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'tiny-instance',
@@ -184,7 +184,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.small',
     description: 'Small instance',
     visibility: 'Public',
-    createdAt: 'Nov 18, 2025',
+    createdAt: 'Nov 18, 2025 09:01:17',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'small-instance',
@@ -208,7 +208,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.medium',
     description: 'Medium instance',
     visibility: 'Private',
-    createdAt: 'Nov 17, 2025',
+    createdAt: 'Nov 17, 2025 02:48:00',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'medium-instance',
@@ -232,7 +232,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.large',
     description: 'Large instance',
     visibility: 'Public',
-    createdAt: 'Nov 16, 2025',
+    createdAt: 'Nov 16, 2025 19:35:43',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'large-instance',
@@ -255,7 +255,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.xlarge',
     description: 'Extra large instance',
     visibility: 'Private',
-    createdAt: 'Nov 15, 2025',
+    createdAt: 'Nov 15, 2025 12:22:26',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'xlarge-instance',
@@ -279,7 +279,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.2xlarge',
     description: '2x large instance',
     visibility: 'Public',
-    createdAt: 'Nov 14, 2025',
+    createdAt: 'Nov 14, 2025 05:09:09',
     isFavorite: false,
     config: {
       instanceNamePrefix: '2xlarge-instance',
@@ -843,7 +843,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'newsnapshot',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 's2',
@@ -851,7 +851,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'web-backup',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
   },
   {
     id: 's3',
@@ -859,7 +859,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'db-snapshot',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 's4',
@@ -867,7 +867,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'app-snapshot',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 's5',
@@ -875,7 +875,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'test-snapshot',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
 ];
 
@@ -886,7 +886,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-01',
     size: '50 GiB',
     type: 'SSD',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 'v2',
@@ -894,7 +894,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-02',
     size: '100 GiB',
     type: 'SSD',
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
   },
   {
     id: 'v3',
@@ -902,7 +902,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'system-disk',
     size: '80 GiB',
     type: 'HDD',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
 ];
 
@@ -1148,6 +1148,7 @@ function ImageSection({
       sortable: true,
       flex: 1,
       minWidth: columnMinWidths.createdAt,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 
@@ -1191,6 +1192,7 @@ function ImageSection({
       sortable: true,
       flex: 1,
       minWidth: columnMinWidths.createdAt,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 
@@ -2259,15 +2261,25 @@ const mockExistingFloatingIPs: ExistingFloatingIPRow[] = [
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
-  { id: 'sg1', name: 'default', description: 'Default security group', createdAt: 'Aug 15, 2025' },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  {
+    id: 'sg1',
+    name: 'default',
+    description: 'Default security group',
+    createdAt: 'Aug 15, 2025 12:22:26',
+  },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 10:20:28' },
   {
     id: 'sg3',
     name: 'web-sg',
     description: 'Web server security group',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
-  { id: 'sg4', name: 'db-sg', description: 'Database security group', createdAt: 'Sep 15, 2025' },
+  {
+    id: 'sg4',
+    name: 'db-sg',
+    description: 'Database security group',
+    createdAt: 'Sep 15, 2025 12:22:26',
+  },
 ];
 
 const mockPorts: PortRow[] = [
@@ -2583,7 +2595,12 @@ function NetworkSection({
       ),
     },
     { key: 'description', label: 'Description', sortable: true },
-    { key: 'createdAt', label: 'Created at', sortable: true },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+    },
   ];
 
   // Port columns
@@ -3831,6 +3848,7 @@ function TemplatesSection({
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

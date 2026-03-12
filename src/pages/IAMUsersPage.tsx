@@ -58,7 +58,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP / Email',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 09:23:41',
   },
   {
     id: 'user-002',
@@ -68,7 +68,7 @@ const mockUsers: User[] = [
     roles: 'viewer',
     lastSignIn: 'Sep 11, 2025',
     mfa: 'OTP',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 14:07:22',
   },
   {
     id: 'user-003',
@@ -78,7 +78,7 @@ const mockUsers: User[] = [
     roles: 'network-admin (+1)',
     lastSignIn: 'Sep 10, 2025',
     mfa: 'Email',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 11:45:33',
   },
   {
     id: 'user-004',
@@ -88,7 +88,7 @@ const mockUsers: User[] = [
     roles: 'viewer',
     lastSignIn: 'Aug 1, 2025',
     mfa: '-',
-    createdAt: 'Jun 10, 2025',
+    createdAt: 'Jun 10, 2025 16:52:08',
   },
   {
     id: 'user-005',
@@ -98,7 +98,7 @@ const mockUsers: User[] = [
     roles: 'super-admin',
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP / Email',
-    createdAt: 'Jan 5, 2025',
+    createdAt: 'Jan 5, 2025 08:30:15',
   },
   {
     id: 'user-006',
@@ -108,7 +108,7 @@ const mockUsers: User[] = [
     roles: 'developer',
     lastSignIn: 'Sep 5, 2025',
     mfa: 'OTP',
-    createdAt: 'Apr 18, 2025',
+    createdAt: 'Apr 18, 2025 13:19:44',
   },
   {
     id: 'user-007',
@@ -118,7 +118,7 @@ const mockUsers: User[] = [
     roles: 'qa-lead (+2)',
     lastSignIn: 'Sep 11, 2025',
     mfa: 'Email',
-    createdAt: 'Mar 22, 2025',
+    createdAt: 'Mar 22, 2025 10:41:27',
   },
   {
     id: 'user-008',
@@ -128,7 +128,7 @@ const mockUsers: User[] = [
     roles: 'storage-admin',
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP / Email',
-    createdAt: 'Feb 14, 2025',
+    createdAt: 'Feb 14, 2025 17:03:56',
   },
   {
     id: 'user-009',
@@ -138,7 +138,7 @@ const mockUsers: User[] = [
     roles: 'viewer',
     lastSignIn: 'Jul 15, 2025',
     mfa: '-',
-    createdAt: 'May 30, 2025',
+    createdAt: 'May 30, 2025 12:28:19',
   },
   {
     id: 'user-010',
@@ -148,7 +148,7 @@ const mockUsers: User[] = [
     roles: 'iam-admin (+1)',
     lastSignIn: 'Sep 12, 2025',
     mfa: 'OTP',
-    createdAt: 'Jan 28, 2025',
+    createdAt: 'Jan 28, 2025 15:55:02',
   },
 ];
 
@@ -281,6 +281,7 @@ export function IAMUsersPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',
@@ -307,11 +308,6 @@ export function IAMUsersPage() {
             label: 'Reset password',
             disabled: isDisabled,
             onClick: () => console.log('Reset password', row.id),
-          },
-          {
-            id: 'lock-setting',
-            label: 'Lock setting',
-            onClick: () => console.log('Lock setting', row.id),
           },
           { id: 'edit', label: 'Edit', disabled: isDisabled, onClick: () => handleEditUser(row) },
           {

@@ -74,7 +74,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 8,
     ramUsage: 23,
     podsUsage: 13,
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 08:12:34',
   },
   {
     id: '2',
@@ -88,7 +88,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 45,
     ramUsage: 67,
     podsUsage: 42,
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 09:45:22',
   },
   {
     id: '3',
@@ -102,7 +102,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 32,
     ramUsage: 51,
     podsUsage: 28,
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 11:23:17',
   },
   {
     id: '4',
@@ -116,7 +116,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 78,
     ramUsage: 82,
     podsUsage: 65,
-    createdAt: 'Nov 2, 2025',
+    createdAt: 'Nov 2, 2025 14:30:41',
   },
   {
     id: '5',
@@ -130,7 +130,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 0,
     ramUsage: 0,
     podsUsage: 0,
-    createdAt: 'Nov 2, 2025',
+    createdAt: 'Nov 2, 2025 16:52:08',
   },
   {
     id: '6',
@@ -144,7 +144,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 92,
     ramUsage: 88,
     podsUsage: 75,
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 10:17:55',
   },
 ];
 
@@ -323,6 +323,7 @@ export function ContainerNodesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

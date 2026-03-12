@@ -155,7 +155,7 @@ const mockNodeData: Record<string, NodeData> = {
       'alpha.kubernetes.io/provided-node-ip': '172.16.0.237',
       'csi.volume.kubernetes.io/nodeid': '{"driver.csi.io":"thakicloud"}',
     },
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 16:45:11',
     cpu: { used: 0.24, total: 4 },
     memory: { used: 5.45, total: 14, unit: 'GB' },
     pods: { used: 17, total: 110 },
@@ -188,7 +188,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.29',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 09:12:33',
   },
   {
     id: '2',
@@ -200,7 +200,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.30',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 10:24:15',
   },
   {
     id: '3',
@@ -212,7 +212,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.31',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 11:36:47',
   },
 ];
 
@@ -418,6 +418,7 @@ function PodsTab({ pods }: PodsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

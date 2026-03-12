@@ -53,35 +53,35 @@ const configMapsData: ConfigMapRow[] = [
     name: 'application-runtime-configuration-settings-map',
     namespace: 'default',
     data: 'config.yaml (+2)',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 09:18:42',
   },
   {
     id: '2',
     name: 'nginx-reverse-proxy-server-configuration',
     namespace: 'nginx-ingress',
     data: 'nginx.conf (+1)',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 14:33:27',
   },
   {
     id: '3',
     name: 'kube-root-ca-certificate-authority-configmap',
     namespace: 'kube-system',
     data: 'ca.crt',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 07:52:15',
   },
   {
     id: '4',
     name: 'coredns-cluster-dns-configuration-map',
     namespace: 'kube-system',
     data: 'Corefile (+3)',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 16:41:58',
   },
   {
     id: '5',
     name: 'prometheus-scrape-targets-alerting-configuration',
     namespace: 'monitoring',
     data: 'prometheus.yml (+5)',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 11:24:36',
   },
 ];
 
@@ -208,6 +208,7 @@ export function ConfigMapsPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

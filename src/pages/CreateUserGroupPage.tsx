@@ -69,7 +69,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-2',
@@ -78,7 +78,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-3',
@@ -87,7 +87,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-4',
@@ -96,7 +96,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-5',
@@ -105,7 +105,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-6',
@@ -114,7 +114,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-7',
@@ -123,7 +123,7 @@ const mockUsers: User[] = [
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'user-8',
@@ -132,7 +132,7 @@ const mockUsers: User[] = [
     roles: 'full-access (+5)',
     lastSignIn: 'Sep 10, 2025',
     status: 'active',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
     id: 'user-9',
@@ -141,7 +141,7 @@ const mockUsers: User[] = [
     roles: 'write-access (+2)',
     lastSignIn: 'Sep 8, 2025',
     status: 'active',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
   },
   {
     id: 'user-10',
@@ -150,7 +150,7 @@ const mockUsers: User[] = [
     roles: 'read-only',
     lastSignIn: 'Sep 5, 2025',
     status: 'inactive',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
   {
     id: 'user-11',
@@ -159,7 +159,7 @@ const mockUsers: User[] = [
     roles: 'qa-role (+2)',
     lastSignIn: 'Sep 1, 2025',
     status: 'active',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 'user-12',
@@ -168,7 +168,7 @@ const mockUsers: User[] = [
     roles: 'qa-role (+2)',
     lastSignIn: 'Aug 28, 2025',
     status: 'active',
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
   },
   {
     id: 'user-13',
@@ -177,7 +177,7 @@ const mockUsers: User[] = [
     roles: 'infra-admin (+3)',
     lastSignIn: 'Aug 25, 2025',
     status: 'active',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 'user-14',
@@ -186,7 +186,7 @@ const mockUsers: User[] = [
     roles: 'support-role',
     lastSignIn: 'Aug 20, 2025',
     status: 'active',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'user-15',
@@ -195,7 +195,7 @@ const mockUsers: User[] = [
     roles: 'manager-role (+4)',
     lastSignIn: 'Aug 15, 2025',
     status: 'active',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: 'user-16',
@@ -204,7 +204,7 @@ const mockUsers: User[] = [
     roles: 'read-analytics',
     lastSignIn: 'Aug 10, 2025',
     status: 'active',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   {
     id: 'user-17',
@@ -213,7 +213,7 @@ const mockUsers: User[] = [
     roles: 'security-admin (+5)',
     lastSignIn: 'Aug 5, 2025',
     status: 'active',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 14:12:36',
   },
   {
     id: 'user-18',
@@ -222,7 +222,7 @@ const mockUsers: User[] = [
     roles: 'finance-role (+2)',
     lastSignIn: 'Aug 1, 2025',
     status: 'inactive',
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
   {
     id: 'user-19',
@@ -231,7 +231,7 @@ const mockUsers: User[] = [
     roles: 'hr-role (+3)',
     lastSignIn: 'Jul 28, 2025',
     status: 'active',
-    createdAt: 'Jul 28, 2025',
+    createdAt: 'Jul 28, 2025 07:11:07',
   },
   {
     id: 'user-20',
@@ -240,7 +240,7 @@ const mockUsers: User[] = [
     roles: 'legal-role',
     lastSignIn: 'Jul 25, 2025',
     status: 'active',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   {
     id: 'user-21',
@@ -249,7 +249,7 @@ const mockUsers: User[] = [
     roles: 'marketing-role (+2)',
     lastSignIn: 'Jul 20, 2025',
     status: 'active',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
   {
     id: 'user-22',
@@ -258,7 +258,7 @@ const mockUsers: User[] = [
     roles: 'sales-role (+3)',
     lastSignIn: 'Jul 15, 2025',
     status: 'active',
-    createdAt: 'Jul 15, 2025',
+    createdAt: 'Jul 15, 2025 12:22:26',
   },
   {
     id: 'user-23',
@@ -267,7 +267,7 @@ const mockUsers: User[] = [
     roles: 'customer-role',
     lastSignIn: 'Jul 10, 2025',
     status: 'active',
-    createdAt: 'Jul 10, 2025',
+    createdAt: 'Jul 10, 2025 01:17:01',
   },
   {
     id: 'user-24',
@@ -276,7 +276,7 @@ const mockUsers: User[] = [
     roles: 'partner-role (+2)',
     lastSignIn: 'Jul 5, 2025',
     status: 'active',
-    createdAt: 'Jul 5, 2025',
+    createdAt: 'Jul 5, 2025 14:12:36',
   },
   {
     id: 'user-25',
@@ -285,7 +285,7 @@ const mockUsers: User[] = [
     roles: 'vendor-role',
     lastSignIn: 'Jul 1, 2025',
     status: 'inactive',
-    createdAt: 'Jul 1, 2025',
+    createdAt: 'Jul 1, 2025 10:20:28',
   },
 ];
 
@@ -651,6 +651,7 @@ function AddUsersSection({
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

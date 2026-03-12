@@ -68,7 +68,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Base Ubuntu 22.04 image',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
     status: 'active',
   },
   {
@@ -80,7 +80,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Private',
     description: 'Minimal CentOS 8 installation',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
     status: 'active',
   },
   {
@@ -92,7 +92,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Shared',
     description: 'Rocky Linux 9 server image',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
     status: 'active',
   },
   {
@@ -104,7 +104,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Public',
     description: 'Standard Debian 12 image',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
     status: 'active',
   },
   {
@@ -116,7 +116,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Ubuntu 20.04 LTS server',
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
     status: 'active',
   },
   {
@@ -128,7 +128,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Shared',
     description: 'Windows Server 2022 Datacenter',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
     status: 'pending',
   },
   {
@@ -140,7 +140,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Public',
     description: 'Lightweight Alpine Linux',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
     status: 'active',
   },
   {
@@ -152,7 +152,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Fedora 39 workstation image',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
     status: 'active',
   },
   {
@@ -164,7 +164,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Shared',
     description: 'Oracle Linux 8 for databases',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
     status: 'deactivated',
   },
   {
@@ -176,7 +176,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Ubuntu with GPU drivers',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 14:12:36',
     status: 'active',
   },
 ];
@@ -410,6 +410,7 @@ export function ComputeImagesPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

@@ -81,7 +81,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.39',
     macAddress: 'fa:16:3e:34:85:32',
     adminState: 'Up',
-    createdAt: 'Dec 15, 2025',
+    createdAt: 'Dec 15, 2025 12:22:26',
     status: 'active',
   },
   {
@@ -101,7 +101,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.40',
     macAddress: 'fa:16:3e:34:85:33',
     adminState: 'Up',
-    createdAt: 'Dec 14, 2025',
+    createdAt: 'Dec 14, 2025 05:09:09',
     status: 'active',
   },
   {
@@ -121,7 +121,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:34',
     adminState: 'Down',
-    createdAt: 'Dec 13, 2025',
+    createdAt: 'Dec 13, 2025 22:56:52',
     status: 'down',
   },
   {
@@ -141,7 +141,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:35',
     adminState: 'Up',
-    createdAt: 'Dec 12, 2025',
+    createdAt: 'Dec 12, 2025 15:43:35',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:36',
     adminState: 'Up',
-    createdAt: 'Dec 11, 2025',
+    createdAt: 'Dec 11, 2025 08:30:18',
     status: 'active',
   },
   {
@@ -181,7 +181,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.41',
     macAddress: 'fa:16:3e:34:85:37',
     adminState: 'Up',
-    createdAt: 'Dec 10, 2025',
+    createdAt: 'Dec 10, 2025 01:17:01',
     status: 'active',
   },
   {
@@ -201,7 +201,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:38',
     adminState: 'Up',
-    createdAt: 'Dec 9, 2025',
+    createdAt: 'Dec 9, 2025 18:04:44',
     status: 'active',
   },
   {
@@ -221,7 +221,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.42',
     macAddress: 'fa:16:3e:34:85:39',
     adminState: 'Up',
-    createdAt: 'Dec 8, 2025',
+    createdAt: 'Dec 8, 2025 11:51:27',
     status: 'building',
   },
   {
@@ -241,7 +241,7 @@ const mockPorts: Port[] = [
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:40',
     adminState: 'Down',
-    createdAt: 'Dec 7, 2025',
+    createdAt: 'Dec 7, 2025 04:38:10',
     status: 'error',
   },
   {
@@ -261,7 +261,7 @@ const mockPorts: Port[] = [
     floatingIp: '10.7.65.43',
     macAddress: 'fa:16:3e:34:85:41',
     adminState: 'Up',
-    createdAt: 'Dec 6, 2025',
+    createdAt: 'Dec 6, 2025 21:25:53',
     status: 'active',
   },
 ];
@@ -570,6 +570,7 @@ export function ComputeAdminPortsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

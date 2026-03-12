@@ -42,7 +42,7 @@ const defaultRoles: RoleItem[] = Array.from({ length: 25 }, (_, i) => ({
   name: 'viewer',
   type: 'Built-in',
   policies: 'ReadCompute (+2)',
-  createdAt: 'Sep 12, 2025',
+  createdAt: 'Sep 12, 2025 15:43:35',
 }));
 
 const ITEMS_PER_PAGE = 5;

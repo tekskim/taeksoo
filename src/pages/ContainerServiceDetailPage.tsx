@@ -104,7 +104,7 @@ const mockServiceData: Record<string, ServiceData> = {
     type: 'ClusterIP',
     clusterIP: '10.11.111.10',
     sessionAffinity: 'None',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -124,7 +124,7 @@ const mockServiceData: Record<string, ServiceData> = {
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
     sessionAffinity: 'ClientIP',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
     labels: {
       'app.kubernetes.io/name': 'nginx',
       'app.kubernetes.io/component': 'controller',
@@ -145,7 +145,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   {
     id: '2',
@@ -156,7 +156,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName-2',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   {
     id: '3',
@@ -167,7 +167,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   {
     id: '4',
@@ -178,7 +178,7 @@ const mockPodsData: PodRow[] = [
     restarts: 3,
     ip: '10.11.0.14',
     node: 'nodeName-2',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
 ];
 
@@ -357,6 +357,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',

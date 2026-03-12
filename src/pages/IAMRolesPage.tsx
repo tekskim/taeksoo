@@ -47,7 +47,7 @@ const mockRoles: Role[] = [
     policies: 'FullAccess',
     description: 'Full administrative access',
     scope: 'Global',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
   {
     id: 'role-002',
@@ -56,7 +56,7 @@ const mockRoles: Role[] = [
     policies: 'ReadCompute (+3)',
     description: '-',
     scope: '-',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'role-003',
@@ -65,7 +65,7 @@ const mockRoles: Role[] = [
     policies: 'ViewNetwork (+1)',
     description: 'Read-only network access',
     scope: 'Project',
-    createdAt: 'Jul 15, 2025',
+    createdAt: 'Jul 15, 2025 12:22:26',
   },
   {
     id: 'role-004',
@@ -74,7 +74,7 @@ const mockRoles: Role[] = [
     policies: 'ManageStorage (+2)',
     description: 'Storage management role',
     scope: 'Project',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'role-005',
@@ -83,7 +83,7 @@ const mockRoles: Role[] = [
     policies: 'DeveloperAccess',
     description: 'Developer access role',
     scope: 'Project',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 'role-006',
@@ -92,7 +92,7 @@ const mockRoles: Role[] = [
     policies: 'QAAccess (+1)',
     description: 'QA tester access',
     scope: 'Project',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
   {
     id: 'role-007',
@@ -101,7 +101,7 @@ const mockRoles: Role[] = [
     policies: 'SecurityFullAccess',
     description: 'Security administration',
     scope: 'Global',
-    createdAt: 'Jun 15, 2025',
+    createdAt: 'Jun 15, 2025 12:22:26',
   },
   {
     id: 'role-008',
@@ -110,7 +110,7 @@ const mockRoles: Role[] = [
     policies: 'ViewBilling',
     description: 'View billing information',
     scope: 'Organization',
-    createdAt: 'Jul 1, 2025',
+    createdAt: 'Jul 1, 2025 10:20:28',
   },
   {
     id: 'role-009',
@@ -119,7 +119,7 @@ const mockRoles: Role[] = [
     policies: 'SupportAccess (+2)',
     description: 'Customer support access',
     scope: 'Global',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   {
     id: 'role-010',
@@ -128,7 +128,7 @@ const mockRoles: Role[] = [
     policies: 'ReadAll',
     description: 'Read-only access to all',
     scope: 'Project',
-    createdAt: 'Jun 20, 2025',
+    createdAt: 'Jun 20, 2025 23:27:51',
   },
 ];
 
@@ -253,6 +253,7 @@ export default function IAMRolesPage() {
       label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',

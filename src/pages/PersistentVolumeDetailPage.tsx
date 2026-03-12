@@ -77,7 +77,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
     id: '1',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
     status: 'OK',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -109,7 +109,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
     id: '2',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
     status: 'OK',
-    createdAt: 'Jul 24, 2025',
+    createdAt: 'Jul 24, 2025 03:19:59',
     labels: {
       app: 'postgres',
     },

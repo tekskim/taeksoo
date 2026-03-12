@@ -63,7 +63,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'Ceph-pvc',
     source: 'rbd.csi.ceph.com',
     reason: '',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -73,7 +73,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'data-postgres-0',
     source: 'nfs.csi.k8s.io',
     reason: '',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -83,7 +83,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'nfs.csi.k8s.io',
     reason: '',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '4',
@@ -93,7 +93,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
     reason: 'Claim deleted',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '5',
@@ -103,7 +103,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'redis-data',
     source: 'local.csi.k8s.io',
     reason: '',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
   {
     id: '6',
@@ -113,7 +113,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
     reason: 'Provisioning failed',
-    createdAt: 'Nov 5, 2025',
+    createdAt: 'Nov 5, 2025 14:12:36',
   },
   {
     id: '7',
@@ -123,7 +123,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'pending-claim',
     source: 'nfs.csi.k8s.io',
     reason: 'Waiting for node',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
 ];
 
@@ -284,6 +284,7 @@ export function PersistentVolumesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

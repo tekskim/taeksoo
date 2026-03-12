@@ -45,7 +45,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk...',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 09:23:41',
   },
   'kp-002': {
     id: 'kp-002',
@@ -53,7 +53,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDl...',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 14:07:22',
   },
   'kp-003': {
     id: 'kp-003',
@@ -61,7 +61,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDm...',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 11:45:33',
   },
   'kp-004': {
     id: 'kp-004',
@@ -69,7 +69,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDn...',
-    createdAt: 'Aug 30, 2025',
+    createdAt: 'Aug 30, 2025 16:52:08',
   },
   'kp-005': {
     id: 'kp-005',
@@ -77,7 +77,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDo...',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 08:30:15',
   },
   'kp-006': {
     id: 'kp-006',
@@ -85,7 +85,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDp...',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 13:19:44',
   },
   'kp-007': {
     id: 'kp-007',
@@ -93,7 +93,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq...',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 10:41:27',
   },
   'kp-008': {
     id: 'kp-008',
@@ -101,7 +101,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr...',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 17:03:56',
   },
   'kp-009': {
     id: 'kp-009',
@@ -109,7 +109,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs...',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 12:28:19',
   },
   'kp-010': {
     id: 'kp-010',
@@ -117,7 +117,7 @@ const mockKeyPairsMap: Record<string, KeyPairDetail> = {
     userId: '514aa9f6265d4fb397b4345000b2ee9f',
     fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
     publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDt...',
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 15:55:02',
   },
 };
 

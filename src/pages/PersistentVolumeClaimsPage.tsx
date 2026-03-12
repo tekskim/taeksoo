@@ -67,7 +67,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'Ceph',
     volumeAttributesClass: '1',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 09:23:41',
   },
   {
     id: '2',
@@ -79,7 +79,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'Ceph',
     volumeAttributesClass: '1',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 14:07:22',
   },
   {
     id: '3',
@@ -91,7 +91,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'local',
     volumeAttributesClass: '1',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:45:33',
   },
   {
     id: '4',
@@ -103,7 +103,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWX',
     storageClass: 'nfs',
     volumeAttributesClass: '',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 14:37:52',
   },
   {
     id: '5',
@@ -115,7 +115,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'Ceph',
     volumeAttributesClass: '2',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 16:52:08',
   },
 ];
 
@@ -288,6 +288,7 @@ export function PersistentVolumeClaimsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

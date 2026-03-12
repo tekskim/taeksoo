@@ -63,7 +63,7 @@ const jobsData: JobRow[] = [
     image: 'imageName',
     completions: '1/1',
     duration: '36 days',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -73,7 +73,7 @@ const jobsData: JobRow[] = [
     image: 'migration-tool:v2.1',
     completions: '1/1',
     duration: '2h 15m',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -83,7 +83,7 @@ const jobsData: JobRow[] = [
     image: 'backup-agent:v1.5',
     completions: '0/1',
     duration: '45m',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '4',
@@ -93,7 +93,7 @@ const jobsData: JobRow[] = [
     image: 'cleanup-tool:v1.0',
     completions: '0/3',
     duration: '5m',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '5',
@@ -103,7 +103,7 @@ const jobsData: JobRow[] = [
     image: 'report-gen:v3.2',
     completions: '5/5',
     duration: '1h 30m',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '6',
@@ -113,7 +113,7 @@ const jobsData: JobRow[] = [
     image: 'sync-worker:v2.0',
     completions: '0/1',
     duration: '-',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '7',
@@ -123,7 +123,7 @@ const jobsData: JobRow[] = [
     image: 'indexer:v4.1',
     completions: '1/1',
     duration: '3h 45m',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '8',
@@ -133,7 +133,7 @@ const jobsData: JobRow[] = [
     image: 'cache-warmer:v1.2',
     completions: '10/10',
     duration: '20m',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
 ];
 
@@ -253,6 +253,7 @@ export function JobsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

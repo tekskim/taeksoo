@@ -64,7 +64,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'web-server-01',
     sourceInstanceId: 'vm-001',
     description: 'Base web server snapshot',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'snap-002',
@@ -75,7 +75,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'db-server-01',
     sourceInstanceId: 'vm-002',
     description: 'Database server backup',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
     id: 'snap-003',
@@ -86,7 +86,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'app-server-01',
     sourceInstanceId: 'vm-003',
     description: 'Application server snapshot',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
   },
   {
     id: 'snap-004',
@@ -97,7 +97,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'ml-worker-01',
     sourceInstanceId: 'vm-004',
     description: 'ML worker with GPU config',
-    createdAt: 'Sep 7, 2025',
+    createdAt: 'Sep 7, 2025 04:38:10',
   },
   {
     id: 'snap-005',
@@ -108,7 +108,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'k8s-node-01',
     sourceInstanceId: 'vm-005',
     description: 'Kubernetes node snapshot',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
   {
     id: 'snap-006',
@@ -119,7 +119,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'gateway-01',
     sourceInstanceId: 'vm-006',
     description: 'Gateway server backup',
-    createdAt: 'Sep 3, 2025',
+    createdAt: 'Sep 3, 2025 00:46:02',
   },
   {
     id: 'snap-007',
@@ -130,7 +130,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'win-server-01',
     sourceInstanceId: 'vm-007',
     description: 'Windows server snapshot',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 'snap-008',
@@ -141,7 +141,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'enterprise-01',
     sourceInstanceId: 'vm-008',
     description: 'Enterprise app backup',
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
   },
   {
     id: 'snap-009',
@@ -152,7 +152,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'dev-server-01',
     sourceInstanceId: 'vm-009',
     description: 'Development environment',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 'snap-010',
@@ -163,7 +163,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'legacy-app-01',
     sourceInstanceId: 'vm-010',
     description: 'Legacy application backup',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'snap-011',
@@ -174,7 +174,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'custom-build-01',
     sourceInstanceId: 'vm-011',
     description: 'Custom build environment',
-    createdAt: 'Aug 18, 2025',
+    createdAt: 'Aug 18, 2025 09:01:17',
   },
   {
     id: 'snap-012',
@@ -185,7 +185,7 @@ const mockSnapshots: InstanceSnapshot[] = [
     sourceInstance: 'prod-server-01',
     sourceInstanceId: 'vm-012',
     description: 'Production server snapshot',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
 ];
 
@@ -434,6 +434,7 @@ export function InstanceSnapshotsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

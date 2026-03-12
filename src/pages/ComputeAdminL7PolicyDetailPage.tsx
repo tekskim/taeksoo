@@ -80,7 +80,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   name: 'policy1',
   status: 'active',
   adminState: 'Up',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 09:12:43',
   // Basic information
   description: '-',
   behavior: 'Forward to Pool',
