@@ -1006,6 +1006,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
   key: 'createdAt',
   label: 'Created at',
   width: columnWidths.createdAt,  // ❌ 기존 방식
+  render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
 }
 
 // After
@@ -1013,6 +1014,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
   key: 'createdAt',
   label: 'Created at',
   flex: 1,                              // ✅ 유연하게 늘어남 minWidth: columnMinWidths.createdAt,  // ✅ 최소 너비 보장
+  render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
 }`}
                 />
               </div>

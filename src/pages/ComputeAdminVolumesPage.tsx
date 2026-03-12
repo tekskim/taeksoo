@@ -67,7 +67,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: 'instance',
     attachedToId: '12345678',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'active',
   },
   {
@@ -81,7 +81,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: 'instance',
     attachedToId: '12345679',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'active',
   },
   {
@@ -95,7 +95,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: 'instance',
     attachedToId: '12345680',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'active',
   },
   {
@@ -109,7 +109,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'active',
   },
   {
@@ -123,7 +123,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data Disk',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'pending',
   },
   {
@@ -137,7 +137,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Backup',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'active',
   },
   {
@@ -151,7 +151,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Cache',
     attachedTo: 'instance',
     attachedToId: '12345684',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'in-use',
   },
   {
@@ -165,7 +165,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Archive',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'active',
   },
   {
@@ -179,7 +179,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Boot',
     attachedTo: null,
     attachedToId: null,
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'error',
   },
   {
@@ -193,7 +193,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'ML Dataset',
     attachedTo: 'instance',
     attachedToId: '12345687',
-    createdAt: 'Dec 25, 2025',
+    createdAt: 'Dec 25, 2025 10:32:16',
     status: 'in-use',
   },
 ];
@@ -436,6 +436,7 @@ export function ComputeAdminVolumesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

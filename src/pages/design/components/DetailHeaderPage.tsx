@@ -436,7 +436,7 @@ export function DetailHeaderPage() {
     <DetailHeader.InfoCard label="Status" status="active" />
     <DetailHeader.InfoCard label="ID" value="7284d917..." copyable />
     <DetailHeader.InfoCard label="Host" value="compute-03" />
-    <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025" />
+    <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025 14:30:22" />
   </DetailHeader.InfoGrid>
 </DetailHeader>`}
         >
@@ -486,7 +486,7 @@ export function DetailHeaderPage() {
               <DetailHeader.InfoCard label="Status" status="active" />
               <DetailHeader.InfoCard label="ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
               <DetailHeader.InfoCard label="Host" value="compute-03" />
-              <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025" />
+              <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025 14:30:22" />
             </DetailHeader.InfoGrid>
           </DetailHeader>
         </ComponentPreview>
@@ -553,7 +553,7 @@ export function DetailHeaderPage() {
             <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
               <div className="grid grid-cols-3 gap-2">
                 <DetailHeader.InfoCard label="Host" value="compute-03" />
-                <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025" />
+                <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025 14:30:22" />
                 <DetailHeader.InfoCard label="Availability zone" value="nova" />
               </div>
             </div>

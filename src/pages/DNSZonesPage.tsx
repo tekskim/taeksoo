@@ -65,7 +65,7 @@ const mockZones: DNSZone[] = [
     ttl: 3600,
     serial: '2025111001',
     description: 'Production domain',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 09:15:22',
   },
   {
     id: 'zone-002',
@@ -76,7 +76,7 @@ const mockZones: DNSZone[] = [
     ttl: 3600,
     serial: '2025110901',
     description: 'Staging environment',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 11:32:45',
   },
   {
     id: 'zone-003',
@@ -87,7 +87,7 @@ const mockZones: DNSZone[] = [
     ttl: 300,
     serial: '2025110801',
     description: 'Internal services',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 14:18:33',
   },
   {
     id: 'zone-004',
@@ -98,7 +98,7 @@ const mockZones: DNSZone[] = [
     ttl: 3600,
     serial: '2025110701',
     description: 'Development environment',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 08:42:17',
   },
   {
     id: 'zone-005',
@@ -109,7 +109,7 @@ const mockZones: DNSZone[] = [
     ttl: 1800,
     serial: '2025110601',
     description: 'API gateway domain',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 16:25:51',
   },
   {
     id: 'zone-006',
@@ -120,7 +120,7 @@ const mockZones: DNSZone[] = [
     ttl: 60,
     serial: '2025110501',
     description: 'Database cluster DNS',
-    createdAt: 'Nov 5, 2025',
+    createdAt: 'Nov 5, 2025 10:55:28',
   },
   {
     id: 'zone-007',
@@ -131,7 +131,7 @@ const mockZones: DNSZone[] = [
     ttl: 86400,
     serial: '2025110401',
     description: 'CDN endpoint records',
-    createdAt: 'Nov 4, 2025',
+    createdAt: 'Nov 4, 2025 13:38:42',
   },
   {
     id: 'zone-008',
@@ -142,7 +142,7 @@ const mockZones: DNSZone[] = [
     ttl: 3600,
     serial: '2025110301',
     description: 'Mail server records',
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 09:12:15',
   },
 ];
 
@@ -256,6 +256,7 @@ export function DNSZonesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

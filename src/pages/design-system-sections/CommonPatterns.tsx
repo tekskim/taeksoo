@@ -91,20 +91,26 @@ export function ListPagePatternDemo() {
   ];
 
   const data = [
-    { id: '1', status: 'active', name: 'instance-01', type: 'Standard', createdAt: 'Jan 15, 2024' },
+    {
+      id: '1',
+      status: 'active',
+      name: 'instance-01',
+      type: 'Standard',
+      createdAt: 'Jan 15, 2024 12:22:26',
+    },
     {
       id: '2',
       status: 'error',
       name: 'instance-02',
       type: 'High Memory',
-      createdAt: 'Jan 14, 2024',
+      createdAt: 'Jan 14, 2024 05:09:09',
     },
     {
       id: '3',
       status: 'building',
       name: 'instance-03',
       type: 'Standard',
-      createdAt: 'Jan 13, 2024',
+      createdAt: 'Jan 13, 2024 22:56:52',
     },
   ];
 
@@ -241,7 +247,7 @@ export function DetailPagePatternDemo() {
           <DetailHeader.InfoCard label="Status" status="active" />
           <DetailHeader.InfoCard label="ID" value="i-1234567890abcdef0" copyable />
           <DetailHeader.InfoCard label="Host" value="compute-node-01" />
-          <DetailHeader.InfoCard label="Created at" value="Jan 15, 2024" />
+          <DetailHeader.InfoCard label="Created at" value="Jan 15, 2024 10:22:35" />
         </DetailHeader.InfoGrid>
       </DetailHeader>
 

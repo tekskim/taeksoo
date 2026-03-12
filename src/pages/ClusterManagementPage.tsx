@@ -57,35 +57,35 @@ const mockClusters: Cluster[] = [
     name: 'production-kubernetes-high-availability-cluster',
     status: 'OK',
     kubernetesVersion: 'v1.34',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2025 08:30:18',
   },
   {
     id: 'cluster-002',
     name: 'staging-development-testing-environment-cluster',
     status: 'OK',
     kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 6, 2025',
+    createdAt: 'Oct 6, 2025 21:25:53',
   },
   {
     id: 'cluster-003',
     name: 'production-microservices-platform-cluster',
     status: 'True',
     kubernetesVersion: 'v1.32.2',
-    createdAt: 'Sep 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
   },
   {
     id: 'cluster-004',
     name: 'staging-integration-testing-environment-cluster',
     status: 'None',
     kubernetesVersion: 'v1.33.1',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'cluster-005',
     name: 'development-sandbox-experimental-cluster',
     status: 'ImagePullBackOff',
     kubernetesVersion: 'v1.31.0',
-    createdAt: 'Jul 10, 2025',
+    createdAt: 'Jul 10, 2025 01:17:01',
   },
 ];
 
@@ -165,6 +165,7 @@ export function ClusterManagementPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

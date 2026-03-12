@@ -149,7 +149,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'worker-node-01',
     status: 'active',
     host: 'compute-03',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
@@ -164,7 +164,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'worker-node-02',
     status: 'active',
     host: 'compute-03',
-    createdAt: 'Jul 24, 2025',
+    createdAt: 'Jul 24, 2025 03:19:59',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
@@ -179,7 +179,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'master-node-01',
     status: 'active',
     host: 'compute-01',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
     availabilityZone: 'nova',
     description: 'Kubernetes master node',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
@@ -194,7 +194,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'db-server-01',
     status: 'stopped',
     host: 'compute-02',
-    createdAt: 'Jul 15, 2025',
+    createdAt: 'Jul 15, 2025 12:22:26',
     availabilityZone: 'keystone',
     description: 'Database server',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
@@ -209,7 +209,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'gpu-node-01',
     status: 'active',
     host: 'compute-gpu-01',
-    createdAt: 'Jul 10, 2025',
+    createdAt: 'Jul 10, 2025 01:17:01',
     availabilityZone: 'nova',
     description: 'GPU compute node',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
@@ -227,7 +227,7 @@ const defaultInstanceDetail: InstanceDetail = {
   name: 'Unknown Instance',
   status: 'active',
   host: 'compute-03',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 10:32:16',
   availabilityZone: 'nova',
   description: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
@@ -350,7 +350,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.0.0.6',
     macAddress: '10.0.0.2',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2025 08:30:18',
   },
   {
     id: '38hdk456',
@@ -360,7 +360,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.0.0.5',
     macAddress: 'fa:16:3e:12:34:56',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '47jfl789',
@@ -370,7 +370,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:ab:cd:ef',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '56kgm012',
@@ -380,7 +380,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '172.16.0.10',
     macAddress: 'fa:16:3e:11:22:33',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '65lhn345',
@@ -390,7 +390,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.10.0.5',
     macAddress: 'fa:16:3e:44:55:66',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '74mip678',
@@ -400,7 +400,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Down',
     fixedIp: '10.20.0.15',
     macAddress: 'fa:16:3e:77:88:99',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
   {
     id: '83njq901',
@@ -410,7 +410,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.30.0.20',
     macAddress: 'fa:16:3e:aa:bb:cc',
-    createdAt: 'Nov 5, 2025',
+    createdAt: 'Nov 5, 2025 14:12:36',
   },
   {
     id: '92okr234',
@@ -420,7 +420,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.40.0.25',
     macAddress: 'fa:16:3e:dd:ee:ff',
-    createdAt: 'Nov 4, 2025',
+    createdAt: 'Nov 4, 2025 07:59:19',
   },
   {
     id: '01pls567',
@@ -430,7 +430,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Build',
     fixedIp: '10.50.0.30',
     macAddress: 'fa:16:3e:12:34:ab',
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 00:46:02',
   },
   {
     id: '10qmt890',
@@ -440,7 +440,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.60.0.35',
     macAddress: 'fa:16:3e:cd:ef:12',
-    createdAt: 'Nov 2, 2025',
+    createdAt: 'Nov 2, 2025 17:33:45',
   },
   {
     id: '29rnu123',
@@ -450,7 +450,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.70.0.40',
     macAddress: 'fa:16:3e:34:56:78',
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 10:20:28',
   },
   {
     id: '38sov456',
@@ -460,7 +460,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.80.0.45',
     macAddress: 'fa:16:3e:9a:bc:de',
-    createdAt: 'Oct 31, 2025',
+    createdAt: 'Oct 31, 2025 04:50:58',
   },
 ];
 
@@ -471,7 +471,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '10.0.0.11',
     fixedIp: '10.0.0.11',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: '38hdk456',
@@ -479,7 +479,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '192.168.1.100',
     fixedIp: '10.0.0.5',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: '47jfl789',
@@ -487,7 +487,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '172.16.0.50',
     fixedIp: '10.0.0.20',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
   {
     id: '56kgm012',
@@ -495,7 +495,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.10',
     fixedIp: '10.0.1.10',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
     id: '65lhn345',
@@ -503,7 +503,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.20',
     fixedIp: '10.0.1.20',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: '74mip678',
@@ -511,7 +511,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'error',
     floatingIp: '203.0.113.30',
     fixedIp: '10.0.1.30',
-    createdAt: 'Sep 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
   },
   {
     id: '83njq901',
@@ -519,7 +519,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.40',
     fixedIp: '10.0.1.40',
-    createdAt: 'Sep 18, 2025',
+    createdAt: 'Sep 18, 2025 09:01:17',
   },
   {
     id: '92okr234',
@@ -527,7 +527,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.50',
     fixedIp: '10.0.1.50',
-    createdAt: 'Sep 20, 2025',
+    createdAt: 'Sep 20, 2025 23:27:51',
   },
   {
     id: '01pls567',
@@ -535,7 +535,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '203.0.113.60',
     fixedIp: '10.0.1.60',
-    createdAt: 'Sep 22, 2025',
+    createdAt: 'Sep 22, 2025 13:53:25',
   },
   {
     id: '10qmt890',
@@ -543,7 +543,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.70',
     fixedIp: '10.0.1.70',
-    createdAt: 'Sep 25, 2025',
+    createdAt: 'Sep 25, 2025 10:32:16',
   },
   {
     id: '29rnu123',
@@ -551,7 +551,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.80',
     fixedIp: '10.0.1.80',
-    createdAt: 'Sep 28, 2025',
+    createdAt: 'Sep 28, 2025 07:11:07',
   },
   {
     id: '38sov456',
@@ -559,7 +559,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '203.0.113.90',
     fixedIp: '10.0.1.90',
-    createdAt: 'Sep 30, 2025',
+    createdAt: 'Sep 30, 2025 21:37:41',
   },
 ];
 
@@ -570,72 +570,72 @@ const mockNetworkInterfaces: NetworkInterface[] = [
 ];
 
 const mockSecurityGroups: SecurityGroup[] = [
-  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: 'Nov 11, 2025' },
+  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: 'Nov 11, 2025 08:30:18' },
   {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: 'sg-003',
     name: 'web-servers',
     description: 'Web server security group',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: 'sg-004',
     name: 'ssh-access',
     description: 'SSH access security group',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: 'sg-005',
     name: 'db-servers',
     description: 'Database server security group',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: 'sg-006',
     name: 'internal-only',
     description: 'Internal network only',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
   {
     id: 'sg-007',
     name: 'load-balancer',
     description: 'Load balancer security group',
-    createdAt: 'Nov 5, 2025',
+    createdAt: 'Nov 5, 2025 14:12:36',
   },
   {
     id: 'sg-008',
     name: 'monitoring',
     description: 'Monitoring services access',
-    createdAt: 'Nov 4, 2025',
+    createdAt: 'Nov 4, 2025 07:59:19',
   },
   {
     id: 'sg-009',
     name: 'kubernetes',
     description: 'Kubernetes cluster security group',
-    createdAt: 'Nov 3, 2025',
+    createdAt: 'Nov 3, 2025 00:46:02',
   },
   {
     id: 'sg-010',
     name: 'api-gateway',
     description: 'API gateway security group',
-    createdAt: 'Nov 2, 2025',
+    createdAt: 'Nov 2, 2025 17:33:45',
   },
   {
     id: 'sg-011',
     name: 'cache-servers',
     description: 'Cache server security group',
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 10:20:28',
   },
   {
     id: 'sg-012',
     name: 'message-queue',
     description: 'Message queue security group',
-    createdAt: 'Oct 31, 2025',
+    createdAt: 'Oct 31, 2025 04:50:58',
   },
 ];
 
@@ -646,7 +646,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '30GiB',
     diskFormat: 'RAW',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 'snap-002',
@@ -654,7 +654,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '50GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 28, 2025',
+    createdAt: 'Aug 28, 2025 07:11:07',
   },
   {
     id: 'snap-003',
@@ -662,7 +662,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '20GiB',
     diskFormat: 'RAW',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 'snap-004',
@@ -670,7 +670,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '45GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'snap-005',
@@ -678,7 +678,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '15GiB',
     diskFormat: 'RAW',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: 'snap-006',
@@ -686,7 +686,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '35GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   {
     id: 'snap-007',
@@ -694,7 +694,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '60GiB',
     diskFormat: 'RAW',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 14:12:36',
   },
   {
     id: 'snap-008',
@@ -702,7 +702,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'queued',
     size: '25GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
   {
     id: 'snap-009',
@@ -710,7 +710,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '40GiB',
     diskFormat: 'RAW',
-    createdAt: 'Jul 28, 2025',
+    createdAt: 'Jul 28, 2025 07:11:07',
   },
   {
     id: 'snap-010',
@@ -718,7 +718,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '55GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   {
     id: 'snap-011',
@@ -726,7 +726,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '10GiB',
     diskFormat: 'RAW',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
   {
     id: 'snap-012',
@@ -734,7 +734,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '18GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Jul 15, 2025',
+    createdAt: 'Jul 15, 2025 12:22:26',
   },
 ];
 
@@ -1572,6 +1572,7 @@ export function InstanceDetailPage() {
                       flex: 1,
                       minWidth: columnMinWidths.createdAt,
                       sortable: true,
+                      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                     },
                     {
                       key: 'action',
@@ -1840,6 +1841,7 @@ export function InstanceDetailPage() {
                       flex: 1,
                       minWidth: columnMinWidths.createdAt,
                       sortable: true,
+                      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                     },
                     {
                       key: 'action',

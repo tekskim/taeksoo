@@ -114,7 +114,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
     status: 'OK',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 11:32:18',
     podRestarts: 1,
     ready: { current: 1, desired: 1 },
     labels: {
@@ -134,7 +134,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
     status: 'True',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 08:45:22',
     podRestarts: 0,
     ready: { current: 3, desired: 3 },
     labels: {
@@ -157,7 +157,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 11:35:42',
     containers: [
       'container-0',
       'container-1',
@@ -177,7 +177,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.0.0.100:80',
     selector: 'app=daemonset',
     type: 'ClusterIP',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 11:38:05',
   },
 ];
 
@@ -331,6 +331,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',
@@ -487,6 +488,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

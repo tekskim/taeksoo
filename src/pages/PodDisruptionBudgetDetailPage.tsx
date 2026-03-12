@@ -97,16 +97,16 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     name: 'poddisruptionbudgetName',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
     labels: { app: 'web' },
     annotations: { description: 'PDB for web application' },
     minAvailable: '2',
     maxUnavailable: '',
     selector: { app: 'web', tier: 'frontend' },
     matchingPods: [
-      { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2025' },
-      { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2025' },
-      { name: 'web-deployment-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2025' },
+      { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2025 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2025 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2025 10:32:16' },
     ],
     conditions: [
       {
@@ -148,7 +148,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     name: 'web-pdb',
     status: 'True',
     namespace: 'production',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
     labels: { env: 'production' },
     annotations: {},
     minAvailable: '',
@@ -253,6 +253,7 @@ export function PodDisruptionBudgetDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

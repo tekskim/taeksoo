@@ -87,37 +87,37 @@ const mockRolesMap: Record<string, RoleDetail> = {
     name: 'admin',
     description: 'Full administrative access',
     type: 'Built-in',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
   Member: {
     name: 'Member',
     description: 'member role',
     type: 'Custom',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   viewer: {
     name: 'viewer',
     description: 'Read-only access',
     type: 'Built-in',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
   'compute-admin': {
     name: 'compute-admin',
     description: 'Compute administration access',
     type: 'Built-in',
-    createdAt: 'Jun 15, 2025',
+    createdAt: 'Jun 15, 2025 12:22:26',
   },
   'storage-admin': {
     name: 'storage-admin',
     description: 'Storage administration access',
     type: 'Built-in',
-    createdAt: 'Jun 20, 2025',
+    createdAt: 'Jun 20, 2025 23:27:51',
   },
   'network-admin': {
     name: 'network-admin',
     description: 'Network administration access',
     type: 'Built-in',
-    createdAt: 'Jun 25, 2025',
+    createdAt: 'Jun 25, 2025 10:32:16',
   },
 };
 
@@ -209,17 +209,29 @@ const mockAttachedUserGroups: AttachedUserGroup[] = [
     name: 'dev-admin-group',
     type: 'Built-in',
     userCount: 130,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
-  { id: 'ug-002', name: 'ops-team', type: 'Custom', userCount: 45, createdAt: 'Aug 15, 2025' },
+  {
+    id: 'ug-002',
+    name: 'ops-team',
+    type: 'Custom',
+    userCount: 45,
+    createdAt: 'Aug 15, 2025 12:22:26',
+  },
   {
     id: 'ug-003',
     name: 'security-group',
     type: 'Built-in',
     userCount: 22,
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
-  { id: 'ug-004', name: 'data-analysts', type: 'Custom', userCount: 67, createdAt: 'Jun 10, 2025' },
+  {
+    id: 'ug-004',
+    name: 'data-analysts',
+    type: 'Custom',
+    userCount: 67,
+    createdAt: 'Jun 10, 2025 01:17:01',
+  },
 ];
 
 const mockAttachedUsers: AttachedUser[] = [
@@ -228,35 +240,35 @@ const mockAttachedUsers: AttachedUser[] = [
     name: 'thaki-kim',
     type: 'Built-in',
     lastSignIn: 'Dec 10, 2025',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'u-002',
     name: 'alex.johnson',
     type: 'Custom',
     lastSignIn: 'Dec 9, 2025',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: 'u-003',
     name: 'maria.garcia',
     type: 'Built-in',
     lastSignIn: 'Dec 8, 2025',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
   {
     id: 'u-004',
     name: 'john.doe',
     type: 'Custom',
     lastSignIn: 'Dec 7, 2025',
-    createdAt: 'Jun 10, 2025',
+    createdAt: 'Jun 10, 2025 01:17:01',
   },
   {
     id: 'u-005',
     name: 'emma.wilson',
     type: 'Built-in',
     lastSignIn: 'Dec 5, 2025',
-    createdAt: 'May 5, 2025',
+    createdAt: 'May 5, 2025 14:12:36',
   },
 ];
 
@@ -553,6 +565,7 @@ export default function IAMRoleDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 
@@ -592,6 +605,7 @@ export default function IAMRoleDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 
@@ -652,13 +666,26 @@ export default function IAMRoleDetailPage() {
               <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
                 Delete
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              <ContextMenu
+                items={[
+                  {
+                    id: 'manage-policies',
+                    label: 'Manage policies',
+                    onClick: () => console.log('Manage policies'),
+                  },
+                  { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate') },
+                ]}
+                trigger="click"
+                align="right"
               >
-                More Actions
-              </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+                >
+                  More Actions
+                </Button>
+              </ContextMenu>
             </HStack>
 
             {/* Info Cards */}

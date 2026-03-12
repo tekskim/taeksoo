@@ -86,7 +86,7 @@ const mockSubnetDetail: SubnetDetail = {
   name: 'subnet-1',
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 10:32:16',
   // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,

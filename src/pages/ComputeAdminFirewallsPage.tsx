@@ -105,7 +105,7 @@ const mockFirewalls: Firewall[] = Array.from({ length: 25 }, (_, i) => ({
         ]
       : [],
   adminState: i % 5 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
 }));
 
 const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i) => ({
@@ -416,6 +416,7 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',
@@ -730,7 +731,12 @@ export default function ComputeAdminFirewallsPage() {
                   </button>
                 </div>
                 <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedFirewalls.length === 0}
+                >
                   Delete
                 </Button>
               </div>
@@ -781,7 +787,12 @@ export default function ComputeAdminFirewallsPage() {
                   </button>
                 </div>
                 <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedPolicies.length === 0}
+                >
                   Delete
                 </Button>
               </div>
@@ -832,7 +843,12 @@ export default function ComputeAdminFirewallsPage() {
                   </button>
                 </div>
                 <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedRules.length === 0}
+                >
                   Delete
                 </Button>
               </div>

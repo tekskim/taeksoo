@@ -83,61 +83,61 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
     id: 'sg-001',
     name: 'sg-01',
     description: 'Web server access group',
-    createdAt: 'Jan 15, 2024',
+    createdAt: 'Jan 15, 2024 12:22:26',
   },
   'sg-002': {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Jan 10, 2024',
+    createdAt: 'Jan 10, 2024 01:17:01',
   },
   'sg-003': {
     id: 'sg-003',
     name: 'db-sg',
     description: 'Database access group',
-    createdAt: 'Feb 1, 2024',
+    createdAt: 'Feb 1, 2024 10:20:28',
   },
   'sg-004': {
     id: 'sg-004',
     name: 'app-sg',
     description: 'Application server security group',
-    createdAt: 'Feb 15, 2024',
+    createdAt: 'Feb 15, 2024 12:22:26',
   },
   'sg-005': {
     id: 'sg-005',
     name: 'lb-sg',
     description: 'Load balancer security group',
-    createdAt: 'Mar 1, 2024',
+    createdAt: 'Mar 1, 2024 10:20:28',
   },
   'sg-006': {
     id: 'sg-006',
     name: 'cache-sg',
     description: 'Cache server access group',
-    createdAt: 'Mar 10, 2024',
+    createdAt: 'Mar 10, 2024 01:17:01',
   },
   'sg-007': {
     id: 'sg-007',
     name: 'monitor-sg',
     description: 'Monitoring access group',
-    createdAt: 'Apr 1, 2024',
+    createdAt: 'Apr 1, 2024 10:20:28',
   },
   'sg-008': {
     id: 'sg-008',
     name: 'vpn-sg',
     description: 'VPN access group',
-    createdAt: 'Apr 15, 2024',
+    createdAt: 'Apr 15, 2024 12:22:26',
   },
   'sg-009': {
     id: 'sg-009',
     name: 'admin-sg',
     description: 'Admin access group',
-    createdAt: 'May 1, 2024',
+    createdAt: 'May 1, 2024 10:20:28',
   },
   'sg-010': {
     id: 'sg-010',
     name: 'test-sg',
     description: 'Test environment security group',
-    createdAt: 'May 10, 2024',
+    createdAt: 'May 10, 2024 01:17:01',
   },
 };
 
@@ -525,17 +525,16 @@ export default function SecurityGroupDetailPage() {
                           fullWidth
                         />
                       </div>
-                      <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                        <IconDownload
-                          size={14}
-                          stroke={1.5}
-                          className="text-[var(--color-text-default)]"
-                        />
-                      </button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
                     </div>
                     <div className="w-px h-4 bg-[var(--color-border-default)]" />
                     <Button
-                      variant="secondary"
+                      variant="muted"
                       size="sm"
                       leftIcon={<IconTrash size={12} />}
                       disabled={selectedRules.length === 0}

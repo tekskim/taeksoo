@@ -77,7 +77,7 @@ const mockSubnetDetail: SubnetDetail = {
   name: 'subnet-1',
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
-  createdAt: 'Jul 25, 2025',
+  createdAt: 'Jul 25, 2025 10:32:16',
   // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,
@@ -124,7 +124,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   floatingIp: i % 3 === 0 ? '' : '-',
   macAddress: 'fa:16:3e:77:62:19',
   adminState: i % 7 === 0 ? 'Down' : 'Up',
-  createdAt: 'Dec 15, 2025',
+  createdAt: 'Dec 15, 2025 12:22:26',
 }));
 
 /* ----------------------------------------
@@ -264,9 +264,9 @@ export default function SubnetDetailPage() {
             >
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -319,6 +319,7 @@ export default function SubnetDetailPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

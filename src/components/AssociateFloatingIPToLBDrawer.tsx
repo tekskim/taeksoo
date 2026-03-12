@@ -49,7 +49,7 @@ const defaultFloatingIPs: FloatingIPItem[] = Array.from({ length: 115 }, (_, i) 
   floatingIp: '10.0.0.5',
   networkId: `45ghj${567 + i}`,
   networkName: 'net-02',
-  createdAt: 'Aug 23, 2025',
+  createdAt: 'Aug 23, 2025 20:06:42',
 }));
 
 const ITEMS_PER_PAGE = 5;
@@ -177,6 +177,7 @@ export function AssociateFloatingIPToLBDrawer({
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
   ];
 

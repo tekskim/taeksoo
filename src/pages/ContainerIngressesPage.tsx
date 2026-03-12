@@ -64,7 +64,7 @@ const ingressesData: IngressRow[] = [
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
     default: '-',
     ingressClass: 'traefik',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -74,7 +74,7 @@ const ingressesData: IngressRow[] = [
     target: ['api → 8080/TCP'],
     default: '-',
     ingressClass: 'nginx',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -84,7 +84,7 @@ const ingressesData: IngressRow[] = [
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
     default: 'backend-service:80',
     ingressClass: 'traefik',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '4',
@@ -94,7 +94,7 @@ const ingressesData: IngressRow[] = [
     target: ['app → 3000/TCP'],
     default: '-',
     ingressClass: 'traefik',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
 ];
 
@@ -220,6 +220,7 @@ export function ContainerIngressesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

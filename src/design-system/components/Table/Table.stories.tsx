@@ -22,7 +22,7 @@ const sampleUsers: User[] = [
     email: 'john@example.com',
     role: 'Admin',
     status: 'active',
-    createdAt: 'Jan 15, 2024',
+    createdAt: 'Jan 15, 2024 12:22:26',
   },
   {
     id: '2',
@@ -30,7 +30,7 @@ const sampleUsers: User[] = [
     email: 'jane@example.com',
     role: 'Editor',
     status: 'active',
-    createdAt: 'Jan 20, 2024',
+    createdAt: 'Jan 20, 2024 23:27:51',
   },
   {
     id: '3',
@@ -38,7 +38,7 @@ const sampleUsers: User[] = [
     email: 'bob@example.com',
     role: 'Viewer',
     status: 'inactive',
-    createdAt: 'Feb 1, 2024',
+    createdAt: 'Feb 1, 2024 10:20:28',
   },
   {
     id: '4',
@@ -46,7 +46,7 @@ const sampleUsers: User[] = [
     email: 'alice@example.com',
     role: 'Editor',
     status: 'pending',
-    createdAt: 'Feb 10, 2024',
+    createdAt: 'Feb 10, 2024 01:17:01',
   },
   {
     id: '5',
@@ -54,7 +54,7 @@ const sampleUsers: User[] = [
     email: 'charlie@example.com',
     role: 'Viewer',
     status: 'active',
-    createdAt: 'Feb 15, 2024',
+    createdAt: 'Feb 15, 2024 12:22:26',
   },
 ];
 
@@ -274,7 +274,7 @@ export const Scrollable: Story = {
       email: `user${i + 1}@example.com`,
       role: i % 3 === 0 ? 'Admin' : i % 3 === 1 ? 'Editor' : 'Viewer',
       status: (i % 3 === 0 ? 'active' : i % 3 === 1 ? 'inactive' : 'pending') as User['status'],
-      createdAt: 'Jan 1, 2024',
+      createdAt: 'Jan 1, 2024 10:20:28',
     }));
 
     return (

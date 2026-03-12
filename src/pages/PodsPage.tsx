@@ -63,7 +63,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 1,
     ip: '10.76.0.1',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
@@ -74,7 +74,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 0,
     ip: '10.76.0.12',
-    createdAt: 'Nov 9, 2025',
+    createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
     id: '3',
@@ -85,7 +85,7 @@ const podsData: PodRow[] = [
     ready: '0/1',
     restarts: 0,
     ip: '-',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '4',
@@ -96,7 +96,7 @@ const podsData: PodRow[] = [
     ready: '0/1',
     restarts: 5,
     ip: '10.76.0.45',
-    createdAt: 'Nov 10, 2025',
+    createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '5',
@@ -107,7 +107,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 0,
     ip: '10.76.0.23',
-    createdAt: 'Nov 8, 2025',
+    createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
     id: '6',
@@ -118,7 +118,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 1,
     ip: '10.76.0.34',
-    createdAt: 'Nov 7, 2025',
+    createdAt: 'Nov 7, 2025 04:38:10',
   },
   {
     id: '7',
@@ -129,7 +129,7 @@ const podsData: PodRow[] = [
     ready: '0/1',
     restarts: 0,
     ip: '10.76.0.56',
-    createdAt: 'Nov 6, 2025',
+    createdAt: 'Nov 6, 2025 21:25:53',
   },
   {
     id: '8',
@@ -140,7 +140,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 2,
     ip: '10.76.0.67',
-    createdAt: 'Nov 5, 2025',
+    createdAt: 'Nov 5, 2025 14:12:36',
   },
 ];
 
@@ -309,6 +309,7 @@ export function PodsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

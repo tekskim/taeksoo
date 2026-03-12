@@ -24,7 +24,13 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconChevronDown, IconSettings } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconTrash,
+  IconChevronDown,
+  IconSettings,
+  IconUnlink,
+} from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -67,79 +73,79 @@ const mockUserGroupsMap: Record<string, UserGroupDetail> = {
     name: 'dev-admin-group',
     description: 'Development team administrators',
     type: 'Custom',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   'ops-team': {
     name: 'ops-team',
     description: 'Operations team',
     type: 'Custom',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   'qa-team': {
     name: 'qa-team',
     description: 'Quality assurance team',
     type: 'Custom',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
   },
   viewers: {
     name: 'viewers',
     description: '-',
     type: 'Built-in',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   administrators: {
     name: 'administrators',
     description: 'System administrators',
     type: 'Built-in',
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
   developers: {
     name: 'developers',
     description: 'Development team',
     type: 'Custom',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   'security-team': {
     name: 'security-team',
     description: 'Security operations',
     type: 'Custom',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
   'support-team': {
     name: 'support-team',
     description: 'Customer support team',
     type: 'Custom',
-    createdAt: 'Jul 10, 2025',
+    createdAt: 'Jul 10, 2025 01:17:01',
   },
   'data-analysts': {
     name: 'data-analysts',
     description: 'Data analysis team',
     type: 'Custom',
-    createdAt: 'Jun 25, 2025',
+    createdAt: 'Jun 25, 2025 10:32:16',
   },
   'external-users': {
     name: 'external-users',
     description: 'External partners',
     type: 'Custom',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:20:28',
   },
   MemberGroup: {
     name: 'MemberGroup',
     description: 'member group',
     type: 'Custom',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   'viewer-group': {
     name: 'viewer-group',
     description: 'Read-only access group',
     type: 'Custom',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   'network-admin-group': {
     name: 'network-admin-group',
     description: 'Network administrators group',
     type: 'Built-in',
-    createdAt: 'Jun 15, 2025',
+    createdAt: 'Jun 15, 2025 12:22:26',
   },
 };
 
@@ -150,7 +156,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     lastSignIn: 'Sep 12, 2025',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'u-002',
@@ -158,7 +164,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 10, 2025',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: 'u-003',
@@ -166,7 +172,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+1)',
     lastSignIn: 'Sep 11, 2025',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'u-004',
@@ -174,7 +180,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'shutoff',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 5, 2025',
-    createdAt: 'Jul 1, 2025',
+    createdAt: 'Jul 1, 2025 10:20:28',
   },
   {
     id: 'u-005',
@@ -182,7 +188,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+3)',
     lastSignIn: 'Sep 12, 2025',
-    createdAt: 'Sep 1, 2025',
+    createdAt: 'Sep 1, 2025 10:20:28',
   },
   {
     id: 'u-006',
@@ -190,7 +196,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 8, 2025',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 14:12:36',
   },
   {
     id: 'u-007',
@@ -198,7 +204,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'error',
     userGroups: 'dev-admin-group (+1)',
     lastSignIn: 'Aug 30, 2025',
-    createdAt: 'Jul 15, 2025',
+    createdAt: 'Jul 15, 2025 12:22:26',
   },
   {
     id: 'u-008',
@@ -206,7 +212,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 11, 2025',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 'u-009',
@@ -214,7 +220,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     lastSignIn: 'Sep 9, 2025',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   {
     id: 'u-010',
@@ -222,7 +228,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 7, 2025',
-    createdAt: 'Jul 20, 2025',
+    createdAt: 'Jul 20, 2025 23:27:51',
   },
   {
     id: 'u-011',
@@ -230,7 +236,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'shutoff',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Aug 28, 2025',
-    createdAt: 'Jun 30, 2025',
+    createdAt: 'Jun 30, 2025 21:37:41',
   },
   {
     id: 'u-012',
@@ -238,7 +244,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+1)',
     lastSignIn: 'Sep 10, 2025',
-    createdAt: 'Aug 18, 2025',
+    createdAt: 'Aug 18, 2025 09:01:17',
   },
   {
     id: 'u-013',
@@ -246,7 +252,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 6, 2025',
-    createdAt: 'Jul 25, 2025',
+    createdAt: 'Jul 25, 2025 10:32:16',
   },
   {
     id: 'u-014',
@@ -254,7 +260,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group (+2)',
     lastSignIn: 'Sep 11, 2025',
-    createdAt: 'Aug 22, 2025',
+    createdAt: 'Aug 22, 2025 13:53:25',
   },
   {
     id: 'u-015',
@@ -262,7 +268,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 8, 2025',
-    createdAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
   {
     id: 'u-016',
@@ -270,7 +276,7 @@ const mockGroupUsers: GroupUser[] = [
     status: 'active',
     userGroups: 'dev-admin-group',
     lastSignIn: 'Sep 12, 2025',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
 ];
 
@@ -282,7 +288,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'ReadCompute (+2)',
     userGroupCount: 13,
     userCount: 25,
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'r-002',
@@ -291,7 +297,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'ComputeFullAccess (+2)',
     userGroupCount: 8,
     userCount: 15,
-    createdAt: 'Jan 15, 2025',
+    createdAt: 'Jan 15, 2025 12:22:26',
   },
   {
     id: 'r-003',
@@ -300,7 +306,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'StorageReadOnly',
     userGroupCount: 5,
     userCount: 12,
-    createdAt: 'Jan 20, 2025',
+    createdAt: 'Jan 20, 2025 23:27:51',
   },
   {
     id: 'r-004',
@@ -309,7 +315,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'NetworkFullAccess (+1)',
     userGroupCount: 3,
     userCount: 8,
-    createdAt: 'Feb 1, 2025',
+    createdAt: 'Feb 1, 2025 10:20:28',
   },
   {
     id: 'r-005',
@@ -318,7 +324,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'DevPolicy',
     userGroupCount: 2,
     userCount: 10,
-    createdAt: 'Jun 10, 2025',
+    createdAt: 'Jun 10, 2025 01:17:01',
   },
   {
     id: 'r-006',
@@ -327,7 +333,7 @@ const mockGroupRoles: GroupRole[] = [
     policies: 'IAMReadOnly',
     userGroupCount: 4,
     userCount: 7,
-    createdAt: 'Mar 15, 2025',
+    createdAt: 'Mar 15, 2025 12:22:26',
   },
 ];
 
@@ -476,6 +482,7 @@ export default function IAMUserGroupDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',
@@ -547,6 +554,7 @@ export default function IAMUserGroupDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'id',
@@ -658,13 +666,30 @@ export default function IAMUserGroupDetailPage() {
               <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
                 Delete
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              <ContextMenu
+                items={[
+                  {
+                    id: 'manage-roles',
+                    label: 'Manage roles',
+                    onClick: () => console.log('Manage roles'),
+                  },
+                  {
+                    id: 'manage-users',
+                    label: 'Manage users',
+                    onClick: () => console.log('Manage users'),
+                  },
+                ]}
+                trigger="click"
+                align="right"
               >
-                More Actions
-              </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+                >
+                  More Actions
+                </Button>
+              </ContextMenu>
             </HStack>
 
             {/* Info Cards */}
@@ -749,7 +774,7 @@ export default function IAMUserGroupDetailPage() {
                   </HStack>
 
                   {/* Actions */}
-                  <Button variant="muted" size="sm" disabled>
+                  <Button variant="muted" size="sm" leftIcon={<IconUnlink size={12} />} disabled>
                     Detach
                   </Button>
                 </HStack>

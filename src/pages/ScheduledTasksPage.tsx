@@ -66,7 +66,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 10, 2025 02:00',
     nextExecution: 'Nov 11, 2025 02:00',
     createdBy: 'admin',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 09:23:41',
   },
   {
     id: 'task-002',
@@ -78,7 +78,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 9, 2025 04:00',
     nextExecution: 'Nov 16, 2025 04:00',
     createdBy: 'devops',
-    createdAt: 'Sep 20, 2025',
+    createdAt: 'Sep 20, 2025 14:07:22',
   },
   {
     id: 'task-003',
@@ -90,7 +90,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 10, 2025 12:00',
     nextExecution: 'Nov 10, 2025 18:00',
     createdBy: 'system',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 11:45:33',
   },
   {
     id: 'task-004',
@@ -102,7 +102,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 8, 2025 20:00',
     nextExecution: '-',
     createdBy: 'admin',
-    createdAt: 'Oct 15, 2025',
+    createdAt: 'Oct 15, 2025 16:52:08',
   },
   {
     id: 'task-005',
@@ -114,7 +114,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 10, 2025 01:00',
     nextExecution: 'Nov 11, 2025 01:00',
     createdBy: 'admin',
-    createdAt: 'Jul 1, 2025',
+    createdAt: 'Jul 1, 2025 08:30:15',
   },
   {
     id: 'task-006',
@@ -126,7 +126,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 10, 2025 00:00',
     nextExecution: 'Nov 10, 2025 12:00',
     createdBy: 'ml-team',
-    createdAt: 'Nov 1, 2025',
+    createdAt: 'Nov 1, 2025 13:19:44',
   },
   {
     id: 'task-007',
@@ -138,7 +138,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 10, 2025 03:00',
     nextExecution: 'Nov 11, 2025 03:00',
     createdBy: 'system',
-    createdAt: 'Jun 1, 2025',
+    createdAt: 'Jun 1, 2025 10:41:27',
   },
   {
     id: 'task-008',
@@ -150,7 +150,7 @@ const mockTasks: ScheduledTask[] = [
     lastExecution: 'Nov 10, 2025 08:00',
     nextExecution: 'Nov 11, 2025 08:00',
     createdBy: 'admin',
-    createdAt: 'Oct 15, 2025',
+    createdAt: 'Oct 15, 2025 16:52:08',
   },
 ];
 

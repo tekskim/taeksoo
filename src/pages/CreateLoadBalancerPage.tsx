@@ -133,7 +133,7 @@ const mockCertificates: CertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '38rhk345',
@@ -144,7 +144,7 @@ const mockCertificates: CertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '47sil456',
@@ -155,7 +155,7 @@ const mockCertificates: CertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '56tjm567',
@@ -166,7 +166,7 @@ const mockCertificates: CertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '65ukn678',
@@ -177,7 +177,7 @@ const mockCertificates: CertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
 ];
 
@@ -203,7 +203,7 @@ const mockCaCertificates: CaCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '38rhk345',
@@ -213,7 +213,7 @@ const mockCaCertificates: CaCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '47sil456',
@@ -223,7 +223,7 @@ const mockCaCertificates: CaCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '56tjm567',
@@ -233,7 +233,7 @@ const mockCaCertificates: CaCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '65ukn678',
@@ -243,7 +243,7 @@ const mockCaCertificates: CaCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
 ];
 
@@ -271,7 +271,7 @@ const mockSniCertificates: SniCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '38rhk345',
@@ -282,7 +282,7 @@ const mockSniCertificates: SniCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '47sil456',
@@ -293,7 +293,7 @@ const mockSniCertificates: SniCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '56tjm567',
@@ -304,7 +304,7 @@ const mockSniCertificates: SniCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: '65ukn678',
@@ -315,7 +315,7 @@ const mockSniCertificates: SniCertificateRow[] = [
     listenerId: '294u92s2',
     listenerCount: 3,
     expiresAt: 'Dec 31, 2025',
-    createdAt: 'Oct 1, 2025',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
 ];
 
@@ -891,6 +891,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Created at',
         flex: 1,
         minWidth: columnMinWidths.createdAt,
+        render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
       },
     ],
     [selectedCertificate]
@@ -971,6 +972,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Created at',
         flex: 1,
         minWidth: columnMinWidths.createdAt,
+        render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
       },
     ],
     [selectedCaCertificate]
@@ -1090,6 +1092,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Created at',
         flex: 1,
         minWidth: columnMinWidths.createdAt,
+        render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
       },
     ],
     [selectedSniCertificates]

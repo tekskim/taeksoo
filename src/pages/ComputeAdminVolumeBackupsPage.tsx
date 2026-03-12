@@ -65,7 +65,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
     backupMode: 'Full Backup',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 10:15:33',
     status: 'active',
   },
   {
@@ -77,7 +77,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
     backupMode: 'Incremental',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 14:28:47',
     status: 'active',
   },
   {
@@ -89,7 +89,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
     backupMode: 'Full Backup',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 08:52:19',
     status: 'active',
   },
   {
@@ -101,7 +101,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
     backupMode: 'Incremental',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 16:41:04',
     status: 'creating',
   },
   {
@@ -113,7 +113,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 30, 2025',
+    createdAt: 'Aug 30, 2025 11:33:26',
     status: 'active',
   },
   {
@@ -125,7 +125,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 09:17:52',
     status: 'restoring',
   },
   {
@@ -137,7 +137,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
     backupMode: 'Incremental',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 13:45:38',
     status: 'error',
   },
   {
@@ -149,7 +149,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 07:29:14',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
     backupMode: 'Full Backup',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 15:56:41',
     status: 'active',
   },
   {
@@ -173,7 +173,7 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
     backupMode: 'Incremental',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 17:22:09',
     status: 'deleting',
   },
 ];
@@ -413,6 +413,7 @@ export function ComputeAdminVolumeBackupsPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

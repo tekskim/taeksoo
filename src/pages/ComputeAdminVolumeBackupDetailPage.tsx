@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -51,7 +51,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'db-data-backup',
     status: 'available',
     size: '1500GiB',
-    createdAt: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025 15:43:35',
     description: 'Database data backup',
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
@@ -64,7 +64,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'app-storage-backup',
     status: 'available',
     size: '500GiB',
-    createdAt: 'Sep 10, 2025',
+    createdAt: 'Sep 10, 2025 01:17:01',
     description: 'Application storage backup',
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
@@ -77,7 +77,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'backup-vol-backup',
     status: 'available',
     size: '2000GiB',
-    createdAt: 'Sep 8, 2025',
+    createdAt: 'Sep 8, 2025 11:51:27',
     description: 'Backup volume snapshot',
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
@@ -90,7 +90,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'log-storage-backup',
     status: 'creating',
     size: '100GiB',
-    createdAt: 'Sep 5, 2025',
+    createdAt: 'Sep 5, 2025 14:12:36',
     description: 'Log storage backup',
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
@@ -103,7 +103,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'cache-vol-backup',
     status: 'available',
     size: '256GiB',
-    createdAt: 'Aug 30, 2025',
+    createdAt: 'Aug 30, 2025 21:37:41',
     description: 'Cache volume backup',
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
@@ -116,7 +116,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'media-storage-backup',
     status: 'restoring',
     size: '5000GiB',
-    createdAt: 'Aug 25, 2025',
+    createdAt: 'Aug 25, 2025 10:32:16',
     description: 'Media storage backup',
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
@@ -129,7 +129,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'temp-vol-backup',
     status: 'error',
     size: '50GiB',
-    createdAt: 'Aug 20, 2025',
+    createdAt: 'Aug 20, 2025 23:27:51',
     description: 'Temporary volume backup',
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
@@ -142,7 +142,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'ml-data-backup',
     status: 'available',
     size: '1000GiB',
-    createdAt: 'Aug 15, 2025',
+    createdAt: 'Aug 15, 2025 12:22:26',
     description: 'ML data backup',
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
@@ -155,7 +155,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'archive-vol-backup',
     status: 'available',
     size: '10000GiB',
-    createdAt: 'Aug 10, 2025',
+    createdAt: 'Aug 10, 2025 01:17:01',
     description: 'Archive volume backup',
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
@@ -168,7 +168,7 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     name: 'boot-vol-backup',
     status: 'deleting',
     size: '100GiB',
-    createdAt: 'Aug 5, 2025',
+    createdAt: 'Aug 5, 2025 14:12:36',
     description: 'Boot volume backup',
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
@@ -349,20 +349,12 @@ export function ComputeAdminVolumeBackupDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Source" />
                   <SectionCard.Content>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Volume
-                        </span>
-                        <Link
-                          to={`/compute-admin/volumes/${backup.sourceVolumeId}`}
-                          className="inline-flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                        >
-                          {backup.sourceVolume}
-                        </Link>
-                      </div>
-                    </div>
+                    <SectionCard.DataRow
+                      label="Volume"
+                      value={backup.sourceVolume}
+                      isLink
+                      linkHref={`/compute-admin/volumes/${backup.sourceVolumeId}`}
+                    />
                   </SectionCard.Content>
                 </SectionCard>
 
