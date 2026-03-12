@@ -221,7 +221,8 @@ export function CloudBuilderConsolePage() {
     setStatusModalOpen(false);
     setStatusModal(null);
     setDisableReason('');
-    setSearchParams({}, { replace: true });
+    const currentTab = searchParams.get('tab');
+    setSearchParams(currentTab ? { tab: currentTab } : {}, { replace: true });
   }, [config.rows, config.slug]);
 
   const activeTab = useMemo(() => {
