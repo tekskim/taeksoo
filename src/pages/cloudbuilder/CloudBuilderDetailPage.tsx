@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Badge,
   Button,
@@ -82,6 +82,21 @@ function pad2(n: number) {
   return String(n).padStart(2, '0');
 }
 
+const MONTH_ABBR = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const;
+
 function seededDateTime(seed: string) {
   const base = stableInt(seed);
   const yyyy = 2025;
@@ -90,7 +105,7 @@ function seededDateTime(seed: string) {
   const hh = base % 24;
   const min = (base >>> 8) % 60 || 0;
   const sec = (base >>> 16) % 60 || 0;
-  return `${yyyy}-${pad2(mm)}-${pad2(dd)} ${pad2(hh)}:${pad2(min)}:${pad2(sec)}`;
+  return `${MONTH_ABBR[mm - 1]} ${pad2(dd)}, ${yyyy} ${pad2(hh)}:${pad2(min)}:${pad2(sec)}`;
 }
 
 function toneToBadgeTheme(tone: 'success' | 'neutral' | 'blue' | 'warning' | 'danger') {
@@ -171,9 +186,10 @@ export function CloudBuilderDetailPage() {
   }, [row, updateActiveTabLabel]);
 
   const isNetworkAgent = slug === 'network-agents';
-  const [activeDetailTab, setActiveDetailTab] = useState<
-    'details' | 'disk' | 'configuration' | 'bmc-info'
-  >('details');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const defaultTab = isNetworkAgent ? 'basic-information' : 'details';
+  const activeDetailTab = searchParams.get('tab') || defaultTab;
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   const [serviceStatus, setServiceStatus] = useState<string>(row?.serviceStatus ?? 'Enabled');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -185,8 +201,11 @@ export function CloudBuilderDetailPage() {
     setStatusModalOpen(false);
     setNextStatus('Disabled');
     setDisableReason('');
-    setActiveDetailTab('details');
-  }, [slug, id, row?.serviceStatus]);
+    const currentTab = searchParams.get('tab');
+    if (!currentTab) {
+      setSearchParams({ tab: isNetworkAgent ? 'basic-information' : 'details' }, { replace: true });
+    }
+  }, [slug, id, row?.serviceStatus, isNetworkAgent]);
 
   const networkAgentMeta = useMemo(() => {
     if (!isNetworkAgent) return null;
@@ -452,7 +471,7 @@ export function CloudBuilderDetailPage() {
 
   return (
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-      <VStack gap={4} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {isNetworkAgent ? (
           <DetailHeader>
             <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
@@ -477,15 +496,8 @@ export function CloudBuilderDetailPage() {
             <DetailHeader.InfoGrid className="flex-wrap">
               <DetailHeader.InfoCard
                 label="Service Status"
-                value={
-                  <Badge
-                    theme={(serviceStatus || 'Enabled') === 'Enabled' ? 'green' : 'gray'}
-                    type="subtle"
-                    size="sm"
-                  >
-                    {serviceStatus || 'Enabled'}
-                  </Badge>
-                }
+                value={serviceStatus || 'Enabled'}
+                status={(serviceStatus || 'Enabled') === 'Enabled' ? 'enabled' : 'disabled'}
               />
               <DetailHeader.InfoCard
                 label="Service State"
@@ -555,46 +567,62 @@ export function CloudBuilderDetailPage() {
 
         {isNetworkAgent ? (
           <>
-            <SectionCard>
-              <SectionCard.Header title="Basic information" />
-              <SectionCard.Content>
-                <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
-                <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
-                <SectionCard.DataRow
-                  label="Availability zone"
-                  value={row?.availabilityZone ?? '-'}
-                />
-                <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
-                <SectionCard.DataRow
-                  label="Resources synced"
-                  value={networkAgentMeta?.resourcesSynced ?? '-'}
-                />
-                <SectionCard.DataRow
-                  label="Heartbeat timestamp"
-                  value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
-                />
-                <SectionCard.DataRow
-                  label="Started at"
-                  value={networkAgentMeta?.startedAt ?? '-'}
-                />
-                <SectionCard.DataRow
-                  label="Description"
-                  value={networkAgentMeta?.description ?? '-'}
-                />
-              </SectionCard.Content>
-            </SectionCard>
+            <Tabs
+              value={activeDetailTab}
+              onChange={(v) => setActiveDetailTab(v as any)}
+              variant="underline"
+              size="sm"
+            >
+              <TabList>
+                <Tab value="basic-information">Basic information</Tab>
+                <Tab value="configuration">Configuration</Tab>
+              </TabList>
 
-            <SectionCard>
-              <SectionCard.Header
-                title="Configuration"
-                actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
-              />
-              <SectionCard.Content gap={3}>
-                <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                  {networkAgentMeta?.configurationText ?? ''}
-                </pre>
-              </SectionCard.Content>
-            </SectionCard>
+              <TabPanel value="basic-information" className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
+                    <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
+                    <SectionCard.DataRow
+                      label="Availability zone"
+                      value={row?.availabilityZone ?? '-'}
+                    />
+                    <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
+                    <SectionCard.DataRow
+                      label="Resources synced"
+                      value={networkAgentMeta?.resourcesSynced ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Heartbeat timestamp"
+                      value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Started at"
+                      value={networkAgentMeta?.startedAt ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Description"
+                      value={networkAgentMeta?.description ?? '-'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </TabPanel>
+
+              <TabPanel value="configuration" className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Configuration"
+                    actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
+                  />
+                  <SectionCard.Content gap={3}>
+                    <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
+                      {networkAgentMeta?.configurationText ?? ''}
+                    </pre>
+                  </SectionCard.Content>
+                </SectionCard>
+              </TabPanel>
+            </Tabs>
 
             <Modal
               isOpen={statusModalOpen}
@@ -672,7 +700,6 @@ export function CloudBuilderDetailPage() {
               <Tab value="details">Details</Tab>
               {isServer ? <Tab value="disk">Disk</Tab> : null}
               {isServer ? <Tab value="bmc-info">BMC info</Tab> : null}
-              {isNetworkAgent ? <Tab value="configuration">Configuration</Tab> : null}
             </TabList>
 
             <TabPanel value="details" className="pt-4">
@@ -843,24 +870,6 @@ export function CloudBuilderDetailPage() {
                     </SectionCard>
                   </div>
                 </div>
-              </TabPanel>
-            ) : null}
-
-            {isNetworkAgent ? (
-              <TabPanel value="configuration" className="pt-4">
-                <VStack gap={6}>
-                  <SectionCard>
-                    <SectionCard.Header
-                      title="Configuration"
-                      actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
-                    />
-                    <SectionCard.Content gap={3}>
-                      <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                        {networkAgentMeta?.configurationText ?? ''}
-                      </pre>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </VStack>
               </TabPanel>
             ) : null}
           </Tabs>
