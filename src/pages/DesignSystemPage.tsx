@@ -15306,9 +15306,10 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div
-                          className="size-4 rounded-full border border-[var(--color-text-muted)] animate-spin"
-                          style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+                        <IconProgress
+                          size={16}
+                          stroke={1.5}
+                          className="text-[var(--color-text-muted)]"
                         />
                         <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
                           Processing
