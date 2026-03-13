@@ -638,9 +638,48 @@ export function CloudBuilderConsolePage() {
     </>
   );
 
+  const shellSidebar = <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />;
+  const shellSidebarWidth = sidebarOpen ? 200 : 0;
+  const shellTabBar = (
+    <TabBar
+      tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+      activeTab={shellActiveTabId}
+      onTabChange={selectTab}
+      onTabClose={closeTab}
+      onTabAdd={addNewTab}
+      onTabReorder={moveTab}
+      showAddButton={true}
+      showWindowControls={true}
+      onWindowClose={() => navigate('/')}
+    />
+  );
+  const shellTopBar = (
+    <TopBar
+      showSidebarToggle={!sidebarOpen}
+      onSidebarToggle={openSidebar}
+      showNavigation={true}
+      onBack={() => window.history.back()}
+      onForward={() => window.history.forward()}
+      breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+      actions={
+        <TopBarAction
+          icon={<IconBell size={16} stroke={1.5} />}
+          aria-label="Notifications"
+          badge={true}
+        />
+      }
+    />
+  );
+
   if (isFigmaCapture) {
     return (
-      <FigmaCaptureWrapper>
+      <FigmaCaptureWrapper
+        sidebar={shellSidebar}
+        sidebarWidth={shellSidebarWidth}
+        tabBar={shellTabBar}
+        topBar={shellTopBar}
+        contentClassName="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]"
+      >
         {pageContent}
         {modals}
       </FigmaCaptureWrapper>
@@ -649,38 +688,10 @@ export function CloudBuilderConsolePage() {
 
   return (
     <PageShell
-      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
-      sidebarWidth={sidebarOpen ? 200 : 0}
-      tabBar={
-        <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-          activeTab={shellActiveTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-          onWindowClose={() => navigate('/')}
-        />
-      }
-      topBar={
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={openSidebar}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
-      }
+      sidebar={shellSidebar}
+      sidebarWidth={shellSidebarWidth}
+      tabBar={shellTabBar}
+      topBar={shellTopBar}
       contentClassName="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]"
     >
       {pageContent}
