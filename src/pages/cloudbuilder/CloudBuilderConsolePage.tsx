@@ -479,95 +479,104 @@ export function CloudBuilderConsolePage() {
         <div className="flex items-center justify-between h-8">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
+            <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate} aria-label="Button">
               {config.createLabel}
             </Button>
           )}
         </div>
 
         {hasTabs && config.tabs && (
-          <Tabs
-            value={activeTabId}
-            onChange={(v) => setActiveTabId(v)}
-            variant="underline"
-            size="sm"
-          >
-            <TabList>
-              {config.tabs.map((t) => (
-                <Tab key={t.id} value={t.id}>
-                  {t.label}
-                </Tab>
-              ))}
-            </TabList>
-          </Tabs>
+          <div aria-label="Tabs">
+            <Tabs
+              value={activeTabId}
+              onChange={(v) => setActiveTabId(v)}
+              variant="underline"
+              size="sm"
+            >
+              <TabList>
+                {config.tabs.map((t) => (
+                  <Tab key={t.id} value={t.id}>
+                    {t.label}
+                  </Tab>
+                ))}
+              </TabList>
+            </Tabs>
+          </div>
         )}
 
-        <ListToolbar
-          primaryActions={
-            <ListToolbar.Actions>
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  onClear={() => {
-                    setSearchQuery('');
-                    setCurrentPage(1);
-                  }}
-                  size="sm"
-                  fullWidth
-                />
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-                onClick={() => window.alert('Download: Coming Soon')}
-              />
-            </ListToolbar.Actions>
-          }
-          bulkActions={
-            selectable && showBulkDelete ? (
+        <div aria-label="ListToolbar">
+          <ListToolbar
+            primaryActions={
               <ListToolbar.Actions>
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    onClear={() => {
+                      setSearchQuery('');
+                      setCurrentPage(1);
+                    }}
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
                 <Button
-                  variant="muted"
+                  variant="secondary"
                   size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selected.length === 0}
-                  onClick={handleDeleteSelected}
-                >
-                  Delete
-                </Button>
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                  onClick={() => window.alert('Download: Coming Soon')}
+                />
               </ListToolbar.Actions>
-            ) : undefined
-          }
-        />
+            }
+            bulkActions={
+              selectable && showBulkDelete ? (
+                <ListToolbar.Actions>
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selected.length === 0}
+                    onClick={handleDeleteSelected}
+                    aria-label="Button"
+                  >
+                    Delete
+                  </Button>
+                </ListToolbar.Actions>
+              ) : undefined
+            }
+          />
+        </div>
 
         {filteredRows.length > 0 && (
-          <Pagination
-            currentPage={safePage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings={hasTabs}
-            onSettingsClick={() => window.alert('View settings: Coming Soon')}
-            totalItems={filteredRows.length}
-            selectedCount={selected.length}
-          />
+          <div aria-label="Pagination">
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              showSettings={hasTabs}
+              onSettingsClick={() => window.alert('View settings: Coming Soon')}
+              totalItems={filteredRows.length}
+              selectedCount={selected.length}
+            />
+          </div>
         )}
 
-        <Table<Record<string, string> & { id: string }>
-          columns={columns}
-          data={paged}
-          rowKey="id"
-          emptyMessage="No data found"
-          selectable={selectable}
-          selectedKeys={selected}
-          onSelectionChange={setSelected}
-        />
+        <div aria-label="Table">
+          <Table<Record<string, string> & { id: string }>
+            columns={columns}
+            data={paged}
+            rowKey="id"
+            emptyMessage="No data found"
+            selectable={selectable}
+            selectedKeys={selected}
+            onSelectionChange={setSelected}
+          />
+        </div>
       </VStack>
 
       <ConfirmModal
@@ -623,7 +632,7 @@ export function CloudBuilderConsolePage() {
 
             {/* Footer actions (align right like screenshot) */}
             <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <Button variant="outline" size="md" onClick={closeStatusModal}>
+              <Button variant="outline" size="md" onClick={closeStatusModal} aria-label="Button">
                 Cancel
               </Button>
               <Button
@@ -635,6 +644,7 @@ export function CloudBuilderConsolePage() {
                   !!statusAction?.requireDisableReason &&
                   !disableReason.trim()
                 }
+                aria-label="Button"
               >
                 {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
               </Button>
