@@ -448,16 +448,16 @@ export function CloudBuilderConsolePage() {
     <VStack gap={3} className="w-full">
       <div
         id="tds-PageHeader"
-        data-figma-name="PageHeader"
-        aria-label="PageHeader"
+        data-figma-name="[TDS] PageHeader"
+        aria-label="[TDS] PageHeader"
         className="flex items-center justify-between h-8"
       >
         <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
         {config.createLabel && (
           <Button
             id="tds-CreateButton"
-            data-figma-name="CreateButton"
-            aria-label="CreateButton"
+            data-figma-name="[TDS] CreateButton"
+            aria-label="[TDS] CreateButton"
             leftIcon={<IconPlus size={12} />}
             onClick={handleCreate}
           >
@@ -469,20 +469,20 @@ export function CloudBuilderConsolePage() {
       {hasTabs && config.tabs && (
         <Tabs
           id="tds-Tabs"
-          data-figma-name="Tabs"
-          aria-label="Tabs"
+          data-figma-name="[TDS] Tabs"
+          aria-label="[TDS] Tabs"
           value={activeTabId}
           onChange={(v) => setActiveTabId(v)}
           variant="underline"
           size="sm"
         >
-          <TabList data-figma-name="TabList" aria-label="TabList">
+          <TabList data-figma-name="[TDS] TabList" aria-label="[TDS] TabList">
             {config.tabs.map((t) => (
               <Tab
                 key={t.id}
                 value={t.id}
-                data-figma-name={`Tab-${t.id}`}
-                aria-label={`Tab-${t.label}`}
+                data-figma-name={`[TDS] Tab-${t.id}`}
+                aria-label={`[TDS] Tab-${t.label}`}
               >
                 {t.label}
               </Tab>
@@ -493,14 +493,14 @@ export function CloudBuilderConsolePage() {
 
       <ListToolbar
         id="tds-ListToolbar"
-        data-figma-name="ListToolbar"
-        aria-label="ListToolbar"
+        data-figma-name="[TDS] ListToolbar"
+        aria-label="[TDS] ListToolbar"
         primaryActions={
           <ListToolbar.Actions>
             <div
               className="w-[var(--search-input-width)]"
-              data-figma-name="SearchInput"
-              aria-label="SearchInput"
+              data-figma-name="[TDS] SearchInput"
+              aria-label="[TDS] SearchInput"
             >
               <SearchInput
                 placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
@@ -522,7 +522,7 @@ export function CloudBuilderConsolePage() {
               size="sm"
               icon={<IconDownload size={12} />}
               aria-label="Download"
-              data-figma-name="DownloadButton"
+              data-figma-name="[TDS] DownloadButton"
               onClick={() => window.alert('Download: Coming Soon')}
             />
           </ListToolbar.Actions>
@@ -536,8 +536,8 @@ export function CloudBuilderConsolePage() {
                 leftIcon={<IconTrash size={12} />}
                 disabled={selected.length === 0}
                 onClick={handleDeleteSelected}
-                data-figma-name="DeleteButton"
-                aria-label="DeleteButton"
+                data-figma-name="[TDS] DeleteButton"
+                aria-label="[TDS] DeleteButton"
               >
                 Delete
               </Button>
@@ -549,8 +549,8 @@ export function CloudBuilderConsolePage() {
       {filteredRows.length > 0 && (
         <Pagination
           id="tds-Pagination"
-          data-figma-name="Pagination"
-          aria-label="Pagination"
+          data-figma-name="[TDS] Pagination"
+          aria-label="[TDS] Pagination"
           currentPage={safePage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
@@ -563,8 +563,8 @@ export function CloudBuilderConsolePage() {
 
       <Table<Record<string, string> & { id: string }>
         id="tds-Table"
-        data-figma-name="Table"
-        aria-label="Table"
+        data-figma-name="[TDS] Table"
+        aria-label="[TDS] Table"
         columns={columns}
         data={paged}
         rowKey="id"
@@ -589,8 +589,8 @@ export function CloudBuilderConsolePage() {
         confirmVariant="danger"
         infoLabel="ID"
         infoValue={rowToRemove?.id}
-        data-figma-name="ConfirmModal"
-        aria-label="ConfirmModal"
+        data-figma-name="[TDS] ConfirmModal"
+        aria-label="[TDS] ConfirmModal"
       />
 
       <Modal
@@ -607,8 +607,8 @@ export function CloudBuilderConsolePage() {
             : 'Change this service status to Enabled?'
         }
         className="w-[720px] max-w-[calc(100vw-32px)]"
-        data-figma-name="StatusModal"
-        aria-label="StatusModal"
+        data-figma-name="[TDS] StatusModal"
+        aria-label="[TDS] StatusModal"
       >
         {statusModal ? (
           <div className="flex flex-col">
