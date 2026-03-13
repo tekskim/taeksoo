@@ -182,6 +182,15 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                   active={isActive('/cloudbuilder/orchestration-services')}
                 />
               </MenuSection>
+
+              <MenuSection title="Design" defaultOpen={false}>
+                <MenuItem
+                  icon={<IconLayoutGrid size={16} stroke={1.5} />}
+                  label="Modals"
+                  href="/design/cloudbuilder-modals"
+                  active={isActive('/design/cloudbuilder-modals')}
+                />
+              </MenuSection>
             </>
           ) : isComputeAdmin ? (
             <>
