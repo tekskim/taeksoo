@@ -2,7 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { Button, VStack, HStack, NumberInput, ProgressBar } from '@/design-system';
-import { IconCheck, IconAlertTriangle } from '@tabler/icons-react';
+import { IconCheck, IconAlertTriangle, IconProgress } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -492,10 +492,7 @@ export function FloatingCardPage() {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div
-                  className="size-4 rounded-full border border-[var(--color-text-muted)] animate-spin"
-                  style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-                />
+                <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                 <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
                   Processing
                 </span>
