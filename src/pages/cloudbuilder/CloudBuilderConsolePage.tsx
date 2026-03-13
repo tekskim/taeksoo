@@ -479,7 +479,7 @@ export function CloudBuilderConsolePage() {
         <div className="flex items-center justify-between h-8">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <div className="tds-Button" style={{ display: 'contents' }}>
+            <div className="tds-Button">
               <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
                 {config.createLabel}
               </Button>
@@ -538,7 +538,7 @@ export function CloudBuilderConsolePage() {
             bulkActions={
               selectable && showBulkDelete ? (
                 <ListToolbar.Actions>
-                  <div className="tds-Button" style={{ display: 'contents' }}>
+                  <div className="tds-Button">
                     <Button
                       variant="muted"
                       size="sm"
@@ -635,12 +635,12 @@ export function CloudBuilderConsolePage() {
 
             {/* Footer actions (align right like screenshot) */}
             <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <div className="tds-Button" style={{ display: 'contents' }}>
+              <div className="tds-Button">
                 <Button variant="outline" size="md" onClick={closeStatusModal}>
                   Cancel
                 </Button>
               </div>
-              <div className="tds-Button" style={{ display: 'contents' }}>
+              <div className="tds-Button">
                 <Button
                   variant="primary"
                   size="md"
