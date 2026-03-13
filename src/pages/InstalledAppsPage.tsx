@@ -33,7 +33,7 @@ function toTitleCase(s: string): string {
     .join(' ');
 }
 
-const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error' | 'muted'> = {
+const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
   Deployed: 'active',
   Pending: 'building',
   Failed: 'error',
@@ -96,7 +96,7 @@ export function InstalledAppsPage() {
       minWidth: 120,
       render: (value: InstalledAppStatus, row) => (
         <Tooltip content={row.status === 'Failed' && row.errorMessage ? row.errorMessage : value}>
-          <StatusIndicator status={statusMap[value]} label={value} />
+          <StatusIndicator status={statusMap[value]} label={value} layout="default" />
         </Tooltip>
       ),
     },

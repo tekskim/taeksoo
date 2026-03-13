@@ -71,7 +71,7 @@ function YamlViewer({ value, onCopy, onDownload }: { value: string; onCopy: () =
   );
 }
 
-const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error' | 'muted'> = {
+const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
   Deployed: 'active',
   Pending: 'building',
   Failed: 'error',
@@ -207,7 +207,7 @@ export function InstalledAppDetailPage() {
             </DetailHeader.Actions>
           </HStack>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" status={statusMap[app.status]} value={app.status} />
+            <DetailHeader.InfoCard label="Status" value={<StatusIndicator status={statusMap[app.status]} label={app.status} layout="default" />} />
             <DetailHeader.InfoCard label="App name" value={toTitleCase(app.name)} />
             <DetailHeader.InfoCard label="Version" value={app.version} />
             <DetailHeader.InfoCard label="Namespace" value={app.namespace} />

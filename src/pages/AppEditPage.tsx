@@ -38,7 +38,7 @@ const STORAGECLASS_OPTIONS = [
   { value: 'longhorn', label: 'longhorn' },
 ];
 
-const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error' | 'muted'> = {
+const statusMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
   Deployed: 'active',
   Pending: 'building',
   Failed: 'error',
@@ -432,7 +432,7 @@ function SummarySidebar({
           {toTitleCase(app.name)}
         </span>
         <div className="flex items-center gap-2">
-          <StatusIndicator status={statusMap[app.status]} label={app.status} />
+          <StatusIndicator status={statusMap[app.status]} label={app.status} layout="default" />
         </div>
         <div className="flex flex-col gap-0.5">
           <span className="text-[11px] text-[var(--color-text-subtle)]">Namespace</span>
