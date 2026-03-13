@@ -34,6 +34,7 @@ import {
   IconBell,
 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
+import { FigmaCaptureWrapper } from '@/components/FigmaCaptureWrapper';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -197,6 +198,10 @@ export function CloudBuilderConsolePage() {
     addNewTab,
     moveTab,
   } = useTabs();
+
+  const [isFigmaCapture] = useState(
+    () => new URLSearchParams(window.location.search).get('figma') === 'true'
+  );
 
   // /cloudbuilder 또는 /cloudbuilder/:slug
   const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'discovery';
@@ -439,6 +444,209 @@ export function CloudBuilderConsolePage() {
     setDisableReason('');
   };
 
+  const pageContent = (
+    <VStack gap={3} className="w-full">
+      <div
+        id="tds-PageHeader"
+        data-figma-name="PageHeader"
+        aria-label="PageHeader"
+        className="flex items-center justify-between h-8"
+      >
+        <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
+        {config.createLabel && (
+          <Button
+            id="tds-CreateButton"
+            data-figma-name="CreateButton"
+            aria-label="CreateButton"
+            leftIcon={<IconPlus size={12} />}
+            onClick={handleCreate}
+          >
+            {config.createLabel}
+          </Button>
+        )}
+      </div>
+
+      {hasTabs && config.tabs && (
+        <Tabs
+          id="tds-Tabs"
+          data-figma-name="Tabs"
+          aria-label="Tabs"
+          value={activeTabId}
+          onChange={(v) => setActiveTabId(v)}
+          variant="underline"
+          size="sm"
+        >
+          <TabList>
+            {config.tabs.map((t) => (
+              <Tab key={t.id} value={t.id}>
+                {t.label}
+              </Tab>
+            ))}
+          </TabList>
+        </Tabs>
+      )}
+
+      <ListToolbar
+        id="tds-ListToolbar"
+        data-figma-name="ListToolbar"
+        aria-label="ListToolbar"
+        primaryActions={
+          <ListToolbar.Actions>
+            <div className="w-[var(--search-input-width)]">
+              <SearchInput
+                placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                onClear={() => {
+                  setSearchQuery('');
+                  setCurrentPage(1);
+                }}
+                size="sm"
+                fullWidth
+              />
+            </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<IconDownload size={12} />}
+              aria-label="Download"
+              onClick={() => window.alert('Download: Coming Soon')}
+            />
+          </ListToolbar.Actions>
+        }
+        bulkActions={
+          selectable && showBulkDelete ? (
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selected.length === 0}
+                onClick={handleDeleteSelected}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          ) : undefined
+        }
+      />
+
+      {filteredRows.length > 0 && (
+        <Pagination
+          id="tds-Pagination"
+          data-figma-name="Pagination"
+          aria-label="Pagination"
+          currentPage={safePage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings={hasTabs}
+          onSettingsClick={() => window.alert('View settings: Coming Soon')}
+          totalItems={filteredRows.length}
+          selectedCount={selected.length}
+        />
+      )}
+
+      <Table<Record<string, string> & { id: string }>
+        id="tds-Table"
+        data-figma-name="Table"
+        aria-label="Table"
+        columns={columns}
+        data={paged}
+        rowKey="id"
+        emptyMessage="No data found"
+        selectable={selectable}
+        selectedKeys={selected}
+        onSelectionChange={setSelected}
+      />
+    </VStack>
+  );
+
+  const modals = (
+    <>
+      <ConfirmModal
+        isOpen={confirmRemoveOpen}
+        onClose={handleRemoveCancel}
+        onConfirm={handleRemoveConfirm}
+        title="Remove item"
+        description="선택한 항목을 삭제할까요?"
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="ID"
+        infoValue={rowToRemove?.id}
+      />
+
+      <Modal
+        isOpen={statusModalOpen}
+        onClose={closeStatusModal}
+        title={
+          statusModal?.nextStatus === 'Disabled'
+            ? 'Disable compute service'
+            : 'Enable compute service'
+        }
+        description={
+          statusModal?.nextStatus === 'Disabled'
+            ? 'Change this service status to Disabled?'
+            : 'Change this service status to Enabled?'
+        }
+        className="w-[720px] max-w-[calc(100vw-32px)]"
+      >
+        {statusModal ? (
+          <div className="flex flex-col">
+            {statusModal.nextStatus === 'Disabled' && !!statusAction?.requireDisableReason ? (
+              <div className="py-4">
+                <div className="grid grid-cols-12 gap-6 items-start">
+                  <div className="col-span-12 md:col-span-4 text-label-lg text-[var(--color-text-default)]">
+                    <span>Reason</span>{' '}
+                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                  </div>
+                  <div className="col-span-12 md:col-span-8">
+                    <Textarea
+                      placeholder="Enter a reason for disabling"
+                      value={disableReason}
+                      onChange={(e) => setDisableReason(e.target.value)}
+                      fullWidth
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
+              <Button variant="outline" size="md" onClick={closeStatusModal}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={applyStatusChange}
+                disabled={
+                  statusModal.nextStatus === 'Disabled' &&
+                  !!statusAction?.requireDisableReason &&
+                  !disableReason.trim()
+                }
+              >
+                {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
+              </Button>
+            </div>
+          </div>
+        ) : null}
+      </Modal>
+    </>
+  );
+
+  if (isFigmaCapture) {
+    return (
+      <FigmaCaptureWrapper>
+        {pageContent}
+        {modals}
+      </FigmaCaptureWrapper>
+    );
+  }
+
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -475,190 +683,8 @@ export function CloudBuilderConsolePage() {
       }
       contentClassName="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={3} className="w-full">
-        <div
-          id="tds-PageHeader"
-          data-figma-name="PageHeader"
-          className="flex items-center justify-between h-8"
-        >
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
-          {config.createLabel && (
-            <Button
-              id="tds-CreateButton"
-              data-figma-name="CreateButton"
-              leftIcon={<IconPlus size={12} />}
-              onClick={handleCreate}
-            >
-              {config.createLabel}
-            </Button>
-          )}
-        </div>
-
-        {hasTabs && config.tabs && (
-          <Tabs
-            id="tds-Tabs"
-            data-figma-name="Tabs"
-            value={activeTabId}
-            onChange={(v) => setActiveTabId(v)}
-            variant="underline"
-            size="sm"
-          >
-            <TabList>
-              {config.tabs.map((t) => (
-                <Tab key={t.id} value={t.id}>
-                  {t.label}
-                </Tab>
-              ))}
-            </TabList>
-          </Tabs>
-        )}
-
-        <ListToolbar
-          id="tds-ListToolbar"
-          data-figma-name="ListToolbar"
-          primaryActions={
-            <ListToolbar.Actions>
-              <div className="w-[var(--search-input-width)]">
-                <SearchInput
-                  placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  onClear={() => {
-                    setSearchQuery('');
-                    setCurrentPage(1);
-                  }}
-                  size="sm"
-                  fullWidth
-                />
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-                onClick={() => window.alert('Download: Coming Soon')}
-              />
-            </ListToolbar.Actions>
-          }
-          bulkActions={
-            selectable && showBulkDelete ? (
-              <ListToolbar.Actions>
-                <Button
-                  variant="muted"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selected.length === 0}
-                  onClick={handleDeleteSelected}
-                >
-                  Delete
-                </Button>
-              </ListToolbar.Actions>
-            ) : undefined
-          }
-        />
-
-        {filteredRows.length > 0 && (
-          <Pagination
-            id="tds-Pagination"
-            data-figma-name="Pagination"
-            currentPage={safePage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings={hasTabs}
-            onSettingsClick={() => window.alert('View settings: Coming Soon')}
-            totalItems={filteredRows.length}
-            selectedCount={selected.length}
-          />
-        )}
-
-        <Table<Record<string, string> & { id: string }>
-          id="tds-Table"
-          data-figma-name="Table"
-          columns={columns}
-          data={paged}
-          rowKey="id"
-          emptyMessage="No data found"
-          selectable={selectable}
-          selectedKeys={selected}
-          onSelectionChange={setSelected}
-        />
-      </VStack>
-
-      <ConfirmModal
-        isOpen={confirmRemoveOpen}
-        onClose={handleRemoveCancel}
-        onConfirm={handleRemoveConfirm}
-        title="Remove item"
-        description="선택한 항목을 삭제할까요?"
-        confirmText="Confirm"
-        cancelText="Cancel"
-        confirmVariant="danger"
-        infoLabel="ID"
-        infoValue={rowToRemove?.id}
-      />
-
-      {/* Enable/Disable Modal (UI only) */}
-      <Modal
-        isOpen={statusModalOpen}
-        onClose={closeStatusModal}
-        title={
-          statusModal?.nextStatus === 'Disabled'
-            ? 'Disable compute service'
-            : 'Enable compute service'
-        }
-        description={
-          statusModal?.nextStatus === 'Disabled'
-            ? 'Change this service status to Disabled?'
-            : 'Change this service status to Enabled?'
-        }
-        className="w-[720px] max-w-[calc(100vw-32px)]"
-      >
-        {statusModal ? (
-          <div className="flex flex-col">
-            {/* Form rows */}
-            {statusModal.nextStatus === 'Disabled' && !!statusAction?.requireDisableReason ? (
-              <div className="py-4">
-                <div className="grid grid-cols-12 gap-6 items-start">
-                  <div className="col-span-12 md:col-span-4 text-label-lg text-[var(--color-text-default)]">
-                    <span>Reason</span>{' '}
-                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                  </div>
-                  <div className="col-span-12 md:col-span-8">
-                    <Textarea
-                      placeholder="Enter a reason for disabling"
-                      value={disableReason}
-                      onChange={(e) => setDisableReason(e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : null}
-
-            {/* Footer actions (align right like screenshot) */}
-            <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <Button variant="outline" size="md" onClick={closeStatusModal}>
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                size="md"
-                onClick={applyStatusChange}
-                disabled={
-                  statusModal.nextStatus === 'Disabled' &&
-                  !!statusAction?.requireDisableReason &&
-                  !disableReason.trim()
-                }
-              >
-                {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
-              </Button>
-            </div>
-          </div>
-        ) : null}
-      </Modal>
+      {pageContent}
+      {modals}
     </PageShell>
   );
 }
