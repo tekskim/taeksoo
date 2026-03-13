@@ -20,8 +20,6 @@ import {
   Breadcrumb,
   InlineMessage,
   Loading,
-  EmptyState,
-  ErrorState,
   FormField,
   SectionCard,
   DetailHeader,
@@ -68,8 +66,8 @@ import {
   IconTrash,
   IconDownload,
   IconChevronDown,
-  IconSearch,
-  IconDatabase,
+  IconChevronLeft,
+  IconChevronRight,
   IconAlertTriangle,
   IconPlayerPlay,
   IconTerminal2,
@@ -80,6 +78,16 @@ import {
   IconServer,
   IconHome,
   IconBrandDocker,
+  IconX,
+  IconLayoutSidebar,
+  IconArrowLeft,
+  IconArrowRight,
+  IconSelector,
+  IconChevronUp,
+  IconCopy,
+  IconInfoCircle,
+  IconCircleCheck,
+  IconAlertCircle,
 } from '@tabler/icons-react';
 
 /* ──────────────────────────────────────────
@@ -302,7 +310,6 @@ const buttonVariants = [
   'ghost',
   'outline',
   'danger',
-  'warning',
   'link',
 ] as const;
 const buttonSizes = ['sm', 'md', 'lg'] as const;
@@ -315,7 +322,6 @@ const buttonHoverClasses: Record<string, string> = {
   muted:
     'bg-[var(--color-surface-subtle)] text-[var(--color-text-default)] border-[var(--color-border-strong)]',
   danger: 'bg-[var(--color-state-danger-hover)]',
-  warning: 'bg-[var(--color-orange-600)]',
   link: 'underline underline-offset-4',
 };
 
@@ -623,153 +629,123 @@ export function FigmaComponentsPage() {
       {/* ════════════════ BUTTON ════════════════ */}
       <SectionTitle>Button</SectionTitle>
 
-      <SubTitle>Variants × Sizes</SubTitle>
-      <div className="flex flex-col gap-4">
-        {buttonSizes.map((size) => (
-          <div key={size} className="flex flex-col gap-2">
-            <StateLabel>Size: {size}</StateLabel>
-            <div className="flex flex-wrap gap-3 items-end">
-              {buttonVariants.map((variant) => (
-                <FigmaFrame key={`${variant}-${size}`} name={`Button/${variant}/${size}/default`}>
-                  <Button variant={variant} size={size}>
-                    {variant}
+      {buttonVariants.map((variant) => (
+        <div key={variant} className="mb-10">
+          <SubTitle>{variant.charAt(0).toUpperCase() + variant.slice(1)}</SubTitle>
+
+          <StateLabel>Sizes — default</StateLabel>
+          <div className="flex flex-wrap gap-3 items-end mt-2 mb-4">
+            {buttonSizes.map((size) => (
+              <FigmaFrame
+                key={`${variant}-${size}-default`}
+                name={`Button/${variant}/${size}/default`}
+              >
+                <Button variant={variant} size={size}>
+                  {variant}
+                </Button>
+              </FigmaFrame>
+            ))}
+          </div>
+
+          <StateLabel>Sizes — hover</StateLabel>
+          <div className="flex flex-wrap gap-3 items-end mt-2 mb-4">
+            {buttonSizes.map((size) => (
+              <FigmaFrame key={`${variant}-${size}-hover`} name={`Button/${variant}/${size}/hover`}>
+                <Button variant={variant} size={size} className={buttonHoverClasses[variant]}>
+                  {variant}
+                </Button>
+              </FigmaFrame>
+            ))}
+          </div>
+
+          <StateLabel>States — md</StateLabel>
+          <div className="flex flex-wrap gap-3 items-end mt-2 mb-4">
+            <FigmaFrame name={`Button/${variant}/md/default`}>
+              <Button variant={variant} size="md">
+                Default
+              </Button>
+            </FigmaFrame>
+            <FigmaFrame name={`Button/${variant}/md/hover`}>
+              <Button variant={variant} size="md" className={buttonHoverClasses[variant]}>
+                Hover
+              </Button>
+            </FigmaFrame>
+            <FigmaFrame name={`Button/${variant}/md/disabled`}>
+              <Button variant={variant} size="md" disabled>
+                Disabled
+              </Button>
+            </FigmaFrame>
+            <FigmaFrame name={`Button/${variant}/md/loading`}>
+              <Button variant={variant} size="md" loading>
+                Loading
+              </Button>
+            </FigmaFrame>
+          </div>
+
+          {(variant === 'primary' || variant === 'secondary' || variant === 'danger') && (
+            <>
+              <StateLabel>Icon — sm</StateLabel>
+              <div className="flex flex-wrap gap-3 items-end mt-2">
+                <FigmaFrame name={`Button/${variant}/sm/icon-left/default`}>
+                  <Button variant={variant} size="sm" leftIcon={<IconPlus size={12} />}>
+                    {variant === 'primary' ? 'Create' : variant === 'danger' ? 'Delete' : 'Edit'}
                   </Button>
                 </FigmaFrame>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <SubTitle>Variants × Hover</SubTitle>
-      <div className="flex flex-col gap-4">
-        {buttonSizes.map((size) => (
-          <div key={`hover-${size}`} className="flex flex-col gap-2">
-            <StateLabel>Hover — Size: {size}</StateLabel>
-            <div className="flex flex-wrap gap-3 items-end">
-              {buttonVariants.map((variant) => (
-                <FigmaFrame
-                  key={`hover-${variant}-${size}`}
-                  name={`Button/${variant}/${size}/hover`}
-                >
-                  <Button variant={variant} size={size} className={buttonHoverClasses[variant]}>
-                    {variant}
+                <FigmaFrame name={`Button/${variant}/sm/icon-left/hover`}>
+                  <Button
+                    variant={variant}
+                    size="sm"
+                    leftIcon={<IconPlus size={12} />}
+                    className={buttonHoverClasses[variant]}
+                  >
+                    {variant === 'primary' ? 'Create' : variant === 'danger' ? 'Delete' : 'Edit'}
                   </Button>
                 </FigmaFrame>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <SubTitle>Icon Buttons — Default</SubTitle>
-      <div className="flex flex-wrap gap-3 items-end">
-        <FigmaFrame name="Button/primary/sm/icon-left/default">
-          <Button variant="primary" size="sm" leftIcon={<IconPlus size={12} />}>
-            Create
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/secondary/sm/icon-left/default">
-          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-            Edit
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/danger/sm/icon-left/default">
-          <Button variant="danger" size="sm" leftIcon={<IconTrash size={12} />}>
-            Delete
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/secondary/sm/icon-only/default">
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<IconDownload size={12} />}
-            aria-label="Download"
-          />
-        </FigmaFrame>
-        <FigmaFrame name="Button/primary/md/icon-right/default">
-          <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} />}>
-            Dropdown
-          </Button>
-        </FigmaFrame>
-      </div>
-
-      <SubTitle>Icon Buttons — Hover</SubTitle>
-      <div className="flex flex-wrap gap-3 items-end">
-        <FigmaFrame name="Button/primary/sm/icon-left/hover">
-          <Button
-            variant="primary"
-            size="sm"
-            leftIcon={<IconPlus size={12} />}
-            className={buttonHoverClasses.primary}
-          >
-            Create
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/secondary/sm/icon-left/hover">
-          <Button
-            variant="secondary"
-            size="sm"
-            leftIcon={<IconEdit size={12} />}
-            className={buttonHoverClasses.secondary}
-          >
-            Edit
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/danger/sm/icon-left/hover">
-          <Button
-            variant="danger"
-            size="sm"
-            leftIcon={<IconTrash size={12} />}
-            className={buttonHoverClasses.danger}
-          >
-            Delete
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/secondary/sm/icon-only/hover">
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<IconDownload size={12} />}
-            aria-label="Download"
-            className={buttonHoverClasses.secondary}
-          />
-        </FigmaFrame>
-        <FigmaFrame name="Button/primary/md/icon-right/hover">
-          <Button
-            variant="primary"
-            size="md"
-            rightIcon={<IconChevronDown size={14} />}
-            className={buttonHoverClasses.primary}
-          >
-            Dropdown
-          </Button>
-        </FigmaFrame>
-      </div>
-
-      <SubTitle>States</SubTitle>
-      <div className="flex flex-wrap gap-3 items-end">
-        <FigmaFrame name="Button/primary/md/default">
-          <Button variant="primary" size="md">
-            Default
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/primary/md/hover">
-          <Button variant="primary" size="md" className="bg-[var(--color-action-primary-hover)]">
-            Hover
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/primary/md/disabled">
-          <Button variant="primary" size="md" disabled>
-            Disabled
-          </Button>
-        </FigmaFrame>
-        <FigmaFrame name="Button/primary/md/loading">
-          <Button variant="primary" size="md" loading>
-            Loading
-          </Button>
-        </FigmaFrame>
-      </div>
+                {variant === 'secondary' && (
+                  <>
+                    <FigmaFrame name="Button/secondary/sm/icon-only/default">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </FigmaFrame>
+                    <FigmaFrame name="Button/secondary/sm/icon-only/hover">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                        className={buttonHoverClasses.secondary}
+                      />
+                    </FigmaFrame>
+                  </>
+                )}
+                {variant === 'primary' && (
+                  <>
+                    <FigmaFrame name="Button/primary/md/icon-right/default">
+                      <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} />}>
+                        Dropdown
+                      </Button>
+                    </FigmaFrame>
+                    <FigmaFrame name="Button/primary/md/icon-right/hover">
+                      <Button
+                        variant="primary"
+                        size="md"
+                        rightIcon={<IconChevronDown size={14} />}
+                        className={buttonHoverClasses.primary}
+                      >
+                        Dropdown
+                      </Button>
+                    </FigmaFrame>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      ))}
 
       <FigmaGuide
         figmaName="TDS/Form/Button"
@@ -777,7 +753,7 @@ export function FigmaComponentsPage() {
           {
             name: 'Variant',
             type: 'Variant',
-            values: 'primary | secondary | muted | ghost | outline | danger | warning | link',
+            values: 'primary | secondary | muted | ghost | outline | danger | link',
           },
           { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
           {
@@ -1035,15 +1011,21 @@ export function FigmaComponentsPage() {
       <SubTitle>Open (Dropdown) — Static</SubTitle>
       <FigmaFrame name="Select/open">
         <div className="relative w-[240px] mb-[120px]">
-          <Select
-            options={sampleSelectOptions}
-            value="option1"
-            onChange={() => {}}
-            fullWidth
-            className="[&_button]:border-[var(--input-border-focus)] [&_button]:shadow-[0_0_0_1px_var(--input-border-focus)]"
-          />
+          {/* Trigger — focus ring + chevron rotated */}
+          <button
+            type="button"
+            className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] pl-[var(--select-padding-x)] pr-2 text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid rounded-[var(--select-radius)] border-[var(--select-border-focus)] shadow-[0_0_0_1px_var(--select-border-focus)] cursor-pointer"
+          >
+            <span className="truncate text-[var(--color-text-default)]">Option 1</span>
+            <IconChevronDown
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)] rotate-180 shrink-0"
+            />
+          </button>
+          {/* Dropdown */}
           <div className="absolute top-full left-0 w-full mt-1 bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] z-10 overflow-hidden">
-            {sampleSelectOptions.map((opt, idx) => {
+            {sampleSelectOptions.map((opt) => {
               const isSelected = opt.value === 'option1';
               return (
                 <div
@@ -1052,9 +1034,6 @@ export function FigmaComponentsPage() {
                     'flex items-center justify-between',
                     'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
                     'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-[number:var(--font-weight-regular)]',
-                    idx < sampleSelectOptions.length - 1
-                      ? 'border-b border-[var(--color-border-subtle)]'
-                      : '',
                     isSelected
                       ? 'bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)]'
                       : 'text-[var(--color-text-default)]',
@@ -1394,40 +1373,89 @@ export function FigmaComponentsPage() {
 
       {/* ════════════════ CHIP ════════════════ */}
       <SectionTitle>Chip</SectionTitle>
+
+      <SubTitle>Value only</SubTitle>
       <div className="flex flex-wrap gap-3 items-end">
-        <FigmaFrame name="Chip/default">
-          <Chip label="Label" />
+        <FigmaFrame name="Chip/value-only/default">
+          <Chip value="Active" />
         </FigmaFrame>
-        <FigmaFrame name="Chip/selected">
-          <Chip label="Selected" selected />
+        <FigmaFrame name="Chip/value-only/removable">
+          <Chip value="Running" onRemove={() => {}} />
         </FigmaFrame>
-        <FigmaFrame name="Chip/removable">
-          <Chip label="Removable" onRemove={() => {}} />
+        <FigmaFrame name="Chip/value-only/selected">
+          <Chip value="default-sg" variant="selected" />
         </FigmaFrame>
-        <FigmaFrame name="Chip/disabled">
-          <Chip label="Disabled" disabled />
+        <FigmaFrame name="Chip/value-only/selected-removable">
+          <Chip value="default-sg" variant="selected" onRemove={() => {}} />
+        </FigmaFrame>
+        <FigmaFrame name="Chip/value-only/disabled">
+          <Chip value="Disabled" disabled />
+        </FigmaFrame>
+      </div>
+
+      <SubTitle>Label + Value</SubTitle>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Chip/label-value/default">
+          <Chip label="Name" value="a" />
+        </FigmaFrame>
+        <FigmaFrame name="Chip/label-value/removable">
+          <Chip label="Status" value="Running" onRemove={() => {}} />
+        </FigmaFrame>
+        <FigmaFrame name="Chip/label-value/selected">
+          <Chip label="Region" value="us-west-2" variant="selected" />
+        </FigmaFrame>
+        <FigmaFrame name="Chip/label-value/disabled">
+          <Chip label="Name" value="a" disabled />
+        </FigmaFrame>
+      </div>
+
+      <SubTitle>Truncation</SubTitle>
+      <div className="flex flex-wrap gap-3 items-end">
+        <FigmaFrame name="Chip/truncation/value-only">
+          <Chip
+            value="very-long-label-name-that-gets-truncated"
+            maxWidth="120px"
+            onRemove={() => {}}
+          />
+        </FigmaFrame>
+        <FigmaFrame name="Chip/truncation/label-value">
+          <Chip
+            label="Annotation"
+            value="kubernetes.io/very-long-annotation-value"
+            maxWidth="160px"
+            onRemove={() => {}}
+          />
         </FigmaFrame>
       </div>
 
       <FigmaGuide
         figmaName="TDS/Data/Chip"
         properties={[
-          { name: 'State', type: 'Variant', values: 'default | selected | disabled' },
-          { name: 'Removable', type: 'Boolean', values: 'true | false' },
-          { name: 'Label', type: 'Text', values: '"Label"' },
+          { name: 'Variant', type: 'Variant', values: 'default | selected' },
+          { name: 'Removable', type: 'Boolean', values: 'true | false (onRemove prop)' },
+          { name: 'Disabled', type: 'Boolean', values: 'true | false' },
+          { name: 'Label', type: 'Text', values: 'key/category (optional)' },
+          { name: 'Value', type: 'Text', values: 'display value (required)' },
+          { name: 'MaxWidth', type: 'Text', values: 'truncation width (optional)' },
         ]}
-        autoLayout={[{ label: 'Container', direction: 'H', gap: '4px', padding: '4px 8px' }]}
-        radius="9999px (pill)"
+        autoLayout={[{ label: 'Container', direction: 'H', gap: '6px', padding: '4px 8px' }]}
+        radius="6px (--chip-radius)"
         tokens={[
-          { label: 'Default bg', value: '--color-surface-subtle' },
-          { label: 'Selected bg', value: '--color-action-primary + text white' },
+          { label: 'BG', value: '--chip-bg' },
+          { label: 'Border (default)', value: '--chip-border' },
+          { label: 'Border (selected)', value: '--chip-border-selected' },
+          { label: 'Separator', value: '--chip-separator-color (| divider)' },
+          { label: 'Font size', value: '--chip-font-size (11px)' },
           { label: 'Remove icon', value: 'IconX, 12px' },
         ]}
         tips={[
-          'pill 형태(radius 9999px). 수평 Auto Layout: Label + (optional) Remove 아이콘',
-          'Selected: 배경이 primary, 텍스트가 white로 전환',
-          'Removable: 우측에 X 아이콘 표시. Boolean 속성으로 표시/숨김 제어',
-          '태그, 필터 표시 등에 사용. Badge와 용도 구분: Chip은 인터랙티브(선택/삭제 가능), Badge는 읽기 전용',
+          '구조: [icon] + [label | value] + [× remove]. label은 선택적 (key=value 패턴에서만 표시)',
+          'Value only: 단일 값 필터, 태그 표시에 사용',
+          'Label + Value: label과 value 사이에 구분선(|)으로 시각적 구분',
+          'Selected: 파란 테두리 강조. 라디오/체크박스 선택 결과를 표현',
+          'Removable: onRemove prop 전달 시 우측에 X 아이콘 표시',
+          'Truncation: maxWidth 설정 시 말줄임 처리. title 속성으로 전체 텍스트 확인 가능',
+          'Badge와 용도 구분: Chip은 인터랙티브(선택/삭제 가능), Badge는 읽기 전용',
         ]}
       />
 
@@ -1438,7 +1466,7 @@ export function FigmaComponentsPage() {
         {statusTypes.map((status) => (
           <FigmaFrame key={status} name={`StatusIndicator/icon-only/${status}`}>
             <Tooltip content={status}>
-              <StatusIndicator status={status} />
+              <StatusIndicator status={status} layout="icon-only" />
             </Tooltip>
           </FigmaFrame>
         ))}
@@ -1524,47 +1552,172 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="Pagination/Sub/PrevButton/disabled">
+          <button
+            disabled
+            className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] leading-[var(--pagination-line-height)] font-medium rounded-[var(--pagination-radius)] text-[var(--color-text-disabled)] cursor-not-allowed"
+          >
+            <IconChevronLeft size={14} stroke={1} />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/PrevButton/enabled">
+          <button className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] leading-[var(--pagination-line-height)] font-medium rounded-[var(--pagination-radius)] text-[var(--pagination-text)] hover:bg-[var(--pagination-hover-bg)] cursor-pointer">
+            <IconChevronLeft size={14} stroke={1} />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/NextButton/enabled">
+          <button className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] leading-[var(--pagination-line-height)] font-medium rounded-[var(--pagination-radius)] text-[var(--pagination-text)] hover:bg-[var(--pagination-hover-bg)] cursor-pointer">
+            <IconChevronRight size={14} stroke={1} />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/PageButton/default">
+          <button className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] leading-[var(--pagination-line-height)] font-medium rounded-[var(--pagination-radius)] text-[var(--pagination-text)] hover:bg-[var(--pagination-hover-bg)] cursor-pointer">
+            3
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/PageButton/active">
+          <button className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] leading-[var(--pagination-line-height)] font-medium rounded-[var(--pagination-radius)] bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]">
+            1
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/Dots">
+          <span className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] text-[var(--pagination-text)]">
+            ···
+          </span>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/SettingsButton">
+          <button className="inline-flex items-center justify-center size-[var(--pagination-item-size)] text-[length:var(--pagination-font-size)] leading-[var(--pagination-line-height)] font-medium rounded-[var(--pagination-radius)] text-[var(--pagination-text)] hover:bg-[var(--pagination-hover-bg)] cursor-pointer">
+            <IconSettings size={16} stroke={1} />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/Divider">
+          <div className="h-4 w-px bg-[var(--color-border-default)]" />
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/ItemCount">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">100 items</span>
+        </FigmaFrame>
+        <FigmaFrame name="Pagination/Sub/SelectedCount">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            <span className="text-[var(--color-text-default)] font-medium">3 selected</span>
+            <span className="text-[var(--color-text-muted)]"> / 100 items</span>
+          </span>
+        </FigmaFrame>
+      </div>
+
       {/* ════════════════ PROGRESS BAR ════════════════ */}
       <SectionTitle>ProgressBar</SectionTitle>
+
+      <SubTitle>Default — Bar only</SubTitle>
       <div className="flex flex-col gap-4 max-w-md">
-        <FigmaFrame name="ProgressBar/info/50">
-          <ProgressBar value={50} status="info" />
+        <FigmaFrame name="ProgressBar/default/0">
+          <ProgressBar value={0} max={100} showValue={false} />
         </FigmaFrame>
-        <FigmaFrame name="ProgressBar/success/50">
-          <ProgressBar value={50} status="success" />
+        <FigmaFrame name="ProgressBar/default/25">
+          <ProgressBar value={25} max={100} showValue={false} />
         </FigmaFrame>
-        <FigmaFrame name="ProgressBar/warning/70">
-          <ProgressBar value={70} status="warning" />
+        <FigmaFrame name="ProgressBar/default/50">
+          <ProgressBar value={50} max={100} showValue={false} />
         </FigmaFrame>
-        <FigmaFrame name="ProgressBar/danger/95">
-          <ProgressBar value={95} status="danger" />
+        <FigmaFrame name="ProgressBar/default/75">
+          <ProgressBar value={75} max={100} showValue={false} />
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/default/100">
+          <ProgressBar value={100} max={100} showValue={false} />
+        </FigmaFrame>
+      </div>
+
+      <SubTitle>Labeled — Label + Value + Bar</SubTitle>
+      <div className="flex flex-col gap-6 max-w-md">
+        <FigmaFrame name="ProgressBar/labeled/uploading">
+          <VStack gap={2}>
+            <div className="flex justify-between">
+              <span className="text-label-sm text-[var(--color-text-default)]">Uploading...</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">65%</span>
+            </div>
+            <ProgressBar value={65} max={100} showValue={false} />
+          </VStack>
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/labeled/complete">
+          <VStack gap={2}>
+            <div className="flex justify-between">
+              <span className="text-label-sm text-[var(--color-text-default)]">Complete</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">100%</span>
+            </div>
+            <ProgressBar value={100} max={100} showValue={false} />
+          </VStack>
+        </FigmaFrame>
+      </div>
+
+      <SubTitle>Status Colors</SubTitle>
+      <div className="flex flex-col gap-4 max-w-md">
+        <FigmaFrame name="ProgressBar/status/info">
+          <ProgressBar value={50} max={100} label="Info" status="info" statusText="50%" />
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/status/success">
+          <ProgressBar value={50} max={100} label="Success" status="success" statusText="50%" />
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/status/warning">
+          <ProgressBar value={70} max={100} label="Warning" status="warning" statusText="70%" />
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/status/danger">
+          <ProgressBar value={95} max={100} label="Danger" status="danger" statusText="95%" />
+        </FigmaFrame>
+      </div>
+
+      <SubTitle>Quota Variant</SubTitle>
+      <div className="flex flex-col gap-4 max-w-md">
+        <FigmaFrame name="ProgressBar/quota/normal">
+          <ProgressBar variant="quota" value={3} max={10} label="Instances" showValue />
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/quota/with-new-value">
+          <ProgressBar variant="quota" value={5} newValue={2} max={10} label="vCPU" showValue />
+        </FigmaFrame>
+        <FigmaFrame name="ProgressBar/quota/unlimited">
+          <ProgressBar variant="quota" value={15} label="API Calls" showValue />
         </FigmaFrame>
       </div>
 
       <FigmaGuide
         figmaName="TDS/Data/ProgressBar"
         properties={[
+          { name: 'Variant', type: 'Variant', values: 'default | quota' },
           {
             name: 'Status',
             type: 'Variant',
             values: 'info | success | warning | danger | neutral',
           },
-          { name: 'Value', type: 'Text', values: '(0–100)' },
+          { name: 'Size', type: 'Variant', values: 'sm | md' },
+          { name: 'Value', type: 'Number', values: 'current value (0–max)' },
+          { name: 'Max', type: 'Number', values: 'total value (undefined = unlimited)' },
+          { name: 'NewValue', type: 'Number', values: 'additional value (quota variant)' },
+          { name: 'Label', type: 'Text', values: 'task name (optional)' },
+          { name: 'StatusText', type: 'Text', values: 'right-side text (e.g. "65%")' },
+          { name: 'ShowValue', type: 'Boolean', values: 'show value text (quota variant)' },
         ]}
-        autoLayout={[{ label: 'Track', direction: 'H', gap: '0', padding: '0', height: '4px' }]}
+        autoLayout={[
+          { label: 'Container', direction: 'V', gap: '6px', padding: '0' },
+          { label: 'Track', direction: 'H', gap: '0', padding: '0', height: '4px' },
+        ]}
         radius="9999px (pill — Track and Fill both)"
         tokens={[
+          { label: 'Default fill', value: '--color-action-primary (blue)' },
           { label: 'Info fill', value: '--color-state-info (blue)' },
           { label: 'Success fill', value: '--color-state-success (green)' },
           { label: 'Warning fill', value: '--color-state-warning (orange)' },
           { label: 'Danger fill', value: '--color-state-danger (red)' },
           { label: 'Track bg', value: '--color-border-subtle' },
+          { label: 'Label', value: 'text-label-sm' },
+          { label: 'StatusText', value: 'text-body-sm, text-subtle' },
         ]}
         tips={[
-          'status 미지정 시 자동 색상 결정: <70% info, 70-94% warning, ≥95% danger. Figma에서는 status를 명시적 Variant로 관리 권장',
+          'Default variant: Bar만 단독 표시. Labeled는 상단에 Label + Value 텍스트 배치',
+          'status 미지정 시 기본 색상은 --color-action-primary (파란색)',
+          'status 지정 시 해당 상태 색상 사용. thresholds로 자동 색상 전환도 가능',
+          'Quota variant: Used/New/Total 구성. newValue로 추가 예정 영역 표시',
+          'Quota variant에서 max 미지정 시 "Unlimited" 표시',
           '구조: Track(전체 바, 높이 4px) + Fill(채워진 부분). Fill의 width를 %로 조절',
-          'Figma에서 Fill width는 수동 조절하거나, 대표 값(25%, 50%, 75%, 100%)만 Variant로 생성',
-          'Track 배경: --color-border-subtle (연한 회색). Fill 색상: status별 토큰 참조',
           'border-radius: Track과 Fill 모두 9999px (pill)',
         ]}
       />
@@ -1643,6 +1796,29 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="Tabs/Sub/Tab/active">
+          <div className="relative px-3 py-2 text-body-sm font-medium text-[var(--tabs-active-color,var(--color-action-primary))]">
+            Active
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)]" />
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Tabs/Sub/Tab/inactive">
+          <div className="px-3 py-2 text-body-sm font-medium text-[var(--tabs-inactive-color,var(--color-text-subtle))]">
+            Inactive
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Tabs/Sub/Tab/hover">
+          <div className="px-3 py-2 text-body-sm font-medium text-[var(--tabs-hover-color,var(--color-text-default))]">
+            Hover
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Tabs/Sub/ActiveIndicator">
+          <div className="w-[60px] h-[2px] bg-[var(--color-action-primary)]" />
+        </FigmaFrame>
+      </div>
+
       {/* ════════════════ BREADCRUMB ════════════════ */}
       <SectionTitle>Breadcrumb</SectionTitle>
       <FigmaFrame name="Breadcrumb/3-items">
@@ -1676,6 +1852,24 @@ export function FigmaComponentsPage() {
           'ItemCount를 Variant로 두거나, 아이템을 가변 개수로 처리 (Auto Layout + 복제)',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-wrap gap-4 items-center">
+        <FigmaFrame name="Breadcrumb/Sub/Item/link">
+          <a
+            href="#"
+            className="text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:underline"
+          >
+            Project-1
+          </a>
+        </FigmaFrame>
+        <FigmaFrame name="Breadcrumb/Sub/Item/current">
+          <span className="text-body-sm text-[var(--color-text-default)]">Instances</span>
+        </FigmaFrame>
+        <FigmaFrame name="Breadcrumb/Sub/Separator">
+          <IconChevronRight size={12} className="text-[var(--color-text-subtle)]" />
+        </FigmaFrame>
+      </div>
 
       {/* ═══════════════════════════════════════════
           FEEDBACK
@@ -1749,109 +1943,6 @@ export function FigmaComponentsPage() {
         ]}
       />
 
-      {/* ════════════════ EMPTY STATE ════════════════ */}
-      <SectionTitle>EmptyState</SectionTitle>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FigmaFrame name="EmptyState/card/with-action">
-          <EmptyState
-            icon={<IconDatabase size={48} stroke={1} />}
-            title="No instances found"
-            description="Create your first instance to get started."
-            action={
-              <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
-                Create Instance
-              </Button>
-            }
-          />
-        </FigmaFrame>
-        <FigmaFrame name="EmptyState/inline/no-action">
-          <EmptyState
-            variant="inline"
-            icon={<IconSearch size={48} stroke={1} />}
-            title="No results found"
-            description="Try adjusting your search or filter criteria."
-          />
-        </FigmaFrame>
-      </div>
-
-      <FigmaGuide
-        figmaName="TDS/Feedback/EmptyState"
-        properties={[
-          { name: 'Variant', type: 'Variant', values: 'card | inline' },
-          { name: 'Title', type: 'Text', values: '"No items found"' },
-          { name: 'Description', type: 'Text', values: '"Description"' },
-          { name: 'HasAction', type: 'Boolean', values: 'true | false' },
-          { name: 'Icon', type: 'Instance swap', values: 'icon slot' },
-        ]}
-        autoLayout={[
-          {
-            label: 'Container',
-            direction: 'V',
-            gap: '16px',
-            padding: '64px (card) / 80px 0 (inline)',
-          },
-        ]}
-        tokens={[
-          { label: 'Card padding', value: '64px (p-16)' },
-          { label: 'Inline padding-y', value: '80px (py-20)' },
-          { label: 'Icon color', value: '--color-text-disabled' },
-          { label: 'Title', value: 'heading-h5 (16px/24px semibold)' },
-          { label: 'Description', value: 'body-lg (14px/20px), text-subtle, max-w-md' },
-          {
-            label: 'Content gap',
-            value: '16px (icon ↔ text), 8px (title ↔ desc), 8px (desc ↔ action)',
-          },
-        ]}
-        radius="8px (--primitive-radius-lg) — card variant만"
-        tips={[
-          'card: 테두리(border-subtle) + 배경(surface-default) + 큰 패딩. 독립 영역에서 사용',
-          'inline: 패딩만 있고 테두리/배경 없음. 이미 카드/패널 안에 배치될 때 사용 (중복 테두리 방지)',
-          '수직 Auto Layout: 아이콘 → 제목+설명 → 액션 버튼. 모두 중앙 정렬',
-          'Icon: 48px, stroke 1. Instance swap으로 상황에 맞는 아이콘 교체 (IconDatabase, IconSearch, IconFolder 등)',
-          'Action: 주로 Button(primary, md) + 좌측 아이콘. HasAction=false면 버튼 영역 숨김',
-          'Description과 Action은 각각 optional. Boolean으로 표시/숨김 제어',
-        ]}
-      />
-
-      {/* ════════════════ ERROR STATE ════════════════ */}
-      <SectionTitle>ErrorState</SectionTitle>
-      <FigmaFrame name="ErrorState/with-action">
-        <ErrorState
-          icon={<IconAlertTriangle size={48} stroke={1} />}
-          title="Something went wrong"
-          description="An unexpected error occurred. Please try again later."
-          action={
-            <Button variant="secondary" size="md">
-              Retry
-            </Button>
-          }
-        />
-      </FigmaFrame>
-
-      <FigmaGuide
-        figmaName="TDS/Feedback/ErrorState"
-        properties={[
-          { name: 'Title', type: 'Text', values: '"Error title"' },
-          { name: 'Description', type: 'Text', values: '"Error description"' },
-          { name: 'HasAction', type: 'Boolean', values: 'true | false' },
-          { name: 'Icon', type: 'Instance swap', values: 'icon slot' },
-        ]}
-        autoLayout={[{ label: 'Container', direction: 'V', gap: '8px', padding: '80px 0' }]}
-        tokens={[
-          { label: 'Icon color', value: '--color-state-danger (red)' },
-          { label: 'Title', value: 'heading-h5, mb-8px' },
-          { label: 'Description', value: 'body-md, text-muted, mb-16px' },
-          { label: 'Padding-y', value: '80px (py-20)' },
-        ]}
-        tips={[
-          'EmptyState와 유사한 구조이나 아이콘 색상이 danger(red). 별도 컴포넌트로 생성',
-          '수직 Auto Layout: 아이콘 → 제목 → 설명 → 액션 버튼. 모두 중앙 정렬',
-          'Action: 주로 Retry 버튼(secondary, md). HasAction=false면 버튼 숨김',
-          'Icon: 48px, stroke 1. AlertTriangle(일반), WifiOff(네트워크), ServerOff(서버) 등',
-          'EmptyState와 달리 카드 테두리/배경 없음 (inline과 유사). 상위 컨테이너가 배경 제공',
-        ]}
-      />
-
       {/* ════════════════ FORM FIELD ════════════════ */}
       <SectionTitle>FormField</SectionTitle>
       <div className="flex flex-col gap-6 max-w-md">
@@ -1901,6 +1992,35 @@ export function FigmaComponentsPage() {
           'Control 슬롯: Input, Select, Textarea, Checkbox, Radio 등 다양한 폼 컴포넌트가 들어감. Instance swap 또는 Slot frame으로 처리',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4 max-w-md">
+        <FigmaFrame name="FormField/Sub/Label/default">
+          <span className="text-label-sm text-[var(--color-text-default)] font-medium">
+            Field Label
+          </span>
+        </FigmaFrame>
+        <FigmaFrame name="FormField/Sub/Label/required">
+          <span className="text-label-sm text-[var(--color-text-default)] font-medium">
+            Field Label <span className="text-[var(--color-state-danger)]">*</span>
+          </span>
+        </FigmaFrame>
+        <FigmaFrame name="FormField/Sub/Description">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
+            Select your preferred region for this resource.
+          </span>
+        </FigmaFrame>
+        <FigmaFrame name="FormField/Sub/HelperText">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            2-64 characters allowed
+          </span>
+        </FigmaFrame>
+        <FigmaFrame name="FormField/Sub/ErrorMessage">
+          <span className="text-body-sm text-[var(--color-state-danger)]" role="alert">
+            Password must be at least 8 characters.
+          </span>
+        </FigmaFrame>
+      </div>
 
       {/* ════════════════ SECTION CARD ════════════════ */}
       <SectionTitle>SectionCard</SectionTitle>
@@ -1952,6 +2072,56 @@ export function FigmaComponentsPage() {
           'Content 내부 DataRow 사이에도 1px divider 자동 삽입',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="SectionCard/Sub/Header/default">
+          <div className="flex items-center justify-between h-[28px]">
+            <h3 className="text-heading-h5 text-[var(--color-text-default)]">Basic Information</h3>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/Sub/Header/with-actions">
+          <div className="flex items-center justify-between h-[28px]">
+            <h3 className="text-heading-h5 text-[var(--color-text-default)]">Basic Information</h3>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/Sub/Header/with-description">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between h-[28px]">
+              <h3 className="text-heading-h5 text-[var(--color-text-default)]">Configuration</h3>
+            </div>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              Configure advanced settings for this resource.
+            </span>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/Sub/DataRow/text">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">Name</span>
+            <span className="text-body-md text-[var(--color-text-default)]">instance-01</span>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/Sub/DataRow/link">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">Network</span>
+            <a href="#" className="text-body-md text-[var(--color-action-primary)] hover:underline">
+              network-01
+            </a>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/Sub/DataRow/custom">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-label-sm text-[var(--color-text-subtle)]">Status</span>
+            <StatusIndicator status="active" layout="dot-label" />
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="SectionCard/Sub/Divider">
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        </FigmaFrame>
+      </div>
 
       {/* ════════════════ DETAIL HEADER ════════════════ */}
       <SectionTitle>DetailHeader</SectionTitle>
@@ -2008,6 +2178,74 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="DetailHeader/Sub/Title">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">
+            instance-production-01
+          </h2>
+        </FigmaFrame>
+        <FigmaFrame name="DetailHeader/Sub/Actions">
+          <div className="flex items-center gap-1">
+            <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
+              Console
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+              Start
+            </Button>
+            <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+              More Actions
+            </Button>
+          </div>
+        </FigmaFrame>
+        <div className="flex flex-wrap gap-3">
+          <FigmaFrame name="DetailHeader/Sub/InfoCard/default">
+            <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Host</span>
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  compute-node-03
+                </span>
+              </div>
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DetailHeader/Sub/InfoCard/status">
+            <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Status</span>
+                <StatusIndicator status="active" />
+              </div>
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DetailHeader/Sub/InfoCard/copyable">
+            <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-body-md text-[var(--color-text-default)] truncate">
+                    i-0123456789abcdef
+                  </span>
+                  <button className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-hover)]">
+                    <IconCopy size={12} className="text-[var(--color-text-muted)]" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DetailHeader/Sub/InfoCard/tooltip">
+            <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">IOPS</span>
+                  <IconInfoCircle size={12} className="text-[var(--color-text-subtle)]" />
+                </div>
+                <span className="text-body-md text-[var(--color-text-default)]">3000</span>
+              </div>
+            </div>
+          </FigmaFrame>
+        </div>
+      </div>
+
       {/* ════════════════ PAGE HEADER ════════════════ */}
       <SectionTitle>PageHeader</SectionTitle>
       <FigmaFrame name="PageHeader/with-actions">
@@ -2036,6 +2274,23 @@ export function FigmaComponentsPage() {
           '높이: 32px (md 버튼 높이에 맞춤). 수직 중앙 정렬',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="PageHeader/Sub/Title">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Instances</h1>
+        </FigmaFrame>
+        <FigmaFrame name="PageHeader/Sub/TitleExtra">
+          <Badge variant="info" size="sm">
+            12
+          </Badge>
+        </FigmaFrame>
+        <FigmaFrame name="PageHeader/Sub/Actions">
+          <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
+            Create Instance
+          </Button>
+        </FigmaFrame>
+      </div>
 
       {/* ════════════════ INFO BOX ════════════════ */}
       <SectionTitle>InfoBox</SectionTitle>
@@ -2154,6 +2409,51 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="ListToolbar/Sub/PrimaryActions">
+          <ListToolbar.Actions>
+            <FilterSearchInput
+              filters={filterFields}
+              appliedFilters={[]}
+              onFiltersChange={() => {}}
+              placeholder="Search by attributes"
+              size="sm"
+              className="w-[var(--search-input-width)]"
+              hideAppliedFilters
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<IconDownload size={12} />}
+              aria-label="Download"
+            />
+          </ListToolbar.Actions>
+        </FigmaFrame>
+        <FigmaFrame name="ListToolbar/Sub/BulkActions">
+          <ListToolbar.Actions>
+            <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
+              Start
+            </Button>
+            <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+              Delete
+            </Button>
+          </ListToolbar.Actions>
+        </FigmaFrame>
+        <FigmaFrame name="ListToolbar/Sub/Divider">
+          <div className="h-4 w-px bg-[var(--color-border-default)]" />
+        </FigmaFrame>
+        <FigmaFrame name="ListToolbar/Sub/FilterBar">
+          <div className="flex items-center gap-2 pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+            <Chip label="Status" value="Running" onRemove={() => {}} />
+            <Chip label="Name" value="web-server" onRemove={() => {}} />
+            <button className="text-label-sm text-[var(--color-action-primary)] hover:underline ml-1">
+              Clear all
+            </button>
+          </div>
+        </FigmaFrame>
+      </div>
+
       {/* ════════════════ CONTEXT MENU ════════════════ */}
       <SectionTitle>ContextMenu</SectionTitle>
       <div className="flex gap-4">
@@ -2196,6 +2496,59 @@ export function FigmaComponentsPage() {
           '모든 아이템에 고유 id 필수. Figma에서는 레이어 이름으로 관리',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-3">
+        <FigmaFrame name="ContextMenu/Sub/Container">
+          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius,6px)] shadow-md min-w-[80px] p-1">
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)]">
+              Edit
+            </div>
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)]">
+              Duplicate
+            </div>
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)]">
+              Export
+            </div>
+            <div className="my-1 border-b border-[var(--color-border-subtle)]" />
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-state-danger)] rounded-[var(--radius-md)]">
+              Delete
+            </div>
+          </div>
+        </FigmaFrame>
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="ContextMenu/Sub/Item/default">
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)] min-w-[120px]">
+              Edit
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="ContextMenu/Sub/Item/hover">
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] bg-[var(--color-surface-hover)] rounded-[var(--radius-md)] min-w-[120px]">
+              Edit
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="ContextMenu/Sub/Item/danger">
+            <div className="px-2 py-1.5 text-body-sm text-[var(--color-state-danger)] rounded-[var(--radius-md)] min-w-[120px]">
+              Delete
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="ContextMenu/Sub/Item/with-icon">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)] min-w-[120px]">
+              <IconEdit size={14} className="text-[var(--color-text-muted)]" />
+              Edit
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="ContextMenu/Sub/Divider">
+            <div className="w-[120px] my-1 border-b border-[var(--color-border-subtle)]" />
+          </FigmaFrame>
+          <FigmaFrame name="ContextMenu/Sub/Submenu">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)] min-w-[120px]">
+              <span className="flex-1">Instance status</span>
+              <IconChevronRight size={12} className="text-[var(--color-text-muted)]" />
+            </div>
+          </FigmaFrame>
+        </div>
+      </div>
 
       {/* ═══════════════════════════════════════════
           OVERLAYS
@@ -2383,6 +2736,43 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="Modal/Sub/Overlay">
+          <div className="w-[200px] h-[120px] bg-black/60 rounded-[var(--radius-md)]" />
+        </FigmaFrame>
+        <FigmaFrame name="Modal/Sub/Container">
+          <div className="w-[344px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-xl)] shadow-xl p-6">
+            <div className="text-body-sm text-[var(--color-text-muted)]">
+              Modal container (sm: 344px)
+            </div>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Modal/Sub/Title">
+          <h3 className="text-heading-h5 text-[var(--color-text-default)]">Delete Resource</h3>
+        </FigmaFrame>
+        <FigmaFrame name="Modal/Sub/Description">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            This action is permanent and cannot be undone.
+          </p>
+        </FigmaFrame>
+        <FigmaFrame name="Modal/Sub/Content">
+          <div className="flex flex-col gap-4">
+            <InfoBox label="Resource name" value="instance-01" />
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Modal/Sub/Footer">
+          <div className="flex gap-2 w-[296px]">
+            <Button variant="secondary" className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="danger" className="flex-1">
+              Delete
+            </Button>
+          </div>
+        </FigmaFrame>
+      </div>
+
       {/* ════════════════ DRAWER ════════════════ */}
       <SectionTitle>Drawer</SectionTitle>
       <FigmaFrame name="Drawer/right/360/with-footer">
@@ -2420,6 +2810,43 @@ export function FigmaComponentsPage() {
           'Backdrop 클릭 또는 ESC로 닫힘',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="Drawer/Sub/Overlay">
+          <div className="w-[200px] h-[120px] bg-black/40 rounded-[var(--radius-md)]" />
+        </FigmaFrame>
+        <FigmaFrame name="Drawer/Sub/Title">
+          <h3 className="text-heading-h5 text-[var(--color-text-default)]">Edit Instance</h3>
+        </FigmaFrame>
+        <FigmaFrame name="Drawer/Sub/Description">
+          <p className="text-body-md text-[var(--color-text-subtle)] mt-1">
+            Create a snapshot of this instance to capture its current system state.
+          </p>
+        </FigmaFrame>
+        <FigmaFrame name="Drawer/Sub/Content">
+          <div className="w-[312px] px-6 pt-4 pb-8">
+            <VStack gap={6}>
+              <FormField label="Instance Name" required>
+                <Input placeholder="Enter name" fullWidth />
+              </FormField>
+              <FormField label="Description">
+                <Textarea placeholder="Enter description" fullWidth />
+              </FormField>
+            </VStack>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Drawer/Sub/Footer">
+          <div className="flex gap-2 w-[312px] border-t border-[var(--color-border-default)] px-6 py-4">
+            <Button variant="secondary" className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="primary" className="flex-1">
+              Save
+            </Button>
+          </div>
+        </FigmaFrame>
+      </div>
 
       {/* ════════════════ TOAST ════════════════ */}
       <SectionTitle>Toast</SectionTitle>
@@ -2459,6 +2886,58 @@ export function FigmaComponentsPage() {
           'useToast() 훅으로 프로그래밍 방식 호출: toast.success(), toast.error() 등',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="Toast/Sub/Container">
+          <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg">
+            <div className="flex gap-3">
+              <IconCircleCheck size={20} className="shrink-0 text-[var(--color-state-success)]" />
+              <div className="flex-1 flex flex-col gap-1">
+                <span className="text-label-md text-[var(--color-text-default)]">Success</span>
+                <span className="text-body-md text-[var(--color-text-muted)]">
+                  Instance has been created successfully.
+                </span>
+              </div>
+              <button className="shrink-0 p-1">
+                <IconX size={16} className="text-[var(--color-text-muted)]" />
+              </button>
+            </div>
+          </div>
+        </FigmaFrame>
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="Toast/Sub/Icon/success">
+            <IconCircleCheck size={20} className="text-[var(--color-state-success)]" />
+          </FigmaFrame>
+          <FigmaFrame name="Toast/Sub/Icon/error">
+            <IconAlertCircle size={20} className="text-[var(--color-state-danger)]" />
+          </FigmaFrame>
+          <FigmaFrame name="Toast/Sub/Icon/warning">
+            <IconAlertTriangle size={20} className="text-[var(--color-state-warning)]" />
+          </FigmaFrame>
+          <FigmaFrame name="Toast/Sub/Icon/info">
+            <IconInfoCircle size={20} className="text-[var(--color-state-info)]" />
+          </FigmaFrame>
+        </div>
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="Toast/Sub/Title">
+            <span className="text-label-md text-[var(--color-text-default)]">Instance Created</span>
+          </FigmaFrame>
+          <FigmaFrame name="Toast/Sub/Message">
+            <span className="text-body-md text-[var(--color-text-muted)]">
+              Your instance has been successfully created.
+            </span>
+          </FigmaFrame>
+          <FigmaFrame name="Toast/Sub/CloseButton">
+            <button className="p-1 rounded hover:bg-[var(--color-surface-hover)]">
+              <IconX size={16} className="text-[var(--color-text-muted)]" />
+            </button>
+          </FigmaFrame>
+          <FigmaFrame name="Toast/Sub/Timestamp">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">2 min ago</span>
+          </FigmaFrame>
+        </div>
+      </div>
 
       {/* ════════════════ TABLE ════════════════ */}
       <SectionTitle>Table</SectionTitle>
@@ -2500,6 +2979,137 @@ export function FigmaComponentsPage() {
           'Figma에서 Table은 Row 컴포넌트를 반복 배치. Header Row + Body Row를 분리',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="Table/Sub/HeaderCell/default">
+            <div className="inline-flex items-center px-[var(--table-cell-padding-x,12px)] py-[var(--table-header-padding-y,8px)] bg-[var(--table-header-bg,var(--color-surface-subtle))] text-[length:var(--table-header-font-size,12px)] font-medium text-[var(--color-text-default)]">
+              Name
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/HeaderCell/sortable">
+            <div className="inline-flex items-center gap-1 px-[var(--table-cell-padding-x,12px)] py-[var(--table-header-padding-y,8px)] bg-[var(--table-header-bg,var(--color-surface-subtle))] text-[length:var(--table-header-font-size,12px)] font-medium text-[var(--color-text-default)] cursor-pointer">
+              Name
+              <IconSelector size={14} className="text-[var(--color-text-subtle)]" />
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/HeaderCell/sorted-asc">
+            <div className="inline-flex items-center gap-1 px-[var(--table-cell-padding-x,12px)] py-[var(--table-header-padding-y,8px)] bg-[var(--table-header-bg,var(--color-surface-subtle))] text-[length:var(--table-header-font-size,12px)] font-medium text-[var(--color-action-primary)] cursor-pointer">
+              Name
+              <IconChevronUp size={14} className="text-[var(--color-action-primary)]" />
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/HeaderCell/sorted-desc">
+            <div className="inline-flex items-center gap-1 px-[var(--table-cell-padding-x,12px)] py-[var(--table-header-padding-y,8px)] bg-[var(--table-header-bg,var(--color-surface-subtle))] text-[length:var(--table-header-font-size,12px)] font-medium text-[var(--color-action-primary)] cursor-pointer">
+              Name
+              <IconChevronDown size={14} className="text-[var(--color-action-primary)]" />
+            </div>
+          </FigmaFrame>
+        </div>
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="Table/Sub/HeaderCheckbox">
+            <div className="inline-flex items-center justify-center w-[var(--table-checkbox-width,40px)] py-[var(--table-header-padding-y,8px)] bg-[var(--table-header-bg,var(--color-surface-subtle))]">
+              <Checkbox checked={false} onChange={() => {}} />
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/RowCheckbox">
+            <div className="inline-flex items-center justify-center w-[var(--table-checkbox-width,40px)] py-[var(--table-cell-padding-y,8px)]">
+              <Checkbox checked={false} onChange={() => {}} />
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/RowCheckbox/checked">
+            <div className="inline-flex items-center justify-center w-[var(--table-checkbox-width,40px)] py-[var(--table-cell-padding-y,8px)]">
+              <Checkbox checked onChange={() => {}} />
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/ResizeHandle">
+            <div className="w-[var(--table-resize-handle-width,4px)] h-[44px] bg-[var(--color-border-focus)] cursor-col-resize" />
+          </FigmaFrame>
+        </div>
+        <div className="flex flex-wrap gap-4 items-end">
+          <FigmaFrame name="Table/Sub/DataCell/text">
+            <div className="inline-flex items-center px-[var(--table-cell-padding-x,12px)] py-[var(--table-cell-padding-y,8px)] text-[length:var(--table-font-size,12px)] text-[var(--color-text-default)]">
+              web-server-01
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/DataCell/badge">
+            <div className="inline-flex items-center px-[var(--table-cell-padding-x,12px)] py-[var(--table-cell-padding-y,8px)]">
+              <Badge variant="success" size="sm">
+                Running
+              </Badge>
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/DataCell/status">
+            <div className="inline-flex items-center justify-center px-[var(--table-cell-padding-x,12px)] py-[var(--table-cell-padding-y,8px)]">
+              <StatusIndicator status="active" />
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/DataCell/link">
+            <div className="inline-flex items-center px-[var(--table-cell-padding-x,12px)] py-[var(--table-cell-padding-y,8px)]">
+              <a
+                href="#"
+                className="text-[length:var(--table-font-size,12px)] text-[var(--color-action-primary)] hover:underline"
+              >
+                network-01
+              </a>
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Table/Sub/DataCell/mono">
+            <div className="inline-flex items-center px-[var(--table-cell-padding-x,12px)] py-[var(--table-cell-padding-y,8px)] font-mono text-[length:var(--table-font-size,12px)] text-[var(--color-text-default)]">
+              i-0123456789abcdef
+            </div>
+          </FigmaFrame>
+        </div>
+        <FigmaFrame name="Table/Sub/DataRow/default">
+          <div className="flex items-center min-h-[var(--table-row-height,44px)] rounded-[var(--table-row-radius,6px)] bg-[var(--color-surface-default)]">
+            <div className="px-3 py-2 text-[length:12px] text-[var(--color-text-default)] flex-1">
+              web-server-01
+            </div>
+            <div className="px-3 py-2 text-[length:12px] flex-1">
+              <Badge variant="success" size="sm">
+                Running
+              </Badge>
+            </div>
+            <div className="px-3 py-2 text-[length:12px] text-[var(--color-text-default)] flex-1 text-right">
+              Mar 01, 2026
+            </div>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Table/Sub/DataRow/selected">
+          <div className="flex items-center min-h-[var(--table-row-height,44px)] rounded-[var(--table-row-radius,6px)] bg-[var(--color-state-info-bg)]">
+            <div className="flex items-center justify-center w-[40px]">
+              <Checkbox checked onChange={() => {}} />
+            </div>
+            <div className="px-3 py-2 text-[length:12px] text-[var(--color-text-default)] flex-1">
+              web-server-01
+            </div>
+            <div className="px-3 py-2 text-[length:12px] flex-1">
+              <Badge variant="success" size="sm">
+                Running
+              </Badge>
+            </div>
+            <div className="px-3 py-2 text-[length:12px] text-[var(--color-text-default)] flex-1 text-right">
+              Mar 01, 2026
+            </div>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="Table/Sub/DataRow/hover">
+          <div className="flex items-center min-h-[var(--table-row-height,44px)] rounded-[var(--table-row-radius,6px)] bg-[var(--table-row-hover-bg,var(--color-surface-hover))]">
+            <div className="px-3 py-2 text-[length:12px] text-[var(--color-text-default)] flex-1">
+              web-server-01
+            </div>
+            <div className="px-3 py-2 text-[length:12px] flex-1">
+              <Badge variant="success" size="sm">
+                Running
+              </Badge>
+            </div>
+            <div className="px-3 py-2 text-[length:12px] text-[var(--color-text-default)] flex-1 text-right">
+              Mar 01, 2026
+            </div>
+          </div>
+        </FigmaFrame>
+      </div>
 
       {/* ════════════════ DATE PICKER ════════════════ */}
       <SectionTitle>DatePicker</SectionTitle>
@@ -2543,6 +3153,77 @@ export function FigmaComponentsPage() {
         ]}
       />
 
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-col gap-4">
+        <FigmaFrame name="DatePicker/Sub/MonthNav">
+          <div className="flex items-center gap-2 justify-between w-[260px]">
+            <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-[var(--color-surface-hover)]">
+              <IconChevronLeft size={12} className="text-[var(--color-text-muted)]" />
+            </button>
+            <span className="w-[64px] text-center text-heading-h6 text-[var(--color-text-default)]">
+              Mar 2026
+            </span>
+            <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-[var(--color-surface-hover)]">
+              <IconChevronRight size={12} className="text-[var(--color-text-muted)]" />
+            </button>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="DatePicker/Sub/WeekdayHeaders">
+          <div className="grid grid-cols-7 gap-0" style={{ width: 260 }}>
+            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+              <div
+                key={d}
+                className="w-[32px] h-[32px] flex items-center justify-center text-label-sm text-[var(--color-text-muted)]"
+              >
+                {d}
+              </div>
+            ))}
+          </div>
+        </FigmaFrame>
+        <div className="flex flex-wrap gap-3 items-end">
+          <FigmaFrame name="DatePicker/Sub/DayCell/default">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-default)] rounded-full cursor-pointer hover:bg-[var(--color-surface-hover)]">
+              15
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/selected">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-on-primary)] bg-[var(--color-action-primary)] rounded-full">
+              11
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/today">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-default)] rounded-full ring-1 ring-[var(--color-action-primary)]">
+              11
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/disabled">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-default)] rounded-full opacity-50 cursor-not-allowed">
+              28
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/other-month">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-muted)] rounded-full">
+              1
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/range-start">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-on-primary)] bg-[var(--color-action-primary)] rounded-full">
+              5
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/range-end">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-on-primary)] bg-[var(--color-action-primary)] rounded-full">
+              12
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="DatePicker/Sub/DayCell/in-range">
+            <div className="w-[32px] h-[32px] flex items-center justify-center text-label-md text-[var(--color-text-default)] bg-[var(--color-state-info-bg)]">
+              8
+            </div>
+          </FigmaFrame>
+        </div>
+      </div>
+
       {/* ════════════════ TAB BAR ════════════════ */}
       <SectionTitle>TabBar</SectionTitle>
       <FigmaFrame name="TabBar/with-add/3-tabs">
@@ -2580,6 +3261,62 @@ export function FigmaComponentsPage() {
           'Figma에서 Tab을 별도 컴포넌트로: State(active/inactive/hover) + Closable Boolean',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="TabBar/Sub/Tab/active">
+          <div className="relative group flex items-center gap-[var(--tabbar-tab-gap,4px)] w-[160px] h-[36px] px-[var(--tabbar-tab-padding-x,12px)] bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] rounded-t-[6px]">
+            <IconServer size={12} className="shrink-0 text-[var(--color-text-default)]" />
+            <span className="flex-1 truncate text-[length:var(--tabbar-font-size,12px)] font-medium text-[var(--color-text-default)]">
+              Active Tab
+            </span>
+            <button className="shrink-0 size-[16px] flex items-center justify-center rounded-[var(--radius-sm)]">
+              <IconX size={12} className="text-[var(--color-text-muted)]" />
+            </button>
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-action-primary)] z-20" />
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/Tab/inactive">
+          <div className="relative group flex items-center gap-[var(--tabbar-tab-gap,4px)] w-[160px] h-[36px] px-[var(--tabbar-tab-padding-x,12px)] bg-transparent border-r border-[var(--color-border-subtle)]">
+            <IconServer size={12} className="shrink-0 text-[var(--color-text-muted)]" />
+            <span className="flex-1 truncate text-[length:var(--tabbar-font-size,12px)] font-medium text-[var(--color-text-muted)]">
+              Inactive Tab
+            </span>
+            <button className="shrink-0 size-[16px] flex items-center justify-center rounded-[var(--radius-sm)] opacity-0">
+              <IconX size={12} className="text-[var(--color-text-muted)]" />
+            </button>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/Tab/CloseButton">
+          <button className="size-[16px] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-hover)]">
+            <IconX size={12} className="text-[var(--color-text-muted)]" />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/Tab/ActiveIndicator">
+          <div className="w-[160px] h-[2px] bg-[var(--color-action-primary)]" />
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/AddButton">
+          <button className="shrink-0 size-[28px] flex items-center justify-center rounded-[var(--radius-md)] hover:bg-[var(--color-surface-hover)]">
+            <IconPlus size={14} className="text-[var(--color-text-muted)]" />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/WindowControls">
+          <div className="flex items-center gap-1 px-2">
+            <WindowControl variant="minimize" onClick={() => {}} />
+            <WindowControl variant="maximize" onClick={() => {}} />
+            <WindowControl variant="close" onClick={() => {}} />
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/WindowControl/minimize">
+          <WindowControl variant="minimize" onClick={() => {}} />
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/WindowControl/maximize">
+          <WindowControl variant="maximize" onClick={() => {}} />
+        </FigmaFrame>
+        <FigmaFrame name="TabBar/Sub/WindowControl/close">
+          <WindowControl variant="close" onClick={() => {}} />
+        </FigmaFrame>
+      </div>
 
       {/* ════════════════ TOP BAR ════════════════ */}
       <SectionTitle>TopBar</SectionTitle>
@@ -2644,6 +3381,52 @@ export function FigmaComponentsPage() {
           'TopBarAction의 badge: 빨간 dot으로 알림 표시. Boolean 속성',
         ]}
       />
+
+      <SubTitle>Sub Elements</SubTitle>
+      <div className="flex flex-wrap gap-4 items-end">
+        <FigmaFrame name="TopBar/Sub/SidebarToggle">
+          <button className="size-[var(--topbar-button-size,28px)] flex items-center justify-center rounded-[var(--topbar-button-radius,6px)] hover:bg-[var(--color-surface-hover)]">
+            <IconLayoutSidebar size={14} className="text-[var(--color-text-muted)]" />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="TopBar/Sub/Navigation">
+          <div className="flex items-center gap-0.5">
+            <button className="size-[var(--topbar-button-size,28px)] flex items-center justify-center rounded-[var(--topbar-button-radius,6px)] hover:bg-[var(--color-surface-hover)]">
+              <IconArrowLeft size={12} className="text-[var(--color-text-muted)]" />
+            </button>
+            <button className="size-[var(--topbar-button-size,28px)] flex items-center justify-center rounded-[var(--topbar-button-radius,6px)] hover:bg-[var(--color-surface-hover)]">
+              <IconArrowRight size={12} className="text-[var(--color-text-muted)]" />
+            </button>
+          </div>
+        </FigmaFrame>
+        <FigmaFrame name="TopBar/Sub/Navigation/BackButton">
+          <button className="size-[var(--topbar-button-size,28px)] flex items-center justify-center rounded-[var(--topbar-button-radius,6px)] hover:bg-[var(--color-surface-hover)]">
+            <IconArrowLeft size={12} className="text-[var(--color-text-muted)]" />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="TopBar/Sub/Navigation/ForwardButton">
+          <button className="size-[var(--topbar-button-size,28px)] flex items-center justify-center rounded-[var(--topbar-button-radius,6px)] hover:bg-[var(--color-surface-hover)]">
+            <IconArrowRight size={12} className="text-[var(--color-text-muted)]" />
+          </button>
+        </FigmaFrame>
+        <FigmaFrame name="TopBar/Sub/TopBarAction/default">
+          <TopBarAction icon={<IconTerminal2 size={16} stroke={1.5} />} aria-label="Console" />
+        </FigmaFrame>
+        <FigmaFrame name="TopBar/Sub/TopBarAction/with-badge">
+          <TopBarAction
+            icon={<IconBell size={16} stroke={1.5} />}
+            aria-label="Notifications"
+            badge
+          />
+        </FigmaFrame>
+        <FigmaFrame name="TopBar/Sub/TopBarAction/active">
+          <TopBarAction
+            icon={<IconTerminal2 size={16} stroke={1.5} />}
+            aria-label="Console"
+            active
+          />
+        </FigmaFrame>
+      </div>
 
       {/* ═══════════════════════════════════════════
           LAYOUT & UTILITY
