@@ -470,7 +470,7 @@ export function CloudBuilderDetailPage() {
   if (!hasDetail) {
     if (isFigmaCapture) {
       return (
-        <FigmaCaptureWrapper>
+        <FigmaCaptureWrapper {...shellProps} contentClassName="pt-4 px-8 pb-6">
           <div className="text-[var(--color-text-subtle)]">This page has no detail view.</div>
         </FigmaCaptureWrapper>
       );
@@ -942,7 +942,14 @@ export function CloudBuilderDetailPage() {
   );
 
   if (isFigmaCapture) {
-    return <FigmaCaptureWrapper>{pageContent}</FigmaCaptureWrapper>;
+    return (
+      <FigmaCaptureWrapper
+        {...shellProps}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        {pageContent}
+      </FigmaCaptureWrapper>
+    );
   }
 
   return (
