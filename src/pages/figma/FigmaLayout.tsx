@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 const navItems = [
   { label: 'Foundation', path: '/figma/foundation' },
   { label: 'Components', path: '/figma/components' },
+  { label: 'Cloud Builder', path: '/figma/cloudbuilder' },
 ];
 
 export function FigmaLayout() {
