@@ -26,7 +26,10 @@ const thakiVariantToStatus: Record<ThakiProgressBarVariant, ProgressBarStatus> =
   warning: 'warning',
 };
 
-export interface ProgressBarProps {
+export interface ProgressBarProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children' | 'color'
+> {
   /** Current value (Used) */
   value: number;
   /** Maximum value (Total), undefined = unlimited */
@@ -47,8 +50,6 @@ export interface ProgressBarProps {
   statusText?: string;
   /** Custom status color (overrides default 'info') */
   status?: ProgressBarStatus;
-  /** Custom class name */
-  className?: string;
   /** Size variant */
   size?: 'sm' | 'md';
   /** Custom thresholds for status color transitions.
@@ -169,6 +170,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   thakiVariant,
   color,
   pendingColor,
+  ...rest
 }) => {
   // thaki-ui compatibility: map thakiVariant to status
   const status = rawStatus ?? (thakiVariant ? thakiVariantToStatus[thakiVariant] : undefined);
@@ -194,7 +196,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   // Quota variant
   if (variant === 'quota') {
     return (
-      <div className={`flex flex-col gap-1.5 w-full ${className}`}>
+      <div className={`flex flex-col gap-1.5 w-full ${className}`} {...rest}>
         {/* Header */}
         {(label || showValue) && (
           <div className="flex items-center justify-between">
@@ -290,7 +292,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   // Default variant (simple progress bar or table cell)
   return (
-    <div className={`flex flex-col gap-1.5 w-full ${className}`}>
+    <div className={`flex flex-col gap-1.5 w-full ${className}`} {...rest}>
       {/* Header */}
       {(label || statusText || showValue) && (
         <div className="flex items-center justify-between">

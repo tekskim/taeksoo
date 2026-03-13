@@ -56,31 +56,28 @@ export interface TabsProps extends Omit<
   children: ReactNode;
 }
 
-export interface TabListProps {
+export interface TabListProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Tab items */
   children: ReactNode;
-  /** Additional CSS classes */
-  className?: string;
 }
 
-export interface TabProps {
+export interface TabProps extends Omit<
+  React.HTMLAttributes<HTMLButtonElement>,
+  'children' | 'value'
+> {
   /** Tab value (unique identifier) */
   value: string;
   /** Tab label */
   children: ReactNode;
   /** Disabled state */
   disabled?: boolean;
-  /** Additional CSS classes */
-  className?: string;
 }
 
-export interface TabPanelProps {
+export interface TabPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Panel value (matches Tab value) */
   value: string;
   /** Panel content */
   children: ReactNode;
-  /** Additional CSS classes */
-  className?: string;
 }
 
 /* ----------------------------------------
@@ -132,7 +129,7 @@ export function Tabs({
    TabList Component
    ---------------------------------------- */
 
-export function TabList({ children, className = '' }: TabListProps) {
+export function TabList({ children, className = '', ...rest }: TabListProps) {
   const { variant, setActiveTab } = useTabsContext();
 
   const handleKeyDown = useCallback(
@@ -194,6 +191,7 @@ export function TabList({ children, className = '' }: TabListProps) {
 
   return (
     <div
+      {...rest}
       role="tablist"
       className={twMerge(variantStyles[variant], className)}
       onKeyDown={handleKeyDown}
@@ -207,7 +205,7 @@ export function TabList({ children, className = '' }: TabListProps) {
    Tab Component
    ---------------------------------------- */
 
-export function Tab({ value, children, disabled = false, className = '' }: TabProps) {
+export function Tab({ value, children, disabled = false, className = '', ...rest }: TabProps) {
   const { activeTab, setActiveTab, size, variant } = useTabsContext();
   const isActive = activeTab === value;
 
@@ -220,6 +218,7 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
   if (variant === 'underline') {
     return (
       <button
+        {...rest}
         role="tab"
         type="button"
         data-tab-value={value}
@@ -266,6 +265,7 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
   // Boxed variant
   return (
     <button
+      {...rest}
       role="tab"
       type="button"
       data-tab-value={value}
@@ -297,12 +297,13 @@ export function Tab({ value, children, disabled = false, className = '' }: TabPr
    TabPanel Component
    ---------------------------------------- */
 
-export function TabPanel({ value, children, className = '' }: TabPanelProps) {
+export function TabPanel({ value, children, className = '', ...rest }: TabPanelProps) {
   const { activeTab } = useTabsContext();
   const isActive = activeTab === value;
 
   return (
     <div
+      {...rest}
       role="tabpanel"
       aria-hidden={!isActive}
       className={twMerge('pt-[var(--tabs-panel-padding)]', !isActive && 'hidden', className)}

@@ -32,7 +32,7 @@ export interface ContextMenuItem {
   icon?: React.ReactNode;
 }
 
-export interface ContextMenuProps {
+export interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Menu items */
   items: ContextMenuItem[];
   /** Trigger element */
@@ -41,8 +41,6 @@ export interface ContextMenuProps {
   trigger?: 'click' | 'contextmenu';
   /** Disabled state */
   disabled?: boolean;
-  /** Custom class name */
-  className?: string;
   /** Minimum top position for dropdown */
   minTop?: number;
   /** Alignment of dropdown relative to trigger (for click trigger) */
@@ -508,6 +506,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   className = '',
   minTop,
   align = 'left',
+  ...rest
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -614,7 +613,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     trigger === 'contextmenu' ? { onContextMenu: handleOpen } : { onClickCapture: handleOpen };
 
   return (
-    <div ref={triggerRef} className={`inline-block w-fit ${className}`} {...triggerProps}>
+    <div ref={triggerRef} className={`inline-block w-fit ${className}`} {...rest} {...triggerProps}>
       {children}
       {isOpen && (
         <ContextMenuContent

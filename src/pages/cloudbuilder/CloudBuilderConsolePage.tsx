@@ -476,9 +476,14 @@ export function CloudBuilderConsolePage() {
           variant="underline"
           size="sm"
         >
-          <TabList>
+          <TabList data-figma-name="TabList" aria-label="TabList">
             {config.tabs.map((t) => (
-              <Tab key={t.id} value={t.id}>
+              <Tab
+                key={t.id}
+                value={t.id}
+                data-figma-name={`Tab-${t.id}`}
+                aria-label={`Tab-${t.label}`}
+              >
                 {t.label}
               </Tab>
             ))}
@@ -492,7 +497,11 @@ export function CloudBuilderConsolePage() {
         aria-label="ListToolbar"
         primaryActions={
           <ListToolbar.Actions>
-            <div className="w-[var(--search-input-width)]">
+            <div
+              className="w-[var(--search-input-width)]"
+              data-figma-name="SearchInput"
+              aria-label="SearchInput"
+            >
               <SearchInput
                 placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
                 value={searchQuery}
@@ -513,6 +522,7 @@ export function CloudBuilderConsolePage() {
               size="sm"
               icon={<IconDownload size={12} />}
               aria-label="Download"
+              data-figma-name="DownloadButton"
               onClick={() => window.alert('Download: Coming Soon')}
             />
           </ListToolbar.Actions>
@@ -526,6 +536,8 @@ export function CloudBuilderConsolePage() {
                 leftIcon={<IconTrash size={12} />}
                 disabled={selected.length === 0}
                 onClick={handleDeleteSelected}
+                data-figma-name="DeleteButton"
+                aria-label="DeleteButton"
               >
                 Delete
               </Button>
@@ -577,6 +589,8 @@ export function CloudBuilderConsolePage() {
         confirmVariant="danger"
         infoLabel="ID"
         infoValue={rowToRemove?.id}
+        data-figma-name="ConfirmModal"
+        aria-label="ConfirmModal"
       />
 
       <Modal
@@ -593,6 +607,8 @@ export function CloudBuilderConsolePage() {
             : 'Change this service status to Enabled?'
         }
         className="w-[720px] max-w-[calc(100vw-32px)]"
+        data-figma-name="StatusModal"
+        aria-label="StatusModal"
       >
         {statusModal ? (
           <div className="flex flex-col">

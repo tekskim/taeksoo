@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type ReactNode } from 'react';
+import React, { useState, useRef, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 /* ----------------------------------------
@@ -7,7 +7,10 @@ import { createPortal } from 'react-dom';
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
-export interface TooltipProps {
+export interface TooltipProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children' | 'content'
+> {
   /** Tooltip content */
   content: ReactNode;
   /** Trigger element */
@@ -30,6 +33,7 @@ export function Tooltip({
   position = 'top',
   delay = 200,
   disabled = false,
+  ...rest
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isPositioned, setIsPositioned] = useState(false);
@@ -174,6 +178,7 @@ export function Tooltip({
   return (
     <>
       <div
+        {...rest}
         ref={triggerRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
