@@ -117,11 +117,17 @@ const PodDisruptionBudgetDetailPage = lazy(() => import('@/pages/PodDisruptionBu
 const ClusterManagementPage = lazy(() => import('@/pages/ClusterManagementPage'));
 const CreateClusterPage = lazy(() => import('@/pages/CreateClusterPage'));
 const ClusterDetailPage = lazy(() => import('@/pages/ClusterDetailPage'));
+const AppCatalogPage = lazy(() => import('@/pages/AppCatalogPage'));
+const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
+const InstalledAppDetailPage = lazy(() => import('@/pages/InstalledAppDetailPage'));
 
 export const containerRoutes = (
   <>
     <Route path="/container" element={<ContainerHomePage />} />
     <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
+    <Route path="/container/apps/catalog" element={<AppCatalogPage />} />
+    <Route path="/container/apps/installed-apps" element={<InstalledAppsPage />} />
+    <Route path="/container/apps/installed-apps/:appId" element={<InstalledAppDetailPage />} />
     <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
     <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
     <Route path="/container/namespaces/create-v2" element={<CreateNamespacePage />} />

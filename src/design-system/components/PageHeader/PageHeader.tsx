@@ -23,7 +23,7 @@ export function PageHeader({ title, titleExtra, actions, className = '' }: PageH
   return (
     <div className={`flex items-center justify-between w-full min-h-8 ${className}`.trim()}>
       <div className="flex items-center gap-[8px]">
-        <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">{title}</h1>
+        <h1 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h1>
         {titleExtra}
       </div>
       {actions && <div className="flex items-center gap-[8px]">{actions}</div>}

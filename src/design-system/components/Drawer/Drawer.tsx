@@ -56,22 +56,21 @@ export function Drawer({
   const [isAnimating, setIsAnimating] = useState(false);
   const focusTrapRef = useFocusTrap<HTMLElement>(isOpen);
 
+  const DURATION_MS = 300;
+  const OPEN_DELAY_MS = 40; // Ensure closed state is painted before sliding (fixes fast/flash on heavy content)
+
   // Handle mount/unmount with animation
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
-      // Small delay to ensure DOM is ready for animation
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setIsAnimating(true);
-        });
-      });
+      setIsAnimating(false);
+      const startTimer = setTimeout(() => {
+        setIsAnimating(true);
+      }, OPEN_DELAY_MS);
+      return () => clearTimeout(startTimer);
     } else {
       setIsAnimating(false);
-      // Wait for animation to complete before unmounting
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 300); // Match transition duration
+      const timer = setTimeout(() => setShouldRender(false), DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -115,9 +114,13 @@ export function Drawer({
     'bg-[var(--color-surface-default)]',
     'flex flex-col',
     'shadow-2xl',
-    'transition-transform duration-300 ease-out',
+    'transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]',
     side === 'right' ? 'right-0' : 'left-0',
-    isAnimating ? 'translate-x-0' : side === 'right' ? 'translate-x-full' : '-translate-x-full',
+    isAnimating
+      ? 'translate-x-0 opacity-100'
+      : side === 'right'
+        ? 'translate-x-full opacity-0'
+        : '-translate-x-full opacity-0',
     className
   );
 

@@ -23,6 +23,11 @@ export const notionMapping: Record<string, string> = {
   // 'modal': '',
   // 'select': '',
   // 'table': '',
+
+  // Container - App Catalog (기능명세서·정책서)
+  // Notion 페이지 URL에서 마지막 32자리 hex가 페이지 ID입니다. 추가 후 `npm run sync-notion` 실행
+  // 'app-catalog-spec': '',
+  // 'app-catalog-policy': '',
 };
 
 /** Notion 페이지 URL 생성 (편집 링크용) */

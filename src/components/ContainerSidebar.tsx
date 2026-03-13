@@ -28,6 +28,8 @@ import {
   IconReorder,
   IconChartPie3,
   IconRulerMeasure,
+  IconApps,
+  IconPackages,
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -607,6 +609,22 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   label="Pods"
                   href="/container/pods"
                   active={isActive('/container/pods')}
+                />
+              </MenuSection>
+
+              {/* Apps (Cluster-scoped) */}
+              <MenuSection title="Apps" defaultOpen={true}>
+                <MenuItem
+                  icon={<IconApps size={16} stroke={1.5} />}
+                  label="Catalog"
+                  href="/container/apps/catalog"
+                  active={isActive('/container/apps/catalog')}
+                />
+                <MenuItem
+                  icon={<IconPackages size={16} stroke={1.5} />}
+                  label="Installed Apps"
+                  href="/container/apps/installed-apps"
+                  active={isActive('/container/apps/installed-apps')}
                 />
               </MenuSection>
 

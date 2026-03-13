@@ -1,4 +1,4 @@
-import { useState, Children, type ReactNode, type HTMLAttributes } from 'react';
+import { useState, Children, type ReactNode, type HTMLAttributes, type CSSProperties } from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconCopy, IconCheck, IconHelpCircle } from '@tabler/icons-react';
 import { StatusIndicator, type StatusType } from '../StatusIndicator';
@@ -40,14 +40,21 @@ export interface DetailHeaderTitleProps extends HTMLAttributes<HTMLHeadingElemen
   children: ReactNode;
 }
 
-function DetailHeaderTitle({ children, className, ...props }: DetailHeaderTitleProps) {
+const detailTitleStyle: CSSProperties = {
+  fontSize: 'var(--font-size-16)',
+  lineHeight: 'var(--line-height-24)',
+  fontWeight: 'var(--font-weight-semibold)',
+};
+
+function DetailHeaderTitle({ children, className, style, ...props }: DetailHeaderTitleProps) {
   return (
-    <h5
-      className={twMerge('text-heading-h5', 'text-[var(--color-text-default)]', 'mb-3', className)}
+    <h1
+      style={{ ...detailTitleStyle, ...style }}
+      className={twMerge('mb-3 text-[var(--color-text-default)]', className)}
       {...props}
     >
       {children}
-    </h5>
+    </h1>
   );
 }
 
@@ -205,7 +212,7 @@ function DetailHeaderInfoCard({
       )}
 
       <div className={twMerge('flex flex-col gap-1.5 min-w-0', status && 'pr-6')}>
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
+        <span className="text-label-sm text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
           {label}
           {tooltip && (
             <Tooltip content={tooltip} position="top">
@@ -216,7 +223,7 @@ function DetailHeaderInfoCard({
         <div className="flex items-center gap-1 min-w-0 min-h-[26px]">
           {isStringValue ? (
             <span
-              className="text-body-md leading-4 font-normal truncate text-[var(--color-text-default)]"
+              className="text-body-md font-normal truncate text-[var(--color-text-default)]"
               title={value}
             >
               {value}

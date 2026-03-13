@@ -164,6 +164,11 @@ import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
 // Pages - Container
 import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
 import { ContainerHomePage } from '@/pages/ContainerHomePage';
+import { AppCatalogPage } from '@/pages/AppCatalogPage';
+import { AppInstallPage } from '@/pages/AppInstallPage';
+import { AppEditPage } from '@/pages/AppEditPage';
+import { InstalledAppsPage } from '@/pages/InstalledAppsPage';
+import { InstalledAppDetailPage } from '@/pages/InstalledAppDetailPage';
 import { ContainerNamespacesPage } from '@/pages/ContainerNamespacesPage';
 import { ContainerEventsPage } from '@/pages/ContainerEventsPage';
 import { ContainerNodesPage } from '@/pages/ContainerNodesPage';
@@ -701,6 +706,11 @@ function AppRoutes() {
       {/* Container Routes */}
       <Route path="/container" element={<ContainerHomePage />} />
       <Route path="/container/dashboard" element={<ContainerDashboardPage />} />
+      <Route path="/container/apps/catalog" element={<AppCatalogPage />} />
+      <Route path="/container/apps/catalog/:chartName/install" element={<AppInstallPage />} />
+      <Route path="/container/apps/installed-apps" element={<InstalledAppsPage />} />
+      <Route path="/container/apps/installed-apps/:appId/edit" element={<AppEditPage />} />
+      <Route path="/container/apps/installed-apps/:appId" element={<InstalledAppDetailPage />} />
       <Route path="/container/namespaces" element={<ContainerNamespacesPage />} />
       <Route path="/container/namespaces/create" element={<CreateNamespacePage />} />
       <Route path="/container/namespaces/create-v2" element={<CreateNamespacePage />} />
