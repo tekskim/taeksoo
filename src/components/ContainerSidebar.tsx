@@ -7,7 +7,6 @@ import {
   IconAffiliate,
   IconShieldLock,
   IconPlus,
-  IconArrowLeft,
   IconChevronDown,
   IconBox,
   IconClock,
@@ -30,7 +29,7 @@ import {
   IconRulerMeasure,
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
@@ -521,15 +520,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll"
           >
             <VStack gap={4} className="w-full min-w-0">
-              {/* Back to All Services */}
-              <Link
-                to="/"
-                className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-body-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
-              >
-                <IconArrowLeft size={16} stroke={1.5} />
-                <span>All services</span>
-              </Link>
-
               {/* Bookmarks */}
               <div className="py-2">
                 <button className="flex items-center gap-2 px-0 py-1.5 text-label-md leading-[16px] text-[var(--color-text-default)]">
