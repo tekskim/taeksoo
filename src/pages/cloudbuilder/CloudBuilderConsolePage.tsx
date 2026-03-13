@@ -479,9 +479,11 @@ export function CloudBuilderConsolePage() {
         <div className="flex items-center justify-between h-8">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate} className="tds-Button">
-              {config.createLabel}
-            </Button>
+            <div className="tds-Button" style={{ display: 'contents' }}>
+              <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
+                {config.createLabel}
+              </Button>
+            </div>
           )}
         </div>
 
@@ -536,16 +538,17 @@ export function CloudBuilderConsolePage() {
             bulkActions={
               selectable && showBulkDelete ? (
                 <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selected.length === 0}
-                    onClick={handleDeleteSelected}
-                    className="tds-Button"
-                  >
-                    Delete
-                  </Button>
+                  <div className="tds-Button" style={{ display: 'contents' }}>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selected.length === 0}
+                      onClick={handleDeleteSelected}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </ListToolbar.Actions>
               ) : undefined
             }
@@ -632,22 +635,25 @@ export function CloudBuilderConsolePage() {
 
             {/* Footer actions (align right like screenshot) */}
             <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <Button variant="outline" size="md" onClick={closeStatusModal} className="tds-Button">
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                size="md"
-                onClick={applyStatusChange}
-                disabled={
-                  statusModal.nextStatus === 'Disabled' &&
-                  !!statusAction?.requireDisableReason &&
-                  !disableReason.trim()
-                }
-                className="tds-Button"
-              >
-                {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
-              </Button>
+              <div className="tds-Button" style={{ display: 'contents' }}>
+                <Button variant="outline" size="md" onClick={closeStatusModal}>
+                  Cancel
+                </Button>
+              </div>
+              <div className="tds-Button" style={{ display: 'contents' }}>
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={applyStatusChange}
+                  disabled={
+                    statusModal.nextStatus === 'Disabled' &&
+                    !!statusAction?.requireDisableReason &&
+                    !disableReason.trim()
+                  }
+                >
+                  {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
+                </Button>
+              </div>
             </div>
           </div>
         ) : null}
