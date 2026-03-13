@@ -28,7 +28,10 @@ export interface TableColumn<T = any> {
   render?: (value: any, row: T, rowIndex: number) => React.ReactNode;
 }
 
-export interface TableProps<T = any> {
+export interface TableProps<T = any> extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   columns: TableColumn<T>[];
   /** Table data */
   data?: T[];
@@ -43,7 +46,6 @@ export interface TableProps<T = any> {
   maxHeight?: string;
   onRowClick?: (row: T, rowIndex: number) => void;
   emptyMessage?: string;
-  className?: string;
   rowHeight?: string;
   /** Render expanded content below a row. Return null to collapse. */
   expandedContent?: (row: T, rowIndex: number) => React.ReactNode | null;
@@ -103,6 +105,7 @@ export function Table<T extends Record<string, any>>({
   columnResizeMode = 'onEnd',
   onColumnResize,
   minColumnWidth,
+  ...rest
 }: TableProps<T>) {
   const tableData = data ?? rows ?? [];
 
@@ -248,6 +251,7 @@ export function Table<T extends Record<string, any>>({
 
   return (
     <div
+      {...rest}
       ref={tableRef}
       className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}
       style={rowHeight ? ({ '--table-row-height': rowHeight } as React.CSSProperties) : undefined}

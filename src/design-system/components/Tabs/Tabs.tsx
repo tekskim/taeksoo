@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
@@ -36,7 +36,10 @@ const variantAliasMap: Record<TabVariantAlias, TabVariant> = {
   button: 'boxed',
 };
 
-export interface TabsProps {
+export interface TabsProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'onChange' | 'defaultValue'
+> {
   /** Default active tab value */
   defaultValue?: string;
   /** Controlled active tab value */
@@ -51,8 +54,6 @@ export interface TabsProps {
   variant?: TabVariant | TabVariantAlias;
   /** Children (TabList and TabPanels) */
   children: ReactNode;
-  /** Additional CSS classes */
-  className?: string;
 }
 
 export interface TabListProps {
@@ -95,6 +96,7 @@ export function Tabs({
   variant: rawVariant = 'underline',
   children,
   className = '',
+  ...rest
 }: TabsProps) {
   // thaki-ui compatibility: support activeTabId as alias for value
   const effectiveControlledValue = controlledValue ?? activeTabId;
@@ -119,7 +121,9 @@ export function Tabs({
 
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant }}>
-      <div className={twMerge('flex flex-col h-fit', className)}>{children}</div>
+      <div className={twMerge('flex flex-col h-fit', className)} {...rest}>
+        {children}
+      </div>
     </TabsContext.Provider>
   );
 }

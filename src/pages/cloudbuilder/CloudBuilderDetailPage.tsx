@@ -35,27 +35,25 @@ import {
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div id="tds-Button">
-      <Button
-        variant="secondary"
-        size="sm"
-        leftIcon={
-          copied ? (
-            <IconCheck size={12} className="text-[var(--color-state-success)]" />
-          ) : (
-            <IconCopy size={12} stroke={1.5} />
-          )
-        }
-        onClick={() => {
-          if (!text) return;
-          navigator.clipboard.writeText(text);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2000);
-        }}
-      >
-        {copied ? 'Copied' : 'Copy'}
-      </Button>
-    </div>
+    <Button
+      variant="secondary"
+      size="sm"
+      leftIcon={
+        copied ? (
+          <IconCheck size={12} className="text-[var(--color-state-success)]" />
+        ) : (
+          <IconCopy size={12} stroke={1.5} />
+        )
+      }
+      onClick={() => {
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }}
+    >
+      {copied ? 'Copied' : 'Copy'}
+    </Button>
   );
 }
 
@@ -475,170 +473,157 @@ export function CloudBuilderDetailPage() {
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
       <VStack gap={6} className="min-w-[1176px]">
         {isNetworkAgent ? (
-          <div id="tds-DetailHeader">
-            <DetailHeader>
-              <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
-              <DetailHeader.Actions>
-                <div id="tds-Button">
-                  <Button
-                    variant="secondary"
+          <DetailHeader id="tds-DetailHeader">
+            <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
+            <DetailHeader.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={
+                  serviceStatus === 'Disabled' ? <IconPower size={12} /> : <IconBan size={12} />
+                }
+                onClick={() => {
+                  const current = serviceStatus || 'Enabled';
+                  const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
+                  setDisableReason('');
+                  setNextStatus(to);
+                  setStatusModalOpen(true);
+                }}
+              >
+                {serviceStatus === 'Disabled' ? 'Enable' : 'Disable'}
+              </Button>
+            </DetailHeader.Actions>
+            <DetailHeader.InfoGrid className="flex-wrap">
+              <DetailHeader.InfoCard
+                label="Service Status"
+                value={serviceStatus || 'Enabled'}
+                status={(serviceStatus || 'Enabled') === 'Enabled' ? 'enabled' : 'disabled'}
+              />
+              <DetailHeader.InfoCard
+                label="Service State"
+                value={
+                  <Badge
+                    theme={(row?.serviceState ?? 'Up') === 'Up' ? 'green' : 'red'}
+                    type="subtle"
                     size="sm"
-                    leftIcon={
-                      serviceStatus === 'Disabled' ? <IconPower size={12} /> : <IconBan size={12} />
-                    }
-                    onClick={() => {
-                      const current = serviceStatus || 'Enabled';
-                      const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
-                      setDisableReason('');
-                      setNextStatus(to);
-                      setStatusModalOpen(true);
-                    }}
                   >
-                    {serviceStatus === 'Disabled' ? 'Enable' : 'Disable'}
-                  </Button>
-                </div>
-              </DetailHeader.Actions>
-              <DetailHeader.InfoGrid className="flex-wrap">
-                <DetailHeader.InfoCard
-                  label="Service Status"
-                  value={serviceStatus || 'Enabled'}
-                  status={(serviceStatus || 'Enabled') === 'Enabled' ? 'enabled' : 'disabled'}
-                />
-                <DetailHeader.InfoCard
-                  label="Service State"
-                  value={
-                    <Badge
-                      theme={(row?.serviceState ?? 'Up') === 'Up' ? 'green' : 'red'}
-                      type="subtle"
-                      size="sm"
-                    >
-                      {row?.serviceState ?? 'Up'}
-                    </Badge>
-                  }
-                />
-                <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
-                <DetailHeader.InfoCard
-                  label="Created at"
-                  value={networkAgentMeta?.createdAt ?? '-'}
-                />
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
-          </div>
+                    {row?.serviceState ?? 'Up'}
+                  </Badge>
+                }
+              />
+              <DetailHeader.InfoCard label="ID" value={row?.id ?? id} copyable />
+              <DetailHeader.InfoCard
+                label="Created at"
+                value={networkAgentMeta?.createdAt ?? '-'}
+              />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
         ) : (
-          <div id="tds-DetailHeader">
-            <DetailHeader>
-              <DetailHeader.Title>
-                {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
-              </DetailHeader.Title>
-              <DetailHeader.InfoGrid>
-                <DetailHeader.InfoCard
-                  label="ID"
-                  value={isServer ? (serverDerived?.serverId ?? row?.id ?? id) : (row?.id ?? id)}
-                  copyable
-                />
-                {isServer ? (
-                  <>
-                    <DetailHeader.InfoCard
-                      label="Observed health"
-                      value={renderStatusBadge(
-                        columns,
-                        'observedHealth',
-                        String((row as any)?.observedHealth ?? '-') || '-'
-                      )}
-                    />
-                    <DetailHeader.InfoCard
-                      label="Provision status"
-                      value={renderStatusBadge(
-                        columns,
-                        'provisionStatus',
-                        String((row as any)?.provisionStatus ?? '-') || '-'
-                      )}
-                    />
-                    <DetailHeader.InfoCard
-                      label="Role"
-                      value={renderStatusBadge(
-                        columns,
-                        'role',
-                        String((row as any)?.role ?? '-') || '-'
-                      )}
-                    />
-                    <DetailHeader.InfoCard
-                      label="Power state"
-                      value={renderPowerStateBadge(serverDerived?.bmc.powerState ?? '-')}
-                    />
-                  </>
-                ) : null}
-              </DetailHeader.InfoGrid>
-            </DetailHeader>
-          </div>
+          <DetailHeader id="tds-DetailHeader">
+            <DetailHeader.Title>
+              {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
+            </DetailHeader.Title>
+            <DetailHeader.InfoGrid>
+              <DetailHeader.InfoCard
+                label="ID"
+                value={isServer ? (serverDerived?.serverId ?? row?.id ?? id) : (row?.id ?? id)}
+                copyable
+              />
+              {isServer ? (
+                <>
+                  <DetailHeader.InfoCard
+                    label="Observed health"
+                    value={renderStatusBadge(
+                      columns,
+                      'observedHealth',
+                      String((row as any)?.observedHealth ?? '-') || '-'
+                    )}
+                  />
+                  <DetailHeader.InfoCard
+                    label="Provision status"
+                    value={renderStatusBadge(
+                      columns,
+                      'provisionStatus',
+                      String((row as any)?.provisionStatus ?? '-') || '-'
+                    )}
+                  />
+                  <DetailHeader.InfoCard
+                    label="Role"
+                    value={renderStatusBadge(
+                      columns,
+                      'role',
+                      String((row as any)?.role ?? '-') || '-'
+                    )}
+                  />
+                  <DetailHeader.InfoCard
+                    label="Power state"
+                    value={renderPowerStateBadge(serverDerived?.bmc.powerState ?? '-')}
+                  />
+                </>
+              ) : null}
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
         )}
 
         {isNetworkAgent ? (
           <>
-            <div id="tds-Tabs">
-              <Tabs
-                value={activeDetailTab}
-                onChange={(v) => setActiveDetailTab(v as any)}
-                variant="underline"
-                size="sm"
-              >
-                <TabList>
-                  <Tab value="basic-information">Basic information</Tab>
-                  <Tab value="configuration">Configuration</Tab>
-                </TabList>
+            <Tabs
+              id="tds-Tabs"
+              value={activeDetailTab}
+              onChange={(v) => setActiveDetailTab(v as any)}
+              variant="underline"
+              size="sm"
+            >
+              <TabList>
+                <Tab value="basic-information">Basic information</Tab>
+                <Tab value="configuration">Configuration</Tab>
+              </TabList>
 
-                <TabPanel value="basic-information" className="pt-4">
-                  <div id="tds-SectionCard">
-                    <SectionCard>
-                      <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
-                        <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
-                        <SectionCard.DataRow
-                          label="Availability zone"
-                          value={row?.availabilityZone ?? '-'}
-                        />
-                        <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
-                        <SectionCard.DataRow
-                          label="Resources synced"
-                          value={networkAgentMeta?.resourcesSynced ?? '-'}
-                        />
-                        <SectionCard.DataRow
-                          label="Heartbeat timestamp"
-                          value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
-                        />
-                        <SectionCard.DataRow
-                          label="Started at"
-                          value={networkAgentMeta?.startedAt ?? '-'}
-                        />
-                        <SectionCard.DataRow
-                          label="Description"
-                          value={networkAgentMeta?.description ?? '-'}
-                        />
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </div>
-                </TabPanel>
+              <TabPanel value="basic-information" className="pt-4">
+                <SectionCard id="tds-SectionCard-BasicInfo">
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
+                    <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
+                    <SectionCard.DataRow
+                      label="Availability zone"
+                      value={row?.availabilityZone ?? '-'}
+                    />
+                    <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
+                    <SectionCard.DataRow
+                      label="Resources synced"
+                      value={networkAgentMeta?.resourcesSynced ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Heartbeat timestamp"
+                      value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Started at"
+                      value={networkAgentMeta?.startedAt ?? '-'}
+                    />
+                    <SectionCard.DataRow
+                      label="Description"
+                      value={networkAgentMeta?.description ?? '-'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </TabPanel>
 
-                <TabPanel value="configuration" className="pt-4">
-                  <div id="tds-SectionCard">
-                    <SectionCard>
-                      <SectionCard.Header
-                        title="Configuration"
-                        actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
-                      />
-                      <SectionCard.Content gap={3}>
-                        <div id="tds-pre">
-                          <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                            {networkAgentMeta?.configurationText ?? ''}
-                          </pre>
-                        </div>
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </div>
-                </TabPanel>
-              </Tabs>
-            </div>
+              <TabPanel value="configuration" className="pt-4">
+                <SectionCard id="tds-SectionCard-Config">
+                  <SectionCard.Header
+                    title="Configuration"
+                    actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
+                  />
+                  <SectionCard.Content gap={3}>
+                    <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
+                      {networkAgentMeta?.configurationText ?? ''}
+                    </pre>
+                  </SectionCard.Content>
+                </SectionCard>
+              </TabPanel>
+            </Tabs>
 
             <Modal
               isOpen={statusModalOpen}
@@ -675,254 +660,231 @@ export function CloudBuilderDetailPage() {
                 ) : null}
 
                 <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-                  <div id="tds-Button">
-                    <Button
-                      variant="outline"
-                      size="md"
-                      onClick={() => {
-                        setStatusModalOpen(false);
-                        setDisableReason('');
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                  <div id="tds-Button">
-                    <Button
-                      variant="primary"
-                      size="md"
-                      disabled={
-                        nextStatus === 'Disabled' &&
-                        !!config.statusAction?.requireDisableReason &&
-                        !disableReason.trim()
-                      }
-                      onClick={() => {
-                        setServiceStatus(nextStatus);
-                        setStatusModalOpen(false);
-                        setDisableReason('');
-                      }}
-                    >
-                      {nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
-                    </Button>
-                  </div>
+                  <Button
+                    variant="outline"
+                    size="md"
+                    onClick={() => {
+                      setStatusModalOpen(false);
+                      setDisableReason('');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="md"
+                    disabled={
+                      nextStatus === 'Disabled' &&
+                      !!config.statusAction?.requireDisableReason &&
+                      !disableReason.trim()
+                    }
+                    onClick={() => {
+                      setServiceStatus(nextStatus);
+                      setStatusModalOpen(false);
+                      setDisableReason('');
+                    }}
+                  >
+                    {nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
+                  </Button>
                 </div>
               </div>
             </Modal>
           </>
         ) : row ? (
-          <div id="tds-Tabs">
-            <Tabs
-              value={activeDetailTab}
-              onChange={(v) => setActiveDetailTab(v as any)}
-              variant="underline"
-              size="sm"
-            >
-              <TabList>
-                <Tab value="details">Details</Tab>
-                {isServer ? <Tab value="disk">Disk</Tab> : null}
-                {isServer ? <Tab value="bmc-info">BMC info</Tab> : null}
-              </TabList>
+          <Tabs
+            id="tds-Tabs"
+            value={activeDetailTab}
+            onChange={(v) => setActiveDetailTab(v as any)}
+            variant="underline"
+            size="sm"
+          >
+            <TabList>
+              <Tab value="details">Details</Tab>
+              {isServer ? <Tab value="disk">Disk</Tab> : null}
+              {isServer ? <Tab value="bmc-info">BMC info</Tab> : null}
+            </TabList>
 
-              <TabPanel value="details" className="pt-4">
-                {isServer ? (
-                  <VStack gap={6}>
-                    <div id="tds-SectionCard">
-                      <SectionCard>
-                        <SectionCard.Header title="Basic info" />
-                        <SectionCard.Content>
+            <TabPanel value="details" className="pt-4">
+              {isServer ? (
+                <VStack gap={6}>
+                  <SectionCard id="tds-SectionCard-BasicInfo">
+                    <SectionCard.Header title="Basic info" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow
+                        label="Type"
+                        value={serverDerived?.type ?? '-'}
+                        showDivider={false}
+                      />
+                      <SectionCard.DataRow
+                        label="MAC (Primary)"
+                        value={String((row as any)?.macPrimary ?? '-') || '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="NIC (primary name)"
+                        value={String((row as any)?.nicPrimaryName ?? '-') || '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Location"
+                        value={String((row as any)?.location ?? '-') || '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Provider network"
+                        value={serverDerived?.providerNetwork ?? '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Mgmt IP"
+                        value={String((row as any)?.mgmtIp ?? '-') || '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Created at"
+                        value={serverDerived?.createdAt ?? '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Updated at"
+                        value={serverDerived?.updatedAt ?? '-'}
+                      />
+                      <SectionCard.DataRow label="Domain" value={serverDerived?.domain ?? '-'} />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+              ) : (
+                <SectionCard id="tds-SectionCard-Details">
+                  <SectionCard.Header title="Details" />
+                  <SectionCard.Content>
+                    {columns.map((column, idx) => {
+                      const value = String((row as any)?.[column.key] ?? '-') || '-';
+                      const showDivider = idx > 0;
+
+                      if (column.key === 'storageCapacityGiB') {
+                        const used = Number((row as any).storageUsedGiB ?? 0);
+                        const total = Number((row as any).storageTotalGiB ?? 0);
+                        const safeUsed = Number.isFinite(used) ? used : 0;
+                        const safeTotal = Number.isFinite(total) ? total : 0;
+                        return (
                           <SectionCard.DataRow
-                            label="Type"
-                            value={serverDerived?.type ?? '-'}
-                            showDivider={false}
-                          />
+                            key={column.key}
+                            label={column.label}
+                            showDivider={showDivider}
+                          >
+                            <div className="flex flex-col gap-2 w-full max-w-[520px]">
+                              <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
+                              <div className="text-[12px] text-[var(--color-text-default)]">
+                                {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
+                              </div>
+                            </div>
+                          </SectionCard.DataRow>
+                        );
+                      }
+
+                      if (column.kind === 'badge') {
+                        const tone = column.badgeTones?.[value] ?? 'neutral';
+                        return (
                           <SectionCard.DataRow
-                            label="MAC (Primary)"
-                            value={String((row as any)?.macPrimary ?? '-') || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="NIC (primary name)"
-                            value={String((row as any)?.nicPrimaryName ?? '-') || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Location"
-                            value={String((row as any)?.location ?? '-') || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Provider network"
-                            value={serverDerived?.providerNetwork ?? '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Mgmt IP"
-                            value={String((row as any)?.mgmtIp ?? '-') || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Created at"
-                            value={serverDerived?.createdAt ?? '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Updated at"
-                            value={serverDerived?.updatedAt ?? '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Domain"
-                            value={serverDerived?.domain ?? '-'}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </div>
-                  </VStack>
-                ) : (
-                  <div id="tds-SectionCard">
-                    <SectionCard>
-                      <SectionCard.Header title="Details" />
+                            key={column.key}
+                            label={column.label}
+                            showDivider={showDivider}
+                          >
+                            <Badge theme={toneToBadgeTheme(tone)} type="subtle" size="sm">
+                              {value}
+                            </Badge>
+                          </SectionCard.DataRow>
+                        );
+                      }
+
+                      return (
+                        <SectionCard.DataRow
+                          key={column.key}
+                          label={column.label}
+                          value={value}
+                          showDivider={showDivider}
+                        />
+                      );
+                    })}
+                  </SectionCard.Content>
+                </SectionCard>
+              )}
+            </TabPanel>
+
+            {isServer ? (
+              <TabPanel value="disk" className="pt-4">
+                <VStack gap={6}>
+                  <SectionCard id="tds-SectionCard-Storage">
+                    <SectionCard.Header title="Storage detail" />
+                    <SectionCard.Content gap={3}>
+                      <div className="text-[13px] font-medium text-[var(--color-text-default)]">
+                        Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI Slot
+                        1)
+                      </div>
+                      <Table<DiskRow>
+                        id="tds-Table"
+                        columns={diskColumns}
+                        data={diskRows}
+                        rowKey="id"
+                        emptyMessage="No disks found"
+                      />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+              </TabPanel>
+            ) : null}
+
+            {isServer ? (
+              <TabPanel value="bmc-info" className="pt-4">
+                <div className="grid grid-cols-12 gap-6 items-start">
+                  <div className="col-span-12 lg:col-span-4">
+                    <SectionCard id="tds-SectionCard-BMC">
+                      <SectionCard.Header title="BMC" />
                       <SectionCard.Content>
-                        {columns.map((column, idx) => {
-                          const value = String((row as any)?.[column.key] ?? '-') || '-';
-                          const showDivider = idx > 0;
-
-                          if (column.key === 'storageCapacityGiB') {
-                            const used = Number((row as any).storageUsedGiB ?? 0);
-                            const total = Number((row as any).storageTotalGiB ?? 0);
-                            const safeUsed = Number.isFinite(used) ? used : 0;
-                            const safeTotal = Number.isFinite(total) ? total : 0;
-                            return (
-                              <SectionCard.DataRow
-                                key={column.key}
-                                label={column.label}
-                                showDivider={showDivider}
-                              >
-                                <div className="flex flex-col gap-2 w-full max-w-[520px]">
-                                  <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
-                                  <div className="text-[12px] text-[var(--color-text-default)]">
-                                    {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
-                                  </div>
-                                </div>
-                              </SectionCard.DataRow>
-                            );
-                          }
-
-                          if (column.kind === 'badge') {
-                            const tone = column.badgeTones?.[value] ?? 'neutral';
-                            return (
-                              <SectionCard.DataRow
-                                key={column.key}
-                                label={column.label}
-                                showDivider={showDivider}
-                              >
-                                <Badge theme={toneToBadgeTheme(tone)} type="subtle" size="sm">
-                                  {value}
-                                </Badge>
-                              </SectionCard.DataRow>
-                            );
-                          }
-
-                          return (
-                            <SectionCard.DataRow
-                              key={column.key}
-                              label={column.label}
-                              value={value}
-                              showDivider={showDivider}
-                            />
-                          );
-                        })}
+                        <SectionCard.DataRow
+                          label="Hostname"
+                          value={serverDerived?.bmc.hostname ?? '-'}
+                          showDivider={false}
+                        />
+                        <SectionCard.DataRow
+                          label="Machine type"
+                          value={serverDerived?.bmc.machineType ?? '-'}
+                        />
+                        <SectionCard.DataRow
+                          label="Power state"
+                          value={serverDerived?.bmc.powerState ?? '-'}
+                        />
+                        <SectionCard.DataRow
+                          label="BMC IP"
+                          value={serverDerived?.bmc.bmcIp ?? '-'}
+                        />
+                        <SectionCard.DataRow
+                          label="Manager ethernet interface"
+                          value={serverDerived?.bmc.managerEthernetInterface ?? '-'}
+                        />
                       </SectionCard.Content>
                     </SectionCard>
                   </div>
-                )}
-              </TabPanel>
-
-              {isServer ? (
-                <TabPanel value="disk" className="pt-4">
-                  <VStack gap={6}>
-                    <div id="tds-SectionCard">
-                      <SectionCard>
-                        <SectionCard.Header title="Storage detail" />
-                        <SectionCard.Content gap={3}>
-                          <div className="text-[13px] font-medium text-[var(--color-text-default)]">
-                            Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI
-                            Slot 1)
-                          </div>
-                          <div id="tds-Table">
-                            <Table<DiskRow>
-                              columns={diskColumns}
-                              data={diskRows}
-                              rowKey="id"
-                              emptyMessage="No disks found"
-                            />
-                          </div>
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </div>
-                  </VStack>
-                </TabPanel>
-              ) : null}
-
-              {isServer ? (
-                <TabPanel value="bmc-info" className="pt-4">
-                  <div className="grid grid-cols-12 gap-6 items-start">
-                    <div className="col-span-12 lg:col-span-4">
-                      <div id="tds-SectionCard">
-                        <SectionCard>
-                          <SectionCard.Header title="BMC" />
-                          <SectionCard.Content>
-                            <SectionCard.DataRow
-                              label="Hostname"
-                              value={serverDerived?.bmc.hostname ?? '-'}
-                              showDivider={false}
-                            />
-                            <SectionCard.DataRow
-                              label="Machine type"
-                              value={serverDerived?.bmc.machineType ?? '-'}
-                            />
-                            <SectionCard.DataRow
-                              label="Power state"
-                              value={serverDerived?.bmc.powerState ?? '-'}
-                            />
-                            <SectionCard.DataRow
-                              label="BMC IP"
-                              value={serverDerived?.bmc.bmcIp ?? '-'}
-                            />
-                            <SectionCard.DataRow
-                              label="Manager ethernet interface"
-                              value={serverDerived?.bmc.managerEthernetInterface ?? '-'}
-                            />
-                          </SectionCard.Content>
-                        </SectionCard>
-                      </div>
-                    </div>
-                    <div className="col-span-12 lg:col-span-8">
-                      <div id="tds-SectionCard">
-                        <SectionCard>
-                          <SectionCard.Header
-                            title="server_info.json"
-                            actions={<CopyButton text={serverInfoJsonText} />}
-                          />
-                          <SectionCard.Content gap={3}>
-                            <div id="tds-pre">
-                              <pre className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                                {serverInfoJsonText}
-                              </pre>
-                            </div>
-                          </SectionCard.Content>
-                        </SectionCard>
-                      </div>
-                    </div>
+                  <div className="col-span-12 lg:col-span-8">
+                    <SectionCard id="tds-SectionCard-ServerInfo">
+                      <SectionCard.Header
+                        title="server_info.json"
+                        actions={<CopyButton text={serverInfoJsonText} />}
+                      />
+                      <SectionCard.Content gap={3}>
+                        <pre className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
+                          {serverInfoJsonText}
+                        </pre>
+                      </SectionCard.Content>
+                    </SectionCard>
                   </div>
-                </TabPanel>
-              ) : null}
-            </Tabs>
-          </div>
-        ) : (
-          <div id="tds-SectionCard">
-            <SectionCard>
-              <SectionCard.Header title="Details" />
-              <SectionCard.Content>
-                <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">
-                  데이터를 찾을 수 없습니다.
                 </div>
-              </SectionCard.Content>
-            </SectionCard>
-          </div>
+              </TabPanel>
+            ) : null}
+          </Tabs>
+        ) : (
+          <SectionCard id="tds-SectionCard-Empty">
+            <SectionCard.Header title="Details" />
+            <SectionCard.Content>
+              <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">
+                데이터를 찾을 수 없습니다.
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
         )}
       </VStack>
     </PageShell>

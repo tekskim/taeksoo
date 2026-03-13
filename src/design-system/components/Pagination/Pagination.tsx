@@ -5,7 +5,7 @@ import { IconChevronLeft, IconChevronRight, IconSettings } from '@tabler/icons-r
    Types
    ---------------------------------------- */
 
-export interface PaginationProps {
+export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   /** Current active page (1-indexed) */
   currentPage?: number;
   /** @deprecated thaki-ui compatibility - use currentPage instead */
@@ -32,8 +32,6 @@ export interface PaginationProps {
   totalItems?: number;
   /** Number of selected items */
   selectedCount?: number;
-  /** Custom class name */
-  className?: string;
 }
 
 /* ----------------------------------------
@@ -66,6 +64,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   totalItems,
   selectedCount = 0,
   className = '',
+  ...rest
 }) => {
   // thaki-ui compatibility: support currentAt as alias for currentPage
   const currentPage = rawCurrentPage ?? currentAt ?? 1;
@@ -183,6 +182,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     <nav
       aria-label="Pagination"
       className={`inline-flex items-center gap-[var(--pagination-gap)] ${className}`}
+      {...rest}
     >
       {/* Previous Button */}
       <button
