@@ -13,7 +13,6 @@ import {
   IconWorldWww,
   IconShieldLock,
   IconLoadBalancer,
-  IconArrowLeft,
   IconServer,
   IconArrowsJoin2,
   IconLayoutGrid,
@@ -23,7 +22,7 @@ import {
   IconServer2,
 } from '@tabler/icons-react';
 import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
 import { AppSwitcher } from './AppSwitcher';
 
@@ -86,13 +85,6 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
       <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
-          <Link
-            to="/"
-            className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-body-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
-          >
-            <IconArrowLeft size={16} stroke={1.5} />
-            <span>All Services</span>
-          </Link>
 
           {/* Home */}
           <MenuItem

@@ -12,9 +12,8 @@ import {
   IconLock,
   IconClock,
   IconHistory,
-  IconArrowLeft,
 } from '@tabler/icons-react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { AppSwitcher } from './AppSwitcher';
 
 /* ----------------------------------------
@@ -53,13 +52,6 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
       <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
-          <Link
-            to="/"
-            className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-body-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
-          >
-            <IconArrowLeft size={16} stroke={1.5} />
-            <span>All Services</span>
-          </Link>
 
           {/* Home */}
           <MenuItem
