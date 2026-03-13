@@ -479,14 +479,14 @@ export function CloudBuilderConsolePage() {
         <div className="flex items-center justify-between h-8">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate} aria-label="Button">
+            <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate} className="tds-Button">
               {config.createLabel}
             </Button>
           )}
         </div>
 
         {hasTabs && config.tabs && (
-          <div aria-label="Tabs">
+          <div className="tds-Tabs">
             <Tabs
               value={activeTabId}
               onChange={(v) => setActiveTabId(v)}
@@ -504,7 +504,7 @@ export function CloudBuilderConsolePage() {
           </div>
         )}
 
-        <div aria-label="ListToolbar">
+        <div className="tds-ListToolbar">
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
@@ -542,7 +542,7 @@ export function CloudBuilderConsolePage() {
                     leftIcon={<IconTrash size={12} />}
                     disabled={selected.length === 0}
                     onClick={handleDeleteSelected}
-                    aria-label="Button"
+                    className="tds-Button"
                   >
                     Delete
                   </Button>
@@ -553,7 +553,7 @@ export function CloudBuilderConsolePage() {
         </div>
 
         {filteredRows.length > 0 && (
-          <div aria-label="Pagination">
+          <div className="tds-Pagination">
             <Pagination
               currentPage={safePage}
               totalPages={totalPages}
@@ -566,7 +566,7 @@ export function CloudBuilderConsolePage() {
           </div>
         )}
 
-        <div aria-label="Table">
+        <div className="tds-Table">
           <Table<Record<string, string> & { id: string }>
             columns={columns}
             data={paged}
@@ -632,7 +632,7 @@ export function CloudBuilderConsolePage() {
 
             {/* Footer actions (align right like screenshot) */}
             <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <Button variant="outline" size="md" onClick={closeStatusModal} aria-label="Button">
+              <Button variant="outline" size="md" onClick={closeStatusModal} className="tds-Button">
                 Cancel
               </Button>
               <Button
@@ -644,7 +644,7 @@ export function CloudBuilderConsolePage() {
                   !!statusAction?.requireDisableReason &&
                   !disableReason.trim()
                 }
-                aria-label="Button"
+                className="tds-Button"
               >
                 {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
               </Button>

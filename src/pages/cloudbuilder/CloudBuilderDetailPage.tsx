@@ -45,7 +45,7 @@ function CopyButton({ text }: { text: string }) {
           <IconCopy size={12} stroke={1.5} />
         )
       }
-      aria-label="Button"
+      className="tds-Button"
       onClick={() => {
         if (!text) return;
         navigator.clipboard.writeText(text);
@@ -474,7 +474,7 @@ export function CloudBuilderDetailPage() {
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
       <VStack gap={6} className="min-w-[1176px]">
         {isNetworkAgent ? (
-          <DetailHeader aria-label="DetailHeader">
+          <DetailHeader className="tds-DetailHeader">
             <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
             <DetailHeader.Actions>
               <Button
@@ -483,7 +483,7 @@ export function CloudBuilderDetailPage() {
                 leftIcon={
                   serviceStatus === 'Disabled' ? <IconPower size={12} /> : <IconBan size={12} />
                 }
-                aria-label="Button"
+                className="tds-Button"
                 onClick={() => {
                   const current = serviceStatus || 'Enabled';
                   const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
@@ -521,7 +521,7 @@ export function CloudBuilderDetailPage() {
             </DetailHeader.InfoGrid>
           </DetailHeader>
         ) : (
-          <DetailHeader aria-label="DetailHeader">
+          <DetailHeader className="tds-DetailHeader">
             <DetailHeader.Title>
               {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
             </DetailHeader.Title>
@@ -569,7 +569,7 @@ export function CloudBuilderDetailPage() {
 
         {isNetworkAgent ? (
           <>
-            <div aria-label="Tabs">
+            <div className="tds-Tabs">
               <Tabs
                 value={activeDetailTab}
                 onChange={(v) => setActiveDetailTab(v as any)}
@@ -582,7 +582,7 @@ export function CloudBuilderDetailPage() {
                 </TabList>
 
                 <TabPanel value="basic-information" className="pt-4">
-                  <SectionCard aria-label="SectionCard">
+                  <SectionCard className="tds-SectionCard">
                     <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
                       <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
@@ -613,16 +613,13 @@ export function CloudBuilderDetailPage() {
                 </TabPanel>
 
                 <TabPanel value="configuration" className="pt-4">
-                  <SectionCard aria-label="SectionCard">
+                  <SectionCard className="tds-SectionCard">
                     <SectionCard.Header
                       title="Configuration"
                       actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
                     />
                     <SectionCard.Content gap={3}>
-                      <pre
-                        aria-label="pre"
-                        className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]"
-                      >
+                      <pre className="tds-pre max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
                         {networkAgentMeta?.configurationText ?? ''}
                       </pre>
                     </SectionCard.Content>
@@ -669,7 +666,7 @@ export function CloudBuilderDetailPage() {
                   <Button
                     variant="outline"
                     size="md"
-                    aria-label="Button"
+                    className="tds-Button"
                     onClick={() => {
                       setStatusModalOpen(false);
                       setDisableReason('');
@@ -680,7 +677,7 @@ export function CloudBuilderDetailPage() {
                   <Button
                     variant="primary"
                     size="md"
-                    aria-label="Button"
+                    className="tds-Button"
                     disabled={
                       nextStatus === 'Disabled' &&
                       !!config.statusAction?.requireDisableReason &&
@@ -699,7 +696,7 @@ export function CloudBuilderDetailPage() {
             </Modal>
           </>
         ) : row ? (
-          <div aria-label="Tabs">
+          <div className="tds-Tabs">
             <Tabs
               value={activeDetailTab}
               onChange={(v) => setActiveDetailTab(v as any)}
@@ -715,7 +712,7 @@ export function CloudBuilderDetailPage() {
               <TabPanel value="details" className="pt-4">
                 {isServer ? (
                   <VStack gap={6}>
-                    <SectionCard aria-label="SectionCard">
+                    <SectionCard className="tds-SectionCard">
                       <SectionCard.Header title="Basic info" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
@@ -756,7 +753,7 @@ export function CloudBuilderDetailPage() {
                     </SectionCard>
                   </VStack>
                 ) : (
-                  <SectionCard aria-label="SectionCard">
+                  <SectionCard className="tds-SectionCard">
                     <SectionCard.Header title="Details" />
                     <SectionCard.Content>
                       {columns.map((column, idx) => {
@@ -816,14 +813,14 @@ export function CloudBuilderDetailPage() {
               {isServer ? (
                 <TabPanel value="disk" className="pt-4">
                   <VStack gap={6}>
-                    <SectionCard aria-label="SectionCard">
+                    <SectionCard className="tds-SectionCard">
                       <SectionCard.Header title="Storage detail" />
                       <SectionCard.Content gap={3}>
                         <div className="text-[13px] font-medium text-[var(--color-text-default)]">
                           Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI
                           Slot 1)
                         </div>
-                        <div aria-label="Table">
+                        <div className="tds-Table">
                           <Table<DiskRow>
                             columns={diskColumns}
                             data={diskRows}
@@ -841,7 +838,7 @@ export function CloudBuilderDetailPage() {
                 <TabPanel value="bmc-info" className="pt-4">
                   <div className="grid grid-cols-12 gap-6 items-start">
                     <div className="col-span-12 lg:col-span-4">
-                      <SectionCard aria-label="SectionCard">
+                      <SectionCard className="tds-SectionCard">
                         <SectionCard.Header title="BMC" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
@@ -869,16 +866,13 @@ export function CloudBuilderDetailPage() {
                       </SectionCard>
                     </div>
                     <div className="col-span-12 lg:col-span-8">
-                      <SectionCard aria-label="SectionCard">
+                      <SectionCard className="tds-SectionCard">
                         <SectionCard.Header
                           title="server_info.json"
                           actions={<CopyButton text={serverInfoJsonText} />}
                         />
                         <SectionCard.Content gap={3}>
-                          <pre
-                            aria-label="pre"
-                            className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]"
-                          >
+                          <pre className="tds-pre max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
                             {serverInfoJsonText}
                           </pre>
                         </SectionCard.Content>
@@ -890,7 +884,7 @@ export function CloudBuilderDetailPage() {
             </Tabs>
           </div>
         ) : (
-          <SectionCard aria-label="SectionCard">
+          <SectionCard className="tds-SectionCard">
             <SectionCard.Header title="Details" />
             <SectionCard.Content>
               <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">
