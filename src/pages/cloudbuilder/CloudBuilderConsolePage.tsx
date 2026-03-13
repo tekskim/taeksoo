@@ -476,110 +476,102 @@ export function CloudBuilderConsolePage() {
       contentClassName="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]"
     >
       <VStack gap={3} className="w-full">
-        <div className="flex items-center justify-between h-8">
+        <div id="tds-PageHeader" className="flex items-center justify-between h-8">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <div id="tds-Button">
-              <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
-                {config.createLabel}
-              </Button>
-            </div>
+            <Button id="tds-CreateButton" leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
+              {config.createLabel}
+            </Button>
           )}
         </div>
 
         {hasTabs && config.tabs && (
-          <div id="tds-Tabs">
-            <Tabs
-              value={activeTabId}
-              onChange={(v) => setActiveTabId(v)}
-              variant="underline"
-              size="sm"
-            >
-              <TabList>
-                {config.tabs.map((t) => (
-                  <Tab key={t.id} value={t.id}>
-                    {t.label}
-                  </Tab>
-                ))}
-              </TabList>
-            </Tabs>
-          </div>
+          <Tabs
+            id="tds-Tabs"
+            value={activeTabId}
+            onChange={(v) => setActiveTabId(v)}
+            variant="underline"
+            size="sm"
+          >
+            <TabList>
+              {config.tabs.map((t) => (
+                <Tab key={t.id} value={t.id}>
+                  {t.label}
+                </Tab>
+              ))}
+            </TabList>
+          </Tabs>
         )}
 
-        <div id="tds-ListToolbar">
-          <ListToolbar
-            primaryActions={
-              <ListToolbar.Actions>
-                <div className="w-[var(--search-input-width)]">
-                  <SearchInput
-                    placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    onClear={() => {
-                      setSearchQuery('');
-                      setCurrentPage(1);
-                    }}
-                    size="sm"
-                    fullWidth
-                  />
-                </div>
-                <Button
-                  variant="secondary"
+        <ListToolbar
+          id="tds-ListToolbar"
+          primaryActions={
+            <ListToolbar.Actions>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput
+                  placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  onClear={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
                   size="sm"
-                  icon={<IconDownload size={12} />}
-                  aria-label="Download"
-                  onClick={() => window.alert('Download: Coming Soon')}
+                  fullWidth
                 />
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+                onClick={() => window.alert('Download: Coming Soon')}
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            selectable && showBulkDelete ? (
+              <ListToolbar.Actions>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selected.length === 0}
+                  onClick={handleDeleteSelected}
+                >
+                  Delete
+                </Button>
               </ListToolbar.Actions>
-            }
-            bulkActions={
-              selectable && showBulkDelete ? (
-                <ListToolbar.Actions>
-                  <div id="tds-Button">
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selected.length === 0}
-                      onClick={handleDeleteSelected}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </ListToolbar.Actions>
-              ) : undefined
-            }
-          />
-        </div>
+            ) : undefined
+          }
+        />
 
         {filteredRows.length > 0 && (
-          <div id="tds-Pagination">
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              showSettings={hasTabs}
-              onSettingsClick={() => window.alert('View settings: Coming Soon')}
-              totalItems={filteredRows.length}
-              selectedCount={selected.length}
-            />
-          </div>
+          <Pagination
+            id="tds-Pagination"
+            currentPage={safePage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings={hasTabs}
+            onSettingsClick={() => window.alert('View settings: Coming Soon')}
+            totalItems={filteredRows.length}
+            selectedCount={selected.length}
+          />
         )}
 
-        <div id="tds-Table">
-          <Table<Record<string, string> & { id: string }>
-            columns={columns}
-            data={paged}
-            rowKey="id"
-            emptyMessage="No data found"
-            selectable={selectable}
-            selectedKeys={selected}
-            onSelectionChange={setSelected}
-          />
-        </div>
+        <Table<Record<string, string> & { id: string }>
+          id="tds-Table"
+          columns={columns}
+          data={paged}
+          rowKey="id"
+          emptyMessage="No data found"
+          selectable={selectable}
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
+        />
       </VStack>
 
       <ConfirmModal
@@ -635,25 +627,21 @@ export function CloudBuilderConsolePage() {
 
             {/* Footer actions (align right like screenshot) */}
             <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <div id="tds-Button">
-                <Button variant="outline" size="md" onClick={closeStatusModal}>
-                  Cancel
-                </Button>
-              </div>
-              <div id="tds-Button">
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={applyStatusChange}
-                  disabled={
-                    statusModal.nextStatus === 'Disabled' &&
-                    !!statusAction?.requireDisableReason &&
-                    !disableReason.trim()
-                  }
-                >
-                  {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
-                </Button>
-              </div>
+              <Button variant="outline" size="md" onClick={closeStatusModal}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={applyStatusChange}
+                disabled={
+                  statusModal.nextStatus === 'Disabled' &&
+                  !!statusAction?.requireDisableReason &&
+                  !disableReason.trim()
+                }
+              >
+                {statusModal.nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
+              </Button>
             </div>
           </div>
         ) : null}

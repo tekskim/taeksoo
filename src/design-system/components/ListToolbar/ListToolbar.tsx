@@ -13,7 +13,7 @@ export interface FilterItem {
   value: string;
 }
 
-export interface ListToolbarProps {
+export interface ListToolbarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** Primary actions (left side) - typically search, download */
   primaryActions?: React.ReactNode;
   /** Bulk actions - actions for selected items */
@@ -28,8 +28,6 @@ export interface ListToolbarProps {
   onFiltersClear?: () => void;
   /** Label for clear filters button */
   clearFiltersLabel?: string;
-  /** Additional class name */
-  className?: string;
   /** Children for custom content */
   children?: React.ReactNode;
 }
@@ -120,12 +118,13 @@ export function ListToolbar({
   clearFiltersLabel = 'Clear Filters',
   className,
   children,
+  ...rest
 }: ListToolbarProps) {
   const hasActions = primaryActions || bulkActions || children;
   const hasFilters = filters.length > 0;
 
   return (
-    <div className={twMerge('flex flex-col gap-2', className)}>
+    <div className={twMerge('flex flex-col gap-2', className)} {...rest}>
       {/* Actions Bar */}
       {hasActions && (
         <div className="flex items-center gap-2">
