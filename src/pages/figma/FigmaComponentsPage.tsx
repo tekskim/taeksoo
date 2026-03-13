@@ -638,7 +638,7 @@ export function FigmaComponentsPage() {
             {buttonSizes.map((size) => (
               <FigmaFrame
                 key={`${variant}-${size}-default`}
-                name={`Button/${variant}/${size}/default`}
+                name={`Button/${variant}/${size}/text-only/default`}
               >
                 <Button variant={variant} size={size}>
                   {variant}
@@ -650,7 +650,10 @@ export function FigmaComponentsPage() {
           <StateLabel>Sizes — hover</StateLabel>
           <div className="flex flex-wrap gap-3 items-end mt-2 mb-4">
             {buttonSizes.map((size) => (
-              <FigmaFrame key={`${variant}-${size}-hover`} name={`Button/${variant}/${size}/hover`}>
+              <FigmaFrame
+                key={`${variant}-${size}-hover`}
+                name={`Button/${variant}/${size}/text-only/hover`}
+              >
                 <Button variant={variant} size={size} className={buttonHoverClasses[variant]}>
                   {variant}
                 </Button>
@@ -660,22 +663,22 @@ export function FigmaComponentsPage() {
 
           <StateLabel>States — md</StateLabel>
           <div className="flex flex-wrap gap-3 items-end mt-2 mb-4">
-            <FigmaFrame name={`Button/${variant}/md/default`}>
+            <FigmaFrame name={`Button/${variant}/md/text-only/default`}>
               <Button variant={variant} size="md">
                 Default
               </Button>
             </FigmaFrame>
-            <FigmaFrame name={`Button/${variant}/md/hover`}>
+            <FigmaFrame name={`Button/${variant}/md/text-only/hover`}>
               <Button variant={variant} size="md" className={buttonHoverClasses[variant]}>
                 Hover
               </Button>
             </FigmaFrame>
-            <FigmaFrame name={`Button/${variant}/md/disabled`}>
+            <FigmaFrame name={`Button/${variant}/md/text-only/disabled`}>
               <Button variant={variant} size="md" disabled>
                 Disabled
               </Button>
             </FigmaFrame>
-            <FigmaFrame name={`Button/${variant}/md/loading`}>
+            <FigmaFrame name={`Button/${variant}/md/text-only/loading`}>
               <Button variant={variant} size="md" loading>
                 Loading
               </Button>
@@ -1525,7 +1528,7 @@ export function FigmaComponentsPage() {
         />
       </FigmaFrame>
       <SubTitle>Page 5 (middle — active item visible)</SubTitle>
-      <FigmaFrame name="Pagination/middle-page">
+      <FigmaFrame name="Pagination/middle-page/no-settings">
         <Pagination currentPage={5} totalPages={10} onPageChange={() => {}} totalItems={100} />
       </FigmaFrame>
 
@@ -1961,7 +1964,7 @@ export function FigmaComponentsPage() {
             <Select options={sampleSelectOptions} placeholder="Select region" fullWidth />
           </FormField>
         </FigmaFrame>
-        <FigmaFrame name="FormField/error">
+        <FigmaFrame name="FormField/error/with-error-message">
           <FormField
             label="Password"
             errorMessage="Password must be at least 8 characters."
@@ -3441,13 +3444,13 @@ export function FigmaComponentsPage() {
           <FigmaFrame name="Skeleton/text/3-lines">
             <SkeletonText lines={3} />
           </FigmaFrame>
-          <FigmaFrame name="Skeleton/rectangular">
+          <FigmaFrame name="Skeleton/rectangular/default">
             <Skeleton variant="rectangular" width={120} height={80} />
           </FigmaFrame>
-          <FigmaFrame name="Skeleton/circular">
+          <FigmaFrame name="Skeleton/circular/default">
             <Skeleton variant="circular" size={48} />
           </FigmaFrame>
-          <FigmaFrame name="Skeleton/rounded">
+          <FigmaFrame name="Skeleton/rounded/default">
             <Skeleton variant="rounded" width={120} height={40} />
           </FigmaFrame>
         </div>

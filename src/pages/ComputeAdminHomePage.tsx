@@ -146,11 +146,9 @@ function TenantRow({ name, enabled, resources }: TenantRowProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <span
-          className={`px-2 py-0.5 rounded text-body-xs font-medium ${enabled ? 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success-text)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'}`}
-        >
+        <Badge variant={enabled ? 'success' : 'default'} size="sm">
           {enabled ? 'Enabled' : 'Disabled'}
-        </span>
+        </Badge>
         <button className="flex items-center gap-1 text-label-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]">
           {name}
           <IconChevronRight size={14} className="text-[var(--color-text-muted)]" />
