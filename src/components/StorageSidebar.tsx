@@ -7,11 +7,10 @@ import {
   IconDisc,
   IconBucket,
   IconBrandSpeedtest,
-  IconArrowLeft,
   IconServer2,
 } from '@tabler/icons-react';
 import { HardDrive } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ProjectSelector } from './ProjectSelector';
 import { mockProjects } from '@/contexts/ProjectContext';
 import { AppSwitcher } from './AppSwitcher';
@@ -62,13 +61,6 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
       <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
-          <Link
-            to="/"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-label-sm transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
-          >
-            <IconArrowLeft size={14} stroke={1.5} />
-            <span>All Services</span>
-          </Link>
 
           {/* Home */}
           <MenuItem
