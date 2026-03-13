@@ -45,6 +45,7 @@ function CopyButton({ text }: { text: string }) {
           <IconCopy size={12} stroke={1.5} />
         )
       }
+      aria-label="Button"
       onClick={() => {
         if (!text) return;
         navigator.clipboard.writeText(text);
@@ -473,7 +474,7 @@ export function CloudBuilderDetailPage() {
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
       <VStack gap={6} className="min-w-[1176px]">
         {isNetworkAgent ? (
-          <DetailHeader>
+          <DetailHeader aria-label="DetailHeader">
             <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
             <DetailHeader.Actions>
               <Button
@@ -482,6 +483,7 @@ export function CloudBuilderDetailPage() {
                 leftIcon={
                   serviceStatus === 'Disabled' ? <IconPower size={12} /> : <IconBan size={12} />
                 }
+                aria-label="Button"
                 onClick={() => {
                   const current = serviceStatus || 'Enabled';
                   const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
@@ -519,7 +521,7 @@ export function CloudBuilderDetailPage() {
             </DetailHeader.InfoGrid>
           </DetailHeader>
         ) : (
-          <DetailHeader>
+          <DetailHeader aria-label="DetailHeader">
             <DetailHeader.Title>
               {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
             </DetailHeader.Title>
@@ -567,62 +569,67 @@ export function CloudBuilderDetailPage() {
 
         {isNetworkAgent ? (
           <>
-            <Tabs
-              value={activeDetailTab}
-              onChange={(v) => setActiveDetailTab(v as any)}
-              variant="underline"
-              size="sm"
-            >
-              <TabList>
-                <Tab value="basic-information">Basic information</Tab>
-                <Tab value="configuration">Configuration</Tab>
-              </TabList>
+            <div aria-label="Tabs">
+              <Tabs
+                value={activeDetailTab}
+                onChange={(v) => setActiveDetailTab(v as any)}
+                variant="underline"
+                size="sm"
+              >
+                <TabList>
+                  <Tab value="basic-information">Basic information</Tab>
+                  <Tab value="configuration">Configuration</Tab>
+                </TabList>
 
-              <TabPanel value="basic-information" className="pt-4">
-                <SectionCard>
-                  <SectionCard.Header title="Basic information" />
-                  <SectionCard.Content>
-                    <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
-                    <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
-                    <SectionCard.DataRow
-                      label="Availability zone"
-                      value={row?.availabilityZone ?? '-'}
-                    />
-                    <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
-                    <SectionCard.DataRow
-                      label="Resources synced"
-                      value={networkAgentMeta?.resourcesSynced ?? '-'}
-                    />
-                    <SectionCard.DataRow
-                      label="Heartbeat timestamp"
-                      value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
-                    />
-                    <SectionCard.DataRow
-                      label="Started at"
-                      value={networkAgentMeta?.startedAt ?? '-'}
-                    />
-                    <SectionCard.DataRow
-                      label="Description"
-                      value={networkAgentMeta?.description ?? '-'}
-                    />
-                  </SectionCard.Content>
-                </SectionCard>
-              </TabPanel>
+                <TabPanel value="basic-information" className="pt-4">
+                  <SectionCard aria-label="SectionCard">
+                    <SectionCard.Header title="Basic information" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="Type" value={row?.type ?? '-'} />
+                      <SectionCard.DataRow label="Host" value={row?.host ?? '-'} />
+                      <SectionCard.DataRow
+                        label="Availability zone"
+                        value={row?.availabilityZone ?? '-'}
+                      />
+                      <SectionCard.DataRow label="Topic" value={networkAgentMeta?.topic ?? '-'} />
+                      <SectionCard.DataRow
+                        label="Resources synced"
+                        value={networkAgentMeta?.resourcesSynced ?? '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Heartbeat timestamp"
+                        value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Started at"
+                        value={networkAgentMeta?.startedAt ?? '-'}
+                      />
+                      <SectionCard.DataRow
+                        label="Description"
+                        value={networkAgentMeta?.description ?? '-'}
+                      />
+                    </SectionCard.Content>
+                  </SectionCard>
+                </TabPanel>
 
-              <TabPanel value="configuration" className="pt-4">
-                <SectionCard>
-                  <SectionCard.Header
-                    title="Configuration"
-                    actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
-                  />
-                  <SectionCard.Content gap={3}>
-                    <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                      {networkAgentMeta?.configurationText ?? ''}
-                    </pre>
-                  </SectionCard.Content>
-                </SectionCard>
-              </TabPanel>
-            </Tabs>
+                <TabPanel value="configuration" className="pt-4">
+                  <SectionCard aria-label="SectionCard">
+                    <SectionCard.Header
+                      title="Configuration"
+                      actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
+                    />
+                    <SectionCard.Content gap={3}>
+                      <pre
+                        aria-label="pre"
+                        className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]"
+                      >
+                        {networkAgentMeta?.configurationText ?? ''}
+                      </pre>
+                    </SectionCard.Content>
+                  </SectionCard>
+                </TabPanel>
+              </Tabs>
+            </div>
 
             <Modal
               isOpen={statusModalOpen}
@@ -662,6 +669,7 @@ export function CloudBuilderDetailPage() {
                   <Button
                     variant="outline"
                     size="md"
+                    aria-label="Button"
                     onClick={() => {
                       setStatusModalOpen(false);
                       setDisableReason('');
@@ -672,6 +680,7 @@ export function CloudBuilderDetailPage() {
                   <Button
                     variant="primary"
                     size="md"
+                    aria-label="Button"
                     disabled={
                       nextStatus === 'Disabled' &&
                       !!config.statusAction?.requireDisableReason &&
@@ -690,191 +699,198 @@ export function CloudBuilderDetailPage() {
             </Modal>
           </>
         ) : row ? (
-          <Tabs
-            value={activeDetailTab}
-            onChange={(v) => setActiveDetailTab(v as any)}
-            variant="underline"
-            size="sm"
-          >
-            <TabList>
-              <Tab value="details">Details</Tab>
-              {isServer ? <Tab value="disk">Disk</Tab> : null}
-              {isServer ? <Tab value="bmc-info">BMC info</Tab> : null}
-            </TabList>
+          <div aria-label="Tabs">
+            <Tabs
+              value={activeDetailTab}
+              onChange={(v) => setActiveDetailTab(v as any)}
+              variant="underline"
+              size="sm"
+            >
+              <TabList>
+                <Tab value="details">Details</Tab>
+                {isServer ? <Tab value="disk">Disk</Tab> : null}
+                {isServer ? <Tab value="bmc-info">BMC info</Tab> : null}
+              </TabList>
 
-            <TabPanel value="details" className="pt-4">
-              {isServer ? (
-                <VStack gap={6}>
-                  <SectionCard>
-                    <SectionCard.Header title="Basic info" />
-                    <SectionCard.Content>
-                      <SectionCard.DataRow
-                        label="Type"
-                        value={serverDerived?.type ?? '-'}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow
-                        label="MAC (Primary)"
-                        value={String((row as any)?.macPrimary ?? '-') || '-'}
-                      />
-                      <SectionCard.DataRow
-                        label="NIC (primary name)"
-                        value={String((row as any)?.nicPrimaryName ?? '-') || '-'}
-                      />
-                      <SectionCard.DataRow
-                        label="Location"
-                        value={String((row as any)?.location ?? '-') || '-'}
-                      />
-                      <SectionCard.DataRow
-                        label="Provider network"
-                        value={serverDerived?.providerNetwork ?? '-'}
-                      />
-                      <SectionCard.DataRow
-                        label="Mgmt IP"
-                        value={String((row as any)?.mgmtIp ?? '-') || '-'}
-                      />
-                      <SectionCard.DataRow
-                        label="Created at"
-                        value={serverDerived?.createdAt ?? '-'}
-                      />
-                      <SectionCard.DataRow
-                        label="Updated at"
-                        value={serverDerived?.updatedAt ?? '-'}
-                      />
-                      <SectionCard.DataRow label="Domain" value={serverDerived?.domain ?? '-'} />
-                    </SectionCard.Content>
-                  </SectionCard>
-                </VStack>
-              ) : (
-                <SectionCard>
-                  <SectionCard.Header title="Details" />
-                  <SectionCard.Content>
-                    {columns.map((column, idx) => {
-                      const value = String((row as any)?.[column.key] ?? '-') || '-';
-                      const showDivider = idx > 0;
-
-                      if (column.key === 'storageCapacityGiB') {
-                        const used = Number((row as any).storageUsedGiB ?? 0);
-                        const total = Number((row as any).storageTotalGiB ?? 0);
-                        const safeUsed = Number.isFinite(used) ? used : 0;
-                        const safeTotal = Number.isFinite(total) ? total : 0;
-                        return (
-                          <SectionCard.DataRow
-                            key={column.key}
-                            label={column.label}
-                            showDivider={showDivider}
-                          >
-                            <div className="flex flex-col gap-2 w-full max-w-[520px]">
-                              <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
-                              <div className="text-[12px] text-[var(--color-text-default)]">
-                                {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
-                              </div>
-                            </div>
-                          </SectionCard.DataRow>
-                        );
-                      }
-
-                      if (column.kind === 'badge') {
-                        const tone = column.badgeTones?.[value] ?? 'neutral';
-                        return (
-                          <SectionCard.DataRow
-                            key={column.key}
-                            label={column.label}
-                            showDivider={showDivider}
-                          >
-                            <Badge theme={toneToBadgeTheme(tone)} type="subtle" size="sm">
-                              {value}
-                            </Badge>
-                          </SectionCard.DataRow>
-                        );
-                      }
-
-                      return (
-                        <SectionCard.DataRow
-                          key={column.key}
-                          label={column.label}
-                          value={value}
-                          showDivider={showDivider}
-                        />
-                      );
-                    })}
-                  </SectionCard.Content>
-                </SectionCard>
-              )}
-            </TabPanel>
-
-            {isServer ? (
-              <TabPanel value="disk" className="pt-4">
-                <VStack gap={6}>
-                  <SectionCard>
-                    <SectionCard.Header title="Storage detail" />
-                    <SectionCard.Content gap={3}>
-                      <div className="text-[13px] font-medium text-[var(--color-text-default)]">
-                        Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI Slot
-                        1)
-                      </div>
-                      <Table<DiskRow>
-                        columns={diskColumns}
-                        data={diskRows}
-                        rowKey="id"
-                        emptyMessage="No disks found"
-                      />
-                    </SectionCard.Content>
-                  </SectionCard>
-                </VStack>
-              </TabPanel>
-            ) : null}
-
-            {isServer ? (
-              <TabPanel value="bmc-info" className="pt-4">
-                <div className="grid grid-cols-12 gap-6 items-start">
-                  <div className="col-span-12 lg:col-span-4">
-                    <SectionCard>
-                      <SectionCard.Header title="BMC" />
+              <TabPanel value="details" className="pt-4">
+                {isServer ? (
+                  <VStack gap={6}>
+                    <SectionCard aria-label="SectionCard">
+                      <SectionCard.Header title="Basic info" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
-                          label="Hostname"
-                          value={serverDerived?.bmc.hostname ?? '-'}
+                          label="Type"
+                          value={serverDerived?.type ?? '-'}
                           showDivider={false}
                         />
                         <SectionCard.DataRow
-                          label="Machine type"
-                          value={serverDerived?.bmc.machineType ?? '-'}
+                          label="MAC (Primary)"
+                          value={String((row as any)?.macPrimary ?? '-') || '-'}
                         />
                         <SectionCard.DataRow
-                          label="Power state"
-                          value={serverDerived?.bmc.powerState ?? '-'}
+                          label="NIC (primary name)"
+                          value={String((row as any)?.nicPrimaryName ?? '-') || '-'}
                         />
                         <SectionCard.DataRow
-                          label="BMC IP"
-                          value={serverDerived?.bmc.bmcIp ?? '-'}
+                          label="Location"
+                          value={String((row as any)?.location ?? '-') || '-'}
                         />
                         <SectionCard.DataRow
-                          label="Manager ethernet interface"
-                          value={serverDerived?.bmc.managerEthernetInterface ?? '-'}
+                          label="Provider network"
+                          value={serverDerived?.providerNetwork ?? '-'}
                         />
+                        <SectionCard.DataRow
+                          label="Mgmt IP"
+                          value={String((row as any)?.mgmtIp ?? '-') || '-'}
+                        />
+                        <SectionCard.DataRow
+                          label="Created at"
+                          value={serverDerived?.createdAt ?? '-'}
+                        />
+                        <SectionCard.DataRow
+                          label="Updated at"
+                          value={serverDerived?.updatedAt ?? '-'}
+                        />
+                        <SectionCard.DataRow label="Domain" value={serverDerived?.domain ?? '-'} />
                       </SectionCard.Content>
                     </SectionCard>
-                  </div>
-                  <div className="col-span-12 lg:col-span-8">
-                    <SectionCard>
-                      <SectionCard.Header
-                        title="server_info.json"
-                        actions={<CopyButton text={serverInfoJsonText} />}
-                      />
-                      <SectionCard.Content gap={3}>
-                        <pre className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                          {serverInfoJsonText}
-                        </pre>
-                      </SectionCard.Content>
-                    </SectionCard>
-                  </div>
-                </div>
+                  </VStack>
+                ) : (
+                  <SectionCard aria-label="SectionCard">
+                    <SectionCard.Header title="Details" />
+                    <SectionCard.Content>
+                      {columns.map((column, idx) => {
+                        const value = String((row as any)?.[column.key] ?? '-') || '-';
+                        const showDivider = idx > 0;
+
+                        if (column.key === 'storageCapacityGiB') {
+                          const used = Number((row as any).storageUsedGiB ?? 0);
+                          const total = Number((row as any).storageTotalGiB ?? 0);
+                          const safeUsed = Number.isFinite(used) ? used : 0;
+                          const safeTotal = Number.isFinite(total) ? total : 0;
+                          return (
+                            <SectionCard.DataRow
+                              key={column.key}
+                              label={column.label}
+                              showDivider={showDivider}
+                            >
+                              <div className="flex flex-col gap-2 w-full max-w-[520px]">
+                                <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
+                                <div className="text-[12px] text-[var(--color-text-default)]">
+                                  {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
+                                </div>
+                              </div>
+                            </SectionCard.DataRow>
+                          );
+                        }
+
+                        if (column.kind === 'badge') {
+                          const tone = column.badgeTones?.[value] ?? 'neutral';
+                          return (
+                            <SectionCard.DataRow
+                              key={column.key}
+                              label={column.label}
+                              showDivider={showDivider}
+                            >
+                              <Badge theme={toneToBadgeTheme(tone)} type="subtle" size="sm">
+                                {value}
+                              </Badge>
+                            </SectionCard.DataRow>
+                          );
+                        }
+
+                        return (
+                          <SectionCard.DataRow
+                            key={column.key}
+                            label={column.label}
+                            value={value}
+                            showDivider={showDivider}
+                          />
+                        );
+                      })}
+                    </SectionCard.Content>
+                  </SectionCard>
+                )}
               </TabPanel>
-            ) : null}
-          </Tabs>
+
+              {isServer ? (
+                <TabPanel value="disk" className="pt-4">
+                  <VStack gap={6}>
+                    <SectionCard aria-label="SectionCard">
+                      <SectionCard.Header title="Storage detail" />
+                      <SectionCard.Content gap={3}>
+                        <div className="text-[13px] font-medium text-[var(--color-text-default)]">
+                          Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI
+                          Slot 1)
+                        </div>
+                        <div aria-label="Table">
+                          <Table<DiskRow>
+                            columns={diskColumns}
+                            data={diskRows}
+                            rowKey="id"
+                            emptyMessage="No disks found"
+                          />
+                        </div>
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </VStack>
+                </TabPanel>
+              ) : null}
+
+              {isServer ? (
+                <TabPanel value="bmc-info" className="pt-4">
+                  <div className="grid grid-cols-12 gap-6 items-start">
+                    <div className="col-span-12 lg:col-span-4">
+                      <SectionCard aria-label="SectionCard">
+                        <SectionCard.Header title="BMC" />
+                        <SectionCard.Content>
+                          <SectionCard.DataRow
+                            label="Hostname"
+                            value={serverDerived?.bmc.hostname ?? '-'}
+                            showDivider={false}
+                          />
+                          <SectionCard.DataRow
+                            label="Machine type"
+                            value={serverDerived?.bmc.machineType ?? '-'}
+                          />
+                          <SectionCard.DataRow
+                            label="Power state"
+                            value={serverDerived?.bmc.powerState ?? '-'}
+                          />
+                          <SectionCard.DataRow
+                            label="BMC IP"
+                            value={serverDerived?.bmc.bmcIp ?? '-'}
+                          />
+                          <SectionCard.DataRow
+                            label="Manager ethernet interface"
+                            value={serverDerived?.bmc.managerEthernetInterface ?? '-'}
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </div>
+                    <div className="col-span-12 lg:col-span-8">
+                      <SectionCard aria-label="SectionCard">
+                        <SectionCard.Header
+                          title="server_info.json"
+                          actions={<CopyButton text={serverInfoJsonText} />}
+                        />
+                        <SectionCard.Content gap={3}>
+                          <pre
+                            aria-label="pre"
+                            className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]"
+                          >
+                            {serverInfoJsonText}
+                          </pre>
+                        </SectionCard.Content>
+                      </SectionCard>
+                    </div>
+                  </div>
+                </TabPanel>
+              ) : null}
+            </Tabs>
+          </div>
         ) : (
-          <SectionCard>
+          <SectionCard aria-label="SectionCard">
             <SectionCard.Header title="Details" />
             <SectionCard.Content>
               <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">
