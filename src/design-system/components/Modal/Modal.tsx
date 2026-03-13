@@ -9,7 +9,10 @@ import { useFocusTrap } from '../../hooks/useFocusTrap';
    Types
    ---------------------------------------- */
 
-export interface ModalProps {
+export interface ModalProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'title' | 'children'
+> {
   /** Whether the modal is open */
   isOpen: boolean;
   /** Callback when the modal should close */
@@ -28,8 +31,6 @@ export interface ModalProps {
   closeOnBackdropClick?: boolean;
   /** Close on escape key */
   closeOnEscape?: boolean;
-  /** Custom class name */
-  className?: string;
 }
 
 export interface ConfirmModalProps extends Omit<ModalProps, 'children'> {
@@ -64,6 +65,7 @@ export function Modal({
   closeOnBackdropClick = true,
   closeOnEscape = true,
   className,
+  ...rest
 }: ModalProps) {
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -153,6 +155,7 @@ export function Modal({
   return createPortal(
     <div className={backdropClasses} onClick={handleBackdropClick}>
       <div
+        {...rest}
         ref={focusTrapRef}
         className={modalClasses}
         onClick={(e) => e.stopPropagation()}
