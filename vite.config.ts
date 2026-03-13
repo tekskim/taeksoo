@@ -22,7 +22,7 @@ function generateChangelogPlugin() {
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
   // 로컬 개발: '/', 프로덕션 빌드: '/tds_ssot/'
-  base: command === 'serve' ? '/' : '/tds_ssot/',
+  base: command === 'serve' ? '/' : '/taeksoo/',
   build: {
     outDir: 'docs',
   },
