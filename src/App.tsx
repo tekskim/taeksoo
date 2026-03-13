@@ -416,6 +416,7 @@ import { FigmaLayout } from '@/pages/figma/FigmaLayout';
 import { FigmaFoundationPage } from '@/pages/figma/FigmaFoundationPage';
 import { FigmaComponentsPage } from '@/pages/figma/FigmaComponentsPage';
 import { FigmaGuidePage } from '@/pages/figma/FigmaGuidePage';
+import { FigmaCloudBuilderPage } from '@/pages/figma/FigmaCloudBuilderPage';
 
 // Pages - AI Platform
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
@@ -1122,6 +1123,7 @@ function AppRoutes() {
       <Route path="/figma" element={<FigmaLayout />}>
         <Route path="foundation" element={<FigmaFoundationPage />} />
         <Route path="components" element={<FigmaComponentsPage />} />
+        <Route path="cloudbuilder" element={<FigmaCloudBuilderPage />} />
       </Route>
 
       {/* AI Platform Routes */}
