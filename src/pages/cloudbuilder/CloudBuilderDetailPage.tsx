@@ -35,7 +35,7 @@ import {
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="tds-Button">
+    <div id="tds-Button">
       <Button
         variant="secondary"
         size="sm"
@@ -475,11 +475,11 @@ export function CloudBuilderDetailPage() {
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
       <VStack gap={6} className="min-w-[1176px]">
         {isNetworkAgent ? (
-          <div className="tds-DetailHeader">
+          <div id="tds-DetailHeader">
             <DetailHeader>
               <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
               <DetailHeader.Actions>
-                <div className="tds-Button">
+                <div id="tds-Button">
                   <Button
                     variant="secondary"
                     size="sm"
@@ -525,7 +525,7 @@ export function CloudBuilderDetailPage() {
             </DetailHeader>
           </div>
         ) : (
-          <div className="tds-DetailHeader">
+          <div id="tds-DetailHeader">
             <DetailHeader>
               <DetailHeader.Title>
                 {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
@@ -575,7 +575,7 @@ export function CloudBuilderDetailPage() {
 
         {isNetworkAgent ? (
           <>
-            <div className="tds-Tabs">
+            <div id="tds-Tabs">
               <Tabs
                 value={activeDetailTab}
                 onChange={(v) => setActiveDetailTab(v as any)}
@@ -588,7 +588,7 @@ export function CloudBuilderDetailPage() {
                 </TabList>
 
                 <TabPanel value="basic-information" className="pt-4">
-                  <div className="tds-SectionCard">
+                  <div id="tds-SectionCard">
                     <SectionCard>
                       <SectionCard.Header title="Basic information" />
                       <SectionCard.Content>
@@ -621,14 +621,14 @@ export function CloudBuilderDetailPage() {
                 </TabPanel>
 
                 <TabPanel value="configuration" className="pt-4">
-                  <div className="tds-SectionCard">
+                  <div id="tds-SectionCard">
                     <SectionCard>
                       <SectionCard.Header
                         title="Configuration"
                         actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
                       />
                       <SectionCard.Content gap={3}>
-                        <div className="tds-pre">
+                        <div id="tds-pre">
                           <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
                             {networkAgentMeta?.configurationText ?? ''}
                           </pre>
@@ -675,7 +675,7 @@ export function CloudBuilderDetailPage() {
                 ) : null}
 
                 <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-                  <div className="tds-Button">
+                  <div id="tds-Button">
                     <Button
                       variant="outline"
                       size="md"
@@ -687,7 +687,7 @@ export function CloudBuilderDetailPage() {
                       Cancel
                     </Button>
                   </div>
-                  <div className="tds-Button">
+                  <div id="tds-Button">
                     <Button
                       variant="primary"
                       size="md"
@@ -710,7 +710,7 @@ export function CloudBuilderDetailPage() {
             </Modal>
           </>
         ) : row ? (
-          <div className="tds-Tabs">
+          <div id="tds-Tabs">
             <Tabs
               value={activeDetailTab}
               onChange={(v) => setActiveDetailTab(v as any)}
@@ -726,7 +726,7 @@ export function CloudBuilderDetailPage() {
               <TabPanel value="details" className="pt-4">
                 {isServer ? (
                   <VStack gap={6}>
-                    <div className="tds-SectionCard">
+                    <div id="tds-SectionCard">
                       <SectionCard>
                         <SectionCard.Header title="Basic info" />
                         <SectionCard.Content>
@@ -772,7 +772,7 @@ export function CloudBuilderDetailPage() {
                     </div>
                   </VStack>
                 ) : (
-                  <div className="tds-SectionCard">
+                  <div id="tds-SectionCard">
                     <SectionCard>
                       <SectionCard.Header title="Details" />
                       <SectionCard.Content>
@@ -834,7 +834,7 @@ export function CloudBuilderDetailPage() {
               {isServer ? (
                 <TabPanel value="disk" className="pt-4">
                   <VStack gap={6}>
-                    <div className="tds-SectionCard">
+                    <div id="tds-SectionCard">
                       <SectionCard>
                         <SectionCard.Header title="Storage detail" />
                         <SectionCard.Content gap={3}>
@@ -842,7 +842,7 @@ export function CloudBuilderDetailPage() {
                             Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI
                             Slot 1)
                           </div>
-                          <div className="tds-Table">
+                          <div id="tds-Table">
                             <Table<DiskRow>
                               columns={diskColumns}
                               data={diskRows}
@@ -861,7 +861,7 @@ export function CloudBuilderDetailPage() {
                 <TabPanel value="bmc-info" className="pt-4">
                   <div className="grid grid-cols-12 gap-6 items-start">
                     <div className="col-span-12 lg:col-span-4">
-                      <div className="tds-SectionCard">
+                      <div id="tds-SectionCard">
                         <SectionCard>
                           <SectionCard.Header title="BMC" />
                           <SectionCard.Content>
@@ -891,14 +891,14 @@ export function CloudBuilderDetailPage() {
                       </div>
                     </div>
                     <div className="col-span-12 lg:col-span-8">
-                      <div className="tds-SectionCard">
+                      <div id="tds-SectionCard">
                         <SectionCard>
                           <SectionCard.Header
                             title="server_info.json"
                             actions={<CopyButton text={serverInfoJsonText} />}
                           />
                           <SectionCard.Content gap={3}>
-                            <div className="tds-pre">
+                            <div id="tds-pre">
                               <pre className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
                                 {serverInfoJsonText}
                               </pre>
@@ -913,7 +913,7 @@ export function CloudBuilderDetailPage() {
             </Tabs>
           </div>
         ) : (
-          <div className="tds-SectionCard">
+          <div id="tds-SectionCard">
             <SectionCard>
               <SectionCard.Header title="Details" />
               <SectionCard.Content>

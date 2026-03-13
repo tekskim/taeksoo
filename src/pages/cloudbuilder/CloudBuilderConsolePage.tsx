@@ -479,7 +479,7 @@ export function CloudBuilderConsolePage() {
         <div className="flex items-center justify-between h-8">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <div className="tds-Button">
+            <div id="tds-Button">
               <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
                 {config.createLabel}
               </Button>
@@ -488,7 +488,7 @@ export function CloudBuilderConsolePage() {
         </div>
 
         {hasTabs && config.tabs && (
-          <div className="tds-Tabs">
+          <div id="tds-Tabs">
             <Tabs
               value={activeTabId}
               onChange={(v) => setActiveTabId(v)}
@@ -506,7 +506,7 @@ export function CloudBuilderConsolePage() {
           </div>
         )}
 
-        <div className="tds-ListToolbar">
+        <div id="tds-ListToolbar">
           <ListToolbar
             primaryActions={
               <ListToolbar.Actions>
@@ -538,7 +538,7 @@ export function CloudBuilderConsolePage() {
             bulkActions={
               selectable && showBulkDelete ? (
                 <ListToolbar.Actions>
-                  <div className="tds-Button">
+                  <div id="tds-Button">
                     <Button
                       variant="muted"
                       size="sm"
@@ -556,7 +556,7 @@ export function CloudBuilderConsolePage() {
         </div>
 
         {filteredRows.length > 0 && (
-          <div className="tds-Pagination">
+          <div id="tds-Pagination">
             <Pagination
               currentPage={safePage}
               totalPages={totalPages}
@@ -569,7 +569,7 @@ export function CloudBuilderConsolePage() {
           </div>
         )}
 
-        <div className="tds-Table">
+        <div id="tds-Table">
           <Table<Record<string, string> & { id: string }>
             columns={columns}
             data={paged}
@@ -635,12 +635,12 @@ export function CloudBuilderConsolePage() {
 
             {/* Footer actions (align right like screenshot) */}
             <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
-              <div className="tds-Button">
+              <div id="tds-Button">
                 <Button variant="outline" size="md" onClick={closeStatusModal}>
                   Cancel
                 </Button>
               </div>
-              <div className="tds-Button">
+              <div id="tds-Button">
                 <Button
                   variant="primary"
                   size="md"
