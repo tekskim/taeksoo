@@ -144,7 +144,7 @@ export function InstalledAppsPage() {
       width: '64px',
       align: 'center',
       render: (_, row) => {
-        const isPending = row.status === 'Pending';
+        const isEditDisabled = row.status === 'Pending';
         const menuItems: ContextMenuItem[] = [
           {
             id: 'edit-upgrade',
@@ -152,7 +152,7 @@ export function InstalledAppsPage() {
             icon: <IconEdit size={14} stroke={1.5} />,
             onClick: () => openEditPage(row),
             divider: true,
-            disabled: isPending,
+            disabled: isEditDisabled,
           },
           {
             id: 'delete',
@@ -160,7 +160,6 @@ export function InstalledAppsPage() {
             icon: <IconTrash size={14} stroke={1.5} />,
             onClick: () => openDeleteModal(row),
             variant: 'danger',
-            disabled: isPending,
           },
         ];
 

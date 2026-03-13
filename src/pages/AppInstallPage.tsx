@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { diffLines } from 'diff';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -38,16 +38,88 @@ const STORAGECLASS_OPTIONS = [
   { value: 'longhorn', label: 'longhorn' },
 ];
 
-type SectionStep = 'target' | 'version' | 'configuration' | 'compare';
+type SectionStep = 'target' | 'version' | 'configuration';
 
 const SECTION_LABELS: Record<SectionStep, string> = {
   target: 'Cluster & Namespace',
   version: 'Version',
   configuration: 'Configuration',
-  compare: 'Compare Changes',
 };
 
-const SECTION_ORDER: SectionStep[] = ['target', 'version', 'configuration', 'compare'];
+const SECTION_ORDER: SectionStep[] = ['target', 'version', 'configuration'];
+
+/* ----------------------------------------
+   YAML ↔ Options 실시간 동기화 헬퍼
+   ---------------------------------------- */
+
+function getYamlValue(yaml: string, dotPath: string): string {
+  const parts = dotPath.split('.');
+  const lines = yaml.split('\n');
+  let searchStart = 0;
+
+  for (let depth = 0; depth < parts.length; depth++) {
+    const key = parts[depth];
+    const isLast = depth === parts.length - 1;
+    const expectedIndent = depth * 2;
+    let found = false;
+
+    for (let i = searchStart; i < lines.length; i++) {
+      const line = lines[i];
+      const lineIndent = (line.match(/^( *)/) ?? ['', ''])[1].length;
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      if (lineIndent < expectedIndent) break;
+      if (lineIndent !== expectedIndent) continue;
+
+      if (trimmed.startsWith(key + ':')) {
+        if (isLast) {
+          return trimmed.slice(key.length + 1).trim().replace(/^["']|["']$/g, '');
+        } else {
+          searchStart = i + 1;
+          found = true;
+          break;
+        }
+      }
+    }
+    if (!found && !isLast) return '';
+  }
+  return '';
+}
+
+function setYamlValue(yaml: string, dotPath: string, value: string): string {
+  const parts = dotPath.split('.');
+  const lines = yaml.split('\n');
+  let searchStart = 0;
+
+  for (let depth = 0; depth < parts.length; depth++) {
+    const key = parts[depth];
+    const isLast = depth === parts.length - 1;
+    const expectedIndent = depth * 2;
+
+    for (let i = searchStart; i < lines.length; i++) {
+      const line = lines[i];
+      const lineIndent = (line.match(/^( *)/) ?? ['', ''])[1].length;
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      if (lineIndent < expectedIndent) break;
+      if (lineIndent !== expectedIndent) continue;
+
+      if (trimmed.startsWith(key + ':')) {
+        if (isLast) {
+          const spaces = ' '.repeat(expectedIndent);
+          const formatted =
+            value === '' ? '""' : /[\s:{}\[\],&*#?|<>=!%@`]/.test(value) ? `"${value}"` : value;
+          lines[i] = `${spaces}${key}: ${formatted}`;
+          return lines.join('\n');
+        } else {
+          searchStart = i + 1;
+          break;
+        }
+      }
+    }
+  }
+  return yaml;
+}
 
 function toTitleCase(s: string): string {
   return s
@@ -67,16 +139,19 @@ function UnitInput({
   unit,
   placeholder,
   disabled,
+  type = 'text',
 }: {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   unit: string;
   placeholder?: string;
   disabled?: boolean;
+  type?: 'text' | 'number';
 }) {
   return (
     <div className="flex items-center gap-2 w-full">
       <Input
+        type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -359,6 +434,7 @@ function OptionsFormField({
             onChange={(e) => onChange(opt.key, e.target.value)}
             unit={opt.unit}
             placeholder="e.g. 8"
+            type="number"
           />
         ) : (
           <Input
@@ -486,23 +562,41 @@ export function AppInstallPage() {
     target: 'active',
     version: 'pre',
     configuration: 'pre',
-    compare: 'pre',
   });
 
   // Form values
   const [namespace, setNamespace] = useState(namespaceOptions[0]?.value ?? '');
   const [version, setVersion] = useState(versions[0] ?? '');
-  const [activeTab, setActiveTab] = useState<'options' | 'yaml'>('options');
+  const [activeTab, setActiveTab] = useState<'options' | 'yaml' | 'compare'>('options');
   const [optionValues, setOptionValues] = useState<Record<string, string>>({});
   const [yamlContent, setYamlContent] = useState(chart?.defaultValuesYaml ?? '');
   const [submitting, setSubmitting] = useState(false);
+  const defaultYaml = chart?.defaultValuesYaml ?? '';
 
   const setStep = (updates: Partial<Record<SectionStep, WizardSectionState>>) =>
     setSectionStatus((prev) => ({ ...prev, ...updates }));
 
   const isConfigDone = opts.length === 0 || opts.every((o) => (optionValues[o.key] ?? '').trim() !== '');
-  const isInstallDisabled = sectionStatus.compare !== 'active' || submitting;
-  const defaultYaml = chart?.defaultValuesYaml ?? '';
+  const isInstallDisabled = sectionStatus.configuration !== 'done' || submitting;
+  const hasYamlChanges = yamlContent !== defaultYaml;
+
+  // Edit Options → YAML 실시간 반영
+  const handleOptionChange = useCallback((key: string, val: string) => {
+    setOptionValues((prev) => ({ ...prev, [key]: val }));
+    setYamlContent((prevYaml) => setYamlValue(prevYaml, key, val));
+  }, []);
+
+  // Edit YAML → Options 실시간 반영
+  const handleYamlChange = useCallback((newYaml: string) => {
+    setYamlContent(newYaml);
+    setOptionValues(() => {
+      const newVals: Record<string, string> = {};
+      for (const opt of opts) {
+        newVals[opt.key] = getYamlValue(newYaml, opt.key);
+      }
+      return newVals;
+    });
+  }, [opts]);
 
   const handleInstall = async () => {
     if (isInstallDisabled) return;
@@ -655,7 +749,7 @@ export function AppInstallPage() {
               </DoneSection>
             )}
 
-            {/* ── Section 3: Configuration (Edit Options / Edit YAML) ── */}
+            {/* ── Section 3: Configuration (Edit Options / Edit YAML / Compare Changes) ── */}
             {sectionStatus.configuration === 'pre' && (
               <PreSection title={SECTION_LABELS.configuration} />
             )}
@@ -665,29 +759,40 @@ export function AppInstallPage() {
                 <SectionCard.Content gap={4}>
                   <Tabs
                     value={activeTab}
-                    onChange={(v) => setActiveTab(v as 'options' | 'yaml')}
+                    onChange={(v) => setActiveTab(v as 'options' | 'yaml' | 'compare')}
                     variant="underline"
                     size="sm"
                   >
                     <TabList>
                       <Tab value="options">Edit Options</Tab>
                       <Tab value="yaml">Edit YAML</Tab>
+                      <Tab value="compare" disabled={!hasYamlChanges}>
+                        Compare Changes
+                        {hasYamlChanges && (
+                          <span className="ml-1.5 inline-flex items-center justify-center w-1.5 h-1.5 rounded-full bg-[var(--color-action-primary)]" />
+                        )}
+                      </Tab>
                     </TabList>
                     <TabPanel value="options">
                       <div className="pt-4">
-                        <OptionsForm opts={opts} values={optionValues} onChange={(k, v) => setOptionValues((prev) => ({ ...prev, [k]: v }))} />
+                        <OptionsForm opts={opts} values={optionValues} onChange={handleOptionChange} />
                       </div>
                     </TabPanel>
                     <TabPanel value="yaml">
                       <div className="pt-4 flex flex-col min-h-0">
-                        <YamlEditor value={yamlContent} onChange={setYamlContent} />
+                        <YamlEditor value={yamlContent} onChange={handleYamlChange} />
+                      </div>
+                    </TabPanel>
+                    <TabPanel value="compare">
+                      <div className="pt-4">
+                        <DiffViewer oldYaml={defaultYaml} newYaml={yamlContent} />
                       </div>
                     </TabPanel>
                   </Tabs>
                   <div className="flex justify-end pt-2">
                     <Button
                       variant="primary"
-                      onClick={() => setStep({ configuration: 'done', compare: 'active' })}
+                      onClick={() => setStep({ configuration: 'done' })}
                       disabled={!isConfigDone}
                     >
                       Next
@@ -697,7 +802,7 @@ export function AppInstallPage() {
               </SectionCard>
             )}
             {sectionStatus.configuration === 'done' && (
-              <DoneSection title={SECTION_LABELS.configuration} onEdit={() => setStep({ configuration: 'active', compare: 'pre' })}>
+              <DoneSection title={SECTION_LABELS.configuration} onEdit={() => setStep({ configuration: 'active' })}>
                 {opts.length > 0 ? (
                   opts.slice(0, 3).map((opt) => (
                     <DoneSectionRow
@@ -712,24 +817,6 @@ export function AppInstallPage() {
                 {opts.length > 3 && (
                   <DoneSectionRow label="" value={`+${opts.length - 3} more fields configured`} />
                 )}
-              </DoneSection>
-            )}
-
-            {/* ── Section 4: Compare Changes ── */}
-            {sectionStatus.compare === 'pre' && (
-              <PreSection title={SECTION_LABELS.compare} />
-            )}
-            {sectionStatus.compare === 'active' && (
-              <SectionCard isActive>
-                <SectionCard.Header title={SECTION_LABELS.compare} showDivider />
-                <SectionCard.Content gap={4}>
-                  <DiffViewer oldYaml={defaultYaml} newYaml={yamlContent} />
-                </SectionCard.Content>
-              </SectionCard>
-            )}
-            {sectionStatus.compare === 'done' && (
-              <DoneSection title={SECTION_LABELS.compare} onEdit={() => setStep({ compare: 'active' })}>
-                <DoneSectionRow label="Result" value="Changes reviewed" />
               </DoneSection>
             )}
           </VStack>
