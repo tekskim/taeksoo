@@ -473,7 +473,7 @@ export function CloudBuilderDetailPage() {
     <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
       <VStack gap={6} className="min-w-[1176px]">
         {isNetworkAgent ? (
-          <DetailHeader id="tds-DetailHeader">
+          <DetailHeader id="tds-DetailHeader" data-figma-name="DetailHeader">
             <DetailHeader.Title>{row?.name ?? `Network Agent #${id}`}</DetailHeader.Title>
             <DetailHeader.Actions>
               <Button
@@ -519,7 +519,7 @@ export function CloudBuilderDetailPage() {
             </DetailHeader.InfoGrid>
           </DetailHeader>
         ) : (
-          <DetailHeader id="tds-DetailHeader">
+          <DetailHeader id="tds-DetailHeader" data-figma-name="DetailHeader">
             <DetailHeader.Title>
               {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
             </DetailHeader.Title>
@@ -611,7 +611,7 @@ export function CloudBuilderDetailPage() {
               </TabPanel>
 
               <TabPanel value="configuration" className="pt-4">
-                <SectionCard id="tds-SectionCard-Config">
+                <SectionCard id="tds-SectionCard-Config" data-figma-name="SectionCard-Config">
                   <SectionCard.Header
                     title="Configuration"
                     actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
@@ -693,6 +693,7 @@ export function CloudBuilderDetailPage() {
         ) : row ? (
           <Tabs
             id="tds-Tabs"
+            data-figma-name="Tabs"
             value={activeDetailTab}
             onChange={(v) => setActiveDetailTab(v as any)}
             variant="underline"
@@ -707,7 +708,10 @@ export function CloudBuilderDetailPage() {
             <TabPanel value="details" className="pt-4">
               {isServer ? (
                 <VStack gap={6}>
-                  <SectionCard id="tds-SectionCard-BasicInfo">
+                  <SectionCard
+                    id="tds-SectionCard-BasicInfo"
+                    data-figma-name="SectionCard-BasicInfo"
+                  >
                     <SectionCard.Header title="Basic info" />
                     <SectionCard.Content>
                       <SectionCard.DataRow
@@ -748,7 +752,7 @@ export function CloudBuilderDetailPage() {
                   </SectionCard>
                 </VStack>
               ) : (
-                <SectionCard id="tds-SectionCard-Details">
+                <SectionCard id="tds-SectionCard-Details" data-figma-name="SectionCard-Details">
                   <SectionCard.Header title="Details" />
                   <SectionCard.Content>
                     {columns.map((column, idx) => {
@@ -808,7 +812,7 @@ export function CloudBuilderDetailPage() {
             {isServer ? (
               <TabPanel value="disk" className="pt-4">
                 <VStack gap={6}>
-                  <SectionCard id="tds-SectionCard-Storage">
+                  <SectionCard id="tds-SectionCard-Storage" data-figma-name="SectionCard-Storage">
                     <SectionCard.Header title="Storage detail" />
                     <SectionCard.Content gap={3}>
                       <div className="text-[13px] font-medium text-[var(--color-text-default)]">
@@ -817,6 +821,7 @@ export function CloudBuilderDetailPage() {
                       </div>
                       <Table<DiskRow>
                         id="tds-Table"
+                        data-figma-name="Table"
                         columns={diskColumns}
                         data={diskRows}
                         rowKey="id"
@@ -832,7 +837,7 @@ export function CloudBuilderDetailPage() {
               <TabPanel value="bmc-info" className="pt-4">
                 <div className="grid grid-cols-12 gap-6 items-start">
                   <div className="col-span-12 lg:col-span-4">
-                    <SectionCard id="tds-SectionCard-BMC">
+                    <SectionCard id="tds-SectionCard-BMC" data-figma-name="SectionCard-BMC">
                       <SectionCard.Header title="BMC" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
@@ -860,7 +865,10 @@ export function CloudBuilderDetailPage() {
                     </SectionCard>
                   </div>
                   <div className="col-span-12 lg:col-span-8">
-                    <SectionCard id="tds-SectionCard-ServerInfo">
+                    <SectionCard
+                      id="tds-SectionCard-ServerInfo"
+                      data-figma-name="SectionCard-ServerInfo"
+                    >
                       <SectionCard.Header
                         title="server_info.json"
                         actions={<CopyButton text={serverInfoJsonText} />}
@@ -877,7 +885,7 @@ export function CloudBuilderDetailPage() {
             ) : null}
           </Tabs>
         ) : (
-          <SectionCard id="tds-SectionCard-Empty">
+          <SectionCard id="tds-SectionCard-Empty" data-figma-name="SectionCard-Empty">
             <SectionCard.Header title="Details" />
             <SectionCard.Content>
               <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">

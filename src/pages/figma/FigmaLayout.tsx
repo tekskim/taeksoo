@@ -10,7 +10,7 @@ export function FigmaLayout() {
   const { pathname } = useLocation();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="fixed inset-0 bg-white overflow-y-auto">
       <nav className="sticky top-0 z-50 bg-white border-b border-[var(--color-border-default)] px-8 py-3 flex items-center gap-6">
         <span className="text-heading-h6 text-[var(--color-text-default)]">TDS Figma Capture</span>
         <div className="flex gap-1">

@@ -476,10 +476,19 @@ export function CloudBuilderConsolePage() {
       contentClassName="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]"
     >
       <VStack gap={3} className="w-full">
-        <div id="tds-PageHeader" className="flex items-center justify-between h-8">
+        <div
+          id="tds-PageHeader"
+          data-figma-name="PageHeader"
+          className="flex items-center justify-between h-8"
+        >
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
           {config.createLabel && (
-            <Button id="tds-CreateButton" leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
+            <Button
+              id="tds-CreateButton"
+              data-figma-name="CreateButton"
+              leftIcon={<IconPlus size={12} />}
+              onClick={handleCreate}
+            >
               {config.createLabel}
             </Button>
           )}
@@ -488,6 +497,7 @@ export function CloudBuilderConsolePage() {
         {hasTabs && config.tabs && (
           <Tabs
             id="tds-Tabs"
+            data-figma-name="Tabs"
             value={activeTabId}
             onChange={(v) => setActiveTabId(v)}
             variant="underline"
@@ -505,6 +515,7 @@ export function CloudBuilderConsolePage() {
 
         <ListToolbar
           id="tds-ListToolbar"
+          data-figma-name="ListToolbar"
           primaryActions={
             <ListToolbar.Actions>
               <div className="w-[var(--search-input-width)]">
@@ -552,6 +563,7 @@ export function CloudBuilderConsolePage() {
         {filteredRows.length > 0 && (
           <Pagination
             id="tds-Pagination"
+            data-figma-name="Pagination"
             currentPage={safePage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
@@ -564,6 +576,7 @@ export function CloudBuilderConsolePage() {
 
         <Table<Record<string, string> & { id: string }>
           id="tds-Table"
+          data-figma-name="Table"
           columns={columns}
           data={paged}
           rowKey="id"
