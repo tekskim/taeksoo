@@ -10,8 +10,6 @@ import {
   IconDatabase,
   IconShieldLock,
   IconPlus,
-  IconArrowLeft,
-  IconChevronDown,
   IconApps,
   IconBox,
   IconClock,
@@ -22,7 +20,7 @@ import {
   IconPackages,
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import containerIcon from '@/assets/container.png';
@@ -441,23 +439,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         {/* Navigation */}
         <nav className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll">
           <VStack gap={4} className="w-full min-w-0">
-            {/* Back to All Services */}
-            <Link
-              to="/"
-              className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-[length:var(--font-size-11)] transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
-            >
-              <IconArrowLeft size={16} stroke={1.5} />
-              <span>All Services</span>
-            </Link>
-
-            {/* Bookmarks */}
-            <div className="py-2">
-              <button className="flex items-center gap-2 px-0 py-1.5 text-[14px] font-semibold text-[var(--color-text-default)]">
-                <IconChevronDown size={12} stroke={2} className="rotate-[-90deg]" />
-                <span>Bookmarks</span>
-              </button>
-            </div>
-
             {/* Cluster Section */}
             <MenuSection title="Cluster" defaultOpen={true}>
               <MenuItem
