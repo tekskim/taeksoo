@@ -3,12 +3,12 @@ import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Button, DetailHeader, VStack } from '@/design-system';
+import { Button, DetailHeader, VStack, ContextMenu } from '@/design-system';
 import {
   IconTerminal2,
   IconPlayerPlay,
   IconPlayerStop,
-  IconRefresh,
+  IconPower,
   IconTrash,
   IconChevronDown,
 } from '@tabler/icons-react';
@@ -427,64 +427,71 @@ export function DetailHeaderPage() {
       preview={
         <ComponentPreview
           code={`<DetailHeader>
-  <DetailHeader.Title>tk-test</DetailHeader.Title>
+  <DetailHeader.Title>worker-node-01</DetailHeader.Title>
   <DetailHeader.Actions>
-    <Button variant="secondary" size="sm">Console</Button>
-    <Button variant="secondary" size="sm">Start</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>Console</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>Stop</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>Reboot</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>Delete</Button>
+    <ContextMenu items={moreActions} trigger="click">
+      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+        More Actions
+      </Button>
+    </ContextMenu>
   </DetailHeader.Actions>
   <DetailHeader.InfoGrid>
-    <DetailHeader.InfoCard label="Status" status="active" />
-    <DetailHeader.InfoCard label="ID" value="7284d917..." copyable />
+    <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+    <DetailHeader.InfoCard label="ID" value="vm-001" copyable />
     <DetailHeader.InfoCard label="Host" value="compute-03" />
     <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025 14:30:22" />
   </DetailHeader.InfoGrid>
 </DetailHeader>`}
         >
           <DetailHeader>
-            <DetailHeader.Title>tk-test</DetailHeader.Title>
+            <DetailHeader.Title>worker-node-01</DetailHeader.Title>
             <DetailHeader.Actions>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconTerminal2 size={12} stroke={1.5} />}
-              >
+              <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
                 Console
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
-              >
+              <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
                 Start
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconPlayerStop size={12} stroke={1.5} />}
-              >
+              <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
                 Stop
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<IconRefresh size={12} stroke={1.5} />}
-              >
+              <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
                 Reboot
               </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                 Delete
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              <ContextMenu
+                items={[
+                  {
+                    id: 'instance-status',
+                    label: 'Instance status',
+                    submenu: [
+                      { id: 'soft-reboot', label: 'Soft reboot', onClick: () => {} },
+                      { id: 'pause', label: 'Pause', onClick: () => {} },
+                      { id: 'suspend', label: 'Suspend', onClick: () => {} },
+                      { id: 'shelve', label: 'Shelve', onClick: () => {} },
+                    ],
+                  },
+                  { id: 'storage-snapshot', label: 'Storage & Snapshot', onClick: () => {} },
+                  { id: 'network', label: 'Network', onClick: () => {} },
+                  { id: 'configuration', label: 'Configuration', onClick: () => {} },
+                ]}
+                trigger="click"
               >
-                More Actions
-              </Button>
+                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                  More Actions
+                </Button>
+              </ContextMenu>
             </DetailHeader.Actions>
             <DetailHeader.InfoGrid>
-              <DetailHeader.InfoCard label="Status" status="active" />
-              <DetailHeader.InfoCard label="ID" value="7284d9174e81431e93060a9bbcf2cdfd" copyable />
+              <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+              <DetailHeader.InfoCard label="ID" value="vm-001" copyable />
               <DetailHeader.InfoCard label="Host" value="compute-03" />
               <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025 14:30:22" />
             </DetailHeader.InfoGrid>
@@ -492,16 +499,28 @@ export function DetailHeaderPage() {
         </ComponentPreview>
       }
       usage={{
-        code: `import { DetailHeader, Button } from '@/design-system';
+        code: `import { DetailHeader, Button, ContextMenu } from '@/design-system';
+import { IconTerminal2, IconPlayerPlay, IconPlayerStop, IconPower, IconTrash, IconChevronDown } from '@tabler/icons-react';
 
 <DetailHeader>
-  <DetailHeader.Title>{resourceName}</DetailHeader.Title>
+  <DetailHeader.Title>{instance.name}</DetailHeader.Title>
   <DetailHeader.Actions>
-    <Button variant="secondary" size="sm">Edit</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>Console</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>Stop</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>Reboot</Button>
+    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>Delete</Button>
+    <ContextMenu items={moreActions} trigger="click">
+      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+        More Actions
+      </Button>
+    </ContextMenu>
   </DetailHeader.Actions>
   <DetailHeader.InfoGrid>
-    <DetailHeader.InfoCard label="Status" status="active" />
-    <DetailHeader.InfoCard label="ID" value={id} copyable />
+    <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+    <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
+    <DetailHeader.InfoCard label="Host" value={instance.host} />
+    <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
   </DetailHeader.InfoGrid>
 </DetailHeader>`,
       }}
@@ -568,13 +587,9 @@ export function DetailHeaderPage() {
             </VStack>
             <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
               <DetailHeader>
-                <DetailHeader.Title>my-config</DetailHeader.Title>
+                <DetailHeader.Title>my-configmap</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} stroke={1.5} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
                 </DetailHeader.Actions>
