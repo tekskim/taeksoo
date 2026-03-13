@@ -32,6 +32,7 @@ import {
   IconSquarePlus,
   IconMinus,
   IconPencil,
+  IconEdit,
   IconTrash,
   IconTrashX,
   IconCopy,
@@ -50,6 +51,7 @@ import {
   IconChevronRight,
   IconChevronDown,
   IconChevronUp,
+  IconChevronsRight,
   IconArrowLeft,
   IconArrowRight,
   IconArrowUp,
@@ -63,6 +65,7 @@ import {
   IconDotsCircleHorizontal,
   IconDots,
   IconDotsVertical,
+  IconMenu2,
   // Status - Success & Error
   IconCircleCheck,
   IconCheck,
@@ -75,6 +78,7 @@ import {
   IconHelpCircle,
   // Status - State
   IconCircle,
+  IconCircleFilled,
   IconCircleOff,
   IconBan,
   IconTool,
@@ -92,6 +96,13 @@ import {
   IconLayoutGrid,
   IconGridDots,
   IconArrowsSort,
+  IconGripVertical,
+  IconSelector,
+  IconSquare,
+  IconTag,
+  IconPhoto,
+  IconSlash,
+  IconMapPin,
   // UI - Notifications & Favorites
   IconBell,
   IconBellRinging,
@@ -104,6 +115,7 @@ import {
   IconEye,
   IconEyeOff,
   IconLock,
+  IconLockOpen,
   IconShield,
   IconShieldLock,
   IconKey,
@@ -115,15 +127,18 @@ import {
   IconMessagePlus,
   IconHelp,
   IconQuestionMark,
+  IconLogout,
   // UI - Theme
   IconSun,
   IconMoon,
+  IconPalette,
   // Infrastructure - Compute
   IconServer,
   IconServer2,
   IconCube,
   IconCpu,
   IconServerCog,
+  IconServerOff,
   IconCloud,
   // Infrastructure - Network
   IconNetwork,
@@ -132,6 +147,7 @@ import {
   IconPlugConnected,
   IconScale,
   IconWorldWww,
+  IconWifiOff,
   // Infrastructure - Storage
   IconDatabase,
   IconDatabaseSearch,
@@ -242,6 +258,10 @@ import {
   IconRocky2,
   IconWindowActive,
   IconWindowMinimized,
+  IconRouterArrows,
+  IconAction,
+  IconExpandOff,
+  IconExpandOn,
 } from '@/design-system/components/Icons/CustomIcons';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -289,6 +309,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconSquarePlus, name: 'IconSquarePlus', label: 'Attach' },
       { icon: IconMinus, name: 'IconMinus', label: 'Remove' },
       { icon: IconPencil, name: 'IconPencil', label: 'Edit' },
+      { icon: IconEdit, name: 'IconEdit', label: 'Edit Alt' },
       { icon: IconTrash, name: 'IconTrash', label: 'Delete' },
       { icon: IconTrashX, name: 'IconTrashX', label: 'Deleting' },
       { icon: IconCopy, name: 'IconCopy', label: 'Copy' },
@@ -324,6 +345,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconArrowRight, name: 'IconArrowRight', label: 'Arrow R' },
       { icon: IconArrowUp, name: 'IconArrowUp', label: 'Arrow U' },
       { icon: IconArrowDown, name: 'IconArrowDown', label: 'Arrow D' },
+      { icon: IconChevronsRight, name: 'IconChevronsRight', label: 'Chevrons R' },
       { icon: IconCaretRightFilled, name: 'IconCaretRightFilled', label: 'Caret R' },
       { icon: IconCaretDownFilled, name: 'IconCaretDownFilled', label: 'Caret D' },
     ],
@@ -341,6 +363,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconDotsCircleHorizontal, name: 'IconDotsCircleHorizontal', label: 'Action' },
       { icon: IconDots, name: 'IconDots', label: 'Meatball' },
       { icon: IconDotsVertical, name: 'IconDotsVertical', label: 'Kebab' },
+      { icon: IconMenu2, name: 'IconMenu2', label: 'Hamburger' },
     ],
   },
   {
@@ -361,6 +384,7 @@ const iconCategories: IconCategory[] = [
     title: 'Status - State',
     items: [
       { icon: IconCircle, name: 'IconCircle', label: 'Active' },
+      { icon: IconCircleFilled, name: 'IconCircleFilled', label: 'Filled' },
       { icon: IconCircleOff, name: 'IconCircleOff', label: 'Inactive' },
       { icon: IconBan, name: 'IconBan', label: 'Suspended' },
       { icon: IconTool, name: 'IconTool', label: 'Maintain' },
@@ -382,6 +406,13 @@ const iconCategories: IconCategory[] = [
       { icon: IconLayoutGrid, name: 'IconLayoutGrid', label: 'Grid' },
       { icon: IconGridDots, name: 'IconGridDots', label: 'Grid Dots' },
       { icon: IconArrowsSort, name: 'IconArrowsSort', label: 'Sort' },
+      { icon: IconSelector, name: 'IconSelector', label: 'Selector' },
+      { icon: IconGripVertical, name: 'IconGripVertical', label: 'Drag' },
+      { icon: IconSquare, name: 'IconSquare', label: 'Square' },
+      { icon: IconSlash, name: 'IconSlash', label: 'Separator' },
+      { icon: IconTag, name: 'IconTag', label: 'Tag' },
+      { icon: IconPhoto, name: 'IconPhoto', label: 'Photo' },
+      { icon: IconMapPin, name: 'IconMapPin', label: 'Location' },
     ],
   },
   {
@@ -402,6 +433,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconEye, name: 'IconEye', label: 'Show' },
       { icon: IconEyeOff, name: 'IconEyeOff', label: 'Hide' },
       { icon: IconLock, name: 'IconLock', label: 'Lock' },
+      { icon: IconLockOpen, name: 'IconLockOpen', label: 'Unlock' },
       { icon: IconShield, name: 'IconShield', label: 'Shield' },
       { icon: IconShieldLock, name: 'IconShieldLock', label: 'Shield Lock' },
       { icon: IconKey, name: 'IconKey', label: 'Key' },
@@ -422,6 +454,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconMessageCircle, name: 'IconMessageCircle', label: 'Message Circle' },
       { icon: IconHelp, name: 'IconHelp', label: 'Help' },
       { icon: IconQuestionMark, name: 'IconQuestionMark', label: 'Question' },
+      { icon: IconLogout, name: 'IconLogout', label: 'Logout' },
     ],
   },
   {
@@ -429,6 +462,7 @@ const iconCategories: IconCategory[] = [
     items: [
       { icon: IconSun, name: 'IconSun', label: 'Light' },
       { icon: IconMoon, name: 'IconMoon', label: 'Dark' },
+      { icon: IconPalette, name: 'IconPalette', label: 'Palette' },
     ],
   },
   {
@@ -440,6 +474,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconCpu, name: 'IconCpu', label: 'CPU' },
       { icon: IconCpu2, name: 'IconCpu2', label: 'CPU 2' },
       { icon: IconServerCog, name: 'IconServerCog', label: 'Host Agg' },
+      { icon: IconServerOff, name: 'IconServerOff', label: 'Server Off' },
       { icon: IconCloud, name: 'IconCloud', label: 'Cloud' },
     ],
   },
@@ -454,6 +489,7 @@ const iconCategories: IconCategory[] = [
       { icon: IconLoadBalancer, name: 'IconLoadBalancer', label: 'Load Balancer' },
       { icon: IconWorldWww, name: 'IconWorldWww', label: 'Float IP' },
       { icon: IconWorld, name: 'IconWorld', label: 'World' },
+      { icon: IconWifiOff, name: 'IconWifiOff', label: 'Disconnected' },
       { icon: IconTopologyRing, name: 'IconTopologyRing', label: 'Topo Ring' },
       { icon: IconTopologyStar, name: 'IconTopologyStar', label: 'Topo Star' },
       { icon: IconTopologyStar3, name: 'IconTopologyStar3', label: 'Topo Star 3' },
@@ -607,6 +643,15 @@ const iconCategories: IconCategory[] = [
       },
       { icon: IconTimeout, name: 'IconTimeout', label: 'Timeout', library: 'custom' },
       { icon: IconHistory2, name: 'IconHistory2', label: 'History', library: 'custom' },
+      {
+        icon: IconRouterArrows,
+        name: 'IconRouterArrows',
+        label: 'Virtual Adapter',
+        library: 'custom',
+      },
+      { icon: IconAction, name: 'IconAction', label: 'Action', library: 'custom' },
+      { icon: IconExpandOff, name: 'IconExpandOff', label: 'Collapse All', library: 'custom' },
+      { icon: IconExpandOn, name: 'IconExpandOn', label: 'Expand All', library: 'custom' },
     ],
   },
 ];
@@ -623,6 +668,7 @@ interface IconRowProps {
 function IconRow({ item, categoryType }: IconRowProps) {
   const [copied, setCopied] = useState(false);
   const Icon = item.icon;
+  const figmaName = item.name.replace(/^Icon/, 'Icon/');
 
   const handleCopy = useCallback(async () => {
     const code = `<${item.name} size={16} stroke={1.5} />`;
@@ -648,7 +694,13 @@ function IconRow({ item, categoryType }: IconRowProps) {
     >
       <td className="py-3 px-4" style={{ width: '64px' }}>
         <div className="flex items-center justify-center">
-          <Icon size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          <Icon
+            size={16}
+            stroke={1.5}
+            className="text-[var(--color-text-default)]"
+            data-figma-name={figmaName}
+            aria-label={figmaName}
+          />
         </div>
       </td>
       <td className="py-3 px-4" style={{ width: '220px' }}>

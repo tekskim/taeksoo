@@ -1727,66 +1727,14 @@ export function FigmaComponentsPage() {
         </FigmaFrame>
       </div>
 
-      <SubTitle>Status Colors</SubTitle>
-      <div
-        className="grid items-start gap-x-3 gap-y-2"
-        style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
-      >
-        <StateLabel>info</StateLabel>
-        <StateLabel>success</StateLabel>
-        <StateLabel>warning</StateLabel>
-        <StateLabel>danger</StateLabel>
-
-        <FigmaFrame name="ProgressBar/status/info">
-          <ProgressBar value={50} max={100} label="Info" status="info" statusText="50%" />
-        </FigmaFrame>
-        <FigmaFrame name="ProgressBar/status/success">
-          <ProgressBar value={50} max={100} label="Success" status="success" statusText="50%" />
-        </FigmaFrame>
-        <FigmaFrame name="ProgressBar/status/warning">
-          <ProgressBar value={70} max={100} label="Warning" status="warning" statusText="70%" />
-        </FigmaFrame>
-        <FigmaFrame name="ProgressBar/status/danger">
-          <ProgressBar value={95} max={100} label="Danger" status="danger" statusText="95%" />
-        </FigmaFrame>
-      </div>
-
-      <SubTitle>Quota Variant</SubTitle>
-      <div
-        className="grid items-start gap-x-3 gap-y-2"
-        style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
-      >
-        <StateLabel>normal</StateLabel>
-        <StateLabel>with-new-value</StateLabel>
-        <StateLabel>unlimited</StateLabel>
-
-        <FigmaFrame name="ProgressBar/quota/normal">
-          <ProgressBar variant="quota" value={3} max={10} label="Instances" showValue />
-        </FigmaFrame>
-        <FigmaFrame name="ProgressBar/quota/with-new-value">
-          <ProgressBar variant="quota" value={5} newValue={2} max={10} label="vCPU" showValue />
-        </FigmaFrame>
-        <FigmaFrame name="ProgressBar/quota/unlimited">
-          <ProgressBar variant="quota" value={15} label="API Calls" showValue />
-        </FigmaFrame>
-      </div>
-
       <FigmaGuide
         figmaName="TDS/Data/ProgressBar"
         properties={[
-          { name: 'Variant', type: 'Variant', values: 'default | quota' },
-          {
-            name: 'Status',
-            type: 'Variant',
-            values: 'info | success | warning | danger | neutral',
-          },
           { name: 'Size', type: 'Variant', values: 'sm | md' },
           { name: 'Value', type: 'Number', values: 'current value (0–max)' },
-          { name: 'Max', type: 'Number', values: 'total value (undefined = unlimited)' },
-          { name: 'NewValue', type: 'Number', values: 'additional value (quota variant)' },
+          { name: 'Max', type: 'Number', values: 'total value' },
           { name: 'Label', type: 'Text', values: 'task name (optional)' },
           { name: 'StatusText', type: 'Text', values: 'right-side text (e.g. "65%")' },
-          { name: 'ShowValue', type: 'Boolean', values: 'show value text (quota variant)' },
         ]}
         autoLayout={[
           { label: 'Container', direction: 'V', gap: '6px', padding: '0' },
@@ -1795,20 +1743,12 @@ export function FigmaComponentsPage() {
         radius="9999px (pill — Track and Fill both)"
         tokens={[
           { label: 'Default fill', value: '--color-action-primary (blue)' },
-          { label: 'Info fill', value: '--color-state-info (blue)' },
-          { label: 'Success fill', value: '--color-state-success (green)' },
-          { label: 'Warning fill', value: '--color-state-warning (orange)' },
-          { label: 'Danger fill', value: '--color-state-danger (red)' },
           { label: 'Track bg', value: '--color-border-subtle' },
           { label: 'Label', value: 'text-label-sm' },
           { label: 'StatusText', value: 'text-body-sm, text-subtle' },
         ]}
         tips={[
           'Default variant: Bar만 단독 표시. Labeled는 상단에 Label + Value 텍스트 배치',
-          'status 미지정 시 기본 색상은 --color-action-primary (파란색)',
-          'status 지정 시 해당 상태 색상 사용. thresholds로 자동 색상 전환도 가능',
-          'Quota variant: Used/New/Total 구성. newValue로 추가 예정 영역 표시',
-          'Quota variant에서 max 미지정 시 "Unlimited" 표시',
           '구조: Track(전체 바, 높이 4px) + Fill(채워진 부분). Fill의 width를 %로 조절',
           'border-radius: Track과 Fill 모두 9999px (pill)',
         ]}
