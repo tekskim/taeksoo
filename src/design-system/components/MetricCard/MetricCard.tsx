@@ -70,7 +70,7 @@ function MetricTooltip({ content }: { content: string }) {
     <span className="relative group">
       <button
         type="button"
-        className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] transition-colors"
+        className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] transition-colors flex items-center leading-none"
         aria-label={content}
       >
         <svg

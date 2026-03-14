@@ -170,26 +170,6 @@ export function TextInputPage() {
               </HStack>
             </div>
           </VStack>
-
-          <VStack gap={3}>
-            <Label>With Suffix (Inside)</Label>
-            <div className="flex gap-4 items-end">
-              <Input
-                placeholder="0"
-                width="sm"
-                rightElement={
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">Seconds</span>
-                }
-              />
-              <Input
-                placeholder="100"
-                width="sm"
-                rightElement={
-                  <span className="text-body-sm text-[var(--color-text-subtle)]">GiB</span>
-                }
-              />
-            </div>
-          </VStack>
         </VStack>
       }
       guidelines={

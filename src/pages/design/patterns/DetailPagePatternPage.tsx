@@ -77,7 +77,7 @@ function DetailPagePreview() {
           </Button>
         </DetailHeader.Actions>
         <DetailHeader.InfoGrid>
-          <DetailHeader.InfoCard label="Status" status="active" />
+          <DetailHeader.InfoCard label="Status" value="Active" status="active" />
           <DetailHeader.InfoCard label="ID" value="i-0a1b2c3d4e5f" copyable />
           <DetailHeader.InfoCard label="Host" value="compute-node-03" />
           <DetailHeader.InfoCard label="Created at" value="Feb 15, 2026 09:30:00" />
@@ -488,7 +488,7 @@ export function DetailPagePatternPage() {
     <DetailHeader.Title>web-server-01</DetailHeader.Title>
     <DetailHeader.Actions>...</DetailHeader.Actions>
     <DetailHeader.InfoGrid>
-      <DetailHeader.InfoCard label="Status" status="active" />
+      <DetailHeader.InfoCard label="Status" value="Active" status="active" />
       <DetailHeader.InfoCard label="ID" value="i-0a1b2c3d4e5f" copyable />
       ...
     </DetailHeader.InfoGrid>

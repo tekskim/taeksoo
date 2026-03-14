@@ -37,7 +37,6 @@ import {
   IconPencil,
   IconLayoutList,
   IconAccessible,
-  IconBrush,
   IconChecklist,
   IconBook,
   IconComponents,
@@ -64,19 +63,19 @@ export interface NavGroup {
 const foundationItems: NavItem[] = [
   {
     id: 'token-architecture',
-    label: 'Token architecture',
+    label: 'Token Architecture',
     icon: IconLayoutGrid,
     path: '/design/foundation/tokens',
   },
   {
     id: 'primitive-colors',
-    label: 'Primitive colors',
+    label: 'Primitive Colors',
     icon: IconPalette,
     path: '/design/foundation/primitive-colors',
   },
   {
     id: 'semantic-colors',
-    label: 'Semantic colors',
+    label: 'Semantic Colors',
     icon: IconPalette,
     path: '/design/foundation/semantic-colors',
   },
@@ -101,7 +100,7 @@ const foundationItems: NavItem[] = [
     path: '/design/foundation/transitions',
   },
   { id: 'icons', label: 'Icons', icon: IconStar, path: '/design/foundation/icons' },
-  { id: 'app-icons', label: 'App icons', icon: IconApps, path: '/design/foundation/app-icons' },
+  { id: 'app-icons', label: 'App Icons', icon: IconApps, path: '/design/foundation/app-icons' },
 ];
 
 const formControlItems: NavItem[] = [
@@ -123,7 +122,7 @@ const formControlItems: NavItem[] = [
   },
   {
     id: 'filter-search-input',
-    label: 'Filter search Input',
+    label: 'Filter Search Input',
     icon: IconSearch,
     path: '/design/components/filter-search-input',
   },
@@ -138,6 +137,19 @@ const formControlItems: NavItem[] = [
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight, path: '/design/components/toggle' },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck, path: '/design/components/checkbox' },
   { id: 'radio', label: 'Radio', icon: IconCircle, path: '/design/components/radio' },
+  { id: 'password', label: 'Password', icon: IconForms, path: '/design/components/password' },
+  {
+    id: 'copy-button',
+    label: 'Copy Button',
+    icon: IconClick,
+    path: '/design/components/copy-button',
+  },
+  {
+    id: 'selection-indicator',
+    label: 'Selection Indicator',
+    icon: IconActivity,
+    path: '/design/components/selection-indicator',
+  },
 ];
 
 const dataDisplayItems: NavItem[] = [
@@ -150,7 +162,7 @@ const dataDisplayItems: NavItem[] = [
   },
   {
     id: 'status-indicator',
-    label: 'Status indicator',
+    label: 'Status Indicator',
     icon: IconActivity,
     path: '/design/components/status-indicator',
   },
@@ -159,7 +171,7 @@ const dataDisplayItems: NavItem[] = [
   { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
   {
     id: 'file-list-card',
-    label: 'FileListCard',
+    label: 'File List Card',
     icon: IconList,
     path: '/design/components/file-list-card',
   },
@@ -175,12 +187,26 @@ const dataDisplayItems: NavItem[] = [
     icon: IconSelector,
     path: '/design/components/disclosure',
   },
+  { id: 'tag', label: 'Tag', icon: IconTag, path: '/design/components/tag' },
+  { id: 'info-box', label: 'Info Box', icon: IconInfoCircle, path: '/design/components/info-box' },
+  {
+    id: 'metric-card',
+    label: 'Metric Card',
+    icon: IconActivity,
+    path: '/design/components/metric-card',
+  },
+  {
+    id: 'list-toolbar',
+    label: 'List Toolbar',
+    icon: IconLayoutList,
+    path: '/design/components/list-toolbar',
+  },
 ];
 
 const feedbackItems: NavItem[] = [
   {
     id: 'inline-message',
-    label: 'Inline message',
+    label: 'Inline Message',
     icon: IconInfoCircle,
     path: '/design/components/inline-message',
   },
@@ -212,15 +238,9 @@ const feedbackItems: NavItem[] = [
   { id: 'snackbar', label: 'Snackbar', icon: IconBell, path: '/design/components/snackbar' },
   {
     id: 'notification-center',
-    label: 'Notification center',
+    label: 'Notification Center',
     icon: IconBell,
     path: '/design/components/notification-center',
-  },
-  {
-    id: 'global-notification-panel',
-    label: 'Global notification panel',
-    icon: IconBell,
-    path: '/design/components/global-notification-panel',
   },
 ];
 
@@ -231,7 +251,7 @@ const navigationItems: NavItem[] = [
     icon: IconLayoutNavbar,
     path: '/design/components/topbar',
   },
-  { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar, path: '/design/components/tabbar' },
+  { id: 'tabbar', label: 'Tab Bar', icon: IconLayoutNavbar, path: '/design/components/tabbar' },
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar, path: '/design/components/tabs' },
   {
     id: 'breadcrumb',
@@ -272,97 +292,34 @@ const overlayItems: NavItem[] = [
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid, path: '/design/components/drawer' },
   {
     id: 'floating-card',
-    label: 'Floating card',
+    label: 'Floating Card',
     icon: IconLayoutGrid,
     path: '/design/components/floating-card',
   },
 ];
 
 const patternItems: NavItem[] = [
-  // Page-level patterns
-  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
-    id: 'shell-pattern',
-    label: 'Shell',
+    id: 'app-window',
+    label: 'App Window',
     icon: IconTerminal2,
-    path: '/design/patterns/shell',
+    path: '/design/policies/app-window',
   },
-  {
-    id: 'list-page',
-    label: 'List Page',
-    icon: IconList,
-    path: '/design/patterns/list-page',
-  },
-  {
-    id: 'detail-page',
-    label: 'Detail Page',
-    icon: IconList,
-    path: '/design/patterns/detail-page',
-  },
-  {
-    id: 'empty-states',
-    label: 'Empty States',
-    icon: IconTemplate,
-    path: '/design/patterns/empty-states',
-  },
-  // Section/Component patterns
-  {
-    id: 'detail-header',
-    label: 'Detail header',
-    icon: IconLayoutNavbar,
-    path: '/design/patterns/detail-header',
-  },
-  {
-    id: 'section-card',
-    label: 'Section card',
-    icon: IconLayoutGrid,
-    path: '/design/patterns/section-card',
-  },
-  {
-    id: 'common-patterns',
-    label: 'Common patterns',
-    icon: IconTemplate,
-    path: '/design/patterns/common',
-  },
-  // Form patterns
-  {
-    id: 'form-field-pattern',
-    label: 'Form Field',
-    icon: IconForms,
-    path: '/design/patterns/form-field-pattern',
-  },
-  {
-    id: 'form-field-spacing',
-    label: 'Form Field Spacing',
-    icon: IconLayoutGrid,
-    path: '/design/patterns/form-field',
-  },
-  {
-    id: 'dynamic-form-fields',
-    label: 'Dynamic Form Fields',
-    icon: IconForms,
-    path: '/design/patterns/dynamic-form-fields',
-  },
-  // Create flow patterns
   {
     id: 'wizard',
-    label: 'Wizard (Create Flow)',
+    label: 'Create Page (Wizard)',
     icon: IconListNumbers,
     path: '/design/patterns/wizard',
   },
   {
     id: 'open-form',
-    label: 'Open Form (Create Flow)',
+    label: 'Create Page (Multi tab)',
     icon: IconLayoutList,
     path: '/design/patterns/open-form',
   },
-  // Specialized patterns
-  {
-    id: 'list-selector',
-    label: 'List Selector',
-    icon: IconList,
-    path: '/design/patterns/list-selector',
-  },
+  { id: 'list-page', label: 'List Page', icon: IconList, path: '/design/patterns/list-page' },
+  { id: 'detail-page', label: 'Detail Page', icon: IconList, path: '/design/patterns/detail-page' },
+  { id: 'shell-pattern', label: 'Shell', icon: IconTerminal2, path: '/design/patterns/shell' },
   {
     id: 'view-preferences',
     label: 'View Preferences',
@@ -370,22 +327,72 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/view-preferences',
   },
   {
+    id: 'system-error',
+    label: 'System Error',
+    icon: IconAlertTriangle,
+    path: '/design/policies/system-error',
+  },
+  {
+    id: 'empty-states',
+    label: 'Empty States',
+    icon: IconTemplate,
+    path: '/design/patterns/empty-states',
+  },
+  {
+    id: 'list-selector',
+    label: 'List Selector',
+    icon: IconList,
+    path: '/design/patterns/list-selector',
+  },
+  {
+    id: 'form-field-pattern',
+    label: 'Form Field',
+    icon: IconForms,
+    path: '/design/patterns/form-field-pattern',
+  },
+  {
+    id: 'global-notification-panel',
+    label: 'Global Notification Panel',
+    icon: IconBell,
+    path: '/design/components/global-notification-panel',
+  },
+  {
+    id: 'csv-download',
+    label: 'List Download (CSV Export)',
+    icon: IconDownload,
+    path: '/design/policies/csv-download',
+  },
+  {
     id: 'monitoring-toolbar',
-    label: 'Monitoring toolbar',
+    label: 'Monitoring Toolbar',
     icon: IconRefresh,
     path: '/design/patterns/monitoring-toolbar',
   },
+  // Remaining items
+  { id: 'layout', label: 'Layout', icon: IconLayoutSidebar, path: '/design/patterns/layout' },
   {
-    id: 'desktop-grid',
-    label: 'Desktop Icon Grid',
-    icon: IconDeviceDesktop,
-    path: '/design/patterns/desktop-grid',
+    id: 'detail-header',
+    label: 'Detail Header',
+    icon: IconLayoutNavbar,
+    path: '/design/patterns/detail-header',
   },
   {
-    id: 'editor',
-    label: 'Editor',
+    id: 'section-card',
+    label: 'Section Card',
+    icon: IconLayoutGrid,
+    path: '/design/patterns/section-card',
+  },
+  {
+    id: 'common-patterns',
+    label: 'Common Patterns',
     icon: IconTemplate,
-    path: '/design/patterns/editor',
+    path: '/design/patterns/common',
+  },
+  {
+    id: 'form-field-spacing',
+    label: 'Form Field Spacing',
+    icon: IconLayoutGrid,
+    path: '/design/patterns/form-field',
   },
 ];
 
@@ -403,53 +410,23 @@ const policyItems: NavItem[] = [
     path: '/design/policies/ux-writing',
   },
   {
-    id: 'csv-download',
-    label: 'List Download (CSV Export)',
-    icon: IconDownload,
-    path: '/design/policies/csv-download',
-  },
-  {
-    id: 'app-window',
-    label: 'App Window',
-    icon: IconTerminal2,
-    path: '/design/policies/app-window',
-  },
-  {
-    id: 'theming',
-    label: 'Theming',
-    icon: IconBrush,
-    path: '/design/policies/theming',
-  },
-  {
     id: 'error-alert',
     label: 'Error & Alert',
     icon: IconAlertTriangle,
     path: '/design/policies/error-alert',
-  },
-  {
-    id: 'system-error',
-    label: 'System Error',
-    icon: IconAlertTriangle,
-    path: '/design/policies/system-error',
-  },
-  {
-    id: 'form-validation',
-    label: 'Form Validation',
-    icon: IconChecklist,
-    path: '/design/policies/form-validation',
   },
 ];
 
 const graphItems: NavItem[] = [
   {
     id: 'chart-overview',
-    label: 'Chart overview',
+    label: 'Chart Overview',
     icon: IconChartBar,
     path: '/design/charts/overview',
   },
   {
     id: 'status-colors',
-    label: 'Status colors',
+    label: 'Status Colors',
     icon: IconPalette,
     path: '/design/charts/status-colors',
   },
@@ -460,12 +437,39 @@ const graphItems: NavItem[] = [
     path: '/design/charts/usage-chart',
   },
   { id: 'area-chart', label: 'Line Chart', icon: IconChartBar, path: '/design/charts/area-chart' },
-  { id: 'pie-chart', label: 'Pie chart', icon: IconActivity, path: '/design/charts/pie-chart' },
+  { id: 'pie-chart', label: 'Pie Chart', icon: IconActivity, path: '/design/charts/pie-chart' },
   {
     id: 'chart-tooltip',
-    label: 'Chart tooltip',
+    label: 'Chart Tooltip',
     icon: IconMessage2,
     path: '/design/charts/tooltip',
+  },
+];
+
+const etcItems: NavItem[] = [
+  {
+    id: 'dynamic-form-fields',
+    label: 'Dynamic Form Fields',
+    icon: IconForms,
+    path: '/design/patterns/dynamic-form-fields',
+  },
+  {
+    id: 'editor',
+    label: 'Editor',
+    icon: IconTemplate,
+    path: '/design/patterns/editor',
+  },
+  {
+    id: 'desktop-grid',
+    label: 'Desktop Icon Grid',
+    icon: IconDeviceDesktop,
+    path: '/design/patterns/desktop-grid',
+  },
+  {
+    id: 'card-title',
+    label: 'Card Title',
+    icon: IconBorderAll,
+    path: '/design/components/card-title',
   },
 ];
 
@@ -533,6 +537,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Patterns', items: patternItems },
   { title: 'Policies', items: policyItems },
   { title: 'Graphs', items: graphItems },
+  { title: 'Etc', items: etcItems },
   { title: 'Figma Migration', items: figmaItems },
   { title: 'Audit', items: auditItems },
   { title: 'Prototype', items: prototypeItems },
@@ -555,7 +560,6 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/foundation/app-icons': '2026-03-01 10:30:00',
   '/design/policies/ux-writing': '2026-03-05 13:00:00',
   '/design/policies/accessibility': '2026-02-25 14:00:00',
-  '/design/policies/theming': '2026-02-25 14:00:00',
   '/design/policies/error-alert': '2026-03-09 10:30:00',
   '/design/policies/system-error': '2026-03-09 10:30:00',
   // Form Controls
@@ -573,6 +577,9 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/toggle': '2026-03-09 10:30:00',
   '/design/components/checkbox': '2026-03-09 10:30:00',
   '/design/components/radio': '2026-03-09 10:30:00',
+  '/design/components/password': '2026-03-13 10:00:00',
+  '/design/components/copy-button': '2026-03-13 10:00:00',
+  '/design/components/selection-indicator': '2026-03-13 10:00:00',
   // Data Display
   '/design/components/table': '2026-03-09 10:30:00',
   '/design/components/badge': '2026-03-05 13:00:00',
@@ -582,6 +589,11 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/pagination': '2026-03-09',
   '/design/components/file-list-card': '2026-03-01 10:30:00',
   '/design/components/expandable-checklist': '2026-03-09 10:30:00',
+  '/design/components/tag': '2026-03-13 10:00:00',
+  '/design/components/info-box': '2026-03-13 10:00:00',
+  '/design/components/metric-card': '2026-03-13 10:00:00',
+  '/design/components/card-title': '2026-03-13 10:00:00',
+  '/design/components/list-toolbar': '2026-03-13 10:00:00',
   // Feedback
   '/design/components/inline-message': '2026-03-09 10:30:00',
   '/design/components/loading': '2026-03-09',
@@ -620,7 +632,6 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
   '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
-  '/design/policies/form-validation': '2026-03-01 10:30:00',
   '/design/patterns/editor': '2026-03-09',
   '/design/patterns/list-page': '2026-03-09 15:00:00',
   '/design/patterns/detail-page': '2026-03-09',
