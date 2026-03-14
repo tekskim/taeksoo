@@ -111,13 +111,6 @@ const modalProps: PropDef[] = [
   { name: 'onClose', type: '() => void', required: true, description: 'Close handler' },
   { name: 'title', type: 'string', required: true, description: 'Modal title' },
   { name: 'description', type: 'string', required: false, description: 'Description below title' },
-  {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    default: "'md'",
-    required: false,
-    description: 'Modal width',
-  },
   { name: 'children', type: 'ReactNode', required: false, description: 'Modal content' },
   {
     name: 'showCloseButton',
@@ -161,7 +154,7 @@ export function ModalPage() {
       ]}
       preview={<ModalDemo variant="delete" />}
       usage={{
-        code: `import { Modal } from '@/design-system';\n\n<Modal\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Modal Title"\n  description="Optional description"\n  size="sm"\n>\n  {/* Content */}\n</Modal>`,
+        code: `import { Modal } from '@/design-system';\n\n<Modal\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Modal Title"\n  description="Optional description"\n>\n  {/* Content */}\n</Modal>`,
       }}
       examples={
         <VStack gap={8}>
@@ -203,7 +196,7 @@ export function ModalPage() {
             <code>backdrop: black/60</code>
           </div>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>sm: 400px</code> · <code>md: 480px</code> · <code>lg: 640px</code>
+            <code>width: 344px</code>
           </div>
         </VStack>
       }

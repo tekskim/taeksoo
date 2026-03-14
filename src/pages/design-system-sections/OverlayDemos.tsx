@@ -32,41 +32,16 @@ import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
    Modal Demo Components ---------------------------------------- */
 
 // Basic Modal Demo
-export function ModalDemo({
-  variant,
-}: {
-  variant: 'basic' | 'delete' | 'size-sm' | 'size-md' | 'size-lg';
-}) {
+export function ModalDemo({ variant }: { variant: 'basic' | 'delete' }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const getButtonLabel = () => {
-    switch (variant) {
-      case 'basic':
-        return 'Open Basic Modal';
-      case 'delete':
-        return 'Open Delete Modal';
-      case 'size-sm':
-        return 'Small (320px)';
-      case 'size-md':
-        return 'Medium (400px)';
-      case 'size-lg':
-        return 'Large (560px)';
-      default:
-        return 'Open Modal';
-    }
-  };
-
-  const getSize = (): 'sm' | 'md' | 'lg' => {
-    if (variant === 'size-sm') return 'sm';
-    if (variant === 'size-lg') return 'lg';
-    return variant === 'delete' ? 'sm' : 'md';
-  };
+  const buttonLabel = variant === 'delete' ? 'Open Delete Modal' : 'Open Basic Modal';
 
   if (variant === 'delete') {
     return (
       <>
         <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
-          {getButtonLabel()}
+          {buttonLabel}
         </Button>
         <ConfirmModal
           isOpen={isOpen}
@@ -90,14 +65,13 @@ export function ModalDemo({
   return (
     <>
       <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
-        {getButtonLabel()}
+        {buttonLabel}
       </Button>
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Modal Title"
         description="This is a modal description that provides additional context."
-        size={getSize()}
       >
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
           <p className="text-body-md text-[var(--color-text-default)]">
@@ -130,7 +104,6 @@ export function ModalUseCaseDemo({
       button: 'Delete (Single)',
       title: 'Delete Security group',
       description: 'Removing the selected instances is permanent and cannot be undone.',
-      size: 'sm' as const,
       infoLabel: 'Security group',
       infoValue: 'sg-01',
       hasWarning: true,
@@ -143,7 +116,6 @@ export function ModalUseCaseDemo({
       button: 'Delete (Multiple)',
       title: 'Delete Security groups',
       description: 'Removing the selected instances is permanent and cannot be undone.',
-      size: 'md' as const,
       infoLabel: 'Security groups (5)',
       infoList: ['sg-01', 'sg-02', 'sg-03', 'sg-04', 'sg-05'],
       hasWarning: true,
@@ -156,7 +128,6 @@ export function ModalUseCaseDemo({
       title: 'Disassociate floating IP',
       description:
         'Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately.',
-      size: 'sm' as const,
       infoLabel: 'Floating IP',
       infoValue: '123.45.67.8',
       secondInfoLabel: 'Associated to',
@@ -169,7 +140,6 @@ export function ModalUseCaseDemo({
       button: 'Restore (Disabled)',
       title: 'Restore backup',
       description: 'Large volume backups may impact performance and network throughput.',
-      size: 'md' as const,
       infoLabel: 'Volume name',
       infoValue: 'vol-01 (Available)',
       secondInfoLabel: 'Instance name',
@@ -195,7 +165,6 @@ export function ModalUseCaseDemo({
         onClose={() => setIsOpen(false)}
         title={c.title}
         description={c.description}
-        size={c.size}
       >
         <div className="flex flex-col gap-2">
           {/* Info Box */}

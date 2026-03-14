@@ -244,7 +244,7 @@ const handleClose = () => {
 />
 
 // 또는 Manual Modal
-<Modal isOpen={isOpen} onClose={handleClose} title="Delete Resource" size="sm">
+<Modal isOpen={isOpen} onClose={handleClose} title="Delete Resource">
   <InfoBox label="Resource name" value={resourceName} />
   <div className="flex gap-2 w-full">
     <Button variant="secondary" onClick={handleClose} className="flex-1">Cancel</Button>
