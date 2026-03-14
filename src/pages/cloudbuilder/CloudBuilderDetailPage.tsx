@@ -767,37 +767,35 @@ export function CloudBuilderDetailPage() {
               setStatusModalOpen(false);
               setDisableReason('');
             }}
-            title={nextStatus === 'Disabled' ? 'Disable service' : 'Enable service'}
+            title={
+              nextStatus === 'Disabled'
+                ? `Disable ${config.title.replace(/s$/, '').toLowerCase()}`
+                : `Enable ${config.title.replace(/s$/, '').toLowerCase()}`
+            }
             description={
               nextStatus === 'Disabled'
-                ? 'Change this service status to Disabled?'
-                : 'Change this service status to Enabled?'
+                ? `Change this ${config.title.replace(/s$/, '').toLowerCase()} status to Disabled?`
+                : `Change this ${config.title.replace(/s$/, '').toLowerCase()} status to Enabled?`
             }
-            className="w-[720px] max-w-[calc(100vw-32px)]"
             data-figma-name="[TDS] StatusModal"
             aria-label="[TDS] StatusModal"
           >
-            <div className="flex flex-col">
+            <>
               {nextStatus === 'Disabled' && !!config.statusAction?.requireDisableReason ? (
-                <div className="py-4">
-                  <div className="grid grid-cols-12 gap-6 items-start">
-                    <div className="col-span-12 md:col-span-4 text-body-lg text-[var(--color-text-default)]">
-                      <span>Reason</span>{' '}
-                      <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                    </div>
-                    <div className="col-span-12 md:col-span-8">
-                      <Textarea
-                        placeholder="Enter a reason for disabling"
-                        value={disableReason}
-                        onChange={(e) => setDisableReason(e.target.value)}
-                        fullWidth
-                      />
-                    </div>
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
+                    Reason <span className="text-[var(--color-state-danger)]">*</span>
+                  </span>
+                  <Textarea
+                    placeholder="Enter a reason for disabling"
+                    value={disableReason}
+                    onChange={(e) => setDisableReason(e.target.value)}
+                    fullWidth
+                  />
                 </div>
               ) : null}
 
-              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[var(--color-border-subtle)]">
+              <div className="flex gap-2 w-full">
                 <Button
                   variant="outline"
                   size="md"
@@ -805,6 +803,7 @@ export function CloudBuilderDetailPage() {
                     setStatusModalOpen(false);
                     setDisableReason('');
                   }}
+                  className="flex-1"
                 >
                   Cancel
                 </Button>
@@ -821,11 +820,12 @@ export function CloudBuilderDetailPage() {
                     setStatusModalOpen(false);
                     setDisableReason('');
                   }}
+                  className="flex-1"
                 >
                   {nextStatus === 'Disabled' ? 'Disable' : 'Enable'}
                 </Button>
               </div>
-            </div>
+            </>
           </Modal>
         </>
       ) : row ? (

@@ -23,8 +23,6 @@ export interface ModalProps extends Omit<
   description?: string;
   /** Modal content (children) */
   children?: React.ReactNode;
-  /** Modal size */
-  size?: 'sm' | 'md' | 'lg';
   /** Whether to show close button */
   showCloseButton?: boolean;
   /** Close on backdrop click */
@@ -60,7 +58,6 @@ export function Modal({
   title,
   description,
   children,
-  size = 'md',
   showCloseButton: _showCloseButton = false,
   closeOnBackdropClick = true,
   closeOnEscape = true,
@@ -125,12 +122,6 @@ export function Modal({
 
   if (!shouldRender) return null;
 
-  const sizeClasses = {
-    sm: 'w-[344px]',
-    md: 'w-[344px]',
-    lg: 'w-[640px]',
-  };
-
   const backdropClasses = twMerge(
     'fixed inset-0 z-[var(--z-modal)]',
     'bg-black/60',
@@ -148,7 +139,7 @@ export function Modal({
     'flex flex-col gap-4',
     'transition-all duration-200 ease-out',
     isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
-    sizeClasses[size],
+    'w-[344px]',
     className
   );
 
@@ -200,18 +191,10 @@ export function ConfirmModal({
   infoLabel,
   infoValue,
   isLoading = false,
-  size = 'sm',
   ...props
 }: ConfirmModalProps) {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={title}
-      description={description}
-      size={size}
-      {...props}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={title} description={description} {...props}>
       {/* Info Box */}
       {infoLabel && infoValue && (
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
