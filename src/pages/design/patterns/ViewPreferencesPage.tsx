@@ -1,6 +1,11 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { Button } from '@/design-system';
+import { IconSettings } from '@tabler/icons-react';
 
 const VIEW_PREFERENCES_GUIDELINES = `## Overview
 
@@ -103,6 +108,46 @@ Save
 | List page | Pattern | 적용 대상 |
 `;
 
+const mockColumns: ColumnConfig[] = [
+  { id: 'status', label: 'Status', visible: true, locked: true },
+  { id: 'name', label: 'Name', visible: true, locked: true },
+  { id: 'image', label: 'Image', visible: true },
+  { id: 'flavor', label: 'Flavor', visible: true },
+  { id: 'vcpu', label: 'vCPU', visible: true },
+  { id: 'ram', label: 'RAM', visible: true },
+  { id: 'network', label: 'Network', visible: true },
+  { id: 'createdAt', label: 'Created at', visible: false },
+  { id: 'actions', label: 'Action', visible: true, locked: true },
+];
+
+function ViewPreferencesPreview() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [columns, setColumns] = useState<ColumnConfig[]>(mockColumns);
+
+  return (
+    <div className="flex flex-col items-center gap-4 py-8">
+      <Button
+        variant="outline"
+        size="sm"
+        leftIcon={<IconSettings size={12} />}
+        onClick={() => setIsOpen(true)}
+      >
+        View preferences
+      </Button>
+      <ViewPreferencesDrawer
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={setRowsPerPage}
+        columns={columns}
+        onColumnsChange={setColumns}
+        defaultColumns={mockColumns}
+      />
+    </div>
+  );
+}
+
 export function ViewPreferencesPage() {
   return (
     <ComponentPageTemplate
@@ -112,6 +157,23 @@ export function ViewPreferencesPage() {
       whenNotToUse={[
         '생성 화면, 드로어 내부 테이블은 보조 데이터를 표기하는 것으로 테이블 속성 변경 기능 미지원',
       ]}
+      preview={
+        <ComponentPreview
+          code={`import { ViewPreferencesDrawer } from '@/components/ViewPreferencesDrawer';
+
+<ViewPreferencesDrawer
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  rowsPerPage={rowsPerPage}
+  onRowsPerPageChange={setRowsPerPage}
+  columns={columns}
+  onColumnsChange={setColumns}
+  defaultColumns={defaultColumns}
+/>`}
+        >
+          <ViewPreferencesPreview />
+        </ComponentPreview>
+      }
       guidelines={
         <>
           <NotionRenderer markdown={VIEW_PREFERENCES_GUIDELINES} />

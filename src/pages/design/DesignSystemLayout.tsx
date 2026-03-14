@@ -206,7 +206,7 @@ export function DesignSystemLayout() {
                       </VStack>
                     </Disclosure.Panel>
                   </Disclosure>
-                  {group.title === 'Graphs' && (
+                  {group.title === 'Etc' && (
                     <div className="w-full h-px bg-[var(--color-border-subtle)] my-2" />
                   )}
                 </div>
