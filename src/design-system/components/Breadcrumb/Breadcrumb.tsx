@@ -50,6 +50,7 @@ export function Breadcrumb({ items, separator, className = '', maxItems = 0 }: B
 
   return (
     <nav
+      data-figma-name="Breadcrumb"
       aria-label="Breadcrumb"
       className={twMerge('flex items-center gap-[var(--breadcrumb-gap)]', className)}
     >

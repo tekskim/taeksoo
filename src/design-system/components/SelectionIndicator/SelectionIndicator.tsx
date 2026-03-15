@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { twMerge } from '../../utils/cn';
-import { IconCircleX } from '@tabler/icons-react';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import { Chip } from '../Chip';
 
 /* ----------------------------------------
@@ -51,11 +51,11 @@ export function SelectionIndicator({
 
   return (
     <div
+      data-figma-name="SelectionIndicator"
       className={twMerge(
         'flex flex-row items-center justify-between gap-4 w-full',
-        'px-3 py-2',
-        'rounded-[var(--table-row-radius)]',
-        'min-h-[42px]',
+        'p-[var(--inline-message-padding)]',
+        'rounded-[var(--inline-message-radius)]',
         showError ? 'bg-[var(--inline-message-error-bg)]' : 'bg-[var(--color-surface-subtle)]',
         className
       )}
@@ -63,7 +63,7 @@ export function SelectionIndicator({
       {...props}
     >
       {/* Selection chips, empty text, or error message */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-[var(--inline-message-gap)] flex-wrap">
         {hasSelection ? (
           selectedItems.map((item) => (
             <Chip
@@ -75,7 +75,7 @@ export function SelectionIndicator({
           ))
         ) : showError ? (
           <>
-            <IconCircleX
+            <IconAlertTriangle
               size={16}
               className="text-[var(--inline-message-error-icon)] shrink-0"
               strokeWidth={1.5}

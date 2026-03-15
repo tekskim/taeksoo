@@ -39,7 +39,7 @@ export function EmptyState({
       : 'py-20';
 
   return (
-    <div className={`${variantClasses} ${className}`.trim()}>
+    <div data-figma-name="EmptyState" className={`${variantClasses} ${className}`.trim()}>
       <div className="flex flex-col items-center gap-[16px]">
         {icon && <div className="text-[var(--color-text-disabled)]">{icon}</div>}
         <div className="flex flex-col items-center gap-[8px] text-center">

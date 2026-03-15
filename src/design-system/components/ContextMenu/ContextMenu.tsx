@@ -456,6 +456,7 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
 
   return createPortal(
     <div
+      data-figma-name="ContextMenu"
       ref={menuRef}
       role="menu"
       aria-orientation="vertical"

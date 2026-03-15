@@ -132,6 +132,7 @@ export function Drawer({
 
       {/* Drawer Panel */}
       <aside
+        data-figma-name="Drawer"
         ref={focusTrapRef}
         className={drawerClasses}
         style={{ width: widthValue }}

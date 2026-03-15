@@ -387,7 +387,7 @@ export function FigmaCloudBuilderPage() {
                   </Button>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" status="active" />
+                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                   <DetailHeader.InfoCard label="ID" value="25d21d60" copyable />
                   <DetailHeader.InfoCard label="Host" value="bdv2kr1-ctrl01" />
                   <DetailHeader.InfoCard label="Type" value="DHCP agent" />
@@ -458,7 +458,7 @@ export function FigmaCloudBuilderPage() {
                     </Button>
                   </DetailHeader.Actions>
                   <DetailHeader.InfoGrid>
-                    <DetailHeader.InfoCard label="Status" status="active" />
+                    <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                     <DetailHeader.InfoCard label="ID" value="25d21d60" copyable />
                     <DetailHeader.InfoCard label="Host" value="bdv2kr1-ctrl01" />
                     <DetailHeader.InfoCard label="Type" value="DHCP agent" />

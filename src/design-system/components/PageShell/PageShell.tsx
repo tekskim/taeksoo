@@ -41,7 +41,10 @@ export function PageShell({
   className = '',
 }: PageShellProps) {
   return (
-    <div className={`fixed inset-0 bg-[var(--color-surface-subtle)] ${className}`.trim()}>
+    <div
+      data-figma-name="PageShell"
+      className={`fixed inset-0 bg-[var(--color-surface-subtle)] ${className}`.trim()}
+    >
       {/* Sidebar */}
       {sidebar}
 

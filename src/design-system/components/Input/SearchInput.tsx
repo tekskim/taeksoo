@@ -127,7 +127,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     );
 
     return (
-      <div className={wrapperClasses}>
+      <div className={wrapperClasses} data-figma-name="SearchInput">
         {label && (
           <label htmlFor={inputId} className="text-label-sm text-[var(--color-text-default)]">
             {label}

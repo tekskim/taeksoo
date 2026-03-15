@@ -355,9 +355,10 @@ export function FloatingCardPage() {
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <span className="text-body-md text-[var(--color-text-default)]">Flavor</span>
-                      <div
-                        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-                        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+                      <IconProgress
+                        size={16}
+                        stroke={1.5}
+                        className="shrink-0 text-[var(--color-text-muted)]"
                       />
                     </div>
                   </div>
@@ -412,14 +413,16 @@ export function FloatingCardPage() {
                                 />
                               </div>
                             ) : i === 3 ? (
-                              <div
-                                className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-                                style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+                              <IconProgress
+                                size={16}
+                                stroke={1.5}
+                                className="shrink-0 text-[var(--color-text-muted)]"
                               />
                             ) : (
-                              <div
-                                className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-                                style={{ borderStyle: 'dashed' }}
+                              <IconProgress
+                                size={16}
+                                stroke={1.5}
+                                className="shrink-0 text-[var(--color-border-default)]"
                               />
                             )}
                           </div>
@@ -483,9 +486,10 @@ export function FloatingCardPage() {
             <span className="text-label-md text-[var(--color-text-default)]">Status icons</span>
             <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
               <div className="flex items-center gap-2">
-                <div
-                  className="size-4 rounded-full border border-[var(--color-border-default)]"
-                  style={{ borderStyle: 'dashed' }}
+                <IconProgress
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--color-border-default)]"
                 />
                 <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
                   Default

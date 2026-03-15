@@ -376,7 +376,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
     );
 
     return (
-      <div className={wrapperClasses} ref={containerRef}>
+      <div className={wrapperClasses} ref={containerRef} data-figma-name="FilterSearchInput">
         {/* Input Container */}
         <div className="relative">
           <div className={inputContainerClasses}>

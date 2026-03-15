@@ -24,6 +24,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Popover,
+  InfoBox,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
@@ -37,7 +38,6 @@ import {
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconInfoCircle,
   IconTrash,
 } from '@tabler/icons-react';
 
@@ -268,36 +268,6 @@ const mockEventsData: EventRow[] = [
     name: 'cart-manager.17e83a1b2c3d4e5f',
   },
 ];
-
-/* ----------------------------------------
-   Metric Card Component
-   ---------------------------------------- */
-
-interface MetricCardProps {
-  title: string;
-  value: string | number;
-  tooltip: string;
-}
-
-function MetricCard({ title, value, tooltip }: MetricCardProps) {
-  return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <VStack gap={1.5}>
-        <HStack gap={1} align="center">
-          <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{title}</span>
-          <Tooltip content={tooltip} position="top">
-            <button className="text-[var(--color-text-subtle)]">
-              <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
-            </button>
-          </Tooltip>
-        </HStack>
-        <span className="text-body-md leading-4 font-normal text-[var(--color-text-default)]">
-          {value}
-        </span>
-      </VStack>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Pods Tab Content
@@ -1082,25 +1052,29 @@ export function DeploymentDetailPage() {
 
           {/* Metric Cards */}
           <HStack gap={3} className="w-full mt-3">
-            <MetricCard
-              title="Pod restarts"
+            <InfoBox
+              label="Pod restarts"
               value={deployment.podRestarts}
               tooltip="Pod restarts indicates how many times a container within the pod has been restarted by Kubernetes."
+              className="flex-1"
             />
-            <MetricCard
-              title="Ready"
+            <InfoBox
+              label="Ready"
               value={`${deployment.ready.current}/${deployment.ready.desired}`}
               tooltip="'Ready' indicates how many Deployment pods are currently running and passing readiness checks."
+              className="flex-1"
             />
-            <MetricCard
-              title="Up-to-date"
+            <InfoBox
+              label="Up-to-date"
               value={deployment.upToDate}
               tooltip="Up-to-date shows how many pods have been updated to the Deployment's latest specification."
+              className="flex-1"
             />
-            <MetricCard
-              title="Available"
+            <InfoBox
+              label="Available"
               value={deployment.available}
               tooltip="'Available' represents how many pods are fully ready and available to serve user requests."
+              className="flex-1"
             />
           </HStack>
 

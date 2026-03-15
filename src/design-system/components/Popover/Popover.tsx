@@ -349,6 +349,7 @@ export function Popover({
             <div className="relative">
               {/* Popover Box */}
               <div
+                data-figma-name="Popover"
                 className={`
                   bg-[var(--color-surface-default)]
                   border border-[var(--color-border-default)]

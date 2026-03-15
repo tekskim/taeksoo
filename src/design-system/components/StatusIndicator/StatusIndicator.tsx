@@ -287,7 +287,13 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
 
     return (
-      <span className={classes} role="status" aria-label={displayLabel} {...props}>
+      <span
+        data-figma-name="StatusIndicator"
+        className={classes}
+        role="status"
+        aria-label={displayLabel}
+        {...props}
+      >
         <span className="shrink-0">{clonedIcon}</span>
       </span>
     );
@@ -309,7 +315,13 @@ export const StatusIndicator = memo(function StatusIndicator({
     const classes = twMerge(baseStyles, config.bgColor, className);
 
     return (
-      <span className={classes} role="status" aria-label={displayLabel} {...props}>
+      <span
+        data-figma-name="StatusIndicator"
+        className={classes}
+        role="status"
+        aria-label={displayLabel}
+        {...props}
+      >
         <span className="shrink-0">{displayIcon}</span>
         <span>{displayLabel}</span>
       </span>
@@ -332,7 +344,13 @@ export const StatusIndicator = memo(function StatusIndicator({
   const classes = twMerge(baseStyles, paddingStyles, config.bgColor, className);
 
   return (
-    <span className={classes} role="status" aria-label={displayLabel} {...props}>
+    <span
+      data-figma-name="StatusIndicator"
+      className={classes}
+      role="status"
+      aria-label={displayLabel}
+      {...props}
+    >
       <span className="shrink-0">{displayIcon}</span>
       <span>{displayLabel}</span>
     </span>

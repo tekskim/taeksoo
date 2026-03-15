@@ -12,7 +12,7 @@ import { StatusIndicator } from '../StatusIndicator/StatusIndicator';
 import { Tabs, TabList, Tab, TabPanel } from '../Tabs/Tabs';
 import { DetailHeader } from '../DetailHeader/DetailHeader';
 import { SectionCard } from '../SectionCard/SectionCard';
-import { MetricCard } from '../MetricCard/MetricCard';
+import { InfoBox } from '../InfoBox/InfoBox';
 import { VStack } from '../../layouts';
 import { TabBar } from '../TabBar';
 import { TopBar } from '../TopBar';
@@ -615,16 +615,22 @@ function DashboardPageExample() {
       <VStack gap={4}>
         <PageHeader title="Dashboard" />
 
-        <MetricCard.Group>
-          <MetricCard
-            title="Total Instances"
+        <div className="flex items-stretch gap-[12px] w-full">
+          <InfoBox
+            label="Total Instances"
             value={24}
             tooltip="Total number of compute instances."
+            className="flex-1"
           />
-          <MetricCard title="Running" value={18} tooltip="Currently running instances." />
-          <MetricCard title="Stopped" value={4} tooltip="Stopped instances." />
-          <MetricCard title="Errors" value={2} tooltip="Instances with errors." />
-        </MetricCard.Group>
+          <InfoBox
+            label="Running"
+            value={18}
+            tooltip="Currently running instances."
+            className="flex-1"
+          />
+          <InfoBox label="Stopped" value={4} tooltip="Stopped instances." className="flex-1" />
+          <InfoBox label="Errors" value={2} tooltip="Instances with errors." className="flex-1" />
+        </div>
 
         <SectionCard>
           <SectionCard.Header
@@ -675,7 +681,7 @@ export const DashboardPage: Story = {
 
 구성요소:
 1. \`PageHeader\` — 제목
-2. \`MetricCard.Group\` — 주요 메트릭 카드
+2. \`InfoBox\` — 주요 메트릭 카드 (가로 배치)
 3. \`SectionCard\` — 최근 활동, 리소스 사용량 등
         `,
       },

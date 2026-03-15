@@ -41,19 +41,19 @@ export const Chip = memo(function Chip({
   ...props
 }: ChipProps) {
   const variantStyles = {
-    default: `border-[var(--chip-border)] pl-[var(--chip-padding-left)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-left)]'}`,
-    selected: `border-[var(--chip-border-selected)] pl-[var(--chip-padding-selected)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-selected)]'}`,
+    default: `shadow-[inset_0_0_0_1px_var(--chip-border)] pl-[var(--chip-padding-left)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-left)]'}`,
+    selected: `shadow-[inset_0_0_0_1px_var(--chip-border-selected)] pl-[var(--chip-padding-selected)] ${onRemove ? 'pr-[var(--chip-padding-right)]' : 'pr-[var(--chip-padding-selected)]'}`,
   };
 
   const fullText = label ? `${label}: ${value}` : value;
 
   return (
     <div
+      data-figma-name="Chip"
       className={twMerge(
         'inline-flex items-center gap-[var(--chip-gap)]',
         'py-[var(--chip-padding-y)]',
         'bg-[var(--chip-bg)]',
-        'border',
         'rounded-[var(--chip-radius)]',
         'text-[length:var(--chip-font-size)] leading-[var(--chip-line-height)]',
         'font-medium',

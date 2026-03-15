@@ -66,7 +66,10 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     };
 
     return (
-      <div className={twMerge('flex flex-col gap-[var(--toggle-description-gap)]', className)}>
+      <div
+        className={twMerge('flex flex-col gap-[var(--toggle-description-gap)]', className)}
+        data-figma-name="Toggle"
+      >
         <label
           htmlFor={inputId}
           className={twMerge(

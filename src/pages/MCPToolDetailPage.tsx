@@ -134,7 +134,11 @@ function MCPToolHeader({
 
         {/* Info Grid */}
         <DetailHeader.InfoGrid>
-          <DetailHeader.InfoCard label="Status" status={toolStatusMap[status]} />
+          <DetailHeader.InfoCard
+            label="Status"
+            value={status.charAt(0).toUpperCase() + status.slice(1)}
+            status={toolStatusMap[status]}
+          />
           <DetailHeader.InfoCard label="MCP server" value={mcpServer} />
           <DetailHeader.InfoCard label="Category" value={category} />
           <DetailHeader.InfoCard label="Executions" value={executions.toLocaleString()} />

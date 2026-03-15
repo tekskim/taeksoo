@@ -251,6 +251,7 @@ export function Table<T extends Record<string, any>>({
 
   return (
     <div
+      data-figma-name="Table"
       {...rest}
       ref={tableRef}
       className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}

@@ -57,7 +57,10 @@ export const Loading: React.FC<LoadingProps> = ({
   // Spinner variant
   if (variant === 'spinner') {
     return (
-      <div className={twMerge('flex flex-col items-center', sizeConfig.gap, className)}>
+      <div
+        data-figma-name="Loading"
+        className={twMerge('flex flex-col items-center', sizeConfig.gap, className)}
+      >
         <IconLoader2
           size={sizeConfig.icon}
           stroke={1.5}
@@ -82,7 +85,10 @@ export const Loading: React.FC<LoadingProps> = ({
     const clampedProgress = Math.min(Math.max(progress, 0), 100);
 
     return (
-      <div className={twMerge('flex flex-col items-center gap-3', className)}>
+      <div
+        data-figma-name="Loading"
+        className={twMerge('flex flex-col items-center gap-3', className)}
+      >
         {/* Title and Description */}
         <div className="flex flex-col items-center gap-2 text-[var(--color-text-default)]">
           <p className="font-medium text-body-lg leading-5">{text}</p>
@@ -115,7 +121,7 @@ export const Loading: React.FC<LoadingProps> = ({
   // Button variant (loading-button)
   if (variant === 'button') {
     return (
-      <div className={twMerge('inline-flex', className)}>
+      <div data-figma-name="Loading" className={twMerge('inline-flex', className)}>
         <button
           type="button"
           disabled

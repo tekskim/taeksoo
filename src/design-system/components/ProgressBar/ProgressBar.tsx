@@ -196,7 +196,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   // Quota variant
   if (variant === 'quota') {
     return (
-      <div className={`flex flex-col gap-1.5 w-full ${className}`} {...rest}>
+      <div
+        data-figma-name="ProgressBar"
+        className={`flex flex-col gap-1.5 w-full ${className}`}
+        {...rest}
+      >
         {/* Header */}
         {(label || showValue) && (
           <div className="flex items-center justify-between">
@@ -292,7 +296,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   // Default variant (simple progress bar or table cell)
   return (
-    <div className={`flex flex-col gap-1.5 w-full ${className}`} {...rest}>
+    <div
+      data-figma-name="ProgressBar"
+      className={`flex flex-col gap-1.5 w-full ${className}`}
+      {...rest}
+    >
       {/* Header */}
       {(label || statusText || showValue) && (
         <div className="flex items-center justify-between">

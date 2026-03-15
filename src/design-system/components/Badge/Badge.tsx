@@ -68,7 +68,7 @@ const themeStyles = {
     yellow: 'bg-[var(--color-state-warning)] text-white',
     gray: 'bg-[var(--color-text-subtle)] text-white',
     white:
-      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-default)]',
+      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--color-border-default)]',
   },
   subtle: {
     blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
@@ -77,26 +77,26 @@ const themeStyles = {
     yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
     gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
     white:
-      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-default)]',
+      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--color-border-default)]',
   },
 } as const;
 
 const sizes = {
   sm: [
+    'h-5',
     'px-[var(--badge-padding-x-sm)]',
-    'py-[var(--badge-padding-y-sm)]',
     'text-[length:var(--badge-font-size-sm)]',
     'leading-[var(--badge-line-height-sm)]',
   ],
   md: [
+    'h-6',
     'px-[var(--badge-padding-x-md)]',
-    'py-[var(--badge-padding-y-md)]',
     'text-[length:var(--badge-font-size-md)]',
     'leading-[var(--badge-line-height-md)]',
   ],
   lg: [
+    'h-7',
     'px-[var(--badge-padding-x-lg)]',
-    'py-[var(--badge-padding-y-lg)]',
     'text-[length:var(--badge-font-size-lg)]',
     'leading-[var(--badge-line-height-lg)]',
   ],
@@ -172,7 +172,7 @@ export const Badge = memo(function Badge({
   };
 
   return (
-    <span className={classes} {...props}>
+    <span data-figma-name="Badge" className={classes} {...props}>
       {dot && (
         <span
           className={`size-[var(--badge-dot-size)] rounded-full shrink-0 ${dotColors[resolvedTheme]}`}

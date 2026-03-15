@@ -187,14 +187,7 @@ const dataDisplayItems: NavItem[] = [
     icon: IconSelector,
     path: '/design/components/disclosure',
   },
-  { id: 'tag', label: 'Tag', icon: IconTag, path: '/design/components/tag' },
   { id: 'info-box', label: 'Info Box', icon: IconInfoCircle, path: '/design/components/info-box' },
-  {
-    id: 'metric-card',
-    label: 'Metric Card',
-    icon: IconActivity,
-    path: '/design/components/metric-card',
-  },
   {
     id: 'list-toolbar',
     label: 'List Toolbar',
@@ -383,12 +376,6 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/section-card',
   },
   {
-    id: 'common-patterns',
-    label: 'Common Patterns',
-    icon: IconTemplate,
-    path: '/design/patterns/common',
-  },
-  {
     id: 'form-field-spacing',
     label: 'Form Field Spacing',
     icon: IconLayoutGrid,
@@ -529,13 +516,13 @@ const testItems: NavItem[] = [
 
 export const navGroups: NavGroup[] = [
   { title: 'Foundation', items: foundationItems },
+  { title: 'Policies', items: policyItems },
   { title: 'Form Controls', items: formControlItems },
   { title: 'Data Display', items: dataDisplayItems },
   { title: 'Feedback', items: feedbackItems },
   { title: 'Navigation', items: navigationItems },
   { title: 'Overlay', items: overlayItems },
   { title: 'Patterns', items: patternItems },
-  { title: 'Policies', items: policyItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Etc', items: etcItems },
   { title: 'Figma Migration', items: figmaItems },
@@ -589,9 +576,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/pagination': '2026-03-09',
   '/design/components/file-list-card': '2026-03-01 10:30:00',
   '/design/components/expandable-checklist': '2026-03-09 10:30:00',
-  '/design/components/tag': '2026-03-13 10:00:00',
   '/design/components/info-box': '2026-03-13 10:00:00',
-  '/design/components/metric-card': '2026-03-13 10:00:00',
   '/design/components/card-title': '2026-03-13 10:00:00',
   '/design/components/list-toolbar': '2026-03-13 10:00:00',
   // Feedback
