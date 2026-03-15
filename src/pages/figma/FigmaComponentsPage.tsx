@@ -40,7 +40,6 @@ import {
   TabBar,
   TopBar,
   TopBarAction,
-  CopyButton,
   Copyable,
   Password,
   ToastContainer,
@@ -81,6 +80,7 @@ import {
   IconSquare,
   IconEye,
   IconEyeOff,
+  IconCopy,
 } from '@tabler/icons-react';
 
 /* ──────────────────────────────────────────
@@ -3699,22 +3699,131 @@ export function FigmaComponentsPage() {
       <Section id="CopyButton">
         {/* ════════════════ COPY BUTTON ════════════════ */}
         <SectionTitle>CopyButton / Copyable</SectionTitle>
-        <SubTitle>CopyButton</SubTitle>
+
+        <SubTitle>Ghost — Icon Only</SubTitle>
         <div
           className="grid items-end gap-x-3 gap-y-2"
-          style={{ gridTemplateColumns: 'repeat(2, auto)' }}
+          style={{ gridTemplateColumns: 'repeat(3, auto)' }}
         >
-          <StateLabel>ghost/icon-only</StateLabel>
-          <StateLabel>outline/with-label</StateLabel>
+          <StateLabel>default</StateLabel>
+          <StateLabel>hover</StateLabel>
+          <StateLabel>copied</StateLabel>
 
-          <FigmaFrame name="CopyButton/ghost/sm/icon-only">
-            <CopyButton value="copied-text" variant="ghost" size="sm" />
+          <FigmaFrame name="CopyButton/ghost/icon-only/default">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-transparent text-[var(--color-text-muted)]"
+            >
+              <IconCopy size={12} stroke={1.5} />
+            </button>
           </FigmaFrame>
-          <FigmaFrame name="CopyButton/outline/sm/with-label">
-            <CopyButton value="copied-text" variant="outline" size="sm" label="Copy ID" />
+          <FigmaFrame name="CopyButton/ghost/icon-only/hover">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]"
+            >
+              <IconCopy size={12} stroke={1.5} />
+            </button>
+          </FigmaFrame>
+          <FigmaFrame name="CopyButton/ghost/icon-only/copied">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-transparent text-[var(--color-state-success)]"
+            >
+              <IconCheck size={12} stroke={2} />
+            </button>
           </FigmaFrame>
         </div>
-        <SubTitle>Copyable (텍스트 + 복사 버튼)</SubTitle>
+
+        <SubTitle>Ghost — With Label</SubTitle>
+        <div
+          className="grid items-end gap-x-3 gap-y-2"
+          style={{ gridTemplateColumns: 'repeat(3, auto)' }}
+        >
+          <StateLabel>default</StateLabel>
+          <StateLabel>hover</StateLabel>
+          <StateLabel>copied</StateLabel>
+
+          <FigmaFrame name="CopyButton/ghost/with-label/default">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-text-muted)]"
+            >
+              <span className="shrink-0 flex items-center">
+                <IconCopy size={12} stroke={1.5} />
+              </span>
+              <span>Copy</span>
+            </button>
+          </FigmaFrame>
+          <FigmaFrame name="CopyButton/ghost/with-label/hover">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]"
+            >
+              <span className="shrink-0 flex items-center">
+                <IconCopy size={12} stroke={1.5} />
+              </span>
+              <span>Copy</span>
+            </button>
+          </FigmaFrame>
+          <FigmaFrame name="CopyButton/ghost/with-label/copied">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-state-success)]"
+            >
+              <span className="shrink-0 flex items-center">
+                <IconCheck size={12} stroke={2} />
+              </span>
+              <span>Copied!</span>
+            </button>
+          </FigmaFrame>
+        </div>
+
+        <SubTitle>Outline — With Label</SubTitle>
+        <div
+          className="grid items-end gap-x-3 gap-y-2"
+          style={{ gridTemplateColumns: 'repeat(3, auto)' }}
+        >
+          <StateLabel>default</StateLabel>
+          <StateLabel>hover</StateLabel>
+          <StateLabel>copied</StateLabel>
+
+          <FigmaFrame name="CopyButton/outline/with-label/default">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-[var(--color-border-default)] rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-text-default)]"
+            >
+              <span className="shrink-0 flex items-center">
+                <IconCopy size={12} stroke={1.5} />
+              </span>
+              <span>Copy</span>
+            </button>
+          </FigmaFrame>
+          <FigmaFrame name="CopyButton/outline/with-label/hover">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-[var(--color-border-default)] rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]"
+            >
+              <span className="shrink-0 flex items-center">
+                <IconCopy size={12} stroke={1.5} />
+              </span>
+              <span>Copy</span>
+            </button>
+          </FigmaFrame>
+          <FigmaFrame name="CopyButton/outline/with-label/copied">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center border border-[var(--color-border-default)] rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-state-success)]"
+            >
+              <span className="shrink-0 flex items-center">
+                <IconCheck size={12} stroke={2} />
+              </span>
+              <span>Copied!</span>
+            </button>
+          </FigmaFrame>
+        </div>
+
+        <SubTitle>Copyable</SubTitle>
         <div
           className="grid items-end gap-x-3 gap-y-2"
           style={{ gridTemplateColumns: 'repeat(2, auto)' }}
@@ -3737,24 +3846,33 @@ export function FigmaComponentsPage() {
         <FigmaGuide
           figmaName="TDS/Utility/CopyButton"
           properties={[
-            { name: 'Variant', type: 'Variant', values: 'default | ghost | outline' },
-            { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
-            { name: 'State', type: 'Variant', values: 'default | copied' },
+            { name: 'Variant', type: 'Variant', values: 'ghost | outline' },
+            { name: 'Size', type: 'Variant', values: 'sm' },
+            { name: 'State', type: 'Variant', values: 'default | hover | copied' },
             { name: 'IconOnly', type: 'Boolean', values: 'true | false' },
-            { name: 'Label', type: 'Text', values: '"Copy" (optional)' },
           ]}
-          autoLayout={[{ label: 'Copyable', direction: 'H', gap: '4px', padding: '0' }]}
-          radius="6px (--primitive-radius-md)"
+          autoLayout={[
+            { label: 'Icon Only', direction: 'H', gap: '—', padding: '6px', height: '24px' },
+            { label: 'With Label', direction: 'H', gap: '4px', padding: '6px', height: '24px' },
+            { label: 'Copyable', direction: 'H', gap: '6px', padding: '4px 8px' },
+          ]}
+          radius="4px (--radius-sm)"
           tokens={[
-            { label: 'Copy icon', value: 'IconCopy, 12px' },
-            { label: 'Success icon', value: 'IconCheck, green, 2000ms duration' },
+            { label: 'Copy icon', value: 'IconCopy, 12px, stroke 1.5' },
+            { label: 'Success icon', value: 'IconCheck, 12px, stroke 2, --color-state-success' },
+            { label: 'Ghost default', value: 'text: --color-text-muted, bg: transparent' },
+            {
+              label: 'Ghost hover',
+              value: 'text: --color-text-default, bg: --color-surface-subtle',
+            },
+            { label: 'Outline border', value: '--color-border-default' },
+            { label: 'Copied', value: 'text: --color-state-success, 2000ms duration' },
           ]}
           tips={[
-            'CopyButton: 아이콘(또는 아이콘+텍스트) 클릭 시 클립보드에 복사. 성공 시 체크 아이콘으로 전환',
-            'Copyable: 텍스트 + CopyButton 조합. ID, URL 등 복사 가능한 값 표시용',
-            'truncate: 긴 텍스트를 말줄임 처리. maxWidth로 최대 너비 제한',
-            'ghost: 배경 없음 (기본). outline: 테두리만. default: 배경+테두리',
-            'successDuration: 체크 아이콘 표시 시간 (기본 2000ms)',
+            'Ghost: 아이콘만 또는 아이콘+라벨. InfoCard copyable, 테이블 행 등에서 사용',
+            'Outline: 테두리 있는 버전. 독립 Copy 버튼으로 사용 시',
+            'Copied 상태: IconCopy → IconCheck + 초록색으로 전환, 2초 후 복귀',
+            'Copyable: 텍스트 + CopyButton(ghost/icon-only) 조합. ID 표시용',
           ]}
         />
       </Section>
