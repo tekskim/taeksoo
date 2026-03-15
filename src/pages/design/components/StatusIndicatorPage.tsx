@@ -210,30 +210,34 @@ export function StatusIndicatorPage() {
       ]}
       preview={
         <ComponentPreview
-          code={`// Defined — Icon + Label (사전 정의된 특수 상태)
-<StatusIndicator status="active" />
-<StatusIndicator status="error" />
-<StatusIndicator status="building" />`}
+          code={`// Icon Only (테이블 Status 컬럼)
+<StatusIndicator status="active" layout="icon-only" />
+<StatusIndicator status="error" layout="icon-only" />
+<StatusIndicator status="building" layout="icon-only" />
+
+// Default — Label Only (White Badge)
+<Badge theme="white" size="sm">Available</Badge>`}
         >
           <div className="flex gap-3 items-center">
-            <StatusIndicator status="active" />
-            <StatusIndicator status="error" />
-            <StatusIndicator status="building" />
+            <StatusIndicator status="active" layout="icon-only" />
+            <StatusIndicator status="error" layout="icon-only" />
+            <StatusIndicator status="building" layout="icon-only" />
+            <Badge theme="white" size="sm">
+              Available
+            </Badge>
           </div>
         </ComponentPreview>
       }
       usage={{
         code: `import { StatusIndicator } from '@/design-system';
 
-// Defined — Icon + Label (기본 형식)
-<StatusIndicator status="active" />
-<StatusIndicator status="error" />
-
-// Defined — Icon Only (공간 제한 시)
+// Icon Only (테이블 Status 컬럼)
 <StatusIndicator status="active" layout="icon-only" />
+<StatusIndicator status="error" layout="icon-only" />
 
-// Defined — Custom label (기획 문서에서 정의한 레이블)
-<StatusIndicator status="active" label="Running" />`,
+// Default 상태는 Badge theme="white"로 표시
+import { Badge } from '@/design-system';
+<Badge theme="white" size="sm">Available</Badge>`,
       }}
       examples={
         <VStack gap={8}>
@@ -263,52 +267,6 @@ export function StatusIndicatorPage() {
               <Badge theme="white" size="sm">
                 Migrating
               </Badge>
-            </div>
-          </VStack>
-
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-          {/* ── Variant: Defined (Icon + Label) ── */}
-          <VStack gap={3}>
-            <Label>Defined — Active (Success / Green)</Label>
-            <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="active" />
-              <StatusIndicator status="enabled" />
-            </div>
-          </VStack>
-          <VStack gap={3}>
-            <Label>Defined — Error (Danger / Red)</Label>
-            <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="error" />
-            </div>
-          </VStack>
-          <VStack gap={3}>
-            <Label>Defined — Processing (Blue)</Label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
-              Action 타입 아이콘은 스피너 형태로 회전하여 진행 중임을 시각적으로 표현한다.
-            </p>
-            <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="building" />
-              <StatusIndicator status="deleting" />
-              <StatusIndicator status="pending" />
-            </div>
-          </VStack>
-          <VStack gap={3}>
-            <Label>Defined — Warning (Orange)</Label>
-            <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="degraded" />
-              <StatusIndicator status="down" />
-              <StatusIndicator status="maintenance" />
-            </div>
-          </VStack>
-          <VStack gap={3}>
-            <Label>Defined — Muted (Gray)</Label>
-            <div className="flex flex-wrap gap-3 items-center">
-              <StatusIndicator status="suspended" />
-              <StatusIndicator status="paused" />
-              <StatusIndicator status="draft" />
-              <StatusIndicator status="in-use" />
-              <StatusIndicator status="disabled" />
             </div>
           </VStack>
 
