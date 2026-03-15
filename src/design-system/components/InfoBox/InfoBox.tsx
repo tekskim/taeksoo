@@ -79,7 +79,7 @@ export function InfoBox({
     >
       {status && (
         <div className="absolute top-1/2 right-3 -translate-y-1/2">
-          <StatusIndicator status={status} layout="icon-only" size="lg" />
+          <StatusIndicator status={status} layout="icon-only" size="md" />
         </div>
       )}
 

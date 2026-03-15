@@ -91,7 +91,7 @@ const tabBarProps: PropDef[] = [
 function TabBarPreview() {
   const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Entry page', closable: false },
+      { id: 'tab-1', label: 'Entry page', closable: true },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
@@ -120,7 +120,7 @@ function TabBarDemo() {
 
   const { tabs, activeTab, addTab, closeTab, selectTab } = useTabBar({
     initialTabs: [
-      { id: 'tab-1', label: 'Entry page', closable: false },
+      { id: 'tab-1', label: 'Entry page', closable: true },
       { id: 'tab-2', label: 'Settings', closable: true },
       { id: 'tab-3', label: 'Profile', closable: true },
     ],
@@ -458,7 +458,7 @@ export function TabBarPage() {
       preview={
         <ComponentPreview
           code={`const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
-  initialTabs: [{ id: '1', label: 'Entry page', closable: false }, ...],
+  initialTabs: [{ id: '1', label: 'Entry page', closable: true }, ...],
   initialActiveTab: '1',
 });
 <TabBar tabs={tabs} activeTab={activeTab} onTabChange={selectTab} onTabClose={closeTab} onTabAdd={addTab} />`}
@@ -471,7 +471,7 @@ export function TabBarPage() {
 
 const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
   initialTabs: [
-    { id: '1', label: 'Home', closable: false },
+    { id: '1', label: 'Home', closable: true },
     { id: '2', label: 'Settings', closable: true },
   ],
   initialActiveTab: '1',

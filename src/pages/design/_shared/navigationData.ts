@@ -168,18 +168,11 @@ const dataDisplayItems: NavItem[] = [
   },
   { id: 'badge', label: 'Badge', icon: IconTag, path: '/design/components/badge' },
   { id: 'chip', label: 'Chip', icon: IconTag, path: '/design/components/chip' },
-  { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
   {
     id: 'file-list-card',
     label: 'File List Card',
     icon: IconList,
     path: '/design/components/file-list-card',
-  },
-  {
-    id: 'expandable-checklist',
-    label: 'Expandable Checklist',
-    icon: IconChecklist,
-    path: '/design/components/expandable-checklist',
   },
   {
     id: 'disclosure',
@@ -193,6 +186,13 @@ const dataDisplayItems: NavItem[] = [
     label: 'List Toolbar',
     icon: IconLayoutList,
     path: '/design/components/list-toolbar',
+  },
+  { id: 'card', label: 'Card', icon: IconBorderAll, path: '/design/components/card' },
+  {
+    id: 'expandable-checklist',
+    label: 'Expandable Checklist',
+    icon: IconChecklist,
+    path: '/design/components/expandable-checklist',
   },
 ];
 
