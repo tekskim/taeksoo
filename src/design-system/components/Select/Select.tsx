@@ -305,7 +305,7 @@ export function Select({
   );
 
   return (
-    <div className={wrapperClasses}>
+    <div className={wrapperClasses} data-figma-name="Select">
       {/* Label */}
       {label && (
         <label htmlFor={triggerId} className="text-label-lg text-[var(--color-text-default)]">

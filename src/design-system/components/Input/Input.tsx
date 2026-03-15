@@ -186,7 +186,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     );
 
     return (
-      <div className={wrapperClasses}>
+      <div className={wrapperClasses} data-figma-name="Input">
         {label && (
           <label htmlFor={inputId} className={`text-label-lg text-[var(--color-text-default)]`}>
             {label}

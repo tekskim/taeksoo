@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconCheck, IconEdit, IconMinus } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconMinus, IconProgress } from '@tabler/icons-react';
 import { Button } from '../Button';
 import { VStack, HStack } from '../../layouts';
 import { SectionCard } from '../SectionCard/SectionCard';
@@ -28,23 +28,9 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
     );
   }
 
-  // active → spinning dashed circle (currently working)
-  if (status === 'active') {
+  if (status === 'active' || status === 'writing') {
     return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-
-  // writing → spinning dashed circle
-  if (status === 'writing') {
-    return (
-      <div
-        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
+      <IconProgress size={16} stroke={1.5} className="shrink-0 text-[var(--color-text-muted)]" />
     );
   }
 

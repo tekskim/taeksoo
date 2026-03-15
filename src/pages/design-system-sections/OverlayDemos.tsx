@@ -25,7 +25,6 @@ import {
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
-import { Label } from './HelperComponents';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 
 /* ----------------------------------------
@@ -231,80 +230,56 @@ export function ModalUseCaseDemo({
    ---------------------------------------- */
 
 export function DrawerDemo() {
-  const [isBasicOpen, setIsBasicOpen] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAttachVolumeOpen, setIsAttachVolumeOpen] = useState(false);
-  const [formValue, setFormValue] = useState('');
+  const [instanceName, setInstanceName] = useState('instance-production-01');
+  const [description, setDescription] = useState('Production web server');
 
   return (
     <div className="flex gap-2 flex-wrap">
-      {/* Basic Drawer */}
-      <Button variant="outline" size="sm" onClick={() => setIsBasicOpen(true)}>
-        Basic Drawer{' '}
+      {/* Edit Instance Drawer */}
+      <Button variant="outline" size="sm" onClick={() => setIsEditOpen(true)}>
+        Edit Instance
       </Button>
       <Drawer
-        isOpen={isBasicOpen}
-        onClose={() => setIsBasicOpen(false)}
-        title="Drawer Title"
-        width={360}
-      >
-        <VStack gap={6}>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
-            <p className="text-body-md text-[var(--color-text-default)]">
-              This is a basic drawer with content. Drawers are useful for secondary content, forms,
-              or detail views.
-            </p>
-          </div>
-          <VStack gap={2}>
-            <Label>Example content</Label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
-              You can put any content inside a drawer, including forms, lists, or details.
-            </p>
-          </VStack>
-        </VStack>
-      </Drawer>
-
-      {/* Drawer with Footer */}
-      <Button variant="outline" size="sm" onClick={() => setIsFormOpen(true)}>
-        With button{' '}
-      </Button>
-      <Drawer
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        title="Edit Settings"
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        title="Edit Instance"
         width={360}
         footer={
-          <div className="flex gap-2 w-full">
-            <Button variant="secondary" className="flex-1" onClick={() => setIsFormOpen(false)}>
-              Cancel{' '}
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" className="flex-1" onClick={() => setIsEditOpen(false)}>
+              Cancel
             </Button>
-            <Button variant="primary" className="flex-1" onClick={() => setIsFormOpen(false)}>
-              Save{' '}
+            <Button variant="primary" className="flex-1" onClick={() => setIsEditOpen(false)}>
+              Save
             </Button>
-          </div>
+          </HStack>
         }
       >
         <VStack gap={6}>
-          <VStack gap={2}>
-            <label className="text-label-md text-[var(--color-text-default)]">Setting Name</label>
+          <FormField label="Instance Name" required>
             <Input
-              value={formValue}
-              onChange={(e) => setFormValue(e.target.value)}
-              placeholder="Enter value..."
+              value={instanceName}
+              onChange={(e) => setInstanceName(e.target.value)}
+              placeholder="Enter instance name"
               fullWidth
             />
-          </VStack>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-3">
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
-              Drawers with footers are useful for forms with action buttons.
-            </p>
-          </div>
+          </FormField>
+          <FormField label="Description">
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter description"
+              fullWidth
+            />
+          </FormField>
         </VStack>
       </Drawer>
 
-      {/* Attach volume Drawer */}
+      {/* Attach Volume Drawer */}
       <Button variant="outline" size="sm" onClick={() => setIsAttachVolumeOpen(true)}>
-        Attach volume{' '}
+        Attach Volume
       </Button>
       <AttachVolumeDrawer
         isOpen={isAttachVolumeOpen}

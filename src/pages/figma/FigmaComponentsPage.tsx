@@ -25,7 +25,6 @@ import {
   DetailHeader,
   PageHeader,
   InfoBox,
-  MetricCard,
   ListToolbar,
   FilterSearchInput,
   NumberInput,
@@ -75,12 +74,13 @@ import {
   IconArrowRight,
   IconSelector,
   IconChevronUp,
-  IconCopy,
   IconInfoCircle,
   IconCircleCheck,
   IconAlertCircle,
   IconMinus,
   IconSquare,
+  IconEye,
+  IconEyeOff,
 } from '@tabler/icons-react';
 
 /* ──────────────────────────────────────────
@@ -359,7 +359,7 @@ const sampleSelectOptions = [
 const contextMenuItems = [
   { id: 'edit', label: 'Edit', onClick: () => {} },
   { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
-  { id: 'export', label: 'Export', onClick: () => {}, divider: true },
+  { id: 'export', label: 'Export', onClick: () => {} },
   { id: 'delete', label: 'Delete', status: 'danger' as const, onClick: () => {} },
 ];
 
@@ -1303,25 +1303,24 @@ export function FigmaComponentsPage() {
       <Section id="Slider">
         {/* ════════════════ SLIDER ════════════════ */}
         <SectionTitle>Slider</SectionTitle>
-        <div
-          className="grid items-end gap-x-3 gap-y-2"
-          style={{ gridTemplateColumns: 'repeat(3, auto)' }}
-        >
-          <StateLabel>default</StateLabel>
-          <StateLabel>with-input</StateLabel>
-          <StateLabel>disabled</StateLabel>
-
+        <div className="flex flex-wrap gap-6 items-start">
           <FigmaFrame name="Slider/default">
-            <Slider min={0} max={100} value={sliderVal} onChange={setSliderVal} />
+            <div className="w-[220px]">
+              <Slider min={0} max={100} value={sliderVal} onChange={setSliderVal} />
+            </div>
           </FigmaFrame>
           <FigmaFrame name="Slider/with-input">
             <HStack gap={3} align="center">
-              <Slider min={0} max={100} value={sliderVal} onChange={setSliderVal} />
+              <div className="w-[220px]">
+                <Slider min={0} max={100} value={sliderVal} onChange={setSliderVal} />
+              </div>
               <NumberInput min={0} max={100} value={sliderVal} onChange={setSliderVal} width="xs" />
             </HStack>
           </FigmaFrame>
           <FigmaFrame name="Slider/disabled">
-            <Slider min={0} max={100} value={30} onChange={() => {}} disabled />
+            <div className="w-[220px]">
+              <Slider min={0} max={100} value={30} onChange={() => {}} disabled />
+            </div>
           </FigmaFrame>
         </div>
 
@@ -1400,24 +1399,29 @@ export function FigmaComponentsPage() {
             { name: 'Label', type: 'Text', values: '"Badge"' },
           ]}
           autoLayout={[
-            { label: 'SM', direction: 'H', gap: '4px', padding: '2px 6px' },
-            { label: 'MD', direction: 'H', gap: '4px', padding: '4px 8px' },
-            { label: 'LG', direction: 'H', gap: '4px', padding: '4px 12px' },
+            { label: 'SM', direction: 'H', gap: '4px', padding: '0 6px', height: '20px' },
+            { label: 'MD', direction: 'H', gap: '4px', padding: '0 8px', height: '24px' },
+            { label: 'LG', direction: 'H', gap: '4px', padding: '0 12px', height: '28px' },
           ]}
           radius="4px (--primitive-radius-sm)"
           tokens={[
-            { label: 'Subtle bg', value: 'theme별 --color-state-{info|success|warning|danger}-bg' },
-            { label: 'Subtle text', value: 'theme별 --color-state-{info|success|warning|danger}' },
+            { label: 'Height SM', value: '20px (h-5)' },
+            { label: 'Height MD', value: '24px (h-6)' },
+            { label: 'Height LG', value: '28px (h-7)' },
+            { label: 'Subtle bg', value: 'theme별 --badge-subtle-{color}-bg' },
+            { label: 'Subtle text', value: 'theme별 --badge-subtle-{color}-text' },
             { label: 'Solid bg', value: 'theme 색상 (blue600, red600...)' },
             { label: 'Solid text', value: '--color-on-primary (white)' },
+            { label: 'White border', value: 'inset box-shadow 1px, --color-border-default' },
             { label: 'Dot size', value: '6px (--badge-dot-size)' },
             { label: 'Icon gap', value: '4px (--badge-gap)' },
           ]}
           tips={[
             'Semantic Color 매핑: info=blue, success=green, warning=yellow, danger=red, neutral=gray, default=white',
             'Subtle 타입 권장: 대부분의 색상 뱃지에 사용. Solid는 white/gray 중심으로 사용',
+            'White 테마: border 대신 inset box-shadow 1px 사용 (높이에 영향 없음)',
             'Dot: 라벨 왼쪽에 6px 원형 dot 추가. Boolean으로 on/off',
-            'Auto Layout: 수평 방향, 텍스트는 hug contents, 아이콘/dot이 있을 때 gap 4px',
+            'Auto Layout: 수평 방향, 고정 높이 + hug contents. 아이콘/dot이 있을 때 gap 4px',
             'Icon slot은 Instance swap으로 설정. 크기: sm/md=10px, lg=12px',
           ]}
         />
@@ -1458,12 +1462,15 @@ export function FigmaComponentsPage() {
             { name: 'Label', type: 'Text', values: 'key/category (optional)' },
             { name: 'Value', type: 'Text', values: 'display value (required)' },
           ]}
-          autoLayout={[{ label: 'Container', direction: 'H', gap: '6px', padding: '4px 8px' }]}
+          autoLayout={[
+            { label: 'Container', direction: 'H', gap: '6px', padding: '4px 8px', height: '24px' },
+          ]}
           radius="6px (--chip-radius)"
           tokens={[
+            { label: 'Height', value: '24px (padding 4px*2 + line-height 16px)' },
             { label: 'BG', value: '--chip-bg' },
-            { label: 'Border (default)', value: '--chip-border' },
-            { label: 'Border (selected)', value: '--chip-border-selected' },
+            { label: 'Border (default)', value: 'inset box-shadow 1px, --chip-border' },
+            { label: 'Border (selected)', value: 'inset box-shadow 1px, --chip-border-selected' },
             { label: 'Separator', value: '--chip-separator-color (| divider)' },
             { label: 'Font size', value: '--chip-font-size (11px)' },
             { label: 'Remove icon', value: 'IconX, 12px' },
@@ -2220,7 +2227,7 @@ export function FigmaComponentsPage() {
               </ContextMenu>
             </DetailHeader.Actions>
             <DetailHeader.InfoGrid>
-              <DetailHeader.InfoCard label="Status" status="active" />
+              <DetailHeader.InfoCard label="Status" value="Active" status="active" />
               <DetailHeader.InfoCard label="ID" value="i-0123456789abcdef" copyable />
               <DetailHeader.InfoCard label="Host" value="compute-node-03" />
               <DetailHeader.InfoCard label="Created at" value="Feb 20, 2026 14:30:00" />
@@ -2240,18 +2247,18 @@ export function FigmaComponentsPage() {
             { label: 'Title', value: 'heading-h5 (16px semibold), mb-3' },
             { label: 'Actions gap', value: '4px (gap-1)' },
             { label: 'InfoGrid gap', value: '12px (gap-3)' },
-            { label: 'InfoCard padding', value: 'px-4 py-3' },
-            { label: 'InfoCard label', value: 'label-sm (11px medium)' },
-            { label: 'InfoCard value', value: 'body-md (12px regular)' },
+            { label: 'InfoBox padding', value: 'px-4 py-3' },
+            { label: 'InfoBox label', value: 'label-sm (11px medium)' },
+            { label: 'InfoBox value', value: 'body-md (12px regular)' },
           ]}
           tips={[
             '구조: Title → Actions(버튼 그룹) → InfoGrid. 수직 Auto Layout',
             'InfoGrid 레이아웃 정책: 1-4 cards → 1행, 5 → 3/2, 6 → 4/2, 7 → 4/3, 8 → 4/4',
-            'Status는 항상 첫 번째 InfoCard에 배치. StatusIndicator 인스턴스 사용',
-            'ID InfoCard: copyable 속성으로 우측에 복사 아이콘 표시. 두 번째 카드에 배치 권장',
+            'Status는 항상 첫 번째 InfoBox에 배치. StatusIndicator 인스턴스 사용',
+            'ID InfoBox: copyable 속성으로 우측에 복사 아이콘 표시. 두 번째 카드에 배치 권장',
             '날짜(Created at 등): 마지막 카드에 배치 권장',
             'Actions: Button 여러 개 + ContextMenu(More Actions). 수평 Auto Layout, gap 4px',
-            'InfoCard는 독립 컴포넌트로 생성: label + value + (optional) StatusIndicator / CopyButton',
+            'InfoGrid 내부는 InfoBox 컴포넌트 인스턴스 사용 (DetailHeader.InfoCard = InfoBox + flex-1)',
             'CardCount Variant로 InfoGrid의 열 수를 제어하거나, Auto Layout wrap 활용',
           ]}
         />
@@ -2277,49 +2284,32 @@ export function FigmaComponentsPage() {
             </div>
           </FigmaFrame>
           <div className="flex flex-wrap gap-3">
-            <FigmaFrame name="DetailHeader/Sub/InfoCard/default">
-              <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Host</span>
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    compute-node-03
-                  </span>
-                </div>
-              </div>
+            <FigmaFrame name="DetailHeader/Sub/InfoBox/default">
+              <InfoBox label="Host" value="compute-node-03" className="flex-1 min-w-[160px]" />
             </FigmaFrame>
-            <FigmaFrame name="DetailHeader/Sub/InfoCard/status">
-              <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Status</span>
-                  <StatusIndicator status="active" />
-                </div>
-              </div>
+            <FigmaFrame name="DetailHeader/Sub/InfoBox/status">
+              <InfoBox
+                label="Status"
+                value="Active"
+                status="active"
+                className="flex-1 min-w-[160px]"
+              />
             </FigmaFrame>
-            <FigmaFrame name="DetailHeader/Sub/InfoCard/copyable">
-              <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-body-md text-[var(--color-text-default)] truncate">
-                      i-0123456789abcdef
-                    </span>
-                    <button className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-hover)]">
-                      <IconCopy size={12} className="text-[var(--color-text-muted)]" />
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <FigmaFrame name="DetailHeader/Sub/InfoBox/copyable">
+              <InfoBox
+                label="ID"
+                value="i-0123456789abcdef"
+                copyable
+                className="flex-1 min-w-[160px]"
+              />
             </FigmaFrame>
-            <FigmaFrame name="DetailHeader/Sub/InfoCard/tooltip">
-              <div className="flex-1 min-w-[160px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center gap-1">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">IOPS</span>
-                    <IconInfoCircle size={12} className="text-[var(--color-text-subtle)]" />
-                  </div>
-                  <span className="text-body-md text-[var(--color-text-default)]">3000</span>
-                </div>
-              </div>
+            <FigmaFrame name="DetailHeader/Sub/InfoBox/tooltip">
+              <InfoBox
+                label="IOPS"
+                value="3000"
+                tooltip="Input/Output Operations Per Second"
+                className="flex-1 min-w-[160px]"
+              />
             </FigmaFrame>
           </div>
         </div>
@@ -2377,10 +2367,24 @@ export function FigmaComponentsPage() {
         <SectionTitle>InfoBox</SectionTitle>
         <div className="flex flex-wrap gap-4">
           <FigmaFrame name="InfoBox/single">
-            <InfoBox label="Instance" value="instance-01" />
+            <InfoBox label="Instance" value="instance-01" className="w-[200px]" />
+          </FigmaFrame>
+          <FigmaFrame name="InfoBox/with-tooltip">
+            <InfoBox
+              label="Pod restarts"
+              value={3}
+              tooltip="Total number of container restarts."
+              className="w-[200px]"
+            />
+          </FigmaFrame>
+          <FigmaFrame name="InfoBox/copyable">
+            <InfoBox label="ID" value="i-1234567890abcdef0" copyable className="w-[200px]" />
+          </FigmaFrame>
+          <FigmaFrame name="InfoBox/with-status">
+            <InfoBox label="Status" value="Running" status="active" className="w-[200px]" />
           </FigmaFrame>
           <FigmaFrame name="InfoBox/with-children">
-            <InfoBox label="Labels (2)">
+            <InfoBox label="Labels (2)" className="w-[200px]">
               <div className="flex flex-wrap items-center gap-1">
                 <Chip label="app=nginx" size="sm" />
                 <Chip label="env=prod" size="sm" />
@@ -2395,53 +2399,29 @@ export function FigmaComponentsPage() {
             { name: 'Label', type: 'Text', values: '"Label"' },
             { name: 'Value', type: 'Text', values: '"Value"' },
             { name: 'HasChildren', type: 'Boolean', values: 'true | false' },
+            { name: 'HasTooltip', type: 'Boolean', values: 'true | false' },
+            { name: 'Copyable', type: 'Boolean', values: 'true | false' },
+            { name: 'HasStatus', type: 'Boolean', values: 'true | false' },
           ]}
           tokens={[
+            { label: 'BG', value: 'surface-subtle' },
+            { label: 'Padding', value: '16px 12px (px-4 py-3)' },
+            { label: 'Radius', value: '8px (primitive-radius-lg)' },
             { label: 'Label', value: 'label-sm (11px medium), text-subtle' },
             { label: 'Value', value: 'body-md (12px regular), text-default' },
-            { label: 'Gap', value: '4px (label ↔ value)' },
+            { label: 'Gap', value: '6px (label ↔ value)' },
+            { label: 'Tooltip icon', value: 'InfoCircle 14px, text-subtle, gap 4px from label' },
+            { label: 'Copy icon', value: '12px, action-primary' },
+            { label: 'Status', value: 'StatusIndicator icon-only lg, absolute right-3 center-y' },
           ]}
           tips={[
-            '구조: Label(위) + Value(아래). 수직 Auto Layout, gap 4px',
-            'Value 대신 children으로 복합 콘텐츠(Chip, Badge 등) 표시 가능. HasChildren Boolean으로 전환',
-            'InfoBox.Group: 여러 InfoBox를 grid로 균등 분할. Figma에서는 Auto Layout + fill container로 처리',
-            '주로 Drawer나 Modal에서 컨텍스트 정보를 표시할 때 사용',
-          ]}
-        />
-      </Section>
-
-      <Section id="MetricCard">
-        {/* ════════════════ METRIC CARD ════════════════ */}
-        <SectionTitle>MetricCard</SectionTitle>
-        <div className="flex flex-wrap gap-4">
-          <FigmaFrame name="MetricCard/with-tooltip">
-            <MetricCard title="Pod restarts" value={3} tooltip="Total restarts." />
-          </FigmaFrame>
-          <FigmaFrame name="MetricCard/without-tooltip">
-            <MetricCard title="CPU usage" value="45%" />
-          </FigmaFrame>
-        </div>
-
-        <FigmaGuide
-          figmaName="TDS/Data/MetricCard"
-          properties={[
-            { name: 'Title', type: 'Text', values: '"Metric"' },
-            { name: 'Value', type: 'Text', values: '"Value"' },
-            { name: 'HasTooltip', type: 'Boolean', values: 'true | false' },
-          ]}
-          tokens={[
-            { label: 'Padding', value: '16px' },
-            { label: 'Title', value: 'label-sm (11px), text-subtle' },
-            { label: 'Value', value: 'heading-h5 (16px semibold)' },
-            { label: 'Border', value: 'border-subtle, 1px' },
-            { label: 'Radius', value: '8px' },
-          ]}
-          tips={[
-            '구조: Title(+ optional 정보 아이콘) + Value. 수직 Auto Layout, gap 8px',
-            'HasTooltip: Title 우측에 InfoCircle 아이콘(14px) 표시. 클릭/호버 시 tooltip 표시',
-            'MetricCard.Group: 카드들을 수평 Auto Layout으로 균등 분할. fill container 사용',
-            'Dashboard 패턴에서 주요 지표를 나란히 표시할 때 사용',
-            'Value에 숫자(3), 백분율(45%), 용량(1.2 GB) 등 다양한 형식 가능',
+            '구조: Label(위) + Value(아래). 수직 Auto Layout, gap 6px',
+            'Value 대신 children으로 복합 콘텐츠(Chip, Badge 등) 표시 가능',
+            'HasTooltip: Label 우측에 InfoCircle 아이콘(14px) 표시',
+            'Copyable: Value 우측에 Copy 아이콘(12px) 표시. string value만 지원',
+            'HasStatus: 우측에 StatusIndicator 배치 (absolute positioned)',
+            'DetailHeader.InfoCard는 내부적으로 InfoBox를 사용 (flex-1 추가)',
+            'InfoBox.Group: 수직 배치 gap 12px',
           ]}
         />
       </Section>
@@ -2603,7 +2583,7 @@ export function FigmaComponentsPage() {
         {/* ════════════════ CONTEXT MENU ════════════════ */}
         <SectionTitle>ContextMenu</SectionTitle>
         <div className="flex gap-4">
-          <FigmaFrame name="ContextMenu/click/with-divider">
+          <FigmaFrame name="ContextMenu/click">
             <ContextMenu items={contextMenuItems} trigger="click">
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
                 Actions
@@ -2619,26 +2599,27 @@ export function FigmaComponentsPage() {
             { name: 'Trigger', type: 'Variant', values: 'click | contextmenu' },
           ]}
           autoLayout={[
-            { label: 'MenuList', direction: 'V', gap: '2px', padding: '4px' },
-            { label: 'MenuItem', direction: 'H', gap: '6px', padding: '6px 8px' },
+            { label: 'MenuList', direction: 'V', gap: '0', padding: '0' },
+            { label: 'MenuItem', direction: 'H', gap: '8px', padding: '6px 12px' },
           ]}
-          radius="6px (--primitive-radius-md)"
+          radius="6px (--context-menu-radius)"
           tokens={[
-            { label: 'Item padding', value: '6px 8px' },
-            { label: 'Item gap', value: '6px' },
-            { label: 'Item radius', value: '6px' },
-            { label: 'Item hover bg', value: '--color-surface-hover' },
+            {
+              label: 'Item padding',
+              value: '6px 12px (--context-menu-padding-y, --context-menu-padding-x)',
+            },
+            { label: 'Item gap', value: '8px (icon ↔ label)' },
+            { label: 'Item min-width', value: '80px (--context-menu-min-width)' },
+            { label: 'Item hover bg', value: '--context-menu-hover-bg' },
             { label: 'Danger text', value: '--color-state-danger' },
-            { label: 'Divider margin', value: '8px (상하)' },
             { label: 'Menu shadow', value: '--shadow-md' },
           ]}
           tips={[
             'ContextMenu는 코드에서 createPortal로 렌더링. Figma에서는 Trigger(Button)와 MenuList를 분리',
-            'MenuList: 수직 Auto Layout. 각 아이템은 MenuItem 컴포넌트로 생성',
+            'MenuList: 수직 Auto Layout, gap 0, padding 0. overflow hidden으로 radius 적용',
             'MenuItem: (optional) 아이콘 + Label 텍스트. 수평 Auto Layout. hover 시 배경색 변경',
-            'divider: 아이템 사이 구분선. Figma에서 1px Rectangle 또는 Line으로 추가',
             'danger 아이템: 텍스트/아이콘 색상이 빨간색. MenuItem State=danger로 처리',
-            'submenu: 우측 화살표 아이콘(chevron-right) + 하위 MenuList. nested component로 구현',
+            'submenu: 우측 화살표 아이콘(chevron-right, size 12, stroke 1) + 하위 MenuList. nested component로 구현',
             '모든 아이템에 고유 id 필수. Figma에서는 레이어 이름으로 관리',
           ]}
         />
@@ -2646,61 +2627,56 @@ export function FigmaComponentsPage() {
         <SubTitle>Sub Elements</SubTitle>
         <div className="flex flex-col gap-3">
           <FigmaFrame name="ContextMenu/Sub/Container">
-            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius,6px)] shadow-md min-w-[80px] p-1">
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)]">
+            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius,6px)] shadow-[var(--shadow-md)] overflow-hidden flex flex-col">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Edit
               </div>
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)]">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Duplicate
               </div>
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)]">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Export
               </div>
-              <div className="my-1 border-b border-[var(--color-border-subtle)]" />
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-state-danger)] rounded-[var(--radius-md)]">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
                 Delete
               </div>
             </div>
           </FigmaFrame>
           <div
             className="grid items-end gap-x-3 gap-y-2"
-            style={{ gridTemplateColumns: 'repeat(6, auto)' }}
+            style={{ gridTemplateColumns: 'repeat(5, auto)' }}
           >
             <StateLabel>default</StateLabel>
             <StateLabel>hover</StateLabel>
             <StateLabel>danger</StateLabel>
             <StateLabel>with-icon</StateLabel>
-            <StateLabel>divider</StateLabel>
             <StateLabel>submenu</StateLabel>
 
             <FigmaFrame name="ContextMenu/Sub/Item/default">
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)] min-w-[120px]">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Edit
               </div>
             </FigmaFrame>
             <FigmaFrame name="ContextMenu/Sub/Item/hover">
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-text-default)] bg-[var(--color-surface-hover)] rounded-[var(--radius-md)] min-w-[120px]">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] bg-[var(--context-menu-hover-bg)] whitespace-nowrap">
                 Edit
               </div>
             </FigmaFrame>
             <FigmaFrame name="ContextMenu/Sub/Item/danger">
-              <div className="px-2 py-1.5 text-body-sm text-[var(--color-state-danger)] rounded-[var(--radius-md)] min-w-[120px]">
+              <div className="min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)] whitespace-nowrap">
                 Delete
               </div>
             </FigmaFrame>
             <FigmaFrame name="ContextMenu/Sub/Item/with-icon">
-              <div className="flex items-center gap-1.5 px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)] min-w-[120px]">
+              <div className="flex items-center gap-2 min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 <IconEdit size={14} className="text-[var(--color-text-muted)]" />
                 Edit
               </div>
             </FigmaFrame>
-            <FigmaFrame name="ContextMenu/Sub/Divider">
-              <div className="w-[120px] my-1 border-b border-[var(--color-border-subtle)]" />
-            </FigmaFrame>
             <FigmaFrame name="ContextMenu/Sub/Submenu">
-              <div className="flex items-center gap-1.5 px-2 py-1.5 text-body-sm text-[var(--color-text-default)] rounded-[var(--radius-md)] min-w-[120px]">
+              <div className="flex items-center justify-between min-w-[var(--context-menu-min-width)] px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 <span className="flex-1">Instance status</span>
-                <IconChevronRight size={12} className="text-[var(--color-text-muted)]" />
+                <IconChevronRight size={12} stroke={1} className="ml-6 shrink-0" />
               </div>
             </FigmaFrame>
           </div>
@@ -2795,22 +2771,17 @@ export function FigmaComponentsPage() {
         {/* ════════════════ POPOVER ════════════════ */}
         <SectionTitle>Popover</SectionTitle>
         <div className="flex flex-wrap gap-8 items-start">
-          {/* Case 1: BadgeList +N overflow — 실제 BadgeList hover시 보이는 popover */}
           <FigmaFrame name="Popover/badge-list-overflow">
             <div className="flex flex-col items-center">
-              {/* Trigger: +N badge row */}
               <div className="flex flex-nowrap gap-1 items-center">
                 <Badge size="sm">app=nginx</Badge>
                 <Badge size="sm">env=prod</Badge>
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 py-0.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)]">
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 h-5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)]">
                   +3
                 </span>
               </div>
-              {/* gap = 8px (showArrow gap) */}
               <div className="h-[8px]" />
-              {/* Popover bubble (bottom, arrow) — 실제 렌더링과 동일 */}
               <div className="relative">
-                {/* Arrow: bottom position → arrow on top of popover */}
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-1px]">
                   <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
                   <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-[-1px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
@@ -2845,114 +2816,34 @@ export function FigmaComponentsPage() {
               </div>
             </div>
           </FigmaFrame>
-
-          {/* Case 2: Quick info — click bottom with arrow */}
-          <FigmaFrame name="Popover/info-content">
-            <div className="flex flex-col items-center">
-              <Button variant="secondary" size="sm">
-                Details
-              </Button>
-              <div className="h-[8px]" />
-              <div className="relative">
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-1px]">
-                  <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-[-1px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
-                </div>
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-lg">
-                  <div className="p-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-default)]">
-                        Resource Info
-                      </span>
-                      <span className="text-body-sm text-[var(--color-text-muted)]">
-                        CPU: 4 vCPU / Memory: 8 GiB
-                      </span>
-                      <span className="text-body-sm text-[var(--color-text-muted)]">
-                        Status: Running since 2h ago
-                      </span>
-                    </VStack>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FigmaFrame>
-
-          {/* Case 3: Form popover — click bottom with arrow */}
-          <FigmaFrame name="Popover/inline-form">
-            <div className="flex flex-col items-center">
-              <Button variant="primary" size="sm">
-                Quick Edit
-              </Button>
-              <div className="h-[8px]" />
-              <div className="relative">
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-1px]">
-                  <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-[-1px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
-                </div>
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-lg w-[240px]">
-                  <VStack gap={3} className="p-4">
-                    <span className="text-heading-h6 text-[var(--color-text-default)]">
-                      Edit Name
-                    </span>
-                    <Input placeholder="Enter name" fullWidth />
-                    <HStack gap={2} className="w-full">
-                      <Button variant="secondary" size="sm" className="flex-1">
-                        Cancel
-                      </Button>
-                      <Button variant="primary" size="sm" className="flex-1">
-                        Save
-                      </Button>
-                    </HStack>
-                  </VStack>
-                </div>
-              </div>
-            </div>
-          </FigmaFrame>
-
-          {/* Case 4: No arrow — click bottom */}
-          <FigmaFrame name="Popover/no-arrow">
-            <div className="flex flex-col items-center">
-              <Button variant="outline" size="sm">
-                Options
-              </Button>
-              {/* gap = 4px (no arrow gap) */}
-              <div className="h-[4px]" />
-              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-lg">
-                <div className="p-3">
-                  <VStack gap={1}>
-                    <span className="text-body-sm text-[var(--color-text-default)]">Option A</span>
-                    <span className="text-body-sm text-[var(--color-text-default)]">Option B</span>
-                    <span className="text-body-sm text-[var(--color-text-default)]">Option C</span>
-                  </VStack>
-                </div>
-              </div>
-            </div>
-          </FigmaFrame>
         </div>
 
         <FigmaGuide
           figmaName="TDS/Overlay/Popover"
           properties={[
-            { name: 'Position', type: 'Variant', values: 'top | bottom | left | right' },
-            { name: 'Trigger', type: 'Variant', values: 'click | hover' },
-            { name: 'ShowArrow', type: 'Boolean', values: 'true | false' },
+            { name: 'Position', type: 'Variant', values: 'bottom (기본)' },
+            { name: 'Trigger', type: 'Variant', values: 'hover' },
+            { name: 'ShowArrow', type: 'Boolean', values: 'true' },
           ]}
-          autoLayout={[{ label: 'Container', direction: 'V', gap: '0', padding: '0' }]}
+          autoLayout={[{ label: 'Container', direction: 'V', gap: '0', padding: '12px' }]}
           radius="8px (--primitive-radius-lg)"
           tokens={[
             { label: 'Border', value: '1px, --color-border-default' },
             { label: 'BG', value: '--color-surface-default' },
             { label: 'Arrow size', value: '7px (outer border), 6px (inner fill)' },
             { label: 'Shadow', value: 'shadow-lg' },
-            { label: 'Gap (arrow)', value: '8px' },
-            { label: 'Gap (no arrow)', value: '4px' },
+            { label: 'Content min-w', value: '120px' },
+            { label: 'Content max-w', value: '320px' },
+            { label: 'Title', value: 'text-body-xs font-medium, --color-text-muted' },
+            { label: 'Badge list gap', value: '4px (flex-col gap-1)' },
+            { label: '+N trigger height', value: 'Badge size에 맞춤 (sm=20px, md=24px, lg=28px)' },
           ]}
           tips={[
-            'Tooltip과 달리 인터랙티브 콘텐츠(폼, 버튼, 메뉴 등) 포함 가능',
+            '실제 사용: BadgeList +N 오버플로우, Detail 페이지 Labels/Annotations +N hover 목록',
+            'BadgeList 컴포넌트가 Popover를 내부적으로 사용. 직접 Popover를 사용할 일은 거의 없음',
             'Arrow는 double-triangle 기법: 외부 7px border 삼각형 + 내부 6px fill 삼각형',
-            'Arrow 있을 때 trigger↔popover gap: 8px, 없을 때: 4px',
-            'click 트리거: 외부 클릭 또는 ESC로 닫힘. hover 트리거: delay/hideDelay로 제어',
-            'aria-haspopup="dialog" 자동 적용',
+            'hover 트리거: delay 100ms, hideDelay 100ms로 빠른 응답',
+            '+N 트리거: Badge와 동일한 높이(h-5/h-6/h-7), px-1.5, rounded, bg-surface-subtle',
           ]}
         />
       </Section>
@@ -3021,9 +2912,7 @@ export function FigmaComponentsPage() {
             </p>
           </FigmaFrame>
           <FigmaFrame name="Modal/Sub/Content">
-            <div className="flex flex-col gap-4">
-              <InfoBox label="Resource name" value="instance-01" />
-            </div>
+            <InfoBox label="Resource name" value="instance-01" />
           </FigmaFrame>
           <FigmaFrame name="Modal/Sub/Footer">
             <div className="flex gap-2 w-[296px]">
@@ -3091,16 +2980,14 @@ export function FigmaComponentsPage() {
             </p>
           </FigmaFrame>
           <FigmaFrame name="Drawer/Sub/Content">
-            <div className="w-[312px] px-6 pt-4 pb-8">
-              <VStack gap={6}>
-                <FormField label="Instance Name" required>
-                  <Input placeholder="Enter name" fullWidth />
-                </FormField>
-                <FormField label="Description">
-                  <Textarea placeholder="Enter description" fullWidth />
-                </FormField>
-              </VStack>
-            </div>
+            <VStack gap={6} className="w-[312px] px-6 pt-4 pb-8">
+              <FormField label="Instance Name" required>
+                <Input placeholder="Enter name" fullWidth />
+              </FormField>
+              <FormField label="Description">
+                <Textarea placeholder="Enter description" fullWidth />
+              </FormField>
+            </VStack>
           </FigmaFrame>
           <FigmaFrame name="Drawer/Sub/Footer">
             <div className="flex gap-2 w-[312px] border-t border-[var(--color-border-default)] px-6 py-4">
@@ -3158,19 +3045,17 @@ export function FigmaComponentsPage() {
         <SubTitle>Sub Elements</SubTitle>
         <div className="flex flex-col gap-4">
           <FigmaFrame name="Toast/Sub/Container">
-            <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg">
-              <div className="flex gap-3">
-                <IconCircleCheck size={20} className="shrink-0 text-[var(--color-state-success)]" />
-                <div className="flex-1 flex flex-col gap-1">
-                  <span className="text-label-md text-[var(--color-text-default)]">Success</span>
-                  <span className="text-body-md text-[var(--color-text-muted)]">
-                    Instance has been created successfully.
-                  </span>
-                </div>
-                <button className="shrink-0 p-1">
-                  <IconX size={16} className="text-[var(--color-text-muted)]" />
-                </button>
+            <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg flex gap-3">
+              <IconCircleCheck size={20} className="shrink-0 text-[var(--color-state-success)]" />
+              <div className="flex-1 flex flex-col gap-1">
+                <span className="text-label-md text-[var(--color-text-default)]">Success</span>
+                <span className="text-body-md text-[var(--color-text-muted)]">
+                  Instance has been created successfully.
+                </span>
               </div>
+              <button className="shrink-0 p-1">
+                <IconX size={16} className="text-[var(--color-text-muted)]" />
+              </button>
             </div>
           </FigmaFrame>
           <div className="flex flex-wrap gap-4 items-end">
@@ -3879,10 +3764,12 @@ export function FigmaComponentsPage() {
         <SectionTitle>Password</SectionTitle>
         <div
           className="grid items-start gap-x-3 gap-y-2"
-          style={{ gridTemplateColumns: 'repeat(3, auto)' }}
+          style={{ gridTemplateColumns: 'repeat(5, auto)' }}
         >
           <StateLabel>default</StateLabel>
           <StateLabel>with-value</StateLabel>
+          <StateLabel>focus</StateLabel>
+          <StateLabel>visible</StateLabel>
           <StateLabel>disabled</StateLabel>
 
           <FigmaFrame name="Password/default">
@@ -3890,6 +3777,30 @@ export function FigmaComponentsPage() {
           </FigmaFrame>
           <FigmaFrame name="Password/with-value">
             <Password defaultValue="mypassword123" fullWidth />
+          </FigmaFrame>
+          <FigmaFrame name="Password/focus">
+            <div className="w-[var(--input-default-width)]">
+              <div className="flex items-center w-full h-[var(--input-height-md)] px-[var(--input-padding-x)] bg-[var(--input-bg)] border border-[var(--input-border-focus)] shadow-[inset_0_0_0_1px_var(--input-border-focus)] rounded-[var(--input-radius)]">
+                <span className="flex-1 text-[length:var(--input-font-size)] text-[var(--input-placeholder)]">
+                  Enter password
+                </span>
+                <span className="flex items-center justify-center p-1 ml-2 text-[var(--color-text-muted)]">
+                  <IconEye size={16} stroke={1.5} />
+                </span>
+              </div>
+            </div>
+          </FigmaFrame>
+          <FigmaFrame name="Password/visible">
+            <div className="w-[var(--input-default-width)]">
+              <div className="flex items-center w-full h-[var(--input-height-md)] px-[var(--input-padding-x)] bg-[var(--input-bg)] border border-[var(--input-border)] rounded-[var(--input-radius)]">
+                <span className="flex-1 text-[length:var(--input-font-size)] text-[var(--color-text-default)]">
+                  mypassword123
+                </span>
+                <span className="flex items-center justify-center p-1 ml-2 text-[var(--color-text-muted)]">
+                  <IconEyeOff size={16} stroke={1.5} />
+                </span>
+              </div>
+            </div>
           </FigmaFrame>
           <FigmaFrame name="Password/disabled">
             <Password placeholder="Disabled" disabled fullWidth />
@@ -3964,13 +3875,17 @@ export function FigmaComponentsPage() {
           tokens={[
             { label: 'BG', value: '--color-surface-subtle' },
             { label: 'Border', value: '--color-border-default, 1px' },
-            { label: 'Error border', value: '--color-state-danger' },
+            { label: 'Error BG', value: '--inline-message-error-bg' },
+            { label: 'Error padding', value: '--inline-message-padding' },
+            { label: 'Error radius', value: '--inline-message-radius' },
+            { label: 'Error gap', value: '--inline-message-gap' },
+            { label: 'Error icon', value: 'IconAlertTriangle, --inline-message-error-icon' },
             { label: 'Chip', value: 'Chip 컴포넌트 인스턴스 사용' },
           ]}
           tips={[
             '선택된 항목들을 Chip으로 표시. 항목 제거 가능 (Removable)',
             'Empty 상태: emptyText 표시 (연한 텍스트)',
-            'Error 상태: border가 danger 색상, 하단에 에러 메시지 표시',
+            'Error 상태: InlineMessage error 스타일 적용 (아이콘: AlertTriangle, BG/padding/radius 동일)',
             'rightContent: 우측에 추가 콘텐츠(버튼 등) 배치 가능',
             'ListToolbar에서 벌크 액션과 함께 사용',
           ]}
@@ -4022,7 +3937,7 @@ export function FigmaComponentsPage() {
           <FigmaFrame name="WindowControl/close/hover">
             <button
               type="button"
-              className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-white bg-[var(--color-state-danger)]"
+              className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]"
               aria-label="close"
             >
               <IconX size={12} stroke={1} />

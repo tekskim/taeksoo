@@ -410,7 +410,7 @@ export function ContextMenuPage() {
   items={[
     { id: 'edit', label: 'Edit', onClick: () => {} },
     { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
-    { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
+    { id: 'copy', label: 'Copy', onClick: () => {} },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
   ]}
 >
@@ -422,7 +422,7 @@ export function ContextMenuPage() {
             items={[
               { id: 'view', label: 'View details', onClick: () => {} },
               { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'share', label: 'Share', onClick: () => {}, divider: true },
+              { id: 'share', label: 'Share', onClick: () => {} },
               { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
             ]}
           >
@@ -433,7 +433,7 @@ export function ContextMenuPage() {
         </ComponentPreview>
       }
       usage={{
-        code: `import { ContextMenu, Button } from '@/design-system';\n\n<ContextMenu\n  items={[\n    { id: 'edit', label: 'Edit', onClick: handleEdit },\n    { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: handleDelete },\n  ]}\n  trigger="click"\n>\n  <Button variant="outline" size="sm">More Actions</Button>\n</ContextMenu>`,
+        code: `import { ContextMenu, Button } from '@/design-system';\n\n<ContextMenu\n  items={[\n    { id: 'edit', label: 'Edit', onClick: handleEdit },\n    { id: 'delete', label: 'Delete', status: 'danger', onClick: handleDelete },\n  ]}\n  trigger="click"\n>\n  <Button variant="outline" size="sm">More Actions</Button>\n</ContextMenu>`,
       }}
       examples={
         <VStack gap={8}>
@@ -441,7 +441,7 @@ export function ContextMenuPage() {
             <VStack gap={1}>
               <span className="text-label-md text-[var(--color-text-default)]">Basic Menu</span>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                기본 항목 + divider + danger 액션. 자주 사용하는 구성.
+                기본 항목 + danger 액션. 자주 사용하는 구성.
               </span>
             </VStack>
             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden w-fit">
@@ -451,7 +451,7 @@ export function ContextMenuPage() {
               <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Duplicate
               </div>
-              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Copy
               </div>
               <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
@@ -480,7 +480,7 @@ export function ContextMenuPage() {
                 <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                   Open
                 </div>
-                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                   Save
                 </div>
                 <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between">
@@ -514,7 +514,7 @@ export function ContextMenuPage() {
               <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Default item
               </div>
-              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
                 Another item
               </div>
               <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
@@ -542,7 +542,7 @@ export function ContextMenuPage() {
                   { id: 'view', label: 'View details', onClick: () => {} },
                   { id: 'edit', label: 'Edit', onClick: () => {} },
                   { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
-                  { id: 'export', label: 'Export', onClick: () => {}, divider: true },
+                  { id: 'export', label: 'Export', onClick: () => {} },
                   { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
                 ]}
               >
@@ -566,7 +566,6 @@ export function ContextMenuPage() {
                     id: 'delete',
                     label: 'Delete',
                     status: 'danger',
-                    divider: true,
                     onClick: () => {},
                   },
                 ]}

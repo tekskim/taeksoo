@@ -130,7 +130,7 @@ function ChartTooltipPageGuidelines() {
 function AxisTooltipDemo() {
   return (
     <div
-      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] shadow-sm p-2 text-[var(--color-text-default)]"
+      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm p-2 text-[var(--color-text-default)]"
       style={{ fontSize: 11, width: 'fit-content' }}
     >
       <div>14:30:00</div>

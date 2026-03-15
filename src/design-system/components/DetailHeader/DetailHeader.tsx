@@ -1,8 +1,7 @@
-import { useState, Children, type ReactNode, type HTMLAttributes } from 'react';
+import { Children, type ReactNode, type HTMLAttributes } from 'react';
 import { twMerge } from '../../utils/cn';
-import { IconCopy, IconCheck, IconHelpCircle } from '@tabler/icons-react';
-import { StatusIndicator, type StatusType } from '../StatusIndicator';
-import { Tooltip } from '../Tooltip';
+import { InfoBox } from '../InfoBox/InfoBox';
+import type { StatusType } from '../StatusIndicator';
 
 /* ----------------------------------------
    DetailHeader - Main Container
@@ -16,6 +15,7 @@ export interface DetailHeaderProps extends HTMLAttributes<HTMLDivElement> {
 export function DetailHeader({ children, className, ...props }: DetailHeaderProps) {
   return (
     <div
+      data-figma-name="DetailHeader"
       className={twMerge(
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
@@ -43,6 +43,7 @@ export interface DetailHeaderTitleProps extends HTMLAttributes<HTMLHeadingElemen
 function DetailHeaderTitle({ children, className, ...props }: DetailHeaderTitleProps) {
   return (
     <h5
+      data-figma-name="DetailHeader/Title"
       className={twMerge('text-heading-h5', 'text-[var(--color-text-default)]', 'mb-3', className)}
       {...props}
     >
@@ -62,7 +63,11 @@ export interface DetailHeaderActionsProps extends HTMLAttributes<HTMLDivElement>
 
 function DetailHeaderActions({ children, className, ...props }: DetailHeaderActionsProps) {
   return (
-    <div className={twMerge('flex items-center gap-1', 'mb-3', className)} {...props}>
+    <div
+      data-figma-name="DetailHeader/Actions"
+      className={twMerge('flex items-center gap-1', 'mb-3', className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -101,7 +106,6 @@ function getRowLayout(count: number): number[] {
   if (count === 10) return [4, 4, 2];
   if (count === 11) return [4, 4, 3];
   if (count === 12) return [4, 4, 4];
-  // Fallback for >12: fill rows of 4
   const rows: number[] = [];
   let remaining = count;
   while (remaining > 0) {
@@ -116,16 +120,18 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
   const count = childArray.length;
   const rowLayout = getRowLayout(count);
 
-  // Single row — keep simple layout
   if (rowLayout.length === 1) {
     return (
-      <div className={twMerge('flex items-stretch gap-3', 'w-full', className)} {...props}>
+      <div
+        data-figma-name="DetailHeader/InfoGrid"
+        className={twMerge('flex items-stretch gap-3', 'w-full', className)}
+        {...props}
+      >
         {children}
       </div>
     );
   }
 
-  // Multi-row layout
   let index = 0;
   const rows = rowLayout.map((rowCount) => {
     const rowChildren = childArray.slice(index, index + rowCount);
@@ -134,7 +140,11 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
   });
 
   return (
-    <div className={twMerge('flex flex-col gap-3', 'w-full', className)} {...props}>
+    <div
+      data-figma-name="DetailHeader/InfoGrid"
+      className={twMerge('flex flex-col gap-3', 'w-full', className)}
+      {...props}
+    >
       {rows.map((rowChildren, rowIndex) => (
         <div key={rowIndex} className="flex items-stretch gap-3 w-full">
           {rowChildren}
@@ -146,6 +156,7 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
 
 /* ----------------------------------------
    DetailHeader.InfoCard
+   Thin wrapper around InfoBox with flex-1
    ---------------------------------------- */
 
 export interface DetailHeaderInfoCardProps extends Omit<
@@ -171,75 +182,16 @@ function DetailHeaderInfoCard({
   status,
   tooltip,
   className,
-  ...props
 }: DetailHeaderInfoCardProps) {
-  const [copied, setCopied] = useState(false);
-  const isStringValue = typeof value === 'string';
-
-  const handleCopy = () => {
-    if (isStringValue) {
-      navigator.clipboard.writeText(value);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   return (
-    <div
-      className={twMerge(
-        'flex-1',
-        'bg-[var(--color-surface-subtle)]',
-        'rounded-lg',
-        'px-4 py-3',
-        'relative',
-        'min-w-0',
-        className
-      )}
-      {...props}
-    >
-      {status && (
-        <div className="absolute top-1/2 right-3 -translate-y-1/2">
-          <StatusIndicator status={status} layout="icon-only" size="lg" />
-        </div>
-      )}
-
-      <div className={twMerge('flex flex-col gap-1.5 min-w-0', status && 'pr-6')}>
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
-          {label}
-          {tooltip && (
-            <Tooltip content={tooltip} position="top">
-              <IconHelpCircle size={12} className="text-[var(--color-text-subtle)] cursor-help" />
-            </Tooltip>
-          )}
-        </span>
-        <div className="flex items-center gap-1 min-w-0 min-h-[26px]">
-          {isStringValue ? (
-            <span
-              className="text-body-md leading-4 font-normal truncate text-[var(--color-text-default)]"
-              title={value}
-            >
-              {value}
-            </span>
-          ) : (
-            value
-          )}
-          {/* Copy button inline next to value (only for string values) */}
-          {copyable && isStringValue && (
-            <button
-              onClick={handleCopy}
-              className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
-              aria-label="Copy to clipboard"
-            >
-              {copied ? (
-                <IconCheck size={12} className="text-[var(--color-state-success)]" />
-              ) : (
-                <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-              )}
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
+    <InfoBox
+      label={label}
+      value={value}
+      tooltip={tooltip}
+      copyable={copyable}
+      status={status}
+      className={twMerge('flex-1', className)}
+    />
   );
 }
 

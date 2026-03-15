@@ -8,6 +8,7 @@ import {
   IconTarget,
   IconAlertTriangle,
   IconCheck,
+  IconProgress,
 } from '@tabler/icons-react';
 import { Button, NumberInput, ProgressBar } from '@/design-system';
 
@@ -93,10 +94,7 @@ function StatusIcon({ status }: { status: SectionStatus }) {
       );
     case 'processing':
       return (
-        <div
-          className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-          style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-        />
+        <IconProgress size={16} stroke={1.5} className="shrink-0 text-[var(--color-text-muted)]" />
       );
     default:
       return (

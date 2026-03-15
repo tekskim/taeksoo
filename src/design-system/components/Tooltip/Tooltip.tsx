@@ -204,6 +204,7 @@ export function Tooltip({
             <div className="relative">
               {/* Tooltip Box */}
               <div
+                data-figma-name="Tooltip"
                 className="
                   bg-[var(--tooltip-bg)]
                   text-[var(--tooltip-text)]

@@ -332,6 +332,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             'flex items-center gap-[var(--primitive-spacing-2)] shrink-0',
             className
           )}
+          data-figma-name="NumberInput"
         >
           <div className={twMerge('flex flex-col gap-[var(--input-label-gap)]', getWidthClass())}>
             {coreElement}
@@ -341,7 +342,11 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       );
     }
 
-    return <div className={wrapperClasses}>{coreElement}</div>;
+    return (
+      <div className={wrapperClasses} data-figma-name="NumberInput">
+        {coreElement}
+      </div>
+    );
   }
 );
 

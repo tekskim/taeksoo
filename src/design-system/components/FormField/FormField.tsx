@@ -146,7 +146,12 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
     if (label !== undefined) {
       return (
         <FormFieldContext.Provider value={contextValue}>
-          <div ref={ref} className={twMerge('flex flex-col', className)} {...props}>
+          <div
+            ref={ref}
+            className={twMerge('flex flex-col', className)}
+            data-figma-name="FormField"
+            {...props}
+          >
             {/* Label */}
             <FormFieldLabel size={labelSize}>{label}</FormFieldLabel>
 
@@ -181,7 +186,12 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
     // Compound API mode: traditional usage with sub-components
     return (
       <FormFieldContext.Provider value={contextValue}>
-        <div ref={ref} className={twMerge('flex flex-col', className)} {...props}>
+        <div
+          ref={ref}
+          className={twMerge('flex flex-col', className)}
+          data-figma-name="FormField"
+          {...props}
+        >
           {children}
         </div>
       </FormFieldContext.Provider>

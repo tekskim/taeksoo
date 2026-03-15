@@ -376,12 +376,9 @@ import { AppWindowPage } from '@/pages/design/components/AppWindowPage';
 import { PasswordPage } from '@/pages/design/components/PasswordPage';
 import { CopyButtonPage } from '@/pages/design/components/CopyButtonPage';
 import { SelectionIndicatorPage } from '@/pages/design/components/SelectionIndicatorPage';
-import { TagPage } from '@/pages/design/components/TagPage';
 import { InfoBoxPage } from '@/pages/design/components/InfoBoxPage';
-import { MetricCardPage } from '@/pages/design/components/MetricCardPage';
 import { CardTitlePage } from '@/pages/design/components/CardTitlePage';
 import { ListToolbarPage } from '@/pages/design/components/ListToolbarPage';
-import { CommonPatternsPage } from '@/pages/design/patterns/CommonPatternsPage';
 import { WizardPage } from '@/pages/design/patterns/WizardPage';
 import { OpenFormPage } from '@/pages/design/patterns/OpenFormPage';
 import { LayoutPage } from '@/pages/design/patterns/LayoutPage';
@@ -1028,9 +1025,7 @@ function AppRoutes() {
         <Route path="components/pagination" element={<PaginationPage />} />
         <Route path="components/file-list-card" element={<FileListCardPage />} />
         <Route path="components/expandable-checklist" element={<ExpandableChecklistPage />} />
-        <Route path="components/tag" element={<TagPage />} />
         <Route path="components/info-box" element={<InfoBoxPage />} />
-        <Route path="components/metric-card" element={<MetricCardPage />} />
         <Route path="components/card-title" element={<CardTitlePage />} />
         <Route path="components/list-toolbar" element={<ListToolbarPage />} />
         <Route path="components/inline-message" element={<InlineMessagePage />} />
@@ -1066,7 +1061,6 @@ function AppRoutes() {
         <Route path="policies/csv-download" element={<CsvDownloadPage />} />
         <Route path="policies/app-window" element={<AppWindowPage />} />
         <Route path="components/*" element={<DesignOverviewPage />} />
-        <Route path="patterns/common" element={<CommonPatternsPage />} />
         <Route path="patterns/wizard" element={<WizardPage />} />
         <Route path="patterns/open-form" element={<OpenFormPage />} />
         <Route path="patterns/layout" element={<LayoutPage />} />

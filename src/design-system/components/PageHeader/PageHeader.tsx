@@ -26,6 +26,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div
+      data-figma-name="PageHeader"
       className={`flex items-center justify-between w-full min-h-8 ${className}`.trim()}
       {...rest}
     >

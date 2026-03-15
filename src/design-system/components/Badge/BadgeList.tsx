@@ -62,7 +62,7 @@ export const BadgeList = memo(function BadgeList({
     );
 
   return (
-    <div className="flex flex-nowrap gap-1 items-center">
+    <div data-figma-name="BadgeList" className="flex flex-nowrap gap-1 items-center">
       {visibleItems.map((item, index) => renderBadge(item, index, true))}
       {remainingCount > 0 && (
         <Popover
@@ -91,7 +91,9 @@ export const BadgeList = memo(function BadgeList({
             </div>
           }
         >
-          <span className="inline-flex shrink-0 items-center justify-center px-1.5 py-0.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
+          <span
+            className={`inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors ${size === 'sm' ? 'h-5' : size === 'md' ? 'h-6' : 'h-7'}`}
+          >
             +{remainingCount}
           </span>
         </Popover>

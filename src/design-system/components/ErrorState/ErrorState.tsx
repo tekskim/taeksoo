@@ -30,6 +30,7 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <div
+      data-figma-name="ErrorState"
       className={`flex flex-col items-center justify-center py-20 text-center ${className}`.trim()}
     >
       {icon && <div className="text-[var(--color-state-danger)] mb-[16px]">{icon}</div>}

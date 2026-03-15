@@ -52,7 +52,10 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
     const onChange = groupContext?.onChange ?? props.onChange;
 
     return (
-      <div className={twMerge('flex flex-col gap-[var(--radio-description-gap)]', className)}>
+      <div
+        className={twMerge('flex flex-col gap-[var(--radio-description-gap)]', className)}
+        data-figma-name="Radio"
+      >
         <label
           htmlFor={inputId}
           className={twMerge(

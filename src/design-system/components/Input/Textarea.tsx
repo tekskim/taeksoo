@@ -201,7 +201,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const wrapperClasses = ['flex flex-col gap-2', fullWidth ? 'w-full' : 'w-fit'].join(' ');
 
     return (
-      <div className={wrapperClasses}>
+      <div className={wrapperClasses} data-figma-name="Textarea">
         {label && (
           <label htmlFor={inputId} className="text-label-lg text-[var(--color-text-default)]">
             {label}

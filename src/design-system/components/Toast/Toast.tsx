@@ -230,6 +230,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
 
   return (
     <div
+      data-figma-name="Toast"
       role="alert"
       className={twMerge(
         'flex flex-col gap-[var(--primitive-spacing-2)]',

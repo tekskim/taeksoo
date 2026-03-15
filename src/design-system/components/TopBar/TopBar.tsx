@@ -65,6 +65,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header
+      data-figma-name="TopBar"
       className={`
         flex items-center
         w-full

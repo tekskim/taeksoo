@@ -121,10 +121,7 @@ export function CardTitlePage() {
   badges={[{ label: 'Ready', variant: 'success' }]}
 />`,
       }}
-      relatedLinks={[
-        { label: 'SectionCard', path: '/design/components/section-card' },
-        { label: 'MetricCard', path: '/design/components/metric-card' },
-      ]}
+      relatedLinks={[{ label: 'SectionCard', path: '/design/components/section-card' }]}
     />
   );
 }
