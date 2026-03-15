@@ -2,6 +2,8 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { CopyButton, Copyable, VStack, HStack } from '@/design-system';
+import { IconCopy, IconCheck } from '@tabler/icons-react';
+import { Label } from '../../design-system-sections/HelperComponents';
 
 const copyButtonProps: PropDef[] = [
   { name: 'value', type: 'string', required: true, description: 'Text to copy to clipboard' },
@@ -62,7 +64,6 @@ function CopyButtonPreview() {
       <HStack gap={2}>
         <CopyButton value="Hello, World!" />
         <CopyButton value="Icon only" iconOnly tooltip="Copy to clipboard" />
-        <CopyButton value="Ghost" variant="ghost" />
         <CopyButton value="Outline" variant="outline" />
       </HStack>
       <Copyable value="i-0a1b2c3d4e5f6789" />
@@ -85,6 +86,7 @@ export function CopyButtonPage() {
         <ComponentPreview
           code={`<CopyButton value="Hello, World!" />
 <CopyButton value="Icon only" iconOnly tooltip="Copy" />
+<CopyButton value="Outline" variant="outline" />
 <Copyable value="i-0a1b2c3d4e5f6789" />`}
         >
           <CopyButtonPreview />
@@ -98,6 +100,150 @@ export function CopyButtonPage() {
 
 <Copyable value="i-0a1b2c3d4e5f" truncate maxWidth={200} />`,
       }}
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <Label>States — Ghost (default variant)</Label>
+            <div className="grid grid-cols-3 gap-6">
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-text-muted)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCopy size={12} stroke={1.5} />
+                  </span>
+                  <span>Copy</span>
+                </button>
+              </VStack>
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Hover</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCopy size={12} stroke={1.5} />
+                  </span>
+                  <span>Copy</span>
+                </button>
+              </VStack>
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Copied</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-state-success)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCheck size={12} stroke={2} />
+                  </span>
+                  <span>Copied!</span>
+                </button>
+              </VStack>
+            </div>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <Label>States — Icon Only</Label>
+            <div className="grid grid-cols-3 gap-6">
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-transparent text-[var(--color-text-muted)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCopy size={12} stroke={1.5} />
+                  </span>
+                </button>
+              </VStack>
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Hover</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCopy size={12} stroke={1.5} />
+                  </span>
+                </button>
+              </VStack>
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Copied</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-transparent text-[var(--color-state-success)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCheck size={12} stroke={2} />
+                  </span>
+                </button>
+              </VStack>
+            </div>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <Label>States — Outline</Label>
+            <div className="grid grid-cols-3 gap-6">
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-[var(--color-border-default)] rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-text-default)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCopy size={12} stroke={1.5} />
+                  </span>
+                  <span>Copy</span>
+                </button>
+              </VStack>
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Hover</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-[var(--color-border-default)] rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCopy size={12} stroke={1.5} />
+                  </span>
+                  <span>Copy</span>
+                </button>
+              </VStack>
+              <VStack gap={1} align="start">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Copied</span>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center border border-[var(--color-border-default)] rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-state-success)]"
+                >
+                  <span className="shrink-0 flex items-center">
+                    <IconCheck size={12} stroke={2} />
+                  </span>
+                  <span>Copied!</span>
+                </button>
+              </VStack>
+            </div>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={3}>
+            <Label>Copyable (Inline)</Label>
+            <VStack gap={2}>
+              <Copyable value="i-0a1b2c3d4e5f6789" />
+              <Copyable
+                value="a-very-long-resource-id-that-should-be-truncated"
+                truncate
+                maxWidth={240}
+              />
+            </VStack>
+          </VStack>
+        </VStack>
+      }
       relatedLinks={[
         { label: 'Button', path: '/design/components/button' },
         { label: 'DetailHeader', path: '/design/patterns/detail-header' },
