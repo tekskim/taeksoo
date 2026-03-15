@@ -3781,7 +3781,7 @@ export function FigmaComponentsPage() {
           <FigmaFrame name="Password/focus">
             <div className="w-[var(--input-default-width)]">
               <div className="flex items-center w-full h-[var(--input-height-md)] px-[var(--input-padding-x)] bg-[var(--input-bg)] border border-[var(--input-border-focus)] shadow-[inset_0_0_0_1px_var(--input-border-focus)] rounded-[var(--input-radius)]">
-                <span className="flex-1 text-[length:var(--input-font-size)] text-[var(--input-placeholder)]">
+                <span className="flex-1 text-[length:var(--input-font-size)] text-[var(--color-text-subtle)]">
                   Enter password
                 </span>
                 <span className="flex items-center justify-center p-1 ml-2 text-[var(--color-text-muted)]">

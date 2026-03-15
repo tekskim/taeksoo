@@ -120,7 +120,7 @@ export const Password = forwardRef<HTMLInputElement, PasswordProps>(
       'bg-transparent',
       'border-none outline-none',
       'text-[var(--color-text-default)]',
-      'placeholder:text-[var(--input-placeholder)]',
+      'placeholder:text-[var(--color-text-subtle)]',
       disabled && 'text-[var(--color-text-subtle)] cursor-not-allowed',
       readOnly && 'cursor-default',
       className
@@ -177,9 +177,9 @@ export const Password = forwardRef<HTMLInputElement, PasswordProps>(
               className={toggleClasses}
             >
               {showPassword ? (
-                <IconEyeOff size={size === 'sm' ? 14 : 16} stroke={1.5} />
+                <IconEyeOff size={16} stroke={1.5} />
               ) : (
-                <IconEye size={size === 'sm' ? 14 : 16} stroke={1.5} />
+                <IconEye size={16} stroke={1.5} />
               )}
             </button>
           )}
