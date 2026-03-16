@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
-import type { PropDef } from '../_shared/PropsTable';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Pagination, VStack } from '@/design-system';
 
@@ -49,54 +48,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const paginationProps: PropDef[] = [
-  {
-    name: 'currentPage',
-    type: 'number',
-    required: true,
-    description: 'Current active page (1-based)',
-  },
-  { name: 'totalPages', type: 'number', required: true, description: 'Total number of pages' },
-  {
-    name: 'onPageChange',
-    type: '(page: number) => void',
-    required: true,
-    description: 'Page change handler',
-  },
-  {
-    name: 'totalItems',
-    type: 'number',
-    required: false,
-    description: 'Total item count displayed on the left',
-  },
-  {
-    name: 'selectedCount',
-    type: 'number',
-    required: false,
-    description: 'Number of selected items (shows "X selected / Y items")',
-  },
-  {
-    name: 'showSettings',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show settings icon button',
-  },
-  {
-    name: 'onSettingsClick',
-    type: '() => void',
-    required: false,
-    description: 'Settings button click handler',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disable all page controls',
-  },
-];
 
 function PaginationPreview() {
   const [page, setPage] = useState(3);
@@ -387,9 +338,6 @@ export function PaginationPage() {
           <PaginationPreview />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Pagination } from '@/design-system';\n\nconst [page, setPage] = useState(1);\n\n<Pagination\n  currentPage={page}\n  totalPages={10}\n  onPageChange={setPage}\n  totalItems={115}\n  showSettings\n  onSettingsClick={() => openPreferences()}\n/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -501,15 +449,6 @@ export function PaginationPage() {
           <span className="font-mono">radius: 4px</span> ·{' '}
           <span className="font-mono">font: 12px</span>
         </div>
-      }
-      apiReference={paginationProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Arrow Left / Arrow Right: 이전 / 다음 페이지로 이동</li>
-          <li>Enter / Space: 포커스된 페이지 버튼 활성화</li>
-          <li>nav role=&quot;navigation&quot; + aria-label=&quot;Pagination&quot; 자동 적용</li>
-          <li>현재 페이지에 aria-current=&quot;page&quot; 적용</li>
-        </ul>
       }
       relatedLinks={[
         {

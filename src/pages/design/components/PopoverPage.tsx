@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Badge, BadgeList, Popover, VStack } from '@/design-system';
 
@@ -160,9 +159,6 @@ export function PopoverPage() {
           />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { BadgeList } from '@/design-system';\n\n// BadgeList가 Popover를 내부적으로 사용\n<BadgeList\n  items={labels}\n  maxVisible={2}\n  maxBadgeWidth="120px"\n  popoverTitle={\`All Labels (\${labels.length})\`}\n/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -257,12 +253,6 @@ export function PopoverPage() {
           <span className="font-mono">arrow: 6px</span>
         </div>
       }
-      apiReference={popoverProps}
-      keyboardInteractions={[
-        { key: 'Enter / Space', description: '트리거 요소로 Popover 열기/닫기' },
-        { key: 'Escape', description: 'Popover를 닫고 트리거 요소로 포커스 복원' },
-        { key: 'Tab', description: 'Popover 내 포커스 가능 요소 간 이동' },
-      ]}
       relatedLinks={[
         { label: 'Tooltip', path: '/design/components/tooltip', description: 'Hover-only info' },
         {

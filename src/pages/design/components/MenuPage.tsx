@@ -651,9 +651,6 @@ export function MenuPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { MenuItem, MenuSection } from '@/design-system';\n\n<MenuSection title="Compute" defaultOpen={true}>\n  <MenuItem icon={<IconCube size={16} />} label="Instances" active />\n  <MenuItem icon={<IconTemplate size={16} />} label="Instance templates" />\n</MenuSection>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -741,20 +738,6 @@ export function MenuPage() {
         </VStack>
       }
       guidelines={<MenuGuidelines />}
-      keyboardInteractions={[
-        { key: 'Tab / Shift+Tab', description: '포커스 이동' },
-        { key: '↑ / ↓', description: '아이템 간 포커스 이동' },
-        { key: 'Enter / Space', description: '아이템 선택 또는 Collapsible 섹션 펼침/접힘' },
-        { key: 'Esc', description: 'Scope Selector 드롭다운 닫기' },
-      ]}
-      accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Menu uses <span className="font-mono">role=&quot;navigation&quot;</span> with{' '}
-          <span className="font-mono">aria-label</span> for the nav container. Active menu items use{' '}
-          <span className="font-mono">aria-current=&quot;page&quot;</span>. Collapsible sections use{' '}
-          <span className="font-mono">aria-expanded</span> to indicate their open/closed state.
-        </p>
-      }
       relatedLinks={[
         { label: 'Top Navigation Bar', path: '/design/components/topbar' },
         { label: 'Tab Bar', path: '/design/components/tabbar' },

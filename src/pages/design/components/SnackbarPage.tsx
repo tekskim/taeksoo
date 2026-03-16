@@ -173,11 +173,6 @@ export function SnackbarPage() {
           />
         </>
       }
-      keyboardInteractions={[
-        { key: 'Tab', description: 'Snackbar 내 액션 버튼으로 포커스 이동' },
-        { key: 'Enter / Space', description: '포커스된 액션 버튼 활성화' },
-        { key: 'Escape', description: 'Snackbar 닫기' },
-      ]}
       relatedLinks={[
         { label: 'Toast', path: '/design/components/toast' },
         { label: 'Inline Message', path: '/design/components/inline-message' },

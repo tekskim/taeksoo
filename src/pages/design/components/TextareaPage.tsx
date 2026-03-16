@@ -419,10 +419,6 @@ export function TextareaPage() {
           </VStack>
         </VStack>
       }
-      keyboardInteractions={[
-        { key: 'Tab', description: '다음 포커스 가능 요소로 이동' },
-        { key: 'Shift + Tab', description: '이전 포커스 가능 요소로 이동' },
-      ]}
       relatedLinks={[
         { label: 'Form Field', path: '/design/patterns/form-field-pattern' },
         { label: 'Text Input', path: '/design/components/text-input' },

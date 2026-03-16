@@ -110,17 +110,6 @@ export function CardTitlePage() {
         </ComponentPreview>
       }
       props={cardTitleProps}
-      usage={{
-        code: `import { CardTitle } from '@/design-system';
-
-<CardTitle
-  title="Worker Node 01"
-  description="192.168.1.10"
-  showStatus
-  statusColor="success"
-  badges={[{ label: 'Ready', variant: 'success' }]}
-/>`,
-      }}
       relatedLinks={[{ label: 'SectionCard', path: '/design/components/section-card' }]}
     />
   );

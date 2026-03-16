@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import {
@@ -61,71 +60,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const sectionCardProps: PropDef[] = [
-  {
-    name: 'isActive',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Active state with blue border',
-  },
-  {
-    name: 'children',
-    type: 'ReactNode',
-    required: true,
-    description: 'SectionCard.Header + Content',
-  },
-];
-
-const sectionCardHeaderProps: PropDef[] = [
-  { name: 'title', type: 'string', required: true, description: 'Section title' },
-  { name: 'actions', type: 'ReactNode', required: false, description: 'Action buttons' },
-  {
-    name: 'showDivider',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Show divider',
-  },
-  { name: 'description', type: 'string', required: false, description: 'Description text' },
-];
-
-const sectionCardContentProps: PropDef[] = [
-  {
-    name: 'showDividers',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Auto-insert dividers between children',
-  },
-  {
-    name: 'gap',
-    type: 'number',
-    required: false,
-    description: 'Gap between children (multiplied by 4px). Overrides default gap-3 (12px)',
-  },
-  {
-    name: 'children',
-    type: 'ReactNode',
-    required: true,
-    description: 'Content children (DataRow or custom)',
-  },
-];
-
-const sectionCardDataRowProps: PropDef[] = [
-  { name: 'label', type: 'ReactNode', required: true, description: 'Row label' },
-  { name: 'value', type: 'string', required: false, description: 'Row value text' },
-  { name: 'children', type: 'ReactNode', required: false, description: 'Custom value content' },
-  {
-    name: 'isLink',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Render as link',
-  },
-  { name: 'linkHref', type: 'string', required: false, description: 'Link destination' },
-];
 
 function SectionCardGuidelines() {
   return (
@@ -468,19 +402,6 @@ export function SectionCardPage() {
           </SectionCard>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { SectionCard } from '@/design-system';
-
-<SectionCard>
-  <SectionCard.Header title="Basic information" actions={<Button>Edit</Button>} />
-  <SectionCard.Content>
-    <SectionCard.DataRow label="Name" value="instance-01" />
-    <SectionCard.DataRow label="Status">
-      <StatusIndicator status="active" label="Active" />
-    </SectionCard.DataRow>
-  </SectionCard.Content>
-</SectionCard>`,
-      }}
       examples={
         <VStack gap={8}>
           {/* Default with actions */}
@@ -776,16 +697,6 @@ export function SectionCardPage() {
           </tbody>
         </TableWrapper>
       }
-      apiReference={sectionCardProps}
-      subComponentApis={[
-        { name: 'SectionCard.Header', props: sectionCardHeaderProps },
-        { name: 'SectionCard.Content', props: sectionCardContentProps },
-        { name: 'SectionCard.DataRow', props: sectionCardDataRowProps },
-      ]}
-      keyboardInteractions={[
-        { key: 'Tab', description: 'SectionCard 내 인터랙티브 요소(버튼, 링크)로 포커스 이동' },
-        { key: 'Enter / Space', description: '포커스된 액션 버튼 활성화' },
-      ]}
       relatedLinks={[
         {
           label: 'Detail Header',

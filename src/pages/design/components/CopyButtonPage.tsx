@@ -93,13 +93,6 @@ export function CopyButtonPage() {
         </ComponentPreview>
       }
       props={copyButtonProps}
-      usage={{
-        code: `import { CopyButton, Copyable } from '@/design-system';
-
-<CopyButton value="text-to-copy" iconOnly tooltip="Copy" />
-
-<Copyable value="i-0a1b2c3d4e5f" truncate maxWidth={200} />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

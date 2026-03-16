@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -100,31 +99,6 @@ const TOGGLE_GUIDELINES = `## Overview
 - On/Off 상태를 라벨 텍스트로 변경하지 않는다. 상태는 Toggle의 시각적 표현으로 전달한다.
 `;
 
-const toggleProps: PropDef[] = [
-  { name: 'label', type: 'ReactNode', required: false, description: 'Toggle label' },
-  { name: 'description', type: 'ReactNode', required: false, description: 'Description text' },
-  { name: 'checked', type: 'boolean', required: false, description: 'Controlled checked state' },
-  {
-    name: 'defaultChecked',
-    type: 'boolean',
-    required: false,
-    description: 'Default state (uncontrolled)',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  {
-    name: 'onChange',
-    type: '(e: ChangeEvent) => void',
-    required: false,
-    description: 'Change handler',
-  },
-];
-
 export function TogglePage() {
   return (
     <ComponentPageTemplate
@@ -140,19 +114,11 @@ export function TogglePage() {
         '여러 항목 중 복수 선택 (체크리스트) → Checkbox Group 사용',
         '상호 배타적인 3개 이상의 옵션 선택 → Radio 또는 Select 사용',
       ]}
-      keyboardInteractions={[
-        { key: 'Space', description: 'Toggle On/Off state' },
-        { key: 'Tab', description: 'Move focus to next element' },
-        { key: 'Shift + Tab', description: 'Move focus to previous element' },
-      ]}
       preview={
         <ComponentPreview code={`<Toggle label="Auto-scaling" defaultChecked />`}>
           <Toggle label="Auto-scaling" defaultChecked />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Toggle } from '@/design-system';\n\n<Toggle label="Enable dark mode" defaultChecked />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -283,14 +249,6 @@ export function TogglePage() {
           <span className="font-mono">radius: pill</span> ·{' '}
           <span className="font-mono">gap: 8px</span>
         </div>
-      }
-      apiReference={toggleProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Space: Toggle 상태 전환</li>
-          <li>Tab: 포커스 이동</li>
-          <li>role=&quot;switch&quot; + aria-checked 자동 적용</li>
-        </ul>
       }
       relatedLinks={[
         { label: 'Checkbox', path: '/design/components/checkbox' },

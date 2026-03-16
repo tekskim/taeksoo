@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { DrawerDemo } from '../../design-system-sections/OverlayDemos';
 import { VStack, Button } from '@/design-system';
 import { CreateInstanceSnapshotDrawer } from '@/components/CreateInstanceSnapshotDrawer';
@@ -185,41 +184,6 @@ function DrawerSectionPageGuidelines() {
   );
 }
 
-const drawerProps: PropDef[] = [
-  { name: 'isOpen', type: 'boolean', required: true, description: 'Open state' },
-  { name: 'onClose', type: '() => void', required: true, description: 'Close handler' },
-  { name: 'title', type: 'string', required: false, description: 'Drawer title' },
-  {
-    name: 'description',
-    type: 'string',
-    required: false,
-    description: 'Description text below title',
-  },
-  {
-    name: 'side',
-    type: "'left' | 'right'",
-    default: "'right'",
-    required: false,
-    description: 'Slide direction',
-  },
-  {
-    name: 'width',
-    type: 'string | number',
-    default: '320',
-    required: false,
-    description: 'Drawer width',
-  },
-  {
-    name: 'showCloseButton',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Deprecated — close button has been removed',
-  },
-  { name: 'footer', type: 'ReactNode', required: false, description: 'Footer content' },
-  { name: 'children', type: 'ReactNode', required: true, description: 'Drawer content' },
-];
-
 export function DrawerSectionPage() {
   const [snapshotOpen, setSnapshotOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -252,9 +216,6 @@ export function DrawerSectionPage() {
         '인터랙티브 없는 짧은 추가 정보만 보여줄 때 → Tooltip 또는 Popover 사용',
       ]}
       preview={<DrawerDemo />}
-      usage={{
-        code: `import { Drawer, VStack, HStack, Button } from '@/design-system';\n\n<Drawer\n  isOpen={isOpen}\n  onClose={handleClose}\n  title="Edit Resource"\n  description="Optional description text."\n  width={360}\n  footer={\n    <HStack gap={2} className="w-full">\n      <Button variant="secondary" className="flex-1">Cancel</Button>\n      <Button variant="primary" className="flex-1">Save</Button>\n    </HStack>\n  }\n>\n  {/* Content */}\n</Drawer>`,
-      }}
       examples={
         <VStack gap={6}>
           <VStack gap={3}>
@@ -313,12 +274,6 @@ export function DrawerSectionPage() {
           <span className="font-mono">animation: 300ms ease-out</span>
         </div>
       }
-      apiReference={drawerProps}
-      keyboardInteractions={[
-        { key: 'Escape', description: 'Drawer를 닫고 트리거 요소로 포커스 복원' },
-        { key: 'Tab', description: 'Drawer 내 다음 포커스 가능 요소로 이동 (focus trap)' },
-        { key: 'Shift + Tab', description: 'Drawer 내 이전 포커스 가능 요소로 이동' },
-      ]}
       relatedLinks={[
         { label: 'Modal', path: '/design/components/modal', description: 'Dialog overlay' },
         {

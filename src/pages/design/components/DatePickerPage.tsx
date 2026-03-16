@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { DatePicker, VStack } from '@/design-system';
@@ -49,63 +48,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const datePickerProps: PropDef[] = [
-  {
-    name: 'mode',
-    type: "'single' | 'range'",
-    default: "'single'",
-    required: false,
-    description: 'Selection mode',
-  },
-  {
-    name: 'value',
-    type: 'Date | null',
-    required: false,
-    description: 'Selected date (single mode)',
-  },
-  {
-    name: 'rangeValue',
-    type: '{ start: Date | null; end: Date | null }',
-    required: false,
-    description: 'Selected range',
-  },
-  {
-    name: 'onChange',
-    type: '(date: Date | null) => void',
-    required: false,
-    description: 'Date change handler',
-  },
-  {
-    name: 'onRangeChange',
-    type: '(range: { start; end }) => void',
-    required: false,
-    description: 'Range change handler',
-  },
-  {
-    name: 'eventDates',
-    type: 'Date[]',
-    default: '[]',
-    required: false,
-    description: 'Dates with event indicators',
-  },
-  { name: 'minDate', type: 'Date', required: false, description: 'Minimum selectable date' },
-  { name: 'maxDate', type: 'Date', required: false, description: 'Maximum selectable date' },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  {
-    name: 'firstDayOfWeek',
-    type: '0 | 1',
-    default: '0',
-    required: false,
-    description: 'First day of week (0=Sun, 1=Mon)',
-  },
-];
 
 function DatePickerGuidelines() {
   return (
@@ -466,9 +408,6 @@ export function DatePickerPage() {
           <DatePicker value={singleDate} onChange={setSingleDate} />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { DatePicker } from '@/design-system';\n\nconst [date, setDate] = useState<Date | null>(null);\n\n<DatePicker value={date} onChange={setDate} />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -549,23 +488,6 @@ export function DatePickerPage() {
           <span className="font-mono">cell: 32×32px</span>
         </div>
       }
-      apiReference={datePickerProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Arrow keys: Navigate dates</li>
-          <li>Enter/Space: Select date</li>
-          <li>Tab: Move focus</li>
-        </ul>
-      }
-      keyboardInteractions={[
-        { key: 'ArrowRight', description: '다음 날짜로 이동' },
-        { key: 'ArrowLeft', description: '이전 날짜로 이동' },
-        { key: 'ArrowDown', description: '다음 주 같은 요일로 이동' },
-        { key: 'ArrowUp', description: '이전 주 같은 요일로 이동' },
-        { key: 'Home', description: '현재 월의 첫째 날로 이동' },
-        { key: 'End', description: '현재 월의 마지막 날로 이동' },
-        { key: 'Enter / Space', description: '포커스된 날짜 선택' },
-      ]}
       relatedLinks={[
         {
           label: 'Input Field',

@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { DosDonts } from '../_shared/DosDonts';
@@ -104,39 +103,6 @@ const CHECKBOX_GUIDELINES = `## Overview
 - Table
 `;
 
-const checkboxProps: PropDef[] = [
-  { name: 'label', type: 'ReactNode', required: false, description: 'Checkbox label' },
-  {
-    name: 'description',
-    type: 'ReactNode',
-    required: false,
-    description: 'Description below label',
-  },
-  { name: 'checked', type: 'boolean', required: false, description: 'Controlled checked state' },
-  {
-    name: 'indeterminate',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Partially selected state',
-  },
-  { name: 'error', type: 'boolean', default: 'false', required: false, description: 'Error state' },
-  { name: 'errorMessage', type: 'string', required: false, description: 'Error message text' },
-  {
-    name: 'onChange',
-    type: '(e: ChangeEvent) => void',
-    required: false,
-    description: 'Change handler',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-];
-
 export function CheckboxPage() {
   return (
     <ComponentPageTemplate
@@ -151,18 +117,11 @@ export function CheckboxPage() {
         'On/Off의 즉각적인 상태 전환이 필요한 경우 → Toggle 사용',
         '5개 이상의 옵션을 나열하는 경우 → Select(Dropdown) 또는 Multi-select 사용 검토',
       ]}
-      keyboardInteractions={[
-        { key: 'Space', description: 'Toggle checkbox checked/unchecked state' },
-        { key: 'Tab', description: 'Move focus to next focusable element' },
-      ]}
       preview={
         <ComponentPreview code={`<Checkbox label="Label" defaultChecked />`}>
           <Checkbox label="Label" defaultChecked />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Checkbox } from '@/design-system';\n\n<Checkbox label="Label" defaultChecked />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -284,14 +243,6 @@ export function CheckboxPage() {
           <span className="font-mono">gap: 6px</span> ·{' '}
           <span className="font-mono">icon: 12px</span>
         </div>
-      }
-      apiReference={checkboxProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Space: Toggle checked state</li>
-          <li>Tab: Move focus</li>
-          <li>Label must be associated for keyboard access</li>
-        </ul>
       }
       relatedLinks={[
         { label: 'Radio', path: '/design/components/radio' },

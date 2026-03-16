@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { TopBar, TopBarAction, Breadcrumb, VStack } from '@/design-system';
@@ -49,52 +48,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const topBarProps: PropDef[] = [
-  { name: 'breadcrumb', type: 'ReactNode', required: false, description: 'Breadcrumb content' },
-  { name: 'actions', type: 'ReactNode', required: false, description: 'Right-side actions' },
-  {
-    name: 'showSidebarToggle',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show sidebar toggle',
-  },
-  {
-    name: 'showNavigation',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Show nav buttons',
-  },
-  {
-    name: 'onSidebarToggle',
-    type: '() => void',
-    required: false,
-    description: 'Sidebar toggle handler',
-  },
-  { name: 'onBack', type: '() => void', required: false, description: 'Back navigation handler' },
-  {
-    name: 'onForward',
-    type: '() => void',
-    required: false,
-    description: 'Forward navigation handler',
-  },
-  {
-    name: 'canGoBack',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Enable/disable back button',
-  },
-  {
-    name: 'canGoForward',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Enable/disable forward button',
-  },
-];
 
 function TopBarGuidelines() {
   return (
@@ -413,23 +366,6 @@ export function TopBarPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { TopBar, TopBarAction, Breadcrumb } from '@/design-system';
-
-<TopBar
-  showSidebarToggle={!sidebarOpen}
-  onSidebarToggle={toggleSidebar}
-  breadcrumb={
-    <Breadcrumb items={[
-      { label: 'Projects', href: '/projects' },
-      { label: 'My project' },
-    ]} />
-  }
-  actions={
-    <TopBarAction icon={<IconBell size={16} />} aria-label="Notifications" />
-  }
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -567,15 +503,6 @@ export function TopBarPage() {
             </tr>
           </tbody>
         </TableWrapper>
-      }
-      apiReference={topBarProps}
-      accessibility={
-        <Prose>
-          <p>
-            유틸리티 버튼의 아이콘에는 반드시 <span className="font-mono">aria-label</span> 또는
-            툴팁을 제공한다. 네비게이션 버튼(뒤로/앞으로)은 키보드로 접근 가능하다.
-          </p>
-        </Prose>
       }
       relatedLinks={[
         {

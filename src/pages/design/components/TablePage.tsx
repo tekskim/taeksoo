@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { DosDonts } from '../_shared/DosDonts';
@@ -183,120 +182,6 @@ Table은 일반적으로 다음 패턴과 함께 사용된다.
 | Status | Component | 상태 표시 |
 `;
 
-const tableProps: PropDef[] = [
-  { name: 'columns', type: 'TableColumn[]', required: true, description: 'Column definitions' },
-  { name: 'data', type: 'T[]', required: false, description: 'Table data array' },
-  {
-    name: 'rowKey',
-    type: 'keyof T | ((row: T) => string)',
-    required: true,
-    description: 'Unique row identifier',
-  },
-  {
-    name: 'selectable',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Enable row selection',
-  },
-  {
-    name: 'selectedKeys',
-    type: 'string[]',
-    default: '[]',
-    required: false,
-    description: 'Selected row keys',
-  },
-  {
-    name: 'onSelectionChange',
-    type: '(keys: string[]) => void',
-    required: false,
-    description: 'Selection change handler',
-  },
-  {
-    name: 'stickyHeader',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Sticky header',
-  },
-  {
-    name: 'maxHeight',
-    type: 'string',
-    required: false,
-    description: 'Max table height (enables scroll)',
-  },
-  {
-    name: 'onRowClick',
-    type: '(row: T, index: number) => void',
-    required: false,
-    description: 'Row click handler',
-  },
-  {
-    name: 'emptyMessage',
-    type: 'string',
-    default: "'No data'",
-    required: false,
-    description: 'Empty state message',
-  },
-  {
-    name: 'resizable',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Enable column resizing via drag handles',
-  },
-  {
-    name: 'columnResizeMode',
-    type: "'onChange' | 'onEnd'",
-    default: "'onEnd'",
-    required: false,
-    description: "Resize timing: 'onChange' updates in real-time, 'onEnd' updates after drag ends",
-  },
-  {
-    name: 'onColumnResize',
-    type: '(columnKey: string, width: number) => void',
-    required: false,
-    description: 'Callback when a column width changes via resize',
-  },
-  {
-    name: 'minColumnWidth',
-    type: 'number',
-    default: '50',
-    required: false,
-    description: 'Global minimum column width in px',
-  },
-];
-
-const tableColumnProps: PropDef[] = [
-  { name: 'key', type: 'string', required: true, description: 'Column key (matches data field)' },
-  { name: 'label', type: 'string', required: true, description: 'Column header text' },
-  { name: 'width', type: 'string', required: false, description: 'Fixed column width' },
-  { name: 'minWidth', type: 'string', required: false, description: 'Minimum column width' },
-  { name: 'flex', type: 'number', required: false, description: 'Flex grow factor' },
-  {
-    name: 'align',
-    type: "'left' | 'center' | 'right'",
-    default: "'left'",
-    required: false,
-    description: 'Content alignment',
-  },
-  { name: 'sortable', type: 'boolean', required: false, description: 'Enable column sorting' },
-  {
-    name: 'resizable',
-    type: 'boolean',
-    required: false,
-    description:
-      'Per-column resize override. Defaults to true for flex columns, false for fixed-width columns',
-  },
-  { name: 'maxWidth', type: 'string', required: false, description: 'Maximum column width' },
-  {
-    name: 'render',
-    type: '(value, row, index) => ReactNode',
-    required: false,
-    description: 'Custom cell renderer',
-  },
-];
-
 const sampleData = [
   { id: '1', name: 'worker-node-01', status: 'Running' },
   { id: '2', name: 'web-server-01', status: 'Running' },
@@ -346,15 +231,6 @@ export function TablePage() {
           <Table columns={previewColumns} data={sampleData} rowKey="id" />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Table } from '@/design-system';
-
-const columns = [
-  { key: 'name', label: 'Name', flex: 1 },
-  { key: 'status', label: 'Status', width: '80px' },
-];
-<Table columns={columns} data={data} rowKey="id" />`,
-      }}
       examples={
         <VStack gap={8}>
           <TableDemo />
@@ -371,25 +247,6 @@ const columns = [
             ]}
             dontItems={['너무 많은 컬럼 사용', '의미 없는 컬럼 표시', '텍스트 과다 표시']}
           />
-        </VStack>
-      }
-      apiReference={tableProps}
-      subComponentApis={[{ name: 'TableColumn', props: tableColumnProps }]}
-      accessibility={
-        <VStack gap={2}>
-          <p className="text-body-md text-[var(--color-text-muted)]">
-            Sortable columns expose sort direction. Selectable rows use checkbox with proper
-            aria-checked. Keyboard: Tab to navigate, Space to select rows.
-          </p>
-          <p className="text-body-md text-[var(--color-text-muted)]">
-            리사이즈 핸들은{' '}
-            <span className="font-mono text-body-sm">role=&quot;separator&quot;</span>,{' '}
-            <span className="font-mono text-body-sm">aria-orientation=&quot;vertical&quot;</span>,{' '}
-            <span className="font-mono text-body-sm">aria-valuenow</span>,{' '}
-            <span className="font-mono text-body-sm">aria-valuemin</span> 속성을 제공합니다. Tab
-            키로 핸들에 포커스할 수 있으며, ArrowLeft/ArrowRight 키로 10px 단위 너비 조절이
-            가능합니다.
-          </p>
         </VStack>
       }
       relatedLinks={[

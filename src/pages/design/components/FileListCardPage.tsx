@@ -1,86 +1,10 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { FileListCard, FileListSection, VStack } from '@/design-system';
 import type { FileItem } from '@/design-system';
 import { IconUpload } from '@tabler/icons-react';
-
-const fileListCardProps: PropDef[] = [
-  { name: 'files', type: 'FileItem[]', required: true, description: '표시할 파일 목록' },
-  {
-    name: 'onRemove',
-    type: '(id: string) => void',
-    required: false,
-    description: '파일 제거 콜백. 미제공 시 X 버튼이 숨겨짐',
-  },
-  {
-    name: 'emptyMessage',
-    type: 'string',
-    default: "'No files'",
-    required: false,
-    description: '파일 없을 때 표시 메시지',
-  },
-  { name: 'className', type: 'string', required: false, description: '추가 CSS 클래스' },
-];
-
-const fileListSectionProps: PropDef[] = [
-  {
-    name: 'label',
-    type: 'string',
-    default: "'Upload Files'",
-    required: false,
-    description: '섹션 레이블',
-  },
-  { name: 'required', type: 'boolean', required: false, description: '필수 필드 표시 (*)' },
-  { name: 'files', type: 'FileItem[]', required: true, description: '표시할 파일 목록' },
-  {
-    name: 'onRemove',
-    type: '(id: string) => void',
-    required: false,
-    description: '파일 제거 콜백',
-  },
-  {
-    name: 'onUpload',
-    type: '() => void',
-    required: false,
-    description: '업로드 버튼 클릭 콜백. 미제공 시 버튼이 숨겨짐',
-  },
-  {
-    name: 'uploadLabel',
-    type: 'string',
-    default: "'Choose file'",
-    required: false,
-    description: '업로드 버튼 텍스트',
-  },
-  { name: 'uploadIcon', type: 'ReactNode', required: false, description: '업로드 버튼 아이콘' },
-  { name: 'error', type: 'string | null', required: false, description: '에러 메시지' },
-  {
-    name: 'emptyMessage',
-    type: 'string',
-    required: false,
-    description: '파일 없을 때 표시 메시지',
-  },
-  { name: 'className', type: 'string', required: false, description: '추가 CSS 클래스' },
-];
-
-const fileItemProps: PropDef[] = [
-  { name: 'id', type: 'string', required: true, description: '고유 식별자' },
-  { name: 'name', type: 'string', required: true, description: '파일 이름' },
-  {
-    name: 'tags',
-    type: 'string[]',
-    required: false,
-    description: '파일 하위 정보 (divider로 구분되어 표시)',
-  },
-  {
-    name: 'description',
-    type: 'string',
-    required: false,
-    description: '단순 설명 텍스트 (tags 미사용 시)',
-  },
-];
 
 const sampleFiles: FileItem[] = [
   { id: '1', name: 'document.pdf', tags: ['2.5 MB', '10 files'] },
@@ -173,27 +97,6 @@ const files = [
           <FileListCardPreview />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { FileListCard, FileListSection } from '@/design-system';
-import type { FileItem } from '@/design-system';
-
-// FileListCard — 파일 목록만 표시
-<FileListCard
-  files={files}
-  onRemove={(id) => handleRemove(id)}
-/>
-
-// FileListSection — 레이블 + 업로드 버튼 + 파일 목록
-<FileListSection
-  label="Upload Files"
-  required
-  files={files}
-  onRemove={handleRemove}
-  onUpload={handleUpload}
-  uploadIcon={<IconUpload size={12} />}
-  error={error}
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -242,17 +145,6 @@ import type { FileItem } from '@/design-system';
           <span className="font-mono">tag: body-sm, text-subtle</span> ·{' '}
           <span className="font-mono">divider: 1px × 10px, border-default</span>
         </div>
-      }
-      apiReference={fileListCardProps}
-      subComponentApis={[
-        { title: 'FileListSection', props: fileListSectionProps },
-        { title: 'FileItem', props: fileItemProps },
-      ]}
-      accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Remove 버튼은 button 요소로 마크업되어 키보드로 접근 가능합니다. 각 파일 행은 의미있는
-          텍스트를 포함하여 스크린 리더에서 인식됩니다.
-        </p>
       }
       relatedLinks={[
         {

@@ -3,8 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { VStack } from '@/design-system';
 import { IconArrowRight, IconCheck, IconX, IconClock } from '@tabler/icons-react';
 import { DocSection } from './DocSection';
-import { PropsTable, type PropDef } from './PropsTable';
-import { CodeBlock } from './CodeBlock';
+import { type PropDef } from './PropsTable';
 import { TableOfContents } from './TableOfContents';
 import { PrevNextNav } from './PrevNextNav';
 import { useDesignLayoutContext } from '../DesignSystemLayout';
@@ -16,11 +15,6 @@ export interface RelatedLink {
   label: string;
   path: string;
   description?: string;
-}
-
-export interface KeyboardInteraction {
-  key: string;
-  description: string;
 }
 
 export interface StructureSpec {
@@ -38,17 +32,12 @@ interface ComponentPageTemplateProps {
   maturity?: ComponentMaturity;
   tags?: string[];
   preview?: ReactNode;
-  usage?: { code: string; description?: string };
   examples?: ReactNode;
   guidelines?: ReactNode;
   whenToUse?: string[];
   whenNotToUse?: string[];
   tokens?: ReactNode;
   structureSpecs?: { label: string; specs: StructureSpec[] }[];
-  apiReference?: PropDef[];
-  subComponentApis?: { name: string; props: PropDef[] }[];
-  accessibility?: ReactNode;
-  keyboardInteractions?: KeyboardInteraction[];
   relatedLinks?: RelatedLink[];
   headerActions?: ReactNode;
   children?: ReactNode;
@@ -78,17 +67,12 @@ export function ComponentPageTemplate({
   maturity,
   tags,
   preview,
-  usage,
   examples,
   guidelines,
   whenToUse,
   whenNotToUse,
   tokens,
   structureSpecs,
-  apiReference,
-  subComponentApis,
-  accessibility,
-  keyboardInteractions,
   children,
   relatedLinks,
   headerActions,
@@ -100,29 +84,20 @@ export function ComponentPageTemplate({
   const tocItems = useMemo(() => {
     const items: { id: string; label: string }[] = [];
     if (preview) items.push({ id: 'preview', label: 'Preview' });
-    if (usage) items.push({ id: 'usage', label: 'Usage' });
     if (whenToUse || whenNotToUse) items.push({ id: 'when-to-use', label: 'When to use' });
     if (examples) items.push({ id: 'examples', label: 'Examples' });
     if (guidelines) items.push({ id: 'guidelines', label: 'Guidelines' });
     if (tokens || structureSpecs) items.push({ id: 'tokens', label: 'Design tokens' });
-    if (apiReference || subComponentApis) items.push({ id: 'api', label: 'API Reference' });
-    if (accessibility || keyboardInteractions)
-      items.push({ id: 'accessibility', label: 'Accessibility' });
     if (relatedLinks && relatedLinks.length > 0) items.push({ id: 'related', label: 'Related' });
     return items;
   }, [
     preview,
-    usage,
     whenToUse,
     whenNotToUse,
     examples,
     guidelines,
     tokens,
     structureSpecs,
-    apiReference,
-    subComponentApis,
-    accessibility,
-    keyboardInteractions,
     relatedLinks,
   ]);
 
@@ -193,13 +168,6 @@ export function ComponentPageTemplate({
         {preview && (
           <DocSection id="preview" title="Preview">
             {preview}
-          </DocSection>
-        )}
-
-        {/* Usage */}
-        {usage && (
-          <DocSection id="usage" title="Usage" description={usage.description}>
-            <CodeBlock code={usage.code} language="tsx" />
           </DocSection>
         )}
 
@@ -306,62 +274,6 @@ export function ComponentPageTemplate({
                   </div>
                 </VStack>
               ))}
-            </VStack>
-          </DocSection>
-        )}
-
-        {/* API Reference */}
-        {(apiReference || subComponentApis) && (
-          <DocSection id="api" title="API Reference">
-            <VStack gap={6} align="stretch">
-              {apiReference && <PropsTable props={apiReference} name={title + 'Props'} />}
-              {subComponentApis?.map((sub) => (
-                <PropsTable key={sub.name} props={sub.props} name={sub.name} />
-              ))}
-            </VStack>
-          </DocSection>
-        )}
-
-        {/* Accessibility */}
-        {(accessibility || keyboardInteractions) && (
-          <DocSection id="accessibility" title="Accessibility">
-            <VStack gap={5} align="stretch">
-              {accessibility}
-              {keyboardInteractions && keyboardInteractions.length > 0 && (
-                <VStack gap={2} align="stretch">
-                  <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-                    Keyboard interactions
-                  </h4>
-                  <div className="overflow-x-auto rounded-[var(--primitive-radius-md)] border border-[var(--color-border-default)]">
-                    <table className="w-full text-body-md">
-                      <thead>
-                        <tr className="bg-[var(--color-surface-muted)]">
-                          <th className="text-left px-3 py-2 text-label-sm text-[var(--color-text-subtle)] font-medium w-[140px]">
-                            Key
-                          </th>
-                          <th className="text-left px-3 py-2 text-label-sm text-[var(--color-text-subtle)] font-medium">
-                            Description
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {keyboardInteractions.map((interaction, i) => (
-                          <tr key={i} className="border-t border-[var(--color-border-subtle)]">
-                            <td className="px-3 py-2">
-                              <kbd className="inline-block px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)] bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono text-[var(--color-text-default)]">
-                                {interaction.key}
-                              </kbd>
-                            </td>
-                            <td className="px-3 py-2 text-[var(--color-text-default)]">
-                              {interaction.description}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </VStack>
-              )}
             </VStack>
           </DocSection>
         )}

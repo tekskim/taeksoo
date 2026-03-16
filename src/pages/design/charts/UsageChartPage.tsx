@@ -1,7 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { Label } from '../../design-system-sections/HelperComponents';
 import {
   QuotaBarDemo,
@@ -469,46 +468,6 @@ function UsageChartGuidelines() {
   );
 }
 
-const progressBarProps: PropDef[] = [
-  { name: 'value', type: 'number', required: true, description: 'Current value (used)' },
-  {
-    name: 'max',
-    type: 'number',
-    required: false,
-    description: 'Maximum value (undefined = unlimited)',
-  },
-  {
-    name: 'newValue',
-    type: 'number',
-    default: '0',
-    required: false,
-    description: 'New/additional value (quota variant)',
-  },
-  {
-    name: 'variant',
-    type: "'default' | 'quota'",
-    default: "'default'",
-    required: false,
-    description: 'Bar variant',
-  },
-  { name: 'label', type: 'string', required: false, description: 'Label text' },
-  {
-    name: 'showValue',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Show value text',
-  },
-  { name: 'size', type: "'sm' | 'md'", default: "'md'", required: false, description: 'Bar size' },
-  { name: 'error', type: 'boolean', default: 'false', required: false, description: 'Error state' },
-  {
-    name: 'thresholds',
-    type: 'StatusThresholds',
-    required: false,
-    description: 'Custom thresholds (e.g. STATUS_THRESHOLDS.compute)',
-  },
-];
-
 export function UsageChartPage() {
   return (
     <ComponentPageTemplate
@@ -545,18 +504,6 @@ export function UsageChartPage() {
           />
         </div>
       }
-      usage={{
-        code: `import { ProgressBar } from '@/design-system';
-
-// Gauge Bar Chart
-<ProgressBar variant="quota" label="vCPU" value={5} max={10} />
-
-// Donut Chart (Full) — uses echarts-for-react
-<DoughnutChart title="Capacity Used" value={88} />
-
-// Donut Chart (Half)
-<HalfDoughnutChart value={35} used={66.5} total={189.9} unit="TiB" />`,
-      }}
       examples={
         <VStack gap={8}>
           {/* Gauge Bar Chart Examples */}
@@ -687,7 +634,6 @@ export function UsageChartPage() {
         </VStack>
       }
       guidelines={<UsageChartGuidelines />}
-      apiReference={progressBarProps}
       relatedLinks={[
         {
           label: 'Status Colors',

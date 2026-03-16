@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -112,37 +111,6 @@ const RADIO_GUIDELINES = `## Overview
 - Toggle
 `;
 
-const radioProps: PropDef[] = [
-  { name: 'label', type: 'ReactNode', required: false, description: 'Radio label' },
-  {
-    name: 'description',
-    type: 'ReactNode',
-    required: false,
-    description: 'Description below label',
-  },
-  { name: 'value', type: 'string', required: true, description: 'Radio value' },
-  { name: 'checked', type: 'boolean', required: false, description: 'Controlled checked state' },
-  {
-    name: 'onChange',
-    type: '(e: ChangeEvent) => void',
-    required: false,
-    description: 'Change handler',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  {
-    name: 'children',
-    type: 'ReactNode',
-    required: false,
-    description: 'Alternative to label prop',
-  },
-];
-
 export function RadioPage() {
   return (
     <ComponentPageTemplate
@@ -159,12 +127,6 @@ export function RadioPage() {
         '즉시 On/Off를 전환하는 경우 → Toggle 사용',
         '선택이 선택 사항(optional)인 경우 → 기본값 없이 Checkbox 고려',
       ]}
-      keyboardInteractions={[
-        { key: 'Tab', description: 'Move focus to the radio group (first selected or first item)' },
-        { key: 'Shift + Tab', description: 'Move focus to previous focus area' },
-        { key: '↑ / ←', description: 'Move focus and selection to previous option' },
-        { key: '↓ / →', description: 'Move focus and selection to next option' },
-      ]}
       preview={
         <ComponentPreview
           code={`<RadioGroup label="Select one" defaultValue="option1">\n  <Radio label="Option 1" value="option1" />\n  <Radio label="Option 2" value="option2" />\n</RadioGroup>`}
@@ -175,9 +137,6 @@ export function RadioPage() {
           </RadioGroup>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Radio, RadioGroup } from '@/design-system';\n\n<RadioGroup label="Select one" defaultValue="option1">\n  <Radio label="Option 1" value="option1" />\n  <Radio label="Option 2" value="option2" />\n</RadioGroup>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -290,14 +249,6 @@ export function RadioPage() {
           <span className="font-mono">border: 2px</span> ·{' '}
           <span className="font-mono">gap: 6px</span>
         </div>
-      }
-      apiReference={radioProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Arrow keys: Navigate between options in group</li>
-          <li>Space: Select focused option</li>
-          <li>Tab: Move focus</li>
-        </ul>
       }
       relatedLinks={[
         { label: 'Select', path: '/design/components/select' },

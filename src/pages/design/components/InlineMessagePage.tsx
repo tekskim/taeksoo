@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -85,25 +84,6 @@ const INLINE_MESSAGE_GUIDELINES = `## Overview
 | Error&Alert Overview | Foundation | 메시지 유형 및 컴포넌트 종합 정책 |
 `;
 
-const inlineMessageProps: PropDef[] = [
-  {
-    name: 'variant',
-    type: "'success' | 'warning' | 'error' | 'info'",
-    default: "'info'",
-    required: false,
-    description: 'Message variant',
-  },
-  { name: 'children', type: 'ReactNode', required: true, description: 'Message content' },
-  {
-    name: 'hideIcon',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Hide variant icon',
-  },
-  { name: 'icon', type: 'ReactNode', required: false, description: 'Custom icon override' },
-];
-
 export function InlineMessagePage() {
   return (
     <ComponentPageTemplate
@@ -131,12 +111,6 @@ export function InlineMessagePage() {
           </VStack>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { InlineMessage } from '@/design-system';
-
-<InlineMessage variant="success">Operation completed.</InlineMessage>
-<InlineMessage variant="error">Something went wrong.</InlineMessage>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -192,13 +166,6 @@ export function InlineMessagePage() {
           <span className="font-mono">icon: 16px</span> ·{' '}
           <span className="font-mono">font: 12px</span>
         </div>
-      }
-      apiReference={inlineMessageProps}
-      accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          InlineMessage uses role="alert" for error variant. Use aria-live for dynamic content.
-          Ensure sufficient color contrast for all variants.
-        </p>
       }
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },

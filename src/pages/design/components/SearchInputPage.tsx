@@ -480,10 +480,6 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
           </VStack>
         </VStack>
       }
-      keyboardInteractions={[
-        { key: 'Escape', description: '입력 필드 내용 지우기' },
-        { key: 'Enter', description: '검색 실행' },
-      ]}
       relatedLinks={[
         { label: 'List Page', path: '/design/patterns/list-page' },
         { label: 'Chip', path: '/design/components/chip' },

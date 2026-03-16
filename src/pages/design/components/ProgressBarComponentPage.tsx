@@ -297,15 +297,6 @@ export function ProgressBarComponentPage() {
           <ProgressBar value={40} max={100} showValue={false} />
         </div>
       }
-      usage={{
-        code: `import { ProgressBar } from '@/design-system';
-
-// Default — Bar only
-<ProgressBar value={40} max={100} />
-
-// Labeled — with label and value
-<ProgressBar label="Uploading..." value={65} max={100} />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -362,20 +353,6 @@ export function ProgressBarComponentPage() {
         </VStack>
       }
       guidelines={<ProgressBarGuidelines />}
-      accessibility={
-        <Prose>
-          <p>
-            ProgressBar는 <span className="font-mono">role="progressbar"</span>를 사용하며,{' '}
-            <span className="font-mono">aria-valuenow</span>,{' '}
-            <span className="font-mono">aria-valuemin</span>,{' '}
-            <span className="font-mono">aria-valuemax</span>를 통해 현재 진행률을 전달한다. 라벨이
-            있는 경우 <span className="font-mono">aria-label</span> 또는{' '}
-            <span className="font-mono">aria-labelledby</span>로 진행 상태를 설명한다.
-            <span className="font-mono">prefers-reduced-motion</span> 미디어 쿼리를 지원하여 모션
-            민감 사용자에게 애니메이션을 비활성화한다.
-          </p>
-        </Prose>
-      }
       relatedLinks={[
         { label: 'Loading', path: '/design/components/loading', description: '상위 로딩 패턴' },
         {
