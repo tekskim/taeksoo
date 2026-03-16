@@ -1,5 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { Button, HStack, VStack } from '@/design-system';
+import { IconArrowLeft, IconHome, IconLogin } from '@tabler/icons-react';
 
 const SYSTEM_ERROR_GUIDELINES = `## Overview
 인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태를 알리는 메세지입니다. 일반적으로 **전체 페이지 단위로 표시됩니다.**
@@ -93,11 +95,174 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 - Form (Validation 에러)
 `;
 
+interface ErrorConfig {
+  statusCode?: string;
+  title: string;
+  description: string;
+  showGoBack: boolean;
+  showGoHome: boolean;
+  showSignIn: boolean;
+}
+
+const ERROR_CONFIGS: Record<string, ErrorConfig> = {
+  '401-b': {
+    title: 'Session Expired',
+    description: 'Your session has expired due to inactivity. Please sign in again to continue.',
+    showGoBack: false,
+    showGoHome: false,
+    showSignIn: true,
+  },
+  '403': {
+    statusCode: '403',
+    title: 'Access Denied',
+    description:
+      "You don't have permission to access this resource. Contact the administrator to request access.",
+    showGoBack: true,
+    showGoHome: false,
+    showSignIn: false,
+  },
+  '404': {
+    statusCode: '404',
+    title: 'Page Not Found',
+    description: 'The requested page does not exist or is no longer available.',
+    showGoBack: true,
+    showGoHome: true,
+    showSignIn: false,
+  },
+  '500': {
+    statusCode: '500',
+    title: 'Something Went Wrong',
+    description: 'An error occurred while processing your request.',
+    showGoBack: true,
+    showGoHome: true,
+    showSignIn: false,
+  },
+  'link-expired': {
+    title: 'Link Expired',
+    description:
+      'This link is no longer valid because it has expired or has already been used. Please contact your administrator to request a new link.',
+    showGoBack: false,
+    showGoHome: false,
+    showSignIn: false,
+  },
+};
+
+function ErrorPreviewCard({ config }: { config: ErrorConfig }) {
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] py-12 flex items-center justify-center">
+      <div className="text-center px-6">
+        {config.statusCode && (
+          <div className="mb-4">
+            <span className="text-[64px] font-black text-[#4B5563] leading-[80px] h-[80px] inline-block">
+              {config.statusCode}
+            </span>
+          </div>
+        )}
+        <div className="mb-8">
+          <h1 className="text-[18px] font-semibold leading-[26px] text-gray-800 mb-2">
+            {config.title}
+          </h1>
+          <p className="text-gray-500 text-[13px] leading-[20px] max-w-md mx-auto">
+            {config.description}
+          </p>
+        </div>
+        <HStack gap={2} justify="center">
+          {config.showGoBack && (
+            <Button variant="secondary" size="sm" leftIcon={<IconArrowLeft size={12} />}>
+              Go Back
+            </Button>
+          )}
+          {config.showGoHome && (
+            <Button variant="primary" size="sm" leftIcon={<IconHome size={12} />}>
+              Go to Homepage
+            </Button>
+          )}
+          {config.showSignIn && (
+            <Button variant="primary" size="sm" leftIcon={<IconLogin size={12} />}>
+              Sign in again
+            </Button>
+          )}
+        </HStack>
+      </div>
+    </div>
+  );
+}
+
+function SessionTimeoutPreview() {
+  const config = ERROR_CONFIGS['401-b'];
+
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] py-12 flex items-center justify-center">
+      <div className="w-[344px] bg-[var(--color-surface-default)] rounded-[var(--radius-xl)] border border-[var(--color-border-default)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] p-6 flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">{config.title}</h2>
+          <p className="text-body-md text-[var(--color-text-subtle)]">{config.description}</p>
+        </div>
+        <div className="flex w-full">
+          <Button variant="primary" size="md" leftIcon={<IconLogin size={12} />} className="flex-1">
+            Sign in again
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SystemErrorExamples() {
+  return (
+    <VStack gap={8}>
+      <VStack gap={3}>
+        <h4 className="text-heading-h6 text-[var(--color-text-default)]">
+          401-B Session Timeout (Modal)
+        </h4>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Displayed as a modal overlay when the user's session expires. No close button — the user
+          must sign in again.
+        </p>
+        <SessionTimeoutPreview />
+      </VStack>
+
+      <VStack gap={3}>
+        <h4 className="text-heading-h6 text-[var(--color-text-default)]">403 Forbidden</h4>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Full-page error when the user lacks permission to access a resource. Only a "Go Back"
+          button is provided.
+        </p>
+        <ErrorPreviewCard config={ERROR_CONFIGS['403']} />
+      </VStack>
+
+      <VStack gap={3}>
+        <h4 className="text-heading-h6 text-[var(--color-text-default)]">404 Not Found</h4>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Full-page error when the requested page or resource does not exist.
+        </p>
+        <ErrorPreviewCard config={ERROR_CONFIGS['404']} />
+      </VStack>
+
+      <VStack gap={3}>
+        <h4 className="text-heading-h6 text-[var(--color-text-default)]">500 Server Error</h4>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Full-page error when an internal server error occurs while processing the request.
+        </p>
+        <ErrorPreviewCard config={ERROR_CONFIGS['500']} />
+      </VStack>
+
+      <VStack gap={3}>
+        <h4 className="text-heading-h6 text-[var(--color-text-default)]">Link Expired</h4>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
+          Displayed in a full browser window when a one-time link (invite, password reset, MFA) has
+          expired or already been used. No action buttons.
+        </p>
+        <ErrorPreviewCard config={ERROR_CONFIGS['link-expired']} />
+      </VStack>
+    </VStack>
+  );
+}
+
 export function SystemErrorPage() {
   return (
     <ComponentPageTemplate
       title="System Error"
-      status="planned"
       description="인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태를 알리는 메세지입니다. 일반적으로 전체 페이지 단위로 표시됩니다."
       whenToUse={[
         '인증되지 않은 사용자가 인증이 필요한 페이지에 접근한 경우',
@@ -110,6 +275,7 @@ export function SystemErrorPage() {
         '일부 영역만 실패한 경우 (전체 페이지가 아닌 인라인 에러 또는 Toast 사용 권장)',
         '사용자의 입력 오류로 인한 Validation 실패 (Form 에러 메시지 사용 권장)',
       ]}
+      examples={<SystemErrorExamples />}
       guidelines={<NotionRenderer markdown={SYSTEM_ERROR_GUIDELINES} />}
       relatedLinks={[
         { label: 'Modal', path: '/design/components/modal' },
