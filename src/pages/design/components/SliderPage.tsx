@@ -328,31 +328,31 @@ function SliderGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>track-width</code>
+                <span className="font-mono">track-width</span>
               </Td>
               <Td>220px</Td>
             </tr>
             <tr>
               <Td>
-                <code>track-height</code>
+                <span className="font-mono">track-height</span>
               </Td>
               <Td>6px</Td>
             </tr>
             <tr>
               <Td>
-                <code>thumb-size</code>
+                <span className="font-mono">thumb-size</span>
               </Td>
               <Td>16px</Td>
             </tr>
             <tr>
               <Td>
-                <code>thumb-border</code>
+                <span className="font-mono">thumb-border</span>
               </Td>
               <Td>3px</Td>
             </tr>
             <tr>
               <Td>
-                <code>fill-color</code>
+                <span className="font-mono">fill-color</span>
               </Td>
               <Td>primary</Td>
             </tr>
@@ -567,7 +567,10 @@ export function SliderPage() {
                 Default와 Disabled 상태 비교.
               </span>
             </VStack>
-            <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <VStack
+              gap={4}
+              className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]"
+            >
               <VStack gap={1}>
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
                 <Slider defaultValue={30} showValue />
@@ -576,7 +579,7 @@ export function SliderPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Disabled</span>
                 <Slider defaultValue={60} disabled showValue />
               </VStack>
-            </div>
+            </VStack>
           </VStack>
 
           <RangeSliderDemo />
@@ -585,8 +588,10 @@ export function SliderPage() {
       guidelines={<SliderGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>track: 6px height</code> · <code>thumb: 16px, 3px border</code> ·{' '}
-          <code>fill: primary</code> · <code>--slider-track-width: 220px</code>
+          <span className="font-mono">track: 6px height</span> ·{' '}
+          <span className="font-mono">thumb: 16px, 3px border</span> ·{' '}
+          <span className="font-mono">fill: primary</span> ·{' '}
+          <span className="font-mono">--slider-track-width: 220px</span>
         </div>
       }
       apiReference={sliderProps}

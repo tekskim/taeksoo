@@ -155,7 +155,7 @@ const auditCategories: AuditCategory[] = [
     items: [
       { id: 'pat-common', label: 'Common Patterns 문서화' },
       { id: 'pat-wizard', label: 'Wizard (Create Flow) 문서화' },
-      { id: 'pat-open-form', label: 'Open Form (Create Flow) 문서화' },
+      { id: 'pat-open-form', label: 'Create Page (Multi tab) 문서화' },
       { id: 'pat-list', label: 'List Page 패턴 문서화' },
       { id: 'pat-detail', label: 'Detail Page 패턴 문서화' },
       { id: 'pat-list-selector', label: 'List Selector 패턴 문서화' },

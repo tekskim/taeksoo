@@ -279,8 +279,10 @@ export function CheckboxPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>size: 16×16px</code> · <code>radius: 4px</code> · <code>gap: 6px</code> ·{' '}
-          <code>icon: 12px</code>
+          <span className="font-mono">size: 16×16px</span> ·{' '}
+          <span className="font-mono">radius: 4px</span> ·{' '}
+          <span className="font-mono">gap: 6px</span> ·{' '}
+          <span className="font-mono">icon: 12px</span>
         </div>
       }
       apiReference={checkboxProps}

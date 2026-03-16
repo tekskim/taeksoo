@@ -50,6 +50,7 @@ interface ComponentPageTemplateProps {
   accessibility?: ReactNode;
   keyboardInteractions?: KeyboardInteraction[];
   relatedLinks?: RelatedLink[];
+  headerActions?: ReactNode;
   children?: ReactNode;
 }
 
@@ -90,6 +91,7 @@ export function ComponentPageTemplate({
   keyboardInteractions,
   children,
   relatedLinks,
+  headerActions,
 }: ComponentPageTemplateProps) {
   const mainRef = useDesignLayoutContext();
   const location = useLocation();
@@ -184,6 +186,7 @@ export function ComponentPageTemplate({
               </span>
             </div>
           )}
+          {headerActions}
         </VStack>
 
         {/* Preview */}

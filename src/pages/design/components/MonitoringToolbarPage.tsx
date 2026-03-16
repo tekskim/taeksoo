@@ -246,19 +246,19 @@ function MonitoringToolbarGuidelines() {
               <tr>
                 <Td>Minute</Td>
                 <Td>
-                  <code>m</code>
+                  <span className="font-mono">m</span>
                 </Td>
               </tr>
               <tr>
                 <Td>Hour</Td>
                 <Td>
-                  <code>h</code>
+                  <span className="font-mono">h</span>
                 </Td>
               </tr>
               <tr>
                 <Td>Day</Td>
                 <Td>
-                  <code>d</code>
+                  <span className="font-mono">d</span>
                 </Td>
               </tr>
             </tbody>

@@ -7,7 +7,7 @@ import { WizardPatternSection } from '../../design-system-sections/WizardPattern
 export function WizardPage() {
   return (
     <ComponentPageTemplate
-      title="Wizard (Create Flow)"
+      title="Create Page (Wizard)"
       description="사용자가 리소스를 생성하기 위해 단계별 입력을 수행하는 UX 패턴이다. 여러 개의 필수 입력이 존재하거나 입력 간 종속성이 있는 경우, 단일 폼 대신 단계형(step-based) 입력 구조를 사용하여 사용자의 인지 부담을 줄이고 입력 오류를 최소화한다. 페이지는 Two columns layout으로 구성되며, 왼쪽에는 Page title · Card가, 오른쪽에는 Floating card가 배치된다."
       whenToUse={[
         '필수 입력 필드가 많은 경우',
@@ -237,7 +237,7 @@ export function WizardPage() {
       }
       relatedLinks={[
         {
-          label: 'Open Form (Create Flow)',
+          label: 'Create Page (Multi tab)',
           path: '/design/patterns/open-form',
           description: 'Open form and tab-based creation patterns',
         },

@@ -1,7 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import type { PropDef } from '../_shared/PropsTable';
-import { Button, VStack, HStack, NumberInput, ProgressBar } from '@/design-system';
+import { VStack, FloatingCard } from '@/design-system';
 import { IconCheck, IconAlertTriangle, IconProgress } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
@@ -269,51 +269,96 @@ function FloatingCardGuidelines() {
 }
 
 const floatingCardProps: PropDef[] = [
-  { name: 'title', type: 'string', required: true, description: 'Card title' },
+  { name: 'title', type: 'string', required: true, description: 'Summary 영역 타이틀' },
   {
     name: 'sections',
     type: 'FloatingCardSection[]',
     default: '[]',
     required: false,
-    description: 'Card sections',
+    description: '섹션별 진행 상태 아이템 목록. 각 섹션은 tabTitle, items, collapsible 등을 포함',
   },
   {
     name: 'quota',
     type: 'QuotaItem[]',
     default: '[]',
     required: false,
-    description: 'Quota items',
+    description: 'Quota(할당량) 표시 항목. label, current, total, unit으로 구성',
   },
   {
     name: 'instanceCount',
     type: 'number',
     default: '1',
     required: false,
-    description: 'Instance count',
+    description: '인스턴스 수 입력 필드 초기값',
+  },
+  {
+    name: 'onInstanceCountChange',
+    type: '(count: number) => void',
+    required: false,
+    description: '인스턴스 수 변경 콜백. 전달 시 Number of Instances 입력 필드가 표시됨',
+  },
+  {
+    name: 'cancelLabel',
+    type: 'string',
+    default: "'Cancel'",
+    required: false,
+    description: 'Cancel 버튼 라벨',
   },
   {
     name: 'actionLabel',
     type: 'string',
     default: "'Create'",
     required: false,
-    description: 'Action button label',
+    description: 'Action 버튼 라벨 (Create / Save)',
   },
   {
     name: 'actionEnabled',
     type: 'boolean',
     default: 'false',
     required: false,
-    description: 'Action enabled state',
+    description: 'Action 버튼 활성화 여부. 모든 필수 섹션 완료 시 true',
+  },
+  {
+    name: 'onCancel',
+    type: '() => void',
+    required: false,
+    description: 'Cancel 버튼 클릭 핸들러. 전달 시 Cancel 버튼 표시',
+  },
+  {
+    name: 'onAction',
+    type: '() => void',
+    required: false,
+    description: 'Action 버튼 클릭 핸들러. 전달 시 Action 버튼 표시',
+  },
+  {
+    name: 'portal',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: 'true면 document.body에 포탈로 렌더링, false면 인라인 렌더링',
   },
   {
     name: 'position',
-    type: 'FloatingCardPosition',
+    type: "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
     default: "'top-left'",
     required: false,
-    description: 'Position',
+    description: 'portal 모드에서의 위치',
   },
-  { name: 'isOpen', type: 'boolean', default: 'true', required: false, description: 'Open state' },
-  { name: 'width', type: 'string', default: "'320px'", required: false, description: 'Card width' },
+  {
+    name: 'isOpen',
+    type: 'boolean',
+    default: 'true',
+    required: false,
+    description: '카드 노출 여부',
+  },
+  { name: 'width', type: 'string', default: "'320px'", required: false, description: '카드 너비' },
+  {
+    name: 'showCloseButton',
+    type: 'boolean',
+    default: 'false',
+    required: false,
+    description: '닫기 버튼 표시 여부',
+  },
 ];
 
 export function FloatingCardPage() {
@@ -333,197 +378,143 @@ export function FloatingCardPage() {
       ]}
       preview={
         <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
-          <div className="w-[var(--wizard-summary-width)] shrink-0">
-            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
-              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-                <VStack gap={3}>
-                  <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    Summary
-                  </h5>
-                  <div className="flex flex-col">
-                    <div className="flex items-center justify-between py-1">
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        Basic information
-                      </span>
-                      <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-                        <IconCheck
-                          size={10}
-                          stroke={2.5}
-                          className="text-[var(--semantic-color-on-primary)]"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between py-1">
-                      <span className="text-body-md text-[var(--color-text-default)]">Flavor</span>
-                      <IconProgress
-                        size={16}
-                        stroke={1.5}
-                        className="shrink-0 text-[var(--color-text-muted)]"
-                      />
-                    </div>
-                  </div>
-                </VStack>
-              </div>
-              <HStack gap={2}>
-                <Button variant="secondary" className="w-[80px]">
-                  Cancel
-                </Button>
-                <Button variant="primary" disabled className="flex-1">
-                  Create
-                </Button>
-              </HStack>
-            </div>
-          </div>
+          <FloatingCard
+            title="Summary"
+            sections={[
+              {
+                tabTitle: 'Configuration',
+                items: [
+                  { id: 'basic', title: 'Basic information', status: 'success' },
+                  { id: 'source', title: 'Source', status: 'success' },
+                  { id: 'flavor', title: 'Flavor', status: 'processing' },
+                  { id: 'network', title: 'Network', status: 'default' },
+                ],
+                collapsible: true,
+                defaultExpanded: true,
+              },
+            ]}
+            quota={[
+              { label: 'Instance', current: 3, total: 10 },
+              { label: 'vCPU', current: 7, total: 20 },
+              { label: 'RAM', current: 18, total: 50, unit: 'GiB' },
+            ]}
+            instanceCount={1}
+            onInstanceCountChange={() => {}}
+            onCancel={() => {}}
+            onAction={() => {}}
+            actionLabel="Create"
+            actionEnabled={false}
+            portal={false}
+            width="var(--wizard-summary-width)"
+          />
         </div>
       }
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">
-              Basic Example (QuotaSidebar from Create Instance)
+              Create Instance — Full (Summary + Quota + Instance Count)
             </span>
             <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
-              <div className="w-[var(--wizard-summary-width)] shrink-0">
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
-                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-                    <VStack gap={3}>
-                      <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                        Summary
-                      </h5>
-                      <div className="flex flex-col">
-                        {[
-                          'Launch type',
-                          'Basic information',
-                          'Source',
-                          'Flavor',
-                          'Network',
-                          'Authentication',
-                          'Advanced',
-                        ].map((label, i) => (
-                          <div key={label} className="flex items-center justify-between py-1">
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {label}
-                            </span>
-                            {i < 3 ? (
-                              <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-                                <IconCheck
-                                  size={10}
-                                  stroke={2.5}
-                                  className="text-[var(--semantic-color-on-primary)]"
-                                />
-                              </div>
-                            ) : i === 3 ? (
-                              <IconProgress
-                                size={16}
-                                stroke={1.5}
-                                className="shrink-0 text-[var(--color-text-muted)]"
-                              />
-                            ) : (
-                              <IconProgress
-                                size={16}
-                                stroke={1.5}
-                                className="shrink-0 text-[var(--color-border-default)]"
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </VStack>
-                  </div>
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                    <VStack gap={3}>
-                      <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                        Quota
-                      </h5>
-                      <VStack gap={3}>
-                        <ProgressBar
-                          variant="quota"
-                          label="Instance"
-                          value={3}
-                          max={10}
-                          newValue={1}
-                          showValue
-                        />
-                        <ProgressBar
-                          variant="quota"
-                          label="vCPU"
-                          value={7}
-                          max={20}
-                          newValue={2}
-                          showValue
-                        />
-                        <ProgressBar
-                          variant="quota"
-                          label="RAM (GiB)"
-                          value={18}
-                          max={50}
-                          newValue={4}
-                          showValue
-                        />
-                      </VStack>
-                    </VStack>
-                  </div>
-                  <VStack gap={2}>
-                    <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                      Number of Instances
-                    </label>
-                    <NumberInput value={1} onChange={() => {}} min={1} max={10} fullWidth />
-                  </VStack>
-                  <HStack gap={2}>
-                    <Button variant="secondary" className="w-[80px]">
-                      Cancel
-                    </Button>
-                    <Button variant="primary" disabled className="flex-1">
-                      Create
-                    </Button>
-                  </HStack>
-                </div>
-              </div>
+              <FloatingCard
+                title="Summary"
+                sections={[
+                  {
+                    tabTitle: 'Configuration',
+                    items: [
+                      { id: 'launch', title: 'Launch type', status: 'success' },
+                      { id: 'basic', title: 'Basic information', status: 'success' },
+                      { id: 'source', title: 'Source', status: 'success' },
+                      { id: 'flavor', title: 'Flavor', status: 'processing' },
+                      { id: 'network', title: 'Network', status: 'default' },
+                      { id: 'auth', title: 'Authentication', status: 'default' },
+                      { id: 'advanced', title: 'Advanced', status: 'default' },
+                    ],
+                    collapsible: true,
+                    defaultExpanded: true,
+                  },
+                ]}
+                quota={[
+                  { label: 'Instance', current: 3, total: 10 },
+                  { label: 'vCPU', current: 7, total: 20 },
+                  { label: 'RAM', current: 18, total: 50, unit: 'GiB' },
+                ]}
+                instanceCount={1}
+                onInstanceCountChange={() => {}}
+                onCancel={() => {}}
+                onAction={() => {}}
+                actionLabel="Create"
+                actionEnabled={false}
+                portal={false}
+                width="var(--wizard-summary-width)"
+              />
             </div>
           </VStack>
 
           <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Status icons</span>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Create Agent — Multi-section (Collapsible Tabs, No Quota)
+            </span>
+            <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+              <FloatingCard
+                title="Summary"
+                sections={[
+                  {
+                    tabTitle: 'Configuration',
+                    items: [
+                      { id: 'basic-info', title: 'Basic information', status: 'success' },
+                      { id: 'model', title: 'Model settings', status: 'processing' },
+                      { id: 'prompt', title: 'Prompt settings', status: 'default' },
+                    ],
+                    collapsible: true,
+                    defaultExpanded: true,
+                    showSuccessIcon: false,
+                  },
+                  {
+                    tabTitle: 'Data & MCP Connection',
+                    items: [
+                      { id: 'data', title: 'Connect data sources', status: 'default' },
+                      { id: 'mcp', title: 'Connect MCP tools', status: 'default' },
+                    ],
+                    collapsible: true,
+                    defaultExpanded: false,
+                  },
+                ]}
+                onCancel={() => {}}
+                onAction={() => {}}
+                actionLabel="Create"
+                actionEnabled={true}
+                portal={false}
+                width="var(--wizard-summary-width)"
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Status Icons</span>
             <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
               <div className="flex items-center gap-2">
-                <IconProgress
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--color-border-default)]"
+                <div
+                  className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+                  style={{ borderStyle: 'dashed' }}
                 />
-                <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                  Default
-                </span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">Default</span>
               </div>
               <div className="flex items-center gap-2">
                 <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                  Processing
-                </span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">Processing</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] flex items-center justify-center">
-                  <IconAlertTriangle
-                    size={10}
-                    stroke={2}
-                    className="text-[var(--semantic-color-on-primary)]"
-                  />
+                <div className="size-4 rounded-full bg-[var(--color-state-danger)] flex items-center justify-center">
+                  <IconAlertTriangle size={10} stroke={2} className="text-white" />
                 </div>
-                <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                  Warning
-                </span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">Warning</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] flex items-center justify-center">
-                  <IconCheck
-                    size={10}
-                    stroke={2}
-                    className="text-[var(--semantic-color-on-primary)]"
-                  />
+                <div className="size-4 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
+                  <IconCheck size={10} stroke={2} className="text-white" />
                 </div>
-                <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
-                  Success
-                </span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">Success</span>
               </div>
             </div>
           </VStack>
@@ -532,8 +523,8 @@ export function FloatingCardPage() {
       guidelines={<FloatingCardGuidelines />}
       apiReference={floatingCardProps}
       relatedLinks={[
-        { label: 'Create Page', path: '/design/patterns/wizard' },
-        { label: 'Section Card', path: '/design/patterns/section-card' },
+        { label: 'Create Page (Wizard)', path: '/design/patterns/wizard' },
+        { label: 'Create Page (Multi tab)', path: '/design/patterns/open-form' },
         { label: 'Usage Chart', path: '/design/charts/usage-chart' },
       ]}
     />

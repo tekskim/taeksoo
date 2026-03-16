@@ -280,25 +280,25 @@ function TabBarGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>height</code>
+                <span className="font-mono">height</span>
               </Td>
               <Td>36px</Td>
             </tr>
             <tr>
               <Td>
-                <code>max-width</code> (탭)
+                <span className="font-mono">max-width</span> (탭)
               </Td>
               <Td>160px</Td>
             </tr>
             <tr>
               <Td>
-                <code>padding-x</code>
+                <span className="font-mono">padding-x</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>font-size</code>
+                <span className="font-mono">font-size</span>
               </Td>
               <Td>12px</Td>
             </tr>
@@ -377,10 +377,10 @@ function TabBarGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                <code>+</code> 버튼 클릭 시 새 탭이 추가된다.
+                <span className="font-mono">+</span> 버튼 클릭 시 새 탭이 추가된다.
               </li>
               <li>
-                <code>×</code> 버튼 클릭 시 해당 탭이 닫힌다.
+                <span className="font-mono">×</span> 버튼 클릭 시 해당 탭이 닫힌다.
               </li>
               <li>활성 탭을 닫으면 인접한 탭이 자동으로 활성화된다.</li>
             </ul>
@@ -498,25 +498,25 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
           <tbody>
             <tr>
               <Td>
-                <code>height</code>
+                <span className="font-mono">height</span>
               </Td>
               <Td>36px</Td>
             </tr>
             <tr>
               <Td>
-                <code>max-width</code> (탭)
+                <span className="font-mono">max-width</span> (탭)
               </Td>
               <Td>160px</Td>
             </tr>
             <tr>
               <Td>
-                <code>padding-x</code>
+                <span className="font-mono">padding-x</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>font-size</code>
+                <span className="font-mono">font-size</span>
               </Td>
               <Td>12px</Td>
             </tr>
@@ -527,8 +527,9 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
       accessibility={
         <Prose>
           <p>
-            TabBar uses <code>role="tablist"</code> and <code>role="tab"</code>. Tab buttons are
-            keyboard navigable. Close and add buttons have <code>aria-label</code>s.
+            TabBar uses <span className="font-mono">role="tablist"</span> and{' '}
+            <span className="font-mono">role="tab"</span>. Tab buttons are keyboard navigable. Close
+            and add buttons have <span className="font-mono">aria-label</span>s.
           </p>
         </Prose>
       }

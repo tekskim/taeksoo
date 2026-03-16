@@ -262,17 +262,19 @@ function OpenFormGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1 text-[var(--color-text-default)]">
             <li>
-              Wrap all SectionCards in <code>VStack gap={'{4}'}</code>
+              Wrap all SectionCards in <span className="font-mono">VStack gap={'{4}'}</span>
             </li>
             <li>
-              Add <code>className=&quot;pb-4&quot;</code> to every <code>SectionCard</code> (16px
-              bottom padding for Open Form only)
+              Add <span className="font-mono">className=&quot;pb-4&quot;</span> to every{' '}
+              <span className="font-mono">SectionCard</span> (16px bottom padding for Open Form
+              only)
             </li>
             <li>
-              Use <code>VStack gap={'{6}'}</code> inside Content for field spacing
+              Use <span className="font-mono">VStack gap={'{6}'}</span> inside Content for field
+              spacing
             </li>
             <li>
-              Do NOT use <code>isActive</code> on SectionCards
+              Do NOT use <span className="font-mono">isActive</span> on SectionCards
             </li>
             <li>Use FormField for all form inputs (label + control + helper text)</li>
             <li>Optional: Add SummarySidebar on the right with sticky positioning</li>
@@ -434,16 +436,19 @@ function OpenFormGuidelines() {
                   Tab 키 및 방향키(Arrow 키)로 모든 입력 필드와 버튼을 탐색할 수 있어야 합니다.
                 </li>
                 <li>
-                  각 탭 및 섹션 영역은 <code>ARIA role=&quot;region&quot;</code>을 활용해 스크린
+                  각 탭 및 섹션 영역은{' '}
+                  <span className="font-mono">ARIA role=&quot;region&quot;</span>을 활용해 스크린
                   리더에서 인식될 수 있도록 합니다.
                 </li>
                 <li>
                   폼 구성요소는 라벨(label)과 필드(input)가 programmatically 연결되어야 하며,{' '}
-                  <code>aria-describedby</code> 속성을 사용해 오류 메시지나 도움말을 제공합니다.
+                  <span className="font-mono">aria-describedby</span> 속성을 사용해 오류 메시지나
+                  도움말을 제공합니다.
                 </li>
                 <li>
-                  버튼과 토글 요소는 활성화 상태를 명확히 알리기 위해 <code>aria-pressed</code> 또는{' '}
-                  <code>aria-disabled</code> 속성을 사용합니다.
+                  버튼과 토글 요소는 활성화 상태를 명확히 알리기 위해{' '}
+                  <span className="font-mono">aria-pressed</span> 또는{' '}
+                  <span className="font-mono">aria-disabled</span> 속성을 사용합니다.
                 </li>
                 <li>
                   Summary 패널의 진행 상태나 검증 결과는 시각적 정보 외에도 스크린 리더를 통한 대체
@@ -451,7 +456,8 @@ function OpenFormGuidelines() {
                 </li>
                 <li>
                   모든 툴팁과 헬퍼 텍스트는 Hover 또는 Focus 상태에서 스크린 리더가 읽을 수 있도록{' '}
-                  <code>aria-label</code> 또는 <code>aria-describedby</code>를 설정합니다.
+                  <span className="font-mono">aria-label</span> 또는{' '}
+                  <span className="font-mono">aria-describedby</span>를 설정합니다.
                 </li>
               </ul>
             </Prose>
@@ -506,7 +512,7 @@ const previewCode = `<VStack gap={4} className="flex-1">
 export function OpenFormPage() {
   return (
     <ComponentPageTemplate
-      title="Open Form (Create Flow)"
+      title="Create Page (Multi tab)"
       description="All-sections-visible create page pattern used by Container (Kubernetes) pages. Every section is expanded and scrollable — no wizard steps or progressive disclosure."
       preview={
         <ComponentPreview code={previewCode}>
@@ -635,7 +641,7 @@ export function OpenFormPage() {
       guidelines={<OpenFormGuidelines />}
       relatedLinks={[
         {
-          label: 'Wizard (Create Flow)',
+          label: 'Create Page (Wizard)',
           path: '/design/patterns/wizard',
           description: 'Step-by-step wizard pattern with section states',
         },

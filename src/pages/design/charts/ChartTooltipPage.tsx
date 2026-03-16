@@ -88,19 +88,24 @@ function ChartTooltipPageGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              배경색: <code>#ffffff</code>, 테두리: <code>#e2e8f0</code> (border-subtle)
+              배경색: <span className="font-mono">#ffffff</span>, 테두리:{' '}
+              <span className="font-mono">#e2e8f0</span> (border-subtle)
             </li>
             <li>
-              텍스트: <code>#1e293b</code> (slate800), 크기: <code>11px</code>
+              텍스트: <span className="font-mono">#1e293b</span> (slate800), 크기:{' '}
+              <span className="font-mono">11px</span>
             </li>
             <li>
-              폰트: <code>Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif</code>
+              폰트:{' '}
+              <span className="font-mono">
+                Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif
+              </span>
             </li>
             <li>
-              색상 도트: <code>8×8px</code> rounded-full, 시리즈 색상 매칭
+              색상 도트: <span className="font-mono">8×8px</span> rounded-full, 시리즈 색상 매칭
             </li>
             <li>
-              값 텍스트: <code>font-weight: 500</code> (medium)
+              값 텍스트: <span className="font-mono">font-weight: 500</span> (medium)
             </li>
           </ul>
         </Prose>

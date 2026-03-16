@@ -499,9 +499,9 @@ export function ButtonPage() {
               <Label>Icon + Text (Action Buttons)</Label>
               <p className="text-body-sm text-[var(--color-text-subtle)] mt-1">
                 Toolbar bulk action에는{' '}
-                <code className="text-body-sm font-mono text-[var(--color-text-muted)]">
+                <span className="font-mono text-body-sm text-[var(--color-text-muted)]">
                   variant=&quot;muted&quot;
-                </code>
+                </span>
                 를 사용합니다. 선택 없음 시 disabled, 선택 시 enabled으로 전환됩니다.
               </p>
             </div>
@@ -693,8 +693,9 @@ export function ButtonPage() {
             </table>
           </div>
           <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1">
-            <code>radius: 6px (md)</code> · <code>border: slate-300 (secondary)</code> ·{' '}
-            <code>disabled-bg: slate-200 (primary)</code>
+            <span className="font-mono">radius: 6px (md)</span> ·{' '}
+            <span className="font-mono">border: slate-300 (secondary)</span> ·{' '}
+            <span className="font-mono">disabled-bg: slate-200 (primary)</span>
           </div>
         </>
       }

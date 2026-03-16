@@ -161,6 +161,7 @@ export function CardTitle({
 
   return (
     <div
+      data-figma-name="CardTitle"
       className={`flex items-start gap-3 ${className} ${onClick ? 'cursor-pointer' : ''}`}
       onClick={onClick}
     >

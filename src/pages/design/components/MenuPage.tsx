@@ -289,43 +289,43 @@ function MenuGuidelines() {
             <tbody>
               <tr>
                 <Td>
-                  <code>item.padding</code>
+                  <span className="font-mono">item.padding</span>
                 </Td>
                 <Td>8×6px</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>item.gap</code>
+                  <span className="font-mono">item.gap</span>
                 </Td>
                 <Td>6px</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>item.radius</code>
+                  <span className="font-mono">item.radius</span>
                 </Td>
                 <Td>6px (md)</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>section.padding</code>
+                  <span className="font-mono">section.padding</span>
                 </Td>
                 <Td>8×4px</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>section.gap</code>
+                  <span className="font-mono">section.gap</span>
                 </Td>
                 <Td>16px</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>section.title-gap</code>
+                  <span className="font-mono">section.title-gap</span>
                 </Td>
                 <Td>6px</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>divider.margin</code>
+                  <span className="font-mono">divider.margin</span>
                 </Td>
                 <Td>8px</Td>
               </tr>
@@ -457,7 +457,7 @@ function MenuGuidelines() {
                 이동한다.
               </li>
               <li>
-                드롭다운 외부 클릭 또는 <code>Esc</code> 키 입력 시 닫힌다.
+                드롭다운 외부 클릭 또는 <span className="font-mono">Esc</span> 키 입력 시 닫힌다.
               </li>
             </ul>
           </Prose>
@@ -477,7 +477,7 @@ function MenuGuidelines() {
               </li>
               <li>
                 펼침/접힘 애니메이션: 높이 전환(height transition)을 사용하며, 지속 시간은 Motion
-                가이드라인의 <code>duration.short</code>를 따른다.
+                가이드라인의 <span className="font-mono">duration.short</span>를 따른다.
               </li>
             </ul>
           </Prose>
@@ -495,25 +495,27 @@ function MenuGuidelines() {
             <tbody>
               <tr>
                 <Td>
-                  <code>Tab</code> / <code>Shift+Tab</code>
+                  <span className="font-mono">Tab</span> /{' '}
+                  <span className="font-mono">Shift+Tab</span>
                 </Td>
                 <Td>포커스 이동</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>↑</code> / <code>↓</code>
+                  <span className="font-mono">↑</span> / <span className="font-mono">↓</span>
                 </Td>
                 <Td>아이템 간 포커스 이동</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>Enter</code> / <code>Space</code>
+                  <span className="font-mono">Enter</span> /{' '}
+                  <span className="font-mono">Space</span>
                 </Td>
                 <Td>아이템 선택 또는 Collapsible 섹션 펼침/접힘</Td>
               </tr>
               <tr>
                 <Td>
-                  <code>Esc</code>
+                  <span className="font-mono">Esc</span>
                 </Td>
                 <Td>Scope Selector 드롭다운 닫기</Td>
               </tr>
@@ -747,9 +749,10 @@ export function MenuPage() {
       ]}
       accessibility={
         <p className="text-body-md text-[var(--color-text-muted)]">
-          Menu uses <code>role=&quot;navigation&quot;</code> with <code>aria-label</code> for the
-          nav container. Active menu items use <code>aria-current=&quot;page&quot;</code>.
-          Collapsible sections use <code>aria-expanded</code> to indicate their open/closed state.
+          Menu uses <span className="font-mono">role=&quot;navigation&quot;</span> with{' '}
+          <span className="font-mono">aria-label</span> for the nav container. Active menu items use{' '}
+          <span className="font-mono">aria-current=&quot;page&quot;</span>. Collapsible sections use{' '}
+          <span className="font-mono">aria-expanded</span> to indicate their open/closed state.
         </p>
       }
       relatedLinks={[

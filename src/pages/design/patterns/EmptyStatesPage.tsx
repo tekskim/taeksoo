@@ -81,8 +81,9 @@ function EmptyStatesGuidelines() {
               </Td>
               <Td>권장</Td>
               <Td>
-                상황을 시각적으로 전달. <code>size={'{48}'}</code>, <code>stroke={'{1}'}</code>{' '}
-                통일. 리소스 타입에 맞는 아이콘 사용
+                상황을 시각적으로 전달. <span className="font-mono">size={'{48}'}</span>,{' '}
+                <span className="font-mono">stroke={'{1}'}</span> 통일. 리소스 타입에 맞는 아이콘
+                사용
               </Td>
             </tr>
             <tr>
@@ -228,13 +229,13 @@ function EmptyStatesGuidelines() {
                 <strong>권장 패턴</strong>: &quot;No [리소스] found&quot;
                 <ul className="list-disc pl-5 mt-1 space-y-0.5">
                   <li>
-                    <Good>✅</Good> <code>No instances found</code>
+                    <Good>✅</Good> <span className="font-mono">No instances found</span>
                   </li>
                   <li>
-                    <Good>✅</Good> <code>No results found</code>
+                    <Good>✅</Good> <span className="font-mono">No results found</span>
                   </li>
                   <li>
-                    <Bad>❌</Bad> <code>Nothing here!</code> (상태가 불명확)
+                    <Bad>❌</Bad> <span className="font-mono">Nothing here!</span> (상태가 불명확)
                   </li>
                 </ul>
               </li>
@@ -253,17 +254,19 @@ function EmptyStatesGuidelines() {
                 조정해보세요.&quot;
                 <ul className="list-disc pl-5 mt-1 space-y-0.5">
                   <li>
-                    <Good>✅</Good> <code>Create your first instance to get started.</code>
+                    <Good>✅</Good>{' '}
+                    <span className="font-mono">Create your first instance to get started.</span>
                   </li>
                   <li>
-                    <Good>✅</Good> <code>Try adjusting your search or filter criteria.</code>
+                    <Good>✅</Good>{' '}
+                    <span className="font-mono">Try adjusting your search or filter criteria.</span>
                   </li>
                   <li>
                     <Bad>❌</Bad>{' '}
-                    <code>
+                    <span className="font-mono">
                       There is nothing to display at the moment because no data has been entered
                       yet.
-                    </code>{' '}
+                    </span>{' '}
                     (과도하게 길다)
                   </li>
                 </ul>
@@ -280,12 +283,13 @@ function EmptyStatesGuidelines() {
                 동사로 시작하는 간결한 레이블을 사용한다.
                 <ul className="list-disc pl-5 mt-1 space-y-0.5">
                   <li>
-                    <Good>✅</Good> <code>Create instance</code>, <code>Upload file</code>,{' '}
-                    <code>Clear filters</code>
+                    <Good>✅</Good> <span className="font-mono">Create instance</span>,{' '}
+                    <span className="font-mono">Upload file</span>,{' '}
+                    <span className="font-mono">Clear filters</span>
                   </li>
                   <li>
-                    <Bad>❌</Bad> <code>Click here to create</code>,{' '}
-                    <code>Go to creation page</code>
+                    <Bad>❌</Bad> <span className="font-mono">Click here to create</span>,{' '}
+                    <span className="font-mono">Go to creation page</span>
                   </li>
                 </ul>
               </li>

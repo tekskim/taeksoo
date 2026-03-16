@@ -204,37 +204,37 @@ function TopBarGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>height</code>
+                <span className="font-mono">height</span>
               </Td>
               <Td>36px</Td>
             </tr>
             <tr>
               <Td>
-                <code>padding-x</code>
+                <span className="font-mono">padding-x</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>button-size</code>
+                <span className="font-mono">button-size</span>
               </Td>
               <Td>28px</Td>
             </tr>
             <tr>
               <Td>
-                <code>icon-size</code>
+                <span className="font-mono">icon-size</span>
               </Td>
               <Td>16px</Td>
             </tr>
             <tr>
               <Td>
-                <code>border-radius</code>
+                <span className="font-mono">border-radius</span>
               </Td>
               <Td>4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>gap</code> (버튼 간격)
+                <span className="font-mono">gap</span> (버튼 간격)
               </Td>
               <Td>4px</Td>
             </tr>
@@ -531,37 +531,37 @@ export function TopBarPage() {
           <tbody>
             <tr>
               <Td>
-                <code>height</code>
+                <span className="font-mono">height</span>
               </Td>
               <Td>36px</Td>
             </tr>
             <tr>
               <Td>
-                <code>padding-x</code>
+                <span className="font-mono">padding-x</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>button-size</code>
+                <span className="font-mono">button-size</span>
               </Td>
               <Td>28px</Td>
             </tr>
             <tr>
               <Td>
-                <code>icon-size</code>
+                <span className="font-mono">icon-size</span>
               </Td>
               <Td>16px</Td>
             </tr>
             <tr>
               <Td>
-                <code>border-radius</code>
+                <span className="font-mono">border-radius</span>
               </Td>
               <Td>4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>gap</code> (버튼 간격)
+                <span className="font-mono">gap</span> (버튼 간격)
               </Td>
               <Td>4px</Td>
             </tr>
@@ -572,8 +572,8 @@ export function TopBarPage() {
       accessibility={
         <Prose>
           <p>
-            유틸리티 버튼의 아이콘에는 반드시 <code>aria-label</code> 또는 툴팁을 제공한다.
-            네비게이션 버튼(뒤로/앞으로)은 키보드로 접근 가능하다.
+            유틸리티 버튼의 아이콘에는 반드시 <span className="font-mono">aria-label</span> 또는
+            툴팁을 제공한다. 네비게이션 버튼(뒤로/앞으로)은 키보드로 접근 가능하다.
           </p>
         </Prose>
       }

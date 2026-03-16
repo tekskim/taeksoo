@@ -960,9 +960,9 @@ function TimelineStepRow({
 
           {/* Endpoint + params */}
           <div className="mt-1.5 ml-5">
-            <code className="text-body-sm font-mono text-[var(--color-text-subtle)]">
+            <span className="text-body-sm font-mono text-[var(--color-text-subtle)]">
               {step.endpoint}
-            </code>
+            </span>
             <div className="mt-1 flex flex-col gap-0.5">
               {Object.entries(step.params).map(([k, v]) => (
                 <div key={k} className="flex items-center gap-2">

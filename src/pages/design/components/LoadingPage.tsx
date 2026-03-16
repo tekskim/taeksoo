@@ -333,7 +333,7 @@ export function LoadingPage() {
           <tbody>
             <tr>
               <Td>
-                <code>progress</code>
+                <span className="font-mono">progress</span>
               </Td>
               <Td>h-1 (4px)</Td>
             </tr>
@@ -344,8 +344,8 @@ export function LoadingPage() {
       accessibility={
         <Prose>
           <p>
-            Loading spinner uses <code>aria-hidden</code> for decorative icon. Progress variant
-            exposes progress value. Button variant is disabled and not focusable.
+            Loading spinner uses <span className="font-mono">aria-hidden</span> for decorative icon.
+            Progress variant exposes progress value. Button variant is disabled and not focusable.
           </p>
         </Prose>
       }

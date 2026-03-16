@@ -200,7 +200,7 @@ function BadgeGuidelines() {
           <strong>Default가 solid인 이유:</strong> Badge의 가장 빈번한 사용처인 테이블 셀에서는
           white/gray 테마의 solid 배지가 시각적으로 가장 균형 잡혀 있습니다. 시맨틱 컬러(info,
           success 등)를 사용할 때는 subtle 타입이 더 적절하므로 명시적으로{' '}
-          <code className="text-body-sm">type=&quot;subtle&quot;</code>을 지정하세요.
+          <span className="font-mono text-body-sm">type=&quot;subtle&quot;</span>을 지정하세요.
         </p>
 
         <SubSectionTitle>Semantic Color</SubSectionTitle>
@@ -353,51 +353,53 @@ function BadgeGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>sm</code>
+                <span className="font-mono">sm</span>
               </Td>
               <Td>
-                <code>6×2px</code>
+                <span className="font-mono">6×2px</span>
               </Td>
               <Td>
-                <code>11px</code>
+                <span className="font-mono">11px</span>
               </Td>
               <Td>
-                <code>16px</code>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>md</code>
-              </Td>
-              <Td>
-                <code>8×4px</code>
-              </Td>
-              <Td>
-                <code>12px</code>
-              </Td>
-              <Td>
-                <code>16px</code>
+                <span className="font-mono">16px</span>
               </Td>
             </tr>
             <tr>
               <Td>
-                <code>lg</code>
+                <span className="font-mono">md</span>
               </Td>
               <Td>
-                <code>12×4px</code>
+                <span className="font-mono">8×4px</span>
               </Td>
               <Td>
-                <code>14px</code>
+                <span className="font-mono">12px</span>
               </Td>
               <Td>
-                <code>20px</code>
+                <span className="font-mono">16px</span>
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <span className="font-mono">lg</span>
+              </Td>
+              <Td>
+                <span className="font-mono">12×4px</span>
+              </Td>
+              <Td>
+                <span className="font-mono">14px</span>
+              </Td>
+              <Td>
+                <span className="font-mono">20px</span>
               </Td>
             </tr>
           </tbody>
         </TableWrapper>
         <Prose>
           <p>
-            <code>radius: 4px</code> · <code>gap: 4px</code> · <code>dot-size: 6px</code>
+            <span className="font-mono">radius: 4px</span> ·{' '}
+            <span className="font-mono">gap: 4px</span> ·{' '}
+            <span className="font-mono">dot-size: 6px</span>
           </p>
         </Prose>
       </VStack>
@@ -410,8 +412,9 @@ function BadgeGuidelines() {
         <Prose>
           <p>
             테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
-            가능한 개수(<code>maxVisible</code>)를 초과하면 <code>+N</code> 인디케이터로 숨김
-            처리하고, 클릭 시 Popover로 전체 항목을 확인할 수 있다.
+            가능한 개수(<span className="font-mono">maxVisible</span>)를 초과하면{' '}
+            <span className="font-mono">+N</span> 인디케이터로 숨김 처리하고, 클릭 시 Popover로 전체
+            항목을 확인할 수 있다.
           </p>
         </Prose>
 
@@ -460,10 +463,12 @@ function BadgeGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <code>maxVisible</code> 값을 초과하는 항목은 <code>+N</code> 인디케이터로 표시한다.
+              <span className="font-mono">maxVisible</span> 값을 초과하는 항목은{' '}
+              <span className="font-mono">+N</span> 인디케이터로 표시한다.
             </li>
             <li>
-              <code>+N</code> 클릭 시 Popover가 열리며 전체 Badge 목록을 표시한다.
+              <span className="font-mono">+N</span> 클릭 시 Popover가 열리며 전체 Badge 목록을
+              표시한다.
             </li>
             <li>Popover 내에서도 동일한 Badge 스타일을 유지한다.</li>
           </ul>
@@ -538,8 +543,9 @@ function BadgeGuidelines() {
         <SubSectionTitle>Semantic ↔ Theme 매핑</SubSectionTitle>
         <Prose>
           <p>
-            Badge의 <code>variant</code>(semantic)와 <code>theme</code>(색상)은 다음과 같이
-            매핑된다. Semantic variant 사용 시 자동으로 대응되는 theme 색상이 적용된다.
+            Badge의 <span className="font-mono">variant</span>(semantic)와{' '}
+            <span className="font-mono">theme</span>(색상)은 다음과 같이 매핑된다. Semantic variant
+            사용 시 자동으로 대응되는 theme 색상이 적용된다.
           </p>
         </Prose>
         <TableWrapper>
@@ -779,44 +785,44 @@ export function BadgePage() {
           <tbody>
             <tr>
               <Td>
-                <code>sm</code>
+                <span className="font-mono">sm</span>
               </Td>
               <Td>
-                <code>6×2px</code>
+                <span className="font-mono">6×2px</span>
               </Td>
               <Td>
-                <code>11px</code>
+                <span className="font-mono">11px</span>
               </Td>
               <Td>
-                <code>16px</code>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <code>md</code>
-              </Td>
-              <Td>
-                <code>8×4px</code>
-              </Td>
-              <Td>
-                <code>12px</code>
-              </Td>
-              <Td>
-                <code>16px</code>
+                <span className="font-mono">16px</span>
               </Td>
             </tr>
             <tr>
               <Td>
-                <code>lg</code>
+                <span className="font-mono">md</span>
               </Td>
               <Td>
-                <code>12×4px</code>
+                <span className="font-mono">8×4px</span>
               </Td>
               <Td>
-                <code>14px</code>
+                <span className="font-mono">12px</span>
               </Td>
               <Td>
-                <code>20px</code>
+                <span className="font-mono">16px</span>
+              </Td>
+            </tr>
+            <tr>
+              <Td>
+                <span className="font-mono">lg</span>
+              </Td>
+              <Td>
+                <span className="font-mono">12×4px</span>
+              </Td>
+              <Td>
+                <span className="font-mono">14px</span>
+              </Td>
+              <Td>
+                <span className="font-mono">20px</span>
               </Td>
             </tr>
           </tbody>
@@ -850,8 +856,9 @@ export function BadgePage() {
           <Prose>
             <p>
               테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
-              가능한 개수(<code>maxVisible</code>)를 초과하면 <code>+N</code> 인디케이터로 숨김
-              처리하고, 클릭 시 Popover로 전체 항목을 확인할 수 있다.
+              가능한 개수(<span className="font-mono">maxVisible</span>)를 초과하면{' '}
+              <span className="font-mono">+N</span> 인디케이터로 숨김 처리하고, 클릭 시 Popover로
+              전체 항목을 확인할 수 있다.
             </p>
           </Prose>
 

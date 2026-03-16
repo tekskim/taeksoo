@@ -119,7 +119,9 @@ pnpm storybook   # Storybook → http://localhost:6006`}
               </span>
               <VStack gap={0.5} align="start" className="min-w-0">
                 <span className="text-label-md text-[var(--color-text-default)]">{item.label}</span>
-                <code className="text-body-sm text-[var(--color-text-subtle)]">{item.desc}</code>
+                <span className="font-mono text-body-sm text-[var(--color-text-subtle)]">
+                  {item.desc}
+                </span>
                 <span className="text-body-sm text-[var(--color-text-muted)]">{item.detail}</span>
               </VStack>
             </div>

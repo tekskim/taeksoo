@@ -168,25 +168,25 @@ function DatePickerGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>padding</code>
+                <span className="font-mono">padding</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>gap</code>
+                <span className="font-mono">gap</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>radius</code>
+                <span className="font-mono">radius</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>cell</code>
+                <span className="font-mono">cell</span>
               </Td>
               <Td>32×32px</Td>
             </tr>
@@ -408,19 +408,20 @@ function DatePickerGuidelines() {
             <tr>
               <Td>한국어</Td>
               <Td>
-                <code>YYYY-MM-DD</code>
+                <span className="font-mono">YYYY-MM-DD</span>
               </Td>
               <Td>
-                <code>YYYY-MM-DD – YYYY-MM-DD</code> (양쪽 연도 포함)
+                <span className="font-mono">YYYY-MM-DD – YYYY-MM-DD</span> (양쪽 연도 포함)
               </Td>
             </tr>
             <tr>
               <Td>영어</Td>
               <Td>
-                <code>Mth DD, YYYY</code>
+                <span className="font-mono">Mth DD, YYYY</span>
               </Td>
               <Td>
-                <code>Mth DD – Mth DD, YYYY</code> (동일 연도/월이면 종료일에만 연도/월 표시)
+                <span className="font-mono">Mth DD – Mth DD, YYYY</span> (동일 연도/월이면
+                종료일에만 연도/월 표시)
               </Td>
             </tr>
           </tbody>
@@ -542,8 +543,10 @@ export function DatePickerPage() {
       guidelines={<DatePickerGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code> ·{' '}
-          <code>cell: 32×32px</code>
+          <span className="font-mono">padding: 12px</span> ·{' '}
+          <span className="font-mono">gap: 12px</span> ·{' '}
+          <span className="font-mono">radius: 8px</span> ·{' '}
+          <span className="font-mono">cell: 32×32px</span>
         </div>
       }
       apiReference={datePickerProps}

@@ -162,7 +162,9 @@ export function DisclosurePage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>gap: 6px</code> · <code>icon: 12px</code> · <code>font: 14px / 20px / medium</code>
+          <span className="font-mono">gap: 6px</span> ·{' '}
+          <span className="font-mono">icon: 12px</span> ·{' '}
+          <span className="font-mono">font: 14px / 20px / medium</span>
         </div>
       }
       apiReference={disclosureProps}

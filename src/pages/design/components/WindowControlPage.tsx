@@ -98,25 +98,25 @@ function WindowControlGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>size</code>
+                <span className="font-mono">size</span>
               </Td>
               <Td>24×24px</Td>
             </tr>
             <tr>
               <Td>
-                <code>icon</code>
+                <span className="font-mono">icon</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>radius</code>
+                <span className="font-mono">radius</span>
               </Td>
               <Td>4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>gap</code>
+                <span className="font-mono">gap</span>
               </Td>
               <Td>4px</Td>
             </tr>
@@ -276,14 +276,12 @@ export function WindowControlPage() {
       whenNotToUse={['OS 네이티브 창을 그대로 사용하는 경우(이 문서는 불필요)']}
       preview={
         <ComponentPreview code={`<WindowControls />`}>
-          <VStack gap={6} className="w-full items-center">
-            <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
-              <span className="text-body-md font-medium text-[var(--color-text-default)]">
-                Application Title
-              </span>
-              <WindowControls />
-            </div>
-          </VStack>
+          <div className="flex items-center justify-between w-full max-w-[400px] h-10 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
+            <span className="text-body-md font-medium text-[var(--color-text-default)]">
+              Application Title
+            </span>
+            <WindowControls />
+          </div>
         </ComponentPreview>
       }
       examples={
@@ -344,8 +342,10 @@ export function WindowControlPage() {
       guidelines={<WindowControlGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>size: 24×24px</code> · <code>icon: 12px</code> · <code>radius: 4px</code> ·{' '}
-          <code>gap: 4px</code>
+          <span className="font-mono">size: 24×24px</span> ·{' '}
+          <span className="font-mono">icon: 12px</span> ·{' '}
+          <span className="font-mono">radius: 4px</span> ·{' '}
+          <span className="font-mono">gap: 4px</span>
         </div>
       }
       relatedLinks={[

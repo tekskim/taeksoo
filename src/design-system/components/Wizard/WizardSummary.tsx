@@ -38,7 +38,10 @@ interface WizardSummaryProps {
  */
 export function WizardSummary({ title = 'Summary', items, onItemClick }: WizardSummaryProps) {
   return (
-    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+    <div
+      data-figma-name="WizardSummary"
+      className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4"
+    >
       <VStack gap={3}>
         {/* Title */}
         <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>

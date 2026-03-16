@@ -236,10 +236,11 @@ import type { FileItem } from '@/design-system';
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>container: surface-subtle, border, radius-md, p-12</code> ·{' '}
-          <code>item: surface-default, border, radius-md, px-16 py-8</code> ·{' '}
-          <code>name: body-md</code> · <code>tag: body-sm, text-subtle</code> ·{' '}
-          <code>divider: 1px × 10px, border-default</code>
+          <span className="font-mono">container: surface-subtle, border, radius-md, p-12</span> ·{' '}
+          <span className="font-mono">item: surface-default, border, radius-md, px-16 py-8</span> ·{' '}
+          <span className="font-mono">name: body-md</span> ·{' '}
+          <span className="font-mono">tag: body-sm, text-subtle</span> ·{' '}
+          <span className="font-mono">divider: 1px × 10px, border-default</span>
         </div>
       }
       apiReference={fileListCardProps}

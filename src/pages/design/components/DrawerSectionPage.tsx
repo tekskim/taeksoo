@@ -146,12 +146,13 @@ function DrawerSectionPageGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                <strong>헤더</strong>: <code>title</code> prop으로 타이틀 설정. Close 버튼과
-                border-bottom은 제거됨. <code>showCloseButton</code> prop은 deprecated이며 무시된다.
+                <strong>헤더</strong>: <span className="font-mono">title</span> prop으로 타이틀
+                설정. Close 버튼과 border-bottom은 제거됨.{' '}
+                <span className="font-mono">showCloseButton</span> prop은 deprecated이며 무시된다.
               </li>
               <li>
                 <strong>Footer</strong>: 액션 버튼은 footer prop에 배치. Cancel(secondary) 왼쪽,
-                Submit(primary) 오른쪽. <code>flex-1</code>로 균등 너비.
+                Submit(primary) 오른쪽. <span className="font-mono">flex-1</span>로 균등 너비.
               </li>
               <li>
                 <strong>컨텍스트 정보</strong>: 수정 대상 리소스의 ID/이름은 상단 InfoBox로 표시.
@@ -263,29 +264,23 @@ export function DrawerSectionPage() {
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">With description</span>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" size="sm" onClick={() => setSnapshotOpen(true)}>
-                Create Instance Snapshot
-              </Button>
-            </div>
+            <Button variant="secondary" size="sm" onClick={() => setSnapshotOpen(true)}>
+              Create Instance Snapshot
+            </Button>
           </VStack>
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Basic</span>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>
-                Edit Instance
-              </Button>
-            </div>
+            <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>
+              Edit Instance
+            </Button>
           </VStack>
 
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">With header box</span>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" size="sm" onClick={() => setLockOpen(true)}>
-                Lock Setting
-              </Button>
-            </div>
+            <Button variant="secondary" size="sm" onClick={() => setLockOpen(true)}>
+              Lock Setting
+            </Button>
           </VStack>
 
           <CreateInstanceSnapshotDrawer
@@ -308,10 +303,14 @@ export function DrawerSectionPage() {
       guidelines={<DrawerSectionPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>width: 320px (default)</code> · <code>Form: 360px (4col)</code> ·{' '}
-          <code>Selection: 696px (8col)</code> · <code>Large: 1032px (12col)</code> ·{' '}
-          <code>padding-x: 24px</code> · <code>padding-y: 16px</code> ·{' '}
-          <code>scrollbar: 6px overlay</code> · <code>animation: 300ms ease-out</code>
+          <span className="font-mono">width: 320px (default)</span> ·{' '}
+          <span className="font-mono">Form: 360px (4col)</span> ·{' '}
+          <span className="font-mono">Selection: 696px (8col)</span> ·{' '}
+          <span className="font-mono">Large: 1032px (12col)</span> ·{' '}
+          <span className="font-mono">padding-x: 24px</span> ·{' '}
+          <span className="font-mono">padding-y: 16px</span> ·{' '}
+          <span className="font-mono">scrollbar: 6px overlay</span> ·{' '}
+          <span className="font-mono">animation: 300ms ease-out</span>
         </div>
       }
       apiReference={drawerProps}

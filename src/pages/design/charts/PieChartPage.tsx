@@ -355,7 +355,7 @@ function PieColorRow({ index, name, hex }: { index: number; name: string; hex: s
         style={{ backgroundColor: hex }}
       />
       <span className="text-body-md text-[var(--color-text-default)]">{name}</span>
-      <code className="text-body-sm text-[var(--color-text-subtle)]">{hex}</code>
+      <span className="font-mono text-body-sm text-[var(--color-text-subtle)]">{hex}</span>
     </div>
   );
 }
@@ -385,11 +385,14 @@ function PieChartColorTokens() {
 
       <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
         <span className="text-[var(--color-text-default)] font-medium">CSS tokens:</span>{' '}
-        <code>--chart-color-1</code> … <code>--chart-color-10</code>
+        <span className="font-mono">--chart-color-1</span> …{' '}
+        <span className="font-mono">--chart-color-10</span>
         {' · '}
         <span className="text-[var(--color-text-default)] font-medium">Import:</span>{' '}
-        <code>chartColors</code>, <code>primaryChartColors</code>, <code>extendedChartColors</code>{' '}
-        from <code>ChartComponents</code>
+        <span className="font-mono">chartColors</span>,{' '}
+        <span className="font-mono">primaryChartColors</span>,{' '}
+        <span className="font-mono">extendedChartColors</span> from{' '}
+        <span className="font-mono">ChartComponents</span>
       </div>
     </VStack>
   );

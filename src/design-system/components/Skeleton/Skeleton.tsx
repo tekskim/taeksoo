@@ -96,14 +96,19 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
     // Render multiple skeletons if count > 1
     if (count > 1) {
       return (
-        <div ref={ref} className={twMerge('flex flex-col', className)} style={{ gap }} {...props}>
+        <div
+          ref={ref}
+          data-figma-name="Skeleton"
+          className={twMerge('flex flex-col', className)}
+          style={{ gap }}
+          {...props}
+        >
           {Array.from({ length: count }).map((_, index) => (
             <div
               key={index}
               className={twMerge(baseStyles, variantStyles[variant])}
               style={{
                 ...skeletonStyle,
-                // Last item can be shorter for text variant
                 width: variant === 'text' && index === count - 1 ? '80%' : skeletonStyle.width,
               }}
             />
@@ -115,6 +120,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
     return (
       <div
         ref={ref}
+        data-figma-name="Skeleton"
         className={twMerge(baseStyles, variantStyles[variant], className)}
         style={skeletonStyle}
         {...props}
@@ -275,7 +281,12 @@ export interface SkeletonTableProps extends HTMLAttributes<HTMLDivElement> {
 export const SkeletonTable = forwardRef<HTMLDivElement, SkeletonTableProps>(
   ({ rows = 5, columns = 4, className = '', ...props }, ref) => {
     return (
-      <div ref={ref} className={twMerge('flex flex-col gap-2', className)} {...props}>
+      <div
+        ref={ref}
+        data-figma-name="SkeletonTable"
+        className={twMerge('flex flex-col gap-2', className)}
+        {...props}
+      >
         {/* Header */}
         <div className="flex gap-4 py-2 border-b border-[var(--color-border-default)]">
           {Array.from({ length: columns }).map((_, i) => (

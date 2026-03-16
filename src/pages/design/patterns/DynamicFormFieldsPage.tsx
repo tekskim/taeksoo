@@ -1392,7 +1392,7 @@ export function DynamicFormFieldsPage() {
           description: 'List Page, Detail Page, and other standard patterns',
         },
         {
-          label: 'Wizard (Create Flow)',
+          label: 'Create Page (Wizard)',
           path: '/design/patterns/wizard',
           description: 'Multi-step create form pattern',
         },

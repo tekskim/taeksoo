@@ -85,9 +85,9 @@ export function TypographyPage() {
                 ].map(({ token, size, lh, weight, desc, extra }) => (
                   <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                     <td className="py-2 pr-4 w-[120px]">
-                      <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                      <span className="text-[var(--color-action-primary)] font-mono text-[10px]">
                         heading.{token}
-                      </code>
+                      </span>
                     </td>
                     <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                       {size}
@@ -185,9 +185,9 @@ export function TypographyPage() {
                   ].map(({ token, size, lh, weight, desc }) => (
                     <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-2 pr-4 w-[120px]">
-                        <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                        <span className="text-[var(--color-action-primary)] font-mono text-[10px]">
                           body.{token}
-                        </code>
+                        </span>
                       </td>
                       <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                         {size}
@@ -266,9 +266,9 @@ export function TypographyPage() {
                   ].map(({ token, size, lh, weight, desc }) => (
                     <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-2 pr-4 w-[120px]">
-                        <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                        <span className="text-[var(--color-action-primary)] font-mono text-[10px]">
                           label.{token}
-                        </code>
+                        </span>
                       </td>
                       <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                         {size}
@@ -347,9 +347,9 @@ export function TypographyPage() {
                   ].map(({ token, size, lh, weight, desc }) => (
                     <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-2 pr-4 w-[120px]">
-                        <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                        <span className="text-[var(--color-action-primary)] font-mono text-[10px]">
                           button.{token}
-                        </code>
+                        </span>
                       </td>
                       <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                         {size}
@@ -419,9 +419,9 @@ export function TypographyPage() {
                   ].map(({ token, size, lh, desc }) => (
                     <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-2 pr-4 w-[120px]">
-                        <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                        <span className="text-[var(--color-action-primary)] font-mono text-[10px]">
                           code.{token}
-                        </code>
+                        </span>
                       </td>
                       <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                         {size}
@@ -433,7 +433,8 @@ export function TypographyPage() {
                         mono
                       </td>
                       <td className="py-2">
-                        <code
+                        <span
+                          className="font-mono"
                           style={{
                             fontSize: size,
                             lineHeight: lh,
@@ -441,7 +442,7 @@ export function TypographyPage() {
                           }}
                         >
                           {desc}
-                        </code>
+                        </span>
                       </td>
                     </tr>
                   ))}
