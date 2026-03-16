@@ -10,7 +10,13 @@ import {
   ProgressBar,
 } from '@/design-system';
 import { WizardSectionStatusIcon } from '@/design-system/components/Wizard/WizardSection';
-import { IconCheck, IconAlertTriangle, IconProgress, IconCircleDashed } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconAlertTriangle,
+  IconProgress,
+  IconCircleDashed,
+  IconMinus,
+} from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -166,6 +172,12 @@ function FloatingCardGuidelines() {
             </tr>
             <tr>
               <Td>
+                <strong>Skipped</strong>
+              </Td>
+              <Td>마이너스 아이콘</Td>
+            </tr>
+            <tr>
+              <Td>
                 <strong>Writing</strong>
               </Td>
               <Td>"Writing..." 텍스트</Td>
@@ -209,6 +221,12 @@ function FloatingCardGuidelines() {
                 <strong>오류</strong>
               </Td>
               <Td>Warning 아이콘</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>건너뜀</strong>
+              </Td>
+              <Td>Skipped 아이콘 (선택적 섹션을 건너뛴 경우)</Td>
             </tr>
             <tr>
               <Td>
@@ -519,6 +537,12 @@ export function FloatingCardPage() {
                   <IconCheck size={10} stroke={2} className="text-white" />
                 </div>
                 <span className="text-body-sm text-[var(--color-text-muted)]">Success</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="size-4 flex items-center justify-center">
+                  <IconMinus size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                </div>
+                <span className="text-body-sm text-[var(--color-text-muted)]">Skipped</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>

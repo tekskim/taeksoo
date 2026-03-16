@@ -386,7 +386,7 @@ export function FloatingCard({
             )}
             {onAction && (
               <Button
-                variant={actionEnabled ? 'primary' : 'secondary'}
+                variant="primary"
                 size="md"
                 onClick={onAction}
                 disabled={!actionEnabled}
