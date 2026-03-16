@@ -81,13 +81,13 @@ describe('Chip', () => {
     it('applies default variant', () => {
       const { container } = render(<Chip value="Tag" />);
       const chip = container.firstChild;
-      expect(chip).toHaveClass('border-[var(--chip-border)]');
+      expect(chip).toHaveClass('shadow-[inset_0_0_0_1px_var(--chip-border)]');
     });
 
     it('applies selected variant', () => {
       const { container } = render(<Chip value="Tag" variant="selected" />);
       const chip = container.firstChild;
-      expect(chip).toHaveClass('border-[var(--chip-border-selected)]');
+      expect(chip).toHaveClass('shadow-[inset_0_0_0_1px_var(--chip-border-selected)]');
     });
   });
 

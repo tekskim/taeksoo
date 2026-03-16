@@ -13,8 +13,14 @@ import {
   Tab,
   TabPanel,
   DetailHeader,
+  SectionCard,
+  Table,
+  StatusIndicator,
   MonitoringToolbar,
   PageShell,
+  fixedColumns,
+  columnMinWidths,
+  type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -24,7 +30,9 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
+  IconExternalLink,
 } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
 
 const chartColors = {
@@ -410,10 +418,40 @@ interface ImageDetail {
   id: string;
   name: string;
   pool: string;
+  dataPool: string;
+  created: string;
   size: string;
-  objects: number;
+  objects: string;
   objectSize: string;
+  features: string[];
+  provisioned: string;
   totalProvisioned: string;
+  stripeUnit: string;
+  stripeCount: number;
+  parent: string;
+  blockNamePrefix: string;
+  order: number;
+  formatVersion: string;
+}
+
+interface ImageSnapshot {
+  id: string;
+  name: string;
+  size: string;
+  used: string;
+  state: 'protected' | 'unprotected';
+  created: string;
+  sourceVolumeName: string;
+  sourceVolumeId: string;
+}
+
+interface ImageConfig {
+  id: string;
+  name: string;
+  description: string;
+  key: string;
+  source: string;
+  value: string;
 }
 
 /* ----------------------------------------
@@ -422,13 +460,140 @@ interface ImageDetail {
 
 const mockImageDetail: ImageDetail = {
   id: 'img-1',
-  name: 'volume-1d325cdb-2b44-4596-9c32-e280184ad2e6.deleted',
+  name: 'volume-1f6b9382-6afe-4d37-acff-0bd507e6386d',
   pool: 'volumes',
-  size: '18.4 GiB',
-  objects: 256,
-  objectSize: '18.4 GiB',
-  totalProvisioned: '18.4 GiB',
+  dataPool: '-',
+  created: '5/12/25 02:45 PM',
+  size: '10 GiB',
+  objects: '2.6 k',
+  objectSize: '4 MiB',
+  features: ['deep-flatten', 'exclusive-lock', 'fast-diff', 'layering', 'object-map'],
+  provisioned: '2 GiB',
+  totalProvisioned: '2 GiB',
+  stripeUnit: '4 MiB',
+  stripeCount: 1,
+  parent: '-',
+  blockNamePrefix: 'rbd_data.ca4ab71c7fe62c',
+  order: 22,
+  formatVersion: '2',
 };
+
+const imageSnapshotStatusMap: Record<ImageSnapshot['state'], 'active' | 'pending'> = {
+  protected: 'active',
+  unprotected: 'pending',
+};
+
+const mockSnapshots: ImageSnapshot[] = [
+  {
+    id: 'snap-1',
+    name: 'volume-8fa55ce7-1031-40e1-8032-fbdfe6b7a967.clone_snap',
+    size: '1 GB',
+    used: '0 B',
+    state: 'protected',
+    created: '13/1/26 11:38 PM',
+    sourceVolumeName: 'volume-8fa55ce7',
+    sourceVolumeId: 'volume-8fa55ce7-1031-40e1-8032-fbdfe6b7a967',
+  },
+];
+
+const mockConfigs: ImageConfig[] = [
+  {
+    id: 'cfg-1',
+    name: 'BPS Burst',
+    description: 'The desired burst limit of IO bytes.',
+    key: 'rbd_qos_bps_burst',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-2',
+    name: 'BPS Limit',
+    description: 'The desired limit of IO bytes per second.',
+    key: 'rbd_qos_bps_limit',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-3',
+    name: 'IOPS Burst',
+    description: 'The desired burst limit of IO operations.',
+    key: 'rbd_qos_iops_burst',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-4',
+    name: 'IOPS Limit',
+    description: 'The desired limit of IO operations per second.',
+    key: 'rbd_qos_iops_limit',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-5',
+    name: 'Read BPS Burst',
+    description: 'The desired burst limit of read bytes.',
+    key: 'rbd_qos_read_bps_burst',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-6',
+    name: 'Read BPS Limit',
+    description: 'The desired limit of read bytes per second.',
+    key: 'rbd_qos_read_bps_limit',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-7',
+    name: 'Read IOPS Burst',
+    description: 'The desired burst limit of read operations.',
+    key: 'rbd_qos_read_iops_burst',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-8',
+    name: 'Read IOPS Limit',
+    description: 'The desired limit of read operations per second.',
+    key: 'rbd_qos_read_iops_limit',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-9',
+    name: 'Write BPS Burst',
+    description: 'The desired burst limit of write bytes.',
+    key: 'rbd_qos_write_bps_burst',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-10',
+    name: 'Write BPS Limit',
+    description: 'The desired limit of write bytes per second.',
+    key: 'rbd_qos_write_bps_limit',
+    source: 'Global',
+    value: '0 B/s',
+  },
+  {
+    id: 'cfg-11',
+    name: 'Write IOPS Burst',
+    description: 'The desired burst limit of write operations.',
+    key: 'rbd_qos_write_iops_burst',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+  {
+    id: 'cfg-12',
+    name: 'Write IOPS Limit',
+    description: 'The desired limit of write operations per second.',
+    key: 'rbd_qos_write_iops_limit',
+    source: 'Global',
+    value: '0 IOPS',
+  },
+];
 
 // Mock chart data
 const timeLabels = ['13:00', '13:10', '13:20', '13:30', '13:40', '13:50'];
@@ -456,7 +621,7 @@ export function ImageDetailPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'performance';
+  const activeTab = searchParams.get('tab') || 'details';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   // Global tab management
@@ -479,6 +644,64 @@ export function ImageDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
+
+  const snapshotColumns: TableColumn<ImageSnapshot>[] = [
+    {
+      key: 'state',
+      label: 'Status',
+      width: fixedColumns.status,
+      align: 'center',
+      sortable: false,
+      render: (_, row) => (
+        <StatusIndicator layout="icon-only" status={imageSnapshotStatusMap[row.state]} />
+      ),
+    },
+    { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
+    { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+    { key: 'used', label: 'Used', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+    {
+      key: 'created',
+      label: 'Created',
+      flex: 1,
+      minWidth: columnMinWidths.creationDate,
+      sortable: true,
+    },
+    {
+      key: 'sourceVolumeName',
+      label: 'Source volume',
+      flex: 2,
+      minWidth: columnMinWidths.nameWide,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/compute/volumes/${row.sourceVolumeId}`}
+            className="inline-flex items-center gap-1 text-[var(--color-action-primary)] hover:underline truncate"
+          >
+            <span className="truncate">{row.sourceVolumeName}</span>
+            <IconExternalLink size={12} stroke={1.5} className="shrink-0" />
+          </Link>
+          <span className="text-body-xs text-[var(--color-text-muted)] truncate">
+            ID : {row.sourceVolumeId}
+          </span>
+        </div>
+      ),
+    },
+  ];
+
+  const configColumns: TableColumn<ImageConfig>[] = [
+    { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 2,
+      minWidth: columnMinWidths.nameWide,
+      sortable: true,
+    },
+    { key: 'key', label: 'Key', flex: 1, minWidth: columnMinWidths.owner, sortable: true },
+    { key: 'source', label: 'Source', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+    { key: 'value', label: 'Value', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+  ];
 
   // Chart series
   const iopsSeries: ChartSeries[] = [
@@ -543,9 +766,8 @@ export function ImageDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard label="Pool" value={imageData.pool} />
             <DetailHeader.InfoCard label="Size" value={imageData.size} />
-            <DetailHeader.InfoCard label="Objects" value={String(imageData.objects)} />
+            <DetailHeader.InfoCard label="Objects" value={imageData.objects} />
             <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
-            <DetailHeader.InfoCard label="Total provisioned" value={imageData.totalProvisioned} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -553,8 +775,81 @@ export function ImageDetailPage() {
         <div className="w-full">
           <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
             <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="snapshots">Snapshots</Tab>
+              <Tab value="configuration">Configuration</Tab>
               <Tab value="performance">Performance</Tab>
             </TabList>
+
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-4">
+              <SectionCard>
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Name" value={imageData.name} />
+                  <SectionCard.DataRow label="Pool" value={imageData.pool} />
+                  <SectionCard.DataRow label="Data Pool" value={imageData.dataPool} />
+                  <SectionCard.DataRow label="Created" value={imageData.created} />
+                  <SectionCard.DataRow label="Size" value={imageData.size} />
+                  <SectionCard.DataRow label="Objects" value={imageData.objects} />
+                  <SectionCard.DataRow label="Object size" value={imageData.objectSize} />
+                  <SectionCard.DataRow label="Features">
+                    <div className="flex flex-wrap gap-1.5">
+                      {imageData.features.map((feature) => (
+                        <span
+                          key={feature}
+                          className="inline-flex items-center px-2.5 py-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] text-body-sm text-[var(--color-text-default)]"
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </SectionCard.DataRow>
+                  <SectionCard.DataRow label="Provisioned" value={imageData.provisioned} />
+                  <SectionCard.DataRow
+                    label="Total provisioned"
+                    value={imageData.totalProvisioned}
+                  />
+                  <SectionCard.DataRow label="Striping unit" value={imageData.stripeUnit} />
+                  <SectionCard.DataRow
+                    label="Striping count"
+                    value={String(imageData.stripeCount)}
+                  />
+                  <SectionCard.DataRow label="Parent" value={imageData.parent} />
+                  <SectionCard.DataRow
+                    label="Block name prefix"
+                    value={imageData.blockNamePrefix}
+                  />
+                  <SectionCard.DataRow label="Order" value={String(imageData.order)} />
+                  <SectionCard.DataRow label="Format Version" value={imageData.formatVersion} />
+                </SectionCard.Content>
+              </SectionCard>
+            </TabPanel>
+
+            {/* Snapshots Tab Panel */}
+            <TabPanel value="snapshots" className="pt-4">
+              <Table<ImageSnapshot>
+                columns={snapshotColumns}
+                data={mockSnapshots}
+                rowKey="id"
+                emptyMessage="No data to display"
+              />
+              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
+                {mockSnapshots.length} total
+              </div>
+            </TabPanel>
+
+            {/* Configuration Tab Panel */}
+            <TabPanel value="configuration" className="pt-4">
+              <Table<ImageConfig>
+                columns={configColumns}
+                data={mockConfigs}
+                rowKey="id"
+                emptyMessage="No data to display"
+              />
+              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
+                {mockConfigs.length} total
+              </div>
+            </TabPanel>
 
             {/* Performance Tab Panel */}
             <TabPanel value="performance" className="pt-0">

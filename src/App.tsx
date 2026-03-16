@@ -160,6 +160,10 @@ import { OSDsPage } from '@/pages/OSDsPage';
 import { OSDDetailPage } from '@/pages/OSDDetailPage';
 import { PhysicalDisksPage } from '@/pages/PhysicalDisksPage';
 import { OverallPerformancePage } from '@/pages/OverallPerformancePage';
+import { FileSystemsPage } from '@/pages/FileSystemsPage';
+import { FileSystemDetailPage } from '@/pages/FileSystemDetailPage';
+import { NFSPage } from '@/pages/NFSPage';
+import { NFSExportDetailPage } from '@/pages/NFSExportDetailPage';
 
 // Pages - Container
 import { ContainerDashboardPage } from '@/pages/ContainerDashboardPage';
@@ -703,6 +707,10 @@ function AppRoutes() {
       <Route path="/storage/buckets/create-v2" element={<CreateBucketPage />} />
       <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
       <Route path="/storage/performance" element={<OverallPerformancePage />} />
+      <Route path="/storage/file-systems" element={<FileSystemsPage />} />
+      <Route path="/storage/file-systems/:id" element={<FileSystemDetailPage />} />
+      <Route path="/storage/nfs" element={<NFSPage />} />
+      <Route path="/storage/nfs/:id" element={<NFSExportDetailPage />} />
 
       {/* Container Routes */}
       <Route path="/container" element={<ContainerHomePage />} />
