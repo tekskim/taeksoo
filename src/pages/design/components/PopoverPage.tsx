@@ -28,8 +28,8 @@ function PopoverPageGuidelines() {
             </li>
             <li>
               <strong>트리거</strong>: Hover (
-              <span className="font-mono">trigger=&quot;hover&quot;</span>). delay 100ms, hideDelay
-              100ms로 빠른 응답.
+              <span className="font-mono">trigger=&quot;hover&quot;</span>). delay 200ms, hideDelay
+              150ms로 빠른 응답.
             </li>
             <li>
               <strong>콘텐츠 구조</strong>: 타이틀 (
@@ -54,10 +54,10 @@ function PopoverPageGuidelines() {
           'BadgeList 컴포넌트를 사용하면 Popover가 자동으로 포함됩니다.',
           '+N 인디케이터 hover 시 전체 목록을 보여주는 패턴으로 사용합니다.',
           'Popover 타이틀에 전체 개수를 표시합니다 (예: "All Labels (4)").',
+          'Popover는 폼, 메뉴, 버튼 등 인터랙티브 콘텐츠를 지원합니다.',
         ]}
         dontItems={[
           'Popover를 범용 드롭다운/폼 컨테이너로 사용하지 않습니다.',
-          '인터랙티브 콘텐츠(버튼, 입력 필드)를 Popover에 넣지 않습니다.',
           'Popover 안에 또 다른 Popover를 중첩하지 않습니다.',
         ]}
       />
@@ -215,8 +215,8 @@ export function PopoverPage() {
               <Popover
                 trigger="hover"
                 position="bottom"
-                delay={100}
-                hideDelay={100}
+                delay={200}
+                hideDelay={150}
                 content={
                   <div className="p-3 min-w-[120px] max-w-[320px]">
                     <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">

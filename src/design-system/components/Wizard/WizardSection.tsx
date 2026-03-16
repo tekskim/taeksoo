@@ -1,5 +1,11 @@
 import React from 'react';
-import { IconCheck, IconEdit, IconMinus, IconProgress } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconEdit,
+  IconMinus,
+  IconProgress,
+  IconCircleDashed,
+} from '@tabler/icons-react';
 import { Button } from '../Button';
 import { VStack, HStack } from '../../layouts';
 import { SectionCard } from '../SectionCard/SectionCard';
@@ -30,7 +36,9 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
 
   if (status === 'active' || status === 'writing') {
     return (
-      <IconProgress size={16} stroke={1.5} className="shrink-0 text-[var(--color-text-muted)]" />
+      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+        <IconProgress size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+      </div>
     );
   }
 
@@ -45,10 +53,9 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
 
   // pre → empty dashed circle (waiting)
   return (
-    <div
-      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
+    <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+      <IconCircleDashed size={20} stroke={1.5} className="text-[var(--color-border-default)]" />
+    </div>
   );
 }
 

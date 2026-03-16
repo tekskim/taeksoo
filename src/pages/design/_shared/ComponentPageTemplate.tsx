@@ -24,12 +24,14 @@ export interface StructureSpec {
 }
 
 export type ComponentMaturity = 'draft' | 'beta' | 'stable';
+export type ComponentStatus = 'planned' | 'desktop-only';
 
 interface ComponentPageTemplateProps {
   title: string;
   description: string;
   category?: string;
   maturity?: ComponentMaturity;
+  status?: ComponentStatus;
   tags?: string[];
   preview?: ReactNode;
   examples?: ReactNode;
@@ -61,10 +63,24 @@ const maturityConfig: Record<ComponentMaturity, { label: string; color: string; 
   },
 };
 
+const statusConfig: Record<ComponentStatus, { label: string; color: string; bg: string }> = {
+  planned: {
+    label: 'Implementation Pending',
+    color: 'var(--color-state-warning)',
+    bg: 'var(--color-state-warning-bg)',
+  },
+  'desktop-only': {
+    label: 'Desktop App Only',
+    color: 'var(--color-text-subtle)',
+    bg: 'var(--color-surface-muted)',
+  },
+};
+
 export function ComponentPageTemplate({
   title,
   description,
   maturity,
+  status,
   tags,
   preview,
   examples,
@@ -119,6 +135,17 @@ export function ComponentPageTemplate({
                 }}
               >
                 {maturityConfig[maturity].label}
+              </span>
+            )}
+            {status && (
+              <span
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-body-xs font-medium"
+                style={{
+                  color: statusConfig[status].color,
+                  backgroundColor: statusConfig[status].bg,
+                }}
+              >
+                {statusConfig[status].label}
               </span>
             )}
           </div>

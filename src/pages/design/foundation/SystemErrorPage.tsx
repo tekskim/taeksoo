@@ -97,6 +97,7 @@ export function SystemErrorPage() {
   return (
     <ComponentPageTemplate
       title="System Error"
+      status="planned"
       description="인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태를 알리는 메세지입니다. 일반적으로 전체 페이지 단위로 표시됩니다."
       whenToUse={[
         '인증되지 않은 사용자가 인증이 필요한 페이지에 접근한 경우',

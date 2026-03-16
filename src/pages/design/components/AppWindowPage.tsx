@@ -87,6 +87,7 @@ export function AppWindowPage() {
   return (
     <ComponentPageTemplate
       title="App Window"
+      status="desktop-only"
       description="사용자가 하나의 애플리케이션을 탐색하고 작업을 수행하는 기본 UI 컨테이너 패턴. 데스크탑 환경의 macOS 및 Windows 애플리케이션 window 구조와 유사하게 설계되며, 사용자는 App Window 내부에서 앱의 기능을 탐색하고 여러 작업을 동시에 수행할 수 있다."
       whenToUse={[
         '하나의 앱이 독립적인 기능 영역을 가질 때',

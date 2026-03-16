@@ -52,6 +52,7 @@ export const fixedColumns = {
   actions: '64px',
   action: '64px',
   actionWide: '72px',
+  actionsDouble: '96px',
 
   // 기타 아이콘/버튼
   identify: '80px',

@@ -1,7 +1,16 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import { VStack, FloatingCard } from '@/design-system';
-import { IconCheck, IconAlertTriangle, IconProgress } from '@tabler/icons-react';
+import {
+  VStack,
+  HStack,
+  FloatingCard,
+  Button,
+  FormField,
+  NumberInput,
+  ProgressBar,
+} from '@/design-system';
+import { WizardSectionStatusIcon } from '@/design-system/components/Wizard/WizardSection';
+import { IconCheck, IconAlertTriangle, IconProgress, IconCircleDashed } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -155,6 +164,12 @@ function FloatingCardGuidelines() {
               </Td>
               <Td>체크 원형</Td>
             </tr>
+            <tr>
+              <Td>
+                <strong>Writing</strong>
+              </Td>
+              <Td>"Writing..." 텍스트</Td>
+            </tr>
           </tbody>
         </TableWrapper>
       </VStack>
@@ -194,6 +209,12 @@ function FloatingCardGuidelines() {
                 <strong>오류</strong>
               </Td>
               <Td>Warning 아이콘</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>작성 중단</strong>
+              </Td>
+              <Td>"Writing..." 텍스트 (다른 섹션 편집 중)</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -397,17 +418,94 @@ export function FloatingCardPage() {
           </VStack>
 
           <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Create Instance (Wizard) — Summary + Quota + Instance Count
+            </span>
+            <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+              <div className="w-[var(--wizard-summary-width)]">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+                    <VStack gap={3}>
+                      <h5 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h5>
+                      <div className="flex flex-col">
+                        {[
+                          { label: 'Launch type', status: 'done' as const },
+                          { label: 'Basic information', status: 'done' as const },
+                          { label: 'Source', status: 'done' as const },
+                          { label: 'Flavor', status: 'active' as const },
+                          { label: 'Network', status: 'pre' as const },
+                          { label: 'Authentication', status: 'pre' as const },
+                          { label: 'Advanced', status: 'pre' as const },
+                        ].map((item) => (
+                          <div key={item.label} className="flex items-center justify-between py-1">
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              {item.label}
+                            </span>
+                            <WizardSectionStatusIcon status={item.status} />
+                          </div>
+                        ))}
+                      </div>
+                    </VStack>
+                  </div>
+
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                    <VStack gap={3}>
+                      <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
+                      <VStack gap={3}>
+                        {[
+                          { label: 'Instance', used: 3, max: 10 },
+                          { label: 'vCPU', used: 7, max: 20 },
+                          { label: 'RAM (GiB)', used: 18, max: 50 },
+                          { label: 'Disk', used: 3, max: 10 },
+                          { label: 'Disk capacity (GiB)', used: 70, max: 1000 },
+                        ].map((item) => (
+                          <ProgressBar
+                            key={item.label}
+                            variant="quota"
+                            label={item.label}
+                            value={item.used}
+                            max={item.max}
+                            showValue
+                          />
+                        ))}
+                      </VStack>
+                    </VStack>
+                  </div>
+
+                  <FormField label="Number of Instances">
+                    <NumberInput value={1} onChange={() => {}} min={1} max={10} fullWidth />
+                  </FormField>
+
+                  <HStack gap={2}>
+                    <Button variant="secondary" size="md">
+                      Cancel
+                    </Button>
+                    <Button variant="primary" size="md" disabled className="flex-1">
+                      Create
+                    </Button>
+                  </HStack>
+                </div>
+              </div>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Status Icons</span>
             <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
               <div className="flex items-center gap-2">
-                <div
-                  className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-                  style={{ borderStyle: 'dashed' }}
-                />
+                <div className="size-4 flex items-center justify-center">
+                  <IconCircleDashed
+                    size={20}
+                    stroke={1.5}
+                    className="text-[var(--color-border-default)]"
+                  />
+                </div>
                 <span className="text-body-sm text-[var(--color-text-muted)]">Default</span>
               </div>
               <div className="flex items-center gap-2">
-                <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                <div className="size-4 flex items-center justify-center">
+                  <IconProgress size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                </div>
                 <span className="text-body-sm text-[var(--color-text-muted)]">Processing</span>
               </div>
               <div className="flex items-center gap-2">
@@ -421,6 +519,9 @@ export function FloatingCardPage() {
                   <IconCheck size={10} stroke={2} className="text-white" />
                 </div>
                 <span className="text-body-sm text-[var(--color-text-muted)]">Success</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
               </div>
             </div>
           </VStack>
