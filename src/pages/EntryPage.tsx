@@ -3,7 +3,7 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import { IconMoon, IconSun, IconBook } from '@tabler/icons-react';
-import { Button } from '@/design-system';
+import { Button, Disclosure, DisclosureTrigger, DisclosurePanel } from '@/design-system';
 
 // App icons
 import ComputeIcon from '@/assets/appIcon/compute.png';
@@ -261,54 +261,65 @@ export function EntryPage() {
               </h4>
               <div className="flex items-center gap-2 mt-4 flex-wrap">
                 <Button variant="muted" size="md" onClick={() => navigate('/design/drawers')}>
-                  Drawers{' '}
+                  Drawers
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/design/modals')}>
-                  Modals{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/sidebar-icons')}>
-                  Sidebar Icons{' '}
-                </Button>
-                <Button
-                  variant="muted"
-                  size="md"
-                  onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
-                >
-                  404 page{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/table-style-guide')}>
-                  Table Style Guide{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
-                  Topology Popovers{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/iconography')}>
-                  Iconography{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/create-pages')}>
-                  Create Pages{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/detail-pages')}>
-                  Create Pages 2{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/form-patterns')}>
-                  Form Patterns{' '}
-                </Button>
-                <Button variant="muted" size="md" onClick={() => navigate('/mail-template')}>
-                  Mail Template{' '}
-                </Button>
-                <Button
-                  variant="muted"
-                  size="md"
-                  onClick={() => navigate('/design/prototype/ai-workspace')}
-                >
-                  AI Workspace Setup{' '}
+                  Modals
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/system-errors')}>
-                  System Errors{' '}
+                  System Errors
+                </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/mail-template')}>
+                  Mail Template
                 </Button>
               </div>
             </div>
+          </div>
+
+          {/* Archive */}
+          <div className="mt-6">
+            <Disclosure defaultOpen={false}>
+              <DisclosureTrigger>Archive</DisclosureTrigger>
+              <DisclosurePanel>
+                <div className="flex items-center gap-2 flex-wrap pt-3">
+                  <Button variant="muted" size="md" onClick={() => navigate('/sidebar-icons')}>
+                    Sidebar Icons
+                  </Button>
+                  <Button
+                    variant="muted"
+                    size="md"
+                    onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
+                  >
+                    404 page
+                  </Button>
+                  <Button variant="muted" size="md" onClick={() => navigate('/table-style-guide')}>
+                    Table Style Guide
+                  </Button>
+                  <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
+                    Topology Popovers
+                  </Button>
+                  <Button variant="muted" size="md" onClick={() => navigate('/iconography')}>
+                    Iconography
+                  </Button>
+                  <Button variant="muted" size="md" onClick={() => navigate('/create-pages')}>
+                    Create Pages
+                  </Button>
+                  <Button variant="muted" size="md" onClick={() => navigate('/detail-pages')}>
+                    Create Pages 2
+                  </Button>
+                  <Button variant="muted" size="md" onClick={() => navigate('/form-patterns')}>
+                    Form Patterns
+                  </Button>
+                  <Button
+                    variant="muted"
+                    size="md"
+                    onClick={() => navigate('/design/prototype/ai-workspace')}
+                  >
+                    AI Workspace Setup
+                  </Button>
+                </div>
+              </DisclosurePanel>
+            </Disclosure>
           </div>
         </div>
       </main>

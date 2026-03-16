@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Modal, HStack, VStack } from '@/design-system';
+import { Button, Modal, HStack } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -121,16 +122,15 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
   );
 }
 
-function SessionExpiredModal({ isOpen }: { isOpen: boolean }) {
+function SessionExpiredModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const config = ERROR_CONFIGS['401-b'];
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => {}}
+      onClose={onClose}
       title={config.title}
       description={config.description}
-      closeOnBackdropClick={false}
       closeOnEscape={false}
       showCloseButton={false}
     >
@@ -154,6 +154,7 @@ export function SystemErrorPagesPage() {
   const { isDark, toggleDarkMode } = useDarkMode();
   const { variant: urlVariant } = useParams<{ variant: string }>();
   const activeVariant: ErrorVariant = isValidVariant(urlVariant) ? urlVariant : '404';
+  const [modalOpen, setModalOpen] = useState(true);
 
   return (
     <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)] flex flex-col">
@@ -170,22 +171,21 @@ export function SystemErrorPagesPage() {
             />
             <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
           </HStack>
-          <HStack gap={2}>
-            <VStack gap={0.5}>
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Error State</span>
-              <HStack gap={1} className="flex-wrap">
-                {VARIANT_LABELS.map(({ id, label }) => (
-                  <Button
-                    key={id}
-                    variant={activeVariant === id ? 'primary' : 'muted'}
-                    size="sm"
-                    onClick={() => navigate(`/system-errors/${id}`)}
-                  >
-                    {label}
-                  </Button>
-                ))}
-              </HStack>
-            </VStack>
+          <HStack gap={1} align="center">
+            {VARIANT_LABELS.map(({ id, label }) => (
+              <Button
+                key={id}
+                variant={activeVariant === id ? 'secondary' : 'muted'}
+                size="sm"
+                onClick={() => {
+                  if (id === '401-b') setModalOpen(true);
+                  navigate(`/system-errors/${id}`);
+                }}
+              >
+                {label}
+              </Button>
+            ))}
+            <div className="w-px h-5 bg-[var(--color-border-default)] mx-1" />
             <Button
               variant="secondary"
               size="sm"
@@ -204,7 +204,7 @@ export function SystemErrorPagesPage() {
       <div className="flex-1">
         {activeVariant === '401-b' ? (
           <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-            <SessionExpiredModal isOpen />
+            <SessionExpiredModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
           </div>
         ) : (
           <FullPageError variant={activeVariant} />
