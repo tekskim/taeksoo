@@ -405,16 +405,6 @@ export function ScrollbarPage() {
           </VStack>
         </VStack>
       }
-      usage={{
-        code: `// Add class to scrollable container
-<div className="overflow-y-auto sidebar-scroll">
-  {/* scrollable content */}
-</div>
-
-// CSS supports both Webkit and Firefox
-.sidebar-scroll::-webkit-scrollbar { width: 6px; }
-.sidebar-scroll { scrollbar-width: thin; }`,
-      }}
       relatedLinks={[
         { label: 'Layout', path: '/design/patterns/layout' },
         { label: 'Modal', path: '/design/components/modal' },

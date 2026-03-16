@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { DosDonts } from '../_shared/DosDonts';
@@ -158,32 +157,6 @@ function StaticTooltip({
   );
 }
 
-const tooltipProps: PropDef[] = [
-  { name: 'content', type: 'ReactNode', required: true, description: 'Tooltip content' },
-  { name: 'children', type: 'ReactNode', required: true, description: 'Trigger element' },
-  {
-    name: 'position',
-    type: "'top' | 'bottom' | 'left' | 'right'",
-    default: "'top'",
-    required: false,
-    description: 'Tooltip position',
-  },
-  {
-    name: 'delay',
-    type: 'number',
-    default: '200',
-    required: false,
-    description: 'Show delay (ms)',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-];
-
 export function TooltipPage() {
   return (
     <ComponentPageTemplate
@@ -211,9 +184,6 @@ export function TooltipPage() {
           </Tooltip>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Tooltip, Button } from '@/design-system';\n\n<Tooltip content="Helpful hint text">\n  <Button variant="secondary" size="sm">Hover me</Button>\n</Tooltip>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -273,11 +243,6 @@ export function TooltipPage() {
           <span className="font-mono">arrow: 4px</span>
         </div>
       }
-      apiReference={tooltipProps}
-      keyboardInteractions={[
-        { key: 'Focus (Tab)', description: '트리거 요소에 포커스 시 Tooltip 표시' },
-        { key: 'Escape', description: 'Tooltip 닫기' },
-      ]}
       relatedLinks={[
         { label: 'Popover', path: '/design/components/popover' },
         { label: 'Button', path: '/design/components/button' },

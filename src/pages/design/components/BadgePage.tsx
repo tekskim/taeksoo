@@ -52,40 +52,6 @@ function Prose({ children }: { children: React.ReactNode }) {
   );
 }
 
-const badgeProps: PropDef[] = [
-  {
-    name: 'theme',
-    type: "'white' | 'blue' | 'red' | 'green' | 'yellow' | 'gray'",
-    default: "'white'",
-    required: false,
-    description: 'Color theme',
-  },
-  {
-    name: 'type',
-    type: "'solid' | 'subtle'",
-    default: "'solid'",
-    required: false,
-    description: 'Badge type',
-  },
-  {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    default: "'md'",
-    required: false,
-    description: 'Badge size',
-  },
-  { name: 'leftIcon', type: 'ReactNode', required: false, description: 'Left icon' },
-  { name: 'rightIcon', type: 'ReactNode', required: false, description: 'Right icon' },
-  {
-    name: 'dot',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show dot indicator',
-  },
-  { name: 'children', type: 'ReactNode', required: true, description: 'Badge content' },
-];
-
 const badgeListProps: PropDef[] = [
   {
     name: 'items',
@@ -661,13 +627,6 @@ export function BadgePage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Badge } from '@/design-system';
-
-<Badge>Default</Badge>
-<Badge theme="blue" type="subtle">Label</Badge>
-<Badge theme="green" type="subtle" size="sm">Completed</Badge>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -827,15 +786,6 @@ export function BadgePage() {
             </tr>
           </tbody>
         </TableWrapper>
-      }
-      apiReference={badgeProps}
-      accessibility={
-        <Prose>
-          <p>
-            Badge is a presentational component. Use appropriate semantic markup when badges convey
-            status (e.g. aria-label on parent).
-          </p>
-        </Prose>
       }
       relatedLinks={[
         {

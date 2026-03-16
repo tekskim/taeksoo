@@ -1,31 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Disclosure, VStack } from '@/design-system';
-
-const disclosureProps: PropDef[] = [
-  {
-    name: 'defaultOpen',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Default open state',
-  },
-  { name: 'open', type: 'boolean', required: false, description: 'Controlled open state' },
-  {
-    name: 'onChange',
-    type: '(open: boolean) => void',
-    required: false,
-    description: 'State change handler',
-  },
-  {
-    name: 'children',
-    type: 'ReactNode',
-    required: true,
-    description: 'Trigger + Panel components',
-  },
-];
 
 export function DisclosurePage() {
   return (
@@ -65,16 +41,6 @@ export function DisclosurePage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Disclosure } from '@/design-system';
-
-<Disclosure defaultOpen>
-  <Disclosure.Trigger>Section title</Disclosure.Trigger>
-  <Disclosure.Panel>
-    <div>Content</div>
-  </Disclosure.Panel>
-</Disclosure>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -166,13 +132,6 @@ export function DisclosurePage() {
           <span className="font-mono">icon: 12px</span> ·{' '}
           <span className="font-mono">font: 14px / 20px / medium</span>
         </div>
-      }
-      apiReference={disclosureProps}
-      accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Disclosure uses button for trigger with aria-expanded. Panel content is associated via
-          aria-controls. Enter/Space toggles.
-        </p>
       }
       relatedLinks={[
         {

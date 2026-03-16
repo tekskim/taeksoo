@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { TabBar, useTabBar, VStack } from '@/design-system';
@@ -49,44 +48,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const tabBarProps: PropDef[] = [
-  { name: 'tabs', type: 'TabBarItem[]', required: true, description: 'Tab items array' },
-  { name: 'activeTab', type: 'string', required: true, description: 'Active tab id' },
-  {
-    name: 'onTabChange',
-    type: '(tabId: string) => void',
-    required: true,
-    description: 'Tab selection handler',
-  },
-  {
-    name: 'onTabClose',
-    type: '(tabId: string) => void',
-    required: false,
-    description: 'Tab close handler',
-  },
-  { name: 'onTabAdd', type: '() => void', required: false, description: 'Add tab handler' },
-  {
-    name: 'onTabReorder',
-    type: '(from: number, to: number) => void',
-    required: false,
-    description: 'Tab reorder handler',
-  },
-  {
-    name: 'showAddButton',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Show add button',
-  },
-  {
-    name: 'showWindowControls',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Show window controls',
-  },
-];
 
 function TabBarPreview() {
   const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
@@ -466,25 +427,6 @@ export function TabBarPage() {
           <TabBarPreview />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { TabBar, useTabBar } from '@/design-system';
-
-const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
-  initialTabs: [
-    { id: '1', label: 'Home', closable: true },
-    { id: '2', label: 'Settings', closable: true },
-  ],
-  initialActiveTab: '1',
-});
-
-<TabBar
-  tabs={tabs}
-  activeTab={activeTab}
-  onTabChange={selectTab}
-  onTabClose={closeTab}
-  onTabAdd={addTab}
-/>`,
-      }}
       examples={<TabBarDemo />}
       guidelines={<TabBarGuidelines />}
       tokens={
@@ -523,22 +465,6 @@ const { tabs, activeTab, selectTab, closeTab, addTab } = useTabBar({
           </tbody>
         </TableWrapper>
       }
-      apiReference={tabBarProps}
-      accessibility={
-        <Prose>
-          <p>
-            TabBar uses <span className="font-mono">role="tablist"</span> and{' '}
-            <span className="font-mono">role="tab"</span>. Tab buttons are keyboard navigable. Close
-            and add buttons have <span className="font-mono">aria-label</span>s.
-          </p>
-        </Prose>
-      }
-      keyboardInteractions={[
-        { key: 'Tab', description: 'TabBar 진입 및 이탈' },
-        { key: '← / →', description: '이전 / 다음 탭으로 포커스 이동' },
-        { key: 'Enter / Space', description: '포커스된 탭 선택' },
-        { key: 'Delete / Backspace', description: '포커스된 탭 닫기 (closable인 경우)' },
-      ]}
       relatedLinks={[
         {
           label: 'Top Navigation Bar',

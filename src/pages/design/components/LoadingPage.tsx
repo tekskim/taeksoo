@@ -295,11 +295,6 @@ export function LoadingPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Loading } from '@/design-system';
-
-<Loading variant="progress" text="Uploading" progress={50} />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -339,15 +334,6 @@ export function LoadingPage() {
             </tr>
           </tbody>
         </TableWrapper>
-      }
-      apiReference={loadingProps}
-      accessibility={
-        <Prose>
-          <p>
-            Loading spinner uses <span className="font-mono">aria-hidden</span> for decorative icon.
-            Progress variant exposes progress value. Button variant is disabled and not focusable.
-          </p>
-        </Prose>
       }
       relatedLinks={[
         { label: 'Spinner', path: '/design/components/spinner', description: '로딩 표시 컴포넌트' },

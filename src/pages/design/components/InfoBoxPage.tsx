@@ -74,27 +74,6 @@ export function InfoBoxPage() {
         </ComponentPreview>
       }
       props={infoBoxProps}
-      usage={{
-        code: `import { InfoBox } from '@/design-system';
-
-// 기본
-<InfoBox label="Instance" value={instance.name} />
-
-// 복사 버튼
-<InfoBox label="ID" value={resource.id} copyable />
-
-// 상태 표시
-<InfoBox label="Status" value="Running" status="active" />
-
-// tooltip
-<InfoBox label="Pod restarts" value={3} tooltip="Total number of container restarts." />
-
-// 그룹
-<InfoBox.Group>
-  <InfoBox label="Name" value="my-resource" />
-  <InfoBox label="Created" value="2026-01-01" />
-</InfoBox.Group>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

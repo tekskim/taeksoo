@@ -105,10 +105,6 @@ export function ToastPage() {
           />
         </VStack>
       }
-      keyboardInteractions={[
-        { key: 'Escape', description: 'Toast 닫기 (포커스가 Toast에 있을 때)' },
-        { key: 'Tab', description: 'Toast 내 액션 버튼으로 포커스 이동' },
-      ]}
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Inline Message', path: '/design/components/inline-message' },

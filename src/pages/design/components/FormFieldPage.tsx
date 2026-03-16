@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import {
@@ -306,41 +305,6 @@ function FormFieldPageGuidelines() {
   );
 }
 
-const formFieldProps: PropDef[] = [
-  { name: 'label', type: 'ReactNode', required: false, description: 'Label text (simple API)' },
-  {
-    name: 'description',
-    type: 'ReactNode',
-    required: false,
-    description: 'Description below label',
-  },
-  {
-    name: 'helperText',
-    type: 'ReactNode',
-    required: false,
-    description: 'Helper text below input',
-  },
-  { name: 'errorMessage', type: 'ReactNode', required: false, description: 'Error message' },
-  { name: 'error', type: 'boolean', required: false, description: 'Error state' },
-  { name: 'disabled', type: 'boolean', required: false, description: 'Disabled state' },
-  { name: 'required', type: 'boolean', required: false, description: 'Required field indicator' },
-  {
-    name: 'labelSize',
-    type: "'sm' | 'md'",
-    default: "'md'",
-    required: false,
-    description: 'Label size',
-  },
-  {
-    name: 'spacing',
-    type: "'default' | 'loose'",
-    default: "'default'",
-    required: false,
-    description: 'Sub-component spacing',
-  },
-  { name: 'children', type: 'ReactNode', required: true, description: 'Form input element' },
-];
-
 export function FormFieldPage() {
   return (
     <ComponentPageTemplate
@@ -364,9 +328,6 @@ export function FormFieldPage() {
           </FormField>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { FormField, Input } from '@/design-system';\n\n<FormField label="Instance Name" helperText="2-64 characters">\n  <Input placeholder="e.g., web-server-01" fullWidth />\n</FormField>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -721,14 +682,6 @@ export function FormFieldPage() {
           • Description (라벨 하단): text-body-md (12px/18px)
           <br />• HelperText (Input 하단): text-body-sm (11px/16px)
         </div>
-      }
-      apiReference={formFieldProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Label associated with input via htmlFor/id</li>
-          <li>Error messages: role=&quot;alert&quot;</li>
-          <li>Required fields: aria-required</li>
-        </ul>
       }
       relatedLinks={[
         {

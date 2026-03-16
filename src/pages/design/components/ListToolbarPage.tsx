@@ -116,20 +116,6 @@ export function ListToolbarPage() {
         </ComponentPreview>
       }
       props={listToolbarProps}
-      usage={{
-        code: `import { ListToolbar, SearchInput, Button } from '@/design-system';
-
-<ListToolbar
-  primaryActions={
-    <ListToolbar.Actions>
-      <SearchInput placeholder="Search" size="sm" />
-    </ListToolbar.Actions>
-  }
-  filters={filters}
-  onFilterRemove={(id) => removeFilter(id)}
-  onFiltersClear={() => clearAll()}
-/>`,
-      }}
       relatedLinks={[
         { label: 'Table', path: '/design/components/table' },
         { label: 'FilterSearchInput', path: '/design/components/filter-search-input' },

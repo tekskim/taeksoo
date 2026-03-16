@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Button, DetailHeader, VStack, ContextMenu } from '@/design-system';
@@ -56,29 +55,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const detailHeaderProps: PropDef[] = [
-  {
-    name: 'children',
-    type: 'ReactNode',
-    required: true,
-    description: 'Title + Actions + InfoGrid',
-  },
-];
-
-const detailHeaderInfoCardProps: PropDef[] = [
-  { name: 'label', type: 'string', required: true, description: 'Info card label' },
-  { name: 'value', type: 'ReactNode', required: false, description: 'Info card value' },
-  {
-    name: 'copyable',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show copy button',
-  },
-  { name: 'status', type: 'StatusType', required: false, description: 'Status indicator' },
-  { name: 'tooltip', type: 'string', required: false, description: 'Help tooltip text' },
-];
 
 function DetailHeaderGuidelines() {
   return (
@@ -499,32 +475,6 @@ export function DetailHeaderPage() {
           </DetailHeader>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { DetailHeader, Button, ContextMenu } from '@/design-system';
-import { IconTerminal2, IconPlayerPlay, IconPlayerStop, IconPower, IconTrash, IconChevronDown } from '@tabler/icons-react';
-
-<DetailHeader>
-  <DetailHeader.Title>{instance.name}</DetailHeader.Title>
-  <DetailHeader.Actions>
-    <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>Console</Button>
-    <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>Start</Button>
-    <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>Stop</Button>
-    <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>Reboot</Button>
-    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>Delete</Button>
-    <ContextMenu items={moreActions} trigger="click">
-      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-        More Actions
-      </Button>
-    </ContextMenu>
-  </DetailHeader.Actions>
-  <DetailHeader.InfoGrid>
-    <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-    <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
-    <DetailHeader.InfoCard label="Host" value={instance.host} />
-    <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
-  </DetailHeader.InfoGrid>
-</DetailHeader>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -666,18 +616,6 @@ import { IconTerminal2, IconPlayerPlay, IconPlayerStop, IconPower, IconTrash, Ic
           </tbody>
         </TableWrapper>
       }
-      apiReference={detailHeaderProps}
-      subComponentApis={[{ name: 'DetailHeader.InfoCard', props: detailHeaderInfoCardProps }]}
-      keyboardInteractions={[
-        {
-          key: 'Tab',
-          description: 'Header 내 액션 버튼과 복사 가능한 InfoCard 간 포커스 이동',
-        },
-        {
-          key: 'Enter / Space',
-          description: '포커스된 액션 버튼 활성화 또는 ID 복사',
-        },
-      ]}
       relatedLinks={[
         {
           label: 'Section Card',

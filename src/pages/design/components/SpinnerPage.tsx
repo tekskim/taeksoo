@@ -301,15 +301,6 @@ export function SpinnerPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Loading } from '@/design-system';
-
-// Page Spinner
-<Loading variant="spinner" size="lg" text="Loading data…" />
-
-// Button Spinner
-<Loading variant="button" buttonLabel="Saving" />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

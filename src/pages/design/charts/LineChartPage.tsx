@@ -634,18 +634,6 @@ export function LineChartPage() {
         '데이터 구성 비율 표시 (→ Pie Chart)',
       ]}
       preview={<AreaChartDemo variant="basic" />}
-      usage={{
-        code: `import { LineChart } from '@/design-system';
-
-<LineChart
-  title="CPU Usage"
-  series={[
-    { name: 'CPU', data: cpuData, color: chartColors.cyan400 },
-  ]}
-  xAxisData={timestamps}
-  yAxisLabel="Usage (%)"
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

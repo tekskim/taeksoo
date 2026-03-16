@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Slider, RangeSlider, NumberInput, VStack } from '@/design-system';
@@ -49,46 +48,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const sliderProps: PropDef[] = [
-  { name: 'min', type: 'number', default: '0', required: false, description: 'Minimum value' },
-  { name: 'max', type: 'number', default: '100', required: false, description: 'Maximum value' },
-  { name: 'step', type: 'number', default: '1', required: false, description: 'Step increment' },
-  { name: 'value', type: 'number', required: false, description: 'Controlled value' },
-  {
-    name: 'defaultValue',
-    type: 'number',
-    default: '0',
-    required: false,
-    description: 'Default value',
-  },
-  {
-    name: 'onChange',
-    type: '(value: number) => void',
-    required: false,
-    description: 'Change handler',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  {
-    name: 'showValue',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show current value',
-  },
-  {
-    name: 'formatValue',
-    type: '(value: number) => string',
-    required: false,
-    description: 'Format display value',
-  },
-];
 
 function SliderPreview() {
   const [value, setValue] = useState(40);
@@ -540,11 +499,6 @@ export function SliderPage() {
         '범위가 매우 큰 경우(1–1000 이상) → Number Input 사용',
         '범위가 매우 작은 경우(1–3) → Select 사용',
       ]}
-      keyboardInteractions={[
-        { key: '← / →', description: 'Decrease / increase value by one step' },
-        { key: 'Home', description: 'Move to minimum value' },
-        { key: 'End', description: 'Move to maximum value' },
-      ]}
       preview={
         <ComponentPreview
           code={`<div className="flex items-center gap-3">\n  <Slider value={value} onChange={setValue} min={0} max={100} />\n  <NumberInput value={value} onChange={setValue} min={0} max={100} width="xs" />\n</div>`}
@@ -552,9 +506,6 @@ export function SliderPage() {
           <SliderPreview />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Slider, NumberInput } from '@/design-system';\n\nconst [value, setValue] = useState(50);\n\n<div className="flex items-center gap-3">\n  <Slider value={value} onChange={setValue} min={0} max={100} />\n  <NumberInput value={value} onChange={setValue} min={0} max={100} />\n</div>`,
-      }}
       examples={
         <VStack gap={8}>
           <SliderWithNumberInputDemo />
@@ -593,23 +544,6 @@ export function SliderPage() {
           <span className="font-mono">fill: primary</span> ·{' '}
           <span className="font-mono">--slider-track-width: 220px</span>
         </div>
-      }
-      apiReference={sliderProps}
-      accessibility={
-        <Prose>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>
-              <kbd>←</kbd> / <kbd>→</kbd>: step 단위로 값 조정
-            </li>
-            <li>
-              <kbd>Home</kbd> / <kbd>End</kbd>: 최소/최대값으로 이동
-            </li>
-            <li>
-              <kbd>Tab</kbd>: 포커스 이동
-            </li>
-            <li>Range Slider: 두 핸들 모두 키보드로 포커스 및 조작 가능</li>
-          </ul>
-        </Prose>
       }
       relatedLinks={[
         {

@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { VStack, FloatingCard } from '@/design-system';
 import { IconCheck, IconAlertTriangle, IconProgress } from '@tabler/icons-react';
 
@@ -268,99 +267,6 @@ function FloatingCardGuidelines() {
   );
 }
 
-const floatingCardProps: PropDef[] = [
-  { name: 'title', type: 'string', required: true, description: 'Summary 영역 타이틀' },
-  {
-    name: 'sections',
-    type: 'FloatingCardSection[]',
-    default: '[]',
-    required: false,
-    description: '섹션별 진행 상태 아이템 목록. 각 섹션은 tabTitle, items, collapsible 등을 포함',
-  },
-  {
-    name: 'quota',
-    type: 'QuotaItem[]',
-    default: '[]',
-    required: false,
-    description: 'Quota(할당량) 표시 항목. label, current, total, unit으로 구성',
-  },
-  {
-    name: 'instanceCount',
-    type: 'number',
-    default: '1',
-    required: false,
-    description: '인스턴스 수 입력 필드 초기값',
-  },
-  {
-    name: 'onInstanceCountChange',
-    type: '(count: number) => void',
-    required: false,
-    description: '인스턴스 수 변경 콜백. 전달 시 Number of Instances 입력 필드가 표시됨',
-  },
-  {
-    name: 'cancelLabel',
-    type: 'string',
-    default: "'Cancel'",
-    required: false,
-    description: 'Cancel 버튼 라벨',
-  },
-  {
-    name: 'actionLabel',
-    type: 'string',
-    default: "'Create'",
-    required: false,
-    description: 'Action 버튼 라벨 (Create / Save)',
-  },
-  {
-    name: 'actionEnabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Action 버튼 활성화 여부. 모든 필수 섹션 완료 시 true',
-  },
-  {
-    name: 'onCancel',
-    type: '() => void',
-    required: false,
-    description: 'Cancel 버튼 클릭 핸들러. 전달 시 Cancel 버튼 표시',
-  },
-  {
-    name: 'onAction',
-    type: '() => void',
-    required: false,
-    description: 'Action 버튼 클릭 핸들러. 전달 시 Action 버튼 표시',
-  },
-  {
-    name: 'portal',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'true면 document.body에 포탈로 렌더링, false면 인라인 렌더링',
-  },
-  {
-    name: 'position',
-    type: "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
-    default: "'top-left'",
-    required: false,
-    description: 'portal 모드에서의 위치',
-  },
-  {
-    name: 'isOpen',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: '카드 노출 여부',
-  },
-  { name: 'width', type: 'string', default: "'320px'", required: false, description: '카드 너비' },
-  {
-    name: 'showCloseButton',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: '닫기 버튼 표시 여부',
-  },
-];
-
 export function FloatingCardPage() {
   return (
     <ComponentPageTemplate
@@ -521,7 +427,6 @@ export function FloatingCardPage() {
         </VStack>
       }
       guidelines={<FloatingCardGuidelines />}
-      apiReference={floatingCardProps}
       relatedLinks={[
         { label: 'Create Page (Wizard)', path: '/design/patterns/wizard' },
         { label: 'Create Page (Multi tab)', path: '/design/patterns/open-form' },

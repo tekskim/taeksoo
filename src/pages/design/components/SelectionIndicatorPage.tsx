@@ -1,45 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { SelectionIndicator, VStack } from '@/design-system';
-
-const selectionIndicatorProps: PropDef[] = [
-  {
-    name: 'selectedItems',
-    type: 'SelectionItem[]',
-    default: '[]',
-    required: false,
-    description: 'Selected items to display',
-  },
-  {
-    name: 'onRemove',
-    type: '(id: string) => void',
-    required: false,
-    description: 'Item remove handler',
-  },
-  {
-    name: 'emptyText',
-    type: 'string',
-    default: "'No item selected'",
-    required: false,
-    description: 'Empty state text',
-  },
-  {
-    name: 'removable',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Allow item removal',
-  },
-  { name: 'error', type: 'boolean', default: 'false', required: false, description: 'Error state' },
-  {
-    name: 'errorMessage',
-    type: 'string',
-    required: false,
-    description: 'Error message when error is true',
-  },
-];
 
 export function SelectionIndicatorPage() {
   return (
@@ -67,16 +29,6 @@ export function SelectionIndicatorPage() {
           />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { SelectionIndicator } from '@/design-system';
-
-<SelectionIndicator
-  selectedItems={selectedItems}
-  onRemove={(id) => handleRemove(id)}
-  error={required && selectedItems.length === 0}
-  errorMessage="Please select at least one item"
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -145,13 +97,6 @@ export function SelectionIndicatorPage() {
           <span className="font-mono">radius: table-row-radius</span> ·{' '}
           <span className="font-mono">gap: 16px</span>
         </div>
-      }
-      apiReference={selectionIndicatorProps}
-      accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          SelectionIndicator uses aria-live for dynamic content. Remove buttons have aria-label.
-          Error state is announced to screen readers.
-        </p>
       }
       relatedLinks={[
         {

@@ -349,11 +349,6 @@ export function NumberInputPage() {
           </VStack>
         </VStack>
       }
-      keyboardInteractions={[
-        { key: 'ArrowUp', description: '값을 step만큼 증가' },
-        { key: 'ArrowDown', description: '값을 step만큼 감소' },
-        { key: 'Tab', description: '다음 포커스 가능 요소로 이동' },
-      ]}
       relatedLinks={[
         { label: 'Form Field', path: '/design/patterns/form-field-pattern' },
         { label: 'Text Input', path: '/design/components/text-input' },

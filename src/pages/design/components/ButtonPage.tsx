@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Button, VStack } from '@/design-system';
@@ -228,60 +227,6 @@ Tooltip은 "사용자가 화면만 보고 이유를 알 수 있는가"로 결정
 </details>
 `;
 
-const buttonProps: PropDef[] = [
-  {
-    name: 'variant',
-    type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'muted' | 'danger' | 'warning' | 'link'",
-    default: "'primary'",
-    required: false,
-    description: 'Button style variant',
-  },
-  {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    default: "'md'",
-    required: false,
-    description: 'Button size',
-  },
-  {
-    name: 'isLoading',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show loading spinner',
-  },
-  { name: 'leftIcon', type: 'ReactNode', required: false, description: 'Icon before text' },
-  { name: 'rightIcon', type: 'ReactNode', required: false, description: 'Icon after text' },
-  {
-    name: 'icon',
-    type: 'ReactNode',
-    required: false,
-    description: 'Icon-only button (requires aria-label)',
-  },
-  {
-    name: 'fullWidth',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Full width button',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  {
-    name: 'as',
-    type: 'ElementType',
-    default: "'button'",
-    required: false,
-    description: 'Polymorphic element type',
-  },
-  { name: 'children', type: 'ReactNode', required: false, description: 'Button content' },
-];
-
 export function ButtonPage() {
   return (
     <ComponentPageTemplate
@@ -307,9 +252,6 @@ export function ButtonPage() {
           </Button>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Button } from '@/design-system';\n\n<Button variant="primary" size="md">\n  Create\n</Button>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -698,22 +640,6 @@ export function ButtonPage() {
             <span className="font-mono">disabled-bg: slate-200 (primary)</span>
           </div>
         </>
-      }
-      apiReference={buttonProps}
-      keyboardInteractions={[
-        { key: 'Enter', description: 'Activates the button' },
-        { key: 'Space', description: 'Activates the button' },
-        { key: 'Tab', description: 'Moves focus to the next focusable element' },
-      ]}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Icon-only buttons require aria-label for screen reader accessibility.</li>
-          <li>
-            Disabled buttons should provide context about why they are disabled (e.g., tooltip or
-            helper text).
-          </li>
-          <li>Loading state buttons are automatically set to aria-busy=&quot;true&quot;.</li>
-        </ul>
       }
       relatedLinks={[
         { label: 'Tooltip', path: '/design/components/tooltip' },

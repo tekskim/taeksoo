@@ -423,18 +423,6 @@ export function PieChartPage() {
           ]}
         />
       }
-      usage={{
-        code: `import { PieChart } from '@/design-system';
-
-<PieChart
-  title="OSD Objectstore Types"
-  data={[
-    { name: 'bluestore', value: 70 },
-    { name: 'filestore', value: 20 },
-    { name: 'seastore', value: 10 },
-  ]}
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

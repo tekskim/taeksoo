@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -107,43 +106,6 @@ const SEARCH_INPUT_GUIDELINES = `## Overview
 | Table | Component | 필터 대상 |
 `;
 
-const filterSearchInputProps: PropDef[] = [
-  {
-    name: 'filters',
-    type: 'FilterField[]',
-    required: true,
-    description: 'Available filter fields',
-  },
-  {
-    name: 'appliedFilters',
-    type: 'AppliedFilter[]',
-    required: true,
-    description: 'Currently applied filters',
-  },
-  {
-    name: 'onFiltersChange',
-    type: '(filters: AppliedFilter[]) => void',
-    required: true,
-    description: 'Filter change handler',
-  },
-  { name: 'placeholder', type: 'string', required: false, description: 'Search placeholder text' },
-  {
-    name: 'size',
-    type: "'sm' | 'md'",
-    default: "'sm'",
-    required: false,
-    description: 'Input size',
-  },
-  {
-    name: 'hideAppliedFilters',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Hide applied filter chips',
-  },
-  { name: 'className', type: 'string', required: false, description: 'Additional CSS classes' },
-];
-
 function FilterSearchInputDemo() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
 
@@ -215,9 +177,6 @@ export function FilterSearchInputPage() {
           <FilterSearchInputDemo />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { FilterSearchInput } from '@/design-system';\nimport type { FilterField, AppliedFilter } from '@/design-system';\n\nconst filterFields: FilterField[] = [\n  { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter name...' },\n  { id: 'status', label: 'Status', type: 'select', options: [...] },\n];\n\nconst [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);\n\n<FilterSearchInput\n  filters={filterFields}\n  appliedFilters={appliedFilters}\n  onFiltersChange={setAppliedFilters}\n  placeholder="Search by attributes"\n/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -370,19 +329,6 @@ export function FilterSearchInputPage() {
           <span className="font-mono">chip-gap: 4px</span>
         </div>
       }
-      apiReference={filterSearchInputProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Tab: Move focus to input</li>
-          <li>Enter: Apply search</li>
-          <li>Filter chips: Keyboard removable</li>
-        </ul>
-      }
-      keyboardInteractions={[
-        { key: 'Enter', description: '현재 필터 조건 적용' },
-        { key: 'Escape', description: '필터 드롭다운 닫기' },
-        { key: 'Backspace', description: '마지막 적용된 필터 삭제 (입력이 비어있을 때)' },
-      ]}
       relatedLinks={[
         { label: 'Chip', path: '/design/components/chip' },
         { label: 'Table', path: '/design/components/table' },

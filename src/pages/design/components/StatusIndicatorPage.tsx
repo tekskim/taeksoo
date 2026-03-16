@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Badge, StatusIndicator, Tooltip, VStack } from '@/design-system';
@@ -157,36 +156,6 @@ const STATUS_GUIDELINES = `## Overview
 | Detail Header | Component | InfoCard 상태 표시 |
 `;
 
-const statusIndicatorProps: PropDef[] = [
-  {
-    name: 'status',
-    type: "'active' | 'error' | 'building' | 'deleting' | 'pending' | 'degraded' | 'down' | 'maintenance' | 'suspended' | 'paused' | 'draft' | 'in-use' | ...",
-    required: true,
-    description: '상태 타입. Defined 목록에 없으면 Default(White Badge)로 렌더링',
-  },
-  {
-    name: 'layout',
-    type: "'default' | 'icon-only' | 'badge'",
-    default: "'default'",
-    required: false,
-    description:
-      '표시 형식. default: Icon + Label (pill), icon-only: 아이콘만 (공간 제한 시), badge: Icon + Label (square)',
-  },
-  {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    default: "'md'",
-    required: false,
-    description: 'Icon Only 레이아웃 전용 크기',
-  },
-  {
-    name: 'label',
-    type: 'string',
-    required: false,
-    description: '커스텀 레이블. 기획 문서에서 정의한 텍스트로 대체 시 사용',
-  },
-];
-
 export function StatusIndicatorPage() {
   return (
     <ComponentPageTemplate
@@ -222,17 +191,6 @@ export function StatusIndicatorPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { StatusIndicator } from '@/design-system';
-
-// Icon Only (테이블 Status 컬럼)
-<StatusIndicator status="active" layout="icon-only" />
-<StatusIndicator status="error" layout="icon-only" />
-
-// Default 상태는 Badge theme="white"로 표시
-import { Badge } from '@/design-system';
-<Badge theme="white" size="sm">Available</Badge>`,
-      }}
       examples={
         <VStack gap={8}>
           {/* ── Variant: Default (Label Only / White Badge) ── */}
@@ -448,13 +406,6 @@ import { Badge } from '@/design-system';
           />
         </VStack>
       }
-      apiReference={statusIndicatorProps}
-      keyboardInteractions={[
-        {
-          key: 'N/A',
-          description: 'StatusIndicator는 정보 표시 전용이므로 별도의 키보드 인터랙션이 없습니다.',
-        },
-      ]}
       relatedLinks={[
         { label: 'Badge', path: '/design/components/badge' },
         { label: 'Table', path: '/design/components/table' },

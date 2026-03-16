@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Chip, SelectionIndicator, VStack } from '@/design-system';
@@ -48,33 +47,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const chipProps: PropDef[] = [
-  { name: 'label', type: 'string', required: false, description: 'Category/field label (key)' },
-  { name: 'value', type: 'string', required: true, description: 'Display value' },
-  {
-    name: 'variant',
-    type: "'default' | 'selected'",
-    default: "'default'",
-    required: false,
-    description: 'Chip variant',
-  },
-  {
-    name: 'onRemove',
-    type: '() => void',
-    required: false,
-    description: 'Show remove button and handle removal',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  { name: 'icon', type: 'ReactNode', required: false, description: 'Left icon' },
-  { name: 'maxWidth', type: 'string', required: false, description: 'Max width for truncation' },
-];
 
 function ChipGuidelines() {
   return (
@@ -406,21 +378,6 @@ export function ChipPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Chip } from '@/design-system';
-
-// Value only
-<Chip value="Active" onRemove={() => handleRemove()} />
-
-// Label + Value
-<Chip label="Status" value="Running" onRemove={() => {}} />
-
-// Selected variant
-<Chip value="default-sg" variant="selected" onRemove={() => {}} />
-
-// With max width truncation
-<Chip value="very-long-label-name" maxWidth="120px" onRemove={() => {}} />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -555,24 +512,6 @@ export function ChipPage() {
           <span className="font-mono">border-radius: 6px</span> ·{' '}
           <span className="font-mono">font-size: 11px</span>
         </div>
-      }
-      apiReference={chipProps}
-      accessibility={
-        <Prose>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>
-              Remove button에는 <span className="font-mono">aria-label</span>이 자동 적용된다.
-            </li>
-            <li>Disabled Chip은 포커스 불가 처리된다.</li>
-            <li>
-              <kbd>Tab</kbd> / <kbd>Shift+Tab</kbd>으로 Chip 간 포커스 이동이 가능하다.
-            </li>
-            <li>
-              <kbd>Backspace</kbd> / <kbd>Delete</kbd>로 포커스된 Chip을 제거할 수 있다 (Removable에
-              한함).
-            </li>
-          </ul>
-        </Prose>
       }
       relatedLinks={[
         {

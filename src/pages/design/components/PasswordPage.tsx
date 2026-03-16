@@ -103,15 +103,6 @@ export function PasswordPage() {
         </ComponentPreview>
       }
       props={passwordProps}
-      usage={{
-        code: `import { Password } from '@/design-system';
-
-<Password
-  placeholder="Enter password"
-  error="Password must be at least 8 characters"
-  fullWidth
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>

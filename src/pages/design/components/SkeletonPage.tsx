@@ -400,22 +400,6 @@ export function SkeletonPage() {
         '사용자 액션 처리 중 (→ Progress indicator)',
       ]}
       preview={<SkeletonPreview />}
-      usage={{
-        code: `// Text Skeleton
-<div className="animate-pulse bg-[var(--color-border-default)] rounded h-3 w-3/4" />
-
-// Block Skeleton
-<div className="animate-pulse bg-[var(--color-border-default)] rounded-lg h-[120px] w-full" />
-
-// List item Skeleton
-<div className="flex items-center gap-3">
-  <div className="animate-pulse bg-[var(--color-border-default)] rounded w-8 h-8" />
-  <div className="flex-1 space-y-2">
-    <div className="animate-pulse bg-[var(--color-border-default)] rounded h-3 w-2/5" />
-    <div className="animate-pulse bg-[var(--color-border-default)] rounded h-2.5 w-3/5" />
-  </div>
-</div>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -437,18 +421,6 @@ export function SkeletonPage() {
         </VStack>
       }
       guidelines={<SkeletonGuidelines />}
-      accessibility={
-        <Prose>
-          <p>
-            Skeleton 컨테이너에 <span className="font-mono">aria-hidden="true"</span>를 적용하여
-            스크린 리더가 플레이스홀더를 읽지 않도록 한다. 로딩 영역의 부모 요소에{' '}
-            <span className="font-mono">aria-busy="true"</span>를 설정하여 콘텐츠가 로딩 중임을
-            전달한다.
-            <span className="font-mono">prefers-reduced-motion</span> 미디어 쿼리를 지원하여 모션
-            민감 사용자에게 애니메이션을 비활성화한다.
-          </p>
-        </Prose>
-      }
       relatedLinks={[
         { label: 'Loading', path: '/design/components/loading', description: '상위 로딩 패턴' },
         {

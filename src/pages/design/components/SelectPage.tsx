@@ -1,5 +1,4 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -132,78 +131,6 @@ const SELECT_GUIDELINES = `## Overview
 - Tooltip
 `;
 
-const selectProps: PropDef[] = [
-  {
-    name: 'options',
-    type: 'SelectOption[]',
-    required: true,
-    description: 'Dropdown options array',
-  },
-  { name: 'value', type: 'string', required: false, description: 'Controlled selected value' },
-  {
-    name: 'defaultValue',
-    type: 'string',
-    required: false,
-    description: 'Default value (uncontrolled)',
-  },
-  {
-    name: 'onChange',
-    type: '(value: string) => void',
-    required: false,
-    description: 'Change handler',
-  },
-  {
-    name: 'placeholder',
-    type: 'string',
-    default: "'Select an option'",
-    required: false,
-    description: 'Placeholder text',
-  },
-  {
-    name: 'size',
-    type: "'sm' | 'md'",
-    default: "'md'",
-    required: false,
-    description: 'Select size',
-  },
-  {
-    name: 'width',
-    type: "'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full' | number",
-    default: "'md'",
-    required: false,
-    description: 'Select width',
-  },
-  { name: 'error', type: 'string | boolean', required: false, description: 'Error state' },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  {
-    name: 'fullWidth',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Full width select',
-  },
-  {
-    name: 'clearable',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Show clear button',
-  },
-  {
-    name: 'required',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Required field',
-  },
-];
-
 const selectOptions = [
   { value: 'active', label: 'Active' },
   { value: 'shutoff', label: 'Shutoff' },
@@ -222,12 +149,6 @@ export function SelectPage() {
         'On/Off의 즉각적인 상태 전환이 필요한 경우 → Toggle 사용',
         '다중 선택이 필요한 경우 → Checkbox Group 또는 Multi-Select 사용',
       ]}
-      keyboardInteractions={[
-        { key: 'Enter / Space', description: 'Open dropdown / confirm selection' },
-        { key: '↑ / ↓', description: 'Move focus between options' },
-        { key: 'Escape', description: 'Close dropdown' },
-        { key: 'Tab', description: 'Move to next focus area (closes dropdown)' },
-      ]}
       preview={
         <ComponentPreview
           code={`<Select placeholder="Select status" options={options} width="md" />`}
@@ -235,9 +156,6 @@ export function SelectPage() {
           <Select placeholder="Select status" width="md" options={selectOptions} />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Select } from '@/design-system';\n\nconst options = [\n  { value: 'active', label: 'Active' },\n  { value: 'shutoff', label: 'Shutoff' },\n];\n\n<Select placeholder="Select status" options={options} width="md" />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -497,15 +415,6 @@ export function SelectPage() {
           <span className="font-mono">item: 10×6px, 12px</span> ·{' '}
           <span className="font-mono">border: 1px → 2px focus</span>
         </div>
-      }
-      apiReference={selectProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Enter/Space: Open dropdown</li>
-          <li>Arrow keys: Navigate options</li>
-          <li>Tab: Move focus</li>
-          <li>Escape: Close dropdown</li>
-        </ul>
       }
       relatedLinks={[
         { label: 'Checkbox', path: '/design/components/checkbox' },

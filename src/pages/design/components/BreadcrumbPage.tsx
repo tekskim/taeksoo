@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Breadcrumb, VStack } from '@/design-system';
@@ -49,28 +48,6 @@ function Prose({ children }: { children: React.ReactNode }) {
   );
 }
 
-const breadcrumbProps: PropDef[] = [
-  {
-    name: 'items',
-    type: 'BreadcrumbItem[]',
-    required: true,
-    description: 'Breadcrumb items array',
-  },
-  {
-    name: 'separator',
-    type: 'ReactNode',
-    required: false,
-    description: 'Custom separator element',
-  },
-  {
-    name: 'maxItems',
-    type: 'number',
-    default: '0',
-    required: false,
-    description: 'Max items before collapsing',
-  },
-];
-
 export function BreadcrumbPage() {
   return (
     <ComponentPageTemplate
@@ -85,10 +62,6 @@ export function BreadcrumbPage() {
         '단일 페이지(루트 페이지)처럼 계층 구조가 없는 경우',
         '모달, 다이얼로그 등 레이어 위에 올라오는 컴포넌트 내부',
         '이미 페이지 제목, 사이드 내비게이션 등으로 위치가 충분히 전달되는 경우',
-      ]}
-      keyboardInteractions={[
-        { key: 'Tab', description: 'Move focus between breadcrumb links' },
-        { key: 'Enter', description: 'Activate the focused breadcrumb link' },
       ]}
       preview={
         <ComponentPreview
@@ -113,18 +86,6 @@ export function BreadcrumbPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Breadcrumb } from '@/design-system';
-
-<Breadcrumb
-  items={[
-    { label: 'Home', href: '/' },
-    { label: 'Compute', href: '/compute' },
-    { label: 'Instances', href: '/compute/instances' },
-    { label: 'web-large' },
-  ]}
-/>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -642,13 +603,6 @@ export function BreadcrumbPage() {
           <span className="font-mono">line-height: 16px</span> ·{' '}
           <span className="font-mono">font-weight: medium</span>
         </div>
-      }
-      apiReference={breadcrumbProps}
-      accessibility={
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Breadcrumb uses nav with aria-label="Breadcrumb". Current page item has
-          aria-current="page". Links are keyboard navigable.
-        </p>
       }
       relatedLinks={[
         { label: 'TopBar', path: '/design/components/topbar' },

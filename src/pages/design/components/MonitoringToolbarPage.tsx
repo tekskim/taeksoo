@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { MonitoringToolbar, VStack } from '@/design-system';
@@ -48,62 +47,6 @@ function Prose({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-const monitoringToolbarProps: PropDef[] = [
-  {
-    name: 'timeRangeOptions',
-    type: 'TimeRangeOption[]',
-    default: '30m, 1h, 6h, 12h, 24h',
-    required: false,
-    description: 'Time range options',
-  },
-  {
-    name: 'timeRange',
-    type: 'TimeRangeValue',
-    required: false,
-    description: 'Controlled time range value',
-  },
-  {
-    name: 'defaultTimeRange',
-    type: 'TimeRangeValue',
-    default: "'30m'",
-    required: false,
-    description: 'Default time range (uncontrolled)',
-  },
-  {
-    name: 'onTimeRangeChange',
-    type: '(value) => void',
-    required: false,
-    description: 'Time range change callback',
-  },
-  {
-    name: 'customPeriod',
-    type: 'CustomPeriod | null',
-    required: false,
-    description: 'Custom date range',
-  },
-  {
-    name: 'onCustomPeriodChange',
-    type: '(period) => void',
-    required: false,
-    description: 'Custom period change callback',
-  },
-  { name: 'onRefresh', type: '() => void', required: false, description: 'Refresh click callback' },
-  {
-    name: 'showRefresh',
-    type: 'boolean',
-    default: 'true',
-    required: false,
-    description: 'Show refresh button',
-  },
-  {
-    name: 'maxDate',
-    type: 'Date',
-    default: 'new Date()',
-    required: false,
-    description: 'Maximum selectable date',
-  },
-];
 
 function MonitoringToolbarGuidelines() {
   return (
@@ -309,15 +252,6 @@ export function MonitoringToolbarPage() {
           </div>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { MonitoringToolbar } from '@/design-system';
-
-<MonitoringToolbar
-  onTimeRangeChange={(value) => setTimeRange(value)}
-  onCustomPeriodChange={(period) => setCustomPeriod(period)}
-  onRefresh={refetchData}
-/>`,
-      }}
       examples={
         <VStack gap={6}>
           <VStack gap={3}>
@@ -338,7 +272,6 @@ export function MonitoringToolbarPage() {
         </VStack>
       }
       guidelines={<MonitoringToolbarGuidelines />}
-      apiReference={monitoringToolbarProps}
       relatedLinks={[
         {
           label: 'Date Picker',

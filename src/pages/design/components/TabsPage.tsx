@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Tabs, TabList, Tab, TabPanel, VStack } from '@/design-system';
@@ -84,43 +83,6 @@ function CapsuleTabDemo() {
     </div>
   );
 }
-
-const tabsProps: PropDef[] = [
-  { name: 'value', type: 'string', required: false, description: 'Controlled active tab' },
-  { name: 'defaultValue', type: 'string', required: false, description: 'Default active tab' },
-  {
-    name: 'onChange',
-    type: '(value: string) => void',
-    required: false,
-    description: 'Tab change handler',
-  },
-  { name: 'size', type: "'sm' | 'md'", default: "'sm'", required: false, description: 'Tab size' },
-  {
-    name: 'variant',
-    type: "'underline' | 'boxed'",
-    default: "'underline'",
-    required: false,
-    description: 'Tab style',
-  },
-  {
-    name: 'children',
-    type: 'ReactNode',
-    required: true,
-    description: 'TabList and TabPanel children',
-  },
-];
-
-const tabProps: PropDef[] = [
-  { name: 'value', type: 'string', required: true, description: 'Tab identifier' },
-  { name: 'children', type: 'ReactNode', required: true, description: 'Tab label content' },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-];
 
 function TabsGuidelines() {
   return (
@@ -373,18 +335,6 @@ export function TabsPage() {
           </Tabs>
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Tabs, TabList, Tab, TabPanel } from '@/design-system';
-
-<Tabs defaultValue="overview" size="sm">
-  <TabList>
-    <Tab value="overview">Overview</Tab>
-    <Tab value="settings">Settings</Tab>
-  </TabList>
-  <TabPanel value="overview">Overview content</TabPanel>
-  <TabPanel value="settings">Settings content</TabPanel>
-</Tabs>`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -520,23 +470,6 @@ export function TabsPage() {
             </tr>
           </tbody>
         </TableWrapper>
-      }
-      apiReference={tabsProps}
-      subComponentApis={[{ name: 'Tab', props: tabProps }]}
-      keyboardInteractions={[
-        { key: 'Tab', description: 'Tab List 진입 및 이탈' },
-        { key: '← / →', description: '이전 / 다음 탭 항목으로 포커스 이동' },
-        { key: 'Enter / Space', description: '포커스된 탭 선택' },
-      ]}
-      accessibility={
-        <Prose>
-          <p>
-            Tabs use <span className="font-mono">role="tablist"</span>,{' '}
-            <span className="font-mono">role="tab"</span>,{' '}
-            <span className="font-mono">role="tabpanel"</span>. Arrow keys navigate between tabs.{' '}
-            <span className="font-mono">aria-selected</span> indicates active tab.
-          </p>
-        </Prose>
       }
       relatedLinks={[
         {

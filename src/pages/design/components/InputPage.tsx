@@ -1,6 +1,5 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import type { PropDef } from '../_shared/PropsTable';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import {
@@ -192,65 +191,6 @@ function InputPageGuidelines() {
   );
 }
 
-const inputProps: PropDef[] = [
-  {
-    name: 'size',
-    type: "'sm' | 'md' | 'lg'",
-    default: "'md'",
-    required: false,
-    description: 'Input size',
-  },
-  {
-    name: 'variant',
-    type: "'default' | 'search' | 'code'",
-    default: "'default'",
-    required: false,
-    description: 'Input variant',
-  },
-  {
-    name: 'width',
-    type: "'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full' | number",
-    default: "'md'",
-    required: false,
-    description: 'Input width',
-  },
-  {
-    name: 'error',
-    type: 'string | boolean',
-    required: false,
-    description: 'Error state or message',
-  },
-  {
-    name: 'fullWidth',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Full width input',
-  },
-  { name: 'leftElement', type: 'ReactNode', required: false, description: 'Left element (icon)' },
-  {
-    name: 'rightElement',
-    type: 'ReactNode',
-    required: false,
-    description: 'Right element (icon/button)',
-  },
-  {
-    name: 'required',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Required field',
-  },
-  {
-    name: 'disabled',
-    type: 'boolean',
-    default: 'false',
-    required: false,
-    description: 'Disabled state',
-  },
-  { name: 'placeholder', type: 'string', required: false, description: 'Placeholder text' },
-];
-
 export function InputPage() {
   return (
     <ComponentPageTemplate
@@ -273,9 +213,6 @@ export function InputPage() {
           <Input placeholder="Enter text..." width="md" />
         </ComponentPreview>
       }
-      usage={{
-        code: `import { Input } from '@/design-system';\n\n<Input placeholder="Enter text..." width="md" />`,
-      }}
       examples={
         <VStack gap={8}>
           <VStack gap={3}>
@@ -638,14 +575,6 @@ export function InputPage() {
           <span className="font-mono">font: 11-12px</span> ·{' '}
           <span className="font-mono">border: 1px → 2px focus</span>
         </div>
-      }
-      apiReference={inputProps}
-      accessibility={
-        <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
-          <li>Tab: Move focus to input</li>
-          <li>Use aria-describedby for suffix/helper text</li>
-          <li>Error state: role=&quot;alert&quot; for error messages</li>
-        </ul>
       }
       relatedLinks={[
         {
