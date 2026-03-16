@@ -308,6 +308,7 @@ import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
 import { DesignSystemLayout } from '@/pages/design/DesignSystemLayout';
 import { DesignOverviewPage } from '@/pages/design/DesignOverviewPage';
+import { AllComponentsPage } from '@/pages/design/AllComponentsPage';
 import { TokenArchitecturePage } from '@/pages/design/foundation/TokenArchitecturePage';
 import { PrimitiveColorsPage } from '@/pages/design/foundation/PrimitiveColorsPage';
 import { SemanticColorsPage } from '@/pages/design/foundation/SemanticColorsPage';
@@ -985,6 +986,7 @@ function AppRoutes() {
       {/* Design System Routes (New Layout) */}
       <Route path="/design" element={<DesignSystemLayout />}>
         <Route index element={<DesignOverviewPage />} />
+        <Route path="all" element={<AllComponentsPage />} />
         <Route path="foundation/tokens" element={<TokenArchitecturePage />} />
         <Route path="foundation/primitive-colors" element={<PrimitiveColorsPage />} />
         <Route path="foundation/semantic-colors" element={<SemanticColorsPage />} />

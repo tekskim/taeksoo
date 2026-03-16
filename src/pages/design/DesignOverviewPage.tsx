@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { allNavItems } from './_shared/navigationData';
+import thakiSymbol from '@/assets/desktop/symbol.svg';
 
 export function DesignOverviewPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,8 +33,11 @@ export function DesignOverviewPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
-      <div className="w-full max-w-[520px] flex flex-col items-center gap-6">
-        <h1 className="text-heading-h2 text-[var(--color-text-default)]">TDS</h1>
+      <div className="w-full max-w-[520px] flex flex-col items-start gap-2">
+        <div className="flex items-center gap-3">
+          <img src={thakiSymbol} alt="" className="w-8 h-8" />
+          <h1 className="text-heading-h2 text-[var(--color-text-default)]">TDS</h1>
+        </div>
         <p className="text-body-lg text-[var(--color-text-muted)]">THAKI Design System</p>
 
         <div className="relative w-full mt-2">
@@ -52,7 +56,7 @@ export function DesignOverviewPage() {
             }}
             onKeyDown={handleKeyDown}
             placeholder="Search components, patterns, tokens..."
-            className="w-full pl-11 pr-10 py-3.5 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-xl)] text-[length:var(--font-size-14)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors shadow-sm"
+            className="w-full pl-12 pr-10 py-3.5 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-14)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-disabled)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors shadow-sm"
           />
           {searchQuery && (
             <button
