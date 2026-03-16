@@ -17,7 +17,6 @@ import {
   DetailHeader,
   MonitoringToolbar,
   PageShell,
-  STATUS_THRESHOLDS,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -382,8 +381,6 @@ function MonitoringTimeControls({ onTimeRangeChange, onRefresh }: MonitoringTime
    Following design system pattern from DesignSystemPage
    ---------------------------------------- */
 
-type GaugeStatus = 'success' | 'warning' | 'error';
-
 interface CapacityGaugeProps {
   percentage: number;
   used?: number;
@@ -394,19 +391,17 @@ interface CapacityGaugeProps {
 function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
+  const gaugeRef = useRef<HTMLDivElement>(null);
 
-  // Chart dimensions for arc detection
   const chartWidth = 220;
   const chartHeight = 180;
-  const centerX = chartWidth * 0.5; // 50%
-  const centerY = chartHeight * 0.65; // 65%
-  const radius = Math.min(chartWidth, chartHeight) * 0.45; // 90% of half
+  const centerX = chartWidth * 0.5;
+  const centerY = chartHeight * 0.65;
+  const radius = Math.min(chartWidth, chartHeight) * 0.45;
   const arcWidth = 20;
   const innerRadius = radius - arcWidth;
   const outerRadius = radius;
 
-  // Get color from design system CSS variables
   const getColor = (cssVar: string, fallback: string) => {
     if (typeof window !== 'undefined') {
       const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
@@ -415,55 +410,34 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     return fallback;
   };
 
-  // Determine status based on storage thresholds (85 warning, 95 danger)
-  const getStatus = (): GaugeStatus => {
-    const { warning, danger } = STATUS_THRESHOLDS.storage;
-    if (percentage >= danger) return 'error';
-    if (percentage >= warning) return 'warning';
-    return 'success';
-  };
+  const usedColor = getColor('--color-status-success', '#22c55e');
+  const bgColor = getColor('--color-border-subtle', '#f1f5f9');
+  const warningTrack = '#bcc0c6';
+  const dangerTrack = '#8b8f96';
 
-  const status = getStatus();
-
-  const colorMap = {
-    success: getColor('--color-status-success', '#22c55e'),
-    warning: getColor('--color-status-warning', '#f97316'),
-    error: getColor('--color-status-error', '#ef4444'),
-  };
-
-  const color = colorMap[status];
   const available = total !== undefined && used !== undefined ? total - used : 0;
   const availablePercent =
     total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
 
-  // Check if mouse is over the gauge arc
   const isOverGaugeArc = (mx: number, my: number) => {
     const dx = mx - centerX;
     const dy = my - centerY;
     const distance = Math.sqrt(dx * dx + dy * dy);
-
-    // Check if within the arc ring
     if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
-
-    // Check if within the arc angle range (210° to -30°)
     let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
     if (angle < 0) angle += 360;
-
     return angle >= 150 && angle <= 330;
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
+    if (gaugeRef.current) {
+      const rect = gaugeRef.current.getBoundingClientRect();
       const relX = e.clientX - rect.left;
       const relY = e.clientY - rect.top;
-
-      // Calculate chart position within container
       const containerWidth = rect.width;
       const containerHeight = rect.height;
       const chartX = relX - (containerWidth - chartWidth) / 2;
       const chartY = relY - (containerHeight - chartHeight) / 2;
-
       setMousePos({ x: relX, y: relY });
       setShowTooltip(isOverGaugeArc(chartX, chartY));
     }
@@ -471,6 +445,27 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
 
   const handleMouseLeave = () => {
     setShowTooltip(false);
+  };
+
+  const buildColorStops = (): [number, string][] => {
+    const pct = percentage / 100;
+    if (pct >= 0.95)
+      return [
+        [pct, usedColor],
+        [1, dangerTrack],
+      ];
+    if (pct >= 0.7)
+      return [
+        [pct, usedColor],
+        [0.95, warningTrack],
+        [1, dangerTrack],
+      ];
+    return [
+      [pct, usedColor],
+      [0.7, bgColor],
+      [0.95, warningTrack],
+      [1, dangerTrack],
+    ];
   };
 
   const option = {
@@ -483,15 +478,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
         radius: '90%',
         min: 0,
         max: 100,
-        axisLine: {
-          lineStyle: {
-            width: 20,
-            color: [
-              [percentage / 100, color],
-              [1, getColor('--color-border-subtle', '#f1f5f9')],
-            ],
-          },
-        },
+        axisLine: { lineStyle: { width: 20, color: buildColorStops() } },
         pointer: { show: false },
         axisTick: { show: false },
         splitLine: { show: false },
@@ -503,48 +490,71 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="relative h-[180px] flex items-center justify-center"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
-        <span className="text-heading-h3" style={{ color }}>
-          {percentage.toFixed(1)}%
-        </span>
-        {used !== undefined && total !== undefined && (
-          <span className="text-body-md text-[var(--color-text-subtle)]">
-            {used}
-            {unit}/{total}
-            {unit}
+    <div className="flex items-center justify-center gap-6">
+      {/* Legend */}
+      <div className="flex flex-col gap-2.5 shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: usedColor }} />
+          <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
+            Used: {used !== undefined ? `${used} ${unit}` : '-'}
           </span>
-        )}
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: warningTrack }} />
+          <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
+            Warning: 70%
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: dangerTrack }} />
+          <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
+            Danger: 95%
+          </span>
+        </div>
       </div>
 
-      {/* Tooltip */}
-      {showTooltip && used !== undefined && total !== undefined && (
-        <div
-          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
-          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
-        >
-          <div className="flex items-center gap-1.5">
-            <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
-            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Used: {used}
-              {unit} ({Math.round(percentage)}%)
+      {/* Gauge */}
+      <div
+        ref={gaugeRef}
+        className="relative h-[180px] flex items-center justify-center"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
+        <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
+          <span className="text-heading-h3 text-[var(--color-text-default)]">
+            {percentage.toFixed(1)}%
+          </span>
+          {used !== undefined && total !== undefined && (
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              of {total} {unit}
             </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
-              Available: {available.toFixed(1)}
-              {unit} ({availablePercent}%)
-            </span>
-          </div>
+          )}
         </div>
-      )}
+
+        {showTooltip && used !== undefined && total !== undefined && (
+          <div
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
+          >
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-[5px] h-[5px] rounded-[1px]"
+                style={{ backgroundColor: usedColor }}
+              />
+              <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+                Used: {used} {unit} ({Math.round(percentage)}%)
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+              <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+                Available: {available.toFixed(1)} {unit} ({availablePercent}%)
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

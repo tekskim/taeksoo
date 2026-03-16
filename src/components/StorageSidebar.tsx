@@ -8,6 +8,8 @@ import {
   IconBucket,
   IconBrandSpeedtest,
   IconServer2,
+  IconFolders,
+  IconShare,
 } from '@tabler/icons-react';
 import { HardDrive } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -105,6 +107,22 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
               label="Images"
               href="/storage/images"
               active={isActive('/storage/images')}
+            />
+          </MenuSection>
+
+          {/* File Section */}
+          <MenuSection title="File" defaultOpen={true}>
+            <MenuItem
+              icon={<IconFolders size={16} stroke={1.5} />}
+              label="File Systems"
+              href="/storage/file-systems"
+              active={isActive('/storage/file-systems')}
+            />
+            <MenuItem
+              icon={<IconShare size={16} stroke={1.5} />}
+              label="NFS"
+              href="/storage/nfs"
+              active={isActive('/storage/nfs')}
             />
           </MenuSection>
 
