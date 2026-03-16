@@ -19,6 +19,9 @@ export function MenuDivider({ spacing = 'md' }: MenuDividerProps) {
   };
 
   return (
-    <div className={`w-full h-px bg-[var(--color-border-default)] ${spacingStyles[spacing]}`} />
+    <div
+      data-figma-name="MenuDivider"
+      className={`w-full h-px bg-[var(--color-border-default)] ${spacingStyles[spacing]}`}
+    />
   );
 }

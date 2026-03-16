@@ -168,7 +168,7 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                       Keyword search
                     </td>
                     <td className="p-2 border border-[var(--color-border-default)]">
-                      <code className="text-body-sm">SearchInput</code>
+                      <span className="font-mono text-body-sm">SearchInput</span>
                     </td>
                     <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
                       텍스트 기반 검색. 입력된 키워드로 전체 데이터를 필터링한다.
@@ -182,7 +182,7 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
                       Filter search
                     </td>
                     <td className="p-2 border border-[var(--color-border-default)]">
-                      <code className="text-body-sm">FilterSearchInput</code>
+                      <span className="font-mono text-body-sm">FilterSearchInput</span>
                     </td>
                     <td className="p-2 border border-[var(--color-border-default)] text-[var(--color-text-muted)]">
                       필터 키 기반 구조화된 검색. 필터 키를 선택한 후 값을 입력 또는 선택하여 조건을

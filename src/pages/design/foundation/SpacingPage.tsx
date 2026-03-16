@@ -54,9 +54,9 @@ export function SpacingPage() {
                     className="w-12 h-12 bg-[var(--color-action-primary)]"
                     style={{ borderRadius: value }}
                   />
-                  <code className="text-[9px] font-mono text-[var(--color-text-subtle)]">
+                  <span className="text-[9px] font-mono text-[var(--color-text-subtle)]">
                     {name}
-                  </code>
+                  </span>
                 </VStack>
               ))}
             </div>

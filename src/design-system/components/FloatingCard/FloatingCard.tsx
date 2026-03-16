@@ -182,7 +182,12 @@ export function FloatingCard({
   };
 
   const cardContent = (
-    <div className={twMerge(baseStyles.join(' '), className)} style={cardStyle} {...props}>
+    <div
+      data-figma-name="FloatingCard"
+      className={twMerge(baseStyles.join(' '), className)}
+      style={cardStyle}
+      {...props}
+    >
       {showCloseButton && onClose && (
         <button
           type="button"

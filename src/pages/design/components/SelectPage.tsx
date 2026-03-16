@@ -365,7 +365,7 @@ export function SelectPage() {
 
           <VStack gap={3}>
             <Label>Width variants</Label>
-            <div className="flex flex-col gap-3">
+            <VStack gap={3}>
               <div className="flex gap-4 items-end">
                 <VStack gap={1}>
                   <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
@@ -420,7 +420,7 @@ export function SelectPage() {
                   />
                 </VStack>
               </div>
-              <div className="flex flex-col gap-3 w-full">
+              <VStack gap={3} className="w-full">
                 <VStack gap={1}>
                   <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                     Half (50%)
@@ -447,8 +447,8 @@ export function SelectPage() {
                     ]}
                   />
                 </VStack>
-              </div>
-            </div>
+              </VStack>
+            </VStack>
           </VStack>
 
           <VStack gap={3}>
@@ -491,8 +491,11 @@ export function SelectPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>padding: 10×8px</code> · <code>radius: 6px</code> · <code>font: 12px</code> ·{' '}
-          <code>item: 10×6px, 12px</code> · <code>border: 1px → 2px focus</code>
+          <span className="font-mono">padding: 10×8px</span> ·{' '}
+          <span className="font-mono">radius: 6px</span> ·{' '}
+          <span className="font-mono">font: 12px</span> ·{' '}
+          <span className="font-mono">item: 10×6px, 12px</span> ·{' '}
+          <span className="font-mono">border: 1px → 2px focus</span>
         </div>
       }
       apiReference={selectProps}

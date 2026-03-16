@@ -219,17 +219,19 @@ function FormFieldPageGuidelines() {
                 각 요소 간 8px 간격.
               </li>
               <li>
-                <strong>ErrorMessage 스타일</strong>: <code>text-body-sm</code>,{' '}
-                <code>text-[var(--color-state-danger)]</code> 색상,{' '}
-                <code>role=&quot;alert&quot;</code>.
+                <strong>ErrorMessage 스타일</strong>:{' '}
+                <span className="font-mono">text-body-sm</span>,{' '}
+                <span className="font-mono">text-[var(--color-state-danger)]</span> 색상,{' '}
+                <span className="font-mono">role=&quot;alert&quot;</span>.
               </li>
               <li>
-                <strong>HelperText 스타일</strong>: 에러 시에도 <code>text-body-sm</code>,{' '}
-                <code>text-[var(--color-text-subtle)]</code> 유지.
+                <strong>HelperText 스타일</strong>: 에러 시에도{' '}
+                <span className="font-mono">text-body-sm</span>,{' '}
+                <span className="font-mono">text-[var(--color-text-subtle)]</span> 유지.
               </li>
               <li>
-                <strong>Input 테두리</strong>: <code>error</code> prop으로 테두리를 danger 색상으로
-                변경합니다.
+                <strong>Input 테두리</strong>: <span className="font-mono">error</span> prop으로
+                테두리를 danger 색상으로 변경합니다.
               </li>
               <li>
                 <strong>에러 해제</strong>: 사용자가 타이핑을 시작하면(onChange) 즉시 에러 상태를

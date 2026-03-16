@@ -365,12 +365,14 @@ export function ProgressBarComponentPage() {
       accessibility={
         <Prose>
           <p>
-            ProgressBar는 <code>role="progressbar"</code>를 사용하며, <code>aria-valuenow</code>,{' '}
-            <code>aria-valuemin</code>, <code>aria-valuemax</code>를 통해 현재 진행률을 전달한다.
-            라벨이 있는 경우 <code>aria-label</code> 또는 <code>aria-labelledby</code>로 진행 상태를
-            설명한다.
-            <code>prefers-reduced-motion</code> 미디어 쿼리를 지원하여 모션 민감 사용자에게
-            애니메이션을 비활성화한다.
+            ProgressBar는 <span className="font-mono">role="progressbar"</span>를 사용하며,{' '}
+            <span className="font-mono">aria-valuenow</span>,{' '}
+            <span className="font-mono">aria-valuemin</span>,{' '}
+            <span className="font-mono">aria-valuemax</span>를 통해 현재 진행률을 전달한다. 라벨이
+            있는 경우 <span className="font-mono">aria-label</span> 또는{' '}
+            <span className="font-mono">aria-labelledby</span>로 진행 상태를 설명한다.
+            <span className="font-mono">prefers-reduced-motion</span> 미디어 쿼리를 지원하여 모션
+            민감 사용자에게 애니메이션을 비활성화한다.
           </p>
         </Prose>
       }

@@ -23,9 +23,9 @@ export function BordersPage() {
                   style={{ border: `2px solid var(--color-border-${name})` }}
                 />
                 <div>
-                  <code className="text-[length:var(--font-size-11)] font-mono text-[var(--color-text-default)]">
+                  <span className="text-[length:var(--font-size-11)] font-mono text-[var(--color-text-default)]">
                     border-{name}
-                  </code>
+                  </span>
                   <p className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
                     {desc}
                   </p>
@@ -51,9 +51,9 @@ export function BordersPage() {
                     className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
                     style={{ border: `${value} solid var(--color-border-strong)` }}
                   />
-                  <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
+                  <span className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
                     {value}
-                  </code>
+                  </span>
                 </div>
               ))}
             </div>
@@ -69,9 +69,9 @@ export function BordersPage() {
                     className="w-full h-12 rounded-[var(--radius-md)] bg-[var(--color-surface-default)]"
                     style={{ border: `2px ${style} var(--color-border-strong)` }}
                   />
-                  <code className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
+                  <span className="text-[length:var(--font-size-10)] font-mono text-[var(--color-text-subtle)]">
                     {style}
-                  </code>
+                  </span>
                 </div>
               ))}
             </div>
@@ -85,25 +85,25 @@ export function BordersPage() {
                 <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
                   Card with default border
                 </p>
-                <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
+                <span className="font-mono text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
                   border border-[var(--color-border-default)]
-                </code>
+                </span>
               </div>
               <div className="p-4 rounded-[var(--radius-lg)] border-2 border-[var(--color-border-strong)] bg-[var(--color-surface-default)]">
                 <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
                   Card with strong border
                 </p>
-                <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
+                <span className="font-mono text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
                   border-2 border-[var(--color-border-strong)]
-                </code>
+                </span>
               </div>
               <div className="p-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
                 <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mb-2">
                   Dashed border (dropzone)
                 </p>
-                <code className="text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
+                <span className="font-mono text-[length:var(--font-size-10)] text-[var(--color-text-muted)]">
                   border border-dashed
-                </code>
+                </span>
               </div>
             </div>
           </VStack>

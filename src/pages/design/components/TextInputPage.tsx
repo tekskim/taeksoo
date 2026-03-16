@@ -100,7 +100,7 @@ export function TextInputPage() {
 
           <VStack gap={3}>
             <Label>Width</Label>
-            <div className="flex flex-col gap-3 w-full">
+            <VStack gap={3} className="w-full">
               <VStack gap={1} className="items-start">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">XS (80px)</span>
                 <Input placeholder="XS" width="xs" />
@@ -125,7 +125,7 @@ export function TextInputPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Full (100%)</span>
                 <Input placeholder="Full" width="full" />
               </VStack>
-            </div>
+            </VStack>
           </VStack>
 
           <VStack gap={3}>

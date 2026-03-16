@@ -37,6 +37,7 @@ export function FileListCard({
 
   return (
     <div
+      data-figma-name="FileListCard"
       className={`bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-[var(--primitive-spacing-3)] flex flex-col gap-[var(--primitive-spacing-2)] ${className}`}
     >
       {files.map((file) => (
@@ -103,7 +104,7 @@ export function FileListSection({
   className = '',
 }: FileListSectionProps) {
   return (
-    <VStack gap={3} className={`w-full ${className}`}>
+    <VStack gap={3} className={`w-full ${className}`} data-figma-name="FileListSection">
       {label && (
         <label className="text-label-lg text-[var(--color-text-default)]">
           {label}

@@ -215,13 +215,14 @@ export function BreadcrumbPage() {
             <Prose>
               <p>노드는 페이지를 가리킨다.</p>
               <p>
-                Separator: 상위/하위 페이지 관계를 시각적으로 구분. <code>&gt;</code> 기호 사용
+                Separator: 상위/하위 페이지 관계를 시각적으로 구분.{' '}
+                <span className="font-mono">&gt;</span> 기호 사용
               </p>
               <p>
                 Result example:{' '}
-                <code>
+                <span className="font-mono">
                   primaryMenuTitle &gt; (secondaryMenuTitle) &gt; subPageTitle &gt; recentPageTitle
-                </code>
+                </span>
               </p>
               <p>
                 Note: secondaryMenuTitle은 사이드바가 이중으로 구성된 경우(Container 앱, Agent
@@ -298,8 +299,10 @@ export function BreadcrumbPage() {
               <SubSectionTitle>동적 노드명 동기화</SubSectionTitle>
               <Prose>
                 <p>
-                  리소스 이름이 포함된 노드(예: <code>{'{instanceName}'}</code>,{' '}
-                  <code>{'{podName}'}</code>)는 페이지 로딩 시점에 실제 리소스명으로 동기화된다.
+                  리소스 이름이 포함된 노드(예:{' '}
+                  <span className="font-mono">{'{instanceName}'}</span>,{' '}
+                  <span className="font-mono">{'{podName}'}</span>)는 페이지 로딩 시점에 실제
+                  리소스명으로 동기화된다.
                 </p>
                 <p>리소스명을 불러오는 동안에는 로딩 상태(Skeleton 또는 Placeholder)를 표시한다.</p>
               </Prose>
@@ -332,8 +335,9 @@ export function BreadcrumbPage() {
                 <ul className="list-disc pl-5 space-y-1">
                   <li>노드 텍스트는 메뉴명 또는 페이지 H1 제목과 정확히 일치시킨다.</li>
                   <li>
-                    리소스명이 포함되는 경우 <code>{'{리소스명}'}</code> 형태로 동적 바인딩한다.
-                    이름이 없는 리소스는 <code>no name</code>으로 표시한다.
+                    리소스명이 포함되는 경우 <span className="font-mono">{'{리소스명}'}</span>{' '}
+                    형태로 동적 바인딩한다. 이름이 없는 리소스는{' '}
+                    <span className="font-mono">no name</span>으로 표시한다.
                   </li>
                   <li>노드 텍스트를 임의로 축약하거나 변형하지 않는다.</li>
                   <li>노드 텍스트는 문장이 아닌 명사형으로 작성한다.</li>
@@ -360,45 +364,45 @@ export function BreadcrumbPage() {
                       <tr>
                         <Td>단일 화면 (Dashboard)</Td>
                         <Td>
-                          <code>Dashboard</code>
+                          <span className="font-mono">Dashboard</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>단일 화면 (Topology)</Td>
                         <Td>
-                          <code>Topology</code>
+                          <span className="font-mono">Topology</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>리스트 화면</Td>
                         <Td>
-                          <code>Instances</code>
+                          <span className="font-mono">Instances</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>디테일 화면</Td>
                         <Td>
-                          <code>{'Instances > {Instance name}'}</code>
+                          <span className="font-mono">{'Instances > {Instance name}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Pool 상세</Td>
                         <Td>
-                          <code>
+                          <span className="font-mono">
                             {'Load balancer > {load balancer id} > {listener id} > {pool name}'}
-                          </code>
+                          </span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Port 상세 (이름 있음)</Td>
                         <Td>
-                          <code>{'Ports > {port name}'}</code>
+                          <span className="font-mono">{'Ports > {port name}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Port 상세 (이름 없음)</Td>
                         <Td>
-                          <code>Ports &gt; no name</code>
+                          <span className="font-mono">Ports &gt; no name</span>
                         </Td>
                       </tr>
                     </tbody>
@@ -418,25 +422,29 @@ export function BreadcrumbPage() {
                       <tr>
                         <Td>Primary menu page</Td>
                         <Td>
-                          <code>primaryMenuTitle</code>
+                          <span className="font-mono">primaryMenuTitle</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Secondary menu page</Td>
                         <Td>
-                          <code>{'primaryMenuTitle > secondaryMenuTitle > subpageTitle'}</code>
+                          <span className="font-mono">
+                            {'primaryMenuTitle > secondaryMenuTitle > subpageTitle'}
+                          </span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Cluster Create 페이지</Td>
                         <Td>
-                          <code>Cluster Management &gt; Clusters &gt; Create Cluster</code>
+                          <span className="font-mono">
+                            Cluster Management &gt; Clusters &gt; Create Cluster
+                          </span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Pod Detail 페이지</Td>
                         <Td>
-                          <code>{'clusterName > Pods > {podName}'}</code>
+                          <span className="font-mono">{'clusterName > Pods > {podName}'}</span>
                         </Td>
                       </tr>
                     </tbody>
@@ -458,105 +466,107 @@ export function BreadcrumbPage() {
                         <Td>Dashboard</Td>
                         <Td>/home</Td>
                         <Td>
-                          <code>Dashboard</code>
+                          <span className="font-mono">Dashboard</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Pools 리스트</Td>
                         <Td>/pools</Td>
                         <Td>
-                          <code>Pools</code>
+                          <span className="font-mono">Pools</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Pool 상세</Td>
                         <Td>/pools/:poolName</Td>
                         <Td>
-                          <code>{'Pools > {poolName}'}</code>
+                          <span className="font-mono">{'Pools > {poolName}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Hosts 리스트</Td>
                         <Td>/hosts</Td>
                         <Td>
-                          <code>Hosts</code>
+                          <span className="font-mono">Hosts</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Host 상세</Td>
                         <Td>/hosts/:hostname</Td>
                         <Td>
-                          <code>{'Hosts > {hostname}'}</code>
+                          <span className="font-mono">{'Hosts > {hostname}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>OSDs 리스트</Td>
                         <Td>/osds</Td>
                         <Td>
-                          <code>OSDs</code>
+                          <span className="font-mono">OSDs</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>OSD 상세</Td>
                         <Td>/osds/:osdId</Td>
                         <Td>
-                          <code>{'OSDs > {osdId}'}</code>
+                          <span className="font-mono">{'OSDs > {osdId}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Physical Disks 리스트</Td>
                         <Td>/physical-disks</Td>
                         <Td>
-                          <code>Physical Disks</code>
+                          <span className="font-mono">Physical Disks</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Images 리스트</Td>
                         <Td>/images</Td>
                         <Td>
-                          <code>Images</code>
+                          <span className="font-mono">Images</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Image 상세</Td>
                         <Td>/images/:imageName</Td>
                         <Td>
-                          <code>{'Images > {imageName}'}</code>
+                          <span className="font-mono">{'Images > {imageName}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Buckets 리스트</Td>
                         <Td>/buckets</Td>
                         <Td>
-                          <code>Buckets</code>
+                          <span className="font-mono">Buckets</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Bucket 상세</Td>
                         <Td>/buckets/:bucketName</Td>
                         <Td>
-                          <code>{'Buckets > {bucketName}'}</code>
+                          <span className="font-mono">{'Buckets > {bucketName}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Bucket 생성</Td>
                         <Td>/buckets/create</Td>
                         <Td>
-                          <code>Buckets &gt; Create Bucket</code>
+                          <span className="font-mono">Buckets &gt; Create Bucket</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Bucket 편집</Td>
                         <Td>/buckets/:bucketName/edit</Td>
                         <Td>
-                          <code>{'Buckets > {bucketName} > Edit Bucket'}</code>
+                          <span className="font-mono">
+                            {'Buckets > {bucketName} > Edit Bucket'}
+                          </span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Overall Performance</Td>
                         <Td>/overall-performance</Td>
                         <Td>
-                          <code>Overall Performance</code>
+                          <span className="font-mono">Overall Performance</span>
                         </Td>
                       </tr>
                     </tbody>
@@ -576,19 +586,19 @@ export function BreadcrumbPage() {
                       <tr>
                         <Td>Dashboard</Td>
                         <Td>
-                          <code>Dashboard</code>
+                          <span className="font-mono">Dashboard</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Users 리스트</Td>
                         <Td>
-                          <code>Users</code>
+                          <span className="font-mono">Users</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>User 상세</Td>
                         <Td>
-                          <code>{'Users > {Username}'}</code>
+                          <span className="font-mono">{'Users > {Username}'}</span>
                         </Td>
                       </tr>
                     </tbody>
@@ -608,13 +618,13 @@ export function BreadcrumbPage() {
                       <tr>
                         <Td>Data source 상세</Td>
                         <Td>
-                          <code>{'Data sources > {Data source name}'}</code>
+                          <span className="font-mono">{'Data sources > {Data source name}'}</span>
                         </Td>
                       </tr>
                       <tr>
                         <Td>Data source 생성</Td>
                         <Td>
-                          <code>Data sources &gt; Create data source</code>
+                          <span className="font-mono">Data sources &gt; Create data source</span>
                         </Td>
                       </tr>
                     </tbody>
@@ -627,8 +637,10 @@ export function BreadcrumbPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>gap: 4px</code> · <code>font-size: 11px</code> · <code>line-height: 16px</code> ·{' '}
-          <code>font-weight: medium</code>
+          <span className="font-mono">gap: 4px</span> ·{' '}
+          <span className="font-mono">font-size: 11px</span> ·{' '}
+          <span className="font-mono">line-height: 16px</span> ·{' '}
+          <span className="font-mono">font-weight: medium</span>
         </div>
       }
       apiReference={breadcrumbProps}

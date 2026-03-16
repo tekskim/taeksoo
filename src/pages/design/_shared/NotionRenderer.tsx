@@ -230,12 +230,9 @@ function InlineMarkdown({ text }: { text: string }) {
         if (part.type === 'italic') return <em key={i}>{part.text}</em>;
         if (part.type === 'code')
           return (
-            <code
-              key={i}
-              className="px-1 py-0.5 bg-[var(--color-surface-subtle)] rounded text-body-sm font-mono"
-            >
+            <span key={i} className="font-mono">
               {part.text}
-            </code>
+            </span>
           );
         if (part.type === 'strikethrough') return <del key={i}>{part.text}</del>;
         if (part.type === 'link')

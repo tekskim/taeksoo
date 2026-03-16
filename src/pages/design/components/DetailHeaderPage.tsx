@@ -193,7 +193,8 @@ function DetailHeaderGuidelines() {
               배치
             </li>
             <li>
-              <strong>ID</strong>: <code>copyable</code> 속성으로 클립보드 복사 기능을 제공
+              <strong>ID</strong>: <span className="font-mono">copyable</span> 속성으로 클립보드
+              복사 기능을 제공
             </li>
             <li>
               <strong>날짜</strong>: Created at, Updated at 등 시간 정보를 표시
@@ -297,55 +298,55 @@ function DetailHeaderGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>container.padding</code>
+                <span className="font-mono">container.padding</span>
               </Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>container.radius</code>
+                <span className="font-mono">container.radius</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>container.gap</code>
+                <span className="font-mono">container.gap</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>title</code>
+                <span className="font-mono">title</span>
               </Td>
               <Td>16px / semibold</Td>
             </tr>
             <tr>
               <Td>
-                <code>actions.gap</code>
+                <span className="font-mono">actions.gap</span>
               </Td>
               <Td>4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-grid.gap</code>
+                <span className="font-mono">info-grid.gap</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-card.padding</code>
+                <span className="font-mono">info-card.padding</span>
               </Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-card.radius</code>
+                <span className="font-mono">info-card.radius</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-card.gap</code>
+                <span className="font-mono">info-card.gap</span>
               </Td>
               <Td>6px</Td>
             </tr>
@@ -610,55 +611,55 @@ import { IconTerminal2, IconPlayerPlay, IconPlayerStop, IconPower, IconTrash, Ic
           <tbody>
             <tr>
               <Td>
-                <code>container.padding</code>
+                <span className="font-mono">container.padding</span>
               </Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>container.radius</code>
+                <span className="font-mono">container.radius</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>container.gap</code>
+                <span className="font-mono">container.gap</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>title</code>
+                <span className="font-mono">title</span>
               </Td>
               <Td>16px / semibold</Td>
             </tr>
             <tr>
               <Td>
-                <code>actions.gap</code>
+                <span className="font-mono">actions.gap</span>
               </Td>
               <Td>4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-grid.gap</code>
+                <span className="font-mono">info-grid.gap</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-card.padding</code>
+                <span className="font-mono">info-card.padding</span>
               </Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-card.radius</code>
+                <span className="font-mono">info-card.radius</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>info-card.gap</code>
+                <span className="font-mono">info-card.gap</span>
               </Td>
               <Td>6px</Td>
             </tr>

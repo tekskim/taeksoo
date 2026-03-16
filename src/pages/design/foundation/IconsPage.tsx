@@ -179,14 +179,14 @@ function IconsGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>라이브러리</strong>: Tabler Icons (<code>@tabler/icons-react</code>)를
-              사용합니다.
+              <strong>라이브러리</strong>: Tabler Icons (
+              <span className="font-mono">@tabler/icons-react</span>)를 사용합니다.
             </li>
             <li>
               <strong>Stroke</strong>: 기본{' '}
-              <code>
+              <span className="font-mono">
                 stroke={'{'}1.5{'}'}
-              </code>
+              </span>
               .
             </li>
             <li>
@@ -194,14 +194,16 @@ function IconsGuidelines() {
             </li>
             <li>
               <strong>색상</strong>: CSS 변수(
-              <code>text-[var(--color-text-*)]</code>)를 사용. 하드코딩 금지.
+              <span className="font-mono">text-[var(--color-text-*)]</span>)를 사용. 하드코딩 금지.
             </li>
             <li>
-              <strong>즐겨찾기</strong>: <code>IconStar</code>(비활성) / <code>IconStarFilled</code>
+              <strong>즐겨찾기</strong>: <span className="font-mono">IconStar</span>(비활성) /{' '}
+              <span className="font-mono">IconStarFilled</span>
               (활성, yellow400).
             </li>
             <li>
-              아이콘만 사용하는 버튼에는 반드시 <code>aria-label</code>을 지정합니다.
+              아이콘만 사용하는 버튼에는 반드시 <span className="font-mono">aria-label</span>을
+              지정합니다.
             </li>
           </ul>
         </Prose>

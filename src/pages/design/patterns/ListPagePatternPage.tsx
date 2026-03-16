@@ -428,15 +428,15 @@ Table
                 <li>새로운 리소스 생성이 가능할 때 추가된다.</li>
                 <li>Primary 버튼이다.</li>
                 <li>
-                  <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                     KO
-                  </code>{' '}
+                  </span>{' '}
                   {'{리소스명} 생성'}
                 </li>
                 <li>
-                  <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                     EN
-                  </code>{' '}
+                  </span>{' '}
                   {'Create {resource}'}
                 </li>
               </ul>

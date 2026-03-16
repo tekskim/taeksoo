@@ -147,9 +147,9 @@ export function CsvDownloadPage() {
                   <li>ZIP 파일 다운로드</li>
                   <li>
                     파일명 규칙:{' '}
-                    <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                       {'{resource_name}_{YYYYMMDD}_{HHMM}.zip'}
-                    </code>
+                    </span>
                   </li>
                 </ul>
               </ul>
@@ -165,14 +165,14 @@ export function CsvDownloadPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)]">토스트 메시지</span>
                 <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                   <li>
-                    <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                       {'Failed to download the {resource_name} list.'}
-                    </code>
+                    </span>
                   </li>
                   <li>
-                    <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                       {'{resource_name} 목록 다운로드를 실패했습니다.'}
-                    </code>
+                    </span>
                   </li>
                 </ul>
               </VStack>
@@ -240,9 +240,9 @@ export function CsvDownloadPage() {
                 <li>포맷: CSV, ZIP(대용량 파일일 때)</li>
                 <li>
                   파일명 규칙:{' '}
-                  <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                     {'{resource_name}_{YYYYMMDD}_{HHMM}.csv / .zip'}
-                  </code>
+                  </span>
                 </li>
               </ul>
             </VStack>
@@ -262,9 +262,9 @@ export function CsvDownloadPage() {
                 <li>Only icon 버튼</li>
                 <li>
                   호버 시 툴팁:{' '}
-                  <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                     "Download CSV"
-                  </code>
+                  </span>
                 </li>
               </ul>
             </VStack>
@@ -311,15 +311,15 @@ export function CsvDownloadPage() {
               </p>
               <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                 <li>
-                  <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                     EN
-                  </code>{' '}
+                  </span>{' '}
                   {'Failed to download the {resource_name} list.'}
                 </li>
                 <li>
-                  <code className="text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
                     KO
-                  </code>{' '}
+                  </span>{' '}
                   {'{resource_name} 목록 다운로드를 실패했습니다.'}
                 </li>
               </ul>

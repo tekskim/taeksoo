@@ -54,34 +54,32 @@ function ListToolbarPreview() {
   ]);
 
   return (
-    <div className="w-full">
-      <ListToolbar
-        primaryActions={
-          <ListToolbar.Actions>
-            <SearchInput placeholder="Search instances" size="sm" className="w-[240px]" />
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<IconDownload size={12} />}
-              aria-label="Download"
-            />
-          </ListToolbar.Actions>
-        }
-        bulkActions={
-          <ListToolbar.Actions>
-            <Button variant="muted" size="sm">
-              Start
-            </Button>
-            <Button variant="muted" size="sm">
-              Delete
-            </Button>
-          </ListToolbar.Actions>
-        }
-        filters={filters}
-        onFilterRemove={(id) => setFilters(filters.filter((f) => f.id !== id))}
-        onFiltersClear={() => setFilters([])}
-      />
-    </div>
+    <ListToolbar
+      primaryActions={
+        <ListToolbar.Actions>
+          <SearchInput placeholder="Search instances" size="sm" className="w-[240px]" />
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<IconDownload size={12} />}
+            aria-label="Download"
+          />
+        </ListToolbar.Actions>
+      }
+      bulkActions={
+        <ListToolbar.Actions>
+          <Button variant="muted" size="sm">
+            Start
+          </Button>
+          <Button variant="muted" size="sm">
+            Delete
+          </Button>
+        </ListToolbar.Actions>
+      }
+      filters={filters}
+      onFilterRemove={(id) => setFilters(filters.filter((f) => f.id !== id))}
+      onFiltersClear={() => setFilters([])}
+    />
   );
 }
 

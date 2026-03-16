@@ -186,25 +186,25 @@ function PaginationGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>item-size</code>
+                <span className="font-mono">item-size</span>
               </Td>
               <Td>24px</Td>
             </tr>
             <tr>
               <Td>
-                <code>gap</code>
+                <span className="font-mono">gap</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>radius</code>
+                <span className="font-mono">radius</span>
               </Td>
               <Td>4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>font</code>
+                <span className="font-mono">font</span>
               </Td>
               <Td>12px</Td>
             </tr>
@@ -496,8 +496,10 @@ export function PaginationPage() {
       guidelines={<PaginationGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>item-size: 24px</code> · <code>gap: 8px</code> · <code>radius: 4px</code> ·{' '}
-          <code>font: 12px</code>
+          <span className="font-mono">item-size: 24px</span> ·{' '}
+          <span className="font-mono">gap: 8px</span> ·{' '}
+          <span className="font-mono">radius: 4px</span> ·{' '}
+          <span className="font-mono">font: 12px</span>
         </div>
       }
       apiReference={paginationProps}

@@ -205,11 +205,11 @@ export function TogglePage() {
 
           <VStack gap={3}>
             <Label>Interactive examples</Label>
-            <div className="flex flex-col gap-3">
+            <VStack gap={3}>
               <Toggle label="Enable dark mode" defaultChecked />
               <Toggle label="Receive notifications" />
               <Toggle label="Auto-backup enabled" defaultChecked />
-            </div>
+            </VStack>
           </VStack>
 
           <VStack gap={3}>
@@ -224,8 +224,10 @@ export function TogglePage() {
           <VStack gap={3}>
             <Label>Mini Toggle (Chart Controls)</Label>
             <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] mb-2">
-              <code>size: 24×12px</code> · <code>thumb: 8×8px</code> · <code>border: 1px</code> ·{' '}
-              <code>radius: 6px</code>
+              <span className="font-mono">size: 24×12px</span> ·{' '}
+              <span className="font-mono">thumb: 8×8px</span> ·{' '}
+              <span className="font-mono">border: 1px</span> ·{' '}
+              <span className="font-mono">radius: 6px</span>
             </div>
             <div className="flex gap-8 items-center">
               <VStack gap={2}>
@@ -275,8 +277,11 @@ export function TogglePage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>track: 36×20px</code> · <code>thumb: 16×16px</code> · <code>padding: 4px</code> ·{' '}
-          <code>radius: pill</code> · <code>gap: 8px</code>
+          <span className="font-mono">track: 36×20px</span> ·{' '}
+          <span className="font-mono">thumb: 16×16px</span> ·{' '}
+          <span className="font-mono">padding: 4px</span> ·{' '}
+          <span className="font-mono">radius: pill</span> ·{' '}
+          <span className="font-mono">gap: 8px</span>
         </div>
       }
       apiReference={toggleProps}

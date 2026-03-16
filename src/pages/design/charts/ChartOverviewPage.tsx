@@ -188,16 +188,16 @@ export function ChartOverviewPage() {
           <div className="text-body-sm text-[var(--color-text-muted)] flex flex-col gap-2">
             <div>
               <span className="text-[var(--color-text-subtle)]">Bar chart:</span>{' '}
-              <code className="px-1.5 py-0.5 bg-[var(--color-surface-default)] rounded text-[var(--color-action-primary)]">
+              <span className="font-mono px-1.5 py-0.5 bg-[var(--color-surface-default)] rounded text-[var(--color-action-primary)]">
                 ProgressBar
-              </code>{' '}
+              </span>{' '}
               - TDS 자체 컴포넌트 (CSS 기반)
             </div>
             <div>
               <span className="text-[var(--color-text-subtle)]">Area / Pie / Doughnut:</span>{' '}
-              <code className="px-1.5 py-0.5 bg-[var(--color-surface-default)] rounded text-[var(--color-action-primary)]">
+              <span className="font-mono px-1.5 py-0.5 bg-[var(--color-surface-default)] rounded text-[var(--color-action-primary)]">
                 echarts-for-react
-              </code>{' '}
+              </span>{' '}
               - Apache ECharts wrapper for React{' '}
               <a
                 href="https://echarts.apache.org/"

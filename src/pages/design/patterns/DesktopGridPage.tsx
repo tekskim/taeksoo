@@ -24,8 +24,9 @@ function DesktopGridGuidelines() {
         <SectionTitle>그리드 방식</SectionTitle>
         <Prose>
           <p>
-            CSS Grid의 <code>repeat(auto-fill, 80px)</code>를 사용하여 뷰포트 너비에 따라 아이콘이
-            자동으로 재배열됩니다. 아이콘 추가/삭제 시 레이아웃 변경이 필요 없습니다.
+            CSS Grid의 <span className="font-mono">repeat(auto-fill, 80px)</span>를 사용하여 뷰포트
+            너비에 따라 아이콘이 자동으로 재배열됩니다. 아이콘 추가/삭제 시 레이아웃 변경이 필요
+            없습니다.
           </p>
         </Prose>
       </VStack>
@@ -40,7 +41,8 @@ function DesktopGridGuidelines() {
               <strong>Flow</strong>: row (왼쪽→오른쪽, 위→아래) — OS 데스크톱 컨벤션
             </li>
             <li>
-              <strong>Alignment</strong>: top-left (<code>content-start</code>)
+              <strong>Alignment</strong>: top-left (<span className="font-mono">content-start</span>
+              )
             </li>
             <li>
               <strong>Wrap</strong>: 뷰포트 부족 시 자동으로 다음 행으로 이동
@@ -56,7 +58,8 @@ function DesktopGridGuidelines() {
           <strong>Desktop Grid Guidelines:</strong>
           <ul className="mt-2 space-y-1 list-disc list-inside">
             <li>
-              <code>auto-fill</code>로 뷰포트에 맞게 컬럼 수가 자동 결정됩니다.
+              <span className="font-mono">auto-fill</span>로 뷰포트에 맞게 컬럼 수가 자동
+              결정됩니다.
             </li>
             <li>아이콘 셀은 80px 고정 (w-20). 64px 아이콘 이미지가 중앙 정렬됩니다.</li>
             <li>

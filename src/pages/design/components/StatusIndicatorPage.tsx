@@ -26,14 +26,17 @@ const STATUS_GUIDELINES = `## Overview
 
 ### 2. Defined
 사전에 정의된 특수 상태에 한해 아이콘·컬러·레이블 텍스트를 코딩하여 표시한다.
+어떤 상태를 특수 상태로 취급할지는 리소스별 별도 기획 문서에서 정의한다.
+
+특수 상태는 시맨틱 의미에 따라 아래 5가지 타입으로 코딩된다.
 
 | 타입 | 색상 | 사용 상황 예시 |
 | --- | --- | --- |
-| Active | Green | active, enabled |
-| Error | Red | error |
-| Processing | Blue | building, deleting, pending |
-| Warning | Orange | degraded, down, maintenance |
-| Muted | Gray | suspended, paused, draft, in-use, disabled |
+| Active (Success) | Green | active |
+| Error (Danger) | Red | error |
+| Processing | Blue | building · deleting · pending |
+| Warning | Orange | degraded · down · maintenance |
+| Muted | Gray | suspended · paused · draft · in-use |
 
 ### 표시 형식 (Display Type)
 
@@ -123,26 +126,17 @@ const STATUS_GUIDELINES = `## Overview
 | 시맨틱 타입 | status 값 | 기본 레이블 | 설명 |
 | --- | --- | --- | --- |
 | Active (Green) | active | Active | 정상 동작 중 |
-| Active (Green) | enabled | Enabled | 활성화됨 |
 | Error (Red) | error | Error | 오류 발생 |
-| Processing (Blue) | building | Building... | 생성 중 (스피너) |
+| Processing (Blue) | building | Building... | 생성 중 |
 | Processing (Blue) | deleting | Deleting... | 삭제 중 |
 | Processing (Blue) | pending | Pending | 대기 중 |
-| Warning (Orange) | verify-resized | Verify Resized | 리사이즈 확인 필요 |
 | Warning (Orange) | degraded | Degraded | 성능 저하 |
-| Warning (Orange) | no-monitor | No Monitor | 모니터 없음 |
 | Warning (Orange) | down | Down | 다운 상태 |
 | Warning (Orange) | maintenance | Maintenance | 유지보수 중 |
 | Muted (Gray) | suspended | Suspended | 일시 중지 |
-| Muted (Gray) | shelved | Shelved Offloaded | 보관됨 (오프로드) |
-| Muted (Gray) | shelved-offloaded | Shelved Offloaded | 보관됨 (오프로드) |
-| Muted (Gray) | mounted | Mounted | 마운트됨 |
-| Muted (Gray) | shutoff | Shutoff | 종료됨 |
 | Muted (Gray) | paused | Paused | 일시 정지 |
 | Muted (Gray) | draft | Draft | 초안 |
-| Muted (Gray) | deactivated | Deactivated | 비활성화 |
 | Muted (Gray) | in-use | In-use | 사용 중 |
-| Muted (Gray) | disabled | Disabled | 비활성화됨 |
 
 ### 특수 상태 정의 문서 관리 원칙
 
@@ -166,7 +160,7 @@ const STATUS_GUIDELINES = `## Overview
 const statusIndicatorProps: PropDef[] = [
   {
     name: 'status',
-    type: "'active' | 'enabled' | 'error' | 'building' | 'deleting' | 'suspended' | 'shutoff' | 'paused' | 'pending' | 'draft' | 'disabled' | 'degraded' | 'down' | 'maintenance' | ...",
+    type: "'active' | 'error' | 'building' | 'deleting' | 'pending' | 'degraded' | 'down' | 'maintenance' | 'suspended' | 'paused' | 'draft' | 'in-use' | ...",
     required: true,
     description: '상태 타입. Defined 목록에 없으면 Default(White Badge)로 렌더링',
   },
@@ -425,7 +419,9 @@ import { Badge } from '@/design-system';
                 <VStack key={token} gap={1} align="center">
                   <span className={`w-8 h-8 rounded-full ${bg}`} />
                   <span className="text-body-xs text-[var(--color-text-default)]">{lbl}</span>
-                  <code className="text-body-xs text-[var(--color-text-subtle)]">{token}</code>
+                  <span className="font-mono text-body-xs text-[var(--color-text-subtle)]">
+                    {token}
+                  </span>
                 </VStack>
               ))}
             </div>

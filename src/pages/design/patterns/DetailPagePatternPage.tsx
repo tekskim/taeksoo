@@ -343,7 +343,8 @@ function DetailPageGuidelines() {
               <tr>
                 <Td>속성값이 없거나 미설정 상태일 때</Td>
                 <Td>
-                  <code>—</code> (em dash) 또는 <code>None</code> 표시, 빈 칸으로 두지 않음
+                  <span className="font-mono">—</span> (em dash) 또는{' '}
+                  <span className="font-mono">None</span> 표시, 빈 칸으로 두지 않음
                 </Td>
               </tr>
             </tbody>
@@ -386,11 +387,11 @@ function DetailPageGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>
                 리소스명은 사용자가 직접 입력한 이름을 그대로 표시하되, 최대 표시 글자 수를 초과할
-                경우 말줄임(<code>…</code>)으로 처리한다.
+                경우 말줄임(<span className="font-mono">…</span>)으로 처리한다.
               </li>
               <li>
                 시스템이 자동 생성한 이름인 경우 사용자가 인지할 수 있는 패턴(예:{' '}
-                <code>instance-production-01</code>)을 따른다.
+                <span className="font-mono">instance-production-01</span>)을 따른다.
               </li>
             </ul>
           </Prose>
@@ -405,8 +406,9 @@ function DetailPageGuidelines() {
                 작성한다.
               </li>
               <li>
-                예시: <code>Basic information</code>, <code>Network configuration</code>,{' '}
-                <code>Flavor</code>
+                예시: <span className="font-mono">Basic information</span>,{' '}
+                <span className="font-mono">Network configuration</span>,{' '}
+                <span className="font-mono">Flavor</span>
               </li>
               <li>
                 동사형이나 문장형 표현은 사용하지 않는다. (예: <s>"Configure your network"</s>)
@@ -425,8 +427,9 @@ function DetailPageGuidelines() {
                 표현을 제공한다.
               </li>
               <li>
-                예시: <code>Instance name</code>, <code>Availability zone</code>,{' '}
-                <code>Created at</code>
+                예시: <span className="font-mono">Instance name</span>,{' '}
+                <span className="font-mono">Availability zone</span>,{' '}
+                <span className="font-mono">Created at</span>
               </li>
             </ul>
           </Prose>
@@ -437,8 +440,9 @@ function DetailPageGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                값이 없는 경우 <code>—</code>(em dash)를 사용하며 <code>N/A</code>,{' '}
-                <code>null</code>, 빈 문자열은 사용하지 않는다.
+                값이 없는 경우 <span className="font-mono">—</span>(em dash)를 사용하며{' '}
+                <span className="font-mono">N/A</span>, <span className="font-mono">null</span>, 빈
+                문자열은 사용하지 않는다.
               </li>
               <li>ID처럼 긴 값은 전체를 노출하되 복사 버튼을 함께 제공한다.</li>
             </ul>
@@ -454,8 +458,9 @@ function DetailPageGuidelines() {
                 작성한다.
               </li>
               <li>
-                예시: <code>Details</code>, <code>Volumes</code>, <code>Network</code>,{' '}
-                <code>Logs</code>
+                예시: <span className="font-mono">Details</span>,{' '}
+                <span className="font-mono">Volumes</span>,{' '}
+                <span className="font-mono">Network</span>, <span className="font-mono">Logs</span>
               </li>
               <li>동사, 문장 형태는 사용하지 않는다.</li>
             </ul>

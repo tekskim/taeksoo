@@ -116,7 +116,7 @@ export function StatusColorsPage() {
                   </div>
                 </div>
                 <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                  <code>{`thresholds={STATUS_THRESHOLDS.${key}}`}</code>
+                  <span className="font-mono">{`thresholds={STATUS_THRESHOLDS.${key}}`}</span>
                   <span className="ml-2 text-[var(--color-text-muted)]">{thresholds}</span>
                 </div>
               </div>
@@ -126,14 +126,21 @@ export function StatusColorsPage() {
             <span className="text-label-md text-[var(--color-text-default)]">Usage</span>
             <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] flex flex-col gap-1">
               <div>
-                <code>{"import { STATUS_THRESHOLDS } from '@/design-system';"}</code>
+                <span className="font-mono">
+                  {"import { STATUS_THRESHOLDS } from '@/design-system';"}
+                </span>
               </div>
               <div className="mt-1">
-                <code>{'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}</code>
+                <span className="font-mono">
+                  {'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}
+                </span>
               </div>
               <div className="mt-2 text-[var(--color-text-muted)]">
-                Available presets: <code>compute</code> · <code>computeAdmin</code> ·{' '}
-                <code>storage</code> · <code>container</code> · <code>default</code>
+                Available presets: <span className="font-mono">compute</span> ·{' '}
+                <span className="font-mono">computeAdmin</span> ·{' '}
+                <span className="font-mono">storage</span> ·{' '}
+                <span className="font-mono">container</span> ·{' '}
+                <span className="font-mono">default</span>
               </div>
             </div>
           </VStack>

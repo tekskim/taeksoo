@@ -306,9 +306,9 @@ export function TextareaPage() {
               <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                 <li>
                   형식:{' '}
-                  <code className="rounded bg-[var(--color-surface-muted)] px-1 py-0.5 text-body-sm">
+                  <span className="font-mono rounded bg-[var(--color-surface-muted)] px-1 py-0.5 text-body-sm">
                     {'{입력된 글자수} / {최대 글자수}'}
-                  </code>
+                  </span>
                 </li>
                 <li>문자 제한이 있을 때만 표시한다.</li>
                 <li>입력 영역 하단에 표시한다.</li>

@@ -423,12 +423,12 @@ export function TransitionsPage() {
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <code className="text-body-sm font-mono text-[var(--color-state-info)]">
+                    <span className="text-body-sm font-mono text-[var(--color-state-info)]">
                       {token}
-                    </code>
-                    <code className="text-body-xs font-mono text-[var(--color-text-subtle)]">
+                    </span>
+                    <span className="text-body-xs font-mono text-[var(--color-text-subtle)]">
                       {primitive}
-                    </code>
+                    </span>
                   </div>
                   <p className="text-body-sm text-[var(--color-text-subtle)]">{usage}</p>
                   <DurationDemo duration={value} label={name} />
@@ -448,9 +448,9 @@ export function TransitionsPage() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-heading-h6 text-[var(--color-text-default)]">{name}</span>
-                    <code className="text-body-sm font-mono text-[var(--color-text-muted)]">
+                    <span className="text-body-sm font-mono text-[var(--color-text-muted)]">
                       {css}
-                    </code>
+                    </span>
                   </div>
                   <p className="text-body-sm text-[var(--color-text-subtle)]">{desc}</p>
                   <p className="text-body-xs text-[var(--color-text-muted)]">
@@ -543,8 +543,8 @@ export function TransitionsPage() {
             </h3>
             <p className="text-body-md text-[var(--color-text-subtle)]">
               Interactive demo of the desktop window open/close animation. Uses{' '}
-              <code className="font-mono text-body-sm">framer-motion</code> with{' '}
-              <code className="font-mono text-body-sm">AnimatePresence</code> for enter/exit
+              <span className="font-mono text-body-sm">framer-motion</span> with{' '}
+              <span className="font-mono text-body-sm">AnimatePresence</span> for enter/exit
               transitions.
             </p>
             <DesktopAppDemo />
@@ -619,12 +619,12 @@ export function TransitionsPage() {
                 <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
                   <li>• Use duration tokens instead of hardcoded values</li>
                   <li>
-                    • Prefer <code className="font-mono text-body-sm">ease-out</code> for elements
+                    • Prefer <span className="font-mono text-body-sm">ease-out</span> for elements
                     entering the viewport
                   </li>
                   <li>• Keep durations under 300ms for UI interactions</li>
                   <li>
-                    • Use <code className="font-mono text-body-sm">AnimatePresence</code> for
+                    • Use <span className="font-mono text-body-sm">AnimatePresence</span> for
                     enter/exit animations
                   </li>
                   <li>• Match transition speed to the size of the change</li>
@@ -636,13 +636,13 @@ export function TransitionsPage() {
                   <li>• Don't animate layout properties (width/height) unless necessary</li>
                   <li>• Don't use durations longer than 500ms for interactive UI</li>
                   <li>
-                    • Don't use <code className="font-mono text-body-sm">ease-in</code> alone — it
+                    • Don't use <span className="font-mono text-body-sm">ease-in</span> alone — it
                     feels sluggish on entry
                   </li>
                   <li>• Don't animate multiple unrelated properties simultaneously</li>
                   <li>
                     • Don't forget{' '}
-                    <code className="font-mono text-body-sm">prefers-reduced-motion</code>{' '}
+                    <span className="font-mono text-body-sm">prefers-reduced-motion</span>{' '}
                     accessibility
                   </li>
                 </ul>

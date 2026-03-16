@@ -132,25 +132,25 @@ function ContextMenuGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>min-width</code>
+                <span className="font-mono">min-width</span>
               </Td>
               <Td>80px</Td>
             </tr>
             <tr>
               <Td>
-                <code>padding</code>
+                <span className="font-mono">padding</span>
               </Td>
               <Td>12×6px</Td>
             </tr>
             <tr>
               <Td>
-                <code>radius</code>
+                <span className="font-mono">radius</span>
               </Td>
               <Td>6px</Td>
             </tr>
             <tr>
               <Td>
-                <code>shadow</code>
+                <span className="font-mono">shadow</span>
               </Td>
               <Td>md</Td>
             </tr>
@@ -581,8 +581,10 @@ export function ContextMenuPage() {
       guidelines={<ContextMenuGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>min-width: 80px</code> · <code>padding: 12×6px</code> · <code>radius: 6px</code> ·{' '}
-          <code>shadow: md</code>
+          <span className="font-mono">min-width: 80px</span> ·{' '}
+          <span className="font-mono">padding: 12×6px</span> ·{' '}
+          <span className="font-mono">radius: 6px</span> ·{' '}
+          <span className="font-mono">shadow: md</span>
         </div>
       }
       apiReference={contextMenuProps}
@@ -596,10 +598,10 @@ export function ContextMenuPage() {
             <h4 className="text-heading-h6 text-[var(--color-text-default)]">ARIA 속성</h4>
             <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
               <li>
-                <code>role="menu"</code> — 메뉴 컨테이너에 적용
+                <span className="font-mono">role="menu"</span> — 메뉴 컨테이너에 적용
               </li>
               <li>
-                <code>role="menuitem"</code> — 각 메뉴 항목에 적용
+                <span className="font-mono">role="menuitem"</span> — 각 메뉴 항목에 적용
               </li>
             </ul>
           </VStack>

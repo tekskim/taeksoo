@@ -325,8 +325,10 @@ export function NotificationCenterPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code> ·{' '}
-          <code>shadow: lg</code>
+          <span className="font-mono">width: 360px</span> ·{' '}
+          <span className="font-mono">padding: 16px</span> ·{' '}
+          <span className="font-mono">border-radius: 8px</span> ·{' '}
+          <span className="font-mono">shadow: lg</span>
         </div>
       }
       relatedLinks={[

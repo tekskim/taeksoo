@@ -377,6 +377,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   return (
     <div
+      data-figma-name="DatePicker"
       className={`
         inline-flex flex-col gap-[var(--datepicker-gap)]
         p-[var(--datepicker-padding)]

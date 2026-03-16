@@ -141,7 +141,7 @@ export const Password = forwardRef<HTMLInputElement, PasswordProps>(
     );
 
     return (
-      <div className={wrapperClasses}>
+      <div data-figma-name="Password" className={wrapperClasses}>
         {/* Label */}
         {label && (
           <label htmlFor={inputId} className="text-label-sm text-[var(--color-text-default)]">

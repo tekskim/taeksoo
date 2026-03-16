@@ -137,25 +137,25 @@ function ChipGuidelines() {
           <tbody>
             <tr>
               <Td>
-                <code>padding</code>
+                <span className="font-mono">padding</span>
               </Td>
               <Td>8 × 4px</Td>
             </tr>
             <tr>
               <Td>
-                <code>gap</code>
+                <span className="font-mono">gap</span>
               </Td>
               <Td>6px</Td>
             </tr>
             <tr>
               <Td>
-                <code>border-radius</code>
+                <span className="font-mono">border-radius</span>
               </Td>
               <Td>6px</Td>
             </tr>
             <tr>
               <Td>
-                <code>font-size</code>
+                <span className="font-mono">font-size</span>
               </Td>
               <Td>11px</Td>
             </tr>
@@ -183,7 +183,7 @@ function ChipGuidelines() {
               </Td>
               <Td>Value 텍스트만 표시하는 기본형</Td>
               <Td>
-                단일 값 필터, 태그 표시 (<code>Active ×</code>)
+                단일 값 필터, 태그 표시 (<span className="font-mono">Active ×</span>)
               </Td>
             </tr>
             <tr>
@@ -192,7 +192,8 @@ function ChipGuidelines() {
               </Td>
               <Td>Label(key)과 Value를 구분선으로 나누어 함께 표시</Td>
               <Td>
-                key=value 쌍 표시 (<code>Name | a ×</code>, <code>Status | Running ×</code>)
+                key=value 쌍 표시 (<span className="font-mono">Name | a ×</span>,{' '}
+                <span className="font-mono">Status | Running ×</span>)
               </Td>
             </tr>
           </tbody>
@@ -259,7 +260,8 @@ function ChipGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                Chip 내 텍스트가 지정된 최대 너비를 초과할 경우 말줄임(<code>…</code>)으로 처리한다.
+                Chip 내 텍스트가 지정된 최대 너비를 초과할 경우 말줄임(
+                <span className="font-mono">…</span>)으로 처리한다.
               </li>
               <li>
                 말줄임 처리된 Chip에는 Tooltip을 제공하여 전체 텍스트를 확인할 수 있도록 한다.
@@ -274,11 +276,12 @@ function ChipGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                화면 또는 컨테이너 내에 표시 가능한 Chip 수를 초과하면 <code>+N more</code> 형태로
-                접어서 표시한다.
+                화면 또는 컨테이너 내에 표시 가능한 Chip 수를 초과하면{' '}
+                <span className="font-mono">+N more</span> 형태로 접어서 표시한다.
               </li>
               <li>
-                <code>+N more</code> Chip을 클릭하면 나머지 항목을 펼쳐서 확인할 수 있다.
+                <span className="font-mono">+N more</span> Chip을 클릭하면 나머지 항목을 펼쳐서
+                확인할 수 있다.
               </li>
               <li>축약 기준(N)은 레이아웃 컨텍스트에 따라 다르게 적용할 수 있다.</li>
             </ul>
@@ -356,14 +359,16 @@ function ChipGuidelines() {
             </li>
             <li>
               <strong>Key=Value 패턴</strong>: Label(key)은 카테고리를 명확히 나타내고, Value는
-              구체적인 값을 표시한다. 예: <code>Status | Running</code>, <code>Name | a</code>
+              구체적인 값을 표시한다. 예: <span className="font-mono">Status | Running</span>,{' '}
+              <span className="font-mono">Name | a</span>
             </li>
             <li>
               <strong>대소문자</strong>: 시스템 식별자(Kubernetes label 등)는 원래 형식 그대로
               표시하고, UI 레이블은 Sentence case를 기본으로 한다.
             </li>
             <li>
-              <strong>+N more 레이블</strong>: <code>+3 more</code>처럼 숫자와 more를 함께 표기한다.
+              <strong>+N more 레이블</strong>: <span className="font-mono">+3 more</span>처럼 숫자와
+              more를 함께 표기한다.
             </li>
           </ul>
         </Prose>
@@ -545,8 +550,10 @@ export function ChipPage() {
       guidelines={<ChipGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <code>padding: 8 × 4px</code> · <code>gap: 6px</code> · <code>border-radius: 6px</code> ·{' '}
-          <code>font-size: 11px</code>
+          <span className="font-mono">padding: 8 × 4px</span> ·{' '}
+          <span className="font-mono">gap: 6px</span> ·{' '}
+          <span className="font-mono">border-radius: 6px</span> ·{' '}
+          <span className="font-mono">font-size: 11px</span>
         </div>
       }
       apiReference={chipProps}
@@ -554,7 +561,7 @@ export function ChipPage() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              Remove button에는 <code>aria-label</code>이 자동 적용된다.
+              Remove button에는 <span className="font-mono">aria-label</span>이 자동 적용된다.
             </li>
             <li>Disabled Chip은 포커스 불가 처리된다.</li>
             <li>

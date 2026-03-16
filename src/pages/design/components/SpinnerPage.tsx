@@ -210,7 +210,7 @@ function SpinnerGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>전체 화면 로딩이 이뤄질 경우 스피너 아래에 문구를 추가한다.</li>
               <li>
-                문구: <code>Loading data…</code>
+                문구: <span className="font-mono">Loading data…</span>
               </li>
             </ul>
           </Prose>
@@ -363,25 +363,25 @@ export function SpinnerPage() {
           <tbody>
             <tr>
               <Td>
-                <code>spinner size (sm)</code>
+                <span className="font-mono">spinner size (sm)</span>
               </Td>
               <Td>16px</Td>
             </tr>
             <tr>
               <Td>
-                <code>spinner size (md)</code>
+                <span className="font-mono">spinner size (md)</span>
               </Td>
               <Td>22px</Td>
             </tr>
             <tr>
               <Td>
-                <code>spinner size (lg)</code>
+                <span className="font-mono">spinner size (lg)</span>
               </Td>
               <Td>32px</Td>
             </tr>
             <tr>
               <Td>
-                <code>button min-width</code>
+                <span className="font-mono">button min-width</span>
               </Td>
               <Td>80px</Td>
             </tr>

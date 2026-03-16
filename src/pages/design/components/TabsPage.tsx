@@ -490,31 +490,31 @@ export function TabsPage() {
           <tbody>
             <tr>
               <Td>
-                <code>gap</code>
+                <span className="font-mono">gap</span>
               </Td>
               <Td>8px</Td>
             </tr>
             <tr>
               <Td>
-                <code>min-width</code>
+                <span className="font-mono">min-width</span>
               </Td>
               <Td>80px</Td>
             </tr>
             <tr>
               <Td>
-                <code>padding-x</code>
+                <span className="font-mono">padding-x</span>
               </Td>
               <Td>12px</Td>
             </tr>
             <tr>
               <Td>
-                <code>indicator</code>
+                <span className="font-mono">indicator</span>
               </Td>
               <Td>2px</Td>
             </tr>
             <tr>
               <Td>
-                <code>boxed-padding</code>
+                <span className="font-mono">boxed-padding</span>
               </Td>
               <Td>24px × 8px</Td>
             </tr>
@@ -531,9 +531,10 @@ export function TabsPage() {
       accessibility={
         <Prose>
           <p>
-            Tabs use <code>role="tablist"</code>, <code>role="tab"</code>,{' '}
-            <code>role="tabpanel"</code>. Arrow keys navigate between tabs.{' '}
-            <code>aria-selected</code> indicates active tab.
+            Tabs use <span className="font-mono">role="tablist"</span>,{' '}
+            <span className="font-mono">role="tab"</span>,{' '}
+            <span className="font-mono">role="tabpanel"</span>. Arrow keys navigate between tabs.{' '}
+            <span className="font-mono">aria-selected</span> indicates active tab.
           </p>
         </Prose>
       }

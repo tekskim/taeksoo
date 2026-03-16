@@ -186,8 +186,11 @@ export function InlineMessagePage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>padding: 12px</code> · <code>gap: 8px</code> · <code>radius: 6px</code> ·{' '}
-          <code>icon: 16px</code> · <code>font: 12px</code>
+          <span className="font-mono">padding: 12px</span> ·{' '}
+          <span className="font-mono">gap: 8px</span> ·{' '}
+          <span className="font-mono">radius: 6px</span> ·{' '}
+          <span className="font-mono">icon: 16px</span> ·{' '}
+          <span className="font-mono">font: 12px</span>
         </div>
       }
       apiReference={inlineMessageProps}
