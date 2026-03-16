@@ -5,6 +5,7 @@ export function CsvDownloadPage() {
   return (
     <ComponentPageTemplate
       title="List Download (CSV Export)"
+      status="planned"
       description="리스트 화면에 표시된 데이터를 CSV 파일로 내보내는 기능 패턴이다. 사용자는 현재 화면의 검색 및 필터 조건이 적용된 데이터를 다운로드하여 외부 분석, 공유, 백업 등에 활용할 수 있다."
       whenToUse={[
         '검색 / 필터 기능이 있는 리스트 화면',

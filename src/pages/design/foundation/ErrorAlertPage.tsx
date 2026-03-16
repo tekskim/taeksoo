@@ -386,7 +386,7 @@ function ErrorAlertGuidelines() {
                 </Td>
                 <Td>성공/실패 확인 등 액션에 대한 가벼운 피드백으로 화면 구석에 팝업으로 나타남</Td>
                 <Td>단발성 피드백</Td>
-                <Td>3초 후 휘발</Td>
+                <Td>5초 후 휘발</Td>
                 <Td>없음</Td>
               </tr>
               <tr>
@@ -509,7 +509,7 @@ function ErrorAlertGuidelines() {
                 <Td>
                   <strong>소멸 방식</strong>
                 </Td>
-                <Td>3초 후 자동 휘발</Td>
+                <Td>5초 후 자동 휘발</Td>
                 <Td>자동 소멸 또는 사용자 처리 후 삭제</Td>
               </tr>
               <tr>
@@ -652,7 +652,7 @@ export function ErrorAlertPage() {
       guidelines={<ErrorAlertGuidelines />}
       relatedLinks={[
         { label: 'Toast', path: '/design/components/toast' },
-        { label: 'Snackbar', path: '/design/components/snackbar' },
+        { label: 'Notification Center', path: '/design/components/notification-center' },
         { label: 'Input Field', path: '/design/components/input' },
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Inline Message', path: '/design/components/inline-message' },

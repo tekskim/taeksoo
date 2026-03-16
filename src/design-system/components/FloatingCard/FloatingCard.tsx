@@ -9,6 +9,7 @@ import {
   IconAlertTriangle,
   IconCheck,
   IconProgress,
+  IconCircleDashed,
 } from '@tabler/icons-react';
 import { Button, NumberInput, ProgressBar } from '@/design-system';
 
@@ -18,7 +19,7 @@ import { Button, NumberInput, ProgressBar } from '@/design-system';
 
 export type FloatingCardPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
-export type SectionStatus = 'processing' | 'warning' | 'success' | 'default';
+export type SectionStatus = 'processing' | 'warning' | 'success' | 'default' | 'writing';
 
 export interface SectionItem {
   id: string;
@@ -94,14 +95,15 @@ function StatusIcon({ status }: { status: SectionStatus }) {
       );
     case 'processing':
       return (
-        <IconProgress size={16} stroke={1.5} className="shrink-0 text-[var(--color-text-muted)]" />
+        <div className="size-4 shrink-0 flex items-center justify-center">
+          <IconProgress size={20} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        </div>
       );
     default:
       return (
-        <div
-          className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-          style={{ borderStyle: 'dashed' }}
-        />
+        <div className="size-4 shrink-0 flex items-center justify-center">
+          <IconCircleDashed size={20} stroke={1.5} className="text-[var(--color-border-default)]" />
+        </div>
       );
   }
 }
@@ -302,7 +304,13 @@ export function FloatingCard({
                             <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-default)] transition-colors">
                               {item.title}
                             </span>
-                            <StatusIcon status={item.status} />
+                            {item.status === 'writing' ? (
+                              <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0">
+                                Writing...
+                              </span>
+                            ) : (
+                              <StatusIcon status={item.status} />
+                            )}
                           </button>
                         ))}
                       </div>
@@ -363,6 +371,7 @@ export function FloatingCard({
               onChange={(value) => onInstanceCountChange(value)}
               min={1}
               size="sm"
+              fullWidth
             />
           </div>
         )}

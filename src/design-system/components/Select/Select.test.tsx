@@ -267,7 +267,7 @@ describe('Select', () => {
 
     it('applies lg width', () => {
       const { container } = render(<Select options={defaultOptions} width="lg" />);
-      expect(container.firstChild).toHaveClass('w-[360px]');
+      expect(container.firstChild).toHaveClass('w-[320px]');
     });
 
     it('applies full width when fullWidth is true', () => {

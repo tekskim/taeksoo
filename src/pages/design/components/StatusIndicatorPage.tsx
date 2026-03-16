@@ -69,7 +69,8 @@ const STATUS_GUIDELINES = `## Overview
 | Gap | 4px |
 | Border Radius | pill (16px) |
 | Font Size | 11px |
-| Icon Size | 14px |
+| Icon Size | sm/md: 14px, lg: 16px (icon-only layout) |
+| Container Size | sm/md: 24px, lg: 28px (icon-only layout) |
 
 ### 시맨틱 컬러 토큰 (Defined 상태 전용)
 

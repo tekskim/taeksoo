@@ -111,7 +111,7 @@ function ChipGuidelines() {
               <Td>
                 <span className="font-mono">padding</span>
               </Td>
-              <Td>8 × 4px</Td>
+              <Td>8 × 4px (기본). Removable일 때 비대칭: 좌 8px, 우 6px (닫기 버튼 공간)</Td>
             </tr>
             <tr>
               <Td>
@@ -507,7 +507,7 @@ export function ChipPage() {
       guidelines={<ChipGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">padding: 8 × 4px</span> ·{' '}
+          <span className="font-mono">padding: 8×4px (removable 시 좌8 우6)</span> ·{' '}
           <span className="font-mono">gap: 6px</span> ·{' '}
           <span className="font-mono">border-radius: 6px</span> ·{' '}
           <span className="font-mono">font-size: 11px</span>

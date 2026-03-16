@@ -50,7 +50,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 | Timestamp | 발생 시각 |
 | Partition info | 프로젝트/네임스페이스 등 |
 | Read button | 읽음 처리 |
-| View details | 상세 메시지 확장 |
+| View detail | 상세 메시지 확장 |
 
 ---
 
@@ -65,7 +65,7 @@ const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 | 사용자 행동 | 읽음 처리 |
 | --- | --- |
 | Snackbar 클릭 | 읽음 |
-| Snackbar 닫기/자동 종료/View details | 안읽음 유지 |
+| Snackbar 닫기/자동 종료/View detail | 안읽음 유지 |
 
 - 스낵바로 노출되는 메시지는 모두 알림센터에 기록된다.
 
