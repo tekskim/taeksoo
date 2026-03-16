@@ -37,6 +37,7 @@ import { Link, useNavigate } from 'react-router-dom';
 interface Bucket {
   id: string;
   name: string;
+  domain: string;
   owner: string;
   usedCapacity: string;
   capacityLimit: string;
@@ -53,6 +54,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-1',
     name: 'cloud_tech/harbor',
+    domain: 'thaki',
     owner: 'ai_platform$ai.platform',
     usedCapacity: '10 MiB',
     capacityLimit: 'No Limit',
@@ -63,6 +65,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-2',
     name: 'ai_platform/ai-platform-hot',
+    domain: 'Hostway',
     owner: 'cloud_tech$harbor',
     usedCapacity: '11.1 GiB',
     capacityLimit: 'No Limit',
@@ -73,6 +76,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-3',
     name: 'ai_platform/model-storage',
+    domain: 'BespinGlobal',
     owner: 'cloud_tech$harbor',
     usedCapacity: '24.5 GiB',
     capacityLimit: 'No Limit',
@@ -83,6 +87,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-4',
     name: 'data_lake/raw-data',
+    domain: 'thaki',
     owner: 'data_engineering$admin',
     usedCapacity: '156.8 GiB',
     capacityLimit: '500 GiB',
@@ -93,6 +98,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-5',
     name: 'data_lake/processed-data',
+    domain: 'Hostway',
     owner: 'data_engineering$admin',
     usedCapacity: '89.2 GiB',
     capacityLimit: '200 GiB',
@@ -103,6 +109,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-6',
     name: 'backup/daily-snapshots',
+    domain: 'BespinGlobal',
     owner: 'system$backup',
     usedCapacity: '512.3 GiB',
     capacityLimit: '1 TiB',
@@ -113,6 +120,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-7',
     name: 'logs/application-logs',
+    domain: 'thaki',
     owner: 'devops$monitoring',
     usedCapacity: '78.4 GiB',
     capacityLimit: '100 GiB',
@@ -123,6 +131,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-8',
     name: 'media/user-uploads',
+    domain: 'Hostway',
     owner: 'app_service$media',
     usedCapacity: '2.3 TiB',
     capacityLimit: '5 TiB',
@@ -133,6 +142,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-9',
     name: 'archive/2024-data',
+    domain: 'BespinGlobal',
     owner: 'system$archive',
     usedCapacity: '4.8 TiB',
     capacityLimit: 'No Limit',
@@ -143,6 +153,7 @@ const mockBuckets: Bucket[] = [
   {
     id: 'bucket-10',
     name: 'temp/scratch-space',
+    domain: 'thaki',
     owner: 'dev_team$shared',
     usedCapacity: '45.6 GiB',
     capacityLimit: '100 GiB',
@@ -235,6 +246,13 @@ export function BucketsPage() {
       minWidth: columnMinWidths.nameWide,
       sortable: true,
       render: (_, row) => <NameCell id={row.id} name={row.name} />,
+    },
+    {
+      key: 'domain',
+      label: 'Domain',
+      flex: 1,
+      minWidth: columnMinWidths.domain,
+      sortable: true,
     },
     {
       key: 'owner',
