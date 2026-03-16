@@ -1,5 +1,5 @@
 import { type ReactNode, useMemo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { VStack } from '@/design-system';
 import { IconArrowRight, IconCheck, IconX, IconClock } from '@tabler/icons-react';
 import { DocSection } from './DocSection';
@@ -95,6 +95,8 @@ export function ComponentPageTemplate({
 }: ComponentPageTemplateProps) {
   const mainRef = useDesignLayoutContext();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const isCaptureMode = searchParams.get('capture') === 'true';
   const lastUpdated = pageLastUpdated[location.pathname];
 
   const tocItems = useMemo(() => {
@@ -119,7 +121,7 @@ export function ComponentPageTemplate({
 
   return (
     <div className="relative">
-      <TableOfContents items={tocItems} scrollContainerRef={mainRef} />
+      {!isCaptureMode && <TableOfContents items={tocItems} scrollContainerRef={mainRef} />}
 
       <VStack gap={10} align="stretch">
         {/* Page Header */}
