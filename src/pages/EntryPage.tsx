@@ -304,6 +304,9 @@ export function EntryPage() {
                 >
                   AI Workspace Setup{' '}
                 </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/system-errors')}>
+                  System Errors{' '}
+                </Button>
               </div>
             </div>
           </div>

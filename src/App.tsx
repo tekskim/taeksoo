@@ -418,6 +418,7 @@ import { IconographyPage } from '@/pages/IconographyPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
+import { SystemErrorPagesPage } from '@/pages/SystemErrorPagesPage';
 
 // Pages - Figma Capture
 import { FigmaLayout } from '@/pages/figma/FigmaLayout';
@@ -1134,6 +1135,8 @@ function AppRoutes() {
       <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
       <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
       <Route path="/form-patterns" element={<FormPatternsPage />} />
+      <Route path="/system-errors" element={<SystemErrorPagesPage />} />
+      <Route path="/system-errors/:variant" element={<SystemErrorPagesPage />} />
 
       {/* Figma Capture Routes */}
       <Route path="/figma" element={<FigmaLayout />}>
