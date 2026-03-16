@@ -2118,11 +2118,54 @@ export function FigmaComponentsPage() {
               </SectionCard.Content>
             </SectionCard>
           </FigmaFrame>
-          <FigmaFrame name="SectionCard/active/wizard">
+          <FigmaFrame name="SectionCard/active/wizard-open">
             <SectionCard isActive>
-              <SectionCard.Header title="Active Section (Wizard)" />
-              <SectionCard.Content>
-                <SectionCard.DataRow label="Setting A" value="Configured" />
+              <SectionCard.Header
+                title="Basic information"
+                showDivider={false}
+                actions={
+                  <HStack gap={2}>
+                    <Button variant="secondary" size="sm">
+                      Cancel
+                    </Button>
+                    <Button variant="primary" size="sm">
+                      Done
+                    </Button>
+                  </HStack>
+                }
+              />
+              <SectionCard.Content showDividers={false}>
+                <VStack gap={0}>
+                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                  <VStack gap={2} className="py-6">
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Input placeholder="Enter instance name" fullWidth />
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      The name should start with upper letter, lower letter or chinese, and be a
+                      string with 1~128 characters.
+                    </span>
+                  </VStack>
+                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                  <VStack gap={2} className="py-6">
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      AZ (Availability zone){' '}
+                      <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Select
+                      options={[{ value: 'nova', label: 'nova (Default)' }]}
+                      value="nova"
+                      fullWidth
+                    />
+                  </VStack>
+                  <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                  <HStack justify="end" className="pt-3">
+                    <Button variant="primary" size="md">
+                      Next
+                    </Button>
+                  </HStack>
+                </VStack>
               </SectionCard.Content>
             </SectionCard>
           </FigmaFrame>
@@ -2143,7 +2186,7 @@ export function FigmaComponentsPage() {
             '구조: Header(타이틀 + 액션 버튼) + Divider + Content(DataRow 목록). 수직 Auto Layout',
             'Header: 수평 Auto Layout. 좌측 타이틀(heading-h5) + 우측 액션 버튼(space-between)',
             'DataRow: label(text-label-sm, 고정 너비 ~120px) + value(text-body-md). 수평 Auto Layout',
-            'isActive: 좌측에 2px primary 색상 바 표시 + 약간 하이라이트된 배경. Wizard 패턴에서 사용',
+            'isActive: border-2 primary 테두리 + 패딩 보정(pt-14 pb-11 px-15). Wizard Open Section 패턴에서 사용',
             'Divider는 Header와 Content 사이에 1px border-subtle 선',
             'Content 내부 DataRow 사이에도 1px divider 자동 삽입',
           ]}

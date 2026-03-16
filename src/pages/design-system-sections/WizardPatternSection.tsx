@@ -124,6 +124,79 @@ function OpenSectionDemo() {
 }
 
 /* ----------------------------------------
+   EditSection Demo Component (Cancel/Done)
+   ---------------------------------------- */
+
+function EditSectionDemo() {
+  return (
+    <SectionCard isActive>
+      <SectionCard.Header
+        title="Basic information"
+        showDivider={false}
+        actions={
+          <HStack gap={2}>
+            <Button variant="secondary" size="sm">
+              Cancel
+            </Button>
+            <Button variant="primary" size="sm">
+              Done
+            </Button>
+          </HStack>
+        }
+      />
+      <SectionCard.Content showDividers={false}>
+        <VStack gap={0}>
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={2} className="py-6">
+            <label className="text-label-lg text-[var(--color-text-default)]">
+              Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </label>
+            <Input placeholder="Instance name" value="my-instance-01" fullWidth readOnly />
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              The name should start with upper letter, lower letter or chinese, and be a string with
+              1~128 characters.
+            </span>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={2} className="py-6">
+            <label className="text-label-lg text-[var(--color-text-default)]">
+              AZ (Availability zone){' '}
+              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </label>
+            <Select
+              options={[
+                { value: 'az-1', label: 'az-1' },
+                { value: 'az-2', label: 'az-2' },
+              ]}
+              value="az-1"
+              onChange={() => {}}
+              fullWidth
+            />
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              Select the availability zone for the instance.
+            </span>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          <VStack gap={2} className="py-6">
+            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
+            <Input placeholder="Enter description" fullWidth />
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              You can use letters, numbers, and special characters (+=@-_.()[]), and maximum 255
+              characters.
+            </span>
+          </VStack>
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
    OpenSection Table Demo Component
    ---------------------------------------- */
 
@@ -771,9 +844,16 @@ Step 3 Next 클릭
 
           <VStack gap={1}>
             <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              OpenSection (열림/활성)
+              OpenSection — 시작 카드 (Next 버튼)
             </span>
             <OpenSectionDemo />
+          </VStack>
+
+          <VStack gap={1}>
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              OpenSection — 수정 카드 (Cancel / Done 버튼)
+            </span>
+            <EditSectionDemo />
           </VStack>
         </VStack>
 
