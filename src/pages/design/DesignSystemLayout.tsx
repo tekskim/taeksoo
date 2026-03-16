@@ -1,7 +1,14 @@
 import { useState, useRef, useEffect, type RefObject } from 'react';
 import { Outlet, Link, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { VStack, Disclosure } from '@/design-system';
-import { IconSearch, IconX, IconHome, IconChevronRight, IconArrowUp } from '@tabler/icons-react';
+import {
+  IconSearch,
+  IconX,
+  IconHome,
+  IconChevronRight,
+  IconArrowUp,
+  IconListDetails,
+} from '@tabler/icons-react';
 import { navGroups, allNavItems } from './_shared/navigationData';
 
 interface DesignLayoutContext {
@@ -159,6 +166,23 @@ export function DesignSystemLayout() {
               </div>
             )}
           </div>
+
+          {/* All Components Link */}
+          <button
+            onClick={() => navigate('/design/all')}
+            className={`
+              w-[166px] box-border px-3 py-2 mb-3 rounded-[var(--radius-button)] flex items-center gap-2
+              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
+              ${
+                currentPath === '/design/all'
+                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium border-transparent'
+                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
+              }
+            `}
+          >
+            <IconListDetails size={16} stroke={1.5} className="shrink-0" />
+            <span className="truncate flex-1 min-w-0">All Components</span>
+          </button>
 
           {/* Navigation Groups */}
           <VStack gap={1} className="w-[166px]">
