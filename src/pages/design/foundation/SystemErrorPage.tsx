@@ -2,7 +2,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
 const SYSTEM_ERROR_GUIDELINES = `## Overview
-인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태 메시지. 일반적으로 전체 페이지 단위로 표시된다.
+인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태를 알리는 메세지입니다. 일반적으로 **전체 페이지 단위로 표시됩니다.**
 
 ### 공통 원칙 (Tone & UX Writing)
 - 전문적이고 중립적인 문체 사용
@@ -17,22 +17,20 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 | Variant | 상황 | 처리 방식 | 표시 위치 |
 | --- | --- | --- | --- |
 | 401-A Unauthorized | 미인증 상태에서 인증 필수 페이지에 최초 접근 | 로그인 페이지로 리다이렉션 | — |
-| 401-B Session Timeout | 세션·토큰 만료 또는 장시간 비활성 | 세션 만료 모달 팝업 표시 | 모달 |
+| 401-B Session Timeout | 세션·토큰 만료 또는 장시간 비활성으로 인증 정보가 유효하지 않은 경우 | 세션 만료 모달 팝업 표시 | 모달 |
 | 403 Forbidden | 인증은 되었으나 리소스에 대한 권한이 없는 경우 | 에러 페이지 표시 | 앱 윈도우 내부 |
 | 404 Not Found | 요청한 페이지·리소스가 존재하지 않거나 이동·삭제된 경우 | 에러 페이지 표시 | 앱 윈도우 내부 |
-| 500 Internal Server Error | 유효한 요청 처리 중 서버 내부 오류 발생 | 에러 페이지 표시 | 앱 윈도우 내부 |
-| 링크 만료 | 일회성 링크가 만료되었거나 이미 사용된 경우 | 에러 페이지 표시 | 브라우저 전체 화면 |
+| 5xx Server Error | 유효한 요청 처리 중 서버 내부 오류 발생 | 에러 페이지 표시 | 앱 윈도우 내부 |
+| 링크 만료 | 일회성 링크(초대·비밀번호 재설정·MFA 인증 등)가 만료되었거나 이미 사용된 경우 | 에러 페이지 표시 | 브라우저 전체 화면 |
 
 ---
 
-## Composition
+## Composition (구성 요소)
 
-### 401-A Unauthorized
-| 요소 | 내용 |
-| --- | --- |
-| 처리 방식 | 로그인 페이지로 리다이렉션 (별도 UI 없음) |
+### 401-A Unauthorized — 최초 로그인 필요
+별도 에러 페이지 없이 로그인 페이지로 즉시 리다이렉션한다.
 
-### 401-B Session Timeout
+### 401-B Session Timeout — 세션 만료
 | 요소 | 내용 |
 | --- | --- |
 | Title | (세션 만료 안내 문구) |
@@ -42,28 +40,28 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 ### 403 Forbidden
 | 요소 | 내용 |
 | --- | --- |
-| Title | Access denied |
-| Description | You don't have permission to access this resource. Contact the administrator to request access. |
-| Status code | 403 |
-| Secondary Button | Go back |
+| 1. Title | Access denied |
+| 2. Description | You don't have permission to access this resource. Contact the administrator to request access. |
+| 3. Status code | 403 |
+| 4. Secondary Button | Go back |
 
 ### 404 Not Found
 | 요소 | 내용 |
 | --- | --- |
-| Title | Page Not Found |
-| Description | The requested page does not exist or no longer available. |
-| Status code | 404 |
-| Secondary Button | Go back |
-| Primary Button | Go to Homepage |
+| 1. Title | Page Not Found |
+| 2. Description | The requested page does not exist or no longer available. |
+| 3. Status code | 404 |
+| 4. Secondary Button | Go back |
+| 5. Primary Button | Go to Homepage |
 
-### 500 Internal Server Error
+### 5xx Server Error
 | 요소 | 내용 |
 | --- | --- |
-| Title | Something went wrong |
-| Description | An error occurred while processing your request. |
-| Status code | 500 |
-| Secondary Button | Go back |
-| Primary Button | Go to Homepage |
+| 1. Title | Something went wrong |
+| 2. Description | An error occurred while processing your request. |
+| 3. Status code | 500 및 기타 모든 5xx 에러 코드 |
+| 4. Secondary Button | Go back |
+| 5. Primary Button | Go to Homepage |
 
 ### 링크 만료
 | 요소 | 내용 |
@@ -74,10 +72,18 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 ---
 
 ## Behavior
-- Go back 버튼: 이전 페이지를 불러온다. 이전 페이지가 없을 경우 비활성화. (403, 404, 500 공통)
-- Go to Homepage 버튼: 앱의 첫 페이지(Home)로 이동. (404, 500에만 제공)
-- Sign in again 버튼: 로그인 페이지로 이동. (401-B)
-- 401-A: 미인증 상태에서 인증 필수 페이지 접근 시 즉시 로그인 페이지로 리다이렉션.
+- **Go back 버튼**
+  - 클릭 시 이전 페이지를 불러온다.
+  - 이전 페이지가 없을 경우 버튼을 비활성화한다.
+  - 403, 404, 500에 공통 적용된다.
+- **Go to Homepage 버튼**
+  - 클릭 시 앱의 첫 페이지(Home)로 이동한다.
+  - 404, 500에만 제공된다.
+- **Sign in again 버튼** (401-B)
+  - 클릭 시 로그인 페이지로 이동한다.
+- **401-A 리다이렉션**
+  - 미인증 상태에서 인증 필수 페이지 접근 시 즉시 로그인 페이지로 리다이렉션한다.
+  - 에러 페이지나 모달을 거치지 않는다.
 
 ---
 
@@ -91,7 +97,7 @@ export function SystemErrorPage() {
   return (
     <ComponentPageTemplate
       title="System Error"
-      description="인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태 메시지. 일반적으로 전체 페이지 단위로 표시된다."
+      description="인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태를 알리는 메세지입니다. 일반적으로 전체 페이지 단위로 표시됩니다."
       whenToUse={[
         '인증되지 않은 사용자가 인증이 필요한 페이지에 접근한 경우',
         '인증은 되었으나 해당 리소스에 대한 권한이 없는 경우',

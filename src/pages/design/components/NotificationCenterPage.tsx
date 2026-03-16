@@ -5,8 +5,8 @@ import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Button, NotificationCenter, VStack } from '@/design-system';
 import type { NotificationItem } from '@/design-system';
 import {
-  IconCheck,
-  IconX,
+  IconCircleCheck,
+  IconAlertCircle,
   IconAlertTriangle,
   IconInfoCircle,
   IconRefresh,
@@ -236,13 +236,11 @@ export function NotificationCenterPage() {
             <div className="grid grid-cols-4 gap-4">
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-                    <IconCheck
-                      size={10}
-                      stroke={2}
-                      className="text-[var(--semantic-color-on-primary)]"
-                    />
-                  </div>
+                  <IconCircleCheck
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-state-success)]"
+                  />
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Success
                   </span>
@@ -253,13 +251,11 @@ export function NotificationCenterPage() {
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-[var(--color-state-danger)] flex items-center justify-center">
-                    <IconX
-                      size={10}
-                      stroke={2}
-                      className="text-[var(--semantic-color-on-primary)]"
-                    />
-                  </div>
+                  <IconAlertTriangle
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-state-danger)]"
+                  />
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Error
                   </span>
@@ -270,13 +266,11 @@ export function NotificationCenterPage() {
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-[var(--color-state-warning)] flex items-center justify-center">
-                    <IconAlertTriangle
-                      size={10}
-                      stroke={2}
-                      className="text-[var(--semantic-color-on-primary)]"
-                    />
-                  </div>
+                  <IconAlertCircle
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-state-warning)]"
+                  />
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Warning
                   </span>
@@ -287,13 +281,11 @@ export function NotificationCenterPage() {
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-[var(--color-state-info)] flex items-center justify-center">
-                    <IconInfoCircle
-                      size={10}
-                      stroke={2}
-                      className="text-[var(--semantic-color-on-primary)]"
-                    />
-                  </div>
+                  <IconInfoCircle
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-state-info)]"
+                  />
                   <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
                     Info
                   </span>

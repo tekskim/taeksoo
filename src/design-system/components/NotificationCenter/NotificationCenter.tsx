@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {
   IconCircleCheck,
   IconAlertCircle,
+  IconAlertTriangle,
+  IconInfoCircle,
   IconCheckbox,
   IconChevronUp,
   IconChevronDown,
@@ -209,21 +211,19 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
     switch (type) {
       case 'success':
         return (
-          <IconCircleCheck size={20} stroke={1.5} className="text-[var(--color-state-success)]" />
+          <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
         );
       case 'error':
         return (
-          <IconAlertCircle size={20} stroke={1.5} className="text-[var(--color-state-danger)]" />
+          <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
         );
       case 'warning':
         return (
-          <IconAlertCircle size={20} stroke={1.5} className="text-[var(--color-state-warning)]" />
+          <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
         );
       case 'info':
       default:
-        return (
-          <IconCircleCheck size={20} stroke={1.5} className="text-[var(--color-state-info)]" />
-        );
+        return <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />;
     }
   };
 
@@ -292,7 +292,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             className="
               flex items-center justify-end gap-1
               w-full px-3 py-2
-              text-label-md
+              text-body-sm
               text-[var(--color-text-muted)]
               hover:text-[var(--color-text-default)]
               border-t border-[var(--color-border-subtle)]
