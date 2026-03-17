@@ -86,7 +86,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   return (
     <div
-      data-figma-name="NotificationCenter"
+      data-figma-name="[TDS] NotificationCenter"
       className={`
         w-[360px]
         bg-[var(--color-surface-default)]
@@ -232,7 +232,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 
   return (
     <div
-      data-figma-name="NotificationItem"
+      data-figma-name="[TDS] NotificationItem"
       className={`
         relative
         rounded-lg

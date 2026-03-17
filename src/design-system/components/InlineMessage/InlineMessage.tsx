@@ -123,7 +123,7 @@ export function InlineMessage({
 
   return (
     <div
-      data-figma-name="InlineMessage"
+      data-figma-name="[TDS] InlineMessage"
       role="status"
       className={twMerge(
         'flex items-start gap-[var(--inline-message-gap)]',

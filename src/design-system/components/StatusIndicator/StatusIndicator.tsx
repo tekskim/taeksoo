@@ -288,7 +288,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
     return (
       <span
-        data-figma-name="StatusIndicator"
+        data-figma-name="[TDS] StatusIndicator"
         className={classes}
         role="status"
         aria-label={displayLabel}
@@ -316,7 +316,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
     return (
       <span
-        data-figma-name="StatusIndicator"
+        data-figma-name="[TDS] StatusIndicator"
         className={classes}
         role="status"
         aria-label={displayLabel}
@@ -345,7 +345,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
   return (
     <span
-      data-figma-name="StatusIndicator"
+      data-figma-name="[TDS] StatusIndicator"
       className={classes}
       role="status"
       aria-label={displayLabel}

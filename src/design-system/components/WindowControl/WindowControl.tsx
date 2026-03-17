@@ -63,7 +63,7 @@ export const WindowControl: React.FC<WindowControlProps> = ({
 
   return (
     <button
-      data-figma-name="WindowControl"
+      data-figma-name="[TDS] FrameControls"
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -101,7 +101,7 @@ export const WindowControls: React.FC<WindowControlsProps> = ({
 }) => {
   return (
     <div
-      data-figma-name="WindowControls"
+      data-figma-name="[TDS] FrameControls"
       className={`flex items-center gap-[var(--window-control-gap)] ${className}`}
     >
       {showMinimize && <WindowControl type="minimize" onClick={onMinimize} disabled={disabled} />}

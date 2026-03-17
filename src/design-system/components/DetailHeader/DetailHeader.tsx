@@ -15,7 +15,7 @@ export interface DetailHeaderProps extends HTMLAttributes<HTMLDivElement> {
 export function DetailHeader({ children, className, ...props }: DetailHeaderProps) {
   return (
     <div
-      data-figma-name="DetailHeader"
+      data-figma-name="[TDS] DetailPageHeader"
       className={twMerge(
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
@@ -43,7 +43,7 @@ export interface DetailHeaderTitleProps extends HTMLAttributes<HTMLHeadingElemen
 function DetailHeaderTitle({ children, className, ...props }: DetailHeaderTitleProps) {
   return (
     <h5
-      data-figma-name="DetailHeader/Title"
+      data-figma-name="[TDS] DetailPageHeader/Title"
       className={twMerge('text-heading-h5', 'text-[var(--color-text-default)]', 'mb-3', className)}
       {...props}
     >
@@ -64,7 +64,7 @@ export interface DetailHeaderActionsProps extends HTMLAttributes<HTMLDivElement>
 function DetailHeaderActions({ children, className, ...props }: DetailHeaderActionsProps) {
   return (
     <div
-      data-figma-name="DetailHeader/Actions"
+      data-figma-name="[TDS] DetailPageHeader/Actions"
       className={twMerge('flex items-center gap-1', 'mb-3', className)}
       {...props}
     >
@@ -123,7 +123,7 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
   if (rowLayout.length === 1) {
     return (
       <div
-        data-figma-name="DetailHeader/InfoGrid"
+        data-figma-name="[TDS] DetailPageHeader/InfoGrid"
         className={twMerge('flex items-stretch gap-3', 'w-full', className)}
         {...props}
       >
@@ -141,7 +141,7 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
 
   return (
     <div
-      data-figma-name="DetailHeader/InfoGrid"
+      data-figma-name="[TDS] DetailPageHeader/InfoGrid"
       className={twMerge('flex flex-col gap-3', 'w-full', className)}
       {...props}
     >

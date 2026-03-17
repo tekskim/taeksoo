@@ -98,7 +98,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
       return (
         <div
           ref={ref}
-          data-figma-name="Skeleton"
+          data-figma-name="[TDS] Skeleton"
           className={twMerge('flex flex-col', className)}
           style={{ gap }}
           {...props}
@@ -120,7 +120,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
     return (
       <div
         ref={ref}
-        data-figma-name="Skeleton"
+        data-figma-name="[TDS] Skeleton"
         className={twMerge(baseStyles, variantStyles[variant], className)}
         style={skeletonStyle}
         {...props}
@@ -283,7 +283,7 @@ export const SkeletonTable = forwardRef<HTMLDivElement, SkeletonTableProps>(
     return (
       <div
         ref={ref}
-        data-figma-name="SkeletonTable"
+        data-figma-name="[TDS] SkeletonTable"
         className={twMerge('flex flex-col gap-2', className)}
         {...props}
       >

@@ -197,7 +197,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   if (variant === 'quota') {
     return (
       <div
-        data-figma-name="ProgressBar"
+        data-figma-name="[TDS] ProgressBar"
         className={`flex flex-col gap-1.5 w-full ${className}`}
         {...rest}
       >
@@ -297,7 +297,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   // Default variant (simple progress bar or table cell)
   return (
     <div
-      data-figma-name="ProgressBar"
+      data-figma-name="[TDS] ProgressBar"
       className={`flex flex-col gap-1.5 w-full ${className}`}
       {...rest}
     >

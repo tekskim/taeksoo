@@ -42,7 +42,7 @@ export function PageShell({
 }: PageShellProps) {
   return (
     <div
-      data-figma-name="PageShell"
+      data-figma-name="[TDS] AppLayout"
       className={`fixed inset-0 bg-[var(--color-surface-subtle)] ${className}`.trim()}
     >
       {/* Sidebar */}

@@ -58,7 +58,7 @@ export const Loading: React.FC<LoadingProps> = ({
   if (variant === 'spinner') {
     return (
       <div
-        data-figma-name="Loading"
+        data-figma-name="[TDS] LoadingSpinner"
         className={twMerge('flex flex-col items-center', sizeConfig.gap, className)}
       >
         <IconLoader2
@@ -86,7 +86,7 @@ export const Loading: React.FC<LoadingProps> = ({
 
     return (
       <div
-        data-figma-name="Loading"
+        data-figma-name="[TDS] LoadingSpinner"
         className={twMerge('flex flex-col items-center gap-3', className)}
       >
         {/* Title and Description */}
@@ -121,7 +121,7 @@ export const Loading: React.FC<LoadingProps> = ({
   // Button variant (loading-button)
   if (variant === 'button') {
     return (
-      <div data-figma-name="Loading" className={twMerge('inline-flex', className)}>
+      <div data-figma-name="[TDS] LoadingSpinner" className={twMerge('inline-flex', className)}>
         <button
           type="button"
           disabled

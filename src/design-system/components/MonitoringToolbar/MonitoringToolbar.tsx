@@ -206,7 +206,7 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   const hasCustomPeriod = customPeriod !== null;
 
   return (
-    <div data-figma-name="MonitoringToolbar" className={`monitoring-toolbar ${className}`}>
+    <div data-figma-name="[TDS] MonitoringToolbar" className={`monitoring-toolbar ${className}`}>
       {/* Time Range Buttons */}
       <div className="monitoring-toolbar-segments">
         {timeRangeOptions.map((option) => (

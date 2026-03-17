@@ -82,22 +82,18 @@ export function CloudBuilderModalsPage() {
     <VStack gap={6}>
       <h1
         className="text-heading-h3 text-[var(--color-text-default)]"
-        data-figma-name="[TDS] PageTitle"
-        aria-label="[TDS] PageTitle"
+        data-figma-name="[TDS] Title"
+        aria-label="[TDS] Title"
       >
         Cloud Builder Modals
       </h1>
 
-      <CategorySection
-        title="Service Status"
-        data-figma-name="[TDS] Section-ServiceStatus"
-        aria-label="[TDS] Section-ServiceStatus"
-      >
+      <CategorySection title="Service Status">
         <ModalPreview
           title="Enable compute service"
           description="Change this service status to Enabled?"
-          data-figma-name="[TDS] Modal-EnableComputeService"
-          aria-label="[TDS] Modal-EnableComputeService"
+          data-figma-name="[TDS] ActionModal-EnableComputeService"
+          aria-label="[TDS] ActionModal-EnableComputeService"
         >
           <div className="flex gap-2 w-full">
             <Button
@@ -122,8 +118,8 @@ export function CloudBuilderModalsPage() {
         <ModalPreview
           title="Disable compute service"
           description="Change this service status to Disabled?"
-          data-figma-name="[TDS] Modal-DisableComputeService-Empty"
-          aria-label="[TDS] Modal-DisableComputeService-Empty"
+          data-figma-name="[TDS] ActionModal-DisableComputeService-Empty"
+          aria-label="[TDS] ActionModal-DisableComputeService-Empty"
         >
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
@@ -160,8 +156,8 @@ export function CloudBuilderModalsPage() {
         <ModalPreview
           title="Disable compute service"
           description="Change this service status to Disabled?"
-          data-figma-name="[TDS] Modal-DisableComputeService-Filled"
-          aria-label="[TDS] Modal-DisableComputeService-Filled"
+          data-figma-name="[TDS] ActionModal-DisableComputeService-Filled"
+          aria-label="[TDS] ActionModal-DisableComputeService-Filled"
         >
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
@@ -195,16 +191,12 @@ export function CloudBuilderModalsPage() {
         </ModalPreview>
       </CategorySection>
 
-      <CategorySection
-        title="Network Agent"
-        data-figma-name="[TDS] Section-NetworkAgent"
-        aria-label="[TDS] Section-NetworkAgent"
-      >
+      <CategorySection title="Network Agent">
         <ModalPreview
           title="Enable network agent"
           description="Change this agent status to Enabled?"
-          data-figma-name="[TDS] Modal-EnableNetworkAgent"
-          aria-label="[TDS] Modal-EnableNetworkAgent"
+          data-figma-name="[TDS] ActionModal-EnableNetworkAgent"
+          aria-label="[TDS] ActionModal-EnableNetworkAgent"
         >
           <div className="flex gap-2 w-full">
             <Button
@@ -229,8 +221,8 @@ export function CloudBuilderModalsPage() {
         <ModalPreview
           title="Disable network agent"
           description="Change this agent status to Disabled?"
-          data-figma-name="[TDS] Modal-DisableNetworkAgent-Empty"
-          aria-label="[TDS] Modal-DisableNetworkAgent-Empty"
+          data-figma-name="[TDS] ActionModal-DisableNetworkAgent-Empty"
+          aria-label="[TDS] ActionModal-DisableNetworkAgent-Empty"
         >
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
@@ -267,8 +259,8 @@ export function CloudBuilderModalsPage() {
         <ModalPreview
           title="Disable network agent"
           description="Change this agent status to Disabled?"
-          data-figma-name="[TDS] Modal-DisableNetworkAgent-Filled"
-          aria-label="[TDS] Modal-DisableNetworkAgent-Filled"
+          data-figma-name="[TDS] ActionModal-DisableNetworkAgent-Filled"
+          aria-label="[TDS] ActionModal-DisableNetworkAgent-Filled"
         >
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
@@ -302,16 +294,12 @@ export function CloudBuilderModalsPage() {
         </ModalPreview>
       </CategorySection>
 
-      <CategorySection
-        title="Block Storage Service"
-        data-figma-name="[TDS] Section-BlockStorage"
-        aria-label="[TDS] Section-BlockStorage"
-      >
+      <CategorySection title="Block Storage Service">
         <ModalPreview
           title="Enable block storage service"
           description="Change this service status to Enabled?"
-          data-figma-name="[TDS] Modal-EnableBlockStorage"
-          aria-label="[TDS] Modal-EnableBlockStorage"
+          data-figma-name="[TDS] ActionModal-EnableBlockStorage"
+          aria-label="[TDS] ActionModal-EnableBlockStorage"
         >
           <div className="flex gap-2 w-full">
             <Button
@@ -336,8 +324,8 @@ export function CloudBuilderModalsPage() {
         <ModalPreview
           title="Disable block storage service"
           description="Change this service status to Disabled?"
-          data-figma-name="[TDS] Modal-DisableBlockStorage-Empty"
-          aria-label="[TDS] Modal-DisableBlockStorage-Empty"
+          data-figma-name="[TDS] ActionModal-DisableBlockStorage-Empty"
+          aria-label="[TDS] ActionModal-DisableBlockStorage-Empty"
         >
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
@@ -374,8 +362,8 @@ export function CloudBuilderModalsPage() {
         <ModalPreview
           title="Disable block storage service"
           description="Change this service status to Disabled?"
-          data-figma-name="[TDS] Modal-DisableBlockStorage-Filled"
-          aria-label="[TDS] Modal-DisableBlockStorage-Filled"
+          data-figma-name="[TDS] ActionModal-DisableBlockStorage-Filled"
+          aria-label="[TDS] ActionModal-DisableBlockStorage-Filled"
         >
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">

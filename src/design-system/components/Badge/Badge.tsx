@@ -172,7 +172,7 @@ export const Badge = memo(function Badge({
   };
 
   return (
-    <span data-figma-name="Badge" className={classes} {...props}>
+    <span data-figma-name="[TDS] Badge" className={classes} {...props}>
       {dot && (
         <span
           className={`size-[var(--badge-dot-size)] rounded-full shrink-0 ${dotColors[resolvedTheme]}`}

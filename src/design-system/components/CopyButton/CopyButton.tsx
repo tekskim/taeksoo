@@ -133,7 +133,7 @@ export const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
     return (
       <button
         ref={ref}
-        data-figma-name="CopyButton"
+        data-figma-name="[TDS] CopyButton"
         type="button"
         onClick={handleCopy}
         disabled={disabled}
@@ -187,7 +187,7 @@ export const Copyable = forwardRef<HTMLDivElement, CopyableProps>(
     return (
       <div
         ref={ref}
-        data-figma-name="Copyable"
+        data-figma-name="[TDS] Copyable"
         className={twMerge(
           'inline-flex items-center gap-1.5',
           'px-2 py-1',

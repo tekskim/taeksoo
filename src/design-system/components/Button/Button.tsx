@@ -316,7 +316,7 @@ export const Button: ButtonComponent = forwardRef(
 
     return (
       <Component
-        data-figma-name="Button"
+        data-figma-name="[TDS] Button"
         ref={ref}
         className={classes}
         disabled={Component === 'button' ? isDisabled : undefined}
@@ -332,19 +332,22 @@ export const Button: ButtonComponent = forwardRef(
             <span className="sr-only">Loading...</span>
           </>
         ) : isIconOnly ? (
-          <span className="shrink-0 flex items-center justify-center" data-figma-name="Button/Icon">
+          <span
+            className="shrink-0 flex items-center justify-center"
+            data-figma-name="[TDS] Button/Icon"
+          >
             {icon}
           </span>
         ) : (
           <>
             {leftIcon && (
-              <span className="shrink-0" data-figma-name="Button/LeftIcon">
+              <span className="shrink-0" data-figma-name="[TDS] Button/LeftIcon">
                 {leftIcon}
               </span>
             )}
             {children}
             {rightIcon && (
-              <span className="shrink-0" data-figma-name="Button/RightIcon">
+              <span className="shrink-0" data-figma-name="[TDS] Button/RightIcon">
                 {rightIcon}
               </span>
             )}

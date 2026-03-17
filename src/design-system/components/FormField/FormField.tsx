@@ -149,7 +149,7 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
           <div
             ref={ref}
             className={twMerge('flex flex-col', className)}
-            data-figma-name="FormField"
+            data-figma-name="[TDS] FormField"
             {...props}
           >
             {/* Label */}
@@ -189,7 +189,7 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
         <div
           ref={ref}
           className={twMerge('flex flex-col', className)}
-          data-figma-name="FormField"
+          data-figma-name="[TDS] FormField"
           {...props}
         >
           {children}

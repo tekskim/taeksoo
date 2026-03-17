@@ -71,7 +71,7 @@ export function InfoBox({
 
   return (
     <div
-      data-figma-name="InfoBox"
+      data-figma-name="[TDS] InfoBox"
       className={twMerge(
         'w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] relative min-w-0',
         className

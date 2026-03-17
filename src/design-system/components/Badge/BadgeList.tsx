@@ -62,7 +62,7 @@ export const BadgeList = memo(function BadgeList({
     );
 
   return (
-    <div data-figma-name="BadgeList" className="flex flex-nowrap gap-1 items-center">
+    <div data-figma-name="[TDS] BadgeList" className="flex flex-nowrap gap-1 items-center">
       {visibleItems.map((item, index) => renderBadge(item, index, true))}
       {remainingCount > 0 && (
         <Popover

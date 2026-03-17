@@ -448,16 +448,16 @@ export function CloudBuilderConsolePage() {
     <VStack gap={3} className="w-full">
       <div
         id="tds-PageHeader"
-        data-figma-name="[TDS] PageHeader"
-        aria-label="[TDS] PageHeader"
+        data-figma-name="[TDS] Title"
+        aria-label="[TDS] Title"
         className="flex items-center justify-between h-8"
       >
         <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
         {config.createLabel && (
           <Button
             id="tds-CreateButton"
-            data-figma-name="[TDS] CreateButton"
-            aria-label="[TDS] CreateButton"
+            data-figma-name="[TDS] Button-Create"
+            aria-label="[TDS] Button-Create"
             leftIcon={<IconPlus size={12} />}
             onClick={handleCreate}
           >
@@ -476,13 +476,13 @@ export function CloudBuilderConsolePage() {
           variant="underline"
           size="sm"
         >
-          <TabList data-figma-name="[TDS] TabList" aria-label="[TDS] TabList">
+          <TabList data-figma-name="[TDS] Tabs.List" aria-label="[TDS] Tabs.List">
             {config.tabs.map((t) => (
               <Tab
                 key={t.id}
                 value={t.id}
-                data-figma-name={`[TDS] Tab-${t.id}`}
-                aria-label={`[TDS] Tab-${t.label}`}
+                data-figma-name={`[TDS] Tabs.Tab-${t.id}`}
+                aria-label={`[TDS] Tabs.Tab-${t.label}`}
               >
                 {t.label}
               </Tab>
@@ -493,14 +493,12 @@ export function CloudBuilderConsolePage() {
 
       <ListToolbar
         id="tds-ListToolbar"
-        data-figma-name="[TDS] ListToolbar"
-        aria-label="[TDS] ListToolbar"
         primaryActions={
           <ListToolbar.Actions>
             <div
               className="w-[var(--search-input-width)]"
-              data-figma-name="[TDS] SearchInput"
-              aria-label="[TDS] SearchInput"
+              data-figma-name="[TDS] FilterSearchInput"
+              aria-label="[TDS] FilterSearchInput"
             >
               <SearchInput
                 placeholder={activeTab?.searchPlaceholder ?? config.searchPlaceholder}
@@ -522,7 +520,7 @@ export function CloudBuilderConsolePage() {
               size="sm"
               icon={<IconDownload size={12} />}
               aria-label="Download"
-              data-figma-name="[TDS] DownloadButton"
+              data-figma-name="[TDS] Button-Download"
               onClick={() => window.alert('Download: Coming Soon')}
             />
           </ListToolbar.Actions>
@@ -536,8 +534,8 @@ export function CloudBuilderConsolePage() {
                 leftIcon={<IconTrash size={12} />}
                 disabled={selected.length === 0}
                 onClick={handleDeleteSelected}
-                data-figma-name="[TDS] DeleteButton"
-                aria-label="[TDS] DeleteButton"
+                data-figma-name="[TDS] Button-Delete"
+                aria-label="[TDS] Button-Delete"
               >
                 Delete
               </Button>
@@ -589,8 +587,8 @@ export function CloudBuilderConsolePage() {
         confirmVariant="danger"
         infoLabel="ID"
         infoValue={rowToRemove?.id}
-        data-figma-name="[TDS] ConfirmModal"
-        aria-label="[TDS] ConfirmModal"
+        data-figma-name="[TDS] ActionModal"
+        aria-label="[TDS] ActionModal"
       />
 
       <Modal
@@ -606,8 +604,8 @@ export function CloudBuilderConsolePage() {
             ? `Change this ${config.title.replace(/s$/, '').toLowerCase()} status to Disabled?`
             : `Change this ${config.title.replace(/s$/, '').toLowerCase()} status to Enabled?`
         }
-        data-figma-name="[TDS] StatusModal"
-        aria-label="[TDS] StatusModal"
+        data-figma-name="[TDS] ResourceActionModal"
+        aria-label="[TDS] ResourceActionModal"
       >
         {statusModal ? (
           <>

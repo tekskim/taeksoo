@@ -54,7 +54,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
     return (
       <div
         className={twMerge('flex flex-col gap-[var(--radio-description-gap)]', className)}
-        data-figma-name="Radio"
+        data-figma-name="[TDS] RadioButton"
       >
         <label
           htmlFor={inputId}

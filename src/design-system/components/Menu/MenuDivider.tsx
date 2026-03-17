@@ -20,7 +20,7 @@ export function MenuDivider({ spacing = 'md' }: MenuDividerProps) {
 
   return (
     <div
-      data-figma-name="MenuDivider"
+      data-figma-name="[TDS] MenuDivider"
       className={`w-full h-px bg-[var(--color-border-default)] ${spacingStyles[spacing]}`}
     />
   );
