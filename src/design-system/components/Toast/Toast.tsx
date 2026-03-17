@@ -182,7 +182,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
   const timerRef = useRef<number | null>(null);
   const duration = toast.duration ?? 5000;
   const dismissible = toast.dismissible ?? true;
-  const timestamp = toast.timestamp ?? new Date();
+  const timestamp = toast.timestamp;
 
   const handleDismiss = useCallback(() => {
     setIsExiting(true);
@@ -251,9 +251,9 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
       onMouseLeave={handleMouseLeave}
     >
       {/* Header Row */}
-      <div className="flex gap-[var(--primitive-spacing-2)]">
+      <div className="flex items-start gap-[var(--primitive-spacing-2)]">
         {/* Icon */}
-        <span className="shrink-0 mt-0.5">{variantIcons[toast.variant]}</span>
+        <span className="shrink-0 -mt-px">{variantIcons[toast.variant]}</span>
 
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col gap-[var(--primitive-spacing-1)]">
@@ -296,9 +296,11 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           )}
 
           {/* Timestamp */}
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            {formatTime(timestamp)}
-          </span>
+          {timestamp && (
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              {formatTime(timestamp)}
+            </span>
+          )}
 
           {/* Action Button */}
           {toast.action && (

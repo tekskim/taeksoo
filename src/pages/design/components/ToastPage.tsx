@@ -1,7 +1,8 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack } from '@/design-system';
+import { Toast, VStack } from '@/design-system';
 
 const TOAST_GUIDELINES = `## Overview
 
@@ -51,7 +52,7 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 - 새로운 Toast가 발생하면 이전 Toast는 즉시 교체된다.
 
 ### 3) 표시 시간
-- 토스트는 3초간 표시된다.
+- 토스트는 5초간 표시된다.
 - 토스트는 자동으로 종료된다.
 
 ### 4) 종료 조건
@@ -73,6 +74,8 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 | UX Writing Guide | Foundation | 메시지 작성 규칙 |
 `;
 
+const NOOP = () => {};
+
 export function ToastPage() {
   return (
     <ComponentPageTemplate
@@ -88,6 +91,70 @@ export function ToastPage() {
         '사용자의 확인이 필요한 경우 (→ Modal)',
         '입력 오류 안내 (→ Validation)',
       ]}
+      preview={
+        <ComponentPreview
+          code={`toast.success('Instance created successfully.');
+toast.info('Snapshot scheduled.', { title: 'Snapshot' });`}
+        >
+          <VStack gap={3} className="items-center pointer-events-none">
+            <Toast
+              toast={{
+                id: 'preview-success',
+                variant: 'success',
+                message: 'Instance created successfully.',
+                duration: 0,
+                dismissible: false,
+              }}
+              onDismiss={NOOP}
+            />
+          </VStack>
+        </ComponentPreview>
+      }
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">SUCCESS</span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                작업이 성공적으로 완료되었을 때 사용.
+              </span>
+            </VStack>
+            <div className="pointer-events-none">
+              <Toast
+                toast={{
+                  id: 'ex-success',
+                  variant: 'success',
+                  message: 'Instance created successfully.',
+                  duration: 0,
+                  dismissible: false,
+                }}
+                onDismiss={NOOP}
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">INFO</span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                일반적인 상태 알림에 사용.
+              </span>
+            </VStack>
+            <div className="pointer-events-none">
+              <Toast
+                toast={{
+                  id: 'ex-info',
+                  variant: 'info',
+                  message: 'Snapshot has been scheduled.',
+                  duration: 0,
+                  dismissible: false,
+                }}
+                onDismiss={NOOP}
+              />
+            </div>
+          </VStack>
+        </VStack>
+      }
       guidelines={
         <VStack gap={6}>
           <NotionRenderer markdown={TOAST_GUIDELINES} />
