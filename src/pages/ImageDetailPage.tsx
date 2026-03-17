@@ -15,10 +15,9 @@ import {
   DetailHeader,
   SectionCard,
   Table,
-  StatusIndicator,
+  Chip,
   MonitoringToolbar,
   PageShell,
-  fixedColumns,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
@@ -30,9 +29,7 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconExternalLink,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
 import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
 
 const chartColors = {
@@ -441,8 +438,6 @@ interface ImageSnapshot {
   used: string;
   state: 'protected' | 'unprotected';
   created: string;
-  sourceVolumeName: string;
-  sourceVolumeId: string;
 }
 
 interface ImageConfig {
@@ -463,7 +458,7 @@ const mockImageDetail: ImageDetail = {
   name: 'volume-1f6b9382-6afe-4d37-acff-0bd507e6386d',
   pool: 'volumes',
   dataPool: '-',
-  created: '5/12/25 02:45 PM',
+  created: '2025-05-12 14:45',
   size: '10 GiB',
   objects: '2.6 k',
   objectSize: '4 MiB',
@@ -478,21 +473,30 @@ const mockImageDetail: ImageDetail = {
   formatVersion: '2',
 };
 
-const imageSnapshotStatusMap: Record<ImageSnapshot['state'], 'active' | 'pending'> = {
-  protected: 'active',
-  unprotected: 'pending',
-};
-
 const mockSnapshots: ImageSnapshot[] = [
   {
     id: 'snap-1',
-    name: 'volume-8fa55ce7-1031-40e1-8032-fbdfe6b7a967.clone_snap',
-    size: '1 GB',
+    name: 'backup.2fb15b89-77fe-433e-a25b-2ca6d1ca074d.snap.1770597864.3632324',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'unprotected',
+    created: '2026-02-09 09:46',
+  },
+  {
+    id: 'snap-2',
+    name: 'snapshot-69ed56eb-827d-483b-8fbd-8bca864c203b',
+    size: '10 GiB',
     used: '0 B',
     state: 'protected',
-    created: '13/1/26 11:38 PM',
-    sourceVolumeName: 'volume-8fa55ce7',
-    sourceVolumeId: 'volume-8fa55ce7-1031-40e1-8032-fbdfe6b7a967',
+    created: '2026-01-23 18:00',
+  },
+  {
+    id: 'snap-3',
+    name: 'volume-532ab768-bc2e-44ff-847f-c8cab2d7a42f.clone_snap',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'protected',
+    created: '2026-01-28 18:09',
   },
 ];
 
@@ -646,17 +650,15 @@ export function ImageDetailPage() {
   }));
 
   const snapshotColumns: TableColumn<ImageSnapshot>[] = [
+    { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
     {
       key: 'state',
-      label: 'Status',
-      width: fixedColumns.status,
-      align: 'center',
-      sortable: false,
-      render: (_, row) => (
-        <StatusIndicator layout="icon-only" status={imageSnapshotStatusMap[row.state]} />
-      ),
+      label: 'State',
+      flex: 1,
+      minWidth: columnMinWidths.status,
+      sortable: true,
+      render: (_, row) => <Chip value={row.state} />,
     },
-    { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
     { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     { key: 'used', label: 'Used', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     {
@@ -665,27 +667,6 @@ export function ImageDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.creationDate,
       sortable: true,
-    },
-    {
-      key: 'sourceVolumeName',
-      label: 'Source volume',
-      flex: 2,
-      minWidth: columnMinWidths.nameWide,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/volumes/${row.sourceVolumeId}`}
-            className="inline-flex items-center gap-1 text-[var(--color-action-primary)] hover:underline truncate"
-          >
-            <span className="truncate">{row.sourceVolumeName}</span>
-            <IconExternalLink size={12} stroke={1.5} className="shrink-0" />
-          </Link>
-          <span className="text-body-xs text-[var(--color-text-muted)] truncate">
-            ID : {row.sourceVolumeId}
-          </span>
-        </div>
-      ),
     },
   ];
 
