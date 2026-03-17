@@ -108,27 +108,19 @@ function ChipGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">padding</span>
-              </Td>
+              <Td>padding</Td>
               <Td>8 × 4px (기본). Removable일 때 비대칭: 좌 8px, 우 6px (닫기 버튼 공간)</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span>
-              </Td>
+              <Td>gap</Td>
               <Td>6px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">border-radius</span>
-              </Td>
+              <Td>border-radius</Td>
               <Td>6px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">font-size</span>
-              </Td>
+              <Td>font-size</Td>
               <Td>11px</Td>
             </tr>
           </tbody>
@@ -154,19 +146,14 @@ function ChipGuidelines() {
                 <strong>Value only</strong>
               </Td>
               <Td>Value 텍스트만 표시하는 기본형</Td>
-              <Td>
-                단일 값 필터, 태그 표시 (<span className="font-mono">Active ×</span>)
-              </Td>
+              <Td>단일 값 필터, 태그 표시 (Active ×)</Td>
             </tr>
             <tr>
               <Td>
                 <strong>Label + Value</strong>
               </Td>
               <Td>Label(key)과 Value를 구분선으로 나누어 함께 표시</Td>
-              <Td>
-                key=value 쌍 표시 (<span className="font-mono">Name | a ×</span>,{' '}
-                <span className="font-mono">Status | Running ×</span>)
-              </Td>
+              <Td>key=value 쌍 표시 (Name | a ×, Status | Running ×)</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -231,10 +218,7 @@ function ChipGuidelines() {
           <SubSectionTitle>텍스트 길이 제한</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>
-                Chip 내 텍스트가 지정된 최대 너비를 초과할 경우 말줄임(
-                <span className="font-mono">…</span>)으로 처리한다.
-              </li>
+              <li>Chip 내 텍스트가 지정된 최대 너비를 초과할 경우 말줄임( …)으로 처리한다.</li>
               <li>
                 말줄임 처리된 Chip에는 Tooltip을 제공하여 전체 텍스트를 확인할 수 있도록 한다.
               </li>
@@ -248,13 +232,10 @@ function ChipGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                화면 또는 컨테이너 내에 표시 가능한 Chip 수를 초과하면{' '}
-                <span className="font-mono">+N more</span> 형태로 접어서 표시한다.
+                화면 또는 컨테이너 내에 표시 가능한 Chip 수를 초과하면 +N more 형태로 접어서
+                표시한다.
               </li>
-              <li>
-                <span className="font-mono">+N more</span> Chip을 클릭하면 나머지 항목을 펼쳐서
-                확인할 수 있다.
-              </li>
+              <li>+N more Chip을 클릭하면 나머지 항목을 펼쳐서 확인할 수 있다.</li>
               <li>축약 기준(N)은 레이아웃 컨텍스트에 따라 다르게 적용할 수 있다.</li>
             </ul>
           </Prose>
@@ -331,16 +312,14 @@ function ChipGuidelines() {
             </li>
             <li>
               <strong>Key=Value 패턴</strong>: Label(key)은 카테고리를 명확히 나타내고, Value는
-              구체적인 값을 표시한다. 예: <span className="font-mono">Status | Running</span>,{' '}
-              <span className="font-mono">Name | a</span>
+              구체적인 값을 표시한다. 예: Status | Running, Name | a
             </li>
             <li>
               <strong>대소문자</strong>: 시스템 식별자(Kubernetes label 등)는 원래 형식 그대로
               표시하고, UI 레이블은 Sentence case를 기본으로 한다.
             </li>
             <li>
-              <strong>+N more 레이블</strong>: <span className="font-mono">+3 more</span>처럼 숫자와
-              more를 함께 표기한다.
+              <strong>+N more 레이블</strong>: +3 more처럼 숫자와 more를 함께 표기한다.
             </li>
           </ul>
         </Prose>
@@ -507,10 +486,7 @@ export function ChipPage() {
       guidelines={<ChipGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">padding: 8×4px (removable 시 좌8 우6)</span> ·{' '}
-          <span className="font-mono">gap: 6px</span> ·{' '}
-          <span className="font-mono">border-radius: 6px</span> ·{' '}
-          <span className="font-mono">font-size: 11px</span>
+          padding: 8×4px (removable 시 좌8 우6) · gap: 6px · border-radius: 6px · font-size: 11px
         </div>
       }
       relatedLinks={[

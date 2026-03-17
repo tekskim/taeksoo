@@ -128,9 +128,7 @@ export function DisclosurePage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">gap: 6px</span> ·{' '}
-          <span className="font-mono">icon: 12px</span> ·{' '}
-          <span className="font-mono">font: 14px / 20px / medium</span>
+          gap: 6px · icon: 12px · font: 14px / 20px / medium
         </div>
       }
       relatedLinks={[

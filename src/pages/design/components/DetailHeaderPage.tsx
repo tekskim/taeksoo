@@ -169,8 +169,7 @@ function DetailHeaderGuidelines() {
               배치
             </li>
             <li>
-              <strong>ID</strong>: <span className="font-mono">copyable</span> 속성으로 클립보드
-              복사 기능을 제공
+              <strong>ID</strong>: copyable 속성으로 클립보드 복사 기능을 제공
             </li>
             <li>
               <strong>날짜</strong>: Created at, Updated at 등 시간 정보를 표시
@@ -273,57 +272,39 @@ function DetailHeaderGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">container.padding</span>
-              </Td>
+              <Td>container.padding</Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">container.radius</span>
-              </Td>
+              <Td>container.radius</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">container.gap</span>
-              </Td>
+              <Td>container.gap</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">title</span>
-              </Td>
+              <Td>title</Td>
               <Td>16px / semibold</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">actions.gap</span>
-              </Td>
+              <Td>actions.gap</Td>
               <Td>4px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-grid.gap</span>
-              </Td>
+              <Td>info-grid.gap</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-card.padding</span>
-              </Td>
+              <Td>info-card.padding</Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-card.radius</span>
-              </Td>
+              <Td>info-card.radius</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-card.gap</span>
-              </Td>
+              <Td>info-card.gap</Td>
               <Td>6px</Td>
             </tr>
           </tbody>
@@ -560,57 +541,39 @@ export function DetailHeaderPage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">container.padding</span>
-              </Td>
+              <Td>container.padding</Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">container.radius</span>
-              </Td>
+              <Td>container.radius</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">container.gap</span>
-              </Td>
+              <Td>container.gap</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">title</span>
-              </Td>
+              <Td>title</Td>
               <Td>16px / semibold</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">actions.gap</span>
-              </Td>
+              <Td>actions.gap</Td>
               <Td>4px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-grid.gap</span>
-              </Td>
+              <Td>info-grid.gap</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-card.padding</span>
-              </Td>
+              <Td>info-card.padding</Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-card.radius</span>
-              </Td>
+              <Td>info-card.radius</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">info-card.gap</span>
-              </Td>
+              <Td>info-card.gap</Td>
               <Td>6px</Td>
             </tr>
           </tbody>

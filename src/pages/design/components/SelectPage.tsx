@@ -409,11 +409,7 @@ export function SelectPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">padding: 10×8px</span> ·{' '}
-          <span className="font-mono">radius: 6px</span> ·{' '}
-          <span className="font-mono">font: 12px</span> ·{' '}
-          <span className="font-mono">item: 10×6px, 12px</span> ·{' '}
-          <span className="font-mono">border: 1px → 2px focus</span>
+          padding: 10×8px · radius: 6px · font: 12px · item: 10×6px, 12px · border: 1px → 2px focus
         </div>
       }
       relatedLinks={[

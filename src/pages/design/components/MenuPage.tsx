@@ -288,45 +288,31 @@ function MenuGuidelines() {
             </thead>
             <tbody>
               <tr>
-                <Td>
-                  <span className="font-mono">item.padding</span>
-                </Td>
+                <Td>item.padding</Td>
                 <Td>8×6px</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">item.gap</span>
-                </Td>
+                <Td>item.gap</Td>
                 <Td>6px</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">item.radius</span>
-                </Td>
+                <Td>item.radius</Td>
                 <Td>6px (md)</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">section.padding</span>
-                </Td>
+                <Td>section.padding</Td>
                 <Td>8×4px</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">section.gap</span>
-                </Td>
+                <Td>section.gap</Td>
                 <Td>16px</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">section.title-gap</span>
-                </Td>
+                <Td>section.title-gap</Td>
                 <Td>6px</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">divider.margin</span>
-                </Td>
+                <Td>divider.margin</Td>
                 <Td>8px</Td>
               </tr>
             </tbody>
@@ -456,9 +442,7 @@ function MenuGuidelines() {
                 선택한 범위에 현재 페이지가 존재하지 않는 경우 해당 범위의 홈(Dashboard 등)으로
                 이동한다.
               </li>
-              <li>
-                드롭다운 외부 클릭 또는 <span className="font-mono">Esc</span> 키 입력 시 닫힌다.
-              </li>
+              <li>드롭다운 외부 클릭 또는 Esc 키 입력 시 닫힌다.</li>
             </ul>
           </Prose>
         </VStack>
@@ -477,7 +461,7 @@ function MenuGuidelines() {
               </li>
               <li>
                 펼침/접힘 애니메이션: 높이 전환(height transition)을 사용하며, 지속 시간은 Motion
-                가이드라인의 <span className="font-mono">duration.short</span>를 따른다.
+                가이드라인의 duration.short를 따른다.
               </li>
             </ul>
           </Prose>
@@ -494,29 +478,19 @@ function MenuGuidelines() {
             </thead>
             <tbody>
               <tr>
-                <Td>
-                  <span className="font-mono">Tab</span> /{' '}
-                  <span className="font-mono">Shift+Tab</span>
-                </Td>
+                <Td>Tab / Shift+Tab</Td>
                 <Td>포커스 이동</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">↑</span> / <span className="font-mono">↓</span>
-                </Td>
+                <Td>↑ / ↓</Td>
                 <Td>아이템 간 포커스 이동</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">Enter</span> /{' '}
-                  <span className="font-mono">Space</span>
-                </Td>
+                <Td>Enter / Space</Td>
                 <Td>아이템 선택 또는 Collapsible 섹션 펼침/접힘</Td>
               </tr>
               <tr>
-                <Td>
-                  <span className="font-mono">Esc</span>
-                </Td>
+                <Td>Esc</Td>
                 <Td>Scope Selector 드롭다운 닫기</Td>
               </tr>
             </tbody>

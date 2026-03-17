@@ -327,9 +327,7 @@ export function LoadingPage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">progress</span>
-              </Td>
+              <Td>progress</Td>
               <Td>h-1 (4px)</Td>
             </tr>
           </tbody>

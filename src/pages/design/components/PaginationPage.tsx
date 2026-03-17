@@ -136,27 +136,19 @@ function PaginationGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">item-size</span>
-              </Td>
+              <Td>item-size</Td>
               <Td>24px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span>
-              </Td>
+              <Td>gap</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">radius</span>
-              </Td>
+              <Td>radius</Td>
               <Td>4px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">font</span>
-              </Td>
+              <Td>font</Td>
               <Td>12px</Td>
             </tr>
           </tbody>
@@ -444,10 +436,7 @@ export function PaginationPage() {
       guidelines={<PaginationGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">item-size: 24px</span> ·{' '}
-          <span className="font-mono">gap: 8px</span> ·{' '}
-          <span className="font-mono">radius: 4px</span> ·{' '}
-          <span className="font-mono">font: 12px</span>
+          item-size: 24px · gap: 8px · radius: 4px · font: 12px
         </div>
       }
       relatedLinks={[

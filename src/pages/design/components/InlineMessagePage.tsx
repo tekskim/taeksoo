@@ -160,11 +160,7 @@ export function InlineMessagePage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">padding: 12px</span> ·{' '}
-          <span className="font-mono">gap: 8px</span> ·{' '}
-          <span className="font-mono">radius: 6px</span> ·{' '}
-          <span className="font-mono">icon: 16px</span> ·{' '}
-          <span className="font-mono">font: 12px</span>
+          padding: 12px · gap: 8px · radius: 6px · icon: 16px · font: 12px
         </div>
       }
       relatedLinks={[

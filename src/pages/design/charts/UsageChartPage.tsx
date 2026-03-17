@@ -424,10 +424,7 @@ function UsageChartGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>차트 위에 마우스를 호버하면 툴팁이 노출된다.</li>
               <li>포함 정보: 데이터 종류(Used / Available), value, percent</li>
-              <li>
-                예: <span className="font-mono">Used: 167.49TiB (89%)</span> /{' '}
-                <span className="font-mono">Available: 22.41TiB (11%)</span>
-              </li>
+              <li>예: Used: 167.49TiB (89%) / Available: 22.41TiB (11%)</li>
             </ul>
           </Prose>
         </VStack>

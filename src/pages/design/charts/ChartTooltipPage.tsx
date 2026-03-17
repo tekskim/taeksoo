@@ -87,26 +87,11 @@ function ChartTooltipPageGuidelines() {
         <SubSectionTitle>공통 스타일 규칙</SubSectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
-            <li>
-              배경색: <span className="font-mono">#ffffff</span>, 테두리:{' '}
-              <span className="font-mono">#e2e8f0</span> (border-subtle)
-            </li>
-            <li>
-              텍스트: <span className="font-mono">#1e293b</span> (slate800), 크기:{' '}
-              <span className="font-mono">11px</span>
-            </li>
-            <li>
-              폰트:{' '}
-              <span className="font-mono">
-                Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif
-              </span>
-            </li>
-            <li>
-              색상 도트: <span className="font-mono">8×8px</span> rounded-full, 시리즈 색상 매칭
-            </li>
-            <li>
-              값 텍스트: <span className="font-mono">font-weight: 500</span> (medium)
-            </li>
+            <li>배경색: #ffffff, 테두리: #e2e8f0 (border-subtle)</li>
+            <li>텍스트: #1e293b (slate800), 크기: 11px</li>
+            <li>폰트: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif</li>
+            <li>색상 도트: 8×8px rounded-full, 시리즈 색상 매칭</li>
+            <li>값 텍스트: font-weight: 500 (medium)</li>
           </ul>
         </Prose>
       </VStack>

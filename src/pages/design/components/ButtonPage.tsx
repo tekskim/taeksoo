@@ -635,9 +635,7 @@ export function ButtonPage() {
             </table>
           </div>
           <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1">
-            <span className="font-mono">radius: 6px (md)</span> ·{' '}
-            <span className="font-mono">border: slate-300 (secondary)</span> ·{' '}
-            <span className="font-mono">disabled-bg: slate-200 (primary)</span>
+            radius: 6px (md) · border: slate-300 (secondary) · disabled-bg: slate-200 (primary)
           </div>
         </>
       }

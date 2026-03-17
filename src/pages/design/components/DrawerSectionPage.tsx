@@ -145,13 +145,12 @@ function DrawerSectionPageGuidelines() {
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                <strong>헤더</strong>: <span className="font-mono">title</span> prop으로 타이틀
-                설정. Close 버튼과 border-bottom은 제거됨.{' '}
-                <span className="font-mono">showCloseButton</span> prop은 deprecated이며 무시된다.
+                <strong>헤더</strong>: title prop으로 타이틀 설정. Close 버튼과 border-bottom은
+                제거됨. showCloseButton prop은 deprecated이며 무시된다.
               </li>
               <li>
                 <strong>Footer</strong>: 액션 버튼은 footer prop에 배치. Cancel(secondary) 왼쪽,
-                Submit(primary) 오른쪽. <span className="font-mono">flex-1</span>로 균등 너비.
+                Submit(primary) 오른쪽. flex-1로 균등 너비.
               </li>
               <li>
                 <strong>컨텍스트 정보</strong>: 수정 대상 리소스의 ID/이름은 상단 InfoBox로 표시.
@@ -264,14 +263,9 @@ export function DrawerSectionPage() {
       guidelines={<DrawerSectionPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">width: 320px (default)</span> ·{' '}
-          <span className="font-mono">Form: 360px (4col)</span> ·{' '}
-          <span className="font-mono">Selection: 696px (8col)</span> ·{' '}
-          <span className="font-mono">Large: 1032px (12col)</span> ·{' '}
-          <span className="font-mono">padding-x: 24px</span> ·{' '}
-          <span className="font-mono">padding-y: 16px</span> ·{' '}
-          <span className="font-mono">scrollbar: 6px overlay</span> ·{' '}
-          <span className="font-mono">animation: 300ms ease-out</span>
+          width: 320px (default) · Form: 360px (4col) · Selection: 696px (8col) · Large: 1032px
+          (12col) · padding-x: 24px · padding-y: 16px · scrollbar: 6px overlay · animation: 300ms
+          ease-out
         </div>
       }
       relatedLinks={[

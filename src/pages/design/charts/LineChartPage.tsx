@@ -328,17 +328,14 @@ function LineChartGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>Multi-series 차트의 경우 CSV에는 모든 series가 포함된다.</li>
               <li>
-                파일명: <span className="font-mono">{'{chart-title}_{time-range}.csv'}</span>
+                파일명: {'{chart-title}_{time-range}.csv'}
                 <ul className="list-disc pl-5 space-y-1 mt-1">
                   <li>
                     예시:
                     <ul className="list-disc pl-5 space-y-1 mt-1">
+                      <li>프리셋 선택 시: cpu-usage_24h.csv</li>
                       <li>
-                        프리셋 선택 시: <span className="font-mono">cpu-usage_24h.csv</span>
-                      </li>
-                      <li>
-                        기간 커스텀 시:{' '}
-                        <span className="font-mono">cpu-usage_20260311_to_20260312.csv</span>
+                        기간 커스텀 시: cpu-usage_20260311_to_20260312.csv
                         <ul className="list-disc pl-5 space-y-1 mt-1">
                           <li>언어설정과 관계없이 YYYYMMDD 형식 사용</li>
                         </ul>
@@ -604,14 +601,10 @@ function ChartColorTokens() {
 
       <div className="px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-subtle)] text-body-sm text-[var(--color-text-muted)]">
         <span className="text-[var(--color-text-default)] font-medium">CSS tokens:</span>{' '}
-        <span className="font-mono">--chart-color-1</span> …{' '}
-        <span className="font-mono">--chart-color-10</span>
+        --chart-color-1 … --chart-color-10
         {' · '}
-        <span className="text-[var(--color-text-default)] font-medium">Import:</span>{' '}
-        <span className="font-mono">chartColors</span>,{' '}
-        <span className="font-mono">primaryChartColors</span>,{' '}
-        <span className="font-mono">extendedChartColors</span> from{' '}
-        <span className="font-mono">ChartComponents</span>
+        <span className="text-[var(--color-text-default)] font-medium">Import:</span> chartColors,
+        primaryChartColors, extendedChartColors from ChartComponents
       </div>
     </VStack>
   );

@@ -140,10 +140,8 @@ export function ModalPage() {
               ConfirmModal component
             </span>
             <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              삭제 확인 등 반복적인 패턴을 위한 전용 컴포넌트.{' '}
-              <span className="font-mono">infoLabel</span>,{' '}
-              <span className="font-mono">infoValue</span>,{' '}
-              <span className="font-mono">confirmVariant</span> props 지원.
+              삭제 확인 등 반복적인 패턴을 위한 전용 컴포넌트. infoLabel, infoValue, confirmVariant
+              props 지원.
             </p>
             <ModalDemo variant="delete" />
           </VStack>
@@ -161,13 +159,10 @@ export function ModalPage() {
       tokens={
         <VStack gap={3}>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <span className="font-mono">padding: 24px</span> ·{' '}
-            <span className="font-mono">gap: 16px</span> ·{' '}
-            <span className="font-mono">radius: 16px</span> ·{' '}
-            <span className="font-mono">backdrop: black/60</span>
+            padding: 24px · gap: 16px · radius: 16px · backdrop: black/60
           </div>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <span className="font-mono">width: 344px</span>
+            width: 344px
           </div>
         </VStack>
       }

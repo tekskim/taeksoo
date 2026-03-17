@@ -943,7 +943,7 @@ function AppSectionCard({ app, searchQuery }: AppSectionCardProps) {
           <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">{app.name}</h2>
           <div className="flex items-center gap-1.5 text-[11px] text-[var(--color-text-subtle)]">
             <IconFile size={12} stroke={1.5} />
-            <span className="font-mono">{app.sidebarFile}</span>
+            {app.sidebarFile}
           </div>
         </div>
       </div>

@@ -322,11 +322,7 @@ export function FilterSearchInputPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">height: 32px (sm) / 36px (md)</span> ·{' '}
-          <span className="font-mono">padding: 8×12px</span> ·{' '}
-          <span className="font-mono">radius: 6px</span> ·{' '}
-          <span className="font-mono">font: 12px</span> ·{' '}
-          <span className="font-mono">chip-gap: 4px</span>
+          height: 32px (sm) / 36px (md) · padding: 8×12px · radius: 6px · font: 12px · chip-gap: 4px
         </div>
       }
       relatedLinks={[

@@ -80,17 +80,17 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
       <div className="text-center px-6 -mt-20">
         {config.statusCode && (
           <div className="mb-4">
-            <span className="text-[64px] font-black text-[#4B5563] leading-[80px] h-[80px] inline-block">
+            <span className="text-[64px] font-black text-[var(--color-text-disabled)] leading-[80px] h-[80px] inline-block">
               {config.statusCode}
             </span>
           </div>
         )}
 
         <div className="mb-8">
-          <h1 className="text-[18px] font-semibold leading-[26px] text-gray-800 mb-2">
+          <h1 className="text-[18px] font-semibold leading-[26px] text-[var(--color-text-default)] mb-2">
             {config.title}
           </h1>
-          <p className="text-gray-500 text-[13px] leading-[20px] max-w-md mx-auto">
+          <p className="text-[var(--color-text-muted)] text-[13px] leading-[20px] max-w-md mx-auto">
             {config.description}
           </p>
         </div>
