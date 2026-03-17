@@ -526,13 +526,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
-          key: 'serviceStatus',
-          label: 'Service status',
+          key: 'serviceState',
+          label: 'Service state',
           sortable: true,
           width: fixedColumns.status,
           align: 'center',
           kind: 'statusIndicator',
-          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+          statusMap: { Up: 'active', Down: 'error' },
         },
         { key: 'name', label: 'Name', sortable: true, minWidth: columnMinWidths.name },
         { key: 'host', label: 'Host', sortable: true, minWidth: columnMinWidths.host },
@@ -543,12 +543,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.availabilityZone,
         },
         {
-          key: 'serviceState',
-          label: 'Service state',
+          key: 'serviceStatus',
+          label: 'Service status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
+          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
         {
           key: 'lastUpdated',
@@ -924,13 +924,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
-          key: 'serviceStatus',
-          label: 'Service status',
+          key: 'serviceState',
+          label: 'Service state',
           sortable: true,
           width: fixedColumns.status,
           align: 'center',
           kind: 'statusIndicator',
-          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+          statusMap: { Up: 'active', Down: 'error' },
         },
         {
           key: 'name',
@@ -950,12 +950,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.availabilityZone,
         },
         {
-          key: 'serviceState',
-          label: 'Service state',
+          key: 'serviceStatus',
+          label: 'Service status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
+          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
         {
           key: 'lastUpdated',
@@ -1012,13 +1012,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
-          key: 'serviceStatus',
-          label: 'Service status',
+          key: 'serviceState',
+          label: 'Service state',
           sortable: true,
           width: fixedColumns.status,
           align: 'center',
           kind: 'statusIndicator',
-          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+          statusMap: { Up: 'active', Down: 'error' },
         },
         { key: 'name', label: 'Name', sortable: true, minWidth: columnMinWidths.name },
         { key: 'host', label: 'Host', sortable: true, minWidth: columnMinWidths.host },
@@ -1029,12 +1029,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.availabilityZone,
         },
         {
-          key: 'serviceState',
-          label: 'Service state',
+          key: 'serviceStatus',
+          label: 'Service status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
+          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
         {
           key: 'lastUpdated',
@@ -1138,6 +1138,15 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       showCheckboxColumn: false,
       showBulkDelete: false,
       columns: [
+        {
+          key: 'status',
+          label: 'Status',
+          sortable: true,
+          width: fixedColumns.status,
+          align: 'center',
+          kind: 'statusIndicator',
+          statusMap: { Up: 'active', Down: 'error' },
+        },
         { key: 'name', label: 'Name', sortable: true, minWidth: columnMinWidths.name },
         {
           key: 'engineId',
@@ -1147,14 +1156,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.engineId,
         },
         { key: 'host', label: 'Host', sortable: true, minWidth: columnMinWidths.host },
-        {
-          key: 'status',
-          label: 'Status',
-          sortable: true,
-          minWidth: columnMinWidths.serviceState,
-          kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
-        },
         {
           key: 'lastUpdated',
           label: 'Last updated',
