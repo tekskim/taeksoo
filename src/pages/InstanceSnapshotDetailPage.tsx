@@ -85,11 +85,17 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
       hw_qemu_guest_agent: 'yes',
       os_distro: 'ubuntu',
       hw_disk_bus: 'scsi',
-      os_version: '22.04',
+      os_version: '24.04',
       os_require_quiesce: 'yes',
+      'owner_specified.openstack.sha256': '-',
+      'owner_specified.openstack.md5': '-',
       image_type: 'snapshot',
+      'owner_specified.openstack.object': 'images/ubuntu-24.04-server',
+      base_image_ref: '1e568eb7-a277-48f0-97d4-e481f2dd1ef4',
       owner_user_name: 'admin',
       owner_project_name: 'test',
+      boot_roles: 'reader,member,load-balancer_member,manager',
+      hw_machine_type: 'pc',
     },
   },
   'snap-002': {
@@ -306,6 +312,7 @@ export function InstanceSnapshotDetailPage() {
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard label="Status" value="Active" status="active" />
             <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value="test" />
             <DetailHeader.InfoCard label="Size" value={snapshot.size} />
             <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
           </DetailHeader.InfoGrid>
@@ -387,24 +394,12 @@ export function InstanceSnapshotDetailPage() {
                       label="Protected"
                       value={snapshot.protected ? 'Enabled' : 'Disabled'}
                     />
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Filename
-                        </span>
-                        <CopyableValue value={snapshot.filename} />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Checksum
-                        </span>
-                        <CopyableValue value={snapshot.checksum} />
-                      </div>
-                    </div>
+                    <SectionCard.DataRow label="Filename">
+                      <CopyableValue value={snapshot.filename} />
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="Checksum">
+                      <CopyableValue value={snapshot.checksum} />
+                    </SectionCard.DataRow>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

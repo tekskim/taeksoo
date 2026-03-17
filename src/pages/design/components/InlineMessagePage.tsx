@@ -262,6 +262,37 @@ function ExpandableInlineMessage({
   );
 }
 
+function ExpandedInlineMessage({
+  variant = 'info',
+  timestamp,
+  children,
+}: {
+  variant?: InlineMessageVariant;
+  timestamp: string;
+  children: React.ReactNode;
+}) {
+  const styles = VARIANT_STYLES[variant];
+
+  return (
+    <div
+      className={`flex items-start gap-[var(--inline-message-gap)] p-[var(--inline-message-padding)] rounded-[var(--inline-message-radius)] ${styles.bg}`}
+    >
+      <span className={`shrink-0 ${styles.iconClass}`}>{styles.icon}</span>
+      <span className="relative flex-1 min-w-0">
+        <span className="block text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)] max-h-[calc(3*var(--inline-message-line-height))] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {children}
+        </span>
+      </span>
+      <span className="text-body-xs leading-[var(--inline-message-line-height)] text-[var(--color-text-default)] whitespace-nowrap shrink-0 ml-2">
+        {timestamp}
+      </span>
+      <button className="shrink-0 leading-[var(--inline-message-line-height)] rounded-[var(--radius-sm)] hover:bg-black/5">
+        <IconChevronUp size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+      </button>
+    </div>
+  );
+}
+
 export function InlineMessagePage() {
   return (
     <ComponentPageTemplate
@@ -368,6 +399,32 @@ export function InlineMessagePage() {
                 9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed to allocate the network(s). No
                 available IP addresses in subnet 192.168.10.0/24.
               </ExpandableInlineMessage>
+            </VStack>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Expandable (expanded)</Label>
+            <VStack gap={3}>
+              <ExpandedInlineMessage variant="success" timestamp="Nov-11-2025 02:51 PM">
+                ERROR nova.compute.manager [instance: 9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed
+                to allocate the network(s). No available IP addresses in subnet 192.168.10.0/24.
+                WARNING neutron.agent.dhcp [subnet: 192.168.10.0/24] DHCP lease pool exhausted.
+              </ExpandedInlineMessage>
+              <ExpandedInlineMessage variant="warning" timestamp="Nov-11-2025 02:51 PM">
+                ERROR nova.compute.manager [instance: 9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed
+                to allocate the network(s). No available IP addresses in subnet 192.168.10.0/24.
+                WARNING neutron.agent.dhcp [subnet: 192.168.10.0/24] DHCP lease pool exhausted.
+              </ExpandedInlineMessage>
+              <ExpandedInlineMessage variant="error" timestamp="Nov-11-2025 02:51 PM">
+                ERROR nova.compute.manager [instance: 9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed
+                to allocate the network(s). No available IP addresses in subnet 192.168.10.0/24.
+                WARNING neutron.agent.dhcp [subnet: 192.168.10.0/24] DHCP lease pool exhausted.
+              </ExpandedInlineMessage>
+              <ExpandedInlineMessage variant="info" timestamp="Nov-11-2025 02:51 PM">
+                ERROR nova.compute.manager [instance: 9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed
+                to allocate the network(s). No available IP addresses in subnet 192.168.10.0/24.
+                WARNING neutron.agent.dhcp [subnet: 192.168.10.0/24] DHCP lease pool exhausted.
+              </ExpandedInlineMessage>
             </VStack>
           </VStack>
 
