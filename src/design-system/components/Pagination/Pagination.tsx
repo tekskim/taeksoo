@@ -180,7 +180,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <nav
-      data-figma-name="Pagination"
+      data-figma-name="[TDS] Pagination"
       aria-label="Pagination"
       className={`inline-flex items-center gap-[var(--pagination-gap)] ${className}`}
       {...rest}

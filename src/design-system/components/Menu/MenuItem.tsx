@@ -77,7 +77,7 @@ export function MenuItem({
     return (
       <Link
         to={href}
-        data-figma-name="MenuItem"
+        data-figma-name="[TDS] MenuItem"
         onClick={disabled ? (e) => e.preventDefault() : onClick}
         className={twMerge(baseStyles, stateStyles)}
         aria-current={active ? 'page' : undefined}
@@ -92,7 +92,7 @@ export function MenuItem({
   return (
     <button
       type="button"
-      data-figma-name="MenuItem"
+      data-figma-name="[TDS] MenuItem"
       onClick={disabled ? undefined : onClick}
       className={twMerge(baseStyles, stateStyles)}
       aria-disabled={disabled}

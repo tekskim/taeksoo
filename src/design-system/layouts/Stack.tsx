@@ -109,9 +109,9 @@ export type HStackProps = Omit<StackProps, 'direction'>;
 export type VStackProps = Omit<StackProps, 'direction'>;
 
 export function HStack(props: HStackProps) {
-  return <Stack data-figma-name="HStack" direction="row" {...props} />;
+  return <Stack data-figma-name="[TDS] HStack" direction="row" {...props} />;
 }
 
 export function VStack(props: VStackProps) {
-  return <Stack data-figma-name="VStack" direction="column" {...props} />;
+  return <Stack data-figma-name="[TDS] VStack" direction="column" {...props} />;
 }

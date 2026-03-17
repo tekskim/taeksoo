@@ -16,7 +16,7 @@ export interface SectionCardProps extends HTMLAttributes<HTMLDivElement> {
 export function SectionCard({ children, isActive = false, className, ...props }: SectionCardProps) {
   return (
     <div
-      data-figma-name="SectionCard"
+      data-figma-name="[TDS] DetailCard"
       className={twMerge(
         'flex flex-col items-start',
         'gap-4',

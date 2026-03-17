@@ -134,7 +134,7 @@ export const TabBar: React.FC<TabBarProps> = ({
 
   return (
     <div
-      data-figma-name="TabBar"
+      data-figma-name="[TDS] TabBar"
       className={`
         relative
         flex items-center

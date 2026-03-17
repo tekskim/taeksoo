@@ -87,7 +87,7 @@ export function Disclosure({
 
   return (
     <DisclosureContext.Provider value={contextValue}>
-      <div data-figma-name="Disclosure" className={twMerge('', className)} {...props}>
+      <div data-figma-name="[TDS] Disclosure" className={twMerge('', className)} {...props}>
         {children}
       </div>
     </DisclosureContext.Provider>

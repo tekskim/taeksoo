@@ -146,7 +146,7 @@ export function Modal({
   return createPortal(
     <div className={backdropClasses} onClick={handleBackdropClick}>
       <div
-        data-figma-name="Modal"
+        data-figma-name="[TDS] Overlay"
         {...rest}
         ref={focusTrapRef}
         className={modalClasses}

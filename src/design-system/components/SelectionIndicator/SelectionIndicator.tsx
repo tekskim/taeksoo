@@ -51,7 +51,7 @@ export function SelectionIndicator({
 
   return (
     <div
-      data-figma-name="SelectionIndicator"
+      data-figma-name="[TDS] SelectionIndicator"
       className={twMerge(
         'flex flex-row items-center justify-between gap-4 w-full',
         'p-[var(--inline-message-padding)]',
