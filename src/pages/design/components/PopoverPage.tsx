@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
@@ -11,6 +12,64 @@ function Prose({ children }: { children: React.ReactNode }) {
   return (
     <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
       {children}
+    </div>
+  );
+}
+
+/* ── Static Popover (design preview, no interaction) ── */
+
+function PopoverArrowTriangles({ position }: { position: 'top' | 'bottom' }) {
+  if (position === 'bottom')
+    return (
+      <div className="relative inline-flex">
+        <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
+      </div>
+    );
+  return (
+    <div className="relative inline-flex">
+      <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-[var(--color-border-default)]" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[var(--color-surface-default)]" />
+    </div>
+  );
+}
+
+function PopoverShape({ children }: { children: ReactNode }) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-lg">
+      {children}
+    </div>
+  );
+}
+
+function StaticPopover({
+  content,
+  position = 'top',
+  children,
+}: {
+  content: ReactNode;
+  position?: 'top' | 'bottom';
+  children?: ReactNode;
+}) {
+  const arrow = (
+    <div className={`flex justify-center ${position === 'top' ? '-mt-px' : '-mb-px'}`}>
+      <PopoverArrowTriangles position={position} />
+    </div>
+  );
+
+  const popover = (
+    <div className="flex flex-col">
+      {position === 'bottom' && arrow}
+      <PopoverShape>{content}</PopoverShape>
+      {position === 'top' && arrow}
+    </div>
+  );
+
+  return (
+    <div className="inline-flex flex-col items-center gap-1">
+      {position === 'top' && popover}
+      {children}
+      {position === 'bottom' && popover}
     </div>
   );
 }
@@ -158,6 +217,66 @@ export function PopoverPage() {
       }
       examples={
         <VStack gap={8}>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <span className="text-label-md text-[var(--color-text-default)]">STATIC PREVIEW</span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                호버 없이 Popover 디자인을 확인할 수 있는 정적 미리보기.
+              </span>
+            </VStack>
+            <div className="flex items-start gap-12 pt-4 pb-2">
+              <StaticPopover
+                position="top"
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Labels (4)
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Badge theme="white" size="sm" className="w-fit">
+                        app=nginx-ingress-controller
+                      </Badge>
+                      <Badge theme="white" size="sm" className="w-fit">
+                        env=production
+                      </Badge>
+                      <Badge theme="white" size="sm" className="w-fit">
+                        team=platform-engineering
+                      </Badge>
+                      <Badge theme="white" size="sm" className="w-fit">
+                        version=2.1.0-rc1
+                      </Badge>
+                    </div>
+                  </div>
+                }
+              />
+
+              <StaticPopover
+                position="bottom"
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All OSDs (4)
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Badge theme="white" size="sm" className="w-fit">
+                        osd.4
+                      </Badge>
+                      <Badge theme="white" size="sm" className="w-fit">
+                        osd.5
+                      </Badge>
+                      <Badge theme="white" size="sm" className="w-fit">
+                        osd.6
+                      </Badge>
+                      <Badge theme="white" size="sm" className="w-fit">
+                        osd.7
+                      </Badge>
+                    </div>
+                  </div>
+                }
+              />
+            </div>
+          </VStack>
+
           <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-md text-[var(--color-text-default)]">

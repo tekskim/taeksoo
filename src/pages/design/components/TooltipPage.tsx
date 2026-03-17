@@ -38,8 +38,12 @@ const TOOLTIP_GUIDELINES = `## Overview
 | 구분 | 설명 |
 | --- | --- |
 | Default | 일반 텍스트 Tooltip. 기본 위치는 트리거 상단(top) |
-| Position — Top | 트리거 요소 상단에 표시 |
-| Position — Bottom | 트리거 요소 하단에 표시 |
+| Position — Top | 트리거 요소 상단 중앙에 표시 |
+| Position — Top Start | 트리거 요소 상단, 화살표가 왼쪽에 위치 |
+| Position — Top End | 트리거 요소 상단, 화살표가 오른쪽에 위치 |
+| Position — Bottom | 트리거 요소 하단 중앙에 표시 |
+| Position — Bottom Start | 트리거 요소 하단, 화살표가 왼쪽에 위치 |
+| Position — Bottom End | 트리거 요소 하단, 화살표가 오른쪽에 위치 |
 | Position — Left | 트리거 요소 왼쪽에 표시 |
 | Position — Right | 트리거 요소 오른쪽에 표시 |
 
@@ -101,6 +105,42 @@ const TOOLTIP_GUIDELINES = `## Overview
 
 `;
 
+type TooltipDir =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'right';
+
+const ARROW_CLASS: Record<TooltipDir, string> = {
+  top: 'absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[var(--color-text-default)]',
+  'top-start':
+    'absolute -bottom-[3px] left-[10px] w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[var(--color-text-default)]',
+  'top-end':
+    'absolute -bottom-[3px] right-[10px] w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[var(--color-text-default)]',
+  bottom:
+    'absolute -top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-[var(--color-text-default)]',
+  'bottom-start':
+    'absolute -top-[3px] left-[10px] w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-[var(--color-text-default)]',
+  'bottom-end':
+    'absolute -top-[3px] right-[10px] w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-[var(--color-text-default)]',
+  left: 'absolute -right-[3px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[4px] border-l-[var(--color-text-default)]',
+  right:
+    'absolute -left-[3px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[4px] border-r-[var(--color-text-default)]',
+};
+
+function TooltipShape({ content, direction }: { content: string; direction: TooltipDir }) {
+  return (
+    <div className="relative inline-flex items-center justify-center px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-[length:var(--tooltip-font-size)] rounded-[var(--tooltip-radius)] w-max max-w-[var(--tooltip-max-width)]">
+      {content}
+      <div className={ARROW_CLASS[direction]} />
+    </div>
+  );
+}
+
 function StaticTooltip({
   content,
   position = 'top',
@@ -110,23 +150,7 @@ function StaticTooltip({
   position?: 'top' | 'bottom' | 'left' | 'right';
   children: ReactNode;
 }) {
-  const tooltip = (
-    <div className="relative inline-flex items-center justify-center px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-[length:var(--tooltip-font-size)] rounded-[var(--tooltip-radius)] w-max max-w-[var(--tooltip-max-width)]">
-      {content}
-      {position === 'top' && (
-        <div className="absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[var(--color-text-default)]" />
-      )}
-      {position === 'bottom' && (
-        <div className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[4px] border-b-[var(--color-text-default)]" />
-      )}
-      {position === 'left' && (
-        <div className="absolute -right-[3px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[4px] border-l-[var(--color-text-default)]" />
-      )}
-      {position === 'right' && (
-        <div className="absolute -left-[3px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[4px] border-r-[var(--color-text-default)]" />
-      )}
-    </div>
-  );
+  const tooltip = <TooltipShape content={content} direction={position} />;
 
   if (position === 'top')
     return (
@@ -186,6 +210,39 @@ export function TooltipPage() {
       }
       examples={
         <VStack gap={8}>
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">Directions</span>
+            <div className="grid grid-cols-3 gap-y-10 gap-x-4 items-center justify-items-center py-8 px-4">
+              <div className="justify-self-start">
+                <TooltipShape content="Tooltip" direction="top-start" />
+              </div>
+              <div>
+                <TooltipShape content="Tooltip" direction="top" />
+              </div>
+              <div className="justify-self-end">
+                <TooltipShape content="Tooltip" direction="top-end" />
+              </div>
+
+              <div className="justify-self-start">
+                <TooltipShape content="Tooltip" direction="left" />
+              </div>
+              <div />
+              <div className="justify-self-end">
+                <TooltipShape content="Tooltip" direction="right" />
+              </div>
+
+              <div className="justify-self-start">
+                <TooltipShape content="Tooltip" direction="bottom-start" />
+              </div>
+              <div>
+                <TooltipShape content="Tooltip" direction="bottom" />
+              </div>
+              <div className="justify-self-end">
+                <TooltipShape content="Tooltip" direction="bottom-end" />
+              </div>
+            </div>
+          </VStack>
+
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
             <div className="flex gap-10 items-center justify-center py-6">
