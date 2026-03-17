@@ -527,25 +527,23 @@ export function CloudBuilderDetailPage() {
             aria-label="[TDS] DetailHeader.InfoGrid"
           >
             <DetailHeader.InfoCard
-              label="Service Status"
-              value={serviceStatus || 'Enabled'}
-              status={(serviceStatus || 'Enabled') === 'Enabled' ? 'enabled' : 'disabled'}
-              data-figma-name="[TDS] InfoCard-ServiceStatus"
-              aria-label="[TDS] InfoCard-ServiceStatus"
-            />
-            <DetailHeader.InfoCard
               label="Service State"
               data-figma-name="[TDS] InfoCard-ServiceState"
               aria-label="[TDS] InfoCard-ServiceState"
+              value={row?.serviceState ?? 'Up'}
+              status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'error'}
+            />
+            <DetailHeader.InfoCard
+              label="Service Status"
+              data-figma-name="[TDS] InfoCard-ServiceStatus"
+              aria-label="[TDS] InfoCard-ServiceStatus"
               value={
                 <Badge
-                  theme={(row?.serviceState ?? 'Up') === 'Up' ? 'green' : 'red'}
+                  theme={(serviceStatus || 'Enabled') === 'Enabled' ? 'green' : 'neutral'}
                   type="subtle"
                   size="sm"
-                  data-figma-name="[TDS] Badge-ServiceState"
-                  aria-label="[TDS] Badge-ServiceState"
                 >
-                  {row?.serviceState ?? 'Up'}
+                  {serviceStatus || 'Enabled'}
                 </Badge>
               }
             />
