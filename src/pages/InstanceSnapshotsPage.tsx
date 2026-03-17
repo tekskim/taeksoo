@@ -427,6 +427,7 @@ export function InstanceSnapshotsPage() {
       label: 'Description',
       flex: 1,
       minWidth: columnMinWidths.description,
+      sortable: true,
     },
     {
       key: 'createdAt',
