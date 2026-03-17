@@ -439,33 +439,23 @@ export function TabsPage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span>
-              </Td>
+              <Td>gap</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">min-width</span>
-              </Td>
+              <Td>min-width</Td>
               <Td>80px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">padding-x</span>
-              </Td>
+              <Td>padding-x</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">indicator</span>
-              </Td>
+              <Td>indicator</Td>
               <Td>2px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">boxed-padding</span>
-              </Td>
+              <Td>boxed-padding</Td>
               <Td>24px × 8px</Td>
             </tr>
           </tbody>

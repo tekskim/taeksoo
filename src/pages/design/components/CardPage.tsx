@@ -100,9 +100,7 @@ export function CardPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">border-radius: 8px</span> ·{' '}
-          <span className="font-mono">padding: 16px</span> ·{' '}
-          <span className="font-mono">gap: 16px</span>
+          border-radius: 8px · padding: 16px · gap: 16px
         </div>
       }
       relatedLinks={[

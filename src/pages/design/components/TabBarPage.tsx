@@ -240,27 +240,19 @@ function TabBarGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">height</span>
-              </Td>
+              <Td>height</Td>
               <Td>36px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">max-width</span> (탭)
-              </Td>
+              <Td>max-width (탭)</Td>
               <Td>160px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">padding-x</span>
-              </Td>
+              <Td>padding-x</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">font-size</span>
-              </Td>
+              <Td>font-size</Td>
               <Td>12px</Td>
             </tr>
           </tbody>
@@ -337,12 +329,8 @@ function TabBarGuidelines() {
           <SubSectionTitle>탭 추가 / 닫기</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <span className="font-mono">+</span> 버튼 클릭 시 새 탭이 추가된다.
-              </li>
-              <li>
-                <span className="font-mono">×</span> 버튼 클릭 시 해당 탭이 닫힌다.
-              </li>
+              <li>+ 버튼 클릭 시 새 탭이 추가된다.</li>
+              <li>× 버튼 클릭 시 해당 탭이 닫힌다.</li>
               <li>활성 탭을 닫으면 인접한 탭이 자동으로 활성화된다.</li>
             </ul>
           </Prose>
@@ -439,27 +427,19 @@ export function TabBarPage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">height</span>
-              </Td>
+              <Td>height</Td>
               <Td>36px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">max-width</span> (탭)
-              </Td>
+              <Td>max-width (탭)</Td>
               <Td>160px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">padding-x</span>
-              </Td>
+              <Td>padding-x</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">font-size</span>
-              </Td>
+              <Td>font-size</Td>
               <Td>12px</Td>
             </tr>
           </tbody>

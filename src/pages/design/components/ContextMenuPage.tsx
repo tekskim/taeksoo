@@ -104,27 +104,19 @@ function ContextMenuGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">min-width</span>
-              </Td>
+              <Td>min-width</Td>
               <Td>80px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">padding</span>
-              </Td>
+              <Td>padding</Td>
               <Td>12×6px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">radius</span>
-              </Td>
+              <Td>radius</Td>
               <Td>6px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">shadow</span>
-              </Td>
+              <Td>shadow</Td>
               <Td>md</Td>
             </tr>
           </tbody>
@@ -551,10 +543,7 @@ export function ContextMenuPage() {
       guidelines={<ContextMenuGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">min-width: 80px</span> ·{' '}
-          <span className="font-mono">padding: 12×6px</span> ·{' '}
-          <span className="font-mono">radius: 6px</span> ·{' '}
-          <span className="font-mono">shadow: md</span>
+          min-width: 80px · padding: 12×6px · radius: 6px · shadow: md
         </div>
       }
       relatedLinks={[

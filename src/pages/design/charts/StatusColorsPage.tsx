@@ -116,7 +116,7 @@ export function StatusColorsPage() {
                   </div>
                 </div>
                 <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                  <span className="font-mono">{`thresholds={STATUS_THRESHOLDS.${key}}`}</span>
+                  {`thresholds={STATUS_THRESHOLDS.${key}}`}
                   <span className="ml-2 text-[var(--color-text-muted)]">{thresholds}</span>
                 </div>
               </div>
@@ -125,22 +125,12 @@ export function StatusColorsPage() {
           <VStack gap={3}>
             <span className="text-label-md text-[var(--color-text-default)]">Usage</span>
             <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] flex flex-col gap-1">
-              <div>
-                <span className="font-mono">
-                  {"import { STATUS_THRESHOLDS } from '@/design-system';"}
-                </span>
-              </div>
+              <div>{"import { STATUS_THRESHOLDS } from '@/design-system';"}</div>
               <div className="mt-1">
-                <span className="font-mono">
-                  {'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}
-                </span>
+                {'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}
               </div>
               <div className="mt-2 text-[var(--color-text-muted)]">
-                Available presets: <span className="font-mono">compute</span> ·{' '}
-                <span className="font-mono">computeAdmin</span> ·{' '}
-                <span className="font-mono">storage</span> ·{' '}
-                <span className="font-mono">container</span> ·{' '}
-                <span className="font-mono">default</span>
+                Available presets: compute · computeAdmin · storage · container · default
               </div>
             </div>
           </VStack>

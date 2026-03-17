@@ -109,27 +109,19 @@ function DatePickerGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">padding</span>
-              </Td>
+              <Td>padding</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span>
-              </Td>
+              <Td>gap</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">radius</span>
-              </Td>
+              <Td>radius</Td>
               <Td>8px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">cell</span>
-              </Td>
+              <Td>cell</Td>
               <Td>32×32px</Td>
             </tr>
           </tbody>
@@ -349,22 +341,13 @@ function DatePickerGuidelines() {
           <tbody>
             <tr>
               <Td>한국어</Td>
-              <Td>
-                <span className="font-mono">YYYY-MM-DD</span>
-              </Td>
-              <Td>
-                <span className="font-mono">YYYY-MM-DD – YYYY-MM-DD</span> (양쪽 연도 포함)
-              </Td>
+              <Td>YYYY-MM-DD</Td>
+              <Td>YYYY-MM-DD – YYYY-MM-DD (양쪽 연도 포함)</Td>
             </tr>
             <tr>
               <Td>영어</Td>
-              <Td>
-                <span className="font-mono">Mth DD, YYYY</span>
-              </Td>
-              <Td>
-                <span className="font-mono">Mth DD – Mth DD, YYYY</span> (동일 연도/월이면
-                종료일에만 연도/월 표시)
-              </Td>
+              <Td>Mth DD, YYYY</Td>
+              <Td>Mth DD – Mth DD, YYYY (동일 연도/월이면 종료일에만 연도/월 표시)</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -482,10 +465,7 @@ export function DatePickerPage() {
       guidelines={<DatePickerGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">padding: 12px</span> ·{' '}
-          <span className="font-mono">gap: 12px</span> ·{' '}
-          <span className="font-mono">radius: 8px</span> ·{' '}
-          <span className="font-mono">cell: 32×32px</span>
+          padding: 12px · gap: 12px · radius: 8px · cell: 32×32px
         </div>
       }
       relatedLinks={[

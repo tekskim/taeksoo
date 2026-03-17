@@ -92,10 +92,7 @@ export function SelectionIndicatorPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">min-height: 42px</span> ·{' '}
-          <span className="font-mono">padding: 8×12px</span> ·{' '}
-          <span className="font-mono">radius: table-row-radius</span> ·{' '}
-          <span className="font-mono">gap: 16px</span>
+          min-height: 42px · padding: 8×12px · radius: table-row-radius · gap: 16px
         </div>
       }
       relatedLinks={[

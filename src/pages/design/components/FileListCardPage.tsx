@@ -139,11 +139,9 @@ const files = [
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">container: surface-subtle, border, radius-md, p-12</span> ·{' '}
-          <span className="font-mono">item: surface-default, border, radius-md, px-16 py-8</span> ·{' '}
-          <span className="font-mono">name: body-md</span> ·{' '}
-          <span className="font-mono">tag: body-sm, text-subtle</span> ·{' '}
-          <span className="font-mono">divider: 1px × 10px, border-default</span>
+          container: surface-subtle, border, radius-md, p-12 · item: surface-default, border,
+          radius-md, px-16 py-8 · name: body-md · tag: body-sm, text-subtle · divider: 1px × 10px,
+          border-default
         </div>
       }
       relatedLinks={[

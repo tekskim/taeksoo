@@ -190,10 +190,7 @@ export function TogglePage() {
           <VStack gap={3}>
             <Label>Mini Toggle (Chart Controls)</Label>
             <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] mb-2">
-              <span className="font-mono">size: 24×12px</span> ·{' '}
-              <span className="font-mono">thumb: 8×8px</span> ·{' '}
-              <span className="font-mono">border: 1px</span> ·{' '}
-              <span className="font-mono">radius: 6px</span>
+              size: 24×12px · thumb: 8×8px · border: 1px · radius: 6px
             </div>
             <div className="flex gap-8 items-center">
               <VStack gap={2}>
@@ -243,11 +240,7 @@ export function TogglePage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">track: 36×20px</span> ·{' '}
-          <span className="font-mono">thumb: 16×16px</span> ·{' '}
-          <span className="font-mono">padding: 4px</span> ·{' '}
-          <span className="font-mono">radius: pill</span> ·{' '}
-          <span className="font-mono">gap: 8px</span>
+          track: 36×20px · thumb: 16×16px · padding: 4px · radius: pill · gap: 8px
         </div>
       }
       relatedLinks={[

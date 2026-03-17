@@ -112,9 +112,7 @@ function ScrollbarGuidelines() {
           </tbody>
         </TableWrapper>
         <Prose>
-          <p>
-            <span className="font-mono">modal-scroll</span>은 4px 너비를 사용한다.
-          </p>
+          <p>modal-scroll은 4px 너비를 사용한다.</p>
         </Prose>
       </VStack>
 
@@ -237,10 +235,7 @@ function ScrollbarGuidelines() {
             가로 스크롤
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>
-              <span className="font-mono">table-scroll-container</span> 클래스로 테이블 가로
-              스크롤에 적용한다.
-            </li>
+            <li>table-scroll-container 클래스로 테이블 가로 스크롤에 적용한다.</li>
             <li>overflow-x: auto와 함께 사용한다.</li>
           </ul>
         </Prose>
@@ -249,10 +244,7 @@ function ScrollbarGuidelines() {
             Shell 컨텍스트
           </p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>
-              <span className="font-mono">shell-scroll</span>은 어두운 배경(터미널)에서 Thumb 색상을
-              #475569으로 적용한다.
-            </li>
+            <li>shell-scroll은 어두운 배경(터미널)에서 Thumb 색상을 #475569으로 적용한다.</li>
           </ul>
         </Prose>
       </VStack>
@@ -294,10 +286,7 @@ export function ScrollbarPage() {
       guidelines={<ScrollbarGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">width: 6px</span> ·{' '}
-          <span className="font-mono">radius: full</span> ·{' '}
-          <span className="font-mono">track: transparent</span> ·{' '}
-          <span className="font-mono">thumb: border-default</span>
+          width: 6px · radius: full · track: transparent · thumb: border-default
         </div>
       }
       examples={

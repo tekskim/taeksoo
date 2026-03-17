@@ -235,12 +235,8 @@ export function TooltipPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">padding: 6×4px</span> ·{' '}
-          <span className="font-mono">radius: 4px</span> ·{' '}
-          <span className="font-mono">font-size: 11px</span> ·{' '}
-          <span className="font-mono">min-width: 60px</span> ·{' '}
-          <span className="font-mono">max-width: 240px</span> ·{' '}
-          <span className="font-mono">arrow: 4px</span>
+          padding: 6×4px · radius: 4px · font-size: 11px · min-width: 60px · max-width: 240px ·
+          arrow: 4px
         </div>
       }
       relatedLinks={[

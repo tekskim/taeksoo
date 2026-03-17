@@ -23,22 +23,19 @@ function PopoverPageGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>주요 사용처</strong>: BadgeList의 <span className="font-mono">+N</span>{' '}
-              인디케이터, Detail 페이지의 Labels/Annotations 오버플로우 목록 표시.
+              <strong>주요 사용처</strong>: BadgeList의 +N 인디케이터, Detail 페이지의
+              Labels/Annotations 오버플로우 목록 표시.
             </li>
             <li>
-              <strong>트리거</strong>: Hover (
-              <span className="font-mono">trigger=&quot;hover&quot;</span>). delay 200ms, hideDelay
+              <strong>트리거</strong>: Hover (trigger=&quot;hover&quot;). delay 200ms, hideDelay
               150ms로 빠른 응답.
             </li>
             <li>
-              <strong>콘텐츠 구조</strong>: 타이틀 (
-              <span className="font-mono">text-body-xs font-medium</span>) + Badge 목록 (
-              <span className="font-mono">flex-col gap-1</span>).
+              <strong>콘텐츠 구조</strong>: 타이틀 (text-body-xs font-medium) + Badge 목록 (flex-col
+              gap-1).
             </li>
             <li>
-              <strong>크기</strong>: <span className="font-mono">min-w-[120px] max-w-[320px]</span>,
-              패딩 12px.
+              <strong>크기</strong>: min-w-[120px] max-w-[320px], 패딩 12px.
             </li>
             <li>
               <strong>위치</strong>: 트리거 기준 자동 배치. 뷰포트 밖으로 나가면 반대 방향으로 flip.
@@ -247,10 +244,7 @@ export function PopoverPage() {
       guidelines={<PopoverPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">padding: 12px</span> ·{' '}
-          <span className="font-mono">radius: 8px</span> ·{' '}
-          <span className="font-mono">border: 1px</span> ·{' '}
-          <span className="font-mono">arrow: 6px</span>
+          padding: 12px · radius: 8px · border: 1px · arrow: 6px
         </div>
       }
       relatedLinks={[

@@ -156,39 +156,27 @@ function TopBarGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">height</span>
-              </Td>
+              <Td>height</Td>
               <Td>36px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">padding-x</span>
-              </Td>
+              <Td>padding-x</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">button-size</span>
-              </Td>
+              <Td>button-size</Td>
               <Td>28px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">icon-size</span>
-              </Td>
+              <Td>icon-size</Td>
               <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">border-radius</span>
-              </Td>
+              <Td>border-radius</Td>
               <Td>4px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span> (버튼 간격)
-              </Td>
+              <Td>gap (버튼 간격)</Td>
               <Td>4px</Td>
             </tr>
           </tbody>
@@ -466,39 +454,27 @@ export function TopBarPage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">height</span>
-              </Td>
+              <Td>height</Td>
               <Td>36px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">padding-x</span>
-              </Td>
+              <Td>padding-x</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">button-size</span>
-              </Td>
+              <Td>button-size</Td>
               <Td>28px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">icon-size</span>
-              </Td>
+              <Td>icon-size</Td>
               <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">border-radius</span>
-              </Td>
+              <Td>border-radius</Td>
               <Td>4px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span> (버튼 간격)
-              </Td>
+              <Td>gap (버튼 간격)</Td>
               <Td>4px</Td>
             </tr>
           </tbody>

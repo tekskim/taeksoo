@@ -318,55 +318,27 @@ function BadgeGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">sm</span>
-              </Td>
-              <Td>
-                <span className="font-mono">6×2px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">11px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
+              <Td>sm</Td>
+              <Td>6×2px</Td>
+              <Td>11px</Td>
+              <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">md</span>
-              </Td>
-              <Td>
-                <span className="font-mono">8×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
+              <Td>md</Td>
+              <Td>8×4px</Td>
+              <Td>12px</Td>
+              <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">lg</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">14px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">20px</span>
-              </Td>
+              <Td>lg</Td>
+              <Td>12×4px</Td>
+              <Td>14px</Td>
+              <Td>20px</Td>
             </tr>
           </tbody>
         </TableWrapper>
         <Prose>
-          <p>
-            <span className="font-mono">radius: 4px</span> ·{' '}
-            <span className="font-mono">gap: 4px</span> ·{' '}
-            <span className="font-mono">dot-size: 6px</span>
-          </p>
+          <p>radius: 4px · gap: 4px · dot-size: 6px</p>
         </Prose>
       </VStack>
 
@@ -378,8 +350,7 @@ function BadgeGuidelines() {
         <Prose>
           <p>
             테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
-            가능한 개수(<span className="font-mono">maxVisible</span>)를 초과하면{' '}
-            <span className="font-mono">+N</span> 인디케이터로 숨김 처리하고, 클릭 시 Popover로 전체
+            가능한 개수(maxVisible)를 초과하면 +N 인디케이터로 숨김 처리하고, 클릭 시 Popover로 전체
             항목을 확인할 수 있다.
           </p>
         </Prose>
@@ -428,14 +399,8 @@ function BadgeGuidelines() {
         <SubSectionTitle>Overflow 처리 정책</SubSectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
-            <li>
-              <span className="font-mono">maxVisible</span> 값을 초과하는 항목은{' '}
-              <span className="font-mono">+N</span> 인디케이터로 표시한다.
-            </li>
-            <li>
-              <span className="font-mono">+N</span> 클릭 시 Popover가 열리며 전체 Badge 목록을
-              표시한다.
-            </li>
+            <li>maxVisible 값을 초과하는 항목은 +N 인디케이터로 표시한다.</li>
+            <li>+N 클릭 시 Popover가 열리며 전체 Badge 목록을 표시한다.</li>
             <li>Popover 내에서도 동일한 Badge 스타일을 유지한다.</li>
           </ul>
         </Prose>
@@ -509,9 +474,8 @@ function BadgeGuidelines() {
         <SubSectionTitle>Semantic ↔ Theme 매핑</SubSectionTitle>
         <Prose>
           <p>
-            Badge의 <span className="font-mono">variant</span>(semantic)와{' '}
-            <span className="font-mono">theme</span>(색상)은 다음과 같이 매핑된다. Semantic variant
-            사용 시 자동으로 대응되는 theme 색상이 적용된다.
+            Badge의 variant(semantic)와 theme(색상)은 다음과 같이 매핑된다. Semantic variant 사용 시
+            자동으로 대응되는 theme 색상이 적용된다.
           </p>
         </Prose>
         <TableWrapper>
@@ -743,46 +707,22 @@ export function BadgePage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">sm</span>
-              </Td>
-              <Td>
-                <span className="font-mono">6×2px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">11px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
+              <Td>sm</Td>
+              <Td>6×2px</Td>
+              <Td>11px</Td>
+              <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">md</span>
-              </Td>
-              <Td>
-                <span className="font-mono">8×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
+              <Td>md</Td>
+              <Td>8×4px</Td>
+              <Td>12px</Td>
+              <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">lg</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">14px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">20px</span>
-              </Td>
+              <Td>lg</Td>
+              <Td>12×4px</Td>
+              <Td>14px</Td>
+              <Td>20px</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -806,8 +746,7 @@ export function BadgePage() {
           <Prose>
             <p>
               테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
-              가능한 개수(<span className="font-mono">maxVisible</span>)를 초과하면{' '}
-              <span className="font-mono">+N</span> 인디케이터로 숨김 처리하고, 클릭 시 Popover로
+              가능한 개수(maxVisible)를 초과하면 +N 인디케이터로 숨김 처리하고, 클릭 시 Popover로
               전체 항목을 확인할 수 있다.
             </p>
           </Prose>

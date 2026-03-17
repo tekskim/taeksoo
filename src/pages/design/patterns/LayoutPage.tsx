@@ -34,8 +34,8 @@ function LayoutGuidelines() {
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>펼침 상태</strong>: 너비 200px (
-              <span className="font-mono">--layout-sidebar-width</span>). 메뉴 아이콘 + 라벨 표시.
+              <strong>펼침 상태</strong>: 너비 200px (--layout-sidebar-width). 메뉴 아이콘 + 라벨
+              표시.
             </li>
             <li>
               <strong>접힘 상태</strong>: 사이드바가 완전히 숨겨집니다.

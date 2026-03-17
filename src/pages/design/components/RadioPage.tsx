@@ -244,10 +244,7 @@ export function RadioPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">size: 16×16px</span> ·{' '}
-          <span className="font-mono">dot: 6px</span> ·{' '}
-          <span className="font-mono">border: 2px</span> ·{' '}
-          <span className="font-mono">gap: 6px</span>
+          size: 16×16px · dot: 6px · border: 2px · gap: 6px
         </div>
       }
       relatedLinks={[

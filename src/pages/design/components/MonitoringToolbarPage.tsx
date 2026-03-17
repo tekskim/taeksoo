@@ -188,21 +188,15 @@ function MonitoringToolbarGuidelines() {
             <tbody>
               <tr>
                 <Td>Minute</Td>
-                <Td>
-                  <span className="font-mono">m</span>
-                </Td>
+                <Td>m</Td>
               </tr>
               <tr>
                 <Td>Hour</Td>
-                <Td>
-                  <span className="font-mono">h</span>
-                </Td>
+                <Td>h</Td>
               </tr>
               <tr>
                 <Td>Day</Td>
-                <Td>
-                  <span className="font-mono">d</span>
-                </Td>
+                <Td>d</Td>
               </tr>
             </tbody>
           </TableWrapper>
