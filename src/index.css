@@ -1116,7 +1116,7 @@ html.theme-transition *::after {
 
   /* State - Info */
   --color-state-info: var(--color-blue-400);
-  --color-state-info-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% - 더 은은하게 */
+  --color-state-info-bg: rgba(59, 130, 246, 0.2); /* blue-500 20% */
   --color-state-info-text: var(--color-blue-300);
 
   /* State - Success (유지) */
@@ -1126,14 +1126,14 @@ html.theme-transition *::after {
 
   /* State - Warning (유지) */
   --color-state-warning: var(--color-orange-400);
-  --color-state-warning-bg: var(--color-orange-900);
+  --color-state-warning-bg: rgba(249, 115, 22, 0.2); /* orange-500 20% */
   --color-state-warning-text: var(--color-orange-200);
 
   /* State - Danger (유지) */
   --color-state-danger: var(--color-red-400);
   --color-state-danger-hover: var(--color-red-500);
   --color-state-danger-active: var(--color-red-600);
-  --color-state-danger-bg: rgba(239, 68, 68, 0.12); /* red-500 12% - matches inline message error */
+  --color-state-danger-bg: rgba(239, 68, 68, 0.08); /* red-500 8% */
   --color-state-danger-text: var(--color-red-200);
 
   /* Extended Text Colors - Dark Mode */
