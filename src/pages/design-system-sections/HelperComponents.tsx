@@ -172,21 +172,36 @@ export function SemanticColorBox({
 export function SemanticColorRow({
   token,
   cssVar,
-  lightHex,
-  darkHex,
-  lightPrimitive,
-  darkPrimitive,
+  primitive,
   border = false,
 }: {
   token: string;
   cssVar: string;
-  lightHex: string;
-  darkHex: string;
-  lightPrimitive: string;
-  darkPrimitive: string;
+  primitive: string;
   border?: boolean;
 }) {
+  const [hexValue, setHexValue] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      const computed = getComputedStyle(ref.current).backgroundColor;
+      const match = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (match) {
+        const hex =
+          '#' +
+          [match[1], match[2], match[3]]
+            .map((x) => {
+              const h = parseInt(x).toString(16);
+              return h.length === 1 ? '0' + h : h;
+            })
+            .join('')
+            .toUpperCase();
+        setHexValue(hex);
+      }
+    }
+  }, [cssVar]);
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -197,6 +212,13 @@ export function SemanticColorRow({
   return (
     <tr className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-subtle)] transition-colors">
       <td className="py-2 pr-3">
+        <div
+          ref={ref}
+          className={`w-8 h-8 rounded-[var(--radius-sm)] ${border ? 'border border-[var(--color-border-default)]' : ''}`}
+          style={{ backgroundColor: `var(${cssVar})` }}
+        />
+      </td>
+      <td className="py-2 pr-3">
         <button
           onClick={() => handleCopy(cssVar, 'token')}
           className="font-mono text-body-sm text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors text-left"
@@ -205,32 +227,15 @@ export function SemanticColorRow({
         </button>
       </td>
       <td className="py-2 pr-3">
-        <div className="flex items-center gap-2">
-          <div
-            className={`w-6 h-6 rounded-[var(--radius-sm)] shrink-0 ${border ? 'border border-[var(--color-border-default)]' : ''}`}
-            style={{ backgroundColor: lightHex }}
-          />
-          <button
-            onClick={() => handleCopy(lightHex, 'lightHex')}
-            className="font-mono text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] transition-colors"
-          >
-            {copied === 'lightHex' ? '✓' : lightHex}
-          </button>
-        </div>
+        <button
+          onClick={() => handleCopy(hexValue, 'hex')}
+          className="font-mono text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] transition-colors"
+        >
+          {copied === 'hex' ? '✓ Copied' : hexValue}
+        </button>
       </td>
       <td className="py-2">
-        <div className="flex items-center gap-2">
-          <div
-            className={`w-6 h-6 rounded-[var(--radius-sm)] shrink-0 ${border ? 'border border-[var(--color-border-default)]' : ''}`}
-            style={{ backgroundColor: darkHex }}
-          />
-          <button
-            onClick={() => handleCopy(darkHex, 'darkHex')}
-            className="font-mono text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] transition-colors"
-          >
-            {copied === 'darkHex' ? '✓' : darkHex}
-          </button>
-        </div>
+        <span className="font-mono text-body-sm text-[var(--color-text-subtle)]">{primitive}</span>
       </td>
     </tr>
   );
@@ -239,17 +244,13 @@ export function SemanticColorRow({
 /* ----------------------------------------
    SemanticColorTable Component
    ---------------------------------------- */
-export type SemanticColor = {
-  token: string;
-  cssVar: string;
-  lightHex: string;
-  darkHex: string;
-  lightPrimitive: string;
-  darkPrimitive: string;
-  border?: boolean;
-};
-
-export function SemanticColorTable({ title, colors }: { title: string; colors: SemanticColor[] }) {
+export function SemanticColorTable({
+  title,
+  colors,
+}: {
+  title: string;
+  colors: Array<{ token: string; cssVar: string; primitive: string; border?: boolean }>;
+}) {
   return (
     <VStack gap={3} className="flex-1 min-w-[280px]">
       <span className="text-label-md text-[var(--color-text-default)] font-medium">{title}</span>
@@ -257,13 +258,16 @@ export function SemanticColorTable({ title, colors }: { title: string; colors: S
         <table className="w-full text-body-sm">
           <thead>
             <tr className="border-b border-[var(--color-border-default)]">
+              <th className="text-left py-2 pr-3 font-medium text-[var(--color-text-subtle)] w-10"></th>
               <th className="text-left py-2 pr-3 font-medium text-[var(--color-text-subtle)]">
                 Token
               </th>
               <th className="text-left py-2 pr-3 font-medium text-[var(--color-text-subtle)]">
-                Light
+                Hex
               </th>
-              <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">Dark</th>
+              <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                Primitive
+              </th>
             </tr>
           </thead>
           <tbody>
