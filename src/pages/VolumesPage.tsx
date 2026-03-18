@@ -37,14 +37,7 @@ import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
 import { CreateTransferDrawer } from '@/components/CreateTransferDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { DetachVolumeDrawer } from '@/components/DetachVolumeDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconExternalLink,
-  IconTransfer,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -400,13 +393,16 @@ export function VolumesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute/volumes/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute/volumes/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </div>
       ),
     },
     {
@@ -446,7 +442,6 @@ export function VolumesPage() {
               className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             >
               {row.attachedTo}
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </button>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.attachedToId}
@@ -530,6 +525,11 @@ export function VolumesPage() {
                 id: 'extend-volume',
                 label: 'Extend volume',
                 onClick: () => handleExtendVolume(row),
+              },
+              {
+                id: 'manage-metadata',
+                label: 'Manage metadata',
+                onClick: () => console.log('Manage metadata:', row.id),
               },
               {
                 id: 'change-volume-type',
@@ -626,9 +626,14 @@ export function VolumesPage() {
         <PageHeader
           title="Volumes"
           actions={
-            <Button size="md" as={Link} to="/compute/volumes/create">
-              Create volume
-            </Button>
+            <>
+              <Button variant="primary" size="md">
+                Accept Volume Transfer
+              </Button>
+              <Button size="md" as={Link} to="/compute/volumes/create">
+                Create volume
+              </Button>
+            </>
           }
         />
 
@@ -661,14 +666,6 @@ export function VolumesPage() {
                 disabled={selectedVolumes.length === 0}
               >
                 Delete
-              </Button>
-              <Button
-                variant="muted"
-                size="sm"
-                leftIcon={<IconTransfer size={12} />}
-                disabled={selectedVolumes.length === 0}
-              >
-                Accept Volume Transfer
               </Button>
             </ListToolbar.Actions>
           }
