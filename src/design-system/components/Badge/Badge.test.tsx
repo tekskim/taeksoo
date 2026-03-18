@@ -79,12 +79,6 @@ describe('Badge', () => {
       const badge = screen.getByText('Medium');
       expect(badge).toHaveClass('px-[var(--badge-padding-x-md)]');
     });
-
-    it('applies lg size', () => {
-      render(<Badge size="lg">Large</Badge>);
-      const badge = screen.getByText('Large');
-      expect(badge).toHaveClass('px-[var(--badge-padding-x-lg)]');
-    });
   });
 
   describe('Icons', () => {

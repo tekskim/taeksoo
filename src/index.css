@@ -533,17 +533,11 @@ html.theme-transition *::after {
   --badge-font-size-sm: var(--font-size-11);
   --badge-line-height-sm: var(--line-height-16);
 
-  /* Size: MD - padding 8×4px, font 12px, lh 16px */
+  /* Size: MD - padding 8×2px, font 13px, lh 18px */
   --badge-padding-x-md: var(--spacing-2);
-  --badge-padding-y-md: var(--spacing-1);
-  --badge-font-size-md: var(--font-size-12);
-  --badge-line-height-md: var(--line-height-16);
-
-  /* Size: LG - padding 12×4px, font 14px, lh 20px */
-  --badge-padding-x-lg: var(--spacing-3);
-  --badge-padding-y-lg: var(--spacing-1);
-  --badge-font-size-lg: var(--font-size-14);
-  --badge-line-height-lg: var(--line-height-20);
+  --badge-padding-y-md: var(--spacing-0-5);
+  --badge-font-size-md: var(--font-size-13);
+  --badge-line-height-md: var(--line-height-18);
 
   /* Common */
   --badge-radius: var(--radius-sm);

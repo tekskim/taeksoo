@@ -83,10 +83,10 @@ import { Badge } from '@thaki/tds';
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: ['sm', 'md'],
       description: '배지 크기',
       table: {
-        type: { summary: '"sm" | "md" | "lg"' },
+        type: { summary: '"sm" | "md"' },
         defaultValue: { summary: '"md"' },
       },
     },
@@ -175,7 +175,6 @@ export const Sizes: Story = {
     <div className="flex items-center gap-[var(--primitive-spacing-2)]">
       <Badge size="sm">Small</Badge>
       <Badge size="md">Medium</Badge>
-      <Badge size="lg">Large</Badge>
     </div>
   ),
 };

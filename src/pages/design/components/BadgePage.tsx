@@ -68,7 +68,7 @@ const badgeListProps: PropDef[] = [
   },
   {
     name: 'size',
-    type: "'sm' | 'md' | 'lg'",
+    type: "'sm' | 'md'",
     default: "'sm'",
     required: false,
     description: 'Badge size',
@@ -126,12 +126,6 @@ function BadgeGuidelines() {
                 <strong>Medium</strong>
               </Td>
               <Td>카드, 상세 페이지 등 일반 컨텍스트 (기본값)</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Large</strong>
-              </Td>
-              <Td>강조가 필요한 단독 표시 영역</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -306,37 +300,6 @@ function BadgeGuidelines() {
           </tbody>
         </TableWrapper>
 
-        <SubSectionTitle>Design Token</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[100px]">Size</Th>
-              <Th>Padding</Th>
-              <Th>Font Size</Th>
-              <Th>Line Height</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>sm</Td>
-              <Td>6×2px</Td>
-              <Td>11px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>md</Td>
-              <Td>8×4px</Td>
-              <Td>12px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>lg</Td>
-              <Td>12×4px</Td>
-              <Td>14px</Td>
-              <Td>20px</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
         <Prose>
           <p>radius: 4px · gap: 4px · dot-size: 6px</p>
         </Prose>
@@ -597,7 +560,7 @@ export function BadgePage() {
             <VStack gap={1}>
               <Label>Sizes</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Small(테이블 셀), Medium(기본), Large(강조).
+                Small(테이블 셀), Medium(기본).
               </span>
             </VStack>
             <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
@@ -606,9 +569,6 @@ export function BadgePage() {
               </Badge>
               <Badge size="md" theme="white">
                 Medium
-              </Badge>
-              <Badge size="lg" theme="white">
-                Large
               </Badge>
             </div>
           </VStack>
@@ -714,15 +674,9 @@ export function BadgePage() {
             </tr>
             <tr>
               <Td>md</Td>
-              <Td>8×4px</Td>
-              <Td>12px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>lg</Td>
-              <Td>12×4px</Td>
-              <Td>14px</Td>
-              <Td>20px</Td>
+              <Td>8×2px</Td>
+              <Td>13px</Td>
+              <Td>18px</Td>
             </tr>
           </tbody>
         </TableWrapper>

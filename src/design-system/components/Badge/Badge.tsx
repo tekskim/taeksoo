@@ -16,7 +16,7 @@ const themeAliasMap: Record<BadgeThemeAlias, BadgeTheme> = {
   ylw: 'yellow',
 };
 export type BadgeType = 'solid' | 'subtle';
-export type BadgeSize = 'sm' | 'md' | 'lg';
+export type BadgeSize = 'sm' | 'md';
 // thaki-ui compatibility
 export type BadgeLayout = 'text-only' | 'left-icon' | 'right-icon';
 
@@ -93,12 +93,6 @@ const sizes = {
     'px-[var(--badge-padding-x-md)]',
     'text-[length:var(--badge-font-size-md)]',
     'leading-[var(--badge-line-height-md)]',
-  ],
-  lg: [
-    'h-7',
-    'px-[var(--badge-padding-x-lg)]',
-    'text-[length:var(--badge-font-size-lg)]',
-    'leading-[var(--badge-line-height-lg)]',
   ],
 } as const;
 

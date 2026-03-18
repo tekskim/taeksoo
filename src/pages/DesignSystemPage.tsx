@@ -11045,7 +11045,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="flex gap-3 items-center">
                       <Badge size="sm">Small</Badge>
                       <Badge size="md">Medium</Badge>
-                      <Badge size="lg">Large</Badge>
                     </div>
                   </VStack>
 
