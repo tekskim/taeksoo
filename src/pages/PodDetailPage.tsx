@@ -629,7 +629,7 @@ export function PodDetailPage() {
     onClick: () => handleExecuteShell(container),
   }));
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',

@@ -394,7 +394,7 @@ export function DetailHeaderPage() {
     <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>Delete</Button>
     <ContextMenu items={moreActions} trigger="click">
       <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-        More Actions
+        More actions
       </Button>
     </ContextMenu>
   </DetailHeader.Actions>
@@ -443,7 +443,7 @@ export function DetailHeaderPage() {
                 trigger="click"
               >
                 <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
+                  More actions
                 </Button>
               </ContextMenu>
             </DetailHeader.Actions>

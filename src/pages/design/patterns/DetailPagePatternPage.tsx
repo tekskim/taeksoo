@@ -73,7 +73,7 @@ function DetailPagePreview() {
             Stop
           </Button>
           <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-            More Actions
+            More actions
           </Button>
         </DetailHeader.Actions>
         <DetailHeader.InfoGrid>
@@ -189,7 +189,7 @@ function DetailPageGuidelines() {
             <tr>
               <Td>b. 액션 버튼 그룹</Td>
               <Td>
-                해당 리소스에 수행 가능한 주요 액션 버튼 나열 (Primary / Secondary / More Actions)
+                해당 리소스에 수행 가능한 주요 액션 버튼 나열 (Primary / Secondary / More actions)
               </Td>
               <Td>항상</Td>
             </tr>
@@ -357,7 +357,7 @@ function DetailPageGuidelines() {
         <DosDonts
           doItems={[
             '메타 정보 카드에는 리소스를 빠르게 식별할 수 있는 핵심 속성(ID, Status, 생성일 등) 4개 이하로 제한한다.',
-            '액션 버튼은 사용 빈도에 따라 Primary → Secondary → More Actions 순으로 배치한다.',
+            '액션 버튼은 사용 빈도에 따라 Primary → Secondary → More actions 순으로 배치한다.',
             'SectionCards는 정보의 논리적 범주에 따라 나눠 구성하고, 한 카드 내 속성은 관련성이 높은 항목끼리 묶는다.',
             '탭은 리소스와 직접적으로 연관된 카테고리만 노출하며, 불필요한 탭으로 인한 인지 부하를 줄인다.',
             'ID처럼 복사 수요가 높은 값에는 복사 버튼을 인라인으로 제공한다.',
