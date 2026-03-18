@@ -165,8 +165,8 @@ function BadgeGuidelines() {
         <p className="text-body-sm text-[var(--color-text-subtle)]">
           <strong>Default가 solid인 이유:</strong> Badge의 가장 빈번한 사용처인 테이블 셀에서는
           white/gray 테마의 solid 배지가 시각적으로 가장 균형 잡혀 있습니다. 시맨틱 컬러(info,
-          success 등)를 사용할 때는 subtle 타입이 더 적절하므로 명시적으로{' '}
-          <span className="font-mono text-body-sm">type=&quot;subtle&quot;</span>을 지정하세요.
+          success 등)를 사용할 때는 subtle 타입이 더 적절하므로 명시적으로 type=&quot;subtle&quot;을
+          지정하세요.
         </p>
 
         <SubSectionTitle>Semantic Color</SubSectionTitle>

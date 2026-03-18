@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 
 interface NotionRendererProps {
   markdown: string;
@@ -228,12 +228,6 @@ function InlineMarkdown({ text }: { text: string }) {
       {parts.map((part, i) => {
         if (part.type === 'bold') return <strong key={i}>{part.text}</strong>;
         if (part.type === 'italic') return <em key={i}>{part.text}</em>;
-        if (part.type === 'code')
-          return (
-            <span key={i} className="font-mono">
-              {part.text}
-            </span>
-          );
         if (part.type === 'strikethrough') return <del key={i}>{part.text}</del>;
         if (part.type === 'link')
           return (
@@ -247,7 +241,7 @@ function InlineMarkdown({ text }: { text: string }) {
               {part.text}
             </a>
           );
-        return <span key={i}>{part.text}</span>;
+        return <Fragment key={i}>{part.text}</Fragment>;
       })}
     </>
   );
