@@ -554,7 +554,8 @@ html.theme-transition *::after {
   --badge-subtle-yellow-bg: var(--color-orange-100);
   --badge-subtle-yellow-text: var(--color-state-warning-text);
   --badge-subtle-gray-bg: var(--color-surface-muted);
-  --badge-subtle-gray-text: var(--color-text-muted);
+  --badge-subtle-gray-text: #475569;
+  --badge-white-border: var(--color-border-default);
 
   /* ----------------------------------------
      Component - Menu
@@ -1168,8 +1169,9 @@ html.theme-transition *::after {
   --badge-subtle-green-text: #86efac; /* green-300 */
   --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.15);
   --badge-subtle-yellow-text: #fdba74; /* orange-300 */
-  --badge-subtle-gray-bg: var(--color-surface-muted);
-  --badge-subtle-gray-text: var(--color-text-muted);
+  --badge-subtle-gray-bg: #333333;
+  --badge-subtle-gray-text: #b0b0b0;
+  --badge-white-border: #4a4a4a;
 
   /* Input (Dark Mode) */
   --input-bg: var(--color-surface-default);
