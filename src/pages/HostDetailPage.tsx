@@ -1209,7 +1209,8 @@ export default function HostDetailPage() {
     {
       key: 'available',
       label: 'Available',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.available,
       sortable: true,
       render: (_, row) => (row.available ? 'Yes' : ''),
     },
@@ -1503,7 +1504,7 @@ export default function HostDetailPage() {
                 {/* Search */}
                 <div className="flex items-center gap-4">
                   <div className="w-[var(--search-input-width)]">
-                    <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                    <SearchInput placeholder="Search devices by attributes" size="sm" fullWidth />
                   </div>
                 </div>
 
@@ -1539,7 +1540,11 @@ export default function HostDetailPage() {
 
                 {/* Search */}
                 <div className="w-[var(--search-input-width)]">
-                  <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                  <SearchInput
+                    placeholder="Search physical disks by attributes"
+                    size="sm"
+                    fullWidth
+                  />
                 </div>
 
                 {/* Pagination */}
@@ -1572,7 +1577,7 @@ export default function HostDetailPage() {
 
                 {/* Search */}
                 <div className="w-[var(--search-input-width)]">
-                  <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                  <SearchInput placeholder="Search daemons by attributes" size="sm" fullWidth />
                 </div>
 
                 {/* Pagination */}
