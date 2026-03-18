@@ -165,50 +165,48 @@ function EditorPreview() {
       {leftOpen && (
         <div className="w-[220px] shrink-0 bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col gap-3 pt-3 px-3 pb-4 overflow-y-auto">
           <VStack gap={2}>
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Block library</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              Click or drag to add
-            </span>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Panel Title</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">Panel description</span>
           </VStack>
 
           <VStack gap={3}>
-            <SearchInput placeholder="Find blocks" size="sm" className="w-full" />
+            <SearchInput placeholder="Search" size="sm" className="w-full" />
             <VStack gap={0}>
               <BlockCategory
-                label="Data"
+                label="Category A"
                 icon={<IconDatabase size={16} className="text-[var(--color-text-default)]" />}
                 count={2}
                 color="blue"
               >
                 <BlockItem
                   icon={<IconGitBranch size={16} className="text-[var(--color-text-default)]" />}
-                  label="Transform"
-                  description="Transform data"
+                  label="Item Title"
+                  description="Item description"
                 />
                 <BlockItem
                   icon={<IconDatabase size={16} className="text-[var(--color-text-default)]" />}
-                  label="Load Dataset"
-                  description="Load datasets from storage"
+                  label="Item Title"
+                  description="Item description"
                   isLast
                 />
               </BlockCategory>
             </VStack>
             <VStack gap={0}>
               <BlockCategory
-                label="Actions"
+                label="Category B"
                 icon={<IconPlayerPlay size={16} className="text-[var(--color-text-default)]" />}
                 count={2}
                 color="yellow"
               >
                 <BlockItem
                   icon={<IconPlayerPlay size={16} className="text-[var(--color-text-default)]" />}
-                  label="Train"
-                  description="Train model"
+                  label="Item Title"
+                  description="Item description"
                 />
                 <BlockItem
                   icon={<IconPlayerPlay size={16} className="text-[var(--color-text-default)]" />}
-                  label="Evaluate"
-                  description="Evaluate model"
+                  label="Item Title"
+                  description="Item description"
                   isLast
                 />
               </BlockCategory>
@@ -232,8 +230,8 @@ function EditorPreview() {
                 className="text-[var(--color-text-subtle)]"
               />
             </div>
-            <TabItem label="Pipeline A" active />
-            <TabItem label="Pipeline B" />
+            <TabItem label="Tab Title" active />
+            <TabItem label="Tab Title" />
             <div className="p-2 cursor-pointer hover:bg-[var(--color-surface-hover)] rounded-[var(--radius-md)]">
               <IconPlus size={16} className="text-[var(--color-text-subtle)]" />
             </div>
@@ -304,31 +302,31 @@ function EditorPreview() {
       {rightOpen && (
         <div className="w-[260px] shrink-0 bg-[var(--color-surface-default)] border-l border-[var(--color-border-default)] flex flex-col gap-3 pt-3 px-4 pb-4 overflow-y-auto">
           <VStack gap={2}>
-            <span className="text-heading-h5 text-[var(--color-text-default)]">LOAD-DATASET-1</span>
-            <span className="text-body-md text-[var(--color-text-subtle)]">DATASET</span>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Title</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">Description</span>
           </VStack>
 
           {/* Section 1 */}
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3">
             <Disclosure defaultOpen>
-              <Disclosure.Trigger>Expandable Section</Disclosure.Trigger>
+              <Disclosure.Trigger>Section Title</Disclosure.Trigger>
               <Disclosure.Panel>
                 <VStack gap={6} className="pt-4">
                   <VStack gap={2}>
-                    <span className="text-label-md text-[var(--color-text-default)]">Source</span>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
                       Description
                     </span>
-                    <Input placeholder="Input placeholder" fullWidth size="sm" />
+                    <Input placeholder="Placeholder" fullWidth size="sm" />
                   </VStack>
                   <VStack gap={2}>
-                    <span className="text-label-md text-[var(--color-text-default)]">Format</span>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
                       Description
                     </span>
                     <Select
-                      options={[{ value: '1units', label: '1units' }]}
-                      value="1units"
+                      options={[{ value: 'option', label: 'Option' }]}
+                      value="option"
                       fullWidth
                       size="sm"
                     />
@@ -341,24 +339,24 @@ function EditorPreview() {
           {/* Section 2 */}
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3">
             <Disclosure defaultOpen>
-              <Disclosure.Trigger>Expandable Section</Disclosure.Trigger>
+              <Disclosure.Trigger>Section Title</Disclosure.Trigger>
               <Disclosure.Panel>
                 <VStack gap={6} className="pt-4">
                   <VStack gap={2}>
-                    <span className="text-label-md text-[var(--color-text-default)]">Output</span>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
                       Description
                     </span>
-                    <Input placeholder="Input placeholder" fullWidth size="sm" />
+                    <Input placeholder="Placeholder" fullWidth size="sm" />
                   </VStack>
                   <VStack gap={2}>
-                    <span className="text-label-md text-[var(--color-text-default)]">Units</span>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
                       Description
                     </span>
                     <Select
-                      options={[{ value: '1units', label: '1units' }]}
-                      value="1units"
+                      options={[{ value: 'option', label: 'Option' }]}
+                      value="option"
                       fullWidth
                       size="sm"
                     />

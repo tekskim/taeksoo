@@ -1090,7 +1090,7 @@ html.theme-transition *::after {
   /* Text - Linear Style (높은 대비) */
   --color-text-default: #ebebeb; /* 거의 흰색 */
   --color-text-muted: #a0a0a0; /* 중간 회색 */
-  --color-text-subtle: #6b6b6b; /* 연한 회색 */
+  --color-text-subtle: #7a7a7a; /* 연한 회색 */
   --color-text-disabled: #4a4a4a; /* 비활성 텍스트 */
   --color-text-inverse: #0d0d0d; /* 역전 텍스트 */
 
