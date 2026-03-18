@@ -1162,7 +1162,7 @@ html.theme-transition *::after {
   --color-status-error-subtle: rgba(239, 68, 68, 0.15);
 
   /* Badge Subtle (Dark Mode) - dark bg with readable text */
-  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.15);
+  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.25);
   --badge-subtle-blue-text: #93c5fd; /* blue-300 */
   --badge-subtle-red-bg: rgba(239, 68, 68, 0.15);
   --badge-subtle-red-text: #fca5a5; /* red-300 */
