@@ -1,7 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Badge, StatusIndicator, Tooltip, VStack } from '@/design-system';
+import { Badge, StatusIndicator, VStack } from '@/design-system';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 
@@ -99,7 +99,7 @@ const STATUS_GUIDELINES = `## Overview
 | Layout | 설명 | 사용 시점 |
 | --- | --- | --- |
 | default | Icon + Label (pill) | 일반적인 상태 표시. 테이블, DetailHeader 등 |
-| icon-only | 아이콘만 표시 | 테이블 컬럼 너비가 좁은 경우 |
+| icon-only | 아이콘만 표시 (호버 시 상태명 Tooltip 자동 표시) | 테이블 컬럼 너비가 좁은 경우 |
 | badge | Icon + Label (square, radius-sm) | 카드나 태그 스타일로 상태를 표시할 때 |
 
 ### 4) 반응형 대응
@@ -237,15 +237,11 @@ export function StatusIndicatorPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Active</span>
                 <div className="flex flex-wrap gap-4 items-start">
                   <VStack gap={1} align="center">
-                    <Tooltip content="active">
-                      <StatusIndicator status="active" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="active" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">active</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="enabled">
-                      <StatusIndicator status="enabled" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="enabled" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">enabled</span>
                   </VStack>
                 </div>
@@ -254,9 +250,7 @@ export function StatusIndicatorPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Error</span>
                 <div className="flex flex-wrap gap-4 items-start">
                   <VStack gap={1} align="center">
-                    <Tooltip content="error">
-                      <StatusIndicator status="error" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="error" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">error</span>
                   </VStack>
                 </div>
@@ -265,21 +259,15 @@ export function StatusIndicatorPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Processing</span>
                 <div className="flex flex-wrap gap-4 items-start">
                   <VStack gap={1} align="center">
-                    <Tooltip content="building">
-                      <StatusIndicator status="building" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="building" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">building</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="deleting">
-                      <StatusIndicator status="deleting" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="deleting" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">deleting</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="pending">
-                      <StatusIndicator status="pending" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="pending" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">pending</span>
                   </VStack>
                 </div>
@@ -288,21 +276,15 @@ export function StatusIndicatorPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Warning</span>
                 <div className="flex flex-wrap gap-4 items-start">
                   <VStack gap={1} align="center">
-                    <Tooltip content="degraded">
-                      <StatusIndicator status="degraded" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="degraded" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">degraded</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="down">
-                      <StatusIndicator status="down" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="down" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">down</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="maintenance">
-                      <StatusIndicator status="maintenance" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="maintenance" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">
                       maintenance
                     </span>
@@ -313,33 +295,23 @@ export function StatusIndicatorPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Muted</span>
                 <div className="flex flex-wrap gap-4 items-start">
                   <VStack gap={1} align="center">
-                    <Tooltip content="suspended">
-                      <StatusIndicator status="suspended" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="suspended" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">suspended</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="paused">
-                      <StatusIndicator status="paused" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="paused" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">paused</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="draft">
-                      <StatusIndicator status="draft" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="draft" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">draft</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="in-use">
-                      <StatusIndicator status="in-use" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="in-use" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">in-use</span>
                   </VStack>
                   <VStack gap={1} align="center">
-                    <Tooltip content="disabled">
-                      <StatusIndicator status="disabled" layout="icon-only" />
-                    </Tooltip>
+                    <StatusIndicator status="disabled" layout="icon-only" />
                     <span className="text-body-xs text-[var(--color-text-subtle)]">disabled</span>
                   </VStack>
                 </div>

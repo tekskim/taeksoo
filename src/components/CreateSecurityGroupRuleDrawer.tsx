@@ -82,7 +82,6 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           className="absolute top-0 left-0 h-full bg-[var(--color-state-success)] rounded-lg"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
-        {/* Reserved portion (next item) */}
         <div
           className="absolute top-0 h-full bg-[var(--color-state-success-bg)] rounded-lg"
           style={{
@@ -118,7 +117,6 @@ export function CreateSecurityGroupRuleDrawer({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
-  // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
       setDirection('ingress');
@@ -159,11 +157,9 @@ export function CreateSecurityGroupRuleDrawer({
     { value: 'security_group', label: 'Security group' },
   ];
 
-  // Check if protocol requires port input
   const showPortInput =
     ['custom_tcp', 'custom_udp'].includes(protocol) && portRangeType === 'custom';
 
-  // Check if protocol is "All Proto" - hides Port Range and Remote sections
   const isAllProto = protocol === 'all_proto';
 
   const handleSubmit = async () => {
@@ -194,16 +190,14 @@ export function CreateSecurityGroupRuleDrawer({
       width={360}
       footer={
         <VStack gap={6} className="w-full">
-          {/* Quota Section */}
           <VStack gap={6} className="w-full">
             <QuotaProgressBar
-              label="Security group rule quota"
+              label="Security Group Rule Quota"
               used={ruleQuota.used}
               total={ruleQuota.total}
             />
           </VStack>
 
-          {/* Buttons */}
           <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
           <HStack gap={2} className="w-full">
             <Button variant="secondary" onClick={handleClose} className="flex-1">
@@ -222,25 +216,27 @@ export function CreateSecurityGroupRuleDrawer({
       }
     >
       <VStack gap={6}>
-        {/* Direction Radio */}
-        <FormField label="Direction" spacing="loose">
-          <RadioGroup value={direction} onChange={(value) => setDirection(value as RuleDirection)}>
-            <VStack gap={2}>
-              <Radio value="ingress" label="Ingress" />
-              <Radio value="egress" label="Egress" />
-            </VStack>
-          </RadioGroup>
+        {/* Direction */}
+        <FormField required spacing="loose">
+          <FormField.Label>Direction</FormField.Label>
+          <FormField.Description>Choose the traffic direction.</FormField.Description>
+          <FormField.Control>
+            <RadioGroup
+              value={direction}
+              onChange={(value) => setDirection(value as RuleDirection)}
+            >
+              <VStack gap={3}>
+                <Radio value="ingress" label="Ingress" />
+                <Radio value="egress" label="Egress" />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
         </FormField>
 
-        {/* Protocol Select */}
-        <FormField>
+        {/* Protocol */}
+        <FormField required>
           <FormField.Label>Protocol</FormField.Label>
-          {!isAllProto && (
-            <FormField.Description>
-              Select a protocol type to define the rule's traffic. 'Custom' allows specifying
-              specific port numbers.
-            </FormField.Description>
-          )}
+          <FormField.Description>Select the protocol to apply to the rule.</FormField.Description>
           <FormField.Control>
             <Select
               options={protocolOptions}
@@ -251,10 +247,14 @@ export function CreateSecurityGroupRuleDrawer({
           </FormField.Control>
         </FormField>
 
-        {/* Port Range (only for Custom TCP/UDP, not for All Proto) */}
+        {/* Port Range (Custom TCP/UDP only) */}
         {!isAllProto && ['custom_tcp', 'custom_udp'].includes(protocol) && (
-          <FormField error={hasAttemptedSubmit && portRangeType === 'custom' && !portRange.trim()}>
+          <FormField
+            required
+            error={hasAttemptedSubmit && portRangeType === 'custom' && !portRange.trim()}
+          >
             <FormField.Label>Port range</FormField.Label>
+            <FormField.Description>Select the port range to allow.</FormField.Description>
             <FormField.Control>
               <VStack gap={2}>
                 <Select
@@ -266,29 +266,29 @@ export function CreateSecurityGroupRuleDrawer({
                 {portRangeType === 'custom' && (
                   <Input
                     value={portRange}
-                    onChange={(e) => setPortRange(e.target.value)}
-                    placeholder=""
+                    onChange={(e) => {
+                      setPortRange(e.target.value);
+                      if (hasAttemptedSubmit && e.target.value.trim()) {
+                        setHasAttemptedSubmit(false);
+                      }
+                    }}
+                    placeholder="e.g. 80 or 1000–2000"
                     fullWidth
                     error={hasAttemptedSubmit && !portRange.trim()}
                   />
                 )}
               </VStack>
             </FormField.Control>
-            {portRangeType === 'custom' && (
-              <>
-                <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
-                <FormField.HelperText>
-                  e.g. single port '8080', port range '7000-7005'
-                </FormField.HelperText>
-              </>
+            {hasAttemptedSubmit && portRangeType === 'custom' && !portRange.trim() && (
+              <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
             )}
           </FormField>
         )}
 
-        {/* ICMP Type and Code (only for Custom ICMP) */}
+        {/* ICMP Type and Code (Custom ICMP only) */}
         {protocol === 'custom_icmp' && (
           <>
-            <FormField label="ICMP type" helperText="0-255">
+            <FormField label="ICMP type" helperText="0-255" required>
               <NumberInput
                 value={icmpType}
                 onChange={(value) => setIcmpType(value ?? 0)}
@@ -298,7 +298,7 @@ export function CreateSecurityGroupRuleDrawer({
               />
             </FormField>
 
-            <FormField label="ICMP code" helperText="0-255">
+            <FormField label="ICMP code" helperText="0-255" required>
               <NumberInput
                 value={icmpCode}
                 onChange={(value) => setIcmpCode(value ?? 0)}
@@ -310,9 +310,9 @@ export function CreateSecurityGroupRuleDrawer({
           </>
         )}
 
-        {/* IP Protocol (only for Other Protocol) */}
+        {/* IP Protocol (Other Protocol only) */}
         {protocol === 'other_protocol' && (
-          <FormField label="IP Protocol" helperText="0–255. (e.g., 6=TCP, 17=UDP, 1=ICMP)">
+          <FormField label="IP Protocol" helperText="0–255. (e.g., 6=TCP, 17=UDP, 1=ICMP)" required>
             <Input
               value={ipProtocol}
               onChange={(e) => setIpProtocol(e.target.value)}
@@ -324,12 +324,12 @@ export function CreateSecurityGroupRuleDrawer({
 
         {/* Remote (not shown for All Proto) */}
         {!isAllProto && (
-          <FormField error={hasAttemptedSubmit && !remoteValue.trim()}>
+          <FormField required error={hasAttemptedSubmit && !remoteValue.trim()}>
             <FormField.Label>Remote</FormField.Label>
             <FormField.Description>
-              Define the source or destination of traffic.
+              Select the remote target (CIDR or security group) for the rule.
             </FormField.Description>
-            <FormField.Control className="mt-0">
+            <FormField.Control>
               <VStack gap={2}>
                 <Select
                   options={remoteTypeOptions}
@@ -341,7 +341,7 @@ export function CreateSecurityGroupRuleDrawer({
                   <Input
                     value={remoteValue}
                     onChange={(e) => setRemoteValue(e.target.value)}
-                    placeholder="e.g. 192.168.0.0/24"
+                    placeholder="Enter CIDR (e.g. 192.168.0.0/24)"
                     fullWidth
                     error={hasAttemptedSubmit && !remoteValue.trim()}
                   />

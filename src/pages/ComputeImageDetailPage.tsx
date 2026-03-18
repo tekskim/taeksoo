@@ -476,40 +476,42 @@ export function ComputeImageDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
               Create instance
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-              Create volume
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
-            {activeDetailTab === 'details' && (
-              <ContextMenu
-                items={
-                  [
-                    {
-                      id: 'create-instance-template',
-                      label: 'Create instance Template',
-                      onClick: () => console.log('Create instance Template'),
-                    },
-                    {
-                      id: 'create-volume',
-                      label: 'Create volume',
-                      onClick: () => console.log('Create volume'),
-                    },
-                  ] as ContextMenuItem[]
-                }
-                trigger="click"
-              >
-                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
-                </Button>
-              </ContextMenu>
-            )}
+            <ContextMenu
+              items={
+                [
+                  {
+                    id: 'create-instance-template',
+                    label: 'Create instance Template',
+                    onClick: () => console.log('Create instance Template'),
+                  },
+                  {
+                    id: 'create-volume',
+                    label: 'Create volume',
+                    onClick: () => console.log('Create volume'),
+                  },
+                ] as ContextMenuItem[]
+              }
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More actions
+              </Button>
+            </ContextMenu>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard label="Status" value="Active" status="active" />
             <DetailHeader.InfoCard label="ID" value={image.id} copyable />
-            <DetailHeader.InfoCard label="Access" value={image.access} />
+            <DetailHeader.InfoCard label="Visibility" value="Project" />
+            <DetailHeader.InfoCard
+              label="Protected"
+              value={image.protected ? 'Enabled' : 'Disabled'}
+            />
             <DetailHeader.InfoCard label="Created at" value={image.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -537,11 +539,6 @@ export function ComputeImageDetailPage() {
                   />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Image name" value={image.name} />
-                    <SectionCard.DataRow label="Usage type" value={image.usageType} />
-                    <SectionCard.DataRow
-                      label="Protected"
-                      value={image.protected ? 'Enabled' : 'Disabled'}
-                    />
                     <SectionCard.DataRow label="Description" value={image.description} />
                   </SectionCard.Content>
                 </SectionCard>
@@ -552,8 +549,9 @@ export function ComputeImageDetailPage() {
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Size" value={image.size} />
                     <SectionCard.DataRow label="OS" value={image.os} />
+                    <SectionCard.DataRow label="OS admin" value={image.os} />
                     <SectionCard.DataRow
-                      label="Disk format"
+                      label="Disk format/Container format"
                       value={`${image.diskFormat} / ${image.containerFormat}`}
                     />
                     <SectionCard.DataRow

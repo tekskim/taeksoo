@@ -393,12 +393,12 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const gaugeRef = useRef<HTMLDivElement>(null);
 
-  const chartWidth = 220;
-  const chartHeight = 180;
+  const chartWidth = 180;
+  const chartHeight = 160;
   const centerX = chartWidth * 0.5;
   const centerY = chartHeight * 0.65;
   const radius = Math.min(chartWidth, chartHeight) * 0.45;
-  const arcWidth = 20;
+  const arcWidth = 14;
   const innerRadius = radius - arcWidth;
   const outerRadius = radius;
 
@@ -410,11 +410,13 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     return fallback;
   };
 
-  const usedColor = getColor('--color-status-success', '#22c55e');
-  const bgColor = getColor('--color-border-subtle', '#f1f5f9');
-  const warningTrack = '#bcc0c6';
-  const dangerTrack = '#8b8f96';
+  const statusColor = () => {
+    if (percentage >= 95) return getColor('--color-state-danger', '#ef4444');
+    if (percentage >= 85) return getColor('--color-state-warning', '#f97316');
+    return getColor('--color-state-success', '#22c55e');
+  };
 
+  const usedColor = statusColor();
   const available = total !== undefined && used !== undefined ? total - used : 0;
   const availablePercent =
     total !== undefined && used !== undefined ? Math.round((available / total) * 100) : 0;
@@ -426,7 +428,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
     let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
     if (angle < 0) angle += 360;
-    return angle >= 150 && angle <= 330;
+    return angle <= 210 || angle >= 330;
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -434,12 +436,8 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
       const rect = gaugeRef.current.getBoundingClientRect();
       const relX = e.clientX - rect.left;
       const relY = e.clientY - rect.top;
-      const containerWidth = rect.width;
-      const containerHeight = rect.height;
-      const chartX = relX - (containerWidth - chartWidth) / 2;
-      const chartY = relY - (containerHeight - chartHeight) / 2;
       setMousePos({ x: relX, y: relY });
-      setShowTooltip(isOverGaugeArc(chartX, chartY));
+      setShowTooltip(isOverGaugeArc(relX, relY));
     }
   };
 
@@ -447,28 +445,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     setShowTooltip(false);
   };
 
-  const buildColorStops = (): [number, string][] => {
-    const pct = percentage / 100;
-    if (pct >= 0.95)
-      return [
-        [pct, usedColor],
-        [1, dangerTrack],
-      ];
-    if (pct >= 0.7)
-      return [
-        [pct, usedColor],
-        [0.95, warningTrack],
-        [1, dangerTrack],
-      ];
-    return [
-      [pct, usedColor],
-      [0.7, bgColor],
-      [0.95, warningTrack],
-      [1, dangerTrack],
-    ];
-  };
-
-  const option = {
+  const getOption = () => ({
     series: [
       {
         type: 'gauge',
@@ -478,7 +455,15 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
         radius: '90%',
         min: 0,
         max: 100,
-        axisLine: { lineStyle: { width: 20, color: buildColorStops() } },
+        axisLine: {
+          lineStyle: {
+            width: 16,
+            color: [
+              [percentage / 100, usedColor],
+              [1, getColor('--color-border-subtle', '#f1f5f9')],
+            ],
+          },
+        },
         pointer: { show: false },
         axisTick: { show: false },
         splitLine: { show: false },
@@ -487,47 +472,27 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
         detail: { show: false },
       },
     ],
-  };
+  });
 
   return (
-    <div className="flex items-center justify-center gap-6">
-      {/* Legend */}
-      <div className="flex flex-col gap-2.5 shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: usedColor }} />
-          <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
-            Used: {used !== undefined ? `${used} ${unit}` : '-'}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: warningTrack }} />
-          <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
-            Warning: 70%
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: dangerTrack }} />
-          <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
-            Danger: 95%
-          </span>
-        </div>
-      </div>
-
+    <div className="flex flex-col items-center justify-center h-full gap-6 -mt-9">
       {/* Gauge */}
       <div
         ref={gaugeRef}
-        className="relative h-[180px] flex items-center justify-center"
+        className="relative"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
-        <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
-          <span className="text-heading-h3 text-[var(--color-text-default)]">
-            {percentage.toFixed(1)}%
+        <ReactECharts option={getOption()} style={{ height: '200px', width: '220px' }} />
+        <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
+          <span className="text-heading-h3 leading-[28px] text-[var(--color-text-default)]">
+            {percentage.toFixed(2)}%
           </span>
           {used !== undefined && total !== undefined && (
             <span className="text-body-md text-[var(--color-text-subtle)]">
-              of {total} {unit}
+              {used}
+              {unit}/{total}
+              {unit}
             </span>
           )}
         </div>
@@ -542,18 +507,36 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
                 className="w-[5px] h-[5px] rounded-[1px]"
                 style={{ backgroundColor: usedColor }}
               />
-              <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Used: {used} {unit} ({Math.round(percentage)}%)
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-              <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--chart-color-neutral)]" />
+              <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Available: {available.toFixed(1)} {unit} ({availablePercent}%)
               </span>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center -mt-3">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: usedColor }} />
+          <span className="text-body-sm text-[var(--color-text-muted)]">
+            Used: {used !== undefined ? `${used}${unit}` : '-'}
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-sm shrink-0 bg-[var(--color-state-warning)]" />
+          <span className="text-body-sm text-[var(--color-text-muted)]">Warning: 85%</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-sm shrink-0 bg-[var(--color-state-danger)]" />
+          <span className="text-body-sm text-[var(--color-text-muted)]">Danger: 95%</span>
+        </div>
       </div>
     </div>
   );
@@ -571,11 +554,11 @@ interface TimeTillFullProps {
 function TimeTillFull({ value, unit }: TimeTillFullProps) {
   return (
     <div className="h-[200px] flex items-center justify-center">
-      <div className="flex items-baseline gap-1">
-        <span className="text-heading-h3" style={{ color: chartColors.green500 }}>
+      <div className="flex items-baseline gap-2">
+        <span className="text-heading-h1" style={{ color: chartColors.green500 }}>
           {value}
         </span>
-        <span className="text-label-lg" style={{ color: chartColors.green500 }}>
+        <span className="text-heading-h4" style={{ color: chartColors.green500 }}>
           {unit}
         </span>
       </div>

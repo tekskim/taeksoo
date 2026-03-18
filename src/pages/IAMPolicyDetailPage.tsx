@@ -462,7 +462,7 @@ export default function IAMPolicyDetailPage() {
     });
   };
 
-  // More Actions menu items
+  // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
     { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles') },
     { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate') },
@@ -650,7 +650,7 @@ export default function IAMPolicyDetailPage() {
             </Button>
             <ContextMenu items={moreActionsItems} trigger="click" align="right">
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>

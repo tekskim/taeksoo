@@ -29,14 +29,14 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconLink,
+  IconLinkOff,
   IconTrash,
   IconBell,
-  IconExternalLink,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconCirclePlus,
   IconEdit,
-  IconSettings,
+  IconDownload,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -73,6 +73,7 @@ interface Port {
   fixedIp: string;
   macAddress: string;
   type: string;
+  createdAt: string;
 }
 
 interface StaticRoute {
@@ -277,14 +278,20 @@ const defaultRouterDetail: RouterDetail = {
   gatewayIp: '-',
 };
 
-const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `port-${String(i + 1).padStart(3, '0')}`,
-  name: `port-${String(i + 1).padStart(2, '0')}`,
-  status: 'active' as const,
-  fixedIp: `10.62.0.${i + 1}`,
-  macAddress: `fa:16:3e:${String(i + 1).padStart(2, '0')}:ab:cd`,
-  type: i % 2 === 0 ? 'Internal Interface' : 'External Interface',
-}));
+const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => {
+  const date = new Date(2025, 8 - Math.floor(i / 10), 12 - (i % 28));
+  return {
+    id: `port-${String(i + 1).padStart(3, '0')}`,
+    name: `port-${String(i + 1).padStart(2, '0')}`,
+    status: 'active' as const,
+    fixedIp: `10.62.0.${i + 1}`,
+    macAddress: `fa:16:3e:${String(i + 1).padStart(2, '0')}:ab:cd`,
+    type: i % 2 === 0 ? 'Internal Interface' : 'External Interface',
+    createdAt: date
+      .toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      .replace(',', ','),
+  };
+});
 
 const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
   id: `route-${String(i + 1).padStart(3, '0')}`,
@@ -319,9 +326,9 @@ export default function RouterDetailPage() {
 
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeDetailTab = searchParams.get('tab') || 'details';
-  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'details';
+  const [activeDetailTab, setActiveDetailTab] = useState(initialTab);
 
   // Port state
   const [portSearchTerm, setPortSearchTerm] = useState('');
@@ -439,19 +446,13 @@ export default function RouterDetailPage() {
       minWidth: columnMinWidths.name,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1">
-            <Link
-              to={`/compute/ports/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <IconExternalLink
-              size={12}
-              className="flex-shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
+          <Link
+            to={`/compute/ports/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
@@ -475,6 +476,13 @@ export default function RouterDetailPage() {
       label: 'Type',
       flex: 1,
       minWidth: columnMinWidths.type,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
     },
     {
       key: 'actions',
@@ -606,18 +614,15 @@ export default function RouterDetailPage() {
                   label: 'Disconnect subnet',
                   onClick: () => {},
                   status: 'danger',
-                  divider: true,
                 },
                 { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
-                { id: 'enable-snat', label: 'Enable SNAT', onClick: () => {} },
-                { id: 'disable-snat', label: 'Disable SNAT', onClick: () => {} },
                 { id: 'create-static-route', label: 'Create static Route', onClick: () => {} },
                 { id: 'edit', label: 'Edit', onClick: () => {} },
               ]}
               trigger="click"
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -629,7 +634,6 @@ export default function RouterDetailPage() {
             />
             <DetailHeader.InfoCard label="ID" value={router.id} copyable />
             <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
-            <DetailHeader.InfoCard label="Access" value={router.access} />
             <DetailHeader.InfoCard
               label="External gateway"
               value={router.externalGateway ? 'Yes' : 'No'}
@@ -662,28 +666,14 @@ export default function RouterDetailPage() {
                   />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Router name" value={router.routerName} />
-                    <SectionCard.DataRow
-                      label="AZ(Availability zone)"
-                      value={router.availabilityZone}
-                    />
-                    <SectionCard.DataRow
-                      label="AZ(Availability zone) Hint"
-                      value={router.availabilityZoneHint}
-                    />
                     <SectionCard.DataRow label="Description" value={router.description} />
+                    <SectionCard.DataRow label="Admin state" value={router.adminState} />
                   </SectionCard.Content>
                 </SectionCard>
 
                 {/* External network */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="External network"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
-                        Setting
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="External network" />
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Network"
@@ -691,13 +681,9 @@ export default function RouterDetailPage() {
                         router.network ? (
                           <Link
                             to={`/compute/networks/${router.network.id}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {router.network.name}
-                            <IconExternalLink
-                              size={12}
-                              className="text-[var(--color-action-primary)]"
-                            />
                           </Link>
                         ) : (
                           '-'
@@ -711,13 +697,9 @@ export default function RouterDetailPage() {
                         router.subnet ? (
                           <Link
                             to={`/compute/subnets/${router.subnet.id}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {router.subnet.name}
-                            <IconExternalLink
-                              size={12}
-                              className="text-[var(--color-action-primary)]"
-                            />
                           </Link>
                         ) : (
                           '-'
@@ -734,30 +716,35 @@ export default function RouterDetailPage() {
             <TabPanel value="ports" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between min-h-[28px]">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Connect subnet
-                  </Button>
                 </div>
 
                 {/* Action Bar */}
                 <div className="flex items-center gap-2">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={portSearchTerm}
-                      onChange={(e) => {
-                        setPortSearchTerm(e.target.value);
-                        setPortCurrentPage(1);
-                      }}
-                      placeholder="Search interface by attributes"
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={portSearchTerm}
+                        onChange={(e) => {
+                          setPortSearchTerm(e.target.value);
+                          setPortCurrentPage(1);
+                        }}
+                        placeholder="Search interface by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
                     />
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
                     variant="muted"
                     size="sm"
-                    leftIcon={<IconLink size={12} />}
+                    leftIcon={<IconLinkOff size={12} />}
                     disabled={selectedPorts.length === 0}
                   >
                     Disconnect
@@ -792,10 +779,10 @@ export default function RouterDetailPage() {
             <TabPanel value="static-routes" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between min-h-[28px]">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Static Route</h3>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create static Route
+                    Create static route
                   </Button>
                 </div>
 

@@ -12852,7 +12852,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                                     명시적인 버튼 클릭으로 메뉴 오픈. 주요 액션 제공 시 사용.
                                   </td>
                                   <td className="py-2 text-[var(--color-text-muted)]">
-                                    More Actions, Create 드롭다운
+                                    More actions, Create 드롭다운
                                   </td>
                                 </tr>
                                 <tr>

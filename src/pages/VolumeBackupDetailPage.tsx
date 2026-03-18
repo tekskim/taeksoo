@@ -18,14 +18,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconExternalLink,
-  IconRestore,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconRestore } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -308,6 +301,9 @@ export function VolumeBackupDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconRestore size={12} />}>
               Restore backup
             </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
@@ -357,10 +353,9 @@ export function VolumeBackupDetailPage() {
                     <SectionCard.DataRow label="Volume">
                       <Link
                         to={`/compute/volumes/${backup.sourceVolumeId}`}
-                        className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline"
+                        className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                       >
                         {backup.sourceVolume}
-                        <IconExternalLink size={12} stroke={1.5} />
                       </Link>
                     </SectionCard.DataRow>
                   </SectionCard.Content>
@@ -370,6 +365,7 @@ export function VolumeBackupDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Specifications" />
                   <SectionCard.Content>
+                    <SectionCard.DataRow label="Backup mode" value={backup.backupMode} />
                     <SectionCard.DataRow label="Size" value={backup.size} />
                   </SectionCard.Content>
                 </SectionCard>
