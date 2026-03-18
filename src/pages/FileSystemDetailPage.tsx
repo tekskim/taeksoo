@@ -14,6 +14,8 @@ import {
   DetailHeader,
   SectionCard,
   Table,
+  SearchInput,
+  Pagination,
   PageShell,
   ProgressBar,
   STATUS_THRESHOLDS,
@@ -548,165 +550,262 @@ export function FileSystemDetailPage() {
           </DetailHeader.Actions>
         </DetailHeader>
 
-        <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-            <TabList>
-              <Tab value="details">Details</Tab>
-              <Tab value="directories">Directories</Tab>
-              <Tab value="subvolumes">Subvolumes</Tab>
-              <Tab value="subvolume-groups">Subvolume groups</Tab>
-              <Tab value="snapshots">Snapshots</Tab>
-              <Tab value="snapshot-schedules">Snapshot schedules</Tab>
-              <Tab value="clients">
-                <span className="flex items-center gap-1.5">
-                  Clients
-                  <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[var(--color-surface-muted)] text-[var(--color-text-default)] text-label-xs">
-                    {mockClients.length}
-                  </span>
-                </span>
-              </Tab>
-              <Tab value="performance">Performance Details</Tab>
-            </TabList>
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="details">Details</Tab>
+            <Tab value="directories">Directories</Tab>
+            <Tab value="subvolumes">Subvolumes</Tab>
+            <Tab value="subvolume-groups">Subvolume groups</Tab>
+            <Tab value="snapshots">Snapshots</Tab>
+            <Tab value="snapshot-schedules">Snapshot schedules</Tab>
+            <Tab value="clients">Clients</Tab>
+            <Tab value="performance">Performance Details</Tab>
+          </TabList>
 
-            {/* Details */}
-            <TabPanel value="details" className="pt-4">
-              <VStack gap={6}>
-                {/* Ranks */}
-                <SectionCard>
-                  <SectionCard.Header title="Ranks" />
-                  <SectionCard.Content>
-                    <Table<Rank>
-                      columns={rankColumns}
-                      data={ranks}
-                      rowKey="id"
-                      emptyMessage="No data to display"
-                    />
-                    <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                      {ranks.length} total
-                    </div>
-                  </SectionCard.Content>
-                </SectionCard>
+          {/* Details */}
+          <TabPanel value="details" className="pt-4">
+            <VStack gap={6}>
+              {/* Ranks */}
+              <SectionCard>
+                <SectionCard.Header title="Ranks" />
+                <SectionCard.Content showDividers={false} gap={3}>
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput placeholder="Search ranks by attributes" size="sm" fullWidth />
+                  </div>
+                  <Pagination
+                    currentPage={1}
+                    totalPages={Math.ceil(ranks.length / 10) || 1}
+                    onPageChange={() => {}}
+                    totalItems={ranks.length}
+                    itemsPerPage={10}
+                    showItemCount
+                  />
+                  <Table<Rank>
+                    columns={rankColumns}
+                    data={ranks}
+                    rowKey="id"
+                    emptyMessage="No ranks found"
+                  />
+                </SectionCard.Content>
+              </SectionCard>
 
-                {/* Pools */}
-                <SectionCard>
-                  <SectionCard.Header title="Pools" />
-                  <SectionCard.Content>
-                    <Table<Pool>
-                      columns={poolColumns}
-                      data={pools}
-                      rowKey="id"
-                      emptyMessage="No data to display"
-                    />
-                    <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                      {pools.length} total
-                    </div>
-                  </SectionCard.Content>
-                </SectionCard>
+              {/* Pools */}
+              <SectionCard>
+                <SectionCard.Header title="Pools" />
+                <SectionCard.Content showDividers={false} gap={3}>
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput placeholder="Search pools by attributes" size="sm" fullWidth />
+                  </div>
+                  <Pagination
+                    currentPage={1}
+                    totalPages={Math.ceil(pools.length / 10) || 1}
+                    onPageChange={() => {}}
+                    totalItems={pools.length}
+                    itemsPerPage={10}
+                    showItemCount
+                  />
+                  <Table<Pool>
+                    columns={poolColumns}
+                    data={pools}
+                    rowKey="id"
+                    emptyMessage="No pools found"
+                  />
+                </SectionCard.Content>
+              </SectionCard>
 
-                {/* Standbys */}
-                <SectionCard>
-                  <SectionCard.Header title="Standbys" />
-                  <SectionCard.Content>
-                    <SectionCard.DataRow label="Standby daemons" value={fsData.standbyDaemons} />
-                  </SectionCard.Content>
-                </SectionCard>
-              </VStack>
-            </TabPanel>
+              {/* Standbys */}
+              <SectionCard>
+                <SectionCard.Header title="Standbys" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Standby daemons" value={fsData.standbyDaemons} />
+                </SectionCard.Content>
+              </SectionCard>
+            </VStack>
+          </TabPanel>
 
-            {/* Directories */}
-            <TabPanel value="directories" className="pt-4">
+          {/* Directories */}
+          <TabPanel value="directories" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">Directories</h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput placeholder="Search directories by attributes" size="sm" fullWidth />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockDirectories.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockDirectories.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<Directory>
                 columns={directoryColumns}
                 data={mockDirectories}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No directories found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockDirectories.length} total
-              </div>
-            </TabPanel>
+            </VStack>
+          </TabPanel>
 
-            {/* Subvolumes */}
-            <TabPanel value="subvolumes" className="pt-4">
+          {/* Subvolumes */}
+          <TabPanel value="subvolumes" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">Subvolumes</h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput placeholder="Search subvolumes by attributes" size="sm" fullWidth />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockSubvolumes.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockSubvolumes.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<Subvolume>
                 columns={subvolumeColumns}
                 data={mockSubvolumes}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No subvolumes found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockSubvolumes.length} total
-              </div>
-            </TabPanel>
+            </VStack>
+          </TabPanel>
 
-            {/* Subvolume groups */}
-            <TabPanel value="subvolume-groups" className="pt-4">
+          {/* Subvolume groups */}
+          <TabPanel value="subvolume-groups" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                  Subvolume groups
+                </h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput
+                  placeholder="Search subvolume groups by attributes"
+                  size="sm"
+                  fullWidth
+                />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockSubvolumeGroups.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockSubvolumeGroups.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<SubvolumeGroup>
                 columns={subvolumeGroupColumns}
                 data={mockSubvolumeGroups}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No subvolume groups found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockSubvolumeGroups.length} total
-              </div>
-            </TabPanel>
+            </VStack>
+          </TabPanel>
 
-            {/* Snapshots */}
-            <TabPanel value="snapshots" className="pt-4">
+          {/* Snapshots */}
+          <TabPanel value="snapshots" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">Snapshots</h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput placeholder="Search snapshots by attributes" size="sm" fullWidth />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockSnapshots.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockSnapshots.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<Snapshot>
                 columns={snapshotColumns}
                 data={mockSnapshots}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No snapshots found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockSnapshots.length} total
-              </div>
-            </TabPanel>
+            </VStack>
+          </TabPanel>
 
-            {/* Snapshot schedules */}
-            <TabPanel value="snapshot-schedules" className="pt-4">
+          {/* Snapshot schedules */}
+          <TabPanel value="snapshot-schedules" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                  Snapshot schedules
+                </h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput
+                  placeholder="Search snapshot schedules by attributes"
+                  size="sm"
+                  fullWidth
+                />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockSnapshotSchedules.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockSnapshotSchedules.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<SnapshotSchedule>
                 columns={snapshotScheduleColumns}
                 data={mockSnapshotSchedules}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No snapshot schedules found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockSnapshotSchedules.length} total
-              </div>
-            </TabPanel>
+            </VStack>
+          </TabPanel>
 
-            {/* Clients */}
-            <TabPanel value="clients" className="pt-4">
+          {/* Clients */}
+          <TabPanel value="clients" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">Clients</h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput placeholder="Search clients by attributes" size="sm" fullWidth />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockClients.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockClients.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<Client>
                 columns={clientColumns}
                 data={mockClients}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No clients found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockClients.length} total
-              </div>
-            </TabPanel>
+            </VStack>
+          </TabPanel>
 
-            {/* Performance Details */}
-            <TabPanel value="performance" className="pt-4">
-              <SectionCard>
-                <SectionCard.Header title="Performance Details" />
-                <SectionCard.Content>
-                  <SectionCard.DataRow label="Read throughput" value="-" />
-                  <SectionCard.DataRow label="Write throughput" value="-" />
-                  <SectionCard.DataRow label="Read IOPS" value="-" />
-                  <SectionCard.DataRow label="Write IOPS" value="-" />
-                  <SectionCard.DataRow label="Read latency" value="-" />
-                  <SectionCard.DataRow label="Write latency" value="-" />
-                </SectionCard.Content>
-              </SectionCard>
-            </TabPanel>
-          </Tabs>
-        </div>
+          {/* Performance Details */}
+          <TabPanel value="performance" className="pt-4">
+            <SectionCard>
+              <SectionCard.Header title="Performance Details" />
+              <SectionCard.Content>
+                <SectionCard.DataRow label="Read throughput" value="-" />
+                <SectionCard.DataRow label="Write throughput" value="-" />
+                <SectionCard.DataRow label="Read IOPS" value="-" />
+                <SectionCard.DataRow label="Write IOPS" value="-" />
+                <SectionCard.DataRow label="Read latency" value="-" />
+                <SectionCard.DataRow label="Write latency" value="-" />
+              </SectionCard.Content>
+            </SectionCard>
+          </TabPanel>
+        </Tabs>
       </VStack>
     </PageShell>
   );
