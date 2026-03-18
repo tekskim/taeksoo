@@ -1203,6 +1203,9 @@ html.theme-transition *::after {
   /* Checkbox (Dark Mode) */
   --checkbox-bg: #1c1c1c; /* surface-default */
   --checkbox-border: var(--color-border-strong); /* SearchInput과 동일 */
+  --checkbox-label-color: var(--color-text-default);
+  --checkbox-label-disabled: var(--color-text-disabled);
+  --checkbox-description-color: var(--color-text-subtle);
   --checkbox-disabled-bg: #252525;
   --checkbox-disabled-border: #333333;
   --checkbox-disabled-checked-bg: #333333;

@@ -81,7 +81,7 @@ export const ExpandableChecklist = memo(function ExpandableChecklist({
 
   return (
     <div
-      className={`overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ${className}`}
+      className={`overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] ${className}`}
     >
       {/* Header */}
       <div
@@ -118,7 +118,7 @@ export const ExpandableChecklist = memo(function ExpandableChecklist({
           {description && (
             <div className="flex items-center">
               <div className="shrink-0 w-4" />
-              <span className="text-body-sm text-[var(--color-text-subtle)]">{description}</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">{description}</span>
             </div>
           )}
         </div>
