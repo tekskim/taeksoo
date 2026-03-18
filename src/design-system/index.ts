@@ -62,6 +62,7 @@ export * from './components/EmptyState';
 export * from './components/ErrorState';
 export * from './components/InfoBox';
 export * from './components/FileListCard';
+export * from './components/ExpandableChecklist';
 
 // Layouts
 export * from './layouts';

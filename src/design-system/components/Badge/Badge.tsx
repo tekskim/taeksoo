@@ -130,7 +130,7 @@ export const Badge = memo(function Badge({
     'inline-flex items-center justify-center',
     'gap-[var(--badge-gap)]',
     'font-medium',
-    'min-w-[28px] text-center',
+    'min-w-[20px] text-center',
     'rounded-[var(--badge-radius)]',
   ].join(' ');
 
