@@ -28,6 +28,7 @@ interface AppCard {
   path: string;
   color: string;
   available: boolean;
+  badge?: string;
 }
 
 /* ----------------------------------------
@@ -113,7 +114,8 @@ const appCards: AppCard[] = [
     icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-[72px] h-[72px]" />,
     path: '/ai-platform',
     color: 'from-pink-500 to-rose-500',
-    available: false,
+    available: true,
+    badge: 'In Progress...',
   },
   {
     id: 'ai-agent',
@@ -122,7 +124,8 @@ const appCards: AppCard[] = [
     icon: <img src={AIAgentIcon} alt="AI Agent" className="w-[72px] h-[72px]" />,
     path: '/agent',
     color: 'from-emerald-500 to-teal-500',
-    available: false,
+    available: true,
+    badge: 'In Progress...',
   },
 ];
 
@@ -173,11 +176,11 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
         {/* Title */}
         <h4 className="text-label-lg text-[var(--color-text-default)] text-right">{card.title}</h4>
 
-        {/* Coming Soon Badge */}
-        {!isAvailable && (
+        {/* Badge */}
+        {card.badge && (
           <div className="absolute top-4 right-4">
             <span className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)] rounded-full">
-              Coming Soon{' '}
+              {card.badge}
             </span>
           </div>
         )}
