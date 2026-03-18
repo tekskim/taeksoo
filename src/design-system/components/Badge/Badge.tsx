@@ -68,7 +68,7 @@ const themeStyles = {
     yellow: 'bg-[var(--color-state-warning)] text-white',
     gray: 'bg-[var(--color-text-subtle)] text-white',
     white:
-      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--color-border-default)]',
+      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--badge-white-border)]',
   },
   subtle: {
     blue: 'bg-[var(--badge-subtle-blue-bg)] text-[var(--badge-subtle-blue-text)]',
@@ -77,7 +77,7 @@ const themeStyles = {
     yellow: 'bg-[var(--badge-subtle-yellow-bg)] text-[var(--badge-subtle-yellow-text)]',
     gray: 'bg-[var(--badge-subtle-gray-bg)] text-[var(--badge-subtle-gray-text)]',
     white:
-      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--color-border-default)]',
+      'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--badge-white-border)]',
   },
 } as const;
 

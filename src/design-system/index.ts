@@ -63,6 +63,7 @@ export * from './components/ErrorState';
 export * from './components/InfoBox';
 export * from './components/FileListCard';
 export * from './components/ExpandableChecklist';
+export * from './components/Card';
 
 // Layouts
 export * from './layouts';
