@@ -554,7 +554,7 @@ export function LoadBalancerDetailPage() {
               ]}
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>

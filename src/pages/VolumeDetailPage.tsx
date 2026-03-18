@@ -632,7 +632,7 @@ export function VolumeDetailPage() {
                   trigger="click"
                 >
                   <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
+                    More actions
                   </Button>
                 </ContextMenu>
               </>
@@ -667,7 +667,7 @@ export function VolumeDetailPage() {
                   trigger="click"
                 >
                   <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
+                    More actions
                   </Button>
                 </ContextMenu>
               </>

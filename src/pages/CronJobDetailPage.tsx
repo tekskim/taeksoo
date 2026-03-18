@@ -498,7 +498,7 @@ export function CronJobDetailPage() {
     console.log('Open in new tab:', tab);
   };
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'run-now',

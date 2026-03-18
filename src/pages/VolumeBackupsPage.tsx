@@ -29,13 +29,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
 import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -332,13 +326,16 @@ export function VolumeBackupsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <Link
-          to={`/compute/volume-backups/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {value}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute/volume-backups/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {value}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </div>
       ),
     },
     {
@@ -353,16 +350,14 @@ export function VolumeBackupsPage() {
       label: 'Source volume',
       flex: 1,
       minWidth: columnMinWidths.sourceVolume,
-      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/volumes/${row.sourceVolumeId}`}
-            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.sourceVolumeId}
@@ -375,7 +370,6 @@ export function VolumeBackupsPage() {
       label: 'Backup mode',
       flex: 1,
       minWidth: columnMinWidths.backupMode,
-      sortable: true,
     },
     {
       key: 'createdAt',
@@ -488,7 +482,7 @@ export function VolumeBackupsPage() {
           title="Volume backups"
           actions={
             <Button size="md" onClick={() => setIsCreateBackupDrawerOpen(true)}>
-              Create Backup
+              Create volume backup
             </Button>
           }
         />
