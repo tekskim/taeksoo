@@ -239,11 +239,11 @@
     --component-badge-padding-ymd: 0.25rem;
     --component-badge-padding-ylg: 0.25rem;
     --component-badge-font-size-sm: 0.6875rem;
-    --component-badge-font-size-md: 0.75rem;
-    --component-badge-font-size-lg: 0.875rem;
+    --component-badge-font-size-md: 0.8125rem;
+
     --component-badge-line-height-sm: 1rem;
-    --component-badge-line-height-md: 1rem;
-    --component-badge-line-height-lg: 1.25rem;
+    --component-badge-line-height-md: 1.125rem;
+
     --component-badge-radius: 0.375rem;
     --component-badge-gap: 0.25rem;
     --component-badge-dot-size: 0.375rem;
