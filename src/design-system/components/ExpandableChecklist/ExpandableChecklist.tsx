@@ -89,7 +89,7 @@ export const ExpandableChecklist = memo(function ExpandableChecklist({
       >
         <div className="flex flex-1 flex-col gap-0.5 px-3 py-2 min-h-[40px] justify-center">
           {/* Row 1: Chevron + Checkbox + Badge */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={handleToggleExpand}
@@ -102,22 +102,24 @@ export const ExpandableChecklist = memo(function ExpandableChecklist({
                 className={`transition-transform duration-[var(--duration-fast)] ${expanded ? 'rotate-90' : ''}`}
               />
             </button>
-            <Checkbox
-              label={label}
-              checked={allChecked}
-              indeterminate={someChecked}
-              onChange={handleHeaderCheck}
-            />
-            {badge && (
-              <Badge size="sm" theme={badge.theme ?? 'green'} type={badge.type ?? 'subtle'}>
-                {badge.text}
-              </Badge>
-            )}
+            <div className="flex items-center gap-1">
+              <Checkbox
+                label={label}
+                checked={allChecked}
+                indeterminate={someChecked}
+                onChange={handleHeaderCheck}
+              />
+              {badge && (
+                <Badge size="sm" theme={badge.theme ?? 'green'} type={badge.type ?? 'subtle'}>
+                  {badge.text}
+                </Badge>
+              )}
+            </div>
           </div>
-          {/* Row 2: Spacer(16px = icon 12 + gap 4) + Description */}
+          {/* Row 2: Spacer(18px = icon 12 + gap 6) + Description */}
           {description && (
             <div className="flex items-center">
-              <div className="shrink-0 w-4" />
+              <div className="shrink-0 w-[18px]" />
               <span className="text-body-sm text-[var(--color-text-muted)]">{description}</span>
             </div>
           )}
@@ -130,7 +132,7 @@ export const ExpandableChecklist = memo(function ExpandableChecklist({
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-1 border-b border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-8 py-2 last:border-b-0"
+              className="flex items-center gap-1 border-b border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-7 py-2 last:border-b-0"
             >
               <Checkbox
                 label={item.label}
