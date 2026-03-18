@@ -457,12 +457,9 @@ export function TableDemo() {
       <VStack gap={3}>
         <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> ·{' '}
-          <code>radius: 8px</code> · <code>font: 12px</code>
+          cell-padding: 12×10px · header-padding: 12×8px · radius: 8px · font: 12px
           <br />
-          <span className="text-[var(--color-text-muted)]">Features:</span>{' '}
-          <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> ·{' '}
-          <code>title tooltip on hover</code>
+          Features: overflow-x: auto · text-overflow: ellipsis · title tooltip on hover
         </div>
       </VStack>
 

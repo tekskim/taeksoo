@@ -436,3 +436,68 @@ export const ComplexExample: Story = {
     );
   },
 };
+
+// Hide Select All
+export const HideSelectAll: Story = {
+  render: function HideSelectAllExample() {
+    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+    return (
+      <Table
+        columns={basicColumns}
+        data={sampleUsers}
+        rowKey="id"
+        selectable
+        hideSelectAll
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      />
+    );
+  },
+};
+
+// Custom Row Height
+export const CustomRowHeight: Story = {
+  render: () => <Table columns={basicColumns} data={sampleUsers} rowKey="id" rowHeight="56px" />,
+};
+
+// Expanded Content
+export const ExpandedContent: Story = {
+  render: () => (
+    <Table
+      columns={basicColumns}
+      data={sampleUsers}
+      rowKey="id"
+      expandedContent={(row) => (
+        <div className="px-4 py-3 bg-[var(--color-surface-subtle)] text-body-md text-[var(--color-text-muted)]">
+          <div className="flex gap-6">
+            <span>Email: {row.email}</span>
+            <span>Role: {row.role}</span>
+            <span>Created: {row.createdAt}</span>
+          </div>
+        </div>
+      )}
+    />
+  ),
+};
+
+// Resize Mode onChange
+export const ResizeModeOnChange: Story = {
+  render: () => (
+    <Table
+      columns={basicColumns}
+      data={sampleUsers}
+      rowKey="id"
+      resizable
+      columnResizeMode="onChange"
+      onColumnResize={(key, width) => console.log(`${key}: ${width}px`)}
+    />
+  ),
+};
+
+// Min Column Width
+export const MinColumnWidth: Story = {
+  render: () => (
+    <Table columns={basicColumns} data={sampleUsers} rowKey="id" resizable minColumnWidth={100} />
+  ),
+};

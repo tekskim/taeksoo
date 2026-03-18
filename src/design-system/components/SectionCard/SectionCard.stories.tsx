@@ -175,6 +175,109 @@ export const WithDivider: Story = {
   ),
 };
 
+// Header with Description
+export const HeaderWithDescription: Story = {
+  render: () => (
+    <SectionCard>
+      <SectionCard.Header
+        title="Scheduling"
+        description="Configure pod scheduling rules and node affinity."
+      />
+      <SectionCard.Content>
+        <SectionCard.DataRow label="Node Selector" value="gpu=true" />
+        <SectionCard.DataRow label="Tolerations" value="NoSchedule" />
+      </SectionCard.Content>
+    </SectionCard>
+  ),
+};
+
+// Header with Status Icon
+export const HeaderWithStatusIcon: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <SectionCard>
+        <SectionCard.Header
+          title="Basic Information"
+          statusIcon={
+            <div className="size-4 rounded-full bg-[var(--color-state-success)] flex items-center justify-center shrink-0">
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+          }
+        />
+        <SectionCard.Content>
+          <SectionCard.DataRow label="Name" value="my-instance" />
+        </SectionCard.Content>
+      </SectionCard>
+      <SectionCard>
+        <SectionCard.Header
+          title="Configuration"
+          statusIcon={
+            <div className="size-4 shrink-0 flex items-center justify-center text-[var(--color-text-muted)]">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              >
+                <circle cx="12" cy="12" r="10" strokeDasharray="4 4" />
+              </svg>
+            </div>
+          }
+        />
+        <SectionCard.Content>
+          <SectionCard.DataRow label="Type" value="Not set" />
+        </SectionCard.Content>
+      </SectionCard>
+    </div>
+  ),
+};
+
+// Content without Dividers
+export const ContentWithoutDividers: Story = {
+  render: () => (
+    <SectionCard>
+      <SectionCard.Header title="Form Section" showDivider={false} />
+      <SectionCard.Content showDividers={false}>
+        <div className="py-6">
+          <span className="text-label-lg text-[var(--color-text-default)]">Instance name</span>
+        </div>
+        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+        <div className="py-6">
+          <span className="text-label-lg text-[var(--color-text-default)]">Availability zone</span>
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
+  ),
+};
+
+// Content with Custom Gap
+export const ContentWithCustomGap: Story = {
+  render: () => (
+    <SectionCard>
+      <SectionCard.Header title="Compact Layout" />
+      <SectionCard.Content gap={1}>
+        <SectionCard.DataRow label="CPU" value="4 vCPU" />
+        <SectionCard.DataRow label="Memory" value="8 GB" />
+        <SectionCard.DataRow label="Storage" value="100 GB" />
+      </SectionCard.Content>
+    </SectionCard>
+  ),
+};
+
 // Multiple Cards
 export const MultipleCards: Story = {
   render: () => (

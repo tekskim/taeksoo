@@ -223,6 +223,61 @@ export const WithCloseButton: Story = {
   ),
 };
 
+// Writing Status
+export const WritingStatus: Story = {
+  render: () => (
+    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
+      <FloatingCard
+        title="Create Instance"
+        portal={false}
+        sections={[
+          {
+            tabTitle: 'Basic Information',
+            items: [
+              { id: '1', title: 'Instance Name', status: 'success' },
+              { id: '2', title: 'Description', status: 'writing' },
+            ],
+          },
+          {
+            tabTitle: 'Configuration',
+            items: [
+              { id: '3', title: 'Instance Type', status: 'default' },
+              { id: '4', title: 'Storage', status: 'default' },
+            ],
+          },
+        ]}
+        onCancel={() => {}}
+        onAction={() => {}}
+      />
+    </div>
+  ),
+};
+
+// Disabled Action
+export const DisabledAction: Story = {
+  render: () => (
+    <div className="relative h-[500px] bg-[var(--color-surface-subtle)] p-[var(--primitive-spacing-4)]">
+      <FloatingCard
+        title="Create Instance"
+        portal={false}
+        sections={[
+          {
+            tabTitle: 'Configuration',
+            items: [
+              { id: '1', title: 'Name', status: 'success' },
+              { id: '2', title: 'Image', status: 'processing' },
+            ],
+          },
+        ]}
+        actionEnabled={false}
+        actionLabel="Create Instance"
+        onCancel={() => {}}
+        onAction={() => {}}
+      />
+    </div>
+  ),
+};
+
 // Multiple Sections
 export const MultipleSections: Story = {
   render: () => (

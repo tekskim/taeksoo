@@ -533,6 +533,14 @@ export const navGroups: NavGroup[] = [
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => g.items);
 
+export function isUpdatedToday(path: string): boolean {
+  const lastUpdated = pageLastUpdated[path];
+  if (!lastUpdated) return false;
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  return lastUpdated.startsWith(todayStr);
+}
+
 export const pageLastUpdated: Record<string, string> = {
   // Foundation
   '/design/foundation/tokens': '2026-02-25 14:00:00',
