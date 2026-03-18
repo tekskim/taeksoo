@@ -25,7 +25,7 @@ import type { TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconEdit, IconTrash, IconBell, IconDownload, IconExternalLink } from '@tabler/icons-react';
+import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -98,7 +98,7 @@ const mockServerCertificate: ServerCertificateDetail = {
   certificateType: 'server',
   type: 'Wildcard',
   domain: '.domain.com',
-  expiresAt: 'Sep 25, 2025',
+  expiresAt: 'Sep 25, 2025 23:59:59',
   createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   // Certificate Metadata
@@ -115,7 +115,7 @@ const mockCACertificate: CACertificateDetail = {
   name: 'root-ca',
   status: 'valid',
   certificateType: 'ca',
-  expiresAt: 'Sep 25, 2025',
+  expiresAt: 'Sep 25, 2025 23:59:59',
   createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   // Certificate Metadata
@@ -278,7 +278,6 @@ export default function CertificateDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -309,7 +308,6 @@ export default function CertificateDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.loadBalancer.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.loadBalancer.id}
@@ -383,9 +381,6 @@ export default function CertificateDetailPage() {
             ) : (
               // CA Certificate actions
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                  Edit
-                </Button>
                 <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
                   Download
                 </Button>
