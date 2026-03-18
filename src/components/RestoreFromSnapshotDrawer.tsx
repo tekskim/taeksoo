@@ -183,7 +183,7 @@ export function RestoreFromSnapshotDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Restore From Snapshot"
-      description="Restore this volume to a previous state using the selected snapshot. All existing data on the volume will be replaced with the snapshot data."
+      description="Create a new image using this volume as the source. The image will contain all data currently stored on the volume and can be used to launch new instances."
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
