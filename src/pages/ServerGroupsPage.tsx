@@ -37,7 +37,7 @@ interface ServerGroup {
   id: string;
   name: string;
   policy: PolicyType;
-  instances: string;
+  instances: { name: string; id: string }[];
 }
 
 /* ----------------------------------------
@@ -45,41 +45,98 @@ interface ServerGroup {
    ---------------------------------------- */
 
 const mockServerGroups: ServerGroup[] = [
-  { id: 'sg-001', name: 'server-1', policy: 'Anti-affinity', instances: 'tk-instance' },
+  {
+    id: 'sg-001',
+    name: 'server-1',
+    policy: 'Anti-affinity',
+    instances: [{ name: 'tk-instance', id: '294u92s2' }],
+  },
   {
     id: 'sg-002',
     name: 'web-servers',
     policy: 'Anti-affinity',
-    instances: 'web-01, web-02, web-03',
+    instances: [
+      { name: 'web-01', id: 'a3f8k2m1' },
+      { name: 'web-02', id: 'b7d4n9p3' },
+      { name: 'web-03', id: 'c1e6q5r8' },
+    ],
   },
-  { id: 'sg-003', name: 'db-cluster', policy: 'Affinity', instances: 'db-primary, db-replica' },
+  {
+    id: 'sg-003',
+    name: 'db-cluster',
+    policy: 'Affinity',
+    instances: [
+      { name: 'db-primary', id: 'd9g2t7v4' },
+      { name: 'db-replica', id: 'e5h8w3x6' },
+    ],
+  },
   {
     id: 'sg-004',
     name: 'cache-group',
     policy: 'Soft-anti-affinity',
-    instances: 'redis-01, redis-02',
+    instances: [
+      { name: 'redis-01', id: 'f2j4y1z9' },
+      { name: 'redis-02', id: 'g8k6a3b5' },
+    ],
   },
   {
     id: 'sg-005',
     name: 'app-servers',
     policy: 'Anti-affinity',
-    instances: 'app-01, app-02, app-03, app-04',
+    instances: [
+      { name: 'app-01', id: 'h4m9c7d2' },
+      { name: 'app-02', id: 'i1n5e8f3' },
+      { name: 'app-03', id: 'j6p2g4h7' },
+      { name: 'app-04', id: 'k3q8i9j1' },
+    ],
   },
-  { id: 'sg-006', name: 'monitoring', policy: 'Soft-affinity', instances: 'prometheus, grafana' },
+  {
+    id: 'sg-006',
+    name: 'monitoring',
+    policy: 'Soft-affinity',
+    instances: [
+      { name: 'prometheus', id: 'l7r4k2m5' },
+      { name: 'grafana', id: 'm9s1l6n8' },
+    ],
+  },
   {
     id: 'sg-007',
     name: 'k8s-workers',
     policy: 'Anti-affinity',
-    instances: 'worker-01, worker-02, worker-03',
+    instances: [
+      { name: 'worker-01', id: 'n5t3o7p4' },
+      { name: 'worker-02', id: 'o2u8q1r6' },
+      { name: 'worker-03', id: 'p8v4s3t9' },
+    ],
   },
   {
     id: 'sg-008',
     name: 'k8s-masters',
     policy: 'Anti-affinity',
-    instances: 'master-01, master-02, master-03',
+    instances: [
+      { name: 'master-01', id: 'q4w9u5v2' },
+      { name: 'master-02', id: 'r1x6w8y3' },
+      { name: 'master-03', id: 's7z2x4a1' },
+    ],
   },
-  { id: 'sg-009', name: 'storage-nodes', policy: 'Affinity', instances: 'storage-01, storage-02' },
-  { id: 'sg-010', name: 'load-balancers', policy: 'Anti-affinity', instances: 'lb-01, lb-02' },
+  {
+    id: 'sg-009',
+    name: 'storage-nodes',
+    policy: 'Affinity',
+    instances: [
+      { name: 'storage-01', id: 't3b8y6c5' },
+      { name: 'storage-02', id: 'u9d4z2e7' },
+    ],
+  },
+  {
+    id: 'sg-010',
+    name: 'load-balancers',
+    policy: 'Anti-affinity',
+    instances: [
+      { name: 'lb-01', id: 'v5f1a9g3' },
+      { name: 'lb-02', id: 'w2h7b4i8' },
+    ],
+  },
 ];
 
 /* ----------------------------------------
@@ -121,8 +178,8 @@ export function ServerGroupsPage() {
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'policy', label: 'Policy', visible: true },
     { id: 'instances', label: 'Instances', visible: true },
+    { id: 'policy', label: 'Policy', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -205,25 +262,45 @@ export function ServerGroupsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute/server-groups/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/compute/server-groups/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-muted)] truncate">ID:{row.id}</span>
+        </div>
       ),
+    },
+    {
+      key: 'instances',
+      label: 'Instances',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => {
+        const first = row.instances[0];
+        const extra = row.instances.length - 1;
+        if (!first) return <span className="text-[var(--color-text-muted)]">—</span>;
+        return (
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-body-md text-[var(--color-text-default)] truncate">
+              {first.name}
+              {extra > 0 && <span> (+{extra})</span>}
+            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)] truncate">
+              ID:{first.id}
+            </span>
+          </div>
+        );
+      },
     },
     {
       key: 'policy',
       label: 'Policy',
       flex: 1,
       sortable: true,
-    },
-    {
-      key: 'instances',
-      label: 'Instances',
-      flex: 1,
     },
     {
       key: 'actions',
@@ -313,7 +390,14 @@ export function ServerGroupsPage() {
     >
       <VStack gap={3}>
         {/* Page Header */}
-        <PageHeader title="Server group" />
+        <PageHeader
+          title="Server groups"
+          actions={
+            <Button variant="primary" size="md">
+              Create Server Group
+            </Button>
+          }
+        />
 
         {/* List Toolbar */}
         <ListToolbar
