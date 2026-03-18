@@ -31,7 +31,7 @@ export interface CardDetailsBoxProps {
 function DetailsBox({ children, className = '' }: CardDetailsBoxProps) {
   return (
     <div
-      className={`bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] flex flex-col gap-5 p-2 ${className}`}
+      className={`bg-[var(--card-details-bg)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] flex flex-col gap-5 p-2 ${className}`}
     >
       {children}
     </div>
