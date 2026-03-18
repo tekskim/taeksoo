@@ -28,13 +28,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromVolumeSnapshotDrawer } from '@/components/CreateVolumeFromVolumeSnapshotDrawer';
 import { EditVolumeSnapshotDrawer } from '@/components/EditVolumeSnapshotDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -307,13 +301,16 @@ export function VolumeSnapshotsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <Link
-          to={`/compute/volume-snapshots/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {value}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute/volume-snapshots/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {value}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </div>
       ),
     },
     {
@@ -333,11 +330,10 @@ export function VolumeSnapshotsPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/volumes/${row.sourceVolumeId}`}
-            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.sourceVolumeId}
@@ -364,6 +360,11 @@ export function VolumeSnapshotsPage() {
             id: 'create-volume',
             label: 'Create volume',
             onClick: () => handleCreateVolume(row),
+          },
+          {
+            id: 'manage-metadata',
+            label: 'Manage metadata',
+            onClick: () => console.log('Manage metadata:', row.id),
           },
           {
             id: 'edit',
