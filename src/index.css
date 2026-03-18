@@ -3034,6 +3034,17 @@ input[type='search']::-webkit-search-decoration {
   font-weight: var(--font-weight-medium);
 }
 
+/* ============== Table Cell Link ============== */
+.table-cell-link {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-action-primary);
+  text-decoration: none;
+}
+.table-cell-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ============== Skeleton Animations ============== */
 @keyframes shimmer {
   0% {
