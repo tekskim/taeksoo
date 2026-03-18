@@ -533,17 +533,11 @@ html.theme-transition *::after {
   --badge-font-size-sm: var(--font-size-11);
   --badge-line-height-sm: var(--line-height-16);
 
-  /* Size: MD - padding 8×4px, font 12px, lh 16px */
+  /* Size: MD - padding 8×2px, font 13px, lh 18px */
   --badge-padding-x-md: var(--spacing-2);
-  --badge-padding-y-md: var(--spacing-1);
-  --badge-font-size-md: var(--font-size-12);
-  --badge-line-height-md: var(--line-height-16);
-
-  /* Size: LG - padding 12×4px, font 14px, lh 20px */
-  --badge-padding-x-lg: var(--spacing-3);
-  --badge-padding-y-lg: var(--spacing-1);
-  --badge-font-size-lg: var(--font-size-14);
-  --badge-line-height-lg: var(--line-height-20);
+  --badge-padding-y-md: var(--spacing-0-5);
+  --badge-font-size-md: var(--font-size-13);
+  --badge-line-height-md: var(--line-height-18);
 
   /* Common */
   --badge-radius: var(--radius-sm);
@@ -560,7 +554,8 @@ html.theme-transition *::after {
   --badge-subtle-yellow-bg: var(--color-orange-100);
   --badge-subtle-yellow-text: var(--color-state-warning-text);
   --badge-subtle-gray-bg: var(--color-surface-muted);
-  --badge-subtle-gray-text: var(--color-text-muted);
+  --badge-subtle-gray-text: #475569;
+  --badge-white-border: var(--color-border-default);
 
   /* ----------------------------------------
      Component - Menu
@@ -585,6 +580,7 @@ html.theme-transition *::after {
   --card-padding-bottom: var(--spacing-3);
   --card-radius: var(--radius-card);
   --card-gap: var(--spacing-3);
+  --card-details-bg: var(--color-surface-muted);
 
   /* ----------------------------------------
      Component - Modal
@@ -1094,7 +1090,7 @@ html.theme-transition *::after {
   /* Text - Linear Style (높은 대비) */
   --color-text-default: #ebebeb; /* 거의 흰색 */
   --color-text-muted: #a0a0a0; /* 중간 회색 */
-  --color-text-subtle: #6b6b6b; /* 연한 회색 */
+  --color-text-subtle: #7a7a7a; /* 연한 회색 */
   --color-text-disabled: #4a4a4a; /* 비활성 텍스트 */
   --color-text-inverse: #0d0d0d; /* 역전 텍스트 */
 
@@ -1120,7 +1116,7 @@ html.theme-transition *::after {
 
   /* State - Info */
   --color-state-info: var(--color-blue-400);
-  --color-state-info-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% - 더 은은하게 */
+  --color-state-info-bg: rgba(59, 130, 246, 0.2); /* blue-500 20% */
   --color-state-info-text: var(--color-blue-300);
 
   /* State - Success (유지) */
@@ -1130,14 +1126,14 @@ html.theme-transition *::after {
 
   /* State - Warning (유지) */
   --color-state-warning: var(--color-orange-400);
-  --color-state-warning-bg: var(--color-orange-900);
+  --color-state-warning-bg: rgba(249, 115, 22, 0.2); /* orange-500 20% */
   --color-state-warning-text: var(--color-orange-200);
 
   /* State - Danger (유지) */
   --color-state-danger: var(--color-red-400);
   --color-state-danger-hover: var(--color-red-500);
   --color-state-danger-active: var(--color-red-600);
-  --color-state-danger-bg: rgba(239, 68, 68, 0.12); /* red-500 12% - matches inline message error */
+  --color-state-danger-bg: rgba(239, 68, 68, 0.08); /* red-500 8% */
   --color-state-danger-text: var(--color-red-200);
 
   /* Extended Text Colors - Dark Mode */
@@ -1166,7 +1162,7 @@ html.theme-transition *::after {
   --color-status-error-subtle: rgba(239, 68, 68, 0.15);
 
   /* Badge Subtle (Dark Mode) - dark bg with readable text */
-  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.15);
+  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.25);
   --badge-subtle-blue-text: #93c5fd; /* blue-300 */
   --badge-subtle-red-bg: rgba(239, 68, 68, 0.15);
   --badge-subtle-red-text: #fca5a5; /* red-300 */
@@ -1174,8 +1170,10 @@ html.theme-transition *::after {
   --badge-subtle-green-text: #86efac; /* green-300 */
   --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.15);
   --badge-subtle-yellow-text: #fdba74; /* orange-300 */
-  --badge-subtle-gray-bg: var(--color-surface-muted);
-  --badge-subtle-gray-text: var(--color-text-muted);
+  --badge-subtle-gray-bg: #333333;
+  --badge-subtle-gray-text: #b0b0b0;
+  --badge-white-border: #4a4a4a;
+  --card-details-bg: #333333;
 
   /* Input (Dark Mode) */
   --input-bg: var(--color-surface-default);
@@ -1209,6 +1207,9 @@ html.theme-transition *::after {
   /* Checkbox (Dark Mode) */
   --checkbox-bg: #1c1c1c; /* surface-default */
   --checkbox-border: var(--color-border-strong); /* SearchInput과 동일 */
+  --checkbox-label-color: var(--color-text-default);
+  --checkbox-label-disabled: var(--color-text-disabled);
+  --checkbox-description-color: var(--color-text-subtle);
   --checkbox-disabled-bg: #252525;
   --checkbox-disabled-border: #333333;
   --checkbox-disabled-checked-bg: #333333;

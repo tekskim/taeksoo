@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { ExpandableChecklist, type ChecklistItem, VStack } from '@/design-system';
+import { Label } from '../../design-system-sections/HelperComponents';
 
 const EXPANDABLE_CHECKLIST_GUIDELINES = `## Overview
 여러 개의 항목을 그룹 단위로 접고 펼칠 수 있으며, 각 항목의 선택 상태와 상태 레이블을 함께 표시하는 컴포넌트
@@ -89,6 +93,121 @@ const EXPANDABLE_CHECKLIST_GUIDELINES = `## Overview
 | Filter | Component | 필터 선택 UI |
 `;
 
+function ExpandedPreview() {
+  const [items, setItems] = useState<ChecklistItem[]>([
+    {
+      id: '1',
+      label: 'node-worker-01',
+      badge: { text: 'Running', theme: 'green', type: 'subtle' },
+    },
+    {
+      id: '2',
+      label: 'node-worker-02',
+      badge: { text: 'Running', theme: 'green', type: 'subtle' },
+    },
+    { id: '3', label: 'node-worker-03', badge: { text: 'Stopped', theme: 'red', type: 'subtle' } },
+    {
+      id: '4',
+      label: 'node-worker-04',
+      badge: { text: 'Running', theme: 'green', type: 'subtle' },
+    },
+    {
+      id: '5',
+      label: 'node-worker-05',
+      badge: { text: 'Pending', theme: 'yellow', type: 'subtle' },
+    },
+  ]);
+
+  return (
+    <div className="w-[280px]">
+      <ExpandableChecklist
+        label="Worker Nodes"
+        description="Select up to 5 nodes"
+        badge={{ text: '5', theme: 'blue', type: 'subtle' }}
+        items={items}
+        onChange={setItems}
+        defaultExpanded
+      />
+    </div>
+  );
+}
+
+function CollapsedPreview() {
+  const [items, setItems] = useState<ChecklistItem[]>([
+    { id: '1', label: 'GPU-A100-01', badge: { text: 'Active', theme: 'green', type: 'subtle' } },
+    { id: '2', label: 'GPU-A100-02', badge: { text: 'Active', theme: 'green', type: 'subtle' } },
+    { id: '3', label: 'GPU-H100-01', badge: { text: 'Draining', theme: 'yellow', type: 'subtle' } },
+  ]);
+
+  return (
+    <div className="w-[280px]">
+      <ExpandableChecklist
+        label="GPU Nodes"
+        description="Select nodes for monitoring"
+        badge={{ text: '3', theme: 'blue', type: 'subtle' }}
+        items={items}
+        onChange={setItems}
+      />
+    </div>
+  );
+}
+
+function WithoutBadgesPreview() {
+  const [items, setItems] = useState<ChecklistItem[]>([
+    { id: '1', label: 'Read access' },
+    { id: '2', label: 'Write access' },
+    { id: '3', label: 'Admin access' },
+  ]);
+
+  return (
+    <div className="w-[280px]">
+      <ExpandableChecklist
+        label="Permissions"
+        description="Select user permissions"
+        items={items}
+        onChange={setItems}
+        defaultExpanded
+      />
+    </div>
+  );
+}
+
+function PartiallyCheckedPreview() {
+  const [items, setItems] = useState<ChecklistItem[]>([
+    {
+      id: '1',
+      label: 'pod-api-server',
+      checked: true,
+      badge: { text: 'Running', theme: 'green', type: 'subtle' },
+    },
+    {
+      id: '2',
+      label: 'pod-scheduler',
+      checked: false,
+      badge: { text: 'Pending', theme: 'yellow', type: 'subtle' },
+    },
+    {
+      id: '3',
+      label: 'pod-controller',
+      checked: true,
+      badge: { text: 'Running', theme: 'green', type: 'subtle' },
+    },
+  ]);
+
+  return (
+    <div className="w-[280px]">
+      <ExpandableChecklist
+        label="System Pods"
+        description="Monitor selected pods"
+        badge={{ text: '2/3', theme: 'blue', type: 'subtle' }}
+        items={items}
+        onChange={setItems}
+        defaultExpanded
+      />
+    </div>
+  );
+}
+
 export function ExpandableChecklistPage() {
   return (
     <ComponentPageTemplate
@@ -100,6 +219,85 @@ export function ExpandableChecklistPage() {
         '선택 가능한 항목이 그룹(계층) 구조를 가지며, 각 항목의 상태(예: Completed, Running 등)를 함께 노출해야 할 때',
       ]}
       whenNotToUse={['항목 수가 적고 계층 구조가 없는 경우 → Checkbox 사용']}
+      preview={
+        <ComponentPreview
+          code={`<ExpandableChecklist
+  label="Worker Nodes"
+  description="Select up to 5 nodes"
+  badge={{ text: '5', theme: 'blue', type: 'subtle' }}
+  items={items}
+  onChange={setItems}
+  defaultExpanded
+/>`}
+        >
+          <ExpandedPreview />
+        </ComponentPreview>
+      }
+      examples={
+        <VStack gap={8}>
+          <VStack gap={3}>
+            <Label>Expanded (default)</Label>
+            <ComponentPreview
+              code={`<ExpandableChecklist
+  label="Worker Nodes"
+  description="Select up to 5 nodes"
+  badge={{ text: '5', theme: 'blue', type: 'subtle' }}
+  items={items}
+  onChange={setItems}
+  defaultExpanded
+/>`}
+            >
+              <ExpandedPreview />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Collapsed</Label>
+            <ComponentPreview
+              code={`<ExpandableChecklist
+  label="GPU Nodes"
+  description="Select nodes for monitoring"
+  badge={{ text: '3', theme: 'blue', type: 'subtle' }}
+  items={items}
+  onChange={setItems}
+/>`}
+            >
+              <CollapsedPreview />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Without Badges</Label>
+            <ComponentPreview
+              code={`<ExpandableChecklist
+  label="Permissions"
+  description="Select user permissions"
+  items={items}
+  onChange={setItems}
+  defaultExpanded
+/>`}
+            >
+              <WithoutBadgesPreview />
+            </ComponentPreview>
+          </VStack>
+
+          <VStack gap={3}>
+            <Label>Partially Checked (Indeterminate)</Label>
+            <ComponentPreview
+              code={`<ExpandableChecklist
+  label="System Pods"
+  description="Monitor selected pods"
+  badge={{ text: '2/3', theme: 'blue', type: 'subtle' }}
+  items={items}
+  onChange={setItems}
+  defaultExpanded
+/>`}
+            >
+              <PartiallyCheckedPreview />
+            </ComponentPreview>
+          </VStack>
+        </VStack>
+      }
       guidelines={
         <>
           <NotionRenderer markdown={EXPANDABLE_CHECKLIST_GUIDELINES} />

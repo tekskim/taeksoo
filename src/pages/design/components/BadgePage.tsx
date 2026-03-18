@@ -68,7 +68,7 @@ const badgeListProps: PropDef[] = [
   },
   {
     name: 'size',
-    type: "'sm' | 'md' | 'lg'",
+    type: "'sm' | 'md'",
     default: "'sm'",
     required: false,
     description: 'Badge size',
@@ -127,47 +127,8 @@ function BadgeGuidelines() {
               </Td>
               <Td>카드, 상세 페이지 등 일반 컨텍스트 (기본값)</Td>
             </tr>
-            <tr>
-              <Td>
-                <strong>Large</strong>
-              </Td>
-              <Td>강조가 필요한 단독 표시 영역</Td>
-            </tr>
           </tbody>
         </TableWrapper>
-
-        <SubSectionTitle>Type</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[120px]">Type</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Solid</strong> (default)
-              </Td>
-              <Td>배경색이 진한 형태. white/gray 테마에서 중립적인 레이블로 사용</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Subtle</strong>
-              </Td>
-              <Td>
-                연한 배경 + 텍스트 색상. 시맨틱 컬러(info, success, warning, danger)와 함께 사용 시
-                권장
-              </Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-        <p className="text-body-sm text-[var(--color-text-subtle)]">
-          <strong>Default가 solid인 이유:</strong> Badge의 가장 빈번한 사용처인 테이블 셀에서는
-          white/gray 테마의 solid 배지가 시각적으로 가장 균형 잡혀 있습니다. 시맨틱 컬러(info,
-          success 등)를 사용할 때는 subtle 타입이 더 적절하므로 명시적으로 type=&quot;subtle&quot;을
-          지정하세요.
-        </p>
 
         <SubSectionTitle>Semantic Color</SubSectionTitle>
         <TableWrapper>
@@ -306,37 +267,6 @@ function BadgeGuidelines() {
           </tbody>
         </TableWrapper>
 
-        <SubSectionTitle>Design Token</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[100px]">Size</Th>
-              <Th>Padding</Th>
-              <Th>Font Size</Th>
-              <Th>Line Height</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>sm</Td>
-              <Td>6×2px</Td>
-              <Td>11px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>md</Td>
-              <Td>8×4px</Td>
-              <Td>12px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>lg</Td>
-              <Td>12×4px</Td>
-              <Td>14px</Td>
-              <Td>20px</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
         <Prose>
           <p>radius: 4px · gap: 4px · dot-size: 6px</p>
         </Prose>
@@ -576,17 +506,31 @@ export function BadgePage() {
       ]}
       preview={
         <ComponentPreview
-          code={`<Badge size="sm">Default</Badge>
-<Badge size="sm" theme="blue" type="subtle">Label</Badge>
-<Badge size="sm" theme="green" type="subtle">Completed</Badge>`}
+          code={`<Badge size="sm" theme="white" type="subtle">White</Badge>
+<Badge size="sm" theme="gray" type="subtle">Gray</Badge>
+<Badge size="sm" theme="blue" type="subtle">Blue</Badge>
+<Badge size="sm" theme="green" type="subtle">Green</Badge>
+<Badge size="sm" theme="red" type="subtle">Red</Badge>
+<Badge size="sm" theme="yellow" type="subtle">Yellow</Badge>`}
         >
-          <div className="flex gap-2">
-            <Badge size="sm">Default</Badge>
+          <div className="flex gap-2 flex-wrap">
+            <Badge size="sm" theme="white" type="subtle">
+              White
+            </Badge>
+            <Badge size="sm" theme="gray" type="subtle">
+              Gray
+            </Badge>
             <Badge size="sm" theme="blue" type="subtle">
-              Label
+              Blue
             </Badge>
             <Badge size="sm" theme="green" type="subtle">
-              Completed
+              Green
+            </Badge>
+            <Badge size="sm" theme="red" type="subtle">
+              Red
+            </Badge>
+            <Badge size="sm" theme="yellow" type="subtle">
+              Yellow
             </Badge>
           </div>
         </ComponentPreview>
@@ -597,7 +541,7 @@ export function BadgePage() {
             <VStack gap={1}>
               <Label>Sizes</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Small(테이블 셀), Medium(기본), Large(강조).
+                Small(테이블 셀), Medium(기본).
               </span>
             </VStack>
             <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
@@ -607,51 +551,35 @@ export function BadgePage() {
               <Badge size="md" theme="white">
                 Medium
               </Badge>
-              <Badge size="lg" theme="white">
-                Large
-              </Badge>
             </div>
           </VStack>
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Types</Label>
+              <Label>Colors</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Solid(진한 배경)와 Subtle(연한 배경 + 텍스트 색상).
+                6가지 컬러 테마로 상태와 카테고리를 구분합니다.
               </span>
             </VStack>
-            <div className="flex gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Solid</span>
-                <div className="flex gap-2">
-                  <Badge size="sm" theme="white">
-                    White
-                  </Badge>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Subtle</span>
-                <div className="flex gap-2">
-                  <Badge size="sm" type="subtle" theme="white">
-                    White
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="blue">
-                    Blue
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="green">
-                    Green
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="red">
-                    Red
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="yellow">
-                    Yellow
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="gray">
-                    Gray
-                  </Badge>
-                </div>
-              </VStack>
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <Badge size="sm" type="subtle" theme="white">
+                White
+              </Badge>
+              <Badge size="sm" type="subtle" theme="gray">
+                Gray
+              </Badge>
+              <Badge size="sm" type="subtle" theme="blue">
+                Blue
+              </Badge>
+              <Badge size="sm" type="subtle" theme="green">
+                Green
+              </Badge>
+              <Badge size="sm" type="subtle" theme="red">
+                Red
+              </Badge>
+              <Badge size="sm" type="subtle" theme="yellow">
+                Yellow
+              </Badge>
             </div>
           </VStack>
 
@@ -714,15 +642,9 @@ export function BadgePage() {
             </tr>
             <tr>
               <Td>md</Td>
-              <Td>8×4px</Td>
-              <Td>12px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>lg</Td>
-              <Td>12×4px</Td>
-              <Td>14px</Td>
-              <Td>20px</Td>
+              <Td>8×2px</Td>
+              <Td>13px</Td>
+              <Td>18px</Td>
             </tr>
           </tbody>
         </TableWrapper>

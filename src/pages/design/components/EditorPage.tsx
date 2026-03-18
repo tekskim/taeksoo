@@ -1,6 +1,24 @@
+import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
-import { VStack } from '@/design-system';
+import { VStack, HStack, Button, Input, Select, Disclosure, SearchInput } from '@/design-system';
+import {
+  IconPlus,
+  IconChevronDown,
+  IconDatabase,
+  IconPlayerPlay,
+  IconGitBranch,
+  IconFolder,
+  IconDeviceFloppy,
+  IconDownload,
+  IconFile,
+  IconRefresh,
+  IconLayoutGrid,
+  IconTrash,
+  IconLayoutSidebar,
+  IconX,
+} from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +60,317 @@ function Prose({ children }: { children: React.ReactNode }) {
   return (
     <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
       {children}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Block Library - Category Item
+   ---------------------------------------- */
+function BlockCategory({
+  label,
+  icon,
+  count,
+  color,
+  children,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  count: number;
+  color: 'blue' | 'yellow';
+  children: React.ReactNode;
+}) {
+  const bgColor =
+    color === 'blue' ? 'bg-[var(--color-state-info-bg)]' : 'bg-[var(--color-state-warning-bg)]';
+  return (
+    <div className="flex flex-col w-full">
+      <div
+        className={`${bgColor} border border-[var(--color-border-default)] rounded-t-[var(--radius-md)] flex items-center px-2 py-2`}
+      >
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-1">
+            <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+            {icon}
+            <span className="text-body-md text-[var(--color-text-default)]">{label}</span>
+          </div>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{count}</span>
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function BlockItem({
+  icon,
+  label,
+  description,
+  isLast = false,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  description?: string;
+  isLast?: boolean;
+}) {
+  return (
+    <div
+      className={`border-x border-b border-[var(--color-border-default)] px-7 py-2 flex flex-col gap-0.5 ${isLast ? 'rounded-b-[var(--radius-md)]' : ''}`}
+    >
+      <div className="flex items-center gap-1">
+        {icon}
+        <span className="text-body-md text-[var(--color-text-default)]">{label}</span>
+      </div>
+      {description && (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{description}</span>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Tab Bar Item
+   ---------------------------------------- */
+function TabItem({ label, active = false }: { label: string; active?: boolean }) {
+  return (
+    <div
+      className={`flex items-center gap-3 min-w-[120px] max-w-[160px] px-3 py-2 ${
+        active
+          ? 'bg-[var(--color-surface-default)] border-x border-[var(--color-border-default)]'
+          : ''
+      }`}
+    >
+      <span className="text-body-md text-[var(--color-text-default)] flex-1 truncate">{label}</span>
+      <IconX size={12} className="text-[var(--color-text-subtle)] shrink-0" />
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Toolbar Separator
+   ---------------------------------------- */
+function ToolbarSep() {
+  return <div className="w-px h-3 bg-[var(--color-border-default)]" />;
+}
+
+/* ----------------------------------------
+   Editor Preview
+   ---------------------------------------- */
+function EditorPreview() {
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [rightOpen, setRightOpen] = useState(true);
+
+  return (
+    <div className="flex w-full h-[480px] border border-[var(--color-border-default)] rounded-lg overflow-hidden">
+      {/* Left: Block Library */}
+      {leftOpen && (
+        <div className="w-[220px] shrink-0 bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col gap-3 pt-3 px-3 pb-4 overflow-y-auto">
+          <VStack gap={2}>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Panel Title</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">Panel description</span>
+          </VStack>
+
+          <VStack gap={3}>
+            <SearchInput placeholder="Search" size="sm" className="w-full" />
+            <VStack gap={0}>
+              <BlockCategory
+                label="Category A"
+                icon={<IconDatabase size={16} className="text-[var(--color-text-default)]" />}
+                count={2}
+                color="blue"
+              >
+                <BlockItem
+                  icon={<IconGitBranch size={16} className="text-[var(--color-text-default)]" />}
+                  label="Item Title"
+                  description="Item description"
+                />
+                <BlockItem
+                  icon={<IconDatabase size={16} className="text-[var(--color-text-default)]" />}
+                  label="Item Title"
+                  description="Item description"
+                  isLast
+                />
+              </BlockCategory>
+            </VStack>
+            <VStack gap={0}>
+              <BlockCategory
+                label="Category B"
+                icon={<IconPlayerPlay size={16} className="text-[var(--color-text-default)]" />}
+                count={2}
+                color="yellow"
+              >
+                <BlockItem
+                  icon={<IconPlayerPlay size={16} className="text-[var(--color-text-default)]" />}
+                  label="Item Title"
+                  description="Item description"
+                />
+                <BlockItem
+                  icon={<IconPlayerPlay size={16} className="text-[var(--color-text-default)]" />}
+                  label="Item Title"
+                  description="Item description"
+                  isLast
+                />
+              </BlockCategory>
+            </VStack>
+          </VStack>
+        </div>
+      )}
+
+      {/* Center: Canvas */}
+      <div className="flex-1 flex flex-col min-w-0 bg-[var(--color-surface-subtle)]">
+        {/* Tab Bar */}
+        <div className="bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] flex items-center justify-between shrink-0">
+          <div className="flex items-center">
+            <div
+              className="p-2 cursor-pointer hover:bg-[var(--color-surface-hover)] rounded-[var(--radius-md)]"
+              onClick={() => setLeftOpen(!leftOpen)}
+            >
+              <IconLayoutSidebar
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-subtle)]"
+              />
+            </div>
+            <TabItem label="Tab Title" active />
+            <TabItem label="Tab Title" />
+            <div className="p-2 cursor-pointer hover:bg-[var(--color-surface-hover)] rounded-[var(--radius-md)]">
+              <IconPlus size={16} className="text-[var(--color-text-subtle)]" />
+            </div>
+          </div>
+          <div
+            className="p-2 cursor-pointer hover:bg-[var(--color-surface-hover)] rounded-[var(--radius-md)]"
+            onClick={() => setRightOpen(!rightOpen)}
+          >
+            <IconLayoutSidebar size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+          </div>
+        </div>
+
+        {/* Toolbar */}
+        <div className="bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)] flex items-center justify-between px-3 py-1 shrink-0">
+          <HStack gap={1} align="center">
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconFolder size={16} stroke={1.5} />}
+              aria-label="Open"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconDeviceFloppy size={16} stroke={1.5} />}
+              aria-label="Save"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconDownload size={16} stroke={1.5} />}
+              aria-label="Download"
+            />
+            <ToolbarSep />
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconFile size={16} stroke={1.5} />}
+              aria-label="File"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconRefresh size={16} stroke={1.5} />}
+              aria-label="Reset"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={<IconLayoutGrid size={16} stroke={1.5} />}
+              aria-label="Grid"
+            />
+          </HStack>
+          <HStack gap={3} align="center">
+            <span className="text-label-md text-[var(--color-text-default)]">0B · 0C</span>
+            <ToolbarSep />
+            <Button variant="primary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+              Run
+            </Button>
+          </HStack>
+        </div>
+
+        {/* Canvas Area (empty) */}
+        <div className="flex-1" />
+      </div>
+
+      {/* Right: Property Panel */}
+      {rightOpen && (
+        <div className="w-[260px] shrink-0 bg-[var(--color-surface-default)] border-l border-[var(--color-border-default)] flex flex-col gap-3 pt-3 px-4 pb-4 overflow-y-auto">
+          <VStack gap={2}>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Title</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">Description</span>
+          </VStack>
+
+          {/* Section 1 */}
+          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3">
+            <Disclosure defaultOpen>
+              <Disclosure.Trigger>Section Title</Disclosure.Trigger>
+              <Disclosure.Panel>
+                <VStack gap={6} className="pt-4">
+                  <VStack gap={2}>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Description
+                    </span>
+                    <Input placeholder="Placeholder" fullWidth size="sm" />
+                  </VStack>
+                  <VStack gap={2}>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Description
+                    </span>
+                    <Select
+                      options={[{ value: 'option', label: 'Option' }]}
+                      value="option"
+                      fullWidth
+                      size="sm"
+                    />
+                  </VStack>
+                </VStack>
+              </Disclosure.Panel>
+            </Disclosure>
+          </div>
+
+          {/* Section 2 */}
+          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3">
+            <Disclosure defaultOpen>
+              <Disclosure.Trigger>Section Title</Disclosure.Trigger>
+              <Disclosure.Panel>
+                <VStack gap={6} className="pt-4">
+                  <VStack gap={2}>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Description
+                    </span>
+                    <Input placeholder="Placeholder" fullWidth size="sm" />
+                  </VStack>
+                  <VStack gap={2}>
+                    <span className="text-label-md text-[var(--color-text-default)]">Label</span>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Description
+                    </span>
+                    <Select
+                      options={[{ value: 'option', label: 'Option' }]}
+                      value="option"
+                      fullWidth
+                      size="sm"
+                    />
+                  </VStack>
+                </VStack>
+              </Disclosure.Panel>
+            </Disclosure>
+          </div>
+
+          <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            Delete
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
@@ -336,6 +665,11 @@ export function EditorPage() {
       title="Editor"
       tags={['AI Component']}
       description="앱 내 리소스(파이프라인, 워크플로우 등)를 시각적으로 구성하고 편집하기 위한 캔버스 기반의 편집 환경이다. 블록을 배치·연결하고, 각 블록의 속성을 구성하는 빌더(Builder) 기능을 포함한다."
+      preview={
+        <ComponentPreview code="">
+          <EditorPreview />
+        </ComponentPreview>
+      }
       whenToUse={[
         '사용자가 리소스 간의 흐름이나 구조를 시각적으로 정의해야 할 때',
         '파이프라인, DAG, 워크플로우 등 블록 기반의 구성 작업이 필요할 때',
