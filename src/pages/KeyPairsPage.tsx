@@ -368,7 +368,14 @@ export function KeyPairsPage() {
     >
       <VStack gap={3}>
         {/* Page Header */}
-        <PageHeader title="Key pairs" />
+        <PageHeader
+          title="Key pairs"
+          actions={
+            <Button variant="primary" size="md">
+              Create Key Pair
+            </Button>
+          }
+        />
 
         {/* List Toolbar */}
         <ListToolbar
