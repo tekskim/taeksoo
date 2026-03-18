@@ -374,7 +374,6 @@ export default function SecurityGroupDetailPage() {
       label: 'Protocol',
       flex: 1,
       minWidth: columnMinWidths.protocol,
-      sortable: true,
     },
     {
       key: 'portRange',
@@ -468,11 +467,11 @@ export default function SecurityGroupDetailPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-1 mb-3">
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-              Edit
-            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
               Create rule
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
@@ -501,6 +500,12 @@ export default function SecurityGroupDetailPage() {
               <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
                 {securityGroup.description}
               </p>
+            </div>
+
+            {/* Origin */}
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <span className="text-label-sm text-[var(--color-text-subtle)]">Origin</span>
+              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">Container</p>
             </div>
 
             {/* Created at */}

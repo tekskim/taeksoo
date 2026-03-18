@@ -829,7 +829,7 @@ export function StatefulSetDetailPage() {
     { id: 'container-5', label: 'container-5', onClick: () => handleExecuteShell('container-5') },
   ];
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',

@@ -7,26 +7,27 @@ import {
   PageShell,
   Badge,
   ProgressBar,
+  Table,
   STATUS_THRESHOLDS,
+  type TableColumn,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import {
-  IconDatabase,
-  IconNetwork,
-  IconRouter,
-  IconPlug,
-  IconWorldWww,
-  IconShieldLock,
-  IconKey,
-  IconServer,
-  IconCopy,
-  IconCheck,
-  IconChevronRight,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconCopy, IconCheck, IconChevronRight, IconBell } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
+
+/* ----------------------------------------
+   Recent Activity Type
+   ---------------------------------------- */
+interface RecentActivity {
+  id: string;
+  target: string;
+  resourceType: string;
+  resourceId: string;
+  action: string;
+  requestedTime: string;
+}
 
 /* ----------------------------------------
    Percentage Badge Component
@@ -104,35 +105,34 @@ function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
 }
 
 /* ----------------------------------------
-   Infrastructure Quota Card Component
+   Infrastructure Quota Row Component
    ---------------------------------------- */
-interface InfraQuotaCardProps {
-  icon: React.ReactNode;
+interface InfraQuotaRowProps {
   label: string;
   used: number;
   total: number;
   href: string;
 }
 
-function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps) {
+function InfraQuotaRow({ label, used, total, href }: InfraQuotaRowProps) {
   const percentage = Math.round((used / total) * 100);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-lg p-3 justify-center">
+      <div className="flex items-center justify-between">
         <Link
           to={href}
-          className="flex items-center gap-1 text-label-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] min-w-0"
+          className="flex items-center gap-0.5 text-label-lg text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]"
         >
-          <span className="flex-shrink-0">{icon}</span>
-          <span className="truncate">{label}</span>
-          <IconChevronRight size={12} className="text-[var(--color-text-muted)] flex-shrink-0" />
+          <span>{label}</span>
+          <IconChevronRight size={12} className="text-[var(--color-text-muted)]" />
         </Link>
-        <PercentageBadge percentage={percentage} />
-      </div>
-      <div className="flex items-baseline mb-3">
-        <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
-        <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
+            {used}/{total}
+          </span>
+          <PercentageBadge percentage={percentage} />
+        </div>
       </div>
       <ProgressBar
         variant="quota"
@@ -146,30 +146,12 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
 }
 
 /* ----------------------------------------
-   Activity Item Component
+   Section Header Component
    ---------------------------------------- */
-interface ActivityItemProps {
-  name: string;
-  resourceType: string;
-  action: string;
-  time: string;
-  isLast?: boolean;
-}
-
-function ActivityItem({ name, resourceType, action, time, isLast = false }: ActivityItemProps) {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <div
-      className={`flex items-center justify-between py-2.5 ${!isLast ? 'border-b border-[var(--color-border-subtle)]' : ''}`}
-    >
-      <div>
-        <div className="text-label-md text-[var(--color-action-primary)]">{name}</div>
-        <div className="flex items-center gap-1.5 text-body-sm text-[var(--color-text-muted)]">
-          <span>{resourceType}</span>
-          <span className="text-[var(--color-border-default)]">|</span>
-          <span>{action}</span>
-        </div>
-      </div>
-      <span className="text-body-sm text-[var(--color-text-muted)]">{time}</span>
+    <div className="mb-4">
+      <span className="text-heading-h6">{title}</span>
     </div>
   );
 }
@@ -223,6 +205,84 @@ export function ComputeHomePage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const recentActivityColumns: TableColumn<RecentActivity>[] = [
+    {
+      key: 'target',
+      label: 'Target',
+      flex: 1,
+      minWidth: 140,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to="/compute/instances"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.resourceType}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-muted)] truncate">
+            ID : {row.resourceId}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      flex: 1,
+      minWidth: 100,
+    },
+    {
+      key: 'requestedTime',
+      label: 'Requested Time',
+      flex: 1,
+      minWidth: 160,
+    },
+  ];
+
+  const recentActivities: RecentActivity[] = [
+    {
+      id: '1',
+      target: '',
+      resourceType: 'Instance',
+      resourceId: '12345678',
+      action: 'Create',
+      requestedTime: 'Mar 18, 2026 09:42',
+    },
+    {
+      id: '2',
+      target: '',
+      resourceType: 'Instance',
+      resourceId: '23456789',
+      action: 'Create',
+      requestedTime: 'Mar 17, 2026 15:30',
+    },
+    {
+      id: '3',
+      target: '',
+      resourceType: 'Instance',
+      resourceId: '34567890',
+      action: 'Create',
+      requestedTime: 'Mar 16, 2026 11:15',
+    },
+    {
+      id: '4',
+      target: '',
+      resourceType: 'Instance',
+      resourceId: '45678901',
+      action: 'Create',
+      requestedTime: 'Mar 15, 2026 08:55',
+    },
+    {
+      id: '5',
+      target: '',
+      resourceType: 'Instance',
+      resourceId: '56789012',
+      action: 'Create',
+      requestedTime: 'Mar 14, 2026 17:20',
+    },
+  ];
 
   return (
     <PageShell
@@ -309,8 +369,8 @@ export function ComputeHomePage() {
           </div>
         </Card>
 
-        {/* Instance Summary */}
-        <Card title="Instance Summary" className="flex flex-col">
+        {/* VM Summary */}
+        <Card title="VM Summary" className="flex flex-col">
           <div className="mb-4">
             <div className="text-heading-h2 text-[var(--color-text-default)]">13</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
@@ -346,100 +406,43 @@ export function ComputeHomePage() {
         </Card>
       </div>
 
-      {/* Bottom Row - 2 Cards */}
-      <div className="grid grid-cols-[1fr_396px] gap-6">
-        {/* Infrastructure Quota */}
-        <Card title="Infrastructure Quota">
-          <div className="space-y-4 mt-8">
-            <div className="grid grid-cols-4 gap-4">
-              <InfraQuotaCard
-                icon={<IconDatabase size={16} stroke={1.5} />}
-                label="Volumes"
-                used={8}
-                total={10}
-                href="/compute/volumes"
-              />
-              <InfraQuotaCard
-                icon={<IconNetwork size={16} stroke={1.5} />}
-                label="Networks"
-                used={10}
-                total={100}
-                href="/compute/networks"
-              />
-              <InfraQuotaCard
-                icon={<IconRouter size={16} stroke={1.5} />}
-                label="Routers"
-                used={9}
-                total={10}
-                href="/compute/routers"
-              />
-              <InfraQuotaCard
-                icon={<IconPlug size={16} stroke={1.5} />}
-                label="Ports"
-                used={500}
-                total={500}
-                href="/compute/ports"
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              <InfraQuotaCard
-                icon={<IconWorldWww size={16} stroke={1.5} />}
-                label="Floating IPs"
-                used={2}
-                total={50}
-                href="/compute/floating-ips"
-              />
-              <InfraQuotaCard
-                icon={<IconShieldLock size={16} stroke={1.5} />}
-                label="Security groups"
-                used={85}
-                total={100}
-                href="/compute/security-groups"
-              />
-              <InfraQuotaCard
-                icon={<IconKey size={16} stroke={1.5} />}
-                label="Key pairs"
-                used={18}
-                total={100}
-                href="/compute/key-pairs"
-              />
-              <InfraQuotaCard
-                icon={<IconServer size={16} stroke={1.5} />}
-                label="Server groups"
-                used={1}
-                total={10}
-                href="/compute/server-groups"
-              />
-            </div>
-          </div>
-        </Card>
-
+      {/* Bottom Row - Recent Activities + Infrastructure Quota */}
+      <div className="grid grid-cols-2 gap-6">
         {/* Recent Activities */}
-        <Card title="Recent Activities">
-          <div>
-            <ActivityItem
-              name="web-server-01"
-              resourceType="Instance"
-              action="create"
-              time="2m ago"
+        <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+          <SectionHeader title="Recent Activities" />
+          <Table<RecentActivity>
+            columns={recentActivityColumns}
+            data={recentActivities}
+            rowKey="id"
+            emptyMessage="No recent activities"
+          />
+        </div>
+
+        {/* Infrastructure Quota */}
+        <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
+          <SectionHeader title="Infrastructure Quota" />
+          <div className="grid grid-cols-2 gap-2 flex-1" style={{ gridAutoRows: '1fr' }}>
+            <InfraQuotaRow label="Volumes" used={25} total={50} href="/compute/volumes" />
+            <InfraQuotaRow label="Networks" used={25} total={50} href="/compute/networks" />
+            <InfraQuotaRow label="Routers" used={25} total={50} href="/compute/routers" />
+            <InfraQuotaRow label="Ports" used={25} total={50} href="/compute/ports" />
+            <InfraQuotaRow label="Floating IPs" used={25} total={50} href="/compute/floating-ips" />
+            <InfraQuotaRow
+              label="Security groups"
+              used={25}
+              total={50}
+              href="/compute/security-groups"
             />
-            <ActivityItem name="data-vol-03" resourceType="Volume" action="attach" time="15m ago" />
-            <ActivityItem name="private-net" resourceType="Network" action="update" time="1h ago" />
-            <ActivityItem
-              name="api-server-02"
-              resourceType="Instance"
-              action="reboot"
-              time="3h ago"
+            <InfraQuotaRow
+              label="Server groups"
+              used={25}
+              total={50}
+              href="/compute/server-groups"
             />
-            <ActivityItem
-              name="sg-default"
-              resourceType="Security group"
-              action="modify"
-              time="5h ago"
-              isLast
-            />
+            <InfraQuotaRow label="Key pairs" used={25} total={50} href="/compute/key-pairs" />
           </div>
-        </Card>
+        </div>
       </div>
     </PageShell>
   );

@@ -383,7 +383,7 @@ export function FigmaCloudBuilderPage() {
                     Edit
                   </Button>
                   <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
+                    More actions
                   </Button>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
@@ -454,7 +454,7 @@ export function FigmaCloudBuilderPage() {
                       Edit
                     </Button>
                     <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
+                      More actions
                     </Button>
                   </DetailHeader.Actions>
                   <DetailHeader.InfoGrid>

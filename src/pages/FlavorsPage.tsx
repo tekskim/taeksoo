@@ -46,6 +46,7 @@ interface Flavor {
   ephemeralDisk: string;
   internalNetworkBandwidth: string;
   access: AccessType;
+  metadata: string;
   type: FlavorType;
   // GPU-specific fields
   gpuType?: string;
@@ -68,6 +69,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -79,6 +81,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -90,6 +93,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -101,6 +105,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -112,6 +117,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -123,6 +129,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -134,6 +141,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -145,6 +153,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
@@ -156,6 +165,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '125GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'GPU',
     gpuType: 'NVIDIA T4',
     numaNodes: '1',
@@ -171,6 +181,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '225GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'GPU',
     gpuType: 'NVIDIA T4',
     numaNodes: '2',
@@ -186,6 +197,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'GPU',
     gpuType: 'NVIDIA V100',
     numaNodes: '2',
@@ -201,6 +213,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'MPU',
     gpuType: 'AWS Inferentia',
     numaNodes: '1',
@@ -216,6 +229,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'MPU',
     gpuType: 'AWS Inferentia',
     numaNodes: '2',
@@ -231,6 +245,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '20GiB',
     internalNetworkBandwidth: '-',
     access: 'Private',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'Custom',
   },
   {
@@ -242,6 +257,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '50GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Private',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'Custom',
   },
 ];
@@ -253,7 +269,6 @@ const mockFlavors: Flavor[] = [
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
-  { key: 'category', label: 'Category', type: 'text' },
   {
     key: 'access',
     label: 'Access',
@@ -283,12 +298,11 @@ export function FlavorsPage() {
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
-    { id: 'category', label: 'Category', visible: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
-    { id: 'ephemeralDisk', label: 'Ephemeral disk', visible: true },
-    { id: 'internalNetworkBandwidth', label: 'Internal network Bandwidth', visible: true },
+    { id: 'ephemeralDisk', label: 'Root disk', visible: true },
     { id: 'access', label: 'Access', visible: true },
+    { id: 'metadata', label: 'Metadata', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -350,21 +364,19 @@ export function FlavorsPage() {
         minWidth: columnMinWidths.name,
         sortable: true,
         render: (_, row) => (
-          <Link
-            to={`/compute/flavors/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute/flavors/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-muted)] truncate">
+              ID:{row.id}
+            </span>
+          </div>
         ),
-      },
-      {
-        key: 'category',
-        label: 'Category',
-        flex: 1,
-        minWidth: '120px',
-        sortable: true,
       },
       {
         key: 'vcpu',
@@ -382,57 +394,35 @@ export function FlavorsPage() {
       },
       {
         key: 'ephemeralDisk',
-        label: 'Ephemeral disk',
+        label: 'Root disk',
         flex: 1,
         minWidth: columnMinWidths.ephemeralDisk,
         sortable: true,
       },
-      {
-        key: 'internalNetworkBandwidth',
-        label: 'Internal network Bandwidth',
-        flex: 1,
-        minWidth: '160px',
-        sortable: true,
-      },
-      // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
-      ...(activeTab === 'gpu' || activeTab === 'mpu'
-        ? ([
-            {
-              key: 'gpuType',
-              label: 'GPU Type',
-              flex: 1,
-              minWidth: columnMinWidths.gpuType,
-              sortable: true,
-            },
-            {
-              key: 'numaNodes',
-              label: 'NUMA Nodes',
-              flex: 1,
-              minWidth: columnMinWidths.numaNodes,
-              sortable: true,
-            },
-            {
-              key: 'cpuPolicy',
-              label: 'CPU Policy',
-              flex: 1,
-              minWidth: columnMinWidths.cpuPolicy,
-              sortable: true,
-            },
-            {
-              key: 'cpuThreadPolicy',
-              label: 'CPU Thread Policy',
-              flex: 1,
-              minWidth: columnMinWidths.cpuThreadPolicy,
-              sortable: true,
-            },
-          ] as TableColumn<Flavor>[])
-        : []),
       {
         key: 'access',
         label: 'Public',
         flex: 1,
         minWidth: columnMinWidths.access,
         render: (_, row) => <span>{row.access === 'Public' ? 'On' : 'Off'}</span>,
+      },
+      {
+        key: 'metadata',
+        label: 'Metadata',
+        flex: 1,
+        minWidth: 180,
+        render: (value: string) => {
+          if (!value || value === '-') return <span>-</span>;
+          const pairs = value.split(',');
+          const first = pairs[0];
+          const extra = pairs.length - 1;
+          return (
+            <span className="truncate">
+              {first}
+              {extra > 0 && <span className="text-[var(--color-text-muted)]"> (+{extra})</span>}
+            </span>
+          );
+        },
       },
       {
         key: 'actions',
@@ -472,36 +462,13 @@ export function FlavorsPage() {
     [activeTab]
   );
 
-  // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    // GPU-specific column keys that should always show when GPU tab is active
-    const gpuColumnKeys = ['gpuType', 'numaNodes', 'cpuPolicy', 'cpuThreadPolicy'];
-
     const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
-
     const columnMap = new Map(columns.map((col) => [col.key, col]));
-
-    // Get base columns from config
-    const baseColumns = visibleColumnIds
+    return visibleColumnIds
       .map((id) => columnMap.get(id))
       .filter((col): col is TableColumn<Flavor> => col !== undefined);
-
-    // If GPU or MPU tab is active, insert GPU columns before the 'access' column
-    if (activeTab === 'gpu' || activeTab === 'mpu') {
-      const gpuColumns = gpuColumnKeys
-        .map((key) => columnMap.get(key))
-        .filter((col): col is TableColumn<Flavor> => col !== undefined);
-
-      const accessIndex = baseColumns.findIndex((col) => col.key === 'access');
-      if (accessIndex !== -1) {
-        baseColumns.splice(accessIndex, 0, ...gpuColumns);
-      } else {
-        baseColumns.push(...gpuColumns);
-      }
-    }
-
-    return baseColumns;
-  }, [columns, columnConfig, activeTab]);
+  }, [columns, columnConfig]);
 
   return (
     <PageShell
@@ -549,7 +516,7 @@ export function FlavorsPage() {
             <Tab value="cpu">CPU</Tab>
             <Tab value="gpu">GPU</Tab>
             <Tab value="mpu">MPU</Tab>
-            <Tab value="custom">Custom</Tab>
+            <Tab value="custom">Bare metal</Tab>
           </TabList>
         </Tabs>
 

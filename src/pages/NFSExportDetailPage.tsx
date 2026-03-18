@@ -14,6 +14,8 @@ import {
   DetailHeader,
   SectionCard,
   Table,
+  SearchInput,
+  Pagination,
   PageShell,
   columnMinWidths,
   type TableColumn,
@@ -238,50 +240,62 @@ export function NFSExportDetailPage() {
           </DetailHeader.Actions>
         </DetailHeader>
 
-        <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-            <TabList>
-              <Tab value="details">Details</Tab>
-              <Tab value="clients">Clients ({mockClients.length})</Tab>
-            </TabList>
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="details">Details</Tab>
+            <Tab value="clients">Clients</Tab>
+          </TabList>
 
-            <TabPanel value="details" className="pt-4">
-              <SectionCard>
-                <SectionCard.Content>
-                  <SectionCard.DataRow label="Access Type" value={exportData.accessType} />
-                  <SectionCard.DataRow
-                    label="CephFS Filesystem"
-                    value={exportData.cephfsFilesystem}
-                  />
-                  <SectionCard.DataRow label="CephFS User" value={exportData.cephfsUser} />
-                  <SectionCard.DataRow label="Cluster" value={exportData.cluster} />
-                  <SectionCard.DataRow label="NFS Protocol" value={exportData.nfsProtocol} />
-                  <SectionCard.DataRow label="Path" value={exportData.path} />
-                  <SectionCard.DataRow label="Pseudo" value={exportData.pseudo} />
-                  <SectionCard.DataRow
-                    label="Security Label"
-                    value={exportData.securityLabel || '-'}
-                  />
-                  <SectionCard.DataRow label="Squash" value={exportData.squash} />
-                  <SectionCard.DataRow label="Storage Backend" value={exportData.storageBackend} />
-                  <SectionCard.DataRow label="Transport" value={exportData.transport} />
-                </SectionCard.Content>
-              </SectionCard>
-            </TabPanel>
+          <TabPanel value="details" className="pt-4">
+            <SectionCard>
+              <SectionCard.Header title="Basic information" />
+              <SectionCard.Content>
+                <SectionCard.DataRow label="Access Type" value={exportData.accessType} />
+                <SectionCard.DataRow
+                  label="CephFS Filesystem"
+                  value={exportData.cephfsFilesystem}
+                />
+                <SectionCard.DataRow label="CephFS User" value={exportData.cephfsUser} />
+                <SectionCard.DataRow label="Cluster" value={exportData.cluster} />
+                <SectionCard.DataRow label="NFS Protocol" value={exportData.nfsProtocol} />
+                <SectionCard.DataRow label="Path" value={exportData.path} />
+                <SectionCard.DataRow label="Pseudo" value={exportData.pseudo} />
+                <SectionCard.DataRow
+                  label="Security Label"
+                  value={exportData.securityLabel || '-'}
+                />
+                <SectionCard.DataRow label="Squash" value={exportData.squash} />
+                <SectionCard.DataRow label="Storage Backend" value={exportData.storageBackend} />
+                <SectionCard.DataRow label="Transport" value={exportData.transport} />
+              </SectionCard.Content>
+            </SectionCard>
+          </TabPanel>
 
-            <TabPanel value="clients" className="pt-4">
+          <TabPanel value="clients" className="pt-0">
+            <VStack gap={4} className="pt-4">
+              <div className="flex items-center h-7">
+                <h3 className="text-heading-h5 text-[var(--color-text-default)]">Clients</h3>
+              </div>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput placeholder="Search clients by attributes" size="sm" fullWidth />
+              </div>
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(mockClients.length / 10) || 1}
+                onPageChange={() => {}}
+                totalItems={mockClients.length}
+                itemsPerPage={10}
+                showItemCount
+              />
               <Table<NFSClient>
                 columns={clientColumns}
                 data={mockClients}
                 rowKey="id"
-                emptyMessage="No data to display"
+                emptyMessage="No clients found"
               />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockClients.length} total
-              </div>
-            </TabPanel>
-          </Tabs>
-        </div>
+            </VStack>
+          </TabPanel>
+        </Tabs>
       </VStack>
     </PageShell>
   );

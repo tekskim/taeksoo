@@ -373,7 +373,7 @@ export function ContainerHPADetailPage() {
     }
   };
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',

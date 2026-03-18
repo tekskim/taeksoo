@@ -2265,7 +2265,7 @@ export function FigmaComponentsPage() {
               </Button>
               <ContextMenu items={contextMenuItems} trigger="click">
                 <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
+                  More actions
                 </Button>
               </ContextMenu>
             </DetailHeader.Actions>
@@ -2300,7 +2300,7 @@ export function FigmaComponentsPage() {
             'Status는 항상 첫 번째 InfoBox에 배치. StatusIndicator 인스턴스 사용',
             'ID InfoBox: copyable 속성으로 우측에 복사 아이콘 표시. 두 번째 카드에 배치 권장',
             '날짜(Created at 등): 마지막 카드에 배치 권장',
-            'Actions: Button 여러 개 + ContextMenu(More Actions). 수평 Auto Layout, gap 4px',
+            'Actions: Button 여러 개 + ContextMenu(More actions). 수평 Auto Layout, gap 4px',
             'InfoGrid 내부는 InfoBox 컴포넌트 인스턴스 사용 (DetailHeader.InfoCard = InfoBox + flex-1)',
             'CardCount Variant로 InfoGrid의 열 수를 제어하거나, Auto Layout wrap 활용',
           ]}
@@ -2322,7 +2322,7 @@ export function FigmaComponentsPage() {
                 Start
               </Button>
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </div>
           </FigmaFrame>

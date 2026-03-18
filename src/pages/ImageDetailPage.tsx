@@ -15,7 +15,10 @@ import {
   DetailHeader,
   SectionCard,
   Table,
+  Badge,
   Chip,
+  SearchInput,
+  Pagination,
   MonitoringToolbar,
   PageShell,
   columnMinWidths,
@@ -749,6 +752,7 @@ export function ImageDetailPage() {
             <DetailHeader.InfoCard label="Size" value={imageData.size} />
             <DetailHeader.InfoCard label="Objects" value={imageData.objects} />
             <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
+            <DetailHeader.InfoCard label="Total provisioned" value={imageData.totalProvisioned} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -765,6 +769,7 @@ export function ImageDetailPage() {
             {/* Details Tab Panel */}
             <TabPanel value="details" className="pt-4">
               <SectionCard>
+                <SectionCard.Header title="Basic information" />
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Name" value={imageData.name} />
                   <SectionCard.DataRow label="Pool" value={imageData.pool} />
@@ -774,14 +779,11 @@ export function ImageDetailPage() {
                   <SectionCard.DataRow label="Objects" value={imageData.objects} />
                   <SectionCard.DataRow label="Object size" value={imageData.objectSize} />
                   <SectionCard.DataRow label="Features">
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1">
                       {imageData.features.map((feature) => (
-                        <span
-                          key={feature}
-                          className="inline-flex items-center px-2.5 py-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] text-body-sm text-[var(--color-text-default)]"
-                        >
+                        <Badge key={feature} theme="white" size="sm">
                           {feature}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </SectionCard.DataRow>
@@ -807,29 +809,67 @@ export function ImageDetailPage() {
             </TabPanel>
 
             {/* Snapshots Tab Panel */}
-            <TabPanel value="snapshots" className="pt-4">
-              <Table<ImageSnapshot>
-                columns={snapshotColumns}
-                data={mockSnapshots}
-                rowKey="id"
-                emptyMessage="No data to display"
-              />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockSnapshots.length} total
-              </div>
+            <TabPanel value="snapshots" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Snapshots</h3>
+                </div>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput placeholder="Search snapshots by attributes" size="sm" fullWidth />
+                </div>
+
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(mockSnapshots.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={mockSnapshots.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                <Table<ImageSnapshot>
+                  columns={snapshotColumns}
+                  data={mockSnapshots}
+                  rowKey="id"
+                  emptyMessage="No snapshots found"
+                />
+              </VStack>
             </TabPanel>
 
             {/* Configuration Tab Panel */}
-            <TabPanel value="configuration" className="pt-4">
-              <Table<ImageConfig>
-                columns={configColumns}
-                data={mockConfigs}
-                rowKey="id"
-                emptyMessage="No data to display"
-              />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockConfigs.length} total
-              </div>
+            <TabPanel value="configuration" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Configuration
+                  </h3>
+                </div>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search configuration by attributes"
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
+
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(mockConfigs.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={mockConfigs.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                <Table<ImageConfig>
+                  columns={configColumns}
+                  data={mockConfigs}
+                  rowKey="id"
+                  emptyMessage="No configuration found"
+                />
+              </VStack>
             </TabPanel>
 
             {/* Performance Tab Panel */}

@@ -34,7 +34,6 @@ import {
   IconLock,
   IconLockOpen,
   IconTerminal2,
-  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -85,7 +84,7 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
   'flv-001': {
     id: 'flv-001',
     name: 'c5.large',
-    category: 'Compute Optimized',
+    category: 'CPU',
     vcpu: 2,
     ram: '16GiB',
     visibility: 'Public',
@@ -490,19 +489,13 @@ export function FlavorDetailPage() {
       flex: 1,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1">
-            <Link
-              to={`/compute/instances/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <IconExternalLink
-              size={12}
-              className="flex-shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
+          <Link
+            to={`/compute/instances/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
@@ -516,14 +509,14 @@ export function FlavorDetailPage() {
       align: 'center',
       render: (_, row) =>
         row.locked ? (
-          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
         ) : (
           <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
         ),
     },
     {
       key: 'image',
-      label: 'Image',
+      label: 'OS',
       flex: 1,
       minWidth: columnMinWidths.image,
       sortable: true,
@@ -541,7 +534,6 @@ export function FlavorDetailPage() {
       label: 'AZ',
       flex: 1,
       minWidth: columnMinWidths.az,
-      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -626,16 +618,19 @@ export function FlavorDetailPage() {
               Create instance
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-              Create volume
+              Create instance template
             </Button>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Category" value={flavor.category} />
             <DetailHeader.InfoCard label="ID" value={flavor.id} copyable />
+            <DetailHeader.InfoCard label="Category" value={flavor.category} />
             <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
             <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
-            <DetailHeader.InfoCard label="Visibility" value={flavor.visibility} />
-            <DetailHeader.InfoCard label="Created at" value={flavor.createdAt} />
+            <DetailHeader.InfoCard label="Root disk" value={flavor.ephemeralDisk} />
+            <DetailHeader.InfoCard
+              label="Public"
+              value={flavor.visibility === 'Public' ? 'On' : 'Off'}
+            />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -656,7 +651,6 @@ export function FlavorDetailPage() {
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Flavor name" value={flavor.name} />
-                    <SectionCard.DataRow label="Architecture" value={flavor.architecture} />
                     <SectionCard.DataRow label="Category" value={flavor.category} />
                   </SectionCard.Content>
                 </SectionCard>
@@ -667,23 +661,9 @@ export function FlavorDetailPage() {
                   <SectionCard.Content>
                     <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
                     <SectionCard.DataRow label="RAM" value={flavor.ram} />
+                    <SectionCard.DataRow label="Root disk" value={flavor.ephemeralDisk} />
                     <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
-                    <SectionCard.DataRow label="NUMA Nodes" value={flavor.numaNodes} />
-                  </SectionCard.Content>
-                </SectionCard>
-
-                {/* Advanced */}
-                <SectionCard>
-                  <SectionCard.Header title="Advanced" />
-                  <SectionCard.Content>
-                    <SectionCard.DataRow label="CPU Policy" value={flavor.cpuPolicy} />
-                    <SectionCard.DataRow label="CPU Thread Policy" value={flavor.cpuThreadPolicy} />
-                    <SectionCard.DataRow label="Memory page" value={flavor.memoryPage} />
-                    <SectionCard.DataRow
-                      label="Internal network Bandwidth"
-                      value={flavor.internalNetworkBandwidth}
-                    />
-                    <SectionCard.DataRow label="Storage IOPS" value={flavor.storageIOPS} />
+                    <SectionCard.DataRow label="Swap disk" value={flavor.numaNodes} />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -691,7 +671,18 @@ export function FlavorDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Security" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Visibility" value={flavor.visibility} />
+                    <SectionCard.DataRow
+                      label="Public"
+                      value={flavor.visibility === 'Public' ? 'On' : 'Off'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Metadata */}
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="{metadata}" value="{value}" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

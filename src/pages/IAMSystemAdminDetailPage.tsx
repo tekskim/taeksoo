@@ -297,7 +297,7 @@ export default function IAMSystemAdminDetailPage() {
     { id: 'terminate', label: 'Terminate session', danger: true },
   ];
 
-  // More Actions menu items
+  // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
     { id: 'reset-password', label: 'Reset password' },
     { id: 'reset-mfa', label: 'Reset MFA' },
@@ -445,7 +445,7 @@ export default function IAMSystemAdminDetailPage() {
               </Button>
               <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
                 <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
+                  More actions
                 </Button>
               </ContextMenu>
             </HStack>

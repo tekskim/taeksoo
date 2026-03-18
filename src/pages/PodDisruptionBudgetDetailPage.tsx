@@ -388,7 +388,7 @@ export function PodDisruptionBudgetDetailPage() {
     },
   ];
 
-  // Create menu items for More Actions dropdown
+  // Create menu items for More actions dropdown
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',

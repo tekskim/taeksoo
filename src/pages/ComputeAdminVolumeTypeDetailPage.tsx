@@ -177,7 +177,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [specToDelete, setSpecToDelete] = useState<ExtraSpec | null>(null);
 
-  // More Actions dropdown state
+  // More actions dropdown state
   const [moreActionsOpen, setMoreActionsOpen] = useState(false);
 
   // Get volume type data based on the ID
@@ -324,7 +324,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
   const hasSelection = selectedSpecs.length > 0;
 
-  // More Actions menu items
+  // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'manage-access',
@@ -396,7 +396,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
             </Button>
             <ContextMenu items={moreActionsItems} trigger="click" align="right">
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
