@@ -580,6 +580,7 @@ html.theme-transition *::after {
   --card-padding-bottom: var(--spacing-3);
   --card-radius: var(--radius-card);
   --card-gap: var(--spacing-3);
+  --card-details-bg: var(--color-surface-muted);
 
   /* ----------------------------------------
      Component - Modal
@@ -1172,6 +1173,7 @@ html.theme-transition *::after {
   --badge-subtle-gray-bg: #333333;
   --badge-subtle-gray-text: #b0b0b0;
   --badge-white-border: #4a4a4a;
+  --card-details-bg: #333333;
 
   /* Input (Dark Mode) */
   --input-bg: var(--color-surface-default);
