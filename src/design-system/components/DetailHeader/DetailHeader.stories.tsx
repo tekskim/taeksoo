@@ -187,6 +187,29 @@ export const ServiceDetail: Story = {
   ),
 };
 
+// With InfoCard Tooltip
+export const WithInfoCardTooltip: Story = {
+  render: () => (
+    <DetailHeader>
+      <DetailHeader.Title>compute-node-01</DetailHeader.Title>
+      <DetailHeader.InfoGrid>
+        <DetailHeader.InfoCard label="Status" status="active" value="" />
+        <DetailHeader.InfoCard label="ID" value="n-a1b2c3d4" copyable />
+        <DetailHeader.InfoCard
+          label="IOPS"
+          value="3000"
+          tooltip="Input/Output Operations Per Second"
+        />
+        <DetailHeader.InfoCard
+          label="Throughput"
+          value="125 MB/s"
+          tooltip="Maximum sustained data transfer rate"
+        />
+      </DetailHeader.InfoGrid>
+    </DetailHeader>
+  ),
+};
+
 // Minimal
 export const Minimal: Story = {
   render: () => (

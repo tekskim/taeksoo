@@ -1132,7 +1132,7 @@ Step 3 Next 클릭
       <VStack gap={3}>
         <Label>Section States (WizardSectionState)</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>'pre' | 'active' | 'done' | 'skipped' | 'writing'</code>
+          'pre' | 'active' | 'done' | 'skipped' | 'writing'
         </div>
       </VStack>
 
@@ -1817,8 +1817,7 @@ function NotificationCenterSection() {
         <VStack gap={3}>
           <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code>{' '}
-            · <code>shadow: lg</code>
+            width: 360px · padding: 16px · border-radius: 8px · shadow: lg
           </div>
         </VStack>
 
@@ -2217,8 +2216,7 @@ function DatePickerSection() {
         <VStack gap={3}>
           <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code> ·{' '}
-            <code>cell: 32×32px</code>
+            padding: 12px · gap: 12px · radius: 8px · cell: 32×32px
           </div>
         </VStack>
 
@@ -2508,8 +2506,7 @@ function TabBarDemo() {
       <VStack gap={3}>
         <Label>Design tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> ·{' '}
-          <code>font: 12px</code>
+          height: 36px · max-width: 160px · padding-x: 12px · font: 12px
         </div>
       </VStack>
 
@@ -3014,12 +3011,9 @@ function TableDemo() {
       <VStack gap={3}>
         <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> ·{' '}
-          <code>radius: 8px</code> · <code>font: 12px</code>
+          cell-padding: 12×10px · header-padding: 12×8px · radius: 8px · font: 12px
           <br />
-          <span className="text-[var(--color-text-muted)]">Features:</span>{' '}
-          <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> ·{' '}
-          <code>title tooltip on hover</code>
+          Features: overflow-x: auto · text-overflow: ellipsis · title tooltip on hover
         </div>
       </VStack>
 
@@ -6444,8 +6438,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       </table>
                     </div>
                     <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1">
-                      <code>radius: 6px (md)</code> · <code>border: slate-300 (secondary)</code> ·{' '}
-                      <code>disabled-bg: slate-200 (primary)</code>
+                      radius: 6px (md) · border: slate-300 (secondary) · disabled-bg: slate-200
+                      (primary)
                     </div>
                   </VStack>
 
@@ -7026,9 +7020,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>height: 28/32px</code> · <code>padding: 10×8px</code> ·{' '}
-                      <code>radius: 6px</code> · <code>font: 11-12px</code> ·{' '}
-                      <code>border: 1px → 2px focus</code>
+                      height: 28/32px · padding: 10×8px · radius: 6px · font: 11-12px · border: 1px
+                      → 2px focus
                     </div>
                   </VStack>
 
@@ -8141,9 +8134,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> ·{' '}
-                      <code>radius: 6px</code> · <code>font: 12px</code> ·{' '}
-                      <code>chip-gap: 4px</code>
+                      height: 32px (sm) / 36px (md) · padding: 8×12px · radius: 6px · font: 12px ·
+                      chip-gap: 4px
                     </div>
                   </VStack>
 
@@ -8511,9 +8503,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>padding: 10×8px</code> · <code>radius: 6px</code> ·{' '}
-                      <code>font: 12px</code> · <code>item: 10×6px, 11px</code> ·{' '}
-                      <code>border: 1px → 2px focus</code>
+                      padding: 10×8px · radius: 6px · font: 12px · item: 10×6px, 11px · border: 1px
+                      → 2px focus
                     </div>
                   </VStack>
 
@@ -9113,7 +9104,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                             </table>
                           </div>
                           <div className="text-body-xs text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                            <code>--slider-track-width: 240px</code>
+                            --slider-track-width: 240px
                           </div>
                         </VStack>
                       </VStack>
@@ -9124,8 +9115,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>track: 6px height</code> · <code>thumb: 16px, 3px border</code> ·{' '}
-                      <code>fill: primary</code>
+                      track: 6px height · thumb: 16px, 3px border · fill: primary
                     </div>
                   </VStack>
 
@@ -9210,8 +9200,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>padding: 8×4px</code> · <code>gap: 6px</code> · <code>radius: 6px</code>{' '}
-                      · <code>font: 11px</code>
+                      padding: 8×4px · gap: 6px · radius: 6px · font: 11px
                     </div>
                   </VStack>
 
@@ -9290,8 +9279,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>min-height: 42px</code> · <code>padding: 8×12px</code> ·{' '}
-                      <code>radius: table-row-radius</code> · <code>gap: 16px</code>
+                      min-height: 42px · padding: 8×12px · radius: table-row-radius · gap: 16px
                     </div>
                   </VStack>
 
@@ -9399,8 +9387,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>item-size: 24px</code> · <code>gap: 8px</code> ·{' '}
-                      <code>radius: 4px</code> · <code>font: 12px</code>
+                      item-size: 24px · gap: 8px · radius: 4px · font: 12px
                     </div>
                   </VStack>
 
@@ -9604,8 +9591,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>spinner: 16/22/32px</code> · <code>progress: h-1</code> ·{' '}
-                      <code>button: min-w-80px</code>
+                      spinner: 16/22/32px · progress: h-1 · button: min-w-80px
                     </div>
                   </VStack>
 
@@ -9744,8 +9730,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>track: 36×20px</code> · <code>thumb: 16×16px</code> ·{' '}
-                      <code>padding: 4px</code> · <code>radius: pill</code> · <code>gap: 8px</code>
+                      track: 36×20px · thumb: 16×16px · padding: 4px · radius: pill · gap: 8px
                     </div>
                   </VStack>
 
@@ -9823,8 +9808,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Mini Toggle (Chart Controls)</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] mb-2">
-                      <code>size: 24×12px</code> · <code>thumb: 8×8px</code> ·{' '}
-                      <code>border: 1px</code> · <code>radius: 6px</code>
+                      size: 24×12px · thumb: 8×8px · border: 1px · radius: 6px
                     </div>
                     <div className="flex gap-8 items-center">
                       <VStack gap={2}>

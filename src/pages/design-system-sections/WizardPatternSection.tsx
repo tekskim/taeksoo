@@ -753,10 +753,8 @@ Step 3 Next 클릭
       <VStack gap={3}>
         <Label>Section States (WizardSectionState)</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>
-            &apos;pre&apos; | &apos;active&apos; | &apos;done&apos; | &apos;skipped&apos; |
-            &apos;writing&apos;
-          </code>
+          &apos;pre&apos; | &apos;active&apos; | &apos;done&apos; | &apos;skipped&apos; |
+          &apos;writing&apos;
         </div>
       </VStack>
 
