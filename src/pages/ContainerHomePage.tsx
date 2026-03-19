@@ -20,7 +20,14 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconTerminal2,
+  IconFile,
+  IconCopy,
+  IconSearch,
+  IconDotsVertical,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -35,6 +42,8 @@ interface ClusterRow {
   cpu: string;
   memory: string;
   pods: string;
+  manage: string;
+  actions: string;
 }
 
 /* ----------------------------------------
@@ -44,83 +53,27 @@ interface ClusterRow {
 const clustersData: ClusterRow[] = [
   {
     id: '1',
-    name: 'Cluster1',
+    name: 'ClusterName',
     status: 'OK',
-    kubernetesVersion: 'v1.24',
-    createdAt: 'Nov 11, 2025 08:30:18',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
   {
     id: '2',
     name: 'ClusterName',
     status: 'OK',
-    kubernetesVersion: 'v1.29.1',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
-  },
-  {
-    id: '3',
-    name: 'ClusterName',
-    status: 'CreateContainerConfigError',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
     cpu: '8 cores',
-    memory: '-',
-    pods: '10/110',
-  },
-  {
-    id: '4',
-    name: 'ClusterName',
-    status: 'InvalidImageName',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
     memory: '16 GiB',
-    pods: '-',
-  },
-  {
-    id: '5',
-    name: 'ClusterName',
-    status: 'ImagePullBackOff',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
-  },
-  {
-    id: '6',
-    name: 'ClusterName',
-    status: 'True',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
-  },
-  {
-    id: '7',
-    name: 'ClusterName',
-    status: 'Raw',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '16 GiB',
-    pods: '10/110',
-  },
-  {
-    id: '8',
-    name: 'ClusterName',
-    status: 'None',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '45/100',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
 ];
 
@@ -161,7 +114,7 @@ export function ContainerHomePage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
@@ -175,22 +128,50 @@ export function ContainerHomePage() {
     },
     {
       key: 'kubernetesVersion',
-      label: 'Kubernetes version',
+      label: 'Kubernetes Version',
       flex: 1,
       minWidth: columnMinWidths.kubernetesVersion,
       sortable: true,
     },
+    { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
+    { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
+    { key: 'pods', label: 'Pods', flex: 1, minWidth: columnMinWidths.pods, sortable: true },
     {
       key: 'createdAt',
-      label: 'Created at',
+      label: 'Created At',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
-    { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
-    { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
-    { key: 'pods', label: 'Pods', width: '80px', sortable: true },
+    {
+      key: 'manage',
+      label: 'Manage',
+      width: fixedColumns.actionWide,
+      align: 'center',
+      sortable: false,
+      render: (_value: string, row: ClusterRow) => (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-[24px] min-w-[60px] !text-body-md"
+          onClick={() => navigate(`/container/clusters/${row.id}`)}
+        >
+          Manage
+        </Button>
+      ),
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: fixedColumns.actionWide,
+      align: 'center',
+      sortable: false,
+      render: () => (
+        <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
+          <IconDotsVertical size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+        </button>
+      ),
+    },
   ];
 
   return (
