@@ -177,6 +177,7 @@ export function SemanticColorRow({
   darkPrimitive,
   darkHex,
   border = false,
+  isDark: isDarkProp,
 }: {
   token: string;
   cssVar: string;
@@ -184,8 +185,10 @@ export function SemanticColorRow({
   darkPrimitive?: string;
   darkHex?: string;
   border?: boolean;
+  isDark?: boolean;
 }) {
-  const { isDark } = useDarkMode();
+  const { isDark: isDarkGlobal } = useDarkMode();
+  const isDark = isDarkProp ?? isDarkGlobal;
   const [computedHex, setComputedHex] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -207,8 +210,7 @@ export function SemanticColorRow({
               const h = parseInt(x).toString(16);
               return h.length === 1 ? '0' + h : h;
             })
-            .join('')
-            .toUpperCase();
+            .join('');
         setComputedHex(hex);
       }
     }
@@ -260,6 +262,7 @@ export function SemanticColorRow({
 export function SemanticColorTable({
   title,
   colors,
+  isDark,
 }: {
   title: string;
   colors: Array<{
@@ -270,6 +273,7 @@ export function SemanticColorTable({
     darkHex?: string;
     border?: boolean;
   }>;
+  isDark?: boolean;
 }) {
   return (
     <VStack gap={3} className="flex-1 min-w-[280px]">
@@ -292,7 +296,7 @@ export function SemanticColorTable({
           </thead>
           <tbody>
             {colors.map((color) => (
-              <SemanticColorRow key={color.token} {...color} />
+              <SemanticColorRow key={color.token} {...color} isDark={isDark} />
             ))}
           </tbody>
         </table>

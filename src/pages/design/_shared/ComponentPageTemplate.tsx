@@ -34,6 +34,7 @@ interface ComponentPageTemplateProps {
   status?: ComponentStatus;
   tags?: string[];
   preview?: ReactNode;
+  previewActions?: ReactNode;
   examples?: ReactNode;
   guidelines?: ReactNode;
   whenToUse?: string[];
@@ -83,6 +84,7 @@ export function ComponentPageTemplate({
   status,
   tags,
   preview,
+  previewActions,
   examples,
   guidelines,
   whenToUse,
@@ -195,7 +197,7 @@ export function ComponentPageTemplate({
 
         {/* Preview */}
         {preview && (
-          <DocSection id="preview" title="Preview">
+          <DocSection id="preview" title="Preview" actions={previewActions}>
             {preview}
           </DocSection>
         )}
