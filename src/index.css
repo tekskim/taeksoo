@@ -78,7 +78,8 @@ html.theme-transition *::after {
    Based on tokens.json structure
    ======================================== */
 
-:root {
+:root,
+[data-theme='light'] {
   /* ========================================
      PRIMITIVE TOKENS
      ======================================== */
@@ -533,17 +534,11 @@ html.theme-transition *::after {
   --badge-font-size-sm: var(--font-size-11);
   --badge-line-height-sm: var(--line-height-16);
 
-  /* Size: MD - padding 8×4px, font 12px, lh 16px */
+  /* Size: MD - padding 8×2px, font 13px, lh 18px */
   --badge-padding-x-md: var(--spacing-2);
-  --badge-padding-y-md: var(--spacing-1);
-  --badge-font-size-md: var(--font-size-12);
-  --badge-line-height-md: var(--line-height-16);
-
-  /* Size: LG - padding 12×4px, font 14px, lh 20px */
-  --badge-padding-x-lg: var(--spacing-3);
-  --badge-padding-y-lg: var(--spacing-1);
-  --badge-font-size-lg: var(--font-size-14);
-  --badge-line-height-lg: var(--line-height-20);
+  --badge-padding-y-md: var(--spacing-0-5);
+  --badge-font-size-md: var(--font-size-13);
+  --badge-line-height-md: var(--line-height-18);
 
   /* Common */
   --badge-radius: var(--radius-sm);
@@ -560,7 +555,8 @@ html.theme-transition *::after {
   --badge-subtle-yellow-bg: var(--color-orange-100);
   --badge-subtle-yellow-text: var(--color-state-warning-text);
   --badge-subtle-gray-bg: var(--color-surface-muted);
-  --badge-subtle-gray-text: var(--color-text-muted);
+  --badge-subtle-gray-text: #475569;
+  --badge-white-border: var(--color-border-default);
 
   /* ----------------------------------------
      Component - Menu
@@ -570,6 +566,8 @@ html.theme-transition *::after {
   --menu-item-gap: var(--spacing-1-5);
   --menu-item-radius: var(--radius-button);
   --menu-item-hover-bg: var(--color-slate-100);
+  --menu-item-active-bg: var(--color-state-info-bg);
+  --menu-item-active-text: var(--color-action-primary);
 
   --menu-section-padding-x: var(--spacing-2);
   --menu-section-padding-y: var(--spacing-1);
@@ -585,6 +583,7 @@ html.theme-transition *::after {
   --card-padding-bottom: var(--spacing-3);
   --card-radius: var(--radius-card);
   --card-gap: var(--spacing-3);
+  --card-details-bg: var(--color-surface-muted);
 
   /* ----------------------------------------
      Component - Modal
@@ -1085,191 +1084,194 @@ html.theme-transition *::after {
    Dark Theme Overrides
    ======================================== */
 
-.dark {
-  /* Action - 유지 */
-  --color-action-primary: var(--color-blue-500);
-  --color-action-primary-hover: var(--color-blue-400);
-  --color-action-primary-active: var(--color-blue-300);
+.dark,
+[data-theme='dark'] {
+  /* Action — Figma dark tokens (dark.css) 참조 */
+  --color-action-primary: var(--semantic-color-primary);
+  --color-action-primary-hover: var(--semantic-color-primary-hover);
+  --color-action-primary-active: var(--semantic-color-primary-focus);
 
-  /* Text - Linear Style (높은 대비) */
-  --color-text-default: #ebebeb; /* 거의 흰색 */
-  --color-text-muted: #a0a0a0; /* 중간 회색 */
-  --color-text-subtle: #6b6b6b; /* 연한 회색 */
-  --color-text-disabled: #4a4a4a; /* 비활성 텍스트 */
-  --color-text-inverse: #0d0d0d; /* 역전 텍스트 */
+  /* Text — Figma dark tokens 참조 */
+  --color-text-default: var(--semantic-color-text);
+  --color-text-muted: var(--semantic-color-text-muted);
+  --color-text-subtle: var(--semantic-color-text-subtle);
+  --color-text-disabled: var(--semantic-color-text-disabled);
+  --color-text-inverse: var(--semantic-color-text-inverse);
 
-  /* Surface - RunPod Style */
-  --color-surface-default: #1c1c1c; /* 카드, 모달 배경 */
-  --color-surface-subtle: #141414; /* 앱 배경 (가장 어두움) */
-  --color-surface-muted: #252525; /* 호버, 강조 배경 */
-  --color-surface-hover: #252525; /* hover 배경 */
-  --color-surface-inverse: #fafafa; /* 밝은 표면 */
-  --color-surface-contrast: #0a0a0a; /* Dark background for code/terminal areas */
+  /* Surface — Figma dark tokens 참조 */
+  --color-surface-default: var(--semantic-color-surface);
+  --color-surface-subtle: var(--semantic-color-surface-muted);
+  --color-surface-muted: var(--semantic-color-surface-hover);
+  --color-surface-hover: var(--semantic-color-surface-hover);
+  --color-surface-inverse: var(--semantic-color-surface-tertiary);
+  --color-surface-contrast: #0a0a0a;
 
   /* Info (weak) */
-  --color-info-weak-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% */
+  --color-info-weak-bg: rgba(59, 130, 246, 0.12);
 
   /* Alias */
   --color-on-primary: var(--color-text-on-primary);
 
-  /* Border - Apple Style */
-  --color-border-default: #3a3a3a; /* 기본 보더 (Apple HIG 참고) */
-  --color-border-subtle: #2e2e2e; /* 미세한 구분선 */
-  --color-border-strong: #4a4a4a; /* 강조 보더 */
-  --color-border-focus: var(--color-blue-400);
+  /* Border — Figma dark tokens 참조 */
+  --color-border-default: var(--semantic-color-border);
+  --color-border-subtle: var(--semantic-color-border-subtle);
+  --color-border-strong: var(--semantic-color-border-strong);
+  --color-border-focus: var(--semantic-color-border-focus);
 
-  /* State - Info */
-  --color-state-info: var(--color-blue-400);
-  --color-state-info-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% - 더 은은하게 */
-  --color-state-info-text: var(--color-blue-300);
+  /* State — Figma dark tokens 참조 */
+  --color-state-info: var(--semantic-color-state-info);
+  --color-state-info-bg: var(--semantic-color-state-info-bg);
+  --color-state-info-text: var(--semantic-color-state-info-text);
 
-  /* State - Success (유지) */
-  --color-state-success: var(--color-green-400);
-  --color-state-success-bg: var(--color-green-900);
-  --color-state-success-text: var(--color-green-200);
+  --color-state-success: var(--semantic-color-state-success);
+  --color-state-success-bg: var(--semantic-color-state-success-bg);
+  --color-state-success-text: var(--semantic-color-state-success-text);
 
-  /* State - Warning (유지) */
-  --color-state-warning: var(--color-orange-400);
-  --color-state-warning-bg: var(--color-orange-900);
-  --color-state-warning-text: var(--color-orange-200);
+  --color-state-warning: var(--semantic-color-state-warning);
+  --color-state-warning-bg: var(--semantic-color-state-warning-bg);
+  --color-state-warning-text: var(--semantic-color-state-warning-text);
 
-  /* State - Danger (유지) */
-  --color-state-danger: var(--color-red-400);
+  --color-state-danger: var(--semantic-color-state-danger);
   --color-state-danger-hover: var(--color-red-500);
   --color-state-danger-active: var(--color-red-600);
-  --color-state-danger-bg: rgba(239, 68, 68, 0.12); /* red-500 12% - matches inline message error */
-  --color-state-danger-text: var(--color-red-200);
+  --color-state-danger-bg: var(--semantic-color-state-danger-bg);
+  --color-state-danger-text: var(--semantic-color-state-danger-text);
 
   /* Extended Text Colors - Dark Mode */
-  --color-text-success: var(--color-green-400);
-  --color-text-warning: var(--color-orange-400);
-  --color-text-danger: var(--color-red-400);
+  --color-text-success: var(--semantic-color-state-success);
+  --color-text-warning: var(--semantic-color-state-warning);
+  --color-text-danger: var(--semantic-color-state-danger);
 
   /* Tooltip (Dark Mode) */
-  --tooltip-bg: #fafafa;
-  --tooltip-text: #0f172a;
+  --tooltip-bg: var(--semantic-color-surface-elevated);
+  --tooltip-text: var(--semantic-color-text);
 
   /* Extended Surface Colors - Dark Mode */
-  --color-surface-sunken: #141414;
+  --color-surface-sunken: var(--semantic-color-surface);
   --color-action-primary-subtle: rgba(59, 130, 246, 0.15);
 
   /* Extended Border Colors - Dark Mode */
-  --color-border-muted: #2e2e2e;
+  --color-border-muted: var(--semantic-color-border-subtle);
 
   /* Status Colors - Dark Mode */
-  --color-status-success: var(--color-green-400);
-  --color-status-warning: var(--color-orange-400);
-  --color-status-error: var(--color-red-400);
+  --color-status-success: var(--semantic-color-state-success);
+  --color-status-warning: var(--semantic-color-state-warning);
+  --color-status-error: var(--semantic-color-state-danger);
   --color-status-idle: var(--color-slate-500);
   --color-status-success-subtle: rgba(34, 197, 94, 0.15);
   --color-status-warning-subtle: rgba(249, 115, 22, 0.15);
   --color-status-error-subtle: rgba(239, 68, 68, 0.15);
 
-  /* Badge Subtle (Dark Mode) - dark bg with readable text */
-  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.15);
-  --badge-subtle-blue-text: #93c5fd; /* blue-300 */
-  --badge-subtle-red-bg: rgba(239, 68, 68, 0.15);
-  --badge-subtle-red-text: #fca5a5; /* red-300 */
-  --badge-subtle-green-bg: rgba(34, 197, 94, 0.15);
-  --badge-subtle-green-text: #86efac; /* green-300 */
-  --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.15);
-  --badge-subtle-yellow-text: #fdba74; /* orange-300 */
-  --badge-subtle-gray-bg: var(--color-surface-muted);
-  --badge-subtle-gray-text: var(--color-text-muted);
+  /* Badge Subtle (Dark Mode) */
+  --badge-subtle-blue-bg: rgba(59, 130, 246, 0.3);
+  --badge-subtle-blue-text: #93c5fd;
+  --badge-subtle-red-bg: rgba(239, 68, 68, 0.2);
+  --badge-subtle-red-text: #fca5a5;
+  --badge-subtle-green-bg: rgba(34, 197, 94, 0.2);
+  --badge-subtle-green-text: #86efac;
+  --badge-subtle-yellow-bg: rgba(249, 115, 22, 0.2);
+  --badge-subtle-yellow-text: #fdba74;
+  --badge-subtle-gray-bg: var(--semantic-color-surface-hover);
+  --badge-subtle-gray-text: var(--color-slate-300);
+  --badge-white-border: var(--semantic-color-border-strong);
+  --card-details-bg: var(--semantic-color-surface-hover);
 
   /* Input (Dark Mode) */
   --input-bg: var(--color-surface-default);
   --input-border: var(--color-border-strong);
-  --input-bg-disabled: #252525; /* surface-muted */
-  --input-text-disabled: #4a4a4a; /* text-disabled */
+  --input-bg-disabled: var(--semantic-color-surface-hover);
+  --input-text-disabled: var(--semantic-color-text-disabled);
 
   /* Select (Dark Mode) */
   --select-bg: var(--color-surface-default);
   --select-border: var(--color-border-strong);
-  --select-bg-disabled: #252525; /* surface-muted */
-  --select-menu-bg: #1c1c1c; /* surface-default */
-  --select-menu-border: #444444; /* border-strong */
-  --select-item-hover-bg: #252525; /* surface-muted */
-  --select-item-selected-bg: rgba(59, 130, 246, 0.15); /* blue with opacity */
-  --select-item-selected-text: var(--color-blue-400); /* 밝은 파랑 */
+  --select-bg-disabled: var(--semantic-color-surface-hover);
+  --select-menu-bg: var(--semantic-color-surface);
+  --select-menu-border: var(--semantic-color-border-strong);
+  --select-item-hover-bg: var(--semantic-color-surface-hover);
+  --select-item-selected-bg: rgba(59, 130, 246, 0.15);
+  --select-item-selected-text: var(--semantic-color-primary);
 
   /* Radio (Dark Mode) */
-  --radio-bg: #1c1c1c; /* surface-default */
-  --radio-border: #444444; /* 더 밝은 보더 */
-  --radio-disabled-bg: #252525;
-  --radio-disabled-border: #333333;
-  --radio-disabled-dot: #4a4a4a;
+  --radio-bg: var(--semantic-color-surface);
+  --radio-border: var(--semantic-color-border-strong);
+  --radio-disabled-bg: var(--semantic-color-surface-hover);
+  --radio-disabled-border: var(--semantic-color-border);
+  --radio-disabled-dot: var(--semantic-color-text-disabled);
 
   /* Toggle (Dark Mode) */
-  --toggle-bg: #333333; /* Off 상태 배경 */
-  --toggle-disabled-bg: #1c1c1c;
-  --toggle-checked-disabled-bg: #333333;
-  --toggle-thumb-disabled: #4a4a4a;
+  --toggle-bg: var(--semantic-color-surface-hover);
+  --toggle-disabled-bg: var(--semantic-color-surface);
+  --toggle-checked-disabled-bg: var(--semantic-color-surface-hover);
+  --toggle-thumb-disabled: var(--semantic-color-text-disabled);
 
   /* Checkbox (Dark Mode) */
-  --checkbox-bg: #1c1c1c; /* surface-default */
-  --checkbox-border: var(--color-border-strong); /* SearchInput과 동일 */
-  --checkbox-disabled-bg: #252525;
-  --checkbox-disabled-border: #333333;
-  --checkbox-disabled-checked-bg: #333333;
-  --checkbox-icon-disabled: #4a4a4a;
+  --checkbox-bg: var(--semantic-color-surface);
+  --checkbox-border: var(--color-border-strong);
+  --checkbox-label-color: var(--color-text-default);
+  --checkbox-label-disabled: var(--color-text-disabled);
+  --checkbox-description-color: var(--color-text-subtle);
+  --checkbox-disabled-bg: var(--semantic-color-surface-hover);
+  --checkbox-disabled-border: var(--semantic-color-border);
+  --checkbox-disabled-checked-bg: var(--semantic-color-surface-hover);
+  --checkbox-icon-disabled: var(--semantic-color-text-disabled);
 
-  /* InlineMessage (Dark Mode) - 은은한 반투명 */
-  --inline-message-success-bg: rgba(34, 197, 94, 0.12); /* green-500 12% */
-  --inline-message-success-icon: var(--color-green-400);
-  --inline-message-warning-bg: rgba(249, 115, 22, 0.12); /* orange-500 12% */
-  --inline-message-warning-icon: var(--color-orange-400);
-  --inline-message-error-bg: rgba(239, 68, 68, 0.12); /* red-500 12% */
-  --inline-message-error-icon: var(--color-red-400);
-  --inline-message-info-bg: rgba(59, 130, 246, 0.12); /* blue-500 12% */
-  --inline-message-info-icon: var(--color-blue-400);
+  /* InlineMessage (Dark Mode) */
+  --inline-message-success-bg: rgba(34, 197, 94, 0.12);
+  --inline-message-success-icon: var(--semantic-color-state-success);
+  --inline-message-warning-bg: rgba(249, 115, 22, 0.12);
+  --inline-message-warning-icon: var(--semantic-color-state-warning);
+  --inline-message-error-bg: rgba(239, 68, 68, 0.12);
+  --inline-message-error-icon: var(--semantic-color-state-danger);
+  --inline-message-info-bg: rgba(59, 130, 246, 0.12);
+  --inline-message-info-icon: var(--semantic-color-state-info);
 
   /* Breadcrumb (Dark Mode) */
-  --breadcrumb-text-color: #a0a0a0; /* 더 밝은 회색 */
-  --breadcrumb-text-hover: #ebebeb; /* 거의 흰색 */
-  --breadcrumb-text-current: #ebebeb; /* 거의 흰색 */
-  --breadcrumb-separator-color: #6b6b6b; /* 구분자는 약간 어둡게 */
+  --breadcrumb-text-color: var(--semantic-color-text-muted);
+  --breadcrumb-text-hover: var(--semantic-color-text);
+  --breadcrumb-text-current: var(--semantic-color-text);
+  --breadcrumb-separator-color: var(--semantic-color-text-subtle);
 
   /* Tabs (Dark Mode) */
-  --tabs-inactive-color: #a0a0a0; /* 비활성 탭 - 더 밝게 */
-  --tabs-hover-color: #ebebeb; /* 호버 - 거의 흰색 */
+  --tabs-inactive-color: var(--semantic-color-text-muted);
+  --tabs-hover-color: var(--semantic-color-text);
 
   /* Pagination (Dark Mode) */
-  --pagination-hover-bg: #2a2a2a; /* 명확한 호버 배경 */
-  --pagination-text: #a0a0a0; /* 비활성 페이지 */
-  --pagination-text-hover: #ebebeb; /* 호버 텍스트 */
+  --pagination-hover-bg: var(--semantic-color-surface-hover);
+  --pagination-text: var(--semantic-color-text-muted);
+  --pagination-text-hover: var(--semantic-color-text);
 
   /* Status Indicator (Dark Mode) */
-  --status-text: var(--color-white); /* 컬러 배경 위에는 항상 흰색 텍스트 */
+  --status-text: var(--color-white);
 
   /* Menu Item (Dark Mode) */
-  --menu-item-hover-bg: #2a2a2a; /* 호버 배경 - 밝아지는 방향 */
-  --menu-item-active-bg: rgba(59, 130, 246, 0.15); /* blue-500 with 15% opacity */
-  --menu-item-active-text: var(--color-blue-400); /* 더 밝은 파랑 */
+  --menu-item-hover-bg: var(--semantic-color-surface-hover);
+  --menu-item-active-bg: rgba(30, 58, 138, 0.5);
+  --menu-item-active-text: #93c5fd;
 
   /* DatePicker (Dark Mode) */
-  --datepicker-range-bg: #253754; /* 기간 선택 배경 - solid color */
-  --datepicker-hover-bg: #2a2a2a; /* 호버 배경 */
+  --datepicker-range-bg: #253754;
+  --datepicker-hover-bg: var(--semantic-color-surface-hover);
 
   /* ContextMenu (Dark Mode) */
-  --context-menu-hover-bg: #2a2a2a; /* 메뉴 아이템 호버 배경 */
+  --context-menu-hover-bg: var(--semantic-color-surface-hover);
 
   /* Table (Dark Mode) */
-  --table-header-bg: var(--color-surface-muted); /* 테이블 헤더 배경 (#252525) */
-  --table-row-hover-bg: #2a2a2a; /* 테이블 행 호버 배경 */
+  --table-header-bg: var(--color-surface-muted);
+  --table-row-hover-bg: var(--semantic-color-surface-hover);
 
   /* TopBar (Dark Mode) */
-  --topbar-button-hover-bg: #2a2a2a; /* 버튼 호버 배경 */
+  --topbar-button-hover-bg: var(--semantic-color-surface-hover);
 
   /* TabBar (Dark Mode) */
-  --tabbar-hover-bg: #2a2a2a; /* 탭바 호버 배경 */
+  --tabbar-hover-bg: var(--semantic-color-surface-hover);
 
-  /* Button (Dark Mode) - 일관되게 밝아지는 방향 */
-  --button-secondary-hover-bg: #2a2a2a; /* surface-default보다 밝게 */
-  --button-ghost-hover-bg: #2a2a2a; /* 동일하게 */
+  /* Button (Dark Mode) */
+  --button-secondary-hover-bg: var(--semantic-color-surface-hover);
+  --button-ghost-hover-bg: var(--semantic-color-surface-hover);
 
   /* Action Icon (Dark Mode) */
-  --action-icon-color: #ebebeb;
+  --action-icon-color: var(--semantic-color-text);
 }
 
 /* ========================================

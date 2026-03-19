@@ -266,8 +266,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 | Size | Padding X | Padding Y | Font Size | Line Height |
 |------|-----------|-----------|-----------|-------------|
 | sm | 0.375rem (6px) | 0.125rem (2px) | 0.6875rem (11px) | 1rem (16px) |
-| md | 0.5rem (8px) | 0.25rem (4px) | 0.75rem (12px) | 1rem (16px) |
-| lg | 0.75rem (12px) | 0.25rem (4px) | 0.875rem (14px) | 1.25rem (20px) |
+| md | 0.5rem (8px) | 0.125rem (2px) | 0.8125rem (13px) | 1.125rem (18px) |
 
 ```css
 --badge-radius: 0.25rem;  /* 4px (radius-sm) */
@@ -469,7 +468,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 
 ### Data Display
 - **Table**: `columns`, `data`, `selectable`, `sortable`
-- **Badge**: `variant="info|success|warning|danger"`, `size="sm|md|lg"`
+- **Badge**: `variant="info|success|warning|danger"`, `size="sm|md"`
 - **Chip**: 태그/필터 표시
 - **StatusIndicator**: `status="active|error|muted|building"`
 - **Pagination**: 페이지 네비게이션

@@ -405,6 +405,7 @@ import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePr
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { DesignAuditPage } from '@/pages/design/DesignAuditPage';
 import { DesignTodoPage } from '@/pages/design/DesignTodoPage';
+import { SharedComponentsPage } from '@/pages/design/SharedComponentsPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
@@ -1099,6 +1100,7 @@ function AppRoutes() {
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
         <Route path="audit" element={<DesignAuditPage />} />
         <Route path="todo" element={<DesignTodoPage />} />
+        <Route path="shared-components" element={<SharedComponentsPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
