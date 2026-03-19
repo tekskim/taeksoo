@@ -28,6 +28,7 @@ import {
   Tooltip,
   FilterSearchInput,
   fixedColumns,
+  columnMinWidths,
   Badge,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -3031,7 +3032,7 @@ export function CreateJobPage() {
                                       key: 'status',
                                       label: 'Status',
                                       width: fixedColumns.statusLabel,
-                                      align: 'left',
+                                      align: 'center',
                                       render: (value: string) => (
                                         <Tooltip content={value}>
                                           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -3043,9 +3044,14 @@ export function CreateJobPage() {
                                     {
                                       key: 'name',
                                       label: 'Name',
+                                      flex: 1,
+                                      minWidth: columnMinWidths.name,
                                       sortable: true,
                                       render: (value: string) => (
-                                        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+                                        <span
+                                          className="truncate block min-w-0 text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
+                                          title={value}
+                                        >
                                           {value}
                                         </span>
                                       ),
@@ -3053,14 +3059,36 @@ export function CreateJobPage() {
                                     {
                                       key: 'description',
                                       label: 'Description',
+                                      flex: 1,
+                                      minWidth: columnMinWidths.description,
                                       sortable: true,
+                                      render: (value: string) => (
+                                        <span
+                                          className="truncate block min-w-0"
+                                          title={value ?? ''}
+                                        >
+                                          {value ?? ''}
+                                        </span>
+                                      ),
                                     },
                                     {
                                       key: 'createdAt',
                                       label: 'Created at',
+                                      flex: 1,
+                                      minWidth: columnMinWidths.createdAt,
                                       sortable: true,
-                                      render: (value: string) =>
-                                        value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+                                      render: (value: string) => {
+                                        const displayValue =
+                                          value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+                                        return (
+                                          <span
+                                            className="truncate block min-w-0 whitespace-nowrap"
+                                            title={displayValue}
+                                          >
+                                            {displayValue}
+                                          </span>
+                                        );
+                                      },
                                     },
                                   ]}
                                   data={MOCK_NAMESPACES.slice(0, 5)}

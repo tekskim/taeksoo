@@ -177,7 +177,6 @@ export function LimitRangesPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -189,7 +188,7 @@ export function LimitRangesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
@@ -204,14 +203,26 @@ export function LimitRangesPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
-      render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      render: (value: string) => (
+        <span className="text-body-md text-[var(--color-text-default)] truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="text-body-md text-[var(--color-text-default)] truncate" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',

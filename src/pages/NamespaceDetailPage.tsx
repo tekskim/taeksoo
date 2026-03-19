@@ -349,7 +349,10 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
       minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
-        <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="block min-w-0 truncate text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -519,7 +522,8 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      align: 'center',
+      sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -535,7 +539,10 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
+        <span
+          className="block min-w-0 truncate text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -546,6 +553,11 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="block min-w-0 truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
@@ -553,6 +565,11 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.type,
       sortable: true,
+      render: (value: string) => (
+        <span className="block min-w-0 truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
@@ -560,12 +577,30 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.containerImage,
       sortable: true,
+      render: (value: string) => (
+        <span className="block min-w-0 truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
+    },
+    {
+      key: 'health',
+      label: 'Health',
+      flex: 1,
+      minWidth: columnMinWidths.health,
+      sortable: true,
+      render: (value: string) => (
+        <span className="block min-w-0 truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -573,13 +608,14 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
-    },
-    {
-      key: 'health',
-      label: 'Health',
-      flex: 1,
-      minWidth: columnMinWidths.health,
+      render: (value: string) => {
+        const formatted = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="block min-w-0 truncate" title={formatted}>
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -647,12 +683,17 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.condition,
       sortable: true,
+      render: (value: string) => (
+        <span className="block min-w-0 truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -668,7 +709,14 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.message,
       sortable: true,
-      render: (value: string) => value || '-',
+      render: (value: string) => {
+        const display = value || '-';
+        return (
+          <span className="block min-w-0 truncate" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'updated',
@@ -676,6 +724,11 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="block min-w-0 truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
   ];
 
@@ -755,6 +808,7 @@ export function NamespaceDetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];
@@ -845,27 +899,31 @@ export function NamespaceDetailPage() {
             <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
             <DetailHeader.InfoCard
               label={`Labels (${Object.keys(namespace.labels).length})`}
-              value={
-                Object.keys(namespace.labels).length > 0 ? (
-                  <div className="flex flex-col items-start gap-1 min-w-0 w-full overflow-hidden">
-                    {Object.entries(namespace.labels).map(([key, val]) => (
-                      <Tooltip key={key} content={`${key}: ${val}`} position="top">
-                        <div className="w-full">
-                          <Badge
-                            theme="white"
-                            size="sm"
-                            className="w-full truncate justify-start text-left"
-                          >
-                            {`${key}: ${val}`}
-                          </Badge>
-                        </div>
+              value={(() => {
+                const entries = Object.entries(namespace.labels);
+                if (entries.length === 0) return '-';
+                const [firstKey, firstVal] = entries[0];
+                const text = `${firstKey}: ${firstVal}`;
+                return (
+                  <div className="flex items-center gap-1 min-w-0 w-full">
+                    <Tooltip content={text} position="top">
+                      <Badge theme="white" size="sm" className="max-w-full">
+                        <span className="truncate">{text}</span>
+                      </Badge>
+                    </Tooltip>
+                    {entries.length > 1 && (
+                      <Tooltip
+                        content={entries.map(([k, v]) => `${k}: ${v}`).join('\n')}
+                        position="top"
+                      >
+                        <span className="text-body-sm text-[var(--color-text-muted)] shrink-0 cursor-pointer hover:underline">
+                          +{entries.length - 1}
+                        </span>
                       </Tooltip>
-                    ))}
+                    )}
                   </div>
-                ) : (
-                  '-'
-                )
-              }
+                );
+              })()}
             />
             <DetailHeader.InfoCard
               label={`Annotations (${Object.keys(namespace.annotations).length})`}

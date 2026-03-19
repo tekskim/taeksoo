@@ -13035,7 +13035,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       items={[
                         { id: 'edit', label: 'Edit', onClick: () => {} },
                         { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
-                        { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
+                        { id: 'copy', label: 'Copy', onClick: () => {} },
                         { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
                       ]}
                     >
@@ -13053,7 +13053,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       items={[
                         { id: 'view', label: 'View details', onClick: () => {} },
                         { id: 'edit', label: 'Edit', onClick: () => {} },
-                        { id: 'share', label: 'Share', onClick: () => {}, divider: true },
+                        { id: 'share', label: 'Share', onClick: () => {} },
                         { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
                       ]}
                     >

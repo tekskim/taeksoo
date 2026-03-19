@@ -168,25 +168,28 @@ export function ContainerServicesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
+        <span className="min-w-0 block">
+          <Tooltip content={value}>
+            <Badge theme="white" size="sm" className="max-w-[80px]">
+              <span className="truncate">{value}</span>
+            </Badge>
+          </Tooltip>
+        </span>
       ),
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (
-        <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
-          {value}
-        </TableLink>
+        <div className="min-w-0">
+          <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
+            {value}
+          </TableLink>
+        </div>
       ),
     },
     {
@@ -195,6 +198,11 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'target',
@@ -205,7 +213,7 @@ export function ContainerServicesPage() {
       render: (value: string[]) => {
         const text = value.join(', ');
         return (
-          <span className="truncate block w-full" title={text}>
+          <span className="min-w-0 truncate block w-full" title={text}>
             {text}
           </span>
         );
@@ -214,12 +222,13 @@ export function ContainerServicesPage() {
     {
       key: 'selector',
       label: 'Selector',
-      width: fixedColumns.selector,
+      flex: 1,
+      minWidth: columnMinWidths.selector,
       sortable: false,
       render: (value: string[]) => {
         const text = value.join(', ');
         return (
-          <span className="truncate block w-full" title={text}>
+          <span className="min-w-0 truncate block w-full" title={text}>
             {text}
           </span>
         );
@@ -232,7 +241,12 @@ export function ContainerServicesPage() {
       minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+        <span
+          className="truncate block min-w-0 text-body-md text-[var(--color-text-default)]"
+          title={value}
+        >
+          {value}
+        </span>
       ),
     },
     {
@@ -241,7 +255,14 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -269,8 +290,8 @@ export function ContainerServicesPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
-            danger: true,
           },
         ];
 

@@ -38,6 +38,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconHelpCircle,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -301,11 +302,10 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -315,10 +315,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -329,18 +330,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -475,11 +484,10 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -493,7 +501,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={() => navigate(`/container/services/${row.id}`)}
         >
@@ -505,26 +513,52 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'target',
       label: 'Target',
       flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'selector',
       label: 'Selector',
       flex: 1,
+      minWidth: columnMinWidths.selector,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+        return (
+          <span className="truncate block min-w-0" title={value}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -583,38 +617,47 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'type',
       label: 'Condition',
       flex: 1,
+      minWidth: columnMinWidths.condition,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
-      render: (value: string, row: ConditionRow) => (
-        <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
-          [{row.reason}] {value}
-        </span>
-      ),
+      render: (value: string, row: ConditionRow) => {
+        const fullText = `[${row.reason}] ${value}`;
+        return (
+          <span className="truncate block min-w-0" title={fullText}>
+            {fullText}
+          </span>
+        );
+      },
     },
     {
       key: 'lastUpdate',
       label: 'Updated',
       flex: 1,
+      minWidth: columnMinWidths.lastUpdate,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
   ];
 
@@ -672,9 +715,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+    },
+    { key: 'source', label: 'Source', flex: 1, minWidth: columnMinWidths.source, sortable: true },
     {
       key: 'message',
       label: 'Message',
@@ -694,10 +743,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -972,28 +1022,36 @@ export function StatefulSetDetailPage() {
           {/* Second row: Pod Restarts, Ready, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Pod restarts
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <HStack gap={1.5} align="center">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                    Pod restarts
+                  </span>
+                  <Tooltip content="Total number of container restarts across all pods">
+                    <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+                  </Tooltip>
+                </HStack>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {statefulset.podRestarts}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Ready
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <HStack gap={1.5} align="center">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">Ready</span>
+                  <Tooltip content="Number of ready replicas out of desired replicas">
+                    <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+                  </Tooltip>
+                </HStack>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {statefulset.ready.current}/{statefulset.ready.desired}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(statefulset.labels).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -1040,7 +1098,7 @@ export function StatefulSetDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(statefulset.annotations).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">

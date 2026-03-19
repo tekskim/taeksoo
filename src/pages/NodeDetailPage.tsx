@@ -39,7 +39,7 @@ import {
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconInfoCircle,
+  IconHelpCircle,
   IconTrash,
 } from '@tabler/icons-react';
 
@@ -321,7 +321,7 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
         </VStack>
         <Tooltip content={tooltip}>
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+            <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
           </button>
         </Tooltip>
       </HStack>
@@ -375,7 +375,7 @@ function PodsTab({ pods }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -391,7 +391,10 @@ function PodsTab({ pods }: PodsTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -403,15 +406,17 @@ function PodsTab({ pods }: PodsTabProps) {
       minWidth: columnMinWidths.namespace,
       sortable: true,
     },
-    { key: 'image', label: 'Image', flex: 1, minWidth: columnMinWidths.image },
-    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready },
+    { key: 'image', label: 'Image', flex: 1, minWidth: columnMinWidths.image, sortable: true },
+    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready, sortable: true },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
+      sortable: true,
     },
-    { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
-    { key: 'node', label: 'Node', flex: 1, minWidth: columnMinWidths.node },
+    { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip, sortable: true },
+    { key: 'node', label: 'Node', flex: 1, minWidth: columnMinWidths.node, sortable: true },
     {
       key: 'createdAt',
       label: 'Created at',
@@ -461,7 +466,7 @@ function LabelWithTooltip({ label, tooltip }: LabelWithTooltipProps) {
       {label}
       <Tooltip content={tooltip}>
         <button className="p-0 bg-transparent border-none cursor-pointer">
-          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+          <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
         </button>
       </Tooltip>
     </span>

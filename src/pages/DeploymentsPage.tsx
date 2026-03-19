@@ -205,7 +205,6 @@ export function DeploymentsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -217,7 +216,7 @@ export function DeploymentsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -239,27 +238,44 @@ export function DeploymentsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.image,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'upToDate',
       label: 'Up to date',
-      width: '100px',
+      flex: 1,
+      minWidth: columnMinWidths.upToDate,
+      sortable: true,
     },
     {
       key: 'available',
       label: 'Available',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.available,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -267,7 +283,11 @@ export function DeploymentsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+        </span>
+      ),
     },
     {
       key: 'actions',
@@ -314,6 +334,7 @@ export function DeploymentsPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
           },
         ];
