@@ -566,6 +566,8 @@ html.theme-transition *::after {
   --menu-item-gap: var(--spacing-1-5);
   --menu-item-radius: var(--radius-button);
   --menu-item-hover-bg: var(--color-slate-100);
+  --menu-item-active-bg: var(--color-state-info-bg);
+  --menu-item-active-text: var(--color-action-primary);
 
   --menu-section-padding-x: var(--spacing-2);
   --menu-section-padding-y: var(--spacing-1);
@@ -1244,8 +1246,8 @@ html.theme-transition *::after {
 
   /* Menu Item (Dark Mode) */
   --menu-item-hover-bg: var(--semantic-color-surface-hover);
-  --menu-item-active-bg: rgba(59, 130, 246, 0.15);
-  --menu-item-active-text: var(--semantic-color-primary);
+  --menu-item-active-bg: rgba(30, 58, 138, 0.5);
+  --menu-item-active-text: #93c5fd;
 
   /* DatePicker (Dark Mode) */
   --datepicker-range-bg: #253754;

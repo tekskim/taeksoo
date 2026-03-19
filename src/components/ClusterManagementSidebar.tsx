@@ -44,7 +44,7 @@ function IconSidebarItem({ icon, active, onClick, tooltip }: IconSidebarItemProp
         transition-colors duration-[var(--duration-fast)]
         ${
           active
-            ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)]'
+            ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)]'
             : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-muted)]'
         }
       `}
