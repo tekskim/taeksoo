@@ -566,6 +566,8 @@ html.theme-transition *::after {
   --menu-item-gap: var(--spacing-1-5);
   --menu-item-radius: var(--radius-button);
   --menu-item-hover-bg: var(--color-slate-100);
+  --menu-item-active-bg: var(--color-state-info-bg);
+  --menu-item-active-text: var(--color-action-primary);
 
   --menu-section-padding-x: var(--spacing-2);
   --menu-section-padding-y: var(--spacing-1);
@@ -1202,6 +1204,50 @@ html.theme-transition *::after {
   --inline-message-error-icon: var(--semantic-color-state-danger);
   --inline-message-info-bg: rgba(59, 130, 246, 0.12);
   --inline-message-info-icon: var(--semantic-color-state-info);
+
+  /* Breadcrumb (Dark Mode) */
+  --breadcrumb-text-color: var(--semantic-color-text-muted);
+  --breadcrumb-text-hover: var(--semantic-color-text);
+  --breadcrumb-text-current: var(--semantic-color-text);
+  --breadcrumb-separator-color: var(--semantic-color-text-subtle);
+
+  /* Tabs (Dark Mode) */
+  --tabs-inactive-color: var(--semantic-color-text-muted);
+  --tabs-hover-color: var(--semantic-color-text);
+
+  /* Pagination (Dark Mode) */
+  --pagination-hover-bg: var(--semantic-color-surface-hover);
+  --pagination-text: var(--semantic-color-text-muted);
+  --pagination-text-hover: var(--semantic-color-text);
+
+  /* Status Indicator (Dark Mode) */
+  --status-text: var(--color-white);
+
+  /* Menu Item (Dark Mode) */
+  --menu-item-hover-bg: var(--semantic-color-surface-hover);
+  --menu-item-active-bg: rgba(30, 58, 138, 0.5);
+  --menu-item-active-text: #93c5fd;
+
+  /* DatePicker (Dark Mode) */
+  --datepicker-range-bg: #253754;
+  --datepicker-hover-bg: var(--semantic-color-surface-hover);
+
+  /* ContextMenu (Dark Mode) */
+  --context-menu-hover-bg: var(--semantic-color-surface-hover);
+
+  /* Table (Dark Mode) */
+  --table-header-bg: var(--color-surface-muted);
+  --table-row-hover-bg: var(--semantic-color-surface-hover);
+
+  /* TopBar (Dark Mode) */
+  --topbar-button-hover-bg: var(--semantic-color-surface-hover);
+
+  /* TabBar (Dark Mode) */
+  --tabbar-hover-bg: var(--semantic-color-surface-hover);
+
+  /* Button (Dark Mode) */
+  --button-secondary-hover-bg: var(--semantic-color-surface-hover);
+  --button-ghost-hover-bg: var(--semantic-color-surface-hover);
 
   /* Action Icon (Dark Mode) */
   --action-icon-color: var(--semantic-color-text);

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Drawer, Button, Input, Select, Radio, FormField, FileListSection } from '@/design-system';
+import { Fragment, useState } from 'react';
+import { Drawer, Button, Input, FormField, FileListSection } from '@/design-system';
 import type { FileItem } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconUpload, IconX, IconCirclePlus } from '@tabler/icons-react';
@@ -164,9 +164,7 @@ export function CreateObjectDrawer({
         <FormField>
           <FormField.Label>Folder path</FormField.Label>
           <FormField.Control>
-            <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-              <span className="text-body-sm text-[var(--color-text-subtle)]">{currentPath}</span>
-            </div>
+            <Input value="" placeholder={currentPath} fullWidth readOnly />
           </FormField.Control>
         </FormField>
 
@@ -191,72 +189,21 @@ export function CreateObjectDrawer({
           emptyMessage=""
         />
 
-        {/* ACL Section */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">ACL</label>
-
-          {/* ACL Type Radio */}
-          <HStack gap={6}>
-            <Radio
-              checked={aclType === 'individual'}
-              onChange={() => setAclType('individual')}
-              label="Individual settings"
-            />
-            <Radio
-              checked={aclType === 'inherit'}
-              onChange={() => setAclType('inherit')}
-              label="Inherit from bucket"
-            />
-          </HStack>
-
-          {/* Grantee and Permissions */}
-          {aclType === 'individual' && (
-            <div className="w-full p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
-              <VStack gap={1.5}>
-                <FormField label="Grantee">
-                  <Select
-                    value={grantee}
-                    onChange={(v) => setGrantee(v as Grantee)}
-                    options={GRANTEE_OPTIONS}
-                    width="full"
-                  />
-                </FormField>
-                <FormField label="Permissions">
-                  <Select
-                    value={permission}
-                    onChange={(v) => setPermission(v as Permission)}
-                    options={PERMISSION_OPTIONS}
-                    width="full"
-                  />
-                </FormField>
-              </VStack>
-            </div>
-          )}
-
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            Any changes to the ACL will overwrite previous one. You can choose any of the available
-            options to modify the specified user group.
-          </p>
-        </VStack>
-
         {/* Tags Section */}
         <VStack gap={3} className="w-full">
           <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
 
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
-            <VStack gap={1}>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center">
               {tags.length > 0 && (
-                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                  <span className="block text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                  <span className="block text-label-sm text-[var(--color-text-subtle)]">Value</span>
+                <>
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
                   <div />
-                </div>
+                </>
               )}
               {tags.map((tag) => (
-                <div
-                  key={tag.id}
-                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                >
+                <Fragment key={tag.id}>
                   <Input
                     placeholder="tag key"
                     value={tag.key}
@@ -274,22 +221,21 @@ export function CreateObjectDrawer({
                     onClick={() => handleRemoveTag(tag.id)}
                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+                    <IconX size={14} className="text-[var(--color-text-muted)]" />
                   </button>
-                </div>
+                </Fragment>
               ))}
-
-              <div className="w-fit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                  onClick={handleAddTag}
-                >
-                  Add Tag
-                </Button>
-              </div>
-            </VStack>
+            </div>
+            <div className="mt-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} />}
+                onClick={handleAddTag}
+              >
+                Add Tag
+              </Button>
+            </div>
           </div>
         </VStack>
       </VStack>

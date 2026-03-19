@@ -82,6 +82,11 @@ import LoadBalancerDetailPage from '@/pages/LoadBalancerDetailPage';
 import CreateLoadBalancerPage from '@/pages/CreateLoadBalancerPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import CertificateDetailPage from '@/pages/CertificateDetailPage';
+import FirewallsPage from '@/pages/FirewallsPage';
+import FirewallDetailPage from '@/pages/FirewallDetailPage';
+import FirewallPolicyDetailPage from '@/pages/FirewallPolicyDetailPage';
+import FirewallRuleDetailPage from '@/pages/FirewallRuleDetailPage';
+import CreateFirewallRulePage from '@/pages/CreateFirewallRulePage';
 import SubnetDetailPage from '@/pages/SubnetDetailPage';
 import ListenerDetailPage from '@/pages/ListenerDetailPage';
 import PoolDetailPage from '@/pages/PoolDetailPage';
@@ -552,6 +557,12 @@ function AppRoutes() {
       <Route path="/compute/l7-policies/:id" element={<L7PolicyDetailPage />} />
       <Route path="/compute/certificates" element={<CertificatesPage />} />
       <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
+      <Route path="/compute/firewall" element={<FirewallsPage />} />
+      <Route path="/compute/firewalls/:id" element={<FirewallDetailPage />} />
+      <Route path="/compute/firewall-policies/:id" element={<FirewallPolicyDetailPage />} />
+      <Route path="/compute/firewall-rules/:id" element={<FirewallRuleDetailPage />} />
+      <Route path="/compute/firewall/create-rule" element={<CreateFirewallRulePage />} />
+      <Route path="/compute/firewall/create-rule-v2" element={<CreateFirewallRulePage />} />
       <Route path="/compute/dns-zones" element={<DNSZonesPage />} />
       <Route path="/compute/backup-policies" element={<BackupPoliciesPage />} />
       <Route path="/compute/scheduled-tasks" element={<ScheduledTasksPage />} />

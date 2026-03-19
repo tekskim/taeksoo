@@ -1,0 +1,25 @@
+---
+description: Provider and hook contracts that downstream consumers depend on
+globs:
+  - 'src/services/**/*.{ts,tsx}'
+  - 'src/components/**/*Provider*.{ts,tsx}'
+alwaysApply: false
+---
+
+## Provider Contracts
+
+These providers have established consumer contracts. Changing their API is a breaking change.
+
+| Provider | Required companion | Consumer usage |
+|----------|-------------------|----------------|
+| `ToastProvider` | `Toaster` (from sonner) | Apps render `<Toaster />` alongside |
+| `LocaleProvider` | `changeLocale` export | Apps call `changeLocale()` for language switch |
+| `OverlayProvider` | `overlayStore` export | Apps pass store instance |
+| `createTabProvider(...)` | factory function | Apps create per-package tab providers |
+
+### Rules
+
+1. Do not remove or rename exported provider props without semver-major intent.
+2. `toast` should be imported from `sonner` directly, not re-exported from this package.
+3. When adding optional props to a provider, ensure existing consumers work without the new prop.
+4. Document new required companions in the relevant barrel or `AI_GUIDE.md`.
