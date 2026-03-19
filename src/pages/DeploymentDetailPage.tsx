@@ -315,6 +315,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       {
         id: 'delete',
         label: 'Delete',
+        status: 'danger',
         onClick: () => console.log('Delete:', row.id),
       },
     ];
@@ -325,7 +326,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -360,13 +360,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
       sortable: true,
     },
     {
@@ -383,7 +385,10 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -491,6 +496,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       {
         id: 'delete',
         label: 'Delete',
+        status: 'danger',
         onClick: () => console.log('Delete:', row.id),
       },
     ];
@@ -501,7 +507,6 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -607,22 +612,6 @@ interface ConditionsTabProps {
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const createConditionMenuItems = (row: ConditionRow): ContextMenuItem[] => {
-    return [
-      {
-        id: 'download-yaml',
-        label: 'Download YAML',
-        onClick: () => console.log('Download YAML:', row.id),
-      },
-      {
-        id: 'delete',
-        label: 'Delete',
-        status: 'danger',
-        onClick: () => console.log('Delete:', row.id),
-      },
-    ];
-  };
-
   const columns: TableColumn<ConditionRow>[] = [
     {
       key: 'type',
@@ -633,17 +622,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -663,23 +645,6 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.lastUpdate,
       sortable: true,
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: fixedColumns.actions,
-      align: 'center',
-      render: (_: unknown, row: ConditionRow) => (
-        <ContextMenu items={createConditionMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal
-              size={16}
-              className="text-[var(--color-text-subtle)]"
-              stroke={1.5}
-            />
-          </button>
-        </ContextMenu>
-      ),
     },
   ];
 
@@ -942,6 +907,7 @@ export function DeploymentDetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];

@@ -152,7 +152,6 @@ import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolume
 import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { AttachInstanceDrawer } from '@/components/AttachInstanceDrawer';
-import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
 import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';

@@ -172,11 +172,9 @@ export default function IAMSystemAdministratorsPage() {
     { id: 'view', label: 'View details' },
     { id: 'edit', label: 'Edit account' },
     { id: 'reset-password', label: 'Reset password' },
-    { type: 'divider' },
     { id: 'lock', label: 'Lock account' },
     { id: 'unlock', label: 'Unlock account' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete account', danger: true },
+    { id: 'delete', label: 'Delete account', status: 'danger' },
   ];
 
   // Table columns (using fixedColumns / columnMinWidths preset)

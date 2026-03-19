@@ -265,11 +265,10 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -279,10 +278,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -293,18 +293,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -318,9 +326,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'node',
       label: 'Node',
       flex: 1,
+      minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -331,7 +343,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -439,11 +458,10 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -457,7 +475,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={() => navigate(`/container/services/${row.id}`)}
         >
@@ -469,26 +487,52 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'target',
       label: 'Target',
       flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'selector',
       label: 'Selector',
       flex: 1,
+      minWidth: columnMinWidths.selector,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -553,7 +597,6 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -634,17 +677,71 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
-    { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    {
+      key: 'type',
+      label: 'Type',
+      flex: 1,
+      minWidth: columnMinWidths.type,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'reason',
+      label: 'Reason',
+      flex: 1,
+      minWidth: columnMinWidths.reason,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: columnMinWidths.source,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
       minWidth: columnMinWidths.message,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'firstSeen',
@@ -652,16 +749,28 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
-    { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count, sortable: true },
+    {
+      key: 'count',
+      label: 'Count',
+      flex: 1,
+      minWidth: columnMinWidths.count,
+      sortable: true,
+    },
     {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
