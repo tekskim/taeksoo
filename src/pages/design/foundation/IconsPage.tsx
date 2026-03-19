@@ -223,7 +223,6 @@ import {
   IconWorld,
   IconUserCog,
   IconCalendarTime,
-  IconBox,
   IconCompass,
   IconPackages,
   IconMessageCircle,
@@ -571,7 +570,6 @@ const iconCategories: IconCategoryData[] = [
   {
     title: 'Container & Workloads',
     items: [
-      { icon: IconBox, name: 'IconBox', label: 'Pod' },
       { icon: IconRocket, name: 'IconRocket', label: 'Deploy' },
       { icon: IconCompass, name: 'IconCompass', label: 'Compass' },
       { icon: IconPackages, name: 'IconPackages', label: 'Packages' },
