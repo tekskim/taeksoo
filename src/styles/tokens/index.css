@@ -5,8 +5,9 @@
 @import './dark.css';
 @import './compatibility.css';
 
-/* Dark mode using prefers-color-scheme */
-@media (prefers-color-scheme: dark) {
+/* Dark mode: controlled by .dark class and data-theme="dark" only.
+   prefers-color-scheme media query removed to prevent OS-level override. */
+/* @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --primitive-color-white: #ffffff;
     --primitive-color-black: #000000;
@@ -288,4 +289,4 @@
     --component-menu-section-padding-y: 0.25rem;
     --component-menu-divider-margin: 0.5rem;
   }
-}
+} */
