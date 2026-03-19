@@ -83,6 +83,7 @@ export function Select({
   // Refs
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Controlled vs Uncontrolled
   const isControlled = controlledValue !== undefined;
@@ -305,7 +306,7 @@ export function Select({
   );
 
   return (
-    <div className={wrapperClasses} data-figma-name="[TDS] Dropdown.Select">
+    <div ref={containerRef} className={wrapperClasses} data-figma-name="[TDS] Dropdown.Select">
       {/* Label */}
       {label && (
         <label htmlFor={triggerId} className="text-label-lg text-[var(--color-text-default)]">
@@ -375,80 +376,87 @@ export function Select({
       {isOpen &&
         createPortal(
           <div
-            ref={listboxRef}
-            id={listboxId}
-            role="listbox"
-            aria-labelledby={triggerId}
-            tabIndex={-1}
-            onKeyDown={handleListboxKeyDown}
-            className={dropdownClasses}
-            style={{
-              top: dropdownPosition.top,
-              left: dropdownPosition.left,
-              width: dropdownPosition.width,
-            }}
+            data-theme={
+              containerRef.current?.closest('[data-theme]')?.getAttribute('data-theme') || undefined
+            }
+            className={containerRef.current?.closest('[data-theme="dark"]') ? 'dark' : ''}
           >
-            {/* Clear option */}
-            {clearable && (
-              <div
-                role="option"
-                aria-selected={false}
-                onClick={() => handleClear()}
-                className={twMerge(
-                  'flex items-center justify-between',
-                  'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
-                  'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-[number:var(--font-weight-regular)]',
-                  'cursor-pointer transition-colors duration-[var(--duration-fast)]',
-                  'text-[var(--color-text-muted)] hover:bg-[var(--select-item-hover-bg)] hover:text-[var(--color-text-default)]'
-                )}
-              >
-                <span>{clearLabel}</span>
-              </div>
-            )}
-            {options.map((option, index) => {
-              const isSelected = option.value === currentValue;
-              const isFocused = enabledOptions[focusedIndex]?.value === option.value;
-
-              return (
+            <div
+              ref={listboxRef}
+              id={listboxId}
+              role="listbox"
+              aria-labelledby={triggerId}
+              tabIndex={-1}
+              onKeyDown={handleListboxKeyDown}
+              className={dropdownClasses}
+              style={{
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
+                width: dropdownPosition.width,
+              }}
+            >
+              {/* Clear option */}
+              {clearable && (
                 <div
-                  key={option.value}
                   role="option"
-                  aria-selected={isSelected}
-                  aria-disabled={option.disabled}
-                  onClick={() => selectOption(option)}
-                  onMouseEnter={() => {
-                    if (!option.disabled) {
-                      const enabledIndex = enabledOptions.findIndex(
-                        (o) => o.value === option.value
-                      );
-                      setFocusedIndex(enabledIndex);
-                    }
-                  }}
+                  aria-selected={false}
+                  onClick={() => handleClear()}
                   className={twMerge(
                     'flex items-center justify-between',
                     'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
                     'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-[number:var(--font-weight-regular)]',
                     'cursor-pointer transition-colors duration-[var(--duration-fast)]',
-                    // States
-                    option.disabled
-                      ? 'text-[var(--color-text-subtle)] cursor-not-allowed'
-                      : isSelected
-                        ? 'bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)]'
-                        : isFocused
-                          ? 'bg-[var(--select-item-hover-bg)] text-[var(--color-text-default)]'
-                          : 'text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)]'
+                    'text-[var(--color-text-muted)] hover:bg-[var(--select-item-hover-bg)] hover:text-[var(--color-text-default)]'
                   )}
                 >
-                  <span>{option.label}</span>
-                  {isSelected && (
-                    <IconCheck
-                      size={14}
-                      className="shrink-0 text-[var(--select-item-selected-text)]"
-                    />
-                  )}
+                  <span>{clearLabel}</span>
                 </div>
-              );
-            })}
+              )}
+              {options.map((option, index) => {
+                const isSelected = option.value === currentValue;
+                const isFocused = enabledOptions[focusedIndex]?.value === option.value;
+
+                return (
+                  <div
+                    key={option.value}
+                    role="option"
+                    aria-selected={isSelected}
+                    aria-disabled={option.disabled}
+                    onClick={() => selectOption(option)}
+                    onMouseEnter={() => {
+                      if (!option.disabled) {
+                        const enabledIndex = enabledOptions.findIndex(
+                          (o) => o.value === option.value
+                        );
+                        setFocusedIndex(enabledIndex);
+                      }
+                    }}
+                    className={twMerge(
+                      'flex items-center justify-between',
+                      'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
+                      'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-[number:var(--font-weight-regular)]',
+                      'cursor-pointer transition-colors duration-[var(--duration-fast)]',
+                      // States
+                      option.disabled
+                        ? 'text-[var(--color-text-subtle)] cursor-not-allowed'
+                        : isSelected
+                          ? 'bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)]'
+                          : isFocused
+                            ? 'bg-[var(--select-item-hover-bg)] text-[var(--color-text-default)]'
+                            : 'text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)]'
+                    )}
+                  >
+                    <span>{option.label}</span>
+                    {isSelected && (
+                      <IconCheck
+                        size={14}
+                        className="shrink-0 text-[var(--select-item-selected-text)]"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>,
           document.body
         )}

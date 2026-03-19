@@ -1142,10 +1142,6 @@ html.theme-transition *::after {
   --color-text-warning: var(--semantic-color-state-warning);
   --color-text-danger: var(--semantic-color-state-danger);
 
-  /* Tooltip (Dark Mode) */
-  --tooltip-bg: var(--semantic-color-surface-elevated);
-  --tooltip-text: var(--semantic-color-text);
-
   /* Extended Surface Colors - Dark Mode */
   --color-surface-sunken: var(--semantic-color-surface);
   --color-action-primary-subtle: rgba(59, 130, 246, 0.15);
@@ -1174,49 +1170,32 @@ html.theme-transition *::after {
   --badge-subtle-gray-bg: var(--semantic-color-surface-hover);
   --badge-subtle-gray-text: var(--color-slate-300);
   --badge-white-border: var(--semantic-color-border-strong);
-  --card-details-bg: var(--semantic-color-surface-hover);
 
-  /* Input (Dark Mode) */
-  --input-bg: var(--color-surface-default);
-  --input-border: var(--color-border-strong);
+  /* Input (Dark Mode - specific overrides) */
   --input-bg-disabled: var(--semantic-color-surface-hover);
   --input-text-disabled: var(--semantic-color-text-disabled);
 
-  /* Select (Dark Mode) */
-  --select-bg: var(--color-surface-default);
-  --select-border: var(--color-border-strong);
+  /* Select (Dark Mode - specific overrides) */
   --select-bg-disabled: var(--semantic-color-surface-hover);
-  --select-menu-bg: var(--semantic-color-surface);
-  --select-menu-border: var(--semantic-color-border-strong);
-  --select-item-hover-bg: var(--semantic-color-surface-hover);
   --select-item-selected-bg: rgba(59, 130, 246, 0.15);
   --select-item-selected-text: var(--semantic-color-primary);
 
-  /* Radio (Dark Mode) */
-  --radio-bg: var(--semantic-color-surface);
-  --radio-border: var(--semantic-color-border-strong);
+  /* Radio (Dark Mode - specific overrides) */
   --radio-disabled-bg: var(--semantic-color-surface-hover);
   --radio-disabled-border: var(--semantic-color-border);
   --radio-disabled-dot: var(--semantic-color-text-disabled);
 
-  /* Toggle (Dark Mode) */
-  --toggle-bg: var(--semantic-color-surface-hover);
+  /* Toggle (Dark Mode - specific overrides) */
   --toggle-disabled-bg: var(--semantic-color-surface);
   --toggle-checked-disabled-bg: var(--semantic-color-surface-hover);
   --toggle-thumb-disabled: var(--semantic-color-text-disabled);
 
-  /* Checkbox (Dark Mode) */
-  --checkbox-bg: var(--semantic-color-surface);
-  --checkbox-border: var(--color-border-strong);
-  --checkbox-label-color: var(--color-text-default);
-  --checkbox-label-disabled: var(--color-text-disabled);
-  --checkbox-description-color: var(--color-text-subtle);
-  --checkbox-disabled-bg: var(--semantic-color-surface-hover);
+  /* Checkbox (Dark Mode - specific overrides) */
   --checkbox-disabled-border: var(--semantic-color-border);
   --checkbox-disabled-checked-bg: var(--semantic-color-surface-hover);
   --checkbox-icon-disabled: var(--semantic-color-text-disabled);
 
-  /* InlineMessage (Dark Mode) */
+  /* InlineMessage (Dark Mode - specific overrides) */
   --inline-message-success-bg: rgba(34, 197, 94, 0.12);
   --inline-message-success-icon: var(--semantic-color-state-success);
   --inline-message-warning-bg: rgba(249, 115, 22, 0.12);
@@ -1272,6 +1251,114 @@ html.theme-transition *::after {
 
   /* Action Icon (Dark Mode) */
   --action-icon-color: var(--semantic-color-text);
+
+  /* ----------------------------------------
+     Re-declared component tokens for dark theme scoping.
+     CSS custom properties inherit COMPUTED values,
+     so var() references must be re-evaluated in dark context.
+     ---------------------------------------- */
+
+  /* Card (Dark Mode) */
+  --card-details-bg: var(--color-surface-muted);
+
+  /* Chip (Dark Mode) */
+  --chip-bg: var(--color-surface-default);
+  --chip-border: var(--color-border-default);
+  --chip-separator-color: var(--color-border-default);
+  --chip-border-selected: var(--color-action-primary);
+
+  /* DatePicker (Dark Mode - additional) */
+  --datepicker-range-bg: #253754;
+  --datepicker-hover-bg: var(--color-surface-hover);
+
+  /* ContextMenu (Dark Mode - additional) */
+  --context-menu-hover-bg: var(--color-surface-hover);
+
+  /* Table (Dark Mode - additional) */
+  --table-header-bg: var(--color-surface-muted);
+  --table-row-hover-bg: var(--color-surface-hover);
+
+  /* TabBar (Dark Mode - additional) */
+  --tabbar-hover-bg: var(--color-surface-muted);
+
+  /* TopBar (Dark Mode - additional) */
+  --topbar-button-hover-bg: var(--color-surface-hover);
+
+  /* Slider (Dark Mode) */
+  --slider-track-bg: var(--color-border-subtle);
+  --slider-fill-bg: var(--color-action-primary);
+  --slider-thumb-bg: var(--color-surface-default);
+  --slider-thumb-border: var(--color-action-primary);
+
+  /* Select (Dark Mode - additional) */
+  --select-bg: var(--color-surface-default);
+  --select-border: var(--color-border-strong);
+  --select-menu-bg: var(--color-surface-default);
+  --select-menu-border: var(--color-border-strong);
+  --select-item-hover-bg: var(--color-surface-hover);
+
+  /* Tabs (Dark Mode - additional) */
+  --tabs-active-color: var(--color-action-primary);
+  --tabs-inactive-color: var(--color-text-muted);
+  --tabs-hover-color: var(--color-text-default);
+  --tabs-boxed-border: var(--color-border-default);
+  --tabs-boxed-active-bg: var(--color-surface-default);
+  --tabs-indicator-color: var(--color-action-primary);
+
+  /* Radio (Dark Mode - additional) */
+  --radio-bg: var(--color-surface-default);
+  --radio-border: var(--color-border-strong);
+  --radio-label-color: var(--color-text-default);
+  --radio-label-disabled: var(--color-text-disabled);
+  --radio-description-color: var(--color-text-subtle);
+
+  /* Toggle (Dark Mode - additional) */
+  --toggle-bg: var(--color-surface-hover);
+  --toggle-label-color: var(--color-text-default);
+  --toggle-label-disabled: var(--color-text-disabled);
+  --toggle-description-color: var(--color-text-subtle);
+
+  /* Checkbox (Dark Mode - additional) */
+  --checkbox-bg: var(--color-surface-default);
+  --checkbox-border: var(--color-border-strong);
+  --checkbox-label-color: var(--color-text-default);
+  --checkbox-label-disabled: var(--color-text-disabled);
+  --checkbox-description-color: var(--color-text-subtle);
+  --checkbox-disabled-bg: var(--color-surface-muted);
+
+  /* Breadcrumb (Dark Mode - additional) */
+  --breadcrumb-text-color: var(--color-text-subtle);
+  --breadcrumb-text-hover: var(--color-text-default);
+  --breadcrumb-text-current: var(--color-text-default);
+  --breadcrumb-separator-color: var(--color-text-subtle);
+
+  /* Pagination (Dark Mode - additional) */
+  --pagination-hover-bg: var(--color-surface-hover);
+  --pagination-text: var(--color-text-muted);
+  --pagination-text-hover: var(--color-text-default);
+
+  /* Input (Dark Mode - additional) */
+  --input-bg: var(--color-surface-default);
+  --input-border: var(--color-border-strong);
+
+  /* InlineMessage (Dark Mode - additional) */
+  --inline-message-text: var(--color-text-default);
+
+  /* Tooltip (Dark Mode) */
+  --tooltip-bg: var(--color-surface-muted);
+  --tooltip-text: var(--color-text-default);
+
+  /* Status Indicator (Dark Mode - additional) */
+  --status-text: var(--color-white);
+
+  /* Button (Dark Mode - additional) */
+  --button-secondary-hover-bg: var(--color-surface-hover);
+  --button-ghost-hover-bg: var(--color-surface-hover);
+
+  /* Menu Item (Dark Mode - additional) */
+  --menu-item-hover-bg: var(--color-surface-hover);
+  --menu-item-active-bg: rgba(30, 58, 138, 0.5);
+  --menu-item-active-text: #93c5fd;
 }
 
 /* ========================================
