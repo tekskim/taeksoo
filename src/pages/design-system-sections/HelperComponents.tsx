@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type ReactNode, type ComponentType } from 'react';
 import { VStack, Tooltip } from '@/design-system';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 /* ----------------------------------------
    Section Component
@@ -173,18 +174,31 @@ export function SemanticColorRow({
   token,
   cssVar,
   primitive,
+  darkPrimitive,
+  darkHex,
   border = false,
+  isDark: isDarkProp,
 }: {
   token: string;
   cssVar: string;
   primitive: string;
+  darkPrimitive?: string;
+  darkHex?: string;
   border?: boolean;
+  isDark?: boolean;
 }) {
-  const [hexValue, setHexValue] = useState('');
+  const { isDark: isDarkGlobal } = useDarkMode();
+  const isDark = isDarkProp ?? isDarkGlobal;
+  const [computedHex, setComputedHex] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
+  const activePrimitive = isDark && darkPrimitive ? darkPrimitive : primitive;
+  const useDarkOverride = isDark && darkHex;
+  const displayHex = useDarkOverride ? darkHex : computedHex;
+
   useEffect(() => {
+    if (useDarkOverride) return;
     if (ref.current) {
       const computed = getComputedStyle(ref.current).backgroundColor;
       const match = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
@@ -196,12 +210,11 @@ export function SemanticColorRow({
               const h = parseInt(x).toString(16);
               return h.length === 1 ? '0' + h : h;
             })
-            .join('')
-            .toUpperCase();
-        setHexValue(hex);
+            .join('');
+        setComputedHex(hex);
       }
     }
-  }, [cssVar]);
+  }, [cssVar, isDark, useDarkOverride]);
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -215,7 +228,7 @@ export function SemanticColorRow({
         <div
           ref={ref}
           className={`w-8 h-8 rounded-[var(--radius-sm)] ${border ? 'border border-[var(--color-border-default)]' : ''}`}
-          style={{ backgroundColor: `var(${cssVar})` }}
+          style={{ backgroundColor: useDarkOverride ? darkHex : `var(${cssVar})` }}
         />
       </td>
       <td className="py-2 pr-3">
@@ -228,14 +241,16 @@ export function SemanticColorRow({
       </td>
       <td className="py-2 pr-3">
         <button
-          onClick={() => handleCopy(hexValue, 'hex')}
+          onClick={() => handleCopy(displayHex, 'hex')}
           className="font-mono text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] transition-colors"
         >
-          {copied === 'hex' ? '✓ Copied' : hexValue}
+          {copied === 'hex' ? '✓ Copied' : displayHex}
         </button>
       </td>
       <td className="py-2">
-        <span className="font-mono text-body-sm text-[var(--color-text-subtle)]">{primitive}</span>
+        <span className="font-mono text-body-sm text-[var(--color-text-subtle)]">
+          {activePrimitive}
+        </span>
       </td>
     </tr>
   );
@@ -247,9 +262,18 @@ export function SemanticColorRow({
 export function SemanticColorTable({
   title,
   colors,
+  isDark,
 }: {
   title: string;
-  colors: Array<{ token: string; cssVar: string; primitive: string; border?: boolean }>;
+  colors: Array<{
+    token: string;
+    cssVar: string;
+    primitive: string;
+    darkPrimitive?: string;
+    darkHex?: string;
+    border?: boolean;
+  }>;
+  isDark?: boolean;
 }) {
   return (
     <VStack gap={3} className="flex-1 min-w-[280px]">
@@ -272,7 +296,7 @@ export function SemanticColorTable({
           </thead>
           <tbody>
             {colors.map((color) => (
-              <SemanticColorRow key={color.token} {...color} />
+              <SemanticColorRow key={color.token} {...color} isDark={isDark} />
             ))}
           </tbody>
         </table>
