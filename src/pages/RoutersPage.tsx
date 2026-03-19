@@ -394,7 +394,7 @@ export function RoutersPage() {
               { id: 'disconnect-subnet', label: 'Disconnect subnet', onClick: () => {} },
               { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
               { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger', divider: true },
+              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
             ]}
             trigger="click"
           >

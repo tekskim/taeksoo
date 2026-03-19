@@ -186,7 +186,6 @@ export function ContainerNamespacesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -198,12 +197,13 @@ export function ContainerNamespacesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/container/namespaces/${value}`);
@@ -218,6 +218,7 @@ export function ContainerNamespacesPage() {
       label: 'Description',
       flex: 1,
       minWidth: columnMinWidths.description,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -252,6 +253,7 @@ export function ContainerNamespacesPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
           },
         ];

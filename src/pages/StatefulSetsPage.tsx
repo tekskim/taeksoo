@@ -187,7 +187,6 @@ export function StatefulSetsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -199,12 +198,12 @@ export function StatefulSetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -227,11 +226,14 @@ export function StatefulSetsPage() {
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.image,
+      sortable: true,
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -239,7 +241,11 @@ export function StatefulSetsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+        </span>
+      ),
     },
     {
       key: 'actions',

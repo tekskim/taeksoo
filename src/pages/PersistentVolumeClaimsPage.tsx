@@ -205,7 +205,6 @@ export function PersistentVolumeClaimsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -217,7 +216,7 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -239,11 +238,16 @@ export function PersistentVolumeClaimsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="min-w-0 truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'volume',
       label: 'Volume',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.volume,
       sortable: true,
       render: (value: string) =>

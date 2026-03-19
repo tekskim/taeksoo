@@ -246,7 +246,6 @@ export function PodsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -258,12 +257,12 @@ export function PodsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -280,28 +279,49 @@ export function PodsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.image,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
+      sortable: true,
     },
     {
       key: 'ip',
       label: 'IP',
       flex: 1,
       minWidth: columnMinWidths.ip,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -309,7 +329,14 @@ export function PodsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+        return (
+          <span className="truncate block min-w-0" title={value}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -317,7 +344,7 @@ export function PodsPage() {
       width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
-        <div onClick={(e) => e.stopPropagation()}>
+        <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal

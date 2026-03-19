@@ -345,12 +345,13 @@ export function PodDisruptionBudgetDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
-          onClick={() => navigate(`/container/events/${value}`)}
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
+          onClick={() => navigate(`/container/events/${value}`)}
         >
           {value}
         </span>

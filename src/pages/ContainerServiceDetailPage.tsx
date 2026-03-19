@@ -280,6 +280,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       {
         id: 'delete',
         label: 'Delete',
+        status: 'danger',
         onClick: () => console.log('Delete:', row.id),
       },
     ];
@@ -290,7 +291,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -308,7 +309,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: true,
       render: (value: string, row: PodRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
           title={value}
           onClick={() => navigate(`/container/pods/${row.id}`)}
         >
@@ -326,13 +327,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -345,9 +348,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'node',
       label: 'Node',
       flex: 1,
+      minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -356,8 +363,16 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -430,12 +445,14 @@ function PortsTab({ ports }: PortsTabProps) {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
+      minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'target',
       label: 'Target',
       flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: true,
     },
     {
@@ -533,13 +550,14 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'type',
       label: 'Condition',
       flex: 1,
+      minWidth: columnMinWidths.condition,
       sortable: true,
     },
     {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -553,9 +571,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
-        <span className="truncate" title={`[${row.reason}] ${value}`}>
+        <span className="truncate min-w-0" title={`[${row.reason}] ${value}`}>
           [{row.reason}] {value}
         </span>
       ),
@@ -564,6 +583,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'lastTransition',
       label: 'Updated',
       flex: 1,
+      minWidth: columnMinWidths.lastUpdate,
       sortable: true,
     },
   ];
@@ -653,6 +673,7 @@ export function ContainerServiceDetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];

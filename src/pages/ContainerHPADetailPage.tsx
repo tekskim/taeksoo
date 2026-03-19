@@ -269,12 +269,16 @@ function ConditionsTab() {
       flex: 1,
       minWidth: columnMinWidths.condition,
       sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -291,7 +295,7 @@ function ConditionsTab() {
       minWidth: columnMinWidths.message,
       sortable: true,
       render: (value) => (
-        <span className="truncate" title={value}>
+        <span className="truncate block" title={value ?? ''}>
           {value}
         </span>
       ),
@@ -302,6 +306,11 @@ function ConditionsTab() {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
   ];
 
@@ -393,6 +402,7 @@ export function ContainerHPADetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];

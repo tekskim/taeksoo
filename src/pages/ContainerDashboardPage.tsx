@@ -286,15 +286,30 @@ const eventsColumns: TableColumn<EventRow>[] = [
     minWidth: columnMinWidths.object,
     sortable: true,
     render: (value: string) => (
-      <span
-        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-        title={value}
-      >
-        {value}
-      </span>
+      <div className="min-w-0">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          title={value}
+        >
+          {value}
+        </span>
+      </div>
     ),
   },
-  { key: 'message', label: 'Message', flex: 1, minWidth: columnMinWidths.message, sortable: true },
+  {
+    key: 'message',
+    label: 'Message',
+    flex: 1,
+    minWidth: columnMinWidths.message,
+    sortable: true,
+    render: (value: string) => (
+      <div className="min-w-0">
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      </div>
+    ),
+  },
   {
     key: 'name',
     label: 'Name',
@@ -302,12 +317,14 @@ const eventsColumns: TableColumn<EventRow>[] = [
     minWidth: columnMinWidths.name,
     sortable: true,
     render: (value: string) => (
-      <span
-        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-        title={value}
-      >
-        {value}
-      </span>
+      <div className="min-w-0">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          title={value}
+        >
+          {value}
+        </span>
+      </div>
     ),
   },
   {
