@@ -1,0 +1,41 @@
+---
+description: Component implementation patterns — CVA, cn(), styles, props
+globs:
+  - 'src/components/**/*.{ts,tsx}'
+  - 'src/features/**/*.{ts,tsx}'
+alwaysApply: false
+---
+
+## Component Patterns
+
+1. Style files use `*.styles.ts` with `class-variance-authority` (CVA) variants.
+2. Combine classes with `cn()` — do not build className strings manually.
+3. Prefer existing design tokens (`var(--semantic-*)`, Tailwind preset) over raw hex/px values.
+4. Export explicit public props interfaces. Keep internal-only types unexported.
+5. Default exports are acceptable for components when stories or barrel files already rely on them.
+6. Storybook stories live in `src/stories/` and import from the public barrel (`src/components/index.tsx`), not deep paths.
+
+### CVA Example
+
+```typescript
+// Button.styles.ts
+import { cva } from 'class-variance-authority';
+
+export const buttonVariants = cva('inline-flex items-center justify-center', {
+  variants: {
+    variant: { primary: '...', secondary: '...' },
+    size: { sm: '...', md: '...', lg: '...' },
+  },
+  defaultVariants: { variant: 'primary', size: 'md' },
+});
+```
+
+```tsx
+// Button.tsx
+import { cn } from '@/services/utils';
+import { buttonVariants } from './Button.styles';
+
+export const Button = ({ variant, size, className, ...props }: ButtonProps) => (
+  <button className={cn(buttonVariants({ variant, size }), className)} {...props} />
+);
+```

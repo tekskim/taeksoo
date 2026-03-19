@@ -35,4 +35,8 @@ storybook-static
 
 # npm auth token
 .npmrc
-thaki-shared-v2/
+thaki-shared-v2/node_modules/
+thaki-shared-v2/dist/
+thaki-shared-v2/preview/node_modules/
+thaki-shared-v2/preview/dist/
+thaki-shared-v2/visual-report/

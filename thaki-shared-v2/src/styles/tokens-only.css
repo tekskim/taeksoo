@@ -1,0 +1,4 @@
+/* Token-only import for remote apps */
+/* Excludes global resets to prevent conflicts with host styles */
+
+@import './tokens/index.css';

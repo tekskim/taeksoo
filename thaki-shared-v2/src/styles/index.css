@@ -1,0 +1,4 @@
+/* 최종 합쳐진 css 파일 */
+
+@import './tailwind.css';
+@import './core.css';
