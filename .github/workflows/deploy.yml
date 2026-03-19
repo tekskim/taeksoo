@@ -44,6 +44,15 @@ jobs:
           fi
           ls -la docs/404.html
 
+      - name: Install shared-v2 preview dependencies
+        run: cd thaki-shared-v2/preview && npm install --legacy-peer-deps
+
+      - name: Build shared-v2 preview
+        run: cd thaki-shared-v2/preview && npm run build
+
+      - name: Add SPA fallback for shared-v2 preview
+        run: cp docs/shared-v2/index.html docs/shared-v2/404.html
+
       - name: Build Storybook
         run: pnpm run build-storybook
 
