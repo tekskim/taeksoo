@@ -72,6 +72,16 @@ const appCards: AppCard[] = [
     available: true,
   },
   {
+    id: 'iam-shared-v2',
+    title: 'IAM (shared-v2)',
+    description: 'IAM with thaki-shared-v2 components applied',
+    icon: <img src={IAMIcon} alt="IAM shared-v2" className="w-[72px] h-[72px]" />,
+    path: '/iam-shared-v2',
+    color: 'from-amber-500 to-orange-500',
+    available: true,
+    badge: 'shared-v2',
+  },
+  {
     id: 'storage',
     title: 'Storage',
     description: 'Object storage, file systems, and data management',
@@ -198,7 +208,11 @@ export function EntryPage() {
 
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
-      navigate(card.path);
+      if (card.id === 'iam-shared-v2') {
+        window.open('http://localhost:5177/iam', '_blank');
+      } else {
+        navigate(card.path);
+      }
     }
   };
 

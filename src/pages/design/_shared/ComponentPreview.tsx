@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from 'react';
 import { CodeBlock } from './CodeBlock';
 import { IconCode, IconEye, IconSun, IconMoon } from '@tabler/icons-react';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 interface ComponentPreviewProps {
   children: ReactNode;
@@ -9,8 +10,11 @@ interface ComponentPreviewProps {
 }
 
 export function ComponentPreview({ children, code, language }: ComponentPreviewProps) {
+  const { isDark: isGlobalDark } = useDarkMode();
   const [showCode, setShowCode] = useState(false);
-  const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>('light');
+  const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>(
+    isGlobalDark ? 'dark' : 'light'
+  );
 
   return (
     <div className="rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">

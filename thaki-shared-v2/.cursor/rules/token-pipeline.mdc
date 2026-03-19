@@ -1,0 +1,35 @@
+---
+description: Token generation pipeline — sources, scripts, generated outputs
+globs:
+  - 'tokens/**'
+  - 'src/styles/tokens/**'
+  - 'tailwind.preset.js'
+alwaysApply: false
+---
+
+## Token Pipeline
+
+### Flow
+
+```
+tokens/*.json  (source of truth)
+    ↓  scripts/generate-css-tokens.js
+src/styles/tokens/tokens-*.css  (generated)
+    ↓  scripts/generate-tailwind-preset.js
+tailwind.preset.js  (generated)
+```
+
+### Rules
+
+1. Edit `tokens/dark.json` and `tokens/light.json` — never edit generated CSS or preset files directly.
+2. After editing token sources, regenerate outputs via the scripts.
+3. When adding a new semantic token, add it to both `dark.json` and `light.json`.
+4. `generate-custom-tokens.js` and `generate-token-docs.js` are supplementary scripts — run them when the task involves custom tokens or documentation.
+
+### Verification
+
+```bash
+node tokens/generate-css-tokens.js
+node tokens/generate-tailwind-preset.js
+pnpm build
+```
