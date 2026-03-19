@@ -85,7 +85,7 @@ export const tableStyles = {
   stickyLast: 'sticky right-0 z-[2]',
   stickyLastTh: 'z-[3]',
   stickyLastTheadBg: 'bg-surface-subtle',
-  stickyLastTbodyBg: 'bg-surface',
+  stickyLastTbodyBg: 'bg-inherit',
 
   // Column divider (needs CSS for ::after pseudo-element)
   columnDivider: 'table-th-divider',
