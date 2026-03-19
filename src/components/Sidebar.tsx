@@ -26,7 +26,7 @@ import {
   IconUsersGroup,
   IconFileCode,
 } from '@tabler/icons-react';
-import { EthernetPort, ChevronsLeftRightEllipsis } from 'lucide-react';
+import { EthernetPort, ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
@@ -80,6 +80,15 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
       (location.pathname.startsWith(`${basePath}/listeners`) ||
         location.pathname.startsWith(`${basePath}/pools`) ||
         location.pathname.startsWith(`${basePath}/l7-policies`))
+    ) {
+      return true;
+    }
+    // Match child resources - Firewalls, Firewall Policies, and Firewall Rules are under NACL/Firewall
+    if (
+      href === `${basePath}/firewall` &&
+      (location.pathname.startsWith(`${basePath}/firewalls`) ||
+        location.pathname.startsWith(`${basePath}/firewall-policies`) ||
+        location.pathname.startsWith(`${basePath}/firewall-rules`))
     ) {
       return true;
     }
@@ -456,6 +465,12 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                   label="Load balancers"
                   href={`${basePath}/load-balancers`}
                   active={isActive(`${basePath}/load-balancers`)}
+                />
+                <MenuItem
+                  icon={<BrickWallFire size={16} strokeWidth={1.5} />}
+                  label="NACL"
+                  href={`${basePath}/firewall`}
+                  active={isActive(`${basePath}/firewall`)}
                 />
                 <MenuItem
                   icon={<IconCertificate size={16} stroke={1.5} />}
