@@ -213,7 +213,6 @@ export function PersistentVolumesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -225,7 +224,7 @@ export function PersistentVolumesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -274,9 +273,16 @@ export function PersistentVolumesPage() {
       key: 'reason',
       label: 'Reason',
       flex: 1,
+      minWidth: columnMinWidths.reason,
       sortable: true,
       render: (value: string) =>
-        value ? <span>{value}</span> : <span className="text-[var(--color-text-subtle)]">-</span>,
+        value ? (
+          <span className="min-w-0 truncate block" title={value}>
+            {value}
+          </span>
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        ),
     },
     {
       key: 'createdAt',
@@ -284,7 +290,14 @@ export function PersistentVolumesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="min-w-0 truncate block" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',

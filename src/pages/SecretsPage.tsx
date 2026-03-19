@@ -176,20 +176,22 @@ export function SecretsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/secrets/${row.id}`);
-          }}
-        >
-          {value}
-        </span>
+        <div className="min-w-0">
+          <span
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            title={value}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/container/secrets/${row.id}`);
+            }}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
@@ -199,29 +201,58 @@ export function SecretsPage() {
       minWidth: columnMinWidths.namespace,
       sortable: true,
       render: (value: string) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
+        <div className="min-w-0">
+          <span
+            className="text-body-md text-[var(--color-text-default)] truncate block"
+            title={value}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
-      render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      render: (value: string) => (
+        <div className="min-w-0">
+          <span className="text-[var(--color-text-default)] truncate block" title={value}>
+            {value}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'data',
       label: 'Data',
       flex: 1,
       minWidth: columnMinWidths.data,
-      render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      sortable: true,
+      render: (value: string) => (
+        <div className="min-w-0">
+          <span className="text-[var(--color-text-default)] truncate block" title={value}>
+            {value}
+          </span>
+        </div>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const displayed = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="whitespace-nowrap" title={value}>
+            {displayed}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',

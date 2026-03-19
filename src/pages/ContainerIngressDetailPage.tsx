@@ -128,7 +128,10 @@ function RulesTab({ rules }: RulesTabProps) {
       minWidth: columnMinWidths.path,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -137,9 +140,13 @@ function RulesTab({ rules }: RulesTabProps) {
       key: 'targetService',
       label: 'Target service',
       flex: 1,
+      minWidth: columnMinWidths.targetService,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -148,15 +155,20 @@ function RulesTab({ rules }: RulesTabProps) {
       key: 'port',
       label: 'Port',
       flex: 1,
+      minWidth: columnMinWidths.port,
       sortable: true,
     },
     {
       key: 'certificates',
       label: 'Certificates',
       flex: 1,
+      minWidth: columnMinWidths.certificates,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),

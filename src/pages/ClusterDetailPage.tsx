@@ -5,7 +5,8 @@ import {
   TopBar,
   Breadcrumb,
   Button,
-  StatusIndicator,
+  Badge,
+  DetailHeader,
   SectionCard,
   Tabs,
   TabList,
@@ -243,6 +244,7 @@ export function ClusterDetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];
@@ -306,15 +308,10 @@ export function ClusterDetailPage() {
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
       <VStack gap={8}>
-        {/* Header Card */}
-        <div className="w-full bg-white border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Cluster Name */}
-            <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-              {clusterData.name}
-            </h1>
+        <DetailHeader>
+          <DetailHeader.Title>{clusterData.name}</DetailHeader.Title>
 
-            {/* More actions Button */}
+          <DetailHeader.Actions>
             <ContextMenu items={moreActionsItems} trigger="click" align="right">
               <Button
                 variant="secondary"
@@ -324,62 +321,25 @@ export function ClusterDetailPage() {
                 More actions
               </Button>
             </ContextMenu>
+          </DetailHeader.Actions>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-4 gap-3 w-full">
-              {/* Status */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative">
-                <VStack gap={1}>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Status</span>
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {clusterData.status.charAt(0).toUpperCase() + clusterData.status.slice(1)}
-                  </span>
-                </VStack>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <StatusIndicator
-                    status={statusMap[clusterData.status]}
-                    layout="icon-only"
-                    size="lg"
-                  />
-                </div>
-              </div>
-
-              {/* Kubernetes version */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <VStack gap={1}>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                    Kubernetes version
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {clusterData.kubernetesVersion}
-                  </span>
-                </VStack>
-              </div>
-
-              {/* Container network */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <VStack gap={1}>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                    Container network
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {clusterData.containerNetwork}
-                  </span>
-                </VStack>
-              </div>
-
-              {/* Created At */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                <VStack gap={1}>
-                  <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {clusterData.createdAt}
-                  </span>
-                </VStack>
-              </div>
-            </div>
-          </VStack>
-        </div>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={
+                <Badge theme="white" size="sm">
+                  {clusterData.status}
+                </Badge>
+              }
+            />
+            <DetailHeader.InfoCard
+              label="Kubernetes version"
+              value={clusterData.kubernetesVersion}
+            />
+            <DetailHeader.InfoCard label="Container network" value={clusterData.containerNetwork} />
+            <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>

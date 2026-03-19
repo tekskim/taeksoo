@@ -425,7 +425,7 @@ export function ComputeAdminRoutersPage() {
           <ContextMenu
             items={[
               { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger', divider: true },
+              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
             ]}
             trigger="click"
           >

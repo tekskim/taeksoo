@@ -263,7 +263,6 @@ export function CertificatesPage() {
       id: 'download',
       label: 'Download',
       onClick: () => console.log('Download:', cert.id),
-      divider: true,
     },
     {
       id: 'delete',

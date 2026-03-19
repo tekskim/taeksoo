@@ -241,7 +241,6 @@ export function ContainerEventsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -253,7 +252,7 @@ export function ContainerEventsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
     },
@@ -276,12 +275,14 @@ export function ContainerEventsPage() {
       label: 'Type',
       flex: 1,
       minWidth: columnMinWidths.type,
+      sortable: true,
     },
     {
       key: 'reason',
       label: 'Reason',
       flex: 1,
       minWidth: columnMinWidths.reason,
+      sortable: true,
     },
     {
       key: 'object',
@@ -312,7 +313,7 @@ export function ContainerEventsPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-body-md text-[var(--color-text-default)] truncate block"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}

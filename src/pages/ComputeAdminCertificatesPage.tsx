@@ -259,7 +259,6 @@ export function ComputeAdminCertificatesPage() {
       id: 'download',
       label: 'Download',
       onClick: () => console.log('Download:', cert.id),
-      divider: true,
     },
     {
       id: 'delete',

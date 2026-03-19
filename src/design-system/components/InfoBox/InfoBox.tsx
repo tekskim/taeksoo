@@ -66,7 +66,11 @@ export function InfoBox({
         </span>
       );
     }
-    return <span className="text-body-md text-[var(--color-text-default)]">{value}</span>;
+    return (
+      <span className="text-body-md text-[var(--color-text-default)] min-w-0 overflow-hidden">
+        {value}
+      </span>
+    );
   };
 
   return (

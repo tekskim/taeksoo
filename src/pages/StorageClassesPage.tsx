@@ -188,7 +188,6 @@ export function StorageClassesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -200,12 +199,12 @@ export function StorageClassesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          className="min-w-0 text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -221,6 +220,7 @@ export function StorageClassesPage() {
       label: 'Default',
       flex: 1,
       minWidth: columnMinWidths.default,
+      sortable: true,
       render: (value: boolean) =>
         value ? (
           <IconCheck size={16} className="text-[var(--color-text-default)]" stroke={2} />
@@ -234,7 +234,14 @@ export function StorageClassesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="min-w-0 truncate block" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',

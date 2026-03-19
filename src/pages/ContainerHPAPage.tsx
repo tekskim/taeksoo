@@ -165,7 +165,6 @@ export function ContainerHPAPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value) => (
         <Tooltip content={value}>
@@ -178,11 +177,15 @@ export function ContainerHPAPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
-        <TableLink onClick={() => navigate(`/container/hpa/${row.id}`)}>{value}</TableLink>
+        <div className="min-w-0">
+          <TableLink onClick={() => navigate(`/container/hpa/${row.id}`)} title={value}>
+            {value}
+          </TableLink>
+        </div>
       ),
     },
     {
@@ -191,12 +194,23 @@ export function ContainerHPAPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'workload',
       label: 'Workload',
       flex: 1,
       minWidth: columnMinWidths.workload,
+      sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'minReplicas',
@@ -225,7 +239,14 @@ export function ContainerHPAPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -253,8 +274,8 @@ export function ContainerHPAPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
-            danger: true,
           },
         ];
 
