@@ -197,7 +197,6 @@ function JobsTab({ jobs }: JobsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>

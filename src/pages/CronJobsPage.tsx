@@ -33,6 +33,7 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
+  IconCircleDashed,
   IconPlayerPause,
   IconChevronDown,
 } from '@tabler/icons-react';
@@ -491,7 +492,7 @@ export function CronJobsPage() {
               <Button
                 variant="muted"
                 size="sm"
-                leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
+                leftIcon={<IconCircleDashed size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
               >
                 Run now
