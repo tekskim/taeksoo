@@ -395,17 +395,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'center',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -788,12 +781,10 @@ export function PodDetailPage() {
           {/* Second row: Workload, Node, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Workload
-                </span>
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Workload</span>
                 <span
-                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/deployments/${pod.workload}`)}
                 >
                   {pod.workload}
@@ -801,12 +792,10 @@ export function PodDetailPage() {
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Node
-                </span>
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Node</span>
                 <span
-                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/nodes/${pod.node}`)}
                 >
                   {pod.node}
@@ -815,7 +804,7 @@ export function PodDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(pod.labels).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -862,7 +851,7 @@ export function PodDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(pod.annotations).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">

@@ -209,9 +209,10 @@ export function EntryPage() {
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
       if (card.id === 'iam-shared-v2') {
-        const sharedV2Url = window.location.hostname === 'localhost'
-          ? 'http://localhost:5174/iam'
-          : `${window.location.origin}/tds_ssot/shared-v2/iam`;
+        const sharedV2Url =
+          window.location.hostname === 'localhost'
+            ? 'http://localhost:5174/iam'
+            : `${window.location.origin}/tds_ssot/shared-v2/iam`;
         window.open(sharedV2Url, '_blank');
       } else {
         navigate(card.path);
@@ -296,9 +297,10 @@ export function EntryPage() {
                   variant="muted"
                   size="md"
                   onClick={() => {
-                    const url = window.location.hostname === 'localhost'
-                      ? 'http://localhost:5174'
-                      : `${window.location.origin}/tds_ssot/shared-v2`;
+                    const url =
+                      window.location.hostname === 'localhost'
+                        ? 'http://localhost:5174'
+                        : `${window.location.origin}/tds_ssot/shared-v2`;
                     window.open(url, '_blank');
                   }}
                 >
