@@ -16,7 +16,6 @@ import {
   SectionCard,
   Table,
   Badge,
-  Chip,
   SearchInput,
   Pagination,
   MonitoringToolbar,
@@ -660,7 +659,11 @@ export function ImageDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.status,
       sortable: true,
-      render: (_, row) => <Chip value={row.state} />,
+      render: (_, row) => (
+        <Badge theme="white" size="sm">
+          {row.state}
+        </Badge>
+      ),
     },
     { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     { key: 'used', label: 'Used', flex: 1, minWidth: columnMinWidths.status, sortable: true },
