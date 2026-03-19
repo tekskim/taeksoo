@@ -275,6 +275,13 @@ export function EntryPage() {
                 <Button variant="muted" size="md" onClick={() => navigate('/mail-template')}>
                   Mail Template
                 </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => window.open('http://localhost:5177', '_blank')}
+                >
+                  Shared V2 Preview
+                </Button>
               </div>
             </div>
           </div>

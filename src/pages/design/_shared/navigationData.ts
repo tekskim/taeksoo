@@ -44,6 +44,7 @@ import {
   IconAlertTriangle,
   IconStack2,
   IconSettings,
+  IconPackages,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -505,6 +506,15 @@ const auditItems: NavItem[] = [
   },
 ];
 
+const sharedItems: NavItem[] = [
+  {
+    id: 'shared-components',
+    label: 'Shared Components',
+    icon: IconPackages,
+    path: '/design/shared-components',
+  },
+];
+
 const testItems: NavItem[] = [
   {
     id: 'nested-box-test',
@@ -528,6 +538,7 @@ export const navGroups: NavGroup[] = [
   { title: 'Figma Migration', items: figmaItems },
   { title: 'Audit', items: auditItems },
   { title: 'Prototype', items: prototypeItems },
+  { title: 'Shared', items: sharedItems },
   { title: 'Test', items: testItems },
 ];
 
@@ -649,6 +660,8 @@ export const pageLastUpdated: Record<string, string> = {
   // Audit
   '/design/audit': '2026-03-11 10:00:00',
   '/design/todo': '2026-03-11 12:00:00',
+  // Shared
+  '/design/shared-components': '2026-03-18 12:00:00',
   // Test
   '/design/test/nested-box': '2026-03-05 01:30:00',
 };
