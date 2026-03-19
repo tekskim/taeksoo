@@ -17,7 +17,7 @@ export const formFieldVariants = cva('flex flex-col gap-sm w-full', {
 export const labelVariants = cva(
   [
     'flex items-baseline gap-xs',
-    'font-sans text-14 font-medium leading-20',
+    'font-sans text-[13px] font-medium leading-[18px]',
     '[color:var(--semantic-color-text)]',
     'cursor-pointer',
   ],

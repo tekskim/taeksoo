@@ -1288,7 +1288,7 @@ export function InstanceListPage() {
       ],
     },
     { id: 'confirm-resize', label: 'Confirm resize' },
-    { id: 'revert-resize', label: 'Revert resize', divider: true },
+    { id: 'revert-resize', label: 'Revert resize' },
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 

@@ -12,6 +12,7 @@ import {
   SearchInput,
   Pagination,
   PageShell,
+  ContextMenu,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
@@ -26,7 +27,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconDotsVertical,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -101,14 +102,15 @@ export function ContainerHomePage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
+        <div className="min-w-0">
+          <Tooltip content={value}>
+            <Badge theme="white" size="sm" className="max-w-[80px]">
+              <span className="truncate">{value}</span>
+            </Badge>
+          </Tooltip>
+        </div>
       ),
     },
     {
@@ -118,12 +120,15 @@ export function ContainerHomePage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
-          onClick={() => navigate('/container/dashboard')}
-        >
-          {value}
-        </span>
+        <div className="min-w-0">
+          <span
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            title={value}
+            onClick={() => navigate('/container/dashboard')}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
@@ -146,7 +151,7 @@ export function ContainerHomePage() {
     {
       key: 'manage',
       label: 'Manage',
-      width: fixedColumns.actionWide,
+      width: fixedColumns.actionsDouble,
       align: 'center',
       sortable: false,
       render: (_value: string, row: ClusterRow) => (
@@ -166,10 +171,26 @@ export function ContainerHomePage() {
       width: fixedColumns.actionWide,
       align: 'center',
       sortable: false,
-      render: () => (
-        <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
-          <IconDotsVertical size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-        </button>
+      render: (_value: string, row: ClusterRow) => (
+        <ContextMenu
+          items={[
+            { id: 'kubectl-shell', label: 'Kubectl Shell', onClick: () => {} },
+            { id: 'download-kubeconfig', label: 'Download KubeConfig', onClick: () => {} },
+            { id: 'copy-kubeconfig', label: 'Copy KubeConfig to Clipboard', onClick: () => {} },
+            { id: 'view-yaml', label: 'View YAML', onClick: () => {} },
+            { id: 'download-yaml', label: 'Download YAML', onClick: () => {} },
+            { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+          ]}
+          trigger="click"
+        >
+          <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-muted)]"
+              stroke={1.5}
+            />
+          </button>
+        </ContextMenu>
       ),
     },
   ];

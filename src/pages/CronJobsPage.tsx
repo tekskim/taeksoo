@@ -33,6 +33,7 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
+  IconCircleDashed,
   IconPlayerPause,
   IconChevronDown,
 } from '@tabler/icons-react';
@@ -232,7 +233,6 @@ export function CronJobsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -244,20 +244,22 @@ export function CronJobsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
-          title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/cronjobs/${row.id}`);
-          }}
-        >
-          {value}
-        </span>
+        <div className="min-w-0">
+          <span
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            title={value}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/container/cronjobs/${row.id}`);
+            }}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
@@ -266,24 +268,47 @@ export function CronJobsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
-      minWidth: columnMinWidths.image,
+      minWidth: columnMinWidths.containerImage,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'schedule',
       label: 'Schedule',
       flex: 1,
       minWidth: columnMinWidths.schedule,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'lastSchedule',
       label: 'Last Schedule',
       flex: 1,
       minWidth: columnMinWidths.lastSchedule,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -291,7 +316,14 @@ export function CronJobsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const formatted = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block whitespace-nowrap" title={formatted}>
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -460,7 +492,7 @@ export function CronJobsPage() {
               <Button
                 variant="muted"
                 size="sm"
-                leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
+                leftIcon={<IconCircleDashed size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
               >
                 Run now

@@ -205,7 +205,6 @@ export function DaemonSetsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -217,7 +216,7 @@ export function DaemonSetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -249,17 +248,23 @@ export function DaemonSetsPage() {
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'current',
       label: 'Current',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.current,
+      sortable: true,
     },
     {
       key: 'desired',
       label: 'Desired',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.desired,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -267,7 +272,11 @@ export function DaemonSetsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => (
+        <span className="whitespace-nowrap" title={value}>
+          {value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+        </span>
+      ),
     },
     {
       key: 'actions',
