@@ -261,7 +261,6 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -784,7 +783,7 @@ export function PodDetailPage() {
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Workload</span>
                 <span
-                  className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-body-md font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/deployments/${pod.workload}`)}
                 >
                   {pod.workload}
@@ -795,7 +794,7 @@ export function PodDetailPage() {
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Node</span>
                 <span
-                  className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-body-md font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/nodes/${pod.node}`)}
                 >
                   {pod.node}
