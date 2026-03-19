@@ -3,9 +3,13 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { Label, SemanticColorTable } from '../../design-system-sections/HelperComponents';
 import { VStack } from '@/design-system';
 import { IconSun, IconMoon } from '@tabler/icons-react';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 export function SemanticColorsPage() {
-  const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>('light');
+  const { isDark: isGlobalDark } = useDarkMode();
+  const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>(
+    isGlobalDark ? 'dark' : 'light'
+  );
   const isDark = previewTheme === 'dark';
 
   const themeToggle = (
@@ -78,15 +82,15 @@ export function SemanticColorsPage() {
                     token: 'text.muted',
                     cssVar: '--color-text-muted',
                     primitive: 'slate600',
-                    darkPrimitive: 'zinc400',
-                    darkHex: '#a1a1aa',
+                    darkPrimitive: 'zinc300',
+                    darkHex: '#d4d4d8',
                   },
                   {
                     token: 'text.subtle',
                     cssVar: '--color-text-subtle',
                     primitive: 'slate500',
-                    darkPrimitive: 'zinc500',
-                    darkHex: '#71717a',
+                    darkPrimitive: 'zinc400',
+                    darkHex: '#a1a1aa',
                   },
                   {
                     token: 'text.disabled',
