@@ -173,7 +173,6 @@ export function BackupPoliciesPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      divider: true,
       onClick: () => console.log('Delete:', row.id),
     },
   ];

@@ -195,7 +195,6 @@ export function JobsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -207,20 +206,22 @@ export function JobsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/jobs/${row.id}`);
-          }}
-        >
-          {value}
-        </span>
+        <div className="min-w-0">
+          <span
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            title={value}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/container/jobs/${row.id}`);
+            }}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
@@ -229,23 +230,47 @@ export function JobsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.containerImage,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'completions',
       label: 'Completions',
-      width: '100px',
+      flex: 1,
+      minWidth: columnMinWidths.completions,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'duration',
       label: 'Duration',
       flex: 1,
       minWidth: columnMinWidths.duration,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -253,7 +278,14 @@ export function JobsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const formatted = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block whitespace-nowrap" title={formatted}>
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',

@@ -289,12 +289,12 @@ export default function IAMSystemAdminDetailPage() {
 
   // Context menu items for MFA
   const mfaContextMenuItems: ContextMenuItem[] = [
-    { id: 'remove', label: 'Remove MFA', danger: true },
+    { id: 'remove', label: 'Remove MFA', status: 'danger' },
   ];
 
   // Context menu items for sessions
   const sessionContextMenuItems: ContextMenuItem[] = [
-    { id: 'terminate', label: 'Terminate session', danger: true },
+    { id: 'terminate', label: 'Terminate session', status: 'danger' },
   ];
 
   // More actions menu items

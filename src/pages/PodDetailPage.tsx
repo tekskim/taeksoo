@@ -261,7 +261,8 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      align: 'center',
+      sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -273,7 +274,8 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
       render: (value: boolean) =>
         value ? (
@@ -312,7 +314,8 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -321,7 +324,14 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -387,7 +397,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -404,7 +414,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
-        <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
+        <span className="truncate min-w-0" title={`[${row.reason}] ${value}`}>
           [{row.reason}] {value}
         </span>
       ),
@@ -502,7 +512,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
           title={value}
         >
           {value}
