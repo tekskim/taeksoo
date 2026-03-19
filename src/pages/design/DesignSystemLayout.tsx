@@ -185,7 +185,7 @@ export function DesignSystemLayout() {
               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
               ${
                 currentPath === '/design/all'
-                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium border-transparent'
+                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
                   : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
               }
             `}
@@ -231,7 +231,7 @@ export function DesignSystemLayout() {
                               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                               ${
                                 currentPath === path
-                                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium'
                                   : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
                               }
                             `}
@@ -262,7 +262,7 @@ export function DesignSystemLayout() {
       {/* Main Content */}
       <main
         ref={mainRef}
-        className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-white ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
+        className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
       >
         <div className="py-12 px-8 overflow-x-auto">
           <div className="max-w-[1000px] mx-auto">

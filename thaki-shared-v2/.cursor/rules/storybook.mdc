@@ -1,0 +1,35 @@
+---
+description: Storybook story conventions and deployment gating
+globs:
+  - 'src/stories/**/*.{ts,tsx}'
+  - '.storybook/**'
+alwaysApply: false
+---
+
+## Storybook
+
+### Story Location
+
+- All stories live in `src/stories/`, not co-located with components.
+- Import components from the public barrel (`src/components/index.tsx` or `@thaki/shared`).
+
+### Conventions
+
+1. One story file per component or component group.
+2. Use CSF 3 format (`satisfies Meta<typeof Component>`).
+3. Include at least a `Default` story. Add variant/state stories when the component has meaningful visual states.
+4. Use `args` for knobs, not hardcoded props in render functions.
+
+### Deploy Gate
+
+Storybook CI deploys only when these paths change:
+- `src/**`
+- `tokens/**`
+- `.storybook/**`
+- `package.json`
+
+### Verification
+
+```bash
+pnpm build-storybook
+```

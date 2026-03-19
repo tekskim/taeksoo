@@ -34,6 +34,7 @@ interface ComponentPageTemplateProps {
   status?: ComponentStatus;
   tags?: string[];
   preview?: ReactNode;
+  previewActions?: ReactNode;
   examples?: ReactNode;
   guidelines?: ReactNode;
   whenToUse?: string[];
@@ -83,6 +84,7 @@ export function ComponentPageTemplate({
   status,
   tags,
   preview,
+  previewActions,
   examples,
   guidelines,
   whenToUse,
@@ -195,7 +197,7 @@ export function ComponentPageTemplate({
 
         {/* Preview */}
         {preview && (
-          <DocSection id="preview" title="Preview">
+          <DocSection id="preview" title="Preview" actions={previewActions}>
             {preview}
           </DocSection>
         )}
@@ -214,7 +216,10 @@ export function ComponentPageTemplate({
                   </div>
                   <ul className="flex flex-col gap-2">
                     {whenToUse.map((item, i) => (
-                      <li key={i} className="text-body-md text-[var(--color-text-default)] pl-1">
+                      <li
+                        key={i}
+                        className="text-body-md text-[var(--color-text-default)] dark:text-white pl-1"
+                      >
                         {item}
                       </li>
                     ))}
@@ -231,7 +236,10 @@ export function ComponentPageTemplate({
                   </div>
                   <ul className="flex flex-col gap-2">
                     {whenNotToUse.map((item, i) => (
-                      <li key={i} className="text-body-md text-[var(--color-text-default)] pl-1">
+                      <li
+                        key={i}
+                        className="text-body-md text-[var(--color-text-default)] dark:text-white pl-1"
+                      >
                         {item}
                       </li>
                     ))}

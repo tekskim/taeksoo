@@ -48,7 +48,7 @@ import {
   IconShield,
   IconApps,
   IconBell,
-  IconPalette,
+  IconHome,
   IconRefresh,
   IconDotsCircleHorizontal,
   IconTarget,
@@ -332,9 +332,9 @@ export function AIPlatformPageLayout({
     () => (
       <>
         <TopBarAction
-          icon={<IconPalette size={16} stroke={1} />}
-          onClick={() => navigate('/design-system')}
-          aria-label="Design system"
+          icon={<IconHome size={16} stroke={1.5} />}
+          onClick={() => navigate('/')}
+          aria-label="Home"
         />
         <TopBarAction
           icon={<IconBell size={16} stroke={1.5} />}

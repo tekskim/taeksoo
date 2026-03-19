@@ -1,0 +1,397 @@
+/* LoadingSpinner animation uses native Tailwind animate-spin */
+/* Custom border-top-color styling for spinner */
+.spinner-primary {
+  border-color: var(--semantic-color-border);
+  border-top-color: var(--semantic-color-primary);
+}
+
+.spinner-secondary {
+  border-color: var(--semantic-color-border);
+  border-top-color: var(--semantic-color-textLight);
+}
+
+.spinner-white {
+  border-color: var(--semantic-color-textInverse);
+  border-top-color: var(--semantic-color-textInverse);
+}
+
+/* Skeleton loading animation - Enhanced shimmer effect */
+.animate-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--semantic-color-borderMuted) 0%,
+    var(--skeleton-highlight, rgba(255, 255, 255, 0.6)) 20%,
+    var(--semantic-color-borderMuted) 40%,
+    var(--semantic-color-borderMuted) 100%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+/* Light theme skeleton highlight */
+:root,
+[data-theme='light'] {
+  --skeleton-highlight: rgba(255, 255, 255, 0.9);
+}
+
+/* Dark theme skeleton highlight */
+[data-theme='dark'] {
+  --skeleton-highlight: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* Tab content fade-in animation */
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-tab-fade-in {
+  animation: tab-fade-in 220ms ease-out both;
+}
+
+/* ContextMenu enter animation */
+@keyframes contextmenu-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-contextmenu-enter {
+  animation: contextmenu-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shared form control styles (RadioButton, Checkbox) */
+.control-input {
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  background-color: var(--semantic-color-surface);
+  border: 2px solid var(--semantic-color-border);
+}
+
+.control-input:checked {
+  border-color: var(--semantic-color-primary);
+}
+
+/* Checkbox: blue background */
+.control-input.checkbox-input:checked {
+  background-color: var(--semantic-color-primary);
+}
+
+/* Radio: blue background with white dot */
+.control-input.radio-input:checked {
+  background-color: var(--semantic-color-primary) !important;
+}
+
+.control-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--semantic-color-primaryLight);
+}
+
+.control-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.control-input:disabled:checked {
+  border-color: var(--semantic-color-border);
+  background-color: var(--semantic-color-border);
+}
+
+/* RadioButton inner dot */
+.radio-input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--semantic-color-surface);
+  border-radius: 50%;
+}
+
+.radio-input.radio-sm:checked::after {
+  width: 5px;
+  height: 5px;
+}
+
+.radio-input.radio-md:checked::after {
+  width: 6px;
+  height: 6px;
+}
+
+.radio-input.radio-lg:checked::after {
+  width: 7px;
+  height: 7px;
+}
+
+/* Checkbox checkmark - uses CheckboxCheck.svg via Icon component pattern */
+.checkbox-input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 6px;
+  transform: translate(-50%, -50%);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='9' height='6' viewBox='0 0 9 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.75 2.75L3.25 5.25L7.75 0.75' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.checkbox-input.checkbox-sm:checked::after {
+  width: 8.5px;
+  height: 5.5px;
+  background-size: 8.5px 5.5px;
+}
+
+.checkbox-input.checkbox-md:checked::after {
+  width: 9px;
+  height: 6px;
+  background-size: 9px 6px;
+}
+
+.checkbox-input.checkbox-lg:checked::after {
+  width: 10px;
+  height: 7px;
+  background-size: 10px 7px;
+}
+
+/* Tooltip arrow styling with data-direction */
+.tooltip-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid var(--semantic-color-text);
+  border-bottom: none;
+}
+
+.tooltip-arrow[data-direction='bottom']::after,
+.tooltip-arrow[data-direction='bottom-start']::after,
+.tooltip-arrow[data-direction='bottom-end']::after,
+[data-direction='bottom'] > .tooltip-arrow::after,
+[data-direction='bottom-start'] > .tooltip-arrow::after,
+[data-direction='bottom-end'] > .tooltip-arrow::after {
+  display: block;
+  top: -4px;
+  bottom: auto;
+  border-bottom: 4px solid var(--semantic-color-text);
+  border-top: none;
+}
+
+.tooltip-arrow[data-direction='left']::after,
+.tooltip-arrow[data-direction='left-start']::after,
+.tooltip-arrow[data-direction='left-end']::after,
+.tooltip-arrow[data-direction='left-top']::after,
+.tooltip-arrow[data-direction='left-bottom']::after,
+[data-direction='left'] > .tooltip-arrow::after,
+[data-direction='left-start'] > .tooltip-arrow::after,
+[data-direction='left-end'] > .tooltip-arrow::after,
+[data-direction='left-top'] > .tooltip-arrow::after,
+[data-direction='left-bottom'] > .tooltip-arrow::after {
+  display: block;
+  right: -4px;
+  left: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  border-left: 4px solid var(--semantic-color-text);
+  border-right: none;
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+}
+
+.tooltip-arrow[data-direction='right']::after,
+.tooltip-arrow[data-direction='right-start']::after,
+.tooltip-arrow[data-direction='right-end']::after,
+.tooltip-arrow[data-direction='right-top']::after,
+.tooltip-arrow[data-direction='right-bottom']::after,
+[data-direction='right'] > .tooltip-arrow::after,
+[data-direction='right-start'] > .tooltip-arrow::after,
+[data-direction='right-end'] > .tooltip-arrow::after,
+[data-direction='right-top'] > .tooltip-arrow::after,
+[data-direction='right-bottom'] > .tooltip-arrow::after {
+  display: block;
+  left: -4px;
+  right: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  border-right: 4px solid var(--semantic-color-text);
+  border-left: none;
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+}
+
+@supports (container-type: anchored) {
+  @container anchored(fallback: flip-block) {
+    [data-direction='top'] > .tooltip-arrow::after,
+    [data-direction='top-start'] > .tooltip-arrow::after,
+    [data-direction='top-end'] > .tooltip-arrow::after {
+      top: -4px;
+      bottom: auto;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      border-left: 3.5px solid transparent;
+      border-right: 3.5px solid transparent;
+      border-bottom: 4px solid var(--semantic-color-text);
+      border-top: none;
+    }
+
+    [data-direction='bottom'] > .tooltip-arrow::after,
+    [data-direction='bottom-start'] > .tooltip-arrow::after,
+    [data-direction='bottom-end'] > .tooltip-arrow::after {
+      bottom: -4px;
+      top: auto;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      border-left: 3.5px solid transparent;
+      border-right: 3.5px solid transparent;
+      border-top: 4px solid var(--semantic-color-text);
+      border-bottom: none;
+    }
+  }
+
+  @container anchored(fallback: flip-inline) {
+    [data-direction='left'] > .tooltip-arrow::after,
+    [data-direction='left-top'] > .tooltip-arrow::after,
+    [data-direction='left-bottom'] > .tooltip-arrow::after {
+      left: -4px;
+      right: auto;
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%);
+      border-right: 4px solid var(--semantic-color-text);
+      border-left: none;
+      border-top: 3.5px solid transparent;
+      border-bottom: 3.5px solid transparent;
+    }
+
+    [data-direction='right'] > .tooltip-arrow::after,
+    [data-direction='right-top'] > .tooltip-arrow::after,
+    [data-direction='right-bottom'] > .tooltip-arrow::after {
+      right: -4px;
+      left: auto;
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%);
+      border-left: 4px solid var(--semantic-color-text);
+      border-right: none;
+      border-top: 3.5px solid transparent;
+      border-bottom: 3.5px solid transparent;
+    }
+  }
+}
+
+/* Table - Column divider pseudo-element */
+.table-th-divider:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background-color: var(--semantic-color-border);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Hide resize handle in selection cell (keep divider visible) */
+
+.table-selection-cell .resize-handle {
+  display: none;
+}
+
+/* ProgressBar - Browser-specific styling */
+.progress-track {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  background: var(--semantic-color-borderMuted) !important;
+}
+
+.progress-track::-webkit-progress-bar {
+  background: var(--semantic-color-borderMuted) !important;
+  border-radius: var(--semantic-radius-lg);
+  overflow: hidden;
+}
+
+.progress-track::-webkit-progress-value {
+  border-radius: var(--semantic-radius-lg);
+  transition: width var(--semantic-transition-normal) ease-in-out;
+}
+
+.progress-track::-moz-progress-bar {
+  border-radius: var(--semantic-radius-lg);
+  transition: width var(--semantic-transition-normal) ease-in-out;
+}
+
+/* Color variants - Chrome/Safari */
+.progress-track.progress-primary::-webkit-progress-value {
+  background-color: var(--semantic-color-primary);
+}
+
+.progress-track.progress-success::-webkit-progress-value {
+  background-color: var(--semantic-color-success);
+}
+
+.progress-track.progress-warning::-webkit-progress-value {
+  background-color: var(--semantic-color-warning);
+}
+
+.progress-track.progress-danger::-webkit-progress-value {
+  background-color: var(--semantic-color-error);
+}
+
+.progress-track.progress-custom::-webkit-progress-value {
+  background-color: var(--progress-color);
+}
+
+/* Color variants - Firefox */
+.progress-track.progress-primary::-moz-progress-bar {
+  background-color: var(--semantic-color-primary);
+}
+
+.progress-track.progress-success::-moz-progress-bar {
+  background-color: var(--semantic-color-success);
+}
+
+.progress-track.progress-warning::-moz-progress-bar {
+  background-color: var(--semantic-color-warning);
+}
+
+.progress-track.progress-danger::-moz-progress-bar {
+  background-color: var(--semantic-color-error);
+}
+
+.progress-track.progress-custom::-moz-progress-bar {
+  background-color: var(--progress-color);
+}

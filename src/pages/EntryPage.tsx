@@ -28,6 +28,7 @@ interface AppCard {
   path: string;
   color: string;
   available: boolean;
+  badge?: string;
 }
 
 /* ----------------------------------------
@@ -69,6 +70,16 @@ const appCards: AppCard[] = [
     path: '/iam',
     color: 'from-amber-500 to-yellow-500',
     available: true,
+  },
+  {
+    id: 'iam-shared-v2',
+    title: 'IAM (shared-v2)',
+    description: 'IAM with thaki-shared-v2 components applied',
+    icon: <img src={IAMIcon} alt="IAM shared-v2" className="w-[72px] h-[72px]" />,
+    path: '/iam-shared-v2',
+    color: 'from-amber-500 to-orange-500',
+    available: true,
+    badge: 'shared-v2',
   },
   {
     id: 'storage',
@@ -113,7 +124,8 @@ const appCards: AppCard[] = [
     icon: <img src={AIPlatformIcon} alt="AI Platform" className="w-[72px] h-[72px]" />,
     path: '/ai-platform',
     color: 'from-pink-500 to-rose-500',
-    available: false,
+    available: true,
+    badge: 'In Progress...',
   },
   {
     id: 'ai-agent',
@@ -122,7 +134,8 @@ const appCards: AppCard[] = [
     icon: <img src={AIAgentIcon} alt="AI Agent" className="w-[72px] h-[72px]" />,
     path: '/agent',
     color: 'from-emerald-500 to-teal-500',
-    available: false,
+    available: true,
+    badge: 'In Progress...',
   },
 ];
 
@@ -173,11 +186,11 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
         {/* Title */}
         <h4 className="text-label-lg text-[var(--color-text-default)] text-right">{card.title}</h4>
 
-        {/* Coming Soon Badge */}
-        {!isAvailable && (
+        {/* Badge */}
+        {card.badge && (
           <div className="absolute top-4 right-4">
             <span className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)] rounded-full">
-              Coming Soon{' '}
+              {card.badge}
             </span>
           </div>
         )}
@@ -195,7 +208,14 @@ export function EntryPage() {
 
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
-      navigate(card.path);
+      if (card.id === 'iam-shared-v2') {
+        const sharedV2Url = window.location.hostname === 'localhost'
+          ? 'http://localhost:5174/iam'
+          : `${window.location.origin}/tds_ssot/shared-v2/iam`;
+        window.open(sharedV2Url, '_blank');
+      } else {
+        navigate(card.path);
+      }
     }
   };
 
@@ -271,6 +291,18 @@ export function EntryPage() {
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/mail-template')}>
                   Mail Template
+                </Button>
+                <Button
+                  variant="muted"
+                  size="md"
+                  onClick={() => {
+                    const url = window.location.hostname === 'localhost'
+                      ? 'http://localhost:5174'
+                      : `${window.location.origin}/tds_ssot/shared-v2`;
+                    window.open(url, '_blank');
+                  }}
+                >
+                  Shared V2 Preview
                 </Button>
               </div>
             </div>
