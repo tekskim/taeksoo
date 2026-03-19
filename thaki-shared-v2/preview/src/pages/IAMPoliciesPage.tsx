@@ -192,10 +192,10 @@ export function IAMPoliciesPage() {
       />
 
       {/* Custom div-based table for expandable rows */}
-      <div className="w-full flex flex-col gap-1">
+      <div className="w-full flex flex-col" style={{ borderSpacing: '0 4px' }}>
         {/* Table Header */}
-        <div className="flex items-stretch min-h-9 bg-surface-muted border border-border rounded-md">
-          <div className="w-[40px] flex items-center justify-center px-3 py-1.5">
+        <div className="flex items-stretch h-12 bg-surface-subtle rounded-base6 border-t border-b border-border mb-1">
+          <div className="w-[40px] flex items-center justify-center px-3 border-l border-border rounded-l-base6">
             <Checkbox
               checked={allSelected}
               onChange={() => {
@@ -205,55 +205,58 @@ export function IAMPoliciesPage() {
               size="sm"
             />
           </div>
-          <div className="flex-1 flex items-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Name</div>
-          <div className="flex-1 flex items-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Type</div>
-          <div className="flex-1 flex items-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Apps</div>
-          <div className="flex-1 flex items-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Roles</div>
-          <div className="flex-1 flex items-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Description</div>
-          <div className="flex-1 flex items-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Edited at</div>
-          <div className="w-[64px] flex items-center justify-center px-3 py-1.5 text-11 font-medium leading-16 text-text border-l border-border">Action</div>
+          <div className="flex-1 flex items-center px-3 text-11 font-medium leading-16 text-text">Name</div>
+          <div className="flex-1 flex items-center px-3 text-11 font-medium leading-16 text-text">Type</div>
+          <div className="flex-1 flex items-center px-3 text-11 font-medium leading-16 text-text">Apps</div>
+          <div className="flex-1 flex items-center px-3 text-11 font-medium leading-16 text-text">Roles</div>
+          <div className="flex-1 flex items-center px-3 text-11 font-medium leading-16 text-text">Description</div>
+          <div className="flex-1 flex items-center px-3 text-11 font-medium leading-16 text-text">Edited at</div>
+          <div className="w-[64px] flex items-center justify-center px-3 text-11 font-medium leading-16 text-text border-r border-border rounded-r-base6">Action</div>
         </div>
 
         {/* Table Rows */}
-        {paginatedPolicies.map((policy) => (
-          <div key={policy.id} className="rounded-md border border-border bg-surface overflow-hidden">
-            <div className="flex items-center min-h-9 hover:bg-surface-muted transition-colors">
-              <div className="w-[40px] flex items-center justify-center px-3 py-1.5">
-                <Checkbox
-                  checked={selectedRows.includes(policy.id)}
-                  onChange={() => toggleRowSelection(policy.id)}
-                  size="sm"
-                />
+        {paginatedPolicies.map((policy) => {
+          const isSelected = selectedRows.includes(policy.id);
+          return (
+            <div key={policy.id} className={`rounded-base6 border overflow-hidden mb-1 ${isSelected ? 'bg-info-weak-bg border-primary' : 'bg-surface border-border'}`}>
+              <div className="flex items-center h-12 transition-colors">
+                <div className="w-[40px] flex items-center justify-center px-3">
+                  <Checkbox
+                    checked={isSelected}
+                    onChange={() => toggleRowSelection(policy.id)}
+                    size="sm"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 flex items-center gap-2 px-3 text-12 leading-16 text-text">
+                  <button
+                    type="button"
+                    onClick={() => policy.permissions && toggleExpand(policy.id)}
+                    className={`p-0.5 hover:bg-surface-muted rounded bg-transparent border-none cursor-pointer flex-shrink-0 ${!policy.permissions ? 'invisible' : ''}`}
+                  >
+                    {expandedPolicies.has(policy.id) ? <IconChevronDown size={16} stroke={1.5} /> : <IconChevronRight size={16} stroke={1.5} />}
+                  </button>
+                  <Link to={`/iam/policies/${policy.name}`} className="text-primary font-medium hover:underline truncate">{policy.name}</Link>
+                </div>
+                <div className="flex-1 min-w-0 flex items-center px-3 text-12 leading-16 text-text truncate">{policy.type}</div>
+                <div className="flex-1 min-w-0 flex items-center px-3 text-12 leading-16 text-text truncate">{policy.apps}</div>
+                <div className="flex-1 min-w-0 flex items-center px-3 text-12 leading-16 text-text truncate">{policy.roles}</div>
+                <div className="flex-1 min-w-0 flex items-center px-3 text-12 leading-16 text-text truncate">{policy.description}</div>
+                <div className="flex-1 min-w-0 flex items-center px-3 text-12 leading-16 text-text whitespace-nowrap">{policy.editedAt}</div>
+                <div className="w-[64px] flex items-center justify-center px-3">
+                  <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
+                    <ContextMenu.Item action={() => {}} disabled={policy.type === 'Built-in'}>Manage roles</ContextMenu.Item>
+                    <ContextMenu.Item action={() => {}}>Duplicate</ContextMenu.Item>
+                    <ContextMenu.Item action={() => {}} disabled={policy.type === 'Built-in'}>Edit</ContextMenu.Item>
+                    <ContextMenu.Item action={() => {}} danger={policy.type !== 'Built-in'} disabled={policy.type === 'Built-in'}>Delete</ContextMenu.Item>
+                  </ContextMenu.Root>
+                </div>
               </div>
-              <div className="flex-1 min-w-0 flex items-center gap-2 px-3 py-1.5 text-12 leading-16 text-text">
-                <button
-                  type="button"
-                  onClick={() => policy.permissions && toggleExpand(policy.id)}
-                  className={`p-0.5 hover:bg-surface-muted rounded bg-transparent border-none cursor-pointer flex-shrink-0 ${!policy.permissions ? 'invisible' : ''}`}
-                >
-                  {expandedPolicies.has(policy.id) ? <IconChevronDown size={16} stroke={1.5} /> : <IconChevronRight size={16} stroke={1.5} />}
-                </button>
-                <Link to={`/iam/policies/${policy.name}`} className="text-primary font-medium hover:underline truncate">{policy.name}</Link>
-              </div>
-              <div className="flex-1 min-w-0 flex items-center px-3 py-1.5 text-12 leading-16 text-text truncate">{policy.type}</div>
-              <div className="flex-1 min-w-0 flex items-center px-3 py-1.5 text-12 leading-16 text-text truncate">{policy.apps}</div>
-              <div className="flex-1 min-w-0 flex items-center px-3 py-1.5 text-12 leading-16 text-text truncate">{policy.roles}</div>
-              <div className="flex-1 min-w-0 flex items-center px-3 py-1.5 text-12 leading-16 text-text truncate">{policy.description}</div>
-              <div className="flex-1 min-w-0 flex items-center px-3 py-1.5 text-12 leading-16 text-text whitespace-nowrap">{policy.editedAt}</div>
-              <div className="w-[64px] flex items-center justify-center px-3 py-1.5">
-                <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
-                  <ContextMenu.Item action={() => {}} disabled={policy.type === 'Built-in'}>Manage roles</ContextMenu.Item>
-                  <ContextMenu.Item action={() => {}}>Duplicate</ContextMenu.Item>
-                  <ContextMenu.Item action={() => {}} disabled={policy.type === 'Built-in'}>Edit</ContextMenu.Item>
-                  <ContextMenu.Item action={() => {}} danger={policy.type !== 'Built-in'} disabled={policy.type === 'Built-in'}>Delete</ContextMenu.Item>
-                </ContextMenu.Root>
-              </div>
+              {expandedPolicies.has(policy.id) && policy.permissions && (
+                <PolicyDetails permissions={policy.permissions} />
+              )}
             </div>
-            {expandedPolicies.has(policy.id) && policy.permissions && (
-              <PolicyDetails permissions={policy.permissions} />
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
