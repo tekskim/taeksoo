@@ -209,7 +209,7 @@ export function EntryPage() {
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
       if (card.id === 'iam-shared-v2') {
-        window.open('http://localhost:5177/iam', '_blank');
+        window.open('http://localhost:5174/iam', '_blank');
       } else {
         navigate(card.path);
       }
@@ -292,7 +292,7 @@ export function EntryPage() {
                 <Button
                   variant="muted"
                   size="md"
-                  onClick={() => window.open('http://localhost:5177', '_blank')}
+                  onClick={() => window.open('http://localhost:5174', '_blank')}
                 >
                   Shared V2 Preview
                 </Button>
