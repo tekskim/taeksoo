@@ -1,0 +1,6 @@
+/* Shared global styles without Tailwind utilities */
+
+@import './tokens/index.css';
+@import './global.css';
+@import './shared-utilities.css';
+@import 'xterm/css/xterm.css';

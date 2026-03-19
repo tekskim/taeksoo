@@ -1,0 +1,14 @@
+/* Auto-generated token imports */
+/* Import all theme files */
+
+@import './tokens-light.css';
+@import './tokens-dark.css';
+
+/* Theme switching utility */
+html[data-theme] {
+  color-scheme: var(--color-scheme, light);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
