@@ -1,37 +1,35 @@
-import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { Label, SemanticColorTable } from '../../design-system-sections/HelperComponents';
-import { VStack } from '@/design-system';
-import { IconSun, IconMoon } from '@tabler/icons-react';
+import { VStack, Tabs, TabList, Tab } from '@/design-system';
+import { useSearchParams } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 
 export function SemanticColorsPage() {
   const { isDark: isGlobalDark } = useDarkMode();
-  const [previewTheme, setPreviewTheme] = useState<'light' | 'dark'>(
-    isGlobalDark ? 'dark' : 'light'
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const themeParam = searchParams.get('theme');
+  const previewTheme =
+    themeParam === 'light' || themeParam === 'dark' ? themeParam : isGlobalDark ? 'dark' : 'light';
   const isDark = previewTheme === 'dark';
 
-  const themeToggle = (
-    <button
-      onClick={() => setPreviewTheme(previewTheme === 'light' ? 'dark' : 'light')}
-      className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
-      aria-label={`Switch to ${previewTheme === 'light' ? 'dark' : 'light'} theme`}
-    >
-      {previewTheme === 'light' ? (
-        <IconMoon size={12} stroke={1.5} />
-      ) : (
-        <IconSun size={12} stroke={1.5} />
-      )}
-      <span>{previewTheme === 'light' ? 'Dark' : 'Light'}</span>
-    </button>
+  const handleThemeChange = (value: string) => {
+    setSearchParams({ theme: value }, { replace: true });
+  };
+
+  const themeTabs = (
+    <Tabs value={previewTheme} onChange={handleThemeChange} variant="boxed" size="sm">
+      <TabList>
+        <Tab value="light">Light</Tab>
+        <Tab value="dark">Dark</Tab>
+      </TabList>
+    </Tabs>
   );
 
   return (
     <ComponentPageTemplate
       title="Semantic colors"
       description="Purpose-driven color tokens with light/dark theme support. Click token or hex to copy."
-      previewActions={themeToggle}
+      previewActions={themeTabs}
       preview={
         <div
           data-theme={previewTheme}

@@ -94,12 +94,6 @@ const foundationItems: NavItem[] = [
   },
   { id: 'borders', label: 'Borders', icon: IconBorderAll, path: '/design/foundation/borders' },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple, path: '/design/foundation/shadows' },
-  {
-    id: 'transitions',
-    label: 'Transitions',
-    icon: IconActivity,
-    path: '/design/foundation/transitions',
-  },
   { id: 'icons', label: 'Icons', icon: IconStar, path: '/design/foundation/icons' },
   { id: 'app-icons', label: 'App Icons', icon: IconApps, path: '/design/foundation/app-icons' },
 ];
@@ -382,6 +376,12 @@ const patternItems: NavItem[] = [
     icon: IconLayoutGrid,
     path: '/design/patterns/form-field',
   },
+  {
+    id: 'dynamic-form-fields',
+    label: 'Dynamic Form Fields',
+    icon: IconForms,
+    path: '/design/patterns/dynamic-form-fields',
+  },
 ];
 
 const policyItems: NavItem[] = [
@@ -436,10 +436,10 @@ const graphItems: NavItem[] = [
 
 const etcItems: NavItem[] = [
   {
-    id: 'dynamic-form-fields',
-    label: 'Dynamic Form Fields',
-    icon: IconForms,
-    path: '/design/patterns/dynamic-form-fields',
+    id: 'transitions',
+    label: 'Transitions',
+    icon: IconActivity,
+    path: '/design/foundation/transitions',
   },
   {
     id: 'editor',

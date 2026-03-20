@@ -1,1 +1,118 @@
-[]
+[
+  {
+    "id": "1",
+    "date": "2026-03-19",
+    "app": "fix",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Fix dark mode theme scoping for component tokens and portals",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Fix When to use text color in dark mode",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Change DosDonts list text color from muted to default",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "date": "2026-03-19",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Dark mode improvements: Zinc palette, menu tokens, theme scoping",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Switch dark mode neutral palette from Slate to Zinc",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Improve Semantic Colors page and DS shared components",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Fix dark mode theme scoping and align tokens to Figma",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "date": "2026-03-18",
+    "app": "revert",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Revert semantic color light/dark columns change",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "date": "2026-03-18",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Add light/dark mode columns to semantic color tokens page",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Add Editor preview and adjust dark mode state colors",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Brighten Badge subtle-blue background in dark mode",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Brighten Card DetailsBox background in dark mode",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Improve Card, CardTitle, Badge components and dark mode tokens",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Add dark mode support for ExpandableChecklist and Checkbox",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Remove Badge lg size and update md tokens, improve Entry/AI Platform pages",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "date": "2026-03-18",
+    "app": "fix",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Align ExpandableChecklist spacing to updated Figma tokens",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "date": "2026-03-18",
+    "app": "feat",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Add ExpandableChecklist component and update Badge min-width",
+        "author": "mjhan-tk"
+      }
+    ]
+  }
+]
