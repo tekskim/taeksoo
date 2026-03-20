@@ -26,7 +26,7 @@ import { IAMLoginPoliciesPage } from './pages/IAMLoginPoliciesPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <Routes>
         <Route element={<IAMLayout />}>
           <Route path="/iam" element={<IAMHomePage />} />
@@ -41,7 +41,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
           <Route path="/iam/domains" element={<IAMDomainsPage />} />
           <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
-          <Route path="/iam/system-administrators/:username" element={<IAMSystemAdminDetailPage />} />
+          <Route
+            path="/iam/system-administrators/:username"
+            element={<IAMSystemAdminDetailPage />}
+          />
           <Route path="/iam/event-logs" element={<IAMEventLogsPage />} />
           <Route path="/iam/mfa-policies" element={<IAMMFAPoliciesPage />} />
           <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
