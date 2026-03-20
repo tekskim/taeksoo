@@ -223,7 +223,7 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.success',
                       cssVar: '--color-state-success',
-                      primitive: 'green600',
+                      primitive: 'green500',
                       darkPrimitive: 'green400',
                       darkHex: '#4ade80',
                     },
@@ -238,7 +238,7 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.success-text',
                       cssVar: '--color-state-success-text',
-                      primitive: 'green800',
+                      primitive: 'green600',
                       darkPrimitive: 'green200',
                       darkHex: '#bbf7d0',
                     },
@@ -251,14 +251,14 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.warning',
                       cssVar: '--color-state-warning',
-                      primitive: 'orange600',
+                      primitive: 'orange500',
                       darkPrimitive: 'orange400',
                       darkHex: '#fb923c',
                     },
                     {
                       token: 'state.warning-bg',
                       cssVar: '--color-state-warning-bg',
-                      primitive: 'yellow50',
+                      primitive: 'orange50',
                       darkPrimitive: 'orange900',
                       darkHex: '#7c2d12',
                       border: true,
@@ -266,7 +266,7 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.warning-text',
                       cssVar: '--color-state-warning-text',
-                      primitive: 'orange800',
+                      primitive: 'orange600',
                       darkPrimitive: 'orange200',
                       darkHex: '#fed7aa',
                     },
@@ -279,7 +279,7 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.danger',
                       cssVar: '--color-state-danger',
-                      primitive: 'red600',
+                      primitive: 'red500',
                       darkPrimitive: 'red400',
                       darkHex: '#f87171',
                     },
@@ -294,7 +294,7 @@ export function SemanticColorsPage() {
                     {
                       token: 'state.danger-text',
                       cssVar: '--color-state-danger-text',
-                      primitive: 'red800',
+                      primitive: 'red600',
                       darkPrimitive: 'red200',
                       darkHex: '#fecaca',
                     },
