@@ -23,6 +23,7 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
+  SearchInput,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -48,6 +49,8 @@ interface ServiceData {
   namespace: string;
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
   clusterIP: string;
+  loadBalancerIP: string;
+  externalIP: string;
   sessionAffinity: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -101,8 +104,10 @@ const mockServiceData: Record<string, ServiceData> = {
     name: 'capi-webhook-service',
     status: 'OK',
     namespace: 'default',
-    type: 'ClusterIP',
+    type: 'LoadBalancer',
     clusterIP: '10.11.111.10',
+    loadBalancerIP: '203.0.113.10',
+    externalIP: '198.51.100.5',
     sessionAffinity: 'None',
     createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
@@ -123,6 +128,8 @@ const mockServiceData: Record<string, ServiceData> = {
     namespace: 'ingress-nginx',
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
+    loadBalancerIP: '203.0.113.50',
+    externalIP: '198.51.100.10',
     sessionAffinity: 'ClientIP',
     createdAt: 'Nov 8, 2025 11:51:27',
     labels: {
@@ -249,6 +256,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [podSearch, setPodSearch] = useState('');
+
+  const filteredPods = pods.filter(
+    (pod) =>
+      pod.name.toLowerCase().includes(podSearch.toLowerCase()) ||
+      pod.image.toLowerCase().includes(podSearch.toLowerCase()) ||
+      pod.node.toLowerCase().includes(podSearch.toLowerCase())
+  );
 
   const createPodMenuItems = (row: PodRow): ContextMenuItem[] => {
     return [
@@ -291,7 +306,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -396,16 +410,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Pods</h3>
+      <SearchInput
+        value={podSearch}
+        onChange={(e) => setPodSearch(e.target.value)}
+        onClear={() => setPodSearch('')}
+        placeholder="Search pods by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredPods.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={pods.length}
+        totalItems={filteredPods.length}
         selectedCount={selectedKeys.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
       <Table
         columns={columns}
-        data={pods}
+        data={filteredPods}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -425,6 +449,14 @@ interface PortsTabProps {
 
 function PortsTab({ ports }: PortsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [portSearch, setPortSearch] = useState('');
+
+  const filteredPorts = ports.filter(
+    (port) =>
+      port.name.toLowerCase().includes(portSearch.toLowerCase()) ||
+      port.protocol.toLowerCase().includes(portSearch.toLowerCase()) ||
+      String(port.port).includes(portSearch)
+  );
 
   const columns: TableColumn<PortRow>[] = [
     {
@@ -481,13 +513,23 @@ function PortsTab({ ports }: PortsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
+      <SearchInput
+        value={portSearch}
+        onChange={(e) => setPortSearch(e.target.value)}
+        onClear={() => setPortSearch('')}
+        placeholder="Search ports by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredPorts.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={ports.length}
+        totalItems={filteredPorts.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={ports} rowKey="id" />
+      <Table columns={columns} data={filteredPorts} rowKey="id" />
     </VStack>
   );
 }
@@ -502,6 +544,13 @@ interface SelectorsTabProps {
 
 function SelectorsTab({ selectors }: SelectorsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectorSearch, setSelectorSearch] = useState('');
+
+  const filteredSelectors = selectors.filter(
+    (sel) =>
+      sel.key.toLowerCase().includes(selectorSearch.toLowerCase()) ||
+      sel.value.toLowerCase().includes(selectorSearch.toLowerCase())
+  );
 
   const columns: TableColumn<SelectorRow>[] = [
     {
@@ -523,13 +572,23 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Selectors</h3>
+      <SearchInput
+        value={selectorSearch}
+        onChange={(e) => setSelectorSearch(e.target.value)}
+        onClear={() => setSelectorSearch('')}
+        placeholder="Search selectors by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredSelectors.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={selectors.length}
+        totalItems={filteredSelectors.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={selectors} rowKey="id" />
+      <Table columns={columns} data={filteredSelectors} rowKey="id" />
     </VStack>
   );
 }
@@ -544,6 +603,15 @@ interface ConditionsTabProps {
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [conditionSearch, setConditionSearch] = useState('');
+
+  const filteredConditions = conditions.filter(
+    (cond) =>
+      cond.type.toLowerCase().includes(conditionSearch.toLowerCase()) ||
+      cond.status.toLowerCase().includes(conditionSearch.toLowerCase()) ||
+      cond.message.toLowerCase().includes(conditionSearch.toLowerCase()) ||
+      cond.reason.toLowerCase().includes(conditionSearch.toLowerCase())
+  );
 
   const columns: TableColumn<ConditionRow>[] = [
     {
@@ -555,17 +623,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'center',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -591,13 +652,23 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
+      <SearchInput
+        value={conditionSearch}
+        onChange={(e) => setConditionSearch(e.target.value)}
+        onClear={() => setConditionSearch('')}
+        placeholder="Search conditions by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredConditions.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={conditions.length}
+        totalItems={filteredConditions.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={filteredConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -778,13 +849,16 @@ export function ContainerServiceDetailPage() {
               }
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
+            <DetailHeader.InfoCard label="Type" value={service.type} />
+            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
+            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
+            <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
             <DetailHeader.InfoCard
-              label="Type"
-              value={`${service.type} - Cluster IP: ${service.clusterIP}`}
+              label="Load balancer IP"
+              value={service.loadBalancerIP}
               copyable
             />
-            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
-            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
+            <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
           </DetailHeader.InfoGrid>
 
           {/* Second row: Labels, Annotations */}
@@ -814,14 +888,14 @@ export function ContainerServiceDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[120px] max-w-[480px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All labels ({Object.keys(service.labels).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(service.labels).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
                               </Badge>
                             ))}
                           </div>
@@ -861,14 +935,14 @@ export function ContainerServiceDetailPage() {
                       delay={100}
                       hideDelay={100}
                       content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                        <div className="p-3 min-w-[120px] max-w-[480px]">
                           <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                             All annotations ({Object.keys(service.annotations).length})
                           </div>
                           <div className="flex flex-col gap-1">
                             {Object.entries(service.annotations).map(([k, v]) => (
                               <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
+                                <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
                               </Badge>
                             ))}
                           </div>
