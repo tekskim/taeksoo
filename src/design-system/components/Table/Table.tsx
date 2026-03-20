@@ -204,7 +204,7 @@ export function Table<T extends Record<string, any>>({
 
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
-      return <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />;
+      return <IconSelector size={14} stroke={1} className="text-[var(--color-text-subtle)]" />;
     }
     if (sortDirection === 'asc') {
       return <IconChevronUp size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
@@ -376,7 +376,7 @@ export function Table<T extends Record<string, any>>({
                       'rounded-[var(--table-row-radius)] overflow-hidden',
                       'border border-[var(--color-border-default)]',
                       isSelected
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
+                        ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                         : 'bg-[var(--color-surface-default)]'
                     )}
                   >

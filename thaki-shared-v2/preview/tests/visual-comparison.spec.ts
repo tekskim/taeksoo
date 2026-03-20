@@ -9,9 +9,31 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const TDS_BASE = 'http://localhost:5173';
-const SHARED_BASE = 'http://localhost:5177';
+const SHARED_BASE = 'http://localhost:5174';
 
 const OUTPUT_DIR = path.resolve(__dirname, '../../visual-report');
+
+const CB_PAGES = [
+  { name: 'cb-discovery', path: '/cloudbuilder/discovery' },
+  { name: 'cb-servers', path: '/cloudbuilder/servers' },
+  { name: 'cb-switch', path: '/cloudbuilder/switch' },
+  { name: 'cb-severs-07v', path: '/cloudbuilder/severs' },
+  { name: 'cb-compute-services', path: '/cloudbuilder/compute-services' },
+  { name: 'cb-compute-nodes', path: '/cloudbuilder/compute-nodes' },
+  { name: 'cb-network-agents', path: '/cloudbuilder/network-agents' },
+  { name: 'cb-block-storage-services', path: '/cloudbuilder/block-storage-services' },
+  { name: 'cb-orchestration-services', path: '/cloudbuilder/orchestration-services' },
+  { name: 'cb-network-agents-detail', path: '/cloudbuilder/network-agents/detail/25d21d61' },
+  {
+    name: 'cb-network-agents-detail-config',
+    path: '/cloudbuilder/network-agents/detail/25d21d61?tab=configuration',
+  },
+  { name: 'cb-servers-detail', path: '/cloudbuilder/servers/detail/SN1001' },
+  { name: 'cb-servers-detail-disk', path: '/cloudbuilder/servers/detail/SN1001?tab=disk' },
+  { name: 'cb-servers-detail-bmc', path: '/cloudbuilder/servers/detail/SN1001?tab=bmc-info' },
+  { name: 'cb-discovery-create', path: '/cloudbuilder/discovery/create' },
+  { name: 'cb-servers-create', path: '/cloudbuilder/servers/create' },
+];
 
 const IAM_PAGES = [
   { name: 'iam-home', path: '/iam' },
@@ -37,12 +59,31 @@ const IAM_PAGES = [
 /* ─── Style diff extraction config ─── */
 
 const STYLE_PROPERTIES = [
-  'width', 'height', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
-  'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
-  'gap', 'rowGap', 'columnGap',
-  'fontSize', 'fontWeight', 'lineHeight', 'color',
-  'backgroundColor', 'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
-  'borderColor', 'borderRadius', 'boxShadow',
+  'width',
+  'height',
+  'paddingTop',
+  'paddingRight',
+  'paddingBottom',
+  'paddingLeft',
+  'marginTop',
+  'marginRight',
+  'marginBottom',
+  'marginLeft',
+  'gap',
+  'rowGap',
+  'columnGap',
+  'fontSize',
+  'fontWeight',
+  'lineHeight',
+  'color',
+  'backgroundColor',
+  'borderTopWidth',
+  'borderRightWidth',
+  'borderBottomWidth',
+  'borderLeftWidth',
+  'borderColor',
+  'borderRadius',
+  'boxShadow',
 ] as const;
 
 interface ElementTarget {
@@ -157,15 +198,21 @@ interface PageStyleReport {
   pixelDiff?: { diffPixels: number; diffPercent: number };
 }
 
-function classifySeverity(property: string, tdsVal: string, sharedVal: string): 'critical' | 'major' | 'minor' {
+function classifySeverity(
+  property: string,
+  tdsVal: string,
+  sharedVal: string
+): 'critical' | 'major' | 'minor' {
   if (property === 'height' || property === 'width') {
     const tdsNum = parseFloat(tdsVal);
     const sharedNum = parseFloat(sharedVal);
     if (!isNaN(tdsNum) && !isNaN(sharedNum) && Math.abs(tdsNum - sharedNum) > 8) return 'critical';
     if (!isNaN(tdsNum) && !isNaN(sharedNum) && Math.abs(tdsNum - sharedNum) > 2) return 'major';
   }
-  if (property === 'fontSize' || property === 'fontWeight' || property === 'lineHeight') return 'major';
-  if (property.startsWith('padding') || property.startsWith('margin') || property === 'gap') return 'major';
+  if (property === 'fontSize' || property === 'fontWeight' || property === 'lineHeight')
+    return 'major';
+  if (property.startsWith('padding') || property.startsWith('margin') || property === 'gap')
+    return 'major';
   if (property === 'backgroundColor' || property === 'color') return 'minor';
   if (property.startsWith('border')) return 'minor';
   return 'minor';
@@ -175,18 +222,19 @@ async function extractStyles(page: Page, selector: string): Promise<Record<strin
   try {
     const el = page.locator(selector).first();
     if (!(await el.count())) return null;
-    return await el.evaluate((node, props) => {
-      const cs = window.getComputedStyle(node);
-      const result: Record<string, string> = {};
-      for (const p of props) {
-        result[p] = cs.getPropertyValue(
-          p.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)
-        );
-      }
-      result['__boundingHeight'] = String(node.getBoundingClientRect().height);
-      result['__boundingWidth'] = String(node.getBoundingClientRect().width);
-      return result;
-    }, [...STYLE_PROPERTIES]);
+    return await el.evaluate(
+      (node, props) => {
+        const cs = window.getComputedStyle(node);
+        const result: Record<string, string> = {};
+        for (const p of props) {
+          result[p] = cs.getPropertyValue(p.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`));
+        }
+        result['__boundingHeight'] = String(node.getBoundingClientRect().height);
+        result['__boundingWidth'] = String(node.getBoundingClientRect().width);
+        return result;
+      },
+      [...STYLE_PROPERTIES]
+    );
   } catch {
     return null;
   }
@@ -265,12 +313,15 @@ test('IAM visual regression: capture + compare all pages', async ({ browser }) =
       status,
     });
 
-    console.log(`  ${pg.name}: ${result.diffPercent}% diff (${result.diffPixels.toLocaleString()}px) [${status}]`);
+    console.log(
+      `  ${pg.name}: ${result.diffPercent}% diff (${result.diffPixels.toLocaleString()}px) [${status}]`
+    );
   }
 
-  const avgDiff = results.length > 0
-    ? (results.reduce((sum, r) => sum + r.diffPercent, 0) / results.length).toFixed(2)
-    : 'N/A';
+  const avgDiff =
+    results.length > 0
+      ? (results.reduce((sum, r) => sum + r.diffPercent, 0) / results.length).toFixed(2)
+      : 'N/A';
 
   const report = [
     '# IAM Visual Regression Report',
@@ -283,8 +334,9 @@ test('IAM visual regression: capture + compare all pages', async ({ browser }) =
     '',
     '| Page | TDS Size | shared-v2 Size | Diff Pixels | Diff % | Status |',
     '|------|----------|----------------|-------------|--------|--------|',
-    ...results.map(r =>
-      `| ${r.page} | ${r.tdsSize} | ${r.sharedSize} | ${r.diffPixels.toLocaleString()} | ${r.diffPercent}% | ${r.status} |`
+    ...results.map(
+      (r) =>
+        `| ${r.page} | ${r.tdsSize} | ${r.sharedSize} | ${r.diffPixels.toLocaleString()} | ${r.diffPercent}% | ${r.status} |`
     ),
     '',
     '## Status Criteria',
@@ -306,7 +358,9 @@ test('IAM visual regression: capture + compare all pages', async ({ browser }) =
 
 /* ─── Style-level diff extraction test ─── */
 
-test('IAM style diff: extract computed styles and generate style-diff.json', async ({ browser }) => {
+test('IAM style diff: extract computed styles and generate style-diff.json', async ({
+  browser,
+}) => {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
   const allPageReports: PageStyleReport[] = [];
@@ -388,7 +442,7 @@ test('IAM style diff: extract computed styles and generate style-diff.json', asy
         }
 
         for (const prop of STYLE_PROPERTIES) {
-          const cssProp = prop.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`);
+          const cssProp = prop.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
           const tdsVal = tdsStyles[prop] || '';
           const sharedVal = sharedStyles[prop] || '';
 
@@ -425,7 +479,8 @@ test('IAM style diff: extract computed styles and generate style-diff.json', asy
 
   const totalDiffs = allPageReports.reduce((sum, r) => sum + r.diffs.length, 0);
   const criticalCount = allPageReports.reduce(
-    (sum, r) => sum + r.diffs.filter(d => d.severity === 'critical').length, 0
+    (sum, r) => sum + r.diffs.filter((d) => d.severity === 'critical').length,
+    0
   );
 
   const report = {
@@ -434,8 +489,14 @@ test('IAM style diff: extract computed styles and generate style-diff.json', asy
       pagesCompared: allPageReports.length,
       totalDiffs,
       critical: criticalCount,
-      major: allPageReports.reduce((sum, r) => sum + r.diffs.filter(d => d.severity === 'major').length, 0),
-      minor: allPageReports.reduce((sum, r) => sum + r.diffs.filter(d => d.severity === 'minor').length, 0),
+      major: allPageReports.reduce(
+        (sum, r) => sum + r.diffs.filter((d) => d.severity === 'major').length,
+        0
+      ),
+      minor: allPageReports.reduce(
+        (sum, r) => sum + r.diffs.filter((d) => d.severity === 'minor').length,
+        0
+      ),
     },
     componentMapping: {
       TabBar: ['src/components/TabBar/TabBar.styles.ts', 'src/components/TabBar/TabItem.styles.ts'],
@@ -448,10 +509,7 @@ test('IAM style diff: extract computed styles and generate style-diff.json', asy
     pages: allPageReports,
   };
 
-  fs.writeFileSync(
-    path.join(OUTPUT_DIR, 'style-diff.json'),
-    JSON.stringify(report, null, 2)
-  );
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'style-diff.json'), JSON.stringify(report, null, 2));
 
   const mdLines = [
     '# Style Diff Report',
@@ -472,7 +530,9 @@ test('IAM style diff: extract computed styles and generate style-diff.json', asy
       for (const d of pageReport.diffs) {
         const tdsShort = d.tds.length > 40 ? d.tds.slice(0, 37) + '...' : d.tds;
         const sharedShort = d.shared.length > 40 ? d.shared.slice(0, 37) + '...' : d.shared;
-        mdLines.push(`| ${d.element} | ${d.property} | ${tdsShort} | ${sharedShort} | ${d.severity} | ${d.styleFile} |`);
+        mdLines.push(
+          `| ${d.element} | ${d.property} | ${tdsShort} | ${sharedShort} | ${d.severity} | ${d.styleFile} |`
+        );
       }
     }
     mdLines.push('');
@@ -485,4 +545,211 @@ test('IAM style diff: extract computed styles and generate style-diff.json', asy
   console.log(`Total diffs: ${totalDiffs} (critical: ${criticalCount})`);
 
   expect(allPageReports.length).toBe(IAM_PAGES.length);
+});
+
+/* ─── Cloud Builder visual regression ─── */
+
+test('Cloud Builder visual regression: capture + compare all pages', async ({ browser }) => {
+  const cbOutputDir = path.resolve(__dirname, '../../visual-report-cb');
+  fs.mkdirSync(path.join(cbOutputDir, 'tds'), { recursive: true });
+  fs.mkdirSync(path.join(cbOutputDir, 'shared-v2'), { recursive: true });
+  fs.mkdirSync(path.join(cbOutputDir, 'diff'), { recursive: true });
+
+  const results: Array<{
+    page: string;
+    route: string;
+    tdsSize: string;
+    sharedSize: string;
+    diffPixels: number;
+    diffPercent: number;
+    status: string;
+  }> = [];
+
+  for (const pg of CB_PAGES) {
+    const tdsImgPath = path.join(cbOutputDir, 'tds', `${pg.name}.png`);
+    const sharedImgPath = path.join(cbOutputDir, 'shared-v2', `${pg.name}.png`);
+    const diffImgPath = path.join(cbOutputDir, 'diff', `${pg.name}-diff.png`);
+
+    await captureFullPage(browser, `${TDS_BASE}${pg.path}`, tdsImgPath);
+    await captureFullPage(browser, `${SHARED_BASE}${pg.path}`, sharedImgPath);
+
+    const result = comparePNGs(tdsImgPath, sharedImgPath, diffImgPath);
+    const status = result.diffPercent < 3 ? 'GOOD' : result.diffPercent < 5 ? 'WARN' : 'REVIEW';
+
+    results.push({
+      page: pg.name,
+      route: pg.path,
+      tdsSize: result.tdsSize,
+      sharedSize: result.sharedSize,
+      diffPixels: result.diffPixels,
+      diffPercent: result.diffPercent,
+      status,
+    });
+
+    console.log(
+      `  ${pg.name}: ${result.diffPercent}% diff (${result.diffPixels.toLocaleString()}px) [${status}]`
+    );
+  }
+
+  const avgDiff =
+    results.length > 0
+      ? (results.reduce((sum, r) => sum + r.diffPercent, 0) / results.length).toFixed(2)
+      : 'N/A';
+
+  const goodCount = results.filter((r) => r.status === 'GOOD').length;
+  const warnCount = results.filter((r) => r.status === 'WARN').length;
+  const reviewCount = results.filter((r) => r.status === 'REVIEW').length;
+
+  const report = [
+    '# Cloud Builder Visual Regression Report',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    `Pages compared: ${results.length}`,
+    `Average diff: ${avgDiff}%`,
+    `GOOD: ${goodCount} | WARN: ${warnCount} | REVIEW: ${reviewCount}`,
+    '',
+    '## Page-by-Page Results',
+    '',
+    '| Page | Route | TDS Size | shared-v2 Size | Diff Pixels | Diff % | Status |',
+    '|------|-------|----------|----------------|-------------|--------|--------|',
+    ...results.map(
+      (r) =>
+        `| ${r.page} | ${r.route} | ${r.tdsSize} | ${r.sharedSize} | ${r.diffPixels.toLocaleString()} | ${r.diffPercent}% | ${r.status} |`
+    ),
+    '',
+    '## Status Criteria',
+    '- **GOOD**: < 3% pixel difference',
+    '- **WARN**: 3-5% pixel difference',
+    '- **REVIEW**: > 5% pixel difference (requires attention)',
+    '',
+    '## Files',
+    `- TDS screenshots: \`${path.join(cbOutputDir, 'tds')}\``,
+    `- shared-v2 screenshots: \`${path.join(cbOutputDir, 'shared-v2')}\``,
+    `- Diff images: \`${path.join(cbOutputDir, 'diff')}\``,
+  ];
+
+  fs.writeFileSync(path.join(cbOutputDir, 'REPORT.md'), report.join('\n'));
+  console.log(`\nReport: ${path.join(cbOutputDir, 'REPORT.md')}`);
+
+  expect(results.length).toBe(CB_PAGES.length);
+});
+
+/* ─── Storage visual regression ─── */
+
+const STORAGE_PAGES = [
+  // Home & Performance
+  { name: 'st-home', path: '/storage' },
+  { name: 'st-performance', path: '/storage/performance' },
+  { name: 'st-performance-hosts', path: '/storage/performance?tab=hosts' },
+  { name: 'st-performance-osds', path: '/storage/performance?tab=osds' },
+  { name: 'st-performance-images', path: '/storage/performance?tab=images' },
+  // List pages
+  { name: 'st-pools', path: '/storage/pools' },
+  { name: 'st-hosts', path: '/storage/hosts' },
+  { name: 'st-osds', path: '/storage/osds' },
+  { name: 'st-physical-disks', path: '/storage/physical-disks' },
+  { name: 'st-images', path: '/storage/images' },
+  { name: 'st-buckets', path: '/storage/buckets' },
+  { name: 'st-file-systems', path: '/storage/file-systems' },
+  { name: 'st-nfs', path: '/storage/nfs' },
+  // Detail pages
+  { name: 'st-pool-detail', path: '/storage/pools/pool-001' },
+  { name: 'st-pool-detail-perf', path: '/storage/pools/pool-001?tab=performance' },
+  { name: 'st-host-detail', path: '/storage/hosts/host-001' },
+  { name: 'st-host-detail-devices', path: '/storage/hosts/host-001?tab=devices' },
+  { name: 'st-host-detail-daemon', path: '/storage/hosts/host-001?tab=daemon' },
+  { name: 'st-osd-detail', path: '/storage/osds/1' },
+  { name: 'st-image-detail', path: '/storage/images/img-1' },
+  { name: 'st-image-detail-snap', path: '/storage/images/img-1?tab=snapshots' },
+  { name: 'st-bucket-detail', path: '/storage/buckets/bucket-1' },
+  { name: 'st-bucket-detail-policy', path: '/storage/buckets/bucket-1?tab=policies' },
+  { name: 'st-fs-detail', path: '/storage/file-systems/fs-1' },
+  { name: 'st-nfs-detail', path: '/storage/nfs/nfs-1' },
+  // Create page
+  { name: 'st-bucket-create', path: '/storage/buckets/create' },
+];
+
+test('Storage visual regression: capture + compare all pages', async ({ browser }) => {
+  const stOutputDir = path.resolve(__dirname, '../../visual-report-storage');
+  fs.mkdirSync(path.join(stOutputDir, 'tds'), { recursive: true });
+  fs.mkdirSync(path.join(stOutputDir, 'shared-v2'), { recursive: true });
+  fs.mkdirSync(path.join(stOutputDir, 'diff'), { recursive: true });
+
+  const results: Array<{
+    page: string;
+    route: string;
+    tdsSize: string;
+    sharedSize: string;
+    diffPixels: number;
+    diffPercent: number;
+    status: string;
+  }> = [];
+
+  for (const pg of STORAGE_PAGES) {
+    const tdsImgPath = path.join(stOutputDir, 'tds', `${pg.name}.png`);
+    const sharedImgPath = path.join(stOutputDir, 'shared-v2', `${pg.name}.png`);
+    const diffImgPath = path.join(stOutputDir, 'diff', `${pg.name}-diff.png`);
+
+    await captureFullPage(browser, `${TDS_BASE}${pg.path}`, tdsImgPath);
+    await captureFullPage(browser, `${SHARED_BASE}${pg.path}`, sharedImgPath);
+
+    const result = comparePNGs(tdsImgPath, sharedImgPath, diffImgPath);
+    const status = result.diffPercent < 5 ? 'GOOD' : result.diffPercent < 10 ? 'WARN' : 'REVIEW';
+
+    results.push({
+      page: pg.name,
+      route: pg.path,
+      tdsSize: result.tdsSize,
+      sharedSize: result.sharedSize,
+      diffPixels: result.diffPixels,
+      diffPercent: result.diffPercent,
+      status,
+    });
+
+    console.log(
+      `  ${pg.name}: ${result.diffPercent}% diff (${result.diffPixels.toLocaleString()}px) [${status}]`
+    );
+  }
+
+  const avgDiff =
+    results.length > 0
+      ? (results.reduce((sum, r) => sum + r.diffPercent, 0) / results.length).toFixed(2)
+      : 'N/A';
+
+  const goodCount = results.filter((r) => r.status === 'GOOD').length;
+  const warnCount = results.filter((r) => r.status === 'WARN').length;
+  const reviewCount = results.filter((r) => r.status === 'REVIEW').length;
+
+  const report = [
+    '# Storage Visual Regression Report',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    `Pages compared: ${results.length}`,
+    `Average diff: ${avgDiff}%`,
+    `GOOD: ${goodCount} | WARN: ${warnCount} | REVIEW: ${reviewCount}`,
+    '',
+    '## Page-by-Page Results',
+    '',
+    '| Page | Route | TDS Size | shared-v2 Size | Diff Pixels | Diff % | Status |',
+    '|------|-------|----------|----------------|-------------|--------|--------|',
+    ...results.map(
+      (r) =>
+        `| ${r.page} | ${r.route} | ${r.tdsSize} | ${r.sharedSize} | ${r.diffPixels.toLocaleString()} | ${r.diffPercent}% | ${r.status} |`
+    ),
+    '',
+    '## Status Criteria',
+    '- **GOOD**: < 5% pixel difference',
+    '- **WARN**: 5-10% pixel difference',
+    '- **REVIEW**: > 10% pixel difference (requires attention)',
+    '',
+    '## Files',
+    `- TDS screenshots: \`${path.join(stOutputDir, 'tds')}\``,
+    `- shared-v2 screenshots: \`${path.join(stOutputDir, 'shared-v2')}\``,
+    `- Diff images: \`${path.join(stOutputDir, 'diff')}\``,
+  ];
+
+  fs.writeFileSync(path.join(stOutputDir, 'REPORT.md'), report.join('\n'));
+  console.log(`\nReport: ${path.join(stOutputDir, 'REPORT.md')}`);
+
+  expect(results.length).toBe(STORAGE_PAGES.length);
 });

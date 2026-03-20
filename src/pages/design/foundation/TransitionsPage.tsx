@@ -579,7 +579,7 @@ export function TransitionsPage() {
                   key={p.title}
                   className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]"
                 >
-                  <span className="text-heading-h7 text-[var(--color-text-default)]">
+                  <span className="text-label-md font-semibold uppercase text-[var(--color-text-default)]">
                     {p.title}
                   </span>
                   <p className="text-body-sm text-[var(--color-text-subtle)] mt-1">{p.desc}</p>
@@ -615,7 +615,9 @@ export function TransitionsPage() {
             <h3 className="text-heading-h6 text-[var(--color-text-default)]">Guidelines</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)]/20 rounded-[var(--primitive-radius-lg)]">
-                <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-2">DO</h4>
+                <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-2">
+                  DO
+                </h4>
                 <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
                   <li>• Use duration tokens instead of hardcoded values</li>
                   <li>
@@ -631,7 +633,9 @@ export function TransitionsPage() {
                 </ul>
               </div>
               <div className="p-4 bg-[var(--color-state-danger-bg)] border border-[var(--color-state-danger)]/20 rounded-[var(--primitive-radius-lg)]">
-                <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-2">DON'T</h4>
+                <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-2">
+                  DON'T
+                </h4>
                 <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
                   <li>• Don't animate layout properties (width/height) unless necessary</li>
                   <li>• Don't use durations longer than 500ms for interactive UI</li>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@shared/components/Button';
 import { Tabs, Tab } from '@shared/components/Tabs';
-import { Input } from '@shared/components/Input';
+import { NumberInput } from '@shared/components/Input';
 import { Title } from '@shared/components/Title';
 import { IconRefresh } from '@tabler/icons-react';
 
@@ -12,13 +12,17 @@ function PolicyField({
   onChange,
   unit,
   helperText,
+  min,
+  max,
 }: {
   label: string;
   description: string;
-  value: string;
-  onChange: (v: string) => void;
+  value: number;
+  onChange: (v: number) => void;
   unit: string;
   helperText: string;
+  min?: number;
+  max?: number;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -28,16 +32,16 @@ function PolicyField({
         </span>
         <span className="text-12 leading-18 text-text-muted">{description}</span>
       </div>
-      <div className="flex items-center gap-2 w-fit">
-        <Input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          filter={/[^0-9]/g}
-          size="sm"
-          style={{ width: 80 }}
-        />
-        <span className="text-12 leading-18 text-text">{unit}</span>
-      </div>
+      <NumberInput
+        value={value}
+        onChange={onChange}
+        min={min}
+        max={max}
+        step={1}
+        size="sm"
+        style={{ width: 80 }}
+        suffix={unit}
+      />
       <span className="text-11 leading-16 text-text-muted">{helperText}</span>
     </div>
   );
@@ -45,10 +49,10 @@ function PolicyField({
 
 export function IAMSessionPoliciesPage() {
   const [activeTab, setActiveTab] = useState('general');
-  const [sessionIdleTimeout, setSessionIdleTimeout] = useState('30');
-  const [sessionMaxLifespan, setSessionMaxLifespan] = useState('8');
-  const [loginTimeout, setLoginTimeout] = useState('30');
-  const [loginActionTimeout, setLoginActionTimeout] = useState('5');
+  const [sessionIdleTimeout, setSessionIdleTimeout] = useState(30);
+  const [sessionMaxLifespan, setSessionMaxLifespan] = useState(8);
+  const [loginTimeout, setLoginTimeout] = useState(30);
+  const [loginActionTimeout, setLoginActionTimeout] = useState(5);
 
   return (
     <div className="flex flex-col gap-6">
@@ -74,6 +78,8 @@ export function IAMSessionPoliciesPage() {
                     onChange={setSessionIdleTimeout}
                     unit="Minutes"
                     helperText="15 - 60 Minutes"
+                    min={15}
+                    max={60}
                   />
                 </div>
 
@@ -87,6 +93,8 @@ export function IAMSessionPoliciesPage() {
                     onChange={setSessionMaxLifespan}
                     unit="Hours"
                     helperText="1 - 24 Hours"
+                    min={1}
+                    max={24}
                   />
                 </div>
 
@@ -100,6 +108,8 @@ export function IAMSessionPoliciesPage() {
                     onChange={setLoginTimeout}
                     unit="Minutes"
                     helperText="1 - 60 Minutes"
+                    min={1}
+                    max={60}
                   />
                 </div>
 
@@ -113,6 +123,8 @@ export function IAMSessionPoliciesPage() {
                     onChange={setLoginActionTimeout}
                     unit="Minutes"
                     helperText="1 - 10 Minutes"
+                    min={1}
+                    max={10}
                   />
                 </div>
 
@@ -126,8 +138,12 @@ export function IAMSessionPoliciesPage() {
                     <IconRefresh size={12} stroke={1.5} />
                     Reset to default
                   </button>
-                  <Button variant="secondary" appearance="outline" size="sm">Reload</Button>
-                  <Button variant="primary" size="sm">Save</Button>
+                  <Button variant="secondary" appearance="outline" size="sm">
+                    Reload
+                  </Button>
+                  <Button variant="primary" size="sm">
+                    Save
+                  </Button>
                 </div>
               </div>
             </div>

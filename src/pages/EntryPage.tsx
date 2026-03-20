@@ -277,7 +277,7 @@ export function EntryPage() {
           {/* Developer Resources */}
           <div className="mt-12">
             <div className="mb-6">
-              <h4 className="text-heading-h7 !font-normal text-[var(--color-text-muted)] mb-4">
+              <h4 className="text-body-md uppercase text-[var(--color-text-muted)] mb-4">
                 Resources
               </h4>
               <div className="flex items-center gap-2 mt-4 flex-wrap">
@@ -306,6 +306,9 @@ export function EntryPage() {
                 >
                   Shared V2 Preview
                 </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/table-style-guide')}>
+                  Table Style Guide
+                </Button>
               </div>
             </div>
           </div>
@@ -325,9 +328,6 @@ export function EntryPage() {
                     onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
                   >
                     404 page
-                  </Button>
-                  <Button variant="muted" size="md" onClick={() => navigate('/table-style-guide')}>
-                    Table Style Guide
                   </Button>
                   <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
                     Topology Popovers

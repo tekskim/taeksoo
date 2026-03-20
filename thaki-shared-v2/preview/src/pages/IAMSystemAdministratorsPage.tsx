@@ -1,15 +1,16 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
-import { Input } from '@shared/components/Input';
 import { Table } from '@shared/components/Table';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
 import { IconDownload, IconLock } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 interface SystemAdmin {
   id: string;
@@ -29,31 +30,146 @@ const statusMap: Record<string, StatusVariant> = {
 };
 
 const mockSystemAdmins: SystemAdmin[] = [
-  { id: 'admin-001', username: 'thaki-kim', status: 'active', locked: true, lastSignIn: 'Sep 12, 2025', mfa: 'OTP / Email', createdAt: 'Sep 12, 2025 08:15:22' },
-  { id: 'admin-002', username: 'alex-jones', status: 'active', locked: false, lastSignIn: 'Sep 11, 2025', mfa: 'OTP', createdAt: 'Aug 15, 2025 10:42:38' },
-  { id: 'admin-003', username: 'sarah-lee', status: 'active', locked: false, lastSignIn: 'Sep 10, 2025', mfa: 'Email', createdAt: 'Jul 20, 2025 14:28:15' },
-  { id: 'admin-004', username: 'john-doe', status: 'inactive', locked: true, lastSignIn: 'Aug 25, 2025', mfa: '-', createdAt: 'Jun 10, 2025 09:55:42' },
-  { id: 'admin-005', username: 'jane-smith', status: 'active', locked: false, lastSignIn: 'Sep 12, 2025', mfa: 'OTP / Email', createdAt: 'Sep 1, 2025 16:18:33' },
-  { id: 'admin-006', username: 'mike-wilson', status: 'active', locked: false, lastSignIn: 'Sep 8, 2025', mfa: 'OTP', createdAt: 'Aug 25, 2025 11:32:47' },
-  { id: 'admin-007', username: 'emily-davis', status: 'pending', locked: false, lastSignIn: '-', mfa: '-', createdAt: 'Sep 10, 2025 13:45:21' },
-  { id: 'admin-008', username: 'chris-martin', status: 'active', locked: true, lastSignIn: 'Sep 5, 2025', mfa: 'Email', createdAt: 'Jul 5, 2025 10:22:55' },
-  { id: 'admin-009', username: 'lisa-anderson', status: 'active', locked: false, lastSignIn: 'Sep 12, 2025', mfa: 'OTP', createdAt: 'Jun 1, 2025 15:48:12' },
-  { id: 'admin-010', username: 'david-brown', status: 'active', locked: false, lastSignIn: 'Sep 11, 2025', mfa: 'OTP / Email', createdAt: 'May 15, 2025 08:35:39' },
+  {
+    id: 'admin-001',
+    username: 'thaki-kim',
+    status: 'active',
+    locked: true,
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP / Email',
+    createdAt: 'Sep 12, 2025 08:15:22',
+  },
+  {
+    id: 'admin-002',
+    username: 'alex-jones',
+    status: 'active',
+    locked: false,
+    lastSignIn: 'Sep 11, 2025',
+    mfa: 'OTP',
+    createdAt: 'Aug 15, 2025 10:42:38',
+  },
+  {
+    id: 'admin-003',
+    username: 'sarah-lee',
+    status: 'active',
+    locked: false,
+    lastSignIn: 'Sep 10, 2025',
+    mfa: 'Email',
+    createdAt: 'Jul 20, 2025 14:28:15',
+  },
+  {
+    id: 'admin-004',
+    username: 'john-doe',
+    status: 'inactive',
+    locked: true,
+    lastSignIn: 'Aug 25, 2025',
+    mfa: '-',
+    createdAt: 'Jun 10, 2025 09:55:42',
+  },
+  {
+    id: 'admin-005',
+    username: 'jane-smith',
+    status: 'active',
+    locked: false,
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP / Email',
+    createdAt: 'Sep 1, 2025 16:18:33',
+  },
+  {
+    id: 'admin-006',
+    username: 'mike-wilson',
+    status: 'active',
+    locked: false,
+    lastSignIn: 'Sep 8, 2025',
+    mfa: 'OTP',
+    createdAt: 'Aug 25, 2025 11:32:47',
+  },
+  {
+    id: 'admin-007',
+    username: 'emily-davis',
+    status: 'pending',
+    locked: false,
+    lastSignIn: '-',
+    mfa: '-',
+    createdAt: 'Sep 10, 2025 13:45:21',
+  },
+  {
+    id: 'admin-008',
+    username: 'chris-martin',
+    status: 'active',
+    locked: true,
+    lastSignIn: 'Sep 5, 2025',
+    mfa: 'Email',
+    createdAt: 'Jul 5, 2025 10:22:55',
+  },
+  {
+    id: 'admin-009',
+    username: 'lisa-anderson',
+    status: 'active',
+    locked: false,
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP',
+    createdAt: 'Jun 1, 2025 15:48:12',
+  },
+  {
+    id: 'admin-010',
+    username: 'david-brown',
+    status: 'active',
+    locked: false,
+    lastSignIn: 'Sep 11, 2025',
+    mfa: 'OTP / Email',
+    createdAt: 'May 15, 2025 08:35:39',
+  },
+];
+
+const filterKeys: FilterKey[] = [
+  { id: 'username', label: 'Username', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+      { label: 'Pending', value: 'pending' },
+    ],
+  },
+  {
+    id: 'mfa',
+    label: 'MFA',
+    type: 'text',
+  },
 ];
 
 export function IAMSystemAdministratorsPage() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const handleFilterAdd = (filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => {
+      const exists = prev.findIndex((f) => f.id === filter.id);
+      if (exists >= 0) {
+        const next = [...prev];
+        next[exists] = filter;
+        return next;
+      }
+      return [...prev, filter];
+    });
+    setCurrentPage(1);
+  };
+
   const filteredAdmins = useMemo(() => {
-    if (!searchQuery.trim()) return mockSystemAdmins;
-    const q = searchQuery.toLowerCase();
-    return mockSystemAdmins.filter(
-      (a) =>
-        a.username.toLowerCase().includes(q) ||
-        a.mfa.toLowerCase().includes(q)
+    if (appliedFilters.length === 0) return mockSystemAdmins;
+    return mockSystemAdmins.filter((a) =>
+      appliedFilters.every((f) => {
+        if (f.id === 'username')
+          return a.username.toLowerCase().includes(String(f.value).toLowerCase());
+        if (f.id === 'status') return a.status === f.value;
+        if (f.id === 'mfa') return a.mfa.toLowerCase().includes(String(f.value).toLowerCase());
+        return true;
+      })
     );
-  }, [searchQuery]);
+  }, [appliedFilters]);
 
   const itemsPerPage = 10;
   const paginatedAdmins = filteredAdmins.slice(
@@ -75,19 +191,18 @@ export function IAMSystemAdministratorsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="System administrators" />
-        <Button variant="primary" size="md">Create account</Button>
+        <Button variant="primary" size="md">
+          Create account
+        </Button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Input
+      <div className="flex items-center gap-1">
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search accounts by attributes"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1);
-          }}
-          size="sm"
-          className="w-[var(--search-input-width,280px)]"
+          defaultFilterKey="username"
         />
         <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
           <IconDownload size={12} />
@@ -103,35 +218,38 @@ export function IAMSystemAdministratorsPage() {
         totalCountLabel="items"
       />
 
-      <Table<SystemAdmin>
-        columns={columns}
-        rows={paginatedAdmins}
-        stickyLastColumn
-      >
+      <Table<SystemAdmin> columns={columns} rows={paginatedAdmins} stickyLastColumn>
         {paginatedAdmins.map((admin) => (
           <Table.Tr key={admin.id} rowData={admin}>
             <Table.Td rowData={admin} column={columns[0]}>
               <StatusIndicator variant={statusMap[admin.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={admin} column={columns[1]}>
-              <Link to={`/iam/system-administrators/${admin.username}`} className="text-primary font-medium hover:underline">
+              <Link
+                to={`/iam/system-administrators/${admin.username}`}
+                className="text-primary font-medium hover:underline"
+              >
                 {admin.username}
               </Link>
             </Table.Td>
             <Table.Td rowData={admin} column={columns[2]}>
               <div className="flex items-center justify-center w-full">
-                {admin.locked && (
-                  <IconLock size={16} stroke={1.5} className="text-text" />
-                )}
+                {admin.locked && <IconLock size={16} stroke={1.5} className="text-text" />}
               </div>
             </Table.Td>
-            <Table.Td rowData={admin} column={columns[3]}>{admin.lastSignIn}</Table.Td>
-            <Table.Td rowData={admin} column={columns[4]}>{admin.mfa}</Table.Td>
+            <Table.Td rowData={admin} column={columns[3]}>
+              {admin.lastSignIn}
+            </Table.Td>
+            <Table.Td rowData={admin} column={columns[4]}>
+              {admin.mfa}
+            </Table.Td>
             <Table.Td rowData={admin} column={columns[5]}>
               {admin.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
             <Table.Td rowData={admin} column={columns[6]} preventClickPropagation>
-              <ContextMenu.Root direction="bottom-end" gap={4}
+              <ContextMenu.Root
+                direction="bottom-end"
+                gap={4}
                 trigger={({ toggle }) => (
                   <button
                     type="button"
@@ -156,7 +274,9 @@ export function IAMSystemAdministratorsPage() {
                 <ContextMenu.Item action={() => {}}>
                   {admin.locked ? 'Unlock account' : 'Lock account'}
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => {}} danger>Delete account</ContextMenu.Item>
+                <ContextMenu.Item action={() => {}} danger>
+                  Delete account
+                </ContextMenu.Item>
               </ContextMenu.Root>
             </Table.Td>
           </Table.Tr>

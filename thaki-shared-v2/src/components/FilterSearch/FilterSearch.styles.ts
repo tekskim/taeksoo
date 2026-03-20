@@ -12,7 +12,8 @@ export const filterSearchStyles = {
   // Containers
   searchContainer: 'relative w-[280px] flex-shrink-0',
   selectContainer: 'relative w-[280px] flex-shrink-0',
-  dateRangeContainer: 'relative w-[280px] flex-shrink-0 [&>div:last-child]:absolute [&>div:last-child]:top-[calc(100%+var(--semantic-space-xs))] [&>div:last-child]:left-0 [&>div:last-child]:z-[1000]',
+  dateRangeContainer:
+    'relative w-[280px] flex-shrink-0 [&>div:last-child]:absolute [&>div:last-child]:top-[calc(100%+var(--semantic-space-xs))] [&>div:last-child]:left-0 [&>div:last-child]:z-[1000]',
 
   // Input wrapper
   inputWrapper:
@@ -29,7 +30,7 @@ export const filterSearchStyles = {
 
   // Input mode container
   inputModeContainer:
-    'bg-surface ring-1 ring-inset ring-border-strong rounded-base6 py-1 px-2 flex items-center gap-1 min-w-[280px] focus-within:ring-focus focus-within:shadow-[0_0_0_1px_var(--semantic-color-focus)]',
+    'bg-surface ring-1 ring-inset ring-border-strong rounded-base6 h-7 px-2 flex items-center gap-1 min-w-[280px] focus-within:ring-focus focus-within:shadow-[0_0_0_1px_var(--semantic-color-focus)]',
 
   // Inline value input
   valueInputInline:

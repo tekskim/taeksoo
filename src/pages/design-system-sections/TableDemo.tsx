@@ -16,8 +16,8 @@ import {
   IconRouter,
   IconCube,
   IconTerminal2,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
-import { IconAction } from '@/design-system/components/Icons';
 
 interface InstanceData {
   id: string;
@@ -286,7 +286,7 @@ export function TableDemo() {
             <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
-            <IconAction size={16} stroke={1} />
+            <IconDotsCircleHorizontal size={16} stroke={1.5} />
           </button>
         </div>
       ),

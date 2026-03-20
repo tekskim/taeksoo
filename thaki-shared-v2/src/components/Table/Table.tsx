@@ -27,8 +27,7 @@ import type {
 import { useColumnResize } from './useColumnResize';
 import { useTableResize } from './useTableResize';
 
-const normalizeColumnKey = (columnKey: string): string =>
-  columnKey.trim().toLowerCase();
+const normalizeColumnKey = (columnKey: string): string => columnKey.trim().toLowerCase();
 
 const FIXED_COLUMN_WIDTHS: Record<string, number> = {
   __select__: TABLE_SELECTION_COLUMN_WIDTH,
@@ -70,16 +69,9 @@ const TableHeader = React.memo(
     stickyLastColumn,
   }: {
     columns: TableColumn[];
-    renderHeaderCell?: (
-      column: TableColumn,
-      index: number
-    ) => React.ReactElement | null;
+    renderHeaderCell?: (column: TableColumn, index: number) => React.ReactElement | null;
     handleColumnResize?: (columnKey: string, newWidth: number) => void;
-    handleResizeStart?: (
-      columnKey: string,
-      startX: number,
-      tableElement: HTMLTableElement
-    ) => void;
+    handleResizeStart?: (columnKey: string, startX: number, tableElement: HTMLTableElement) => void;
     handleResizeEnd?: (columnKey: string) => void;
     currentSort?: string;
     currentOrder?: SortOrder;
@@ -252,10 +244,7 @@ const Th = React.memo(
       return (
         <ChevronDownIcon
           size={12}
-          className={cn(
-            tableStyles.sortIcon,
-            isCurrentSort && tableStyles.sortIconActive
-          )}
+          className={cn(tableStyles.sortIcon, isCurrentSort && tableStyles.sortIconActive)}
           style={{
             transform: isAscending ? 'rotate(180deg)' : 'none',
             transition: 'transform 0.2s ease',
@@ -264,16 +253,15 @@ const Th = React.memo(
       );
     }, [isSortable, onSort, isCurrentSort, currentOrder]);
 
-    const headerContent =
-      children === undefined ? column.header ?? '' : children;
+    const headerContent = children === undefined ? (column.header ?? '') : children;
     const headerNode =
-      headerContent === null || headerContent === false
-        ? null
-        : React.isValidElement(headerContent)
-          ? headerContent
-          : (
-              <span className={tableStyles.thLabel}>{headerContent}</span>
-            );
+      headerContent === null || headerContent === false ? null : React.isValidElement(
+          headerContent
+        ) ? (
+        headerContent
+      ) : (
+        <span className={tableStyles.thLabel}>{headerContent}</span>
+      );
 
     return (
       <th
@@ -291,6 +279,8 @@ const Th = React.memo(
         <div
           className={cn(
             tableStyles.thContent,
+            align === 'center' && 'justify-center',
+            align === 'right' && 'justify-end',
             isSortable && onSort && tableStyles.thClickable
           )}
           onClick={handleClick}
@@ -402,17 +392,17 @@ const Td = <TData,>({
       data-column-key={column.key}
     >
       <ErrorBoundary fallback="-">
-        {children
-          ? children
-          : React.isValidElement(cellValue)
-            ? cellValue
-            : typeof cellValue === 'object' && cellValue !== null
-              ? JSON.stringify(cellValue)
-              : (
-                  <span className={cn(tableStyles.tdText, shouldEllipsis && 'truncate')}>
-                    {String(cellValue ?? '-')}
-                  </span>
-                )}
+        {children ? (
+          children
+        ) : React.isValidElement(cellValue) ? (
+          cellValue
+        ) : typeof cellValue === 'object' && cellValue !== null ? (
+          JSON.stringify(cellValue)
+        ) : (
+          <span className={cn(tableStyles.tdText, shouldEllipsis && 'truncate')}>
+            {String(cellValue ?? '-')}
+          </span>
+        )}
       </ErrorBoundary>
     </td>
   );
@@ -432,12 +422,7 @@ const LoadingRow: React.FC<LoadingRowProps> = ({
 }): React.ReactElement => (
   <tr className={tableStyles.tr}>
     <td
-      className={cn(
-        tableStyles.td,
-        tableStyles.noPad,
-        tableStyles.noPadFullRow,
-        className
-      )}
+      className={cn(tableStyles.td, tableStyles.noPad, tableStyles.noPadFullRow, className)}
       colSpan={colSpan}
     >
       {children || <Skeleton />}
@@ -459,12 +444,7 @@ const EmptyRow: React.FC<EmptyRowProps> = ({
 }): React.ReactElement => (
   <tr className={tableStyles.tr}>
     <td
-      className={cn(
-        tableStyles.td,
-        tableStyles.emptyCell,
-        tableStyles.emptyCellFullRow,
-        className
-      )}
+      className={cn(tableStyles.td, tableStyles.emptyCell, tableStyles.emptyCellFullRow, className)}
       colSpan={colSpan}
     >
       <div className={tableStyles.emptyState}>
@@ -586,9 +566,7 @@ const TableComponent = <TData extends Record<string, unknown>>({
     return columns.map((column: TableColumn) => {
       const fixedWidth = getFixedColumnWidth(column.key);
       if (fixedWidth != null) {
-        return column.width === fixedWidth
-          ? column
-          : { ...column, width: fixedWidth };
+        return column.width === fixedWidth ? column : { ...column, width: fixedWidth };
       }
       if (tableLayout !== 'fixed' || column.width == null) {
         return column;
@@ -619,18 +597,13 @@ const TableComponent = <TData extends Record<string, unknown>>({
     [sort, order, onSortChange]
   );
 
-  const {
-    isResizing,
-    handleColumnResize,
-    handleResizeStart,
-    handleResizeEnd,
-    getColumnWidth,
-  } = useTableResize({
-    columns: columnsWithFixedWidth,
-    columnWidths,
-    maxWidth,
-    onColumnResize,
-  });
+  const { isResizing, handleColumnResize, handleResizeStart, handleResizeEnd, getColumnWidth } =
+    useTableResize({
+      columns: columnsWithFixedWidth,
+      columnWidths,
+      maxWidth,
+      onColumnResize,
+    });
 
   // 로딩 상태 렌더링 메모이제이션
   const renderLoadingBody = useMemo(
@@ -663,7 +636,7 @@ const TableComponent = <TData extends Record<string, unknown>>({
   // 커스텀 바디 렌더링
   const renderCustomBody = (): React.ReactElement => (
     <tbody>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (React.isValidElement(child) && child.type === Tr) {
           // Tr의 children(Td들)을 순회하여 first/last Td에 스타일 추가
           const trChildren = React.Children.toArray(
@@ -674,13 +647,10 @@ const TableComponent = <TData extends Record<string, unknown>>({
             if (React.isValidElement(tdChild) && tdChild.type === Td) {
               const isFirstColumn = index === 0;
               const isLastColumn = index === trChildren.length - 1;
-              const existingClassName = (
-                tdChild.props as { className?: string }
-              ).className;
+              const existingClassName = (tdChild.props as { className?: string }).className;
 
               // Selection cell인지 확인 (tdSelectionCell이 이미 적용된 경우)
-              const isSelectionCell =
-                existingClassName?.includes('table-selection-cell') ?? false;
+              const isSelectionCell = existingClassName?.includes('table-selection-cell') ?? false;
 
               // first/last 스타일과 sticky 스타일 적용
               // Selection cell은 자체 first 스타일을 포함하므로 tdFirst 적용 안함
@@ -689,19 +659,14 @@ const TableComponent = <TData extends Record<string, unknown>>({
                 isFirstColumn && !isSelectionCell && tableStyles.tdFirst,
                 isLastColumn && tableStyles.tdLast,
                 stickyLastColumn && isLastColumn && tableStyles.stickyLast,
-                stickyLastColumn &&
-                  isLastColumn &&
-                  tableStyles.stickyLastTbodyBg
+                stickyLastColumn && isLastColumn && tableStyles.stickyLastTbodyBg
               );
 
-              return React.cloneElement(
-                tdChild as React.ReactElement<TdProps<TData>>,
-                {
-                  ...(tdChild.props as TdProps<TData>),
-                  column: columnsWithWidth[index],
-                  className: newClassName,
-                }
-              );
+              return React.cloneElement(tdChild as React.ReactElement<TdProps<TData>>, {
+                ...(tdChild.props as TdProps<TData>),
+                column: columnsWithWidth[index],
+                className: newClassName,
+              });
             }
             return tdChild;
           });
@@ -721,9 +686,7 @@ const TableComponent = <TData extends Record<string, unknown>>({
   const columnsWithWidth = useMemo(() => {
     return columnsWithFixedWidth.map((column: TableColumn) => {
       const currentWidth = getColumnWidth(column);
-      return currentWidth === column.width
-        ? column
-        : { ...column, width: currentWidth };
+      return currentWidth === column.width ? column : { ...column, width: currentWidth };
     });
   }, [columnsWithFixedWidth, getColumnWidth]);
 
@@ -746,9 +709,7 @@ const TableComponent = <TData extends Record<string, unknown>>({
                     isFirstColumn && tableStyles.tdFirst,
                     isLastColumn && tableStyles.tdLast,
                     stickyLastColumn && isLastColumn && tableStyles.stickyLast,
-                    stickyLastColumn &&
-                      isLastColumn &&
-                      tableStyles.stickyLastTbodyBg
+                    stickyLastColumn && isLastColumn && tableStyles.stickyLastTbodyBg
                   )}
                 />
               );
@@ -785,12 +746,9 @@ const TableComponent = <TData extends Record<string, unknown>>({
 
   return (
     <div className={cn(tableStyles.container, className)}>
-      <table
-        className={getTableClasses(isResizing, tableLayout)}
-        style={tableStyle}
-      >
+      <table className={getTableClasses(isResizing, tableLayout)} style={tableStyle}>
         <colgroup>
-          {columnsWithWidth.map(column => (
+          {columnsWithWidth.map((column) => (
             <col
               key={column.key}
               style={

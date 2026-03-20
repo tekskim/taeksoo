@@ -1055,7 +1055,9 @@ export function SidebarIconsPage() {
         {/* Quick Reference */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-            <h3 className="text-heading-h7 text-[var(--color-text-default)] mb-2">Tabler Icons</h3>
+            <h3 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+              Tabler Icons
+            </h3>
             <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
               import {'{ IconName }'} from '@tabler/icons-react';
             </code>
@@ -1064,7 +1066,9 @@ export function SidebarIconsPage() {
             </code>
           </div>
           <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-            <h3 className="text-heading-h7 text-[var(--color-text-default)] mb-2">Lucide Icons</h3>
+            <h3 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+              Lucide Icons
+            </h3>
             <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
               import {'{ IconName }'} from 'lucide-react';
             </code>

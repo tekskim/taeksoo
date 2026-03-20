@@ -158,7 +158,6 @@ import {
   IconTerminal2,
   IconActivity,
   IconChartBar,
-  IconChartDonut,
   IconGauge,
   IconDeviceDesktop,
   IconDeviceDesktopAnalytics,
@@ -187,7 +186,6 @@ import {
   IconRobot,
   IconRobotFace,
   IconMessageChatbot,
-  IconBooks,
   IconBook,
   IconTestPipe,
   // OS / Brand
@@ -237,14 +235,11 @@ import {
   IconRestore,
 } from '@tabler/icons-react';
 import {
-  IconTimeout,
-  IconHistory2,
   IconUbuntu2,
   IconRocky2,
   IconWindowActive,
   IconWindowMinimized,
   IconRouterArrows,
-  IconAction,
   IconExpandOff,
   IconExpandOn,
 } from '@/design-system/components/Icons/CustomIcons';
@@ -258,6 +253,8 @@ interface IconItem {
   name: string;
   label: string;
   library?: 'tabler' | 'lucide' | 'custom';
+  usage?: string;
+  note?: string;
 }
 
 interface IconCategoryData {
@@ -273,339 +270,1147 @@ const iconCategories: IconCategoryData[] = [
   {
     title: 'Actions - Media Controls',
     items: [
-      { icon: IconPlayerPlay, name: 'IconPlayerPlay', label: 'Play' },
-      { icon: IconPlayerStop, name: 'IconPlayerStop', label: 'Stop' },
-      { icon: IconPlayerPause, name: 'IconPlayerPause', label: 'Pause' },
-      { icon: IconRefresh, name: 'IconRefresh', label: 'Refresh' },
-      { icon: IconRefreshDot, name: 'IconRefreshDot', label: 'Reboot' },
-      { icon: IconRotate, name: 'IconRotate', label: 'Rotate' },
-      { icon: IconRotateClockwise, name: 'IconRotateClockwise', label: 'Retry' },
-      { icon: IconPower, name: 'IconPower', label: 'Reboot' },
-      { icon: IconCircleX, name: 'IconCircleX', label: 'Terminate' },
+      {
+        icon: IconPlayerPlay,
+        name: 'IconPlayerPlay',
+        label: 'Play',
+        usage: 'Instance Detail/List, DetailHeader, ContextMenu',
+      },
+      {
+        icon: IconPlayerStop,
+        name: 'IconPlayerStop',
+        label: 'Stop',
+        usage: 'Instance Detail/List, ScheduledTasks',
+      },
+      {
+        icon: IconPlayerPause,
+        name: 'IconPlayerPause',
+        label: 'Pause',
+        usage: 'StatusIndicator, CronJobs, AIPlatform, Workload Detail',
+      },
+      {
+        icon: IconRefresh,
+        name: 'IconRefresh',
+        label: 'Refresh',
+        usage: 'MonitoringToolbar, DS 컴포넌트',
+      },
+      {
+        icon: IconRefreshDot,
+        name: 'IconRefreshDot',
+        label: 'Reboot',
+        usage: 'Instance Detail, ContextMenu',
+      },
+      { icon: IconRotate, name: 'IconRotate', label: 'Rotate', note: '미사용' },
+      { icon: IconRotateClockwise, name: 'IconRotateClockwise', label: 'Retry', note: '미사용' },
+      {
+        icon: IconPower,
+        name: 'IconPower',
+        label: 'Reboot',
+        usage: 'StatusIndicator, Instance pages, CloudBuilder Detail',
+      },
+      {
+        icon: IconCircleX,
+        name: 'IconCircleX',
+        label: 'Terminate',
+        usage: 'Toast, WorkloadDetail, IAM pages, MCPTools',
+      },
     ],
   },
   {
     title: 'Actions - CRUD',
     items: [
-      { icon: IconPlus, name: 'IconPlus', label: 'Add' },
-      { icon: IconCirclePlus, name: 'IconCirclePlus', label: 'Create / Add' },
-      { icon: IconSquarePlus, name: 'IconSquarePlus', label: 'Attach' },
-      { icon: IconMinus, name: 'IconMinus', label: 'Remove' },
-      { icon: IconPencil, name: 'IconPencil', label: 'Edit' },
-      { icon: IconEdit, name: 'IconEdit', label: 'Edit Alt' },
-      { icon: IconTrash, name: 'IconTrash', label: 'Delete' },
-      { icon: IconTrashX, name: 'IconTrashX', label: 'Deleting' },
-      { icon: IconCopy, name: 'IconCopy', label: 'Copy' },
-      { icon: IconRestore, name: 'IconRestore', label: 'Restore' },
-      { icon: IconReload, name: 'IconReload', label: 'Reset' },
+      {
+        icon: IconPlus,
+        name: 'IconPlus',
+        label: 'Add',
+        usage: 'PageHeader Create 버튼, TabBar, 동적 폼 추가',
+      },
+      {
+        icon: IconCirclePlus,
+        name: 'IconCirclePlus',
+        label: 'Create / Add',
+        usage: '동적 폼 행 추가 버튼',
+      },
+      {
+        icon: IconSquarePlus,
+        name: 'IconSquarePlus',
+        label: 'Attach',
+        usage: 'HomePage, InstanceDetail',
+      },
+      {
+        icon: IconMinus,
+        name: 'IconMinus',
+        label: 'Remove',
+        usage: 'Checkbox(indeterminate), TabBar, NumberInput',
+      },
+      {
+        icon: IconPencil,
+        name: 'IconPencil',
+        label: 'Edit',
+        usage: 'SectionCard Edit 버튼, Detail pages',
+      },
+      {
+        icon: IconEdit,
+        name: 'IconEdit',
+        label: 'Edit Alt',
+        usage: 'SectionCard Edit, DesignTodoPage',
+      },
+      {
+        icon: IconTrash,
+        name: 'IconTrash',
+        label: 'Delete',
+        usage: 'Bulk actions, ContextMenu, 동적 폼 행 삭제',
+      },
+      { icon: IconTrashX, name: 'IconTrashX', label: 'Deleting', note: '미사용' },
+      {
+        icon: IconCopy,
+        name: 'IconCopy',
+        label: 'Copy',
+        usage: 'CopyButton, InfoBox, TopBar',
+        note: 'DS 내부',
+      },
+      { icon: IconRestore, name: 'IconRestore', label: 'Restore', usage: 'VolumeBackupDetail' },
+      {
+        icon: IconReload,
+        name: 'IconReload',
+        label: 'Reset',
+        usage: 'IAMUserDetail, IAMSystemAdminDetail',
+      },
     ],
   },
   {
     title: 'Actions - Transfer',
     items: [
-      { icon: IconDownload, name: 'IconDownload', label: 'Download' },
-      { icon: IconUpload, name: 'IconUpload', label: 'Upload' },
-      { icon: IconShare, name: 'IconShare', label: 'Share' },
-      { icon: IconSend, name: 'IconSend', label: 'Send' },
-      { icon: IconTransfer, name: 'IconTransfer', label: 'Transfer' },
-      { icon: IconLink, name: 'IconLink', label: 'Link' },
-      { icon: IconUnlink, name: 'IconUnlink', label: 'Unlink' },
-      { icon: IconLinkOff, name: 'IconLinkOff', label: 'Link Off' },
-      { icon: IconLinkPlus, name: 'IconLinkPlus', label: 'Associate' },
-      { icon: IconExternalLink, name: 'IconExternalLink', label: 'External' },
-      { icon: IconBinaryTree, name: 'IconBinaryTree', label: 'Allocate' },
-      { icon: IconCircleMinus, name: 'IconCircleMinus', label: 'Remove' },
+      {
+        icon: IconDownload,
+        name: 'IconDownload',
+        label: 'Download',
+        usage: 'AppIconsPage 다운로드, Drawer',
+      },
+      {
+        icon: IconUpload,
+        name: 'IconUpload',
+        label: 'Upload',
+        usage: 'ConfigMap 파일 읽기, Create pages',
+      },
+      { icon: IconShare, name: 'IconShare', label: 'Share', usage: 'Detail pages, ContextMenu' },
+      { icon: IconSend, name: 'IconSend', label: 'Send', usage: 'ChatbotPanel 전송 버튼' },
+      {
+        icon: IconTransfer,
+        name: 'IconTransfer',
+        label: 'Transfer',
+        usage: 'Volume Transfer, ContextMenu',
+      },
+      { icon: IconLink, name: 'IconLink', label: 'Link', usage: 'SectionCard DataRow isLink' },
+      {
+        icon: IconUnlink,
+        name: 'IconUnlink',
+        label: 'Unlink',
+        usage: 'FloatingIP, LB, IAM Group pages',
+      },
+      {
+        icon: IconLinkOff,
+        name: 'IconLinkOff',
+        label: 'Link Off',
+        usage: 'FloatingIPDetail, RouterDetail',
+      },
+      {
+        icon: IconLinkPlus,
+        name: 'IconLinkPlus',
+        label: 'Associate',
+        usage: 'InstanceDetail, PortDetail',
+      },
+      {
+        icon: IconExternalLink,
+        name: 'IconExternalLink',
+        label: 'External',
+        usage: 'Drawer 외부 문서 링크 (60+ files)',
+      },
+      {
+        icon: IconBinaryTree,
+        name: 'IconBinaryTree',
+        label: 'Allocate',
+        usage: 'FloatingIPs, PortDetail',
+      },
+      {
+        icon: IconCircleMinus,
+        name: 'IconCircleMinus',
+        label: 'Remove',
+        usage: 'StatusIndicator, ManageRules/MetadataDrawer, IAMUserDetail',
+      },
     ],
   },
   {
     title: 'Navigation - Chevrons & Arrows',
     items: [
-      { icon: IconChevronLeft, name: 'IconChevronLeft', label: 'Chevron L' },
-      { icon: IconChevronRight, name: 'IconChevronRight', label: 'Chevron R' },
-      { icon: IconChevronDown, name: 'IconChevronDown', label: 'Chevron D' },
-      { icon: IconChevronUp, name: 'IconChevronUp', label: 'Chevron U' },
-      { icon: IconArrowLeft, name: 'IconArrowLeft', label: 'Arrow L' },
-      { icon: IconArrowRight, name: 'IconArrowRight', label: 'Arrow R' },
-      { icon: IconArrowUp, name: 'IconArrowUp', label: 'Arrow U' },
-      { icon: IconArrowDown, name: 'IconArrowDown', label: 'Arrow D' },
-      { icon: IconChevronsRight, name: 'IconChevronsRight', label: 'Chevrons R' },
-      { icon: IconCaretRightFilled, name: 'IconCaretRightFilled', label: 'Caret R' },
-      { icon: IconCaretDownFilled, name: 'IconCaretDownFilled', label: 'Caret D' },
+      {
+        icon: IconChevronLeft,
+        name: 'IconChevronLeft',
+        label: 'Chevron L',
+        usage: 'DatePicker, Pagination, TopBar',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconChevronRight,
+        name: 'IconChevronRight',
+        label: 'Chevron R',
+        usage: 'Breadcrumb, ContextMenu submenu, Disclosure',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconChevronDown,
+        name: 'IconChevronDown',
+        label: 'Chevron D',
+        usage: 'Select, Dropdown, ContextMenu trigger',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconChevronUp,
+        name: 'IconChevronUp',
+        label: 'Chevron U',
+        usage: 'Table sort, NumberInput',
+        note: 'DS 내부',
+      },
+      { icon: IconArrowLeft, name: 'IconArrowLeft', label: 'Arrow L', usage: 'TopBar 뒤로가기' },
+      {
+        icon: IconArrowRight,
+        name: 'IconArrowRight',
+        label: 'Arrow R',
+        usage: 'TopBar 앞으로가기',
+      },
+      { icon: IconArrowUp, name: 'IconArrowUp', label: 'Arrow U', usage: 'Table sort 방향' },
+      { icon: IconArrowDown, name: 'IconArrowDown', label: 'Arrow D', usage: 'Table sort 방향' },
+      {
+        icon: IconChevronsRight,
+        name: 'IconChevronsRight',
+        label: 'Chevrons R',
+        usage: 'ChatbotPanel',
+      },
+      {
+        icon: IconCaretRightFilled,
+        name: 'IconCaretRightFilled',
+        label: 'Caret R',
+        usage: 'CreateTemplate, Tree 컴포넌트',
+      },
+      {
+        icon: IconCaretDownFilled,
+        name: 'IconCaretDownFilled',
+        label: 'Caret D',
+        usage: 'CreateTemplate, Tree 컴포넌트',
+      },
     ],
   },
   {
     title: 'Navigation - Expand & Menu',
     items: [
-      { icon: IconArrowsMaximize, name: 'IconArrowsMaximize', label: 'Maximize' },
-      { icon: IconArrowsMinimize, name: 'IconArrowsMinimize', label: 'Minimize' },
+      {
+        icon: IconArrowsMaximize,
+        name: 'IconArrowsMaximize',
+        label: 'Maximize',
+        usage: 'Chart/Monitor 확대, OverallPerformance, HostDetail',
+      },
+      {
+        icon: IconArrowsMinimize,
+        name: 'IconArrowsMinimize',
+        label: 'Minimize',
+        usage: 'Chart/Monitor 축소',
+      },
       {
         icon: IconLayoutSidebarLeftCollapse,
         name: 'IconLayoutSidebarLeftCollapse',
         label: 'Collapse',
+        usage: 'Sidebar 접기 버튼',
       },
-      { icon: IconDotsCircleHorizontal, name: 'IconDotsCircleHorizontal', label: 'Action' },
-      { icon: IconDots, name: 'IconDots', label: 'Meatball' },
-      { icon: IconDotsVertical, name: 'IconDotsVertical', label: 'Kebab' },
-      { icon: IconMenu2, name: 'IconMenu2', label: 'Hamburger' },
+      {
+        icon: IconDotsCircleHorizontal,
+        name: 'IconDotsCircleHorizontal',
+        label: 'Action',
+        usage: 'Table row 액션 메뉴 (90+ files), IAM pages',
+      },
+      { icon: IconDots, name: 'IconDots', label: 'Meatball', usage: 'ContextMenu trigger' },
+      {
+        icon: IconDotsVertical,
+        name: 'IconDotsVertical',
+        label: 'Kebab',
+        usage: 'ContextMenu trigger (vertical)',
+      },
+      { icon: IconMenu2, name: 'IconMenu2', label: 'Hamburger', usage: 'Mobile menu toggle' },
     ],
   },
   {
     title: 'Status - Success & Error',
     items: [
-      { icon: IconCircleCheck, name: 'IconCircleCheck', label: 'Success' },
-      { icon: IconCheck, name: 'IconCheck', label: 'Check' },
-      { icon: IconShieldCheck, name: 'IconShieldCheck', label: 'Verified' },
-      { icon: IconShieldX, name: 'IconShieldX', label: 'Sec Error' },
-      { icon: IconAlertCircle, name: 'IconAlertCircle', label: 'Error' },
-      { icon: IconAlertTriangle, name: 'IconAlertTriangle', label: 'Warning' },
-      { icon: IconAlertOctagon, name: 'IconAlertOctagon', label: 'Critical' },
-      { icon: IconInfoCircle, name: 'IconInfoCircle', label: 'Info' },
-      { icon: IconHelpCircle, name: 'IconHelpCircle', label: 'Help' },
+      {
+        icon: IconCircleCheck,
+        name: 'IconCircleCheck',
+        label: 'Success',
+        usage: 'InlineMessage, StatusIndicator, TodoPage',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconCheck,
+        name: 'IconCheck',
+        label: 'Check',
+        usage: 'Checkbox, Dropdown selected, CopyButton',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconShieldCheck,
+        name: 'IconShieldCheck',
+        label: 'Verified',
+        usage: 'SecurityGroup Detail, KeyPair pages',
+      },
+      {
+        icon: IconShieldX,
+        name: 'IconShieldX',
+        label: 'Sec Error',
+        usage: 'SecurityGroup/Firewall status',
+      },
+      {
+        icon: IconAlertCircle,
+        name: 'IconAlertCircle',
+        label: 'Error',
+        usage: 'InlineMessage, FormField error, 인라인 경고',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconAlertTriangle,
+        name: 'IconAlertTriangle',
+        label: 'Warning',
+        usage: 'InlineMessage, SelectionIndicator, SystemError',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconAlertOctagon,
+        name: 'IconAlertOctagon',
+        label: 'Critical',
+        usage: 'SystemError 500 pages',
+      },
+      {
+        icon: IconInfoCircle,
+        name: 'IconInfoCircle',
+        label: 'Info',
+        usage: 'Tooltip 정보 아이콘, InlineMessage, DetailHeader',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconHelpCircle,
+        name: 'IconHelpCircle',
+        label: 'Help',
+        usage: 'Help 버튼, Tooltip trigger',
+      },
     ],
   },
   {
     title: 'Status - State',
     items: [
-      { icon: IconCircle, name: 'IconCircle', label: 'Active' },
-      { icon: IconCircleFilled, name: 'IconCircleFilled', label: 'Filled' },
-      { icon: IconCircleOff, name: 'IconCircleOff', label: 'Inactive' },
-      { icon: IconBan, name: 'IconBan', label: 'Suspended' },
-      { icon: IconTool, name: 'IconTool', label: 'Maintain' },
-      { icon: IconLoader, name: 'IconLoader', label: 'Loading' },
-      { icon: IconLoader2, name: 'IconLoader2', label: 'Spinner' },
-      { icon: IconProgress, name: 'IconProgress', label: 'Progress' },
-      { icon: IconInfinity, name: 'IconInfinity', label: 'Infinity' },
+      {
+        icon: IconCircle,
+        name: 'IconCircle',
+        label: 'Active',
+        usage: 'StatusIndicator, TodoPage 상태 토글',
+      },
+      {
+        icon: IconCircleFilled,
+        name: 'IconCircleFilled',
+        label: 'Filled',
+        usage: 'ContainerConsolePage',
+      },
+      { icon: IconCircleOff, name: 'IconCircleOff', label: 'Inactive', note: '미사용' },
+      {
+        icon: IconBan,
+        name: 'IconBan',
+        label: 'Suspended',
+        usage: 'StatusIndicator, CloudBuilderDetail',
+      },
+      {
+        icon: IconTool,
+        name: 'IconTool',
+        label: 'Maintain',
+        usage: 'StatusIndicator maintenance 상태',
+      },
+      {
+        icon: IconLoader,
+        name: 'IconLoader',
+        label: 'Loading',
+        usage: 'StatusIndicator building/deleting/pending',
+      },
+      {
+        icon: IconLoader2,
+        name: 'IconLoader2',
+        label: 'Spinner',
+        usage: 'Loading 컴포넌트 스피너',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconProgress,
+        name: 'IconProgress',
+        label: 'Progress',
+        usage: 'StatusIndicator progress 상태',
+      },
+      {
+        icon: IconInfinity,
+        name: 'IconInfinity',
+        label: 'Infinity',
+        usage: 'Create Drawer 무제한 표시, ProgressBar (15+ files)',
+      },
     ],
   },
   {
     title: 'UI - Common',
     items: [
-      { icon: IconSearch, name: 'IconSearch', label: 'Search' },
-      { icon: IconFilter, name: 'IconFilter', label: 'Filter' },
-      { icon: IconSettings, name: 'IconSettings', label: 'Manage' },
-      { icon: IconHome, name: 'IconHome', label: 'Home' },
-      { icon: IconX, name: 'IconX', label: 'Close' },
-      { icon: IconList, name: 'IconList', label: 'List' },
-      { icon: IconLayoutGrid, name: 'IconLayoutGrid', label: 'Grid' },
-      { icon: IconGridDots, name: 'IconGridDots', label: 'Grid Dots' },
-      { icon: IconArrowsSort, name: 'IconArrowsSort', label: 'Sort' },
-      { icon: IconSelector, name: 'IconSelector', label: 'Selector' },
-      { icon: IconGripVertical, name: 'IconGripVertical', label: 'Drag' },
-      { icon: IconSquare, name: 'IconSquare', label: 'Square' },
-      { icon: IconSlash, name: 'IconSlash', label: 'Separator' },
-      { icon: IconTag, name: 'IconTag', label: 'Tag' },
-      { icon: IconPhoto, name: 'IconPhoto', label: 'Photo' },
-      { icon: IconMapPin, name: 'IconMapPin', label: 'Location' },
+      {
+        icon: IconSearch,
+        name: 'IconSearch',
+        label: 'Search',
+        usage: 'SearchInput, FilterSearchInput',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconFilter,
+        name: 'IconFilter',
+        label: 'Filter',
+        usage: 'DatasetsPage, DesignAuditPage',
+      },
+      {
+        icon: IconSettings,
+        name: 'IconSettings',
+        label: 'Manage',
+        usage: 'Sidebar 메뉴, SettingsPage',
+      },
+      { icon: IconHome, name: 'IconHome', label: 'Home', usage: 'Sidebar Home 메뉴' },
+      {
+        icon: IconX,
+        name: 'IconX',
+        label: 'Close',
+        usage: 'SearchInput clear, Chip dismiss, FileListCard, Tag',
+        note: 'DS 내부',
+      },
+      { icon: IconList, name: 'IconList', label: 'List', usage: 'View 전환 (List/Grid)' },
+      {
+        icon: IconLayoutGrid,
+        name: 'IconLayoutGrid',
+        label: 'Grid',
+        usage: 'View 전환 (List/Grid)',
+      },
+      { icon: IconGridDots, name: 'IconGridDots', label: 'Grid Dots', usage: 'Sidebar 아이콘' },
+      {
+        icon: IconArrowsSort,
+        name: 'IconArrowsSort',
+        label: 'Sort',
+        usage: 'Table 정렬 아이콘',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconSelector,
+        name: 'IconSelector',
+        label: 'Selector',
+        usage: 'Select/Dropdown trigger',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconGripVertical,
+        name: 'IconGripVertical',
+        label: 'Drag',
+        usage: 'TodoPage 드래그 핸들, Sortable 행',
+      },
+      {
+        icon: IconSquare,
+        name: 'IconSquare',
+        label: 'Square',
+        usage: 'TabBar 최대화 아이콘',
+        note: 'DS 내부',
+      },
+      { icon: IconSlash, name: 'IconSlash', label: 'Separator', note: 'Storybook only' },
+      { icon: IconTag, name: 'IconTag', label: 'Tag', usage: 'Tag/Label 표시 아이콘' },
+      { icon: IconPhoto, name: 'IconPhoto', label: 'Photo', usage: 'Image/Snapshot 관련 페이지' },
+      { icon: IconMapPin, name: 'IconMapPin', label: 'Location', note: 'Storybook only' },
     ],
   },
   {
     title: 'UI - Notifications & Favorites',
     items: [
-      { icon: IconBell, name: 'IconBell', label: 'Bell' },
-      { icon: IconBellRinging, name: 'IconBellRinging', label: 'Bell Ring' },
-      { icon: IconStar, name: 'IconStar', label: 'Star' },
-      { icon: IconStarFilled, name: 'IconStarFilled', label: 'Star Fill' },
-      { icon: IconHeart, name: 'IconHeart', label: 'Heart' },
-      { icon: IconTarget, name: 'IconTarget', label: 'Target' },
-      { icon: IconPoint, name: 'IconPoint', label: 'Dot' },
+      { icon: IconBell, name: 'IconBell', label: 'Bell', usage: 'TopBar 알림 아이콘 (40+ files)' },
+      {
+        icon: IconBellRinging,
+        name: 'IconBellRinging',
+        label: 'Bell Ring',
+        usage: 'TopBar 알림 active 상태',
+      },
+      {
+        icon: IconStar,
+        name: 'IconStar',
+        label: 'Star',
+        usage: '즐겨찾기 비활성 상태 (15+ files)',
+      },
+      {
+        icon: IconStarFilled,
+        name: 'IconStarFilled',
+        label: 'Star Fill',
+        usage: '즐겨찾기 활성 상태 (yellow400)',
+      },
+      {
+        icon: IconHeart,
+        name: 'IconHeart',
+        label: 'Heart',
+        usage: 'ButtonPage, MetallicPalettePage',
+      },
+      {
+        icon: IconTarget,
+        name: 'IconTarget',
+        label: 'Target',
+        usage: 'HomePage, AgentPage, AIPlatform, StoragePage',
+      },
+      {
+        icon: IconPoint,
+        name: 'IconPoint',
+        label: 'Dot',
+        usage: 'StatusIndicator dot, 상태 점 표시',
+      },
     ],
   },
   {
     title: 'UI - Visibility & Security',
     items: [
-      { icon: IconEye, name: 'IconEye', label: 'Show' },
-      { icon: IconEyeOff, name: 'IconEyeOff', label: 'Hide' },
-      { icon: IconLock, name: 'IconLock', label: 'Lock' },
-      { icon: IconLockOpen, name: 'IconLockOpen', label: 'Unlock' },
-      { icon: IconShield, name: 'IconShield', label: 'Shield' },
-      { icon: IconShieldLock, name: 'IconShieldLock', label: 'Shield Lock' },
-      { icon: IconKey, name: 'IconKey', label: 'Key' },
+      { icon: IconEye, name: 'IconEye', label: 'Show', usage: 'Password 표시, Detail 보기' },
+      { icon: IconEyeOff, name: 'IconEyeOff', label: 'Hide', usage: 'Password 숨기기' },
+      {
+        icon: IconLock,
+        name: 'IconLock',
+        label: 'Lock',
+        usage: 'Lock 상태, 리소스 잠금 (15+ files)',
+      },
+      {
+        icon: IconLockOpen,
+        name: 'IconLockOpen',
+        label: 'Unlock',
+        usage: 'Flavor/ServerGroup Detail 잠금 해제',
+      },
+      {
+        icon: IconShield,
+        name: 'IconShield',
+        label: 'Shield',
+        usage: 'Sidebar 보안 메뉴, SecurityGroup',
+      },
+      {
+        icon: IconShieldLock,
+        name: 'IconShieldLock',
+        label: 'Shield Lock',
+        usage: 'SecurityGroup 사이드바, Detail',
+      },
+      {
+        icon: IconKey,
+        name: 'IconKey',
+        label: 'Key',
+        usage: 'KeyPair 메뉴/Detail, 인증 관련 (10+ files)',
+      },
     ],
   },
   {
     title: 'UI - User & Communication',
     items: [
-      { icon: IconUser, name: 'IconUser', label: 'User' },
-      { icon: IconUserCircle, name: 'IconUserCircle', label: 'User Circle' },
-      { icon: IconUsers, name: 'IconUsers', label: 'Users' },
-      { icon: IconUsersGroup, name: 'IconUsersGroup', label: 'Users Group' },
-      { icon: IconUserCog, name: 'IconUserCog', label: 'User Cog' },
-      { icon: IconMail, name: 'IconMail', label: 'Mail' },
-      { icon: IconMessage, name: 'IconMessage', label: 'Message' },
-      { icon: IconMessagePlus, name: 'IconMessagePlus', label: 'New Chat' },
-      { icon: IconMessages, name: 'IconMessages', label: 'Messages' },
-      { icon: IconMessageCircle, name: 'IconMessageCircle', label: 'Message Circle' },
-      { icon: IconHelp, name: 'IconHelp', label: 'Help' },
-      { icon: IconQuestionMark, name: 'IconQuestionMark', label: 'Question' },
-      { icon: IconLogout, name: 'IconLogout', label: 'Logout' },
+      { icon: IconUser, name: 'IconUser', label: 'User', usage: 'SettingsSidebar 사용자 메뉴' },
+      {
+        icon: IconUserCircle,
+        name: 'IconUserCircle',
+        label: 'User Circle',
+        usage: 'Profile, Avatar placeholder',
+      },
+      {
+        icon: IconUsers,
+        name: 'IconUsers',
+        label: 'Users',
+        usage: 'IAMSidebar 사용자 메뉴, CreatePages',
+      },
+      {
+        icon: IconUsersGroup,
+        name: 'IconUsersGroup',
+        label: 'Users Group',
+        usage: 'IAM UserGroup 관련 페이지',
+      },
+      {
+        icon: IconUserCog,
+        name: 'IconUserCog',
+        label: 'User Cog',
+        usage: 'IAMSidebar, AIPlatformSidebar, SystemAdmin',
+      },
+      { icon: IconMail, name: 'IconMail', label: 'Mail', usage: 'MailTemplatePage' },
+      {
+        icon: IconMessage,
+        name: 'IconMessage',
+        label: 'Message',
+        usage: 'Chat/Message 관련 페이지',
+      },
+      {
+        icon: IconMessagePlus,
+        name: 'IconMessagePlus',
+        label: 'New Chat',
+        usage: 'ChatbotPanel 새 대화',
+      },
+      {
+        icon: IconMessages,
+        name: 'IconMessages',
+        label: 'Messages',
+        usage: 'AgentSidebar 메시지 메뉴',
+      },
+      {
+        icon: IconMessageCircle,
+        name: 'IconMessageCircle',
+        label: 'Message Circle',
+        usage: 'AIPlatformSidebar',
+      },
+      { icon: IconHelp, name: 'IconHelp', label: 'Help', usage: 'Help 버튼, Sidebar' },
+      {
+        icon: IconQuestionMark,
+        name: 'IconQuestionMark',
+        label: 'Question',
+        usage: 'Help/FAQ 링크',
+      },
+      { icon: IconLogout, name: 'IconLogout', label: 'Logout', note: 'Storybook only' },
     ],
   },
   {
     title: 'UI - Theme',
     items: [
-      { icon: IconSun, name: 'IconSun', label: 'Light' },
-      { icon: IconMoon, name: 'IconMoon', label: 'Dark' },
-      { icon: IconPalette, name: 'IconPalette', label: 'Palette' },
+      {
+        icon: IconSun,
+        name: 'IconSun',
+        label: 'Light',
+        usage: 'DarkModeToggle, EntryPage, SemanticColors',
+      },
+      {
+        icon: IconMoon,
+        name: 'IconMoon',
+        label: 'Dark',
+        usage: 'DarkModeToggle, EntryPage, SemanticColors',
+      },
+      {
+        icon: IconPalette,
+        name: 'IconPalette',
+        label: 'Palette',
+        usage: 'AgentPage, MCPTools, navigationData',
+      },
     ],
   },
   {
     title: 'Infrastructure - Compute',
     items: [
-      { icon: IconServer, name: 'IconServer', label: 'Server' },
-      { icon: IconServer2, name: 'IconServer2', label: 'Instance' },
-      { icon: IconCube, name: 'IconCube', label: 'Cube' },
-      { icon: IconCpu, name: 'IconCpu', label: 'CPU' },
-      { icon: IconCpu2, name: 'IconCpu2', label: 'CPU 2' },
-      { icon: IconServerCog, name: 'IconServerCog', label: 'Host Agg' },
-      { icon: IconServerOff, name: 'IconServerOff', label: 'Server Off' },
-      { icon: IconCloud, name: 'IconCloud', label: 'Cloud' },
+      {
+        icon: IconServer,
+        name: 'IconServer',
+        label: 'Server',
+        usage: 'Sidebar Hypervisor 메뉴, Detail pages',
+      },
+      {
+        icon: IconServer2,
+        name: 'IconServer2',
+        label: 'Instance',
+        usage: 'Sidebar Instance 메뉴, HostDetail',
+      },
+      {
+        icon: IconCube,
+        name: 'IconCube',
+        label: 'Cube',
+        usage: 'Sidebar, Network/Firewall pages, ModelsPage',
+      },
+      { icon: IconCpu, name: 'IconCpu', label: 'CPU', usage: 'Flavor/Resource 표시, Create pages' },
+      { icon: IconCpu2, name: 'IconCpu2', label: 'CPU 2', usage: 'Sidebar Compute 메뉴' },
+      {
+        icon: IconServerCog,
+        name: 'IconServerCog',
+        label: 'Host Agg',
+        usage: 'Sidebar HostAggregate 메뉴',
+      },
+      { icon: IconServerOff, name: 'IconServerOff', label: 'Server Off', note: 'Storybook only' },
+      { icon: IconCloud, name: 'IconCloud', label: 'Cloud', usage: 'Cloud/AZ 관련 페이지' },
     ],
   },
   {
     title: 'Infrastructure - Network',
     items: [
-      { icon: IconNetwork, name: 'IconNetwork', label: 'Network' },
-      { icon: IconRouter, name: 'IconRouter', label: 'Router' },
-      { icon: IconPlug, name: 'IconPlug', label: 'Port' },
-      { icon: IconPlugConnected, name: 'IconPlugConnected', label: 'Connected' },
-      { icon: IconScale, name: 'IconScale', label: 'Load Bal' },
-      { icon: IconLoadBalancer, name: 'IconLoadBalancer', label: 'Load Balancer' },
-      { icon: IconWorldWww, name: 'IconWorldWww', label: 'Float IP' },
-      { icon: IconWorld, name: 'IconWorld', label: 'World' },
-      { icon: IconWifiOff, name: 'IconWifiOff', label: 'Disconnected' },
-      { icon: IconTopologyRing, name: 'IconTopologyRing', label: 'Topo Ring' },
-      { icon: IconTopologyStar, name: 'IconTopologyStar', label: 'Topo Star' },
-      { icon: IconTopologyStar3, name: 'IconTopologyStar3', label: 'Topo Star 3' },
+      {
+        icon: IconNetwork,
+        name: 'IconNetwork',
+        label: 'Network',
+        usage: 'Sidebar, ComputeAdminSidebar, WorkloadDetail',
+      },
+      {
+        icon: IconRouter,
+        name: 'IconRouter',
+        label: 'Router',
+        usage: 'Sidebar Router 메뉴, Network Topology',
+      },
+      { icon: IconPlug, name: 'IconPlug', label: 'Port', usage: 'Sidebar Port 메뉴, Detail pages' },
+      {
+        icon: IconPlugConnected,
+        name: 'IconPlugConnected',
+        label: 'Connected',
+        usage: 'Port 연결 상태 표시',
+      },
+      { icon: IconScale, name: 'IconScale', label: 'Load Bal', usage: 'Sidebar LB 메뉴 (구)' },
+      {
+        icon: IconLoadBalancer,
+        name: 'IconLoadBalancer',
+        label: 'Load Balancer',
+        usage: 'Sidebar, ComputeAdminSidebar LB 메뉴',
+      },
+      {
+        icon: IconWorldWww,
+        name: 'IconWorldWww',
+        label: 'Float IP',
+        usage: 'Sidebar FloatingIP 메뉴, Detail',
+      },
+      {
+        icon: IconWorld,
+        name: 'IconWorld',
+        label: 'World',
+        usage: 'IAMSidebar, DatasetsPage, WorkloadDetail',
+      },
+      { icon: IconWifiOff, name: 'IconWifiOff', label: 'Disconnected', note: 'Storybook only' },
+      { icon: IconTopologyRing, name: 'IconTopologyRing', label: 'Topo Ring', note: '미사용' },
+      {
+        icon: IconTopologyStar,
+        name: 'IconTopologyStar',
+        label: 'Topo Star',
+        usage: 'ContainerSidebar Services 메뉴',
+      },
+      {
+        icon: IconTopologyStar3,
+        name: 'IconTopologyStar3',
+        label: 'Topo Star 3',
+        usage: 'Sidebar Topology 메뉴',
+      },
     ],
   },
   {
     title: 'Infrastructure - Storage',
     items: [
-      { icon: IconDatabase, name: 'IconDatabase', label: 'Database' },
-      { icon: IconDatabaseSearch, name: 'IconDatabaseSearch', label: 'Vol Search' },
-      { icon: IconDatabaseExport, name: 'IconDatabaseExport', label: 'DB Export' },
-      { icon: IconDatabaseCog, name: 'IconDatabaseCog', label: 'DB Cog' },
-      { icon: IconDeviceFloppy, name: 'IconDeviceFloppy', label: 'Disk' },
-      { icon: IconDeviceSdCard, name: 'IconDeviceSdCard', label: 'Backup' },
-      { icon: IconBoxMultiple, name: 'IconBoxMultiple', label: 'Vol Type' },
-      { icon: IconBucket, name: 'IconBucket', label: 'Bucket' },
+      {
+        icon: IconDatabase,
+        name: 'IconDatabase',
+        label: 'Database',
+        usage: 'Sidebar Volume 메뉴, EmptyState',
+      },
+      {
+        icon: IconDatabaseSearch,
+        name: 'IconDatabaseSearch',
+        label: 'Vol Search',
+        usage: 'Volume 검색 관련',
+      },
+      {
+        icon: IconDatabaseExport,
+        name: 'IconDatabaseExport',
+        label: 'DB Export',
+        usage: 'Sidebar, ComputeAdminSidebar Snapshot 메뉴',
+      },
+      {
+        icon: IconDatabaseCog,
+        name: 'IconDatabaseCog',
+        label: 'DB Cog',
+        usage: 'ComputeAdminSidebar VolumeType 메뉴',
+      },
+      {
+        icon: IconDeviceFloppy,
+        name: 'IconDeviceFloppy',
+        label: 'Disk',
+        usage: 'Volume/Disk 관련 Detail',
+      },
+      {
+        icon: IconDeviceSdCard,
+        name: 'IconDeviceSdCard',
+        label: 'Backup',
+        usage: 'Sidebar Backup 메뉴, Detail',
+      },
+      {
+        icon: IconBoxMultiple,
+        name: 'IconBoxMultiple',
+        label: 'Vol Type',
+        usage: 'Sidebar VolumeType 메뉴',
+      },
+      {
+        icon: IconBucket,
+        name: 'IconBucket',
+        label: 'Bucket',
+        usage: 'StorageSidebar Bucket 메뉴',
+      },
     ],
   },
   {
     title: 'Infrastructure - Security',
     items: [
-      { icon: IconShield, name: 'IconShield', label: 'Security' },
-      { icon: IconShieldLock, name: 'IconShieldLock', label: 'Sec Group' },
-      { icon: IconShieldCheck, name: 'IconShieldCheck', label: 'Shield OK' },
-      { icon: IconKey, name: 'IconKey', label: 'Key Pair' },
-      { icon: IconCertificate, name: 'IconCertificate', label: 'Certificate' },
+      { icon: IconShield, name: 'IconShield', label: 'Security', usage: 'Sidebar 보안 메뉴 섹션' },
+      {
+        icon: IconShieldLock,
+        name: 'IconShieldLock',
+        label: 'Sec Group',
+        usage: 'Sidebar SecurityGroup 메뉴',
+      },
+      {
+        icon: IconShieldCheck,
+        name: 'IconShieldCheck',
+        label: 'Shield OK',
+        usage: 'SecurityGroup/KeyPair Detail 상태',
+      },
+      {
+        icon: IconKey,
+        name: 'IconKey',
+        label: 'Key Pair',
+        usage: 'Sidebar KeyPair 메뉴, Detail pages',
+      },
+      {
+        icon: IconCertificate,
+        name: 'IconCertificate',
+        label: 'Certificate',
+        usage: 'SSL/Certificate 관련 페이지',
+      },
     ],
   },
   {
     title: 'Storage & Files',
     items: [
-      { icon: IconCamera, name: 'IconCamera', label: 'Snapshot' },
-      { icon: IconDisc, name: 'IconDisc', label: 'Image' },
-      { icon: IconFile, name: 'IconFile', label: 'File' },
-      { icon: IconFileText, name: 'IconFileText', label: 'Doc' },
-      { icon: IconFileDescription, name: 'IconFileDescription', label: 'Description' },
-      { icon: IconFileCode, name: 'IconFileCode', label: 'Code File' },
-      { icon: IconFileSettings, name: 'IconFileSettings', label: 'Settings File' },
-      { icon: IconFolder, name: 'IconFolder', label: 'Folder' },
-      { icon: IconFolderOpen, name: 'IconFolderOpen', label: 'Folder Open' },
-      { icon: IconFolders, name: 'IconFolders', label: 'Folders' },
-      { icon: IconArchive, name: 'IconArchive', label: 'Archive' },
-      { icon: IconTemplate, name: 'IconTemplate', label: 'Template' },
-      { icon: IconStack2, name: 'IconStack2', label: 'Layers' },
-      { icon: IconStack3, name: 'IconStack3', label: 'Stack' },
-      { icon: IconCode, name: 'IconCode', label: 'Code' },
+      {
+        icon: IconCamera,
+        name: 'IconCamera',
+        label: 'Snapshot',
+        usage: 'Sidebar Snapshot 메뉴, Create Snapshot',
+      },
+      {
+        icon: IconDisc,
+        name: 'IconDisc',
+        label: 'Image',
+        usage: 'Sidebar Image 메뉴, ComputeAdminSidebar',
+      },
+      {
+        icon: IconFile,
+        name: 'IconFile',
+        label: 'File',
+        usage: 'TopBar 툴바 (40+ files), FileListCard',
+      },
+      { icon: IconFileText, name: 'IconFileText', label: 'Doc', note: '미사용' },
+      {
+        icon: IconFileDescription,
+        name: 'IconFileDescription',
+        label: 'Description',
+        usage: 'IAMSidebar, TextGenerationPage',
+      },
+      {
+        icon: IconFileCode,
+        name: 'IconFileCode',
+        label: 'Code File',
+        usage: 'Sidebar, ComputeAdminSidebar',
+      },
+      {
+        icon: IconFileSettings,
+        name: 'IconFileSettings',
+        label: 'Settings File',
+        usage: 'ContainerSidebar ConfigMap 메뉴',
+      },
+      {
+        icon: IconFolder,
+        name: 'IconFolder',
+        label: 'Folder',
+        usage: 'ProjectSelector, BucketDetail, EditorPage',
+      },
+      {
+        icon: IconFolderOpen,
+        name: 'IconFolderOpen',
+        label: 'Folder Open',
+        usage: 'Bucket/Folder 열림 상태',
+      },
+      {
+        icon: IconFolders,
+        name: 'IconFolders',
+        label: 'Folders',
+        usage: 'ContainerSidebar, StorageSidebar',
+      },
+      { icon: IconArchive, name: 'IconArchive', label: 'Archive', usage: 'Archive 관련 액션' },
+      {
+        icon: IconTemplate,
+        name: 'IconTemplate',
+        label: 'Template',
+        usage: 'Sidebar Template 메뉴',
+      },
+      { icon: IconStack2, name: 'IconStack2', label: 'Layers', usage: 'Sidebar 메뉴, Stack 관련' },
+      {
+        icon: IconStack3,
+        name: 'IconStack3',
+        label: 'Stack',
+        usage: 'ContainerSidebar StatefulSet 메뉴',
+      },
+      {
+        icon: IconCode,
+        name: 'IconCode',
+        label: 'Code',
+        usage: 'AIPlatformSidebar, Agent/MCP pages, DevSpace',
+      },
     ],
   },
   {
     title: 'Monitoring & Analytics',
     items: [
-      { icon: IconTerminal, name: 'IconTerminal', label: 'Console' },
-      { icon: IconTerminal2, name: 'IconTerminal2', label: 'Terminal' },
-      { icon: IconActivity, name: 'IconActivity', label: 'Activity' },
-      { icon: IconChartBar, name: 'IconChartBar', label: 'Bar Chart' },
-      { icon: IconChartDonut, name: 'IconChartDonut', label: 'Donut' },
-      { icon: IconChartPie3, name: 'IconChartPie3', label: 'Pie Chart' },
-      { icon: IconGauge, name: 'IconGauge', label: 'Gauge' },
-      { icon: IconBrandSpeedtest, name: 'IconBrandSpeedtest', label: 'Speedtest' },
-      { icon: IconDeviceDesktop, name: 'IconDeviceDesktop', label: 'Desktop' },
-      { icon: IconDeviceDesktopAnalytics, name: 'IconDeviceDesktopAnalytics', label: 'Analytics' },
-      { icon: IconLayoutDashboard, name: 'IconLayoutDashboard', label: 'Dashboard' },
+      { icon: IconTerminal, name: 'IconTerminal', label: 'Console', usage: 'Console 접속 버튼' },
+      {
+        icon: IconTerminal2,
+        name: 'IconTerminal2',
+        label: 'Terminal',
+        usage: 'TopBar 터미널 아이콘 (40+ files), ShellPanel',
+      },
+      {
+        icon: IconActivity,
+        name: 'IconActivity',
+        label: 'Activity',
+        usage: 'Monitoring 관련, navigationData',
+      },
+      {
+        icon: IconChartBar,
+        name: 'IconChartBar',
+        label: 'Bar Chart',
+        usage: 'Chart 관련 페이지, navigationData',
+      },
+      {
+        icon: IconChartPie3,
+        name: 'IconChartPie3',
+        label: 'Pie Chart',
+        usage: 'ContainerSidebar ResourceQuota 메뉴',
+      },
+      {
+        icon: IconGauge,
+        name: 'IconGauge',
+        label: 'Gauge',
+        usage: 'Dashboard, Performance 페이지',
+      },
+      {
+        icon: IconBrandSpeedtest,
+        name: 'IconBrandSpeedtest',
+        label: 'Speedtest',
+        usage: 'StorageSidebar 성능 메뉴',
+      },
+      {
+        icon: IconDeviceDesktop,
+        name: 'IconDeviceDesktop',
+        label: 'Desktop',
+        usage: 'IAMSidebar, DarkModeToggle, navigationData',
+      },
+      {
+        icon: IconDeviceDesktopAnalytics,
+        name: 'IconDeviceDesktopAnalytics',
+        label: 'Analytics',
+        usage: 'Monitoring/Analytics 페이지',
+      },
+      {
+        icon: IconLayoutDashboard,
+        name: 'IconLayoutDashboard',
+        label: 'Dashboard',
+        usage: 'Sidebar Dashboard 메뉴',
+      },
     ],
   },
   {
     title: 'Organization & Structure',
     items: [
-      { icon: IconBuilding, name: 'IconBuilding', label: 'Building' },
-      { icon: IconCategory, name: 'IconCategory', label: 'Category' },
-      { icon: IconLayoutSidebar, name: 'IconLayoutSidebar', label: 'Sidebar' },
-      { icon: IconAdjustments, name: 'IconAdjustments', label: 'Adjust' },
-      { icon: IconBolt, name: 'IconBolt', label: 'Bolt' },
-      { icon: IconGitBranch, name: 'IconGitBranch', label: 'Branch' },
-      { icon: IconAffiliate, name: 'IconAffiliate', label: 'Affiliate' },
-      { icon: IconListSearch, name: 'IconListSearch', label: 'List Search' },
-      { icon: IconRulerMeasure, name: 'IconRulerMeasure', label: 'Ruler' },
-      { icon: IconReorder, name: 'IconReorder', label: 'Reorder' },
-      { icon: IconArrowsShuffle, name: 'IconArrowsShuffle', label: 'Shuffle' },
-      { icon: IconArrowsJoin2, name: 'IconArrowsJoin2', label: 'Join' },
-      { icon: IconTimelineEvent, name: 'IconTimelineEvent', label: 'Timeline' },
+      {
+        icon: IconBuilding,
+        name: 'IconBuilding',
+        label: 'Building',
+        usage: 'Organization/Domain 관련 페이지',
+      },
+      {
+        icon: IconCategory,
+        name: 'IconCategory',
+        label: 'Category',
+        usage: 'Sidebar 카테고리 메뉴',
+      },
+      {
+        icon: IconLayoutSidebar,
+        name: 'IconLayoutSidebar',
+        label: 'Sidebar',
+        usage: 'TopBar 사이드바 토글',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconAdjustments,
+        name: 'IconAdjustments',
+        label: 'Adjust',
+        usage: 'Settings/Preferences 페이지',
+      },
+      { icon: IconBolt, name: 'IconBolt', label: 'Bolt', usage: 'Performance/Action 강조' },
+      { icon: IconGitBranch, name: 'IconGitBranch', label: 'Branch', usage: 'Git/Version 관련' },
+      {
+        icon: IconAffiliate,
+        name: 'IconAffiliate',
+        label: 'Affiliate',
+        usage: 'Sidebar Affinity 메뉴',
+      },
+      {
+        icon: IconListSearch,
+        name: 'IconListSearch',
+        label: 'List Search',
+        usage: 'Sidebar 검색/탐색 메뉴',
+      },
+      {
+        icon: IconRulerMeasure,
+        name: 'IconRulerMeasure',
+        label: 'Ruler',
+        usage: 'ContainerSidebar LimitRange 메뉴',
+      },
+      {
+        icon: IconReorder,
+        name: 'IconReorder',
+        label: 'Reorder',
+        usage: 'ContainerSidebar PodDisruptionBudget 메뉴',
+      },
+      {
+        icon: IconArrowsShuffle,
+        name: 'IconArrowsShuffle',
+        label: 'Shuffle',
+        usage: 'ContainerSidebar DaemonSet 메뉴',
+      },
+      {
+        icon: IconArrowsJoin2,
+        name: 'IconArrowsJoin2',
+        label: 'Join',
+        usage: 'ComputeAdminSidebar',
+      },
+      {
+        icon: IconTimelineEvent,
+        name: 'IconTimelineEvent',
+        label: 'Timeline',
+        usage: 'ContainerSidebar CronJob 메뉴',
+      },
     ],
   },
   {
     title: 'Time & Schedule',
     items: [
-      { icon: IconClock, name: 'IconClock', label: 'Clock' },
-      { icon: IconHourglass, name: 'IconHourglass', label: 'Hourglass' },
-      { icon: IconStopwatch, name: 'IconStopwatch', label: 'Timeout' },
-      { icon: IconHistory, name: 'IconHistory', label: 'History' },
-      { icon: IconArticle, name: 'IconArticle', label: 'Article' },
-      { icon: IconCalendar, name: 'IconCalendar', label: 'Calendar' },
-      { icon: IconCalendarTime, name: 'IconCalendarTime', label: 'Cal Time' },
+      {
+        icon: IconClock,
+        name: 'IconClock',
+        label: 'Clock',
+        usage: '시간/일정 표시, ScheduledTasks',
+      },
+      {
+        icon: IconHourglass,
+        name: 'IconHourglass',
+        label: 'Hourglass',
+        usage: 'Pending/대기 상태 표시',
+      },
+      { icon: IconStopwatch, name: 'IconStopwatch', label: 'Timeout', note: '미사용' },
+      {
+        icon: IconHistory,
+        name: 'IconHistory',
+        label: 'History',
+        usage: 'IAMSidebar AuditLog 메뉴',
+      },
+      {
+        icon: IconArticle,
+        name: 'IconArticle',
+        label: 'Article',
+        usage: 'Documentation/Article 링크',
+      },
+      {
+        icon: IconCalendar,
+        name: 'IconCalendar',
+        label: 'Calendar',
+        usage: 'DatePicker 아이콘',
+        note: 'DS 내부',
+      },
+      {
+        icon: IconCalendarTime,
+        name: 'IconCalendarTime',
+        label: 'Cal Time',
+        usage: 'ContainerSidebar Job 메뉴',
+      },
     ],
   },
   {
     title: 'Container & Workloads',
     items: [
-      { icon: IconRocket, name: 'IconRocket', label: 'Deploy' },
-      { icon: IconCompass, name: 'IconCompass', label: 'Compass' },
-      { icon: IconPackages, name: 'IconPackages', label: 'Packages' },
-      { icon: IconRoute, name: 'IconRoute', label: 'Route' },
-      { icon: IconPuzzle, name: 'IconPuzzle', label: 'Puzzle' },
+      {
+        icon: IconRocket,
+        name: 'IconRocket',
+        label: 'Deploy',
+        usage: 'ContainerSidebar Deployment 메뉴',
+      },
+      { icon: IconCompass, name: 'IconCompass', label: 'Compass', usage: 'AIPlatformSidebar' },
+      {
+        icon: IconPackages,
+        name: 'IconPackages',
+        label: 'Packages',
+        usage: 'AIPlatformSidebar, navigationData',
+      },
+      {
+        icon: IconRoute,
+        name: 'IconRoute',
+        label: 'Route',
+        usage: 'AIPlatformSidebar, PipelineBuilder',
+      },
+      {
+        icon: IconPuzzle,
+        name: 'IconPuzzle',
+        label: 'Puzzle',
+        usage: 'HomePage, AgentSidebar Extension 메뉴',
+      },
     ],
   },
   {
     title: 'Business & Finance',
     items: [
-      { icon: IconCurrencyDollar, name: 'IconCurrencyDollar', label: 'Dollar' },
-      { icon: IconLanguage, name: 'IconLanguage', label: 'Language' },
+      {
+        icon: IconCurrencyDollar,
+        name: 'IconCurrencyDollar',
+        label: 'Dollar',
+        usage: 'Billing/Cost 관련 페이지',
+      },
+      { icon: IconLanguage, name: 'IconLanguage', label: 'Language', usage: '언어 설정' },
     ],
   },
   {
     title: 'AI & ML',
     items: [
-      { icon: IconBrain, name: 'IconBrain', label: 'Brain' },
-      { icon: IconRobot, name: 'IconRobot', label: 'Robot' },
-      { icon: IconRobotFace, name: 'IconRobotFace', label: 'Robot Face' },
-      { icon: IconMessageChatbot, name: 'IconMessageChatbot', label: 'Chatbot' },
-      { icon: IconBooks, name: 'IconBooks', label: 'Books' },
-      { icon: IconBook, name: 'IconBook', label: 'Book' },
-      { icon: IconTestPipe, name: 'IconTestPipe', label: 'Test' },
+      {
+        icon: IconBrain,
+        name: 'IconBrain',
+        label: 'Brain',
+        usage: 'AIPlatformPage, AIPlatformSidebar, AIWorkspace',
+      },
+      { icon: IconRobot, name: 'IconRobot', label: 'Robot', usage: 'AI/Bot 관련 페이지' },
+      {
+        icon: IconRobotFace,
+        name: 'IconRobotFace',
+        label: 'Robot Face',
+        usage: 'HomePage, AgentSidebar',
+      },
+      {
+        icon: IconMessageChatbot,
+        name: 'IconMessageChatbot',
+        label: 'Chatbot',
+        usage: 'ChatbotPanel, AI Chat 기능',
+      },
+      { icon: IconBook, name: 'IconBook', label: 'Book', usage: 'Knowledge/Docs 관련' },
+      { icon: IconTestPipe, name: 'IconTestPipe', label: 'Test', usage: 'Test/Pipeline 관련' },
     ],
   },
   {
     title: 'OS / Brand',
     items: [
-      { icon: IconUbuntu2, name: 'IconUbuntu2', label: 'Ubuntu', library: 'custom' },
-      { icon: IconBrandDebian, name: 'IconBrandDebian', label: 'Debian' },
-      { icon: IconBrandWindows, name: 'IconBrandWindows', label: 'Windows' },
-      { icon: IconBrandRedhat, name: 'IconBrandRedhat', label: 'RedHat' },
-      { icon: IconRocky2, name: 'IconRocky2', label: 'Rocky', library: 'custom' },
-      { icon: IconGrid3x3, name: 'IconGrid3x3', label: 'Grid' },
-      { icon: IconCircleDot, name: 'IconCircleDot', label: 'Other' },
+      {
+        icon: IconUbuntu2,
+        name: 'IconUbuntu2',
+        label: 'Ubuntu',
+        library: 'custom',
+        note: '미사용',
+      },
+      { icon: IconBrandDebian, name: 'IconBrandDebian', label: 'Debian', note: '미사용' },
+      {
+        icon: IconBrandWindows,
+        name: 'IconBrandWindows',
+        label: 'Windows',
+        usage: 'OS 선택/표시 (Instance Create)',
+      },
+      { icon: IconBrandRedhat, name: 'IconBrandRedhat', label: 'RedHat', note: '미사용' },
+      { icon: IconRocky2, name: 'IconRocky2', label: 'Rocky', library: 'custom', note: '미사용' },
+      { icon: IconGrid3x3, name: 'IconGrid3x3', label: 'Grid', note: '미사용' },
+      { icon: IconCircleDot, name: 'IconCircleDot', label: 'Other', usage: 'OS 기타 선택' },
     ],
   },
   {
@@ -616,24 +1421,36 @@ const iconCategories: IconCategoryData[] = [
         name: 'IconWindowActive',
         label: 'Window Active',
         library: 'custom',
+        usage: 'DesktopPage 윈도우 상태',
       },
       {
         icon: IconWindowMinimized,
         name: 'IconWindowMinimized',
         label: 'Window Min',
         library: 'custom',
+        usage: 'DesktopPage 윈도우 상태',
       },
-      { icon: IconTimeout, name: 'IconTimeout', label: 'Timeout', library: 'custom' },
-      { icon: IconHistory2, name: 'IconHistory2', label: 'History', library: 'custom' },
       {
         icon: IconRouterArrows,
         name: 'IconRouterArrows',
         label: 'Virtual Adapter',
         library: 'custom',
+        usage: 'Sidebar, ComputeAdminSidebar',
       },
-      { icon: IconAction, name: 'IconAction', label: 'Action', library: 'custom' },
-      { icon: IconExpandOff, name: 'IconExpandOff', label: 'Collapse All', library: 'custom' },
-      { icon: IconExpandOn, name: 'IconExpandOn', label: 'Expand All', library: 'custom' },
+      {
+        icon: IconExpandOff,
+        name: 'IconExpandOff',
+        label: 'Collapse All',
+        library: 'custom',
+        note: '미사용',
+      },
+      {
+        icon: IconExpandOn,
+        name: 'IconExpandOn',
+        label: 'Expand All',
+        library: 'custom',
+        note: '미사용',
+      },
     ],
   },
 ];
@@ -662,12 +1479,21 @@ function IconRow({ item, categoryType }: { item: IconItem; categoryType: string 
   const libraryLabel =
     item.library === 'custom' ? 'Custom' : item.library === 'lucide' ? 'Lucide' : 'Tabler';
 
+  const noteStyle =
+    item.note === '미사용'
+      ? 'bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger)]'
+      : item.note === 'DS 내부'
+        ? 'bg-[var(--color-state-info-bg)] text-[var(--color-state-info)]'
+        : item.note === 'Storybook only'
+          ? 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)]'
+          : '';
+
   return (
     <tr
       onClick={handleCopy}
       className="border-b border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] cursor-pointer transition-colors group"
     >
-      <td className="py-3 px-4" style={{ width: '64px' }}>
+      <td className="py-3 px-4" style={{ width: '48px' }}>
         <div className="flex items-center justify-center">
           <Icon
             size={16}
@@ -678,7 +1504,7 @@ function IconRow({ item, categoryType }: { item: IconItem; categoryType: string 
           />
         </div>
       </td>
-      <td className="py-3 px-4" style={{ width: '220px' }}>
+      <td className="py-3 px-4" style={{ width: '200px' }}>
         <div className="flex items-center gap-2">
           <span className="text-body-md text-[var(--color-text-default)]">{item.name}</span>
           {copied && (
@@ -686,10 +1512,10 @@ function IconRow({ item, categoryType }: { item: IconItem; categoryType: string 
           )}
         </div>
       </td>
-      <td className="py-3 px-4" style={{ width: '100px' }}>
+      <td className="py-3 px-4" style={{ width: '80px' }}>
         <span className="text-body-md text-[var(--color-text-muted)]">{type}</span>
       </td>
-      <td className="py-3 px-4" style={{ width: '80px' }}>
+      <td className="py-3 px-4" style={{ width: '70px' }}>
         {item.library === 'custom' ? (
           <span className="text-body-sm px-2 py-0.5 bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)] rounded">
             {libraryLabel}
@@ -698,8 +1524,20 @@ function IconRow({ item, categoryType }: { item: IconItem; categoryType: string 
           <span className="text-body-md text-[var(--color-text-subtle)]">{libraryLabel}</span>
         )}
       </td>
-      <td className="py-3 px-4">
+      <td className="py-3 px-4" style={{ width: '80px' }}>
         <span className="text-body-md text-[var(--color-text-subtle)]">{item.label}</span>
+      </td>
+      <td className="py-3 px-4">
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{item.usage || '-'}</span>
+      </td>
+      <td className="py-3 px-4" style={{ width: '100px' }}>
+        {item.note && noteStyle ? (
+          <span className={`text-body-sm px-2 py-0.5 rounded whitespace-nowrap ${noteStyle}`}>
+            {item.note}
+          </span>
+        ) : (
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{item.note || '-'}</span>
+        )}
       </td>
     </tr>
   );
@@ -863,35 +1701,47 @@ function IconsContent() {
                 </span>
               </h3>
             </div>
-            <table className="w-full table-fixed">
+            <table className="w-full">
               <thead>
                 <tr className="border-b border-[var(--color-border-default)]">
                   <th
                     className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                    style={{ width: '64px' }}
+                    style={{ width: '48px' }}
                   >
                     Icon
                   </th>
                   <th
                     className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                    style={{ width: '220px' }}
+                    style={{ width: '200px' }}
                   >
                     Name
                   </th>
                   <th
                     className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                    style={{ width: '100px' }}
+                    style={{ width: '80px' }}
                   >
                     Type
                   </th>
                   <th
                     className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
-                    style={{ width: '80px' }}
+                    style={{ width: '70px' }}
                   >
                     Library
                   </th>
+                  <th
+                    className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
+                    style={{ width: '80px' }}
+                  >
+                    Label
+                  </th>
                   <th className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium">
-                    Description
+                    Usage
+                  </th>
+                  <th
+                    className="py-2 px-4 text-left text-label-sm text-[var(--color-text-muted)] font-medium"
+                    style={{ width: '100px' }}
+                  >
+                    Note
                   </th>
                 </tr>
               </thead>

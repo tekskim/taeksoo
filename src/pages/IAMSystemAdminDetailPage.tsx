@@ -33,8 +33,8 @@ import {
   IconCircleX,
   IconLock,
   IconReload,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
-import { IconAction } from '@/design-system';
 
 /* ----------------------------------------
    Types
@@ -340,7 +340,11 @@ export default function IAMSystemAdminDetailPage() {
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
           >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),
@@ -390,7 +394,11 @@ export default function IAMSystemAdminDetailPage() {
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
           >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),

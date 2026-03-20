@@ -3,8 +3,7 @@ import { Table, type TableColumn } from './Table';
 import { Badge } from '../Badge';
 import { Button } from '../Button';
 import { useState } from 'react';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { IconAction } from '../Icons';
+import { IconEdit, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 interface User {
   id: string;
@@ -404,7 +403,7 @@ export const ComplexExample: Story = {
           <Button
             variant="ghost"
             size="sm"
-            icon={<IconAction size={16} stroke={1} />}
+            icon={<IconDotsCircleHorizontal size={16} stroke={1.5} />}
             aria-label="More actions"
           />
         ),

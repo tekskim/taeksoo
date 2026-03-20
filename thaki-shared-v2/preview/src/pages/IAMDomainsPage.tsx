@@ -1,14 +1,16 @@
 import { useState, useMemo } from 'react';
 import { Button } from '@shared/components/Button';
-import { Input } from '@shared/components/Input';
 import { Table } from '@shared/components/Table';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconArrowLeftRight } from '@tabler/icons-react';
+import { IconDownload } from '@tabler/icons-react';
+import { ArrowRightLeft } from 'lucide-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 interface Domain {
   id: string;
@@ -26,31 +28,119 @@ const statusMap: Record<string, StatusVariant> = {
 };
 
 const mockDomains: Domain[] = [
-  { id: 'domain-001', name: 'domain', description: '-', status: 'active', createdAt: 'Sep 12, 2025 08:22:15' },
-  { id: 'domain-002', name: 'production', description: 'Production environment', status: 'active', createdAt: 'Aug 15, 2025 10:45:33' },
-  { id: 'domain-003', name: 'staging', description: 'Staging environment', status: 'active', createdAt: 'Jul 20, 2025 14:18:42' },
-  { id: 'domain-004', name: 'development', description: 'Development environment', status: 'active', createdAt: 'Jun 10, 2025 09:32:28' },
-  { id: 'domain-005', name: 'testing', description: 'Testing domain', status: 'inactive', createdAt: 'Sep 1, 2025 16:52:07' },
-  { id: 'domain-006', name: 'qa-domain', description: 'QA testing', status: 'active', createdAt: 'Aug 25, 2025 11:15:44' },
-  { id: 'domain-007', name: 'sandbox', description: 'Sandbox environment', status: 'pending', createdAt: 'Sep 10, 2025 13:38:21' },
-  { id: 'domain-008', name: 'demo', description: 'Demo environment', status: 'active', createdAt: 'Jul 5, 2025 10:22:55' },
-  { id: 'domain-009', name: 'internal', description: 'Internal domain', status: 'active', createdAt: 'Jun 1, 2025 15:48:12' },
-  { id: 'domain-010', name: 'external', description: 'External access domain', status: 'active', createdAt: 'May 15, 2025 08:35:39' },
+  {
+    id: 'domain-001',
+    name: 'domain',
+    description: '-',
+    status: 'active',
+    createdAt: 'Sep 12, 2025 08:22:15',
+  },
+  {
+    id: 'domain-002',
+    name: 'production',
+    description: 'Production environment',
+    status: 'active',
+    createdAt: 'Aug 15, 2025 10:45:33',
+  },
+  {
+    id: 'domain-003',
+    name: 'staging',
+    description: 'Staging environment',
+    status: 'active',
+    createdAt: 'Jul 20, 2025 14:18:42',
+  },
+  {
+    id: 'domain-004',
+    name: 'development',
+    description: 'Development environment',
+    status: 'active',
+    createdAt: 'Jun 10, 2025 09:32:28',
+  },
+  {
+    id: 'domain-005',
+    name: 'testing',
+    description: 'Testing domain',
+    status: 'inactive',
+    createdAt: 'Sep 1, 2025 16:52:07',
+  },
+  {
+    id: 'domain-006',
+    name: 'qa-domain',
+    description: 'QA testing',
+    status: 'active',
+    createdAt: 'Aug 25, 2025 11:15:44',
+  },
+  {
+    id: 'domain-007',
+    name: 'sandbox',
+    description: 'Sandbox environment',
+    status: 'pending',
+    createdAt: 'Sep 10, 2025 13:38:21',
+  },
+  {
+    id: 'domain-008',
+    name: 'demo',
+    description: 'Demo environment',
+    status: 'active',
+    createdAt: 'Jul 5, 2025 10:22:55',
+  },
+  {
+    id: 'domain-009',
+    name: 'internal',
+    description: 'Internal domain',
+    status: 'active',
+    createdAt: 'Jun 1, 2025 15:48:12',
+  },
+  {
+    id: 'domain-010',
+    name: 'external',
+    description: 'External access domain',
+    status: 'active',
+    createdAt: 'May 15, 2025 08:35:39',
+  },
+];
+
+const filterKeys: FilterKey[] = [
+  { id: 'name', label: 'Name', type: 'text' },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+      { label: 'Pending', value: 'pending' },
+    ],
+  },
 ];
 
 export function IAMDomainsPage() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const handleFilterAdd = (filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => {
+      const exists = prev.findIndex((f) => f.id === filter.id);
+      if (exists >= 0) {
+        const next = [...prev];
+        next[exists] = filter;
+        return next;
+      }
+      return [...prev, filter];
+    });
+    setCurrentPage(1);
+  };
+
   const filteredDomains = useMemo(() => {
-    if (!searchQuery.trim()) return mockDomains;
-    const q = searchQuery.toLowerCase();
-    return mockDomains.filter(
-      (d) =>
-        d.name.toLowerCase().includes(q) ||
-        d.description.toLowerCase().includes(q)
+    if (appliedFilters.length === 0) return mockDomains;
+    return mockDomains.filter((d) =>
+      appliedFilters.every((f) => {
+        if (f.id === 'name') return d.name.toLowerCase().includes(String(f.value).toLowerCase());
+        if (f.id === 'status') return d.status === f.value;
+        return true;
+      })
     );
-  }, [searchQuery]);
+  }, [appliedFilters]);
 
   const itemsPerPage = 10;
   const paginatedDomains = filteredDomains.slice(
@@ -72,19 +162,18 @@ export function IAMDomainsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Domains" />
-        <Button variant="primary" size="md">Create domain</Button>
+        <Button variant="primary" size="md">
+          Create domain
+        </Button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Input
+      <div className="flex items-center gap-1">
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search domains by attributes"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setCurrentPage(1);
-          }}
-          size="sm"
-          className="w-[var(--search-input-width,280px)]"
+          defaultFilterKey="name"
         />
         <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
           <IconDownload size={12} />
@@ -100,11 +189,7 @@ export function IAMDomainsPage() {
         totalCountLabel="items"
       />
 
-      <Table<Domain>
-        columns={columns}
-        rows={paginatedDomains}
-        stickyLastColumn
-      >
+      <Table<Domain> columns={columns} rows={paginatedDomains} stickyLastColumn>
         {paginatedDomains.map((domain) => (
           <Table.Tr key={domain.id} rowData={domain}>
             <Table.Td rowData={domain} column={columns[0]}>
@@ -113,7 +198,9 @@ export function IAMDomainsPage() {
             <Table.Td rowData={domain} column={columns[1]}>
               <span className="text-12 leading-18">{domain.name}</span>
             </Table.Td>
-            <Table.Td rowData={domain} column={columns[2]}>{domain.description}</Table.Td>
+            <Table.Td rowData={domain} column={columns[2]}>
+              {domain.description}
+            </Table.Td>
             <Table.Td rowData={domain} column={columns[3]}>
               {domain.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
@@ -124,9 +211,11 @@ export function IAMDomainsPage() {
                   className="p-1.5 rounded-md hover:bg-surface-muted transition-colors"
                   title="Open console"
                 >
-                  <IconArrowLeftRight size={16} strokeWidth={1.5} className="text-text" />
+                  <ArrowRightLeft size={16} strokeWidth={1.5} className="text-text" />
                 </button>
-                <ContextMenu.Root direction="bottom-end" gap={4}
+                <ContextMenu.Root
+                  direction="bottom-end"
+                  gap={4}
                   trigger={({ toggle }) => (
                     <button
                       type="button"

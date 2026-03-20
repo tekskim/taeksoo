@@ -67,7 +67,7 @@ const ColorSection = ({
   colors: Array<{ name: string; variable: string; description?: string }>;
 }) => (
   <div className="mb-[var(--primitive-spacing-8)]">
-    <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)] pb-[var(--primitive-spacing-2)] border-b border-[var(--color-border-default)]">
+    <h3 className="text-label-md font-semibold uppercase mb-[var(--primitive-spacing-4)] pb-[var(--primitive-spacing-2)] border-b border-[var(--color-border-default)]">
       {title}
     </h3>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--primitive-spacing-2)]">

@@ -16,7 +16,6 @@ export const twMerge = extendTailwindMerge({
         'text-heading-h4',
         'text-heading-h5',
         'text-heading-h6',
-        'text-heading-h7',
         'text-body-lg',
         'text-body-md',
         'text-body-sm',

@@ -746,7 +746,6 @@ WindowControl:
                 ['text-heading-h4', 'TDS/Heading/H4', '18px / 28px / 600'],
                 ['text-heading-h5', 'TDS/Heading/H5', '16px / 24px / 600'],
                 ['text-heading-h6', 'TDS/Heading/H6', '14px / 20px / 600'],
-                ['text-heading-h7', 'TDS/Heading/H7', '12px / 18px / 600'],
                 ['text-body-lg', 'TDS/Body/LG', '14px / 20px / 400'],
                 ['text-body-md', 'TDS/Body/MD', '12px / 18px / 400'],
                 ['text-body-sm', 'TDS/Body/SM', '11px / 16px / 400'],

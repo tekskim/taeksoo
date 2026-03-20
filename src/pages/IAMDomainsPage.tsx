@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { IconDownload } from '@tabler/icons-react';
+import { IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { ArrowRightLeft } from 'lucide-react';
 import {
   Button,
@@ -19,7 +19,6 @@ import {
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
-import { IconAction } from '@/design-system/components/Icons';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
 import { useTabs } from '@/contexts/TabContext';
@@ -225,7 +224,11 @@ export default function IAMDomainsPage() {
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
-              <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-default)]"
+              />
             </button>
           </ContextMenu>
         </HStack>

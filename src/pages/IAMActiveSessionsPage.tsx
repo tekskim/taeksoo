@@ -20,8 +20,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconCircleX } from '@tabler/icons-react';
-import { IconAction } from '@/design-system';
+import { IconRefresh, IconCircleX, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -232,7 +231,11 @@ export default function IAMActiveSessionsPage() {
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),

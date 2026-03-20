@@ -237,10 +237,6 @@ export function FigmaFoundationPage() {
             <span className="w-24 text-body-xs text-[var(--color-text-subtle)]">H6 · 14/20</span>
             <span className="text-heading-h6">Heading 6</span>
           </div>
-          <div className="flex items-baseline gap-4">
-            <span className="w-24 text-body-xs text-[var(--color-text-subtle)]">H7 · 12/18</span>
-            <span className="text-heading-h7">Heading 7</span>
-          </div>
         </div>
 
         <SubTitle>Body (Regular 400)</SubTitle>

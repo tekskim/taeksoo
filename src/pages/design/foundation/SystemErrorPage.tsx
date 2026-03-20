@@ -1,7 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Button, HStack, VStack } from '@/design-system';
-import { IconArrowLeft, IconHome, IconLogin } from '@tabler/icons-react';
+import { IconArrowLeft, IconHome } from '@tabler/icons-react';
 
 const SYSTEM_ERROR_GUIDELINES = `## Overview
 인증, 권한, 라우팅, 서버 오류 등으로 인해 애플리케이션이 요청한 콘텐츠를 정상적으로 렌더링할 수 없을 때 표시되는 시스템 상태를 알리는 메세지입니다. 일반적으로 **전체 페이지 단위로 표시됩니다.**
@@ -19,7 +19,7 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 | Variant | 상황 | 처리 방식 | 표시 위치 |
 | --- | --- | --- | --- |
 | 401-A Unauthorized | 미인증 상태에서 인증 필수 페이지에 최초 접근 | 로그인 페이지로 리다이렉션 | — |
-| 401-B Session Timeout | 세션·토큰 만료 또는 장시간 비활성으로 인증 정보가 유효하지 않은 경우 | 세션 만료 모달 팝업 표시 | 모달 |
+| 401-B Session Timeout | 세션·토큰 만료 또는 장시간 비활성으로 인증 정보가 유효하지 않은 경우 | 로그아웃 처리 후 로그인 페이지로 리다이렉션 | — |
 | 403 Forbidden | 인증은 되었으나 리소스에 대한 권한이 없는 경우 | 에러 페이지 표시 | 앱 윈도우 내부 |
 | 404 Not Found | 요청한 페이지·리소스가 존재하지 않거나 이동·삭제된 경우 | 에러 페이지 표시 | 앱 윈도우 내부 |
 | 5xx Server Error | 유효한 요청 처리 중 서버 내부 오류 발생 | 에러 페이지 표시 | 앱 윈도우 내부 |
@@ -33,11 +33,7 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 별도 에러 페이지 없이 로그인 페이지로 즉시 리다이렉션한다.
 
 ### 401-B Session Timeout — 세션 만료
-| 요소 | 내용 |
-| --- | --- |
-| Title | (세션 만료 안내 문구) |
-| Description | (세션 만료 설명 문구) |
-| Primary Button | Sign in again |
+401-A와 동일하게 별도 에러 페이지 없이 로그아웃 처리 후 로그인 페이지로 즉시 리다이렉션한다.
 
 ### 403 Forbidden
 | 요소 | 내용 |
@@ -81,10 +77,8 @@ const SYSTEM_ERROR_GUIDELINES = `## Overview
 - **Go to Homepage 버튼**
   - 클릭 시 앱의 첫 페이지(Home)로 이동한다.
   - 404, 500에만 제공된다.
-- **Sign in again 버튼** (401-B)
-  - 클릭 시 로그인 페이지로 이동한다.
-- **401-A 리다이렉션**
-  - 미인증 상태에서 인증 필수 페이지 접근 시 즉시 로그인 페이지로 리다이렉션한다.
+- **401-A / 401-B 리다이렉션**
+  - 미인증 상태(401-A) 또는 세션 만료(401-B) 시 즉시 로그아웃 처리 후 로그인 페이지로 리다이렉션한다.
   - 에러 페이지나 모달을 거치지 않는다.
 
 ---
@@ -101,17 +95,9 @@ interface ErrorConfig {
   description: string;
   showGoBack: boolean;
   showGoHome: boolean;
-  showSignIn: boolean;
 }
 
 const ERROR_CONFIGS: Record<string, ErrorConfig> = {
-  '401-b': {
-    title: 'Session Expired',
-    description: 'Your session has expired due to inactivity. Please sign in again to continue.',
-    showGoBack: false,
-    showGoHome: false,
-    showSignIn: true,
-  },
   '403': {
     statusCode: '403',
     title: 'Access Denied',
@@ -119,7 +105,6 @@ const ERROR_CONFIGS: Record<string, ErrorConfig> = {
       "You don't have permission to access this resource. Contact the administrator to request access.",
     showGoBack: true,
     showGoHome: false,
-    showSignIn: false,
   },
   '404': {
     statusCode: '404',
@@ -127,7 +112,6 @@ const ERROR_CONFIGS: Record<string, ErrorConfig> = {
     description: 'The requested page does not exist or is no longer available.',
     showGoBack: true,
     showGoHome: true,
-    showSignIn: false,
   },
   '500': {
     statusCode: '500',
@@ -135,7 +119,6 @@ const ERROR_CONFIGS: Record<string, ErrorConfig> = {
     description: 'An error occurred while processing your request.',
     showGoBack: true,
     showGoHome: true,
-    showSignIn: false,
   },
   'link-expired': {
     title: 'Link Expired',
@@ -143,7 +126,6 @@ const ERROR_CONFIGS: Record<string, ErrorConfig> = {
       'This link is no longer valid because it has expired or has already been used. Please contact your administrator to request a new link.',
     showGoBack: false,
     showGoHome: false,
-    showSignIn: false,
   },
 };
 
@@ -177,32 +159,7 @@ function ErrorPreviewCard({ config }: { config: ErrorConfig }) {
               Go to Homepage
             </Button>
           )}
-          {config.showSignIn && (
-            <Button variant="primary" size="sm" leftIcon={<IconLogin size={12} />}>
-              Sign in again
-            </Button>
-          )}
         </HStack>
-      </div>
-    </div>
-  );
-}
-
-function SessionTimeoutPreview() {
-  const config = ERROR_CONFIGS['401-b'];
-
-  return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] py-12 flex items-center justify-center">
-      <div className="w-[344px] bg-[var(--color-surface-default)] rounded-[var(--radius-xl)] border border-[var(--color-border-default)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] p-6 flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">{config.title}</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)]">{config.description}</p>
-        </div>
-        <div className="flex w-full">
-          <Button variant="primary" size="md" leftIcon={<IconLogin size={12} />} className="flex-1">
-            Sign in again
-          </Button>
-        </div>
       </div>
     </div>
   );
@@ -211,17 +168,6 @@ function SessionTimeoutPreview() {
 function SystemErrorExamples() {
   return (
     <VStack gap={8}>
-      <VStack gap={3}>
-        <h4 className="text-heading-h6 text-[var(--color-text-default)]">
-          401-B Session Timeout (Modal)
-        </h4>
-        <p className="text-body-sm text-[var(--color-text-subtle)]">
-          Displayed as a modal overlay when the user's session expires. No close button — the user
-          must sign in again.
-        </p>
-        <SessionTimeoutPreview />
-      </VStack>
-
       <VStack gap={3}>
         <h4 className="text-heading-h6 text-[var(--color-text-default)]">403 Forbidden</h4>
         <p className="text-body-sm text-[var(--color-text-subtle)]">

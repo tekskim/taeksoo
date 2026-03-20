@@ -1,6 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { VStack } from '@/design-system';
+import { IconDownload } from '@tabler/icons-react';
 
 import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
 import AppIconAgentOps from '@/assets/appIcon/agentops.png';
@@ -59,16 +60,27 @@ export function AppIconsPage() {
                 { src: AppIconSettings, name: 'Settings' },
                 { src: AppIconAdminCenter, name: 'Admin center' },
                 { src: AppIconChat, name: 'Chat' },
-              ].map(({ src, name }) => (
-                <div key={name} className="flex flex-col items-center gap-2">
-                  <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
-                    <img src={src} alt={name} className="w-16 h-16 object-contain" />
+              ].map(({ src, name }) => {
+                const fileName = name.toLowerCase().replace(/\s+/g, '-') + '.png';
+                return (
+                  <div key={name} className="flex flex-col items-center gap-2 group">
+                    <div className="relative w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex items-center justify-center overflow-hidden">
+                      <img src={src} alt={name} className="w-16 h-16 object-contain" />
+                      <a
+                        href={src}
+                        download={fileName}
+                        className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-150 rounded-xl"
+                        title={`Download ${name}`}
+                      >
+                        <IconDownload size={20} className="text-white" />
+                      </a>
+                    </div>
+                    <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                      {name}
+                    </span>
                   </div>
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                    {name}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </VStack>
         </VStack>

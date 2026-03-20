@@ -654,6 +654,8 @@ html.theme-transition *::after {
   --table-row-hover-bg: var(--color-surface-subtle);
   --table-checkbox-width: 40px;
   --table-empty-padding-y: var(--spacing-8);
+  --table-row-selected-bg: var(--color-state-info-bg);
+  --table-row-selected-border: var(--color-action-primary);
   --table-resize-handle-width: 4px;
   --table-resize-handle-hover-color: var(--color-action-primary);
 
@@ -1236,8 +1238,14 @@ html.theme-transition *::after {
   --context-menu-hover-bg: var(--semantic-color-surface-hover);
 
   /* Table (Dark Mode) */
-  --table-header-bg: var(--color-surface-muted);
+  --table-header-bg: var(--color-surface-subtle);
   --table-row-hover-bg: var(--semantic-color-surface-hover);
+  --table-row-selected-bg: color-mix(
+    in srgb,
+    var(--color-action-primary) 12%,
+    var(--color-surface-default)
+  );
+  --table-row-selected-border: var(--color-action-primary);
 
   /* TopBar (Dark Mode) */
   --topbar-button-hover-bg: var(--semantic-color-surface-hover);
@@ -1275,8 +1283,14 @@ html.theme-transition *::after {
   --context-menu-hover-bg: var(--color-surface-hover);
 
   /* Table (Dark Mode - additional) */
-  --table-header-bg: var(--color-surface-muted);
+  --table-header-bg: var(--color-surface-subtle);
   --table-row-hover-bg: var(--color-surface-hover);
+  --table-row-selected-bg: color-mix(
+    in srgb,
+    var(--color-action-primary) 12%,
+    var(--color-surface-default)
+  );
+  --table-row-selected-border: var(--color-action-primary);
 
   /* TabBar (Dark Mode - additional) */
   --tabbar-hover-bg: var(--color-surface-muted);
@@ -3068,15 +3082,6 @@ input[type='search']::-webkit-search-decoration {
   font-size: var(--font-size-14);
   line-height: var(--line-height-20);
   font-weight: var(--font-weight-semibold);
-}
-
-/* h7 - Card/Section title style (12px, semibold, uppercase) */
-.text-heading-h7 {
-  font-size: var(--font-size-12);
-  line-height: var(--line-height-18);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  color: var(--color-text-default);
 }
 
 /* Body - All regular (400) */
