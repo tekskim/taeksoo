@@ -180,6 +180,15 @@ function ChipGuidelines() {
             </tr>
             <tr>
               <Td>
+                <strong>Read-only</strong>
+              </Td>
+              <Td>
+                Remove button(×)이 없는 읽기 전용 상태. 사용자가 제거할 수 없는 고정 태그나 정보
+                표시에 사용
+              </Td>
+            </tr>
+            <tr>
+              <Td>
                 <strong>Selected</strong>
               </Td>
               <Td>Radio/Checkbox 선택 결과를 표현하는 Chip (파란 테두리 강조)</Td>
@@ -405,13 +414,17 @@ export function ChipPage() {
             <VStack gap={1}>
               <Label>States</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Default, Selected, Disabled 상태 비교.
+                Default, Read-only, Selected, Disabled 상태 비교.
               </span>
             </VStack>
             <div className="flex gap-4 items-start p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
               <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
                 <Chip label="Name" value="a" onRemove={() => {}} />
+              </VStack>
+              <VStack gap={1} align="center">
+                <span className="text-body-xs text-[var(--color-text-subtle)]">Read-only</span>
+                <Chip label="Name" value="a" />
               </VStack>
               <VStack gap={1} align="center">
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Selected</span>

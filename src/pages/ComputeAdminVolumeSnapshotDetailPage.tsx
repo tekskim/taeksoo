@@ -17,7 +17,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconBell, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -222,14 +222,7 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Volume snapshot name" value={snapshot.name} />
                     <SectionCard.DataRow label="Description" value={snapshot.description} />

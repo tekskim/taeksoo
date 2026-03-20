@@ -21,7 +21,6 @@ import {
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
-  fixedColumns,
   Tooltip,
   Popover,
 } from '@/design-system';
@@ -214,8 +213,8 @@ function MetricsTab() {
 
 function BehaviorTab() {
   return (
-    <VStack gap={3}>
-      <HStack gap={3} className="w-full items-stretch">
+    <VStack gap={4}>
+      <HStack gap={4} align="start" className="w-full">
         {/* Scale down behavior Card */}
         <SectionCard className="flex-1">
           <SectionCard.Header title="Scale down behavior" />
@@ -277,16 +276,10 @@ function ConditionsTab() {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',

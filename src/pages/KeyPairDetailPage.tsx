@@ -18,7 +18,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconTrash, IconEdit, IconBell, IconCopy, IconCheck } from '@tabler/icons-react';
+import { IconTrash, IconBell, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -271,14 +271,7 @@ export function KeyPairDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
                     <CopyableDataRow label="User ID" value={keyPair.userId} />
