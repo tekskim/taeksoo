@@ -245,18 +245,18 @@ export function ContainerServicesPage() {
                   <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                     All targets ({value.length})
                   </div>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {value.map((item, i) => (
-                      <span key={i} className="text-body-md text-[var(--color-text-default)]">
+                      <Badge key={i} theme="white" size="sm">
                         {item}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                 </div>
               }
             >
-              <span className="text-body-sm text-[var(--color-text-muted)] cursor-pointer hover:underline shrink-0">
-                (+{value.length - 1})
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                +{value.length - 1}
               </span>
             </Popover>
           )}
@@ -285,18 +285,18 @@ export function ContainerServicesPage() {
                   <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                     All IP addresses ({value.length})
                   </div>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {value.map((item, i) => (
-                      <span key={i} className="text-body-md text-[var(--color-text-default)]">
+                      <Badge key={i} theme="white" size="sm">
                         {item}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                 </div>
               }
             >
-              <span className="text-body-sm text-[var(--color-text-muted)] cursor-pointer hover:underline shrink-0">
-                (+{value.length - 1})
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                +{value.length - 1}
               </span>
             </Popover>
           )}
@@ -325,18 +325,18 @@ export function ContainerServicesPage() {
                   <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                     All selectors ({value.length})
                   </div>
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-wrap gap-1">
                     {value.map((item, i) => (
-                      <span key={i} className="text-body-md text-[var(--color-text-default)]">
+                      <Badge key={i} theme="white" size="sm">
                         {item}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                 </div>
               }
             >
-              <span className="text-body-sm text-[var(--color-text-muted)] cursor-pointer hover:underline shrink-0">
-                (+{value.length - 1})
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                +{value.length - 1}
               </span>
             </Popover>
           )}
