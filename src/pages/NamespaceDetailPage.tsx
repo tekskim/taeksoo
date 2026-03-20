@@ -22,6 +22,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -910,14 +911,30 @@ export function NamespaceDetailPage() {
                       </Badge>
                     </Tooltip>
                     {entries.length > 1 && (
-                      <Tooltip
-                        content={entries.map(([k, v]) => `${k}: ${v}`).join('\n')}
-                        position="top"
+                      <Popover
+                        trigger="hover"
+                        position="bottom"
+                        delay={100}
+                        hideDelay={100}
+                        content={
+                          <div className="p-3 min-w-[120px] max-w-[320px]">
+                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                              All Labels ({entries.length})
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              {entries.map(([k, v], i) => (
+                                <Badge key={i} theme="white" size="sm">
+                                  {k}: {v}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
                       >
-                        <span className="text-body-sm text-[var(--color-text-muted)] shrink-0 cursor-pointer hover:underline">
+                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
                           +{entries.length - 1}
                         </span>
-                      </Tooltip>
+                      </Popover>
                     )}
                   </div>
                 );

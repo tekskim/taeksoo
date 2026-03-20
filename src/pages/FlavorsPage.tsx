@@ -21,6 +21,8 @@ import {
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
+  Popover,
+  Badge,
   type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -417,9 +419,34 @@ export function FlavorsPage() {
           const first = pairs[0];
           const extra = pairs.length - 1;
           return (
-            <span className="truncate">
-              {first}
-              {extra > 0 && <span className="text-[var(--color-text-muted)]"> (+{extra})</span>}
+            <span className="inline-flex items-center gap-1 min-w-0">
+              <span className="truncate min-w-0">{first}</span>
+              {extra > 0 && (
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Metadata ({pairs.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {pairs.map((pair, i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {pair.trim()}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{extra}
+                  </span>
+                </Popover>
+              )}
             </span>
           );
         },
