@@ -244,14 +244,15 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             }}
           />
 
-          {/* New segment */}
+          {/* New (estimate) segment — same color at 50% opacity */}
           {newValue > 0 && (
             <div
               className="absolute inset-y-0 rounded-r-[var(--progress-bar-radius)] z-[2]"
               style={{
                 left: `${usedPercent}%`,
                 width: `${newPercent}%`,
-                backgroundColor: getStatusColor(newStatus, true),
+                backgroundColor: getStatusColor(newStatus),
+                opacity: 0.3,
                 minWidth: newPercent > 0 ? 4 : 0,
               }}
             />
@@ -272,7 +273,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                   <div className="flex items-center gap-1">
                     <span
                       className="w-[6px] h-[6px] rounded-full"
-                      style={{ backgroundColor: getStatusColor(newStatus, true) }}
+                      style={{ backgroundColor: getStatusColor(newStatus), opacity: 0.3 }}
                     />
                     <span>New: {newValue}</span>
                   </div>
