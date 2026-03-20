@@ -1,13 +1,12 @@
 /* Auto-generated from tokens - DO NOT EDIT */
-/* Generated at: 2026-03-18T00:51:21.512Z */
+/* Generated at: 2026-03-20T01:48:30.506Z */
 
 @import './light.css';
 @import './dark.css';
 @import './compatibility.css';
 
-/* Dark mode: controlled by .dark class and data-theme="dark" only.
-   prefers-color-scheme media query removed to prevent OS-level override. */
-/* @media (prefers-color-scheme: dark) {
+/* Dark mode using prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --primitive-color-white: #ffffff;
     --primitive-color-black: #000000;
@@ -160,20 +159,20 @@
     --semantic-color-tertiary-hover: #475569;
     --semantic-color-tertiary-focus: #64748b;
     --semantic-color-on-tertiary: #f8fafc;
-    --semantic-color-surface: #18181b;
-    --semantic-color-surface-muted: #27272a;
-    --semantic-color-surface-hover: #3f3f46;
-    --semantic-color-surface-tertiary: #52525b;
-    --semantic-color-surface-elevated: #27272a;
-    --semantic-color-text: #fafafa;
-    --semantic-color-text-muted: #d4d4d8;
-    --semantic-color-text-subtle: #a1a1aa;
-    --semantic-color-text-disabled: #52525b;
-    --semantic-color-text-inverse: #18181b;
+    --semantic-color-surface: #0f172a;
+    --semantic-color-surface-muted: #1e293b;
+    --semantic-color-surface-hover: #334155;
+    --semantic-color-surface-tertiary: #475569;
+    --semantic-color-surface-elevated: #1e293b;
+    --semantic-color-text: #f8fafc;
+    --semantic-color-text-muted: #94a3b8;
+    --semantic-color-text-subtle: #64748b;
+    --semantic-color-text-disabled: #475569;
+    --semantic-color-text-inverse: #0f172a;
     --semantic-color-text-on-primary: #ffffff;
-    --semantic-color-border: #3f3f46;
-    --semantic-color-border-subtle: #27272a;
-    --semantic-color-border-strong: #52525b;
+    --semantic-color-border: #334155;
+    --semantic-color-border-subtle: #1e293b;
+    --semantic-color-border-strong: #475569;
     --semantic-color-border-focus: #60a5fa;
     --semantic-color-state-info: #60a5fa;
     --semantic-color-state-info-bg: #1e3a8a;
@@ -240,11 +239,11 @@
     --component-badge-padding-ymd: 0.25rem;
     --component-badge-padding-ylg: 0.25rem;
     --component-badge-font-size-sm: 0.6875rem;
-    --component-badge-font-size-md: 0.8125rem;
-
+    --component-badge-font-size-md: 0.75rem;
+    --component-badge-font-size-lg: 0.875rem;
     --component-badge-line-height-sm: 1rem;
-    --component-badge-line-height-md: 1.125rem;
-
+    --component-badge-line-height-md: 1rem;
+    --component-badge-line-height-lg: 1.25rem;
     --component-badge-radius: 0.375rem;
     --component-badge-gap: 0.25rem;
     --component-badge-dot-size: 0.375rem;
@@ -289,4 +288,4 @@
     --component-menu-section-padding-y: 0.25rem;
     --component-menu-divider-margin: 0.5rem;
   }
-} */
+}

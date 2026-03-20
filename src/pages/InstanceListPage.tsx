@@ -1691,9 +1691,11 @@ export function InstanceListPage() {
         <PageHeader
           title="Instances list"
           actions={
-            <Link to="/compute/instances/create">
-              <Button size="md">Create instance</Button>
-            </Link>
+            activeTab === 'vm' ? (
+              <Link to="/compute/instances/create">
+                <Button size="md">Create instance</Button>
+              </Link>
+            ) : undefined
           }
         />
 

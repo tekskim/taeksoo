@@ -27,6 +27,7 @@ import { ScheduledTasksPage } from '@/pages/ScheduledTasksPage';
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
+import { BareMetalDetailPage } from '@/pages/BareMetalDetailPage';
 import { HomePage } from '@/pages/HomePage';
 import { ComputeHomePage } from '@/pages/ComputeHomePage';
 import { ComputeAdminHomePage } from '@/pages/ComputeAdminHomePage';
@@ -509,6 +510,7 @@ function AppRoutes() {
       <Route path="/compute/instances/create" element={<CreateInstancePage />} />
       <Route path="/compute/instances/create-v2" element={<CreateInstancePage />} />
       <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
+      <Route path="/compute/bare-metal/:id" element={<BareMetalDetailPage />} />
       <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
       <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
       <Route path="/compute/instance-templates/create-v2" element={<CreateTemplatePage />} />
