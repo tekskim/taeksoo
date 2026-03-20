@@ -16,6 +16,7 @@ import {
   Tab,
   ListToolbar,
   ContextMenu,
+  Tooltip,
   PageShell,
   PageHeader,
   fixedColumns,
@@ -39,6 +40,7 @@ import {
   IconBell,
   IconDownload,
   IconLock,
+  IconLockOpen,
   IconTerminal2,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -94,6 +96,7 @@ import {
 } from '@/components/RescueInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Types
@@ -108,7 +111,7 @@ interface Instance {
   locked: boolean;
   fixedIp: string;
   floatingIp: string;
-  image: string;
+  os: string;
   flavor: string;
   vcpu: number;
   ram: string;
@@ -122,8 +125,8 @@ interface BareMetalInstance {
   id: string;
   name: string;
   status: InstanceStatus;
-  ip: string;
-  image: string;
+  locked: boolean;
+  os: string;
   flavor: string;
   cpu: number;
   ram: string;
@@ -144,7 +147,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.40',
     floatingIp: '20.30.40.50',
-    image: 'CentOS 7',
+    os: 'Ubuntu 24.04',
     flavor: 'Medium',
     vcpu: 4,
     ram: '8GB',
@@ -159,7 +162,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.41',
     floatingIp: '20.30.40.51',
-    image: 'CentOS 7',
+    os: 'CentOS 7',
     flavor: 'Medium',
     vcpu: 4,
     ram: '8GB',
@@ -174,7 +177,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.10',
     floatingIp: '20.30.40.10',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Large',
     vcpu: 8,
     ram: '16GB',
@@ -189,7 +192,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.20',
     floatingIp: '-',
-    image: 'CentOS 8',
+    os: 'CentOS 8',
     flavor: 'XLarge',
     vcpu: 16,
     ram: '64GB',
@@ -204,7 +207,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.50',
     floatingIp: '20.30.40.60',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'GPU Large',
     vcpu: 32,
     ram: '128GB',
@@ -219,7 +222,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.51',
     floatingIp: '20.30.40.61',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'GPU Large',
     vcpu: 32,
     ram: '128GB',
@@ -234,7 +237,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '-',
     floatingIp: '-',
-    image: 'Rocky Linux 9',
+    os: 'Rocky Linux 9',
     flavor: 'Small',
     vcpu: 2,
     ram: '4GB',
@@ -249,7 +252,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '-',
     floatingIp: '-',
-    image: 'Rocky Linux 9',
+    os: 'Rocky Linux 9',
     flavor: 'Small',
     vcpu: 2,
     ram: '4GB',
@@ -264,7 +267,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.80',
     floatingIp: '-',
-    image: 'Debian 12',
+    os: 'Debian 12',
     flavor: 'XLarge',
     vcpu: 16,
     ram: '32GB',
@@ -279,7 +282,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.90',
     floatingIp: '20.30.40.90',
-    image: 'Debian 12',
+    os: 'Debian 12',
     flavor: 'Medium',
     vcpu: 4,
     ram: '16GB',
@@ -294,7 +297,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.100',
     floatingIp: '20.30.40.100',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Medium',
     vcpu: 4,
     ram: '8GB',
@@ -309,7 +312,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.101',
     floatingIp: '20.30.40.101',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Medium',
     vcpu: 4,
     ram: '8GB',
@@ -324,7 +327,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.110',
     floatingIp: '-',
-    image: 'CentOS 8',
+    os: 'CentOS 8',
     flavor: 'Large',
     vcpu: 8,
     ram: '32GB',
@@ -339,7 +342,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.120',
     floatingIp: '-',
-    image: 'Debian 12',
+    os: 'Debian 12',
     flavor: 'XLarge',
     vcpu: 16,
     ram: '64GB',
@@ -354,7 +357,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.130',
     floatingIp: '20.30.40.130',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Large',
     vcpu: 8,
     ram: '16GB',
@@ -369,7 +372,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.131',
     floatingIp: '-',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Medium',
     vcpu: 4,
     ram: '8GB',
@@ -384,7 +387,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.132',
     floatingIp: '-',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Medium',
     vcpu: 4,
     ram: '8GB',
@@ -399,7 +402,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.140',
     floatingIp: '20.30.40.140',
-    image: 'CentOS 8',
+    os: 'CentOS 8',
     flavor: 'XLarge',
     vcpu: 16,
     ram: '32GB',
@@ -414,7 +417,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.150',
     floatingIp: '-',
-    image: 'Rocky Linux 9',
+    os: 'Rocky Linux 9',
     flavor: 'Large',
     vcpu: 8,
     ram: '16GB',
@@ -429,7 +432,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.160',
     floatingIp: '-',
-    image: 'Debian 12',
+    os: 'Debian 12',
     flavor: 'Medium',
     vcpu: 4,
     ram: '16GB',
@@ -444,7 +447,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.161',
     floatingIp: '-',
-    image: 'Debian 12',
+    os: 'Debian 12',
     flavor: 'Medium',
     vcpu: 4,
     ram: '16GB',
@@ -459,7 +462,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.162',
     floatingIp: '-',
-    image: 'Debian 12',
+    os: 'Debian 12',
     flavor: 'Medium',
     vcpu: 4,
     ram: '16GB',
@@ -474,7 +477,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.170',
     floatingIp: '-',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Large',
     vcpu: 8,
     ram: '32GB',
@@ -489,7 +492,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.171',
     floatingIp: '-',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Large',
     vcpu: 8,
     ram: '32GB',
@@ -504,7 +507,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.172',
     floatingIp: '-',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Large',
     vcpu: 8,
     ram: '32GB',
@@ -519,7 +522,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.180',
     floatingIp: '20.30.40.180',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'GPU XLarge',
     vcpu: 64,
     ram: '256GB',
@@ -534,7 +537,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '10.20.30.181',
     floatingIp: '20.30.40.181',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'GPU Large',
     vcpu: 32,
     ram: '128GB',
@@ -549,7 +552,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.190',
     floatingIp: '20.30.40.190',
-    image: 'Rocky Linux 9',
+    os: 'Rocky Linux 9',
     flavor: 'Small',
     vcpu: 2,
     ram: '4GB',
@@ -564,7 +567,7 @@ const mockInstances: Instance[] = [
     locked: true,
     fixedIp: '10.20.30.200',
     floatingIp: '20.30.40.200',
-    image: 'CentOS 8',
+    os: 'CentOS 8',
     flavor: 'Small',
     vcpu: 2,
     ram: '4GB',
@@ -579,7 +582,7 @@ const mockInstances: Instance[] = [
     locked: false,
     fixedIp: '-',
     floatingIp: '-',
-    image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
     flavor: 'Small',
     vcpu: 2,
     ram: '4GB',
@@ -594,8 +597,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-001',
     name: 'web-server-1',
     status: 'running',
-    ip: '10.62.0.30',
-    image: 'BM image',
+    locked: false,
+    os: 'Ubuntu 22.04',
     flavor: 'BM flavor',
     cpu: 8,
     ram: '16GiB',
@@ -607,8 +610,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-002',
     name: 'web-server-2',
     status: 'running',
-    ip: '10.62.0.31',
-    image: 'BM image',
+    locked: false,
+    os: 'Ubuntu 22.04',
     flavor: 'BM flavor',
     cpu: 8,
     ram: '16GiB',
@@ -620,8 +623,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-003',
     name: 'db-server-1',
     status: 'running',
-    ip: '10.62.0.40',
-    image: 'BM image',
+    locked: true,
+    os: 'Rocky Linux 9',
     flavor: 'BM large',
     cpu: 16,
     ram: '64GiB',
@@ -633,8 +636,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-004',
     name: 'db-server-2',
     status: 'stopped',
-    ip: '10.62.0.41',
-    image: 'BM image',
+    locked: true,
+    os: 'Rocky Linux 9',
     flavor: 'BM large',
     cpu: 16,
     ram: '64GiB',
@@ -646,8 +649,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-005',
     name: 'gpu-node-1',
     status: 'running',
-    ip: '10.62.0.50',
-    image: 'BM GPU',
+    locked: false,
+    os: 'Ubuntu 22.04',
     flavor: 'BM GPU',
     cpu: 32,
     ram: '128GiB',
@@ -659,8 +662,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-006',
     name: 'gpu-node-2',
     status: 'running',
-    ip: '10.62.0.51',
-    image: 'BM GPU',
+    locked: false,
+    os: 'Ubuntu 22.04',
     flavor: 'BM GPU',
     cpu: 32,
     ram: '128GiB',
@@ -672,8 +675,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-007',
     name: 'compute-1',
     status: 'pending',
-    ip: '—',
-    image: 'BM image',
+    locked: false,
+    os: 'CentOS 8',
     flavor: 'BM xlarge',
     cpu: 64,
     ram: '256GiB',
@@ -685,8 +688,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-008',
     name: 'compute-2',
     status: 'building',
-    ip: '—',
-    image: 'BM image',
+    locked: false,
+    os: 'CentOS 8',
     flavor: 'BM xlarge',
     cpu: 64,
     ram: '256GiB',
@@ -698,8 +701,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-009',
     name: 'storage-node-1',
     status: 'running',
-    ip: '10.62.0.60',
-    image: 'BM storage',
+    locked: true,
+    os: 'Debian 12',
     flavor: 'BM storage',
     cpu: 8,
     ram: '32GiB',
@@ -711,8 +714,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-010',
     name: 'storage-node-2',
     status: 'error',
-    ip: '10.62.0.61',
-    image: 'BM storage',
+    locked: true,
+    os: 'Debian 12',
     flavor: 'BM storage',
     cpu: 8,
     ram: '32GiB',
@@ -936,7 +939,7 @@ export function InstanceListPage() {
     { id: 'locked', label: 'Locked', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
-    { id: 'image', label: 'Image', visible: true },
+    { id: 'os', label: 'OS', visible: true },
     { id: 'flavor', label: 'Flavor', visible: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
@@ -987,8 +990,7 @@ export function InstanceListPage() {
         case 'status':
           return instance.status?.toLowerCase() === filterValue;
         case 'os':
-          // OS filter uses image field (e.g., "Ubuntu 22.04" contains "ubuntu")
-          return instance.image?.toLowerCase().includes(filterValue) ?? false;
+          return instance.os?.toLowerCase().includes(filterValue) ?? false;
         case 'flavor':
           return instance.flavor?.toLowerCase().includes(filterValue) ?? false;
         default:
@@ -1012,8 +1014,7 @@ export function InstanceListPage() {
         case 'status':
           return instance.status?.toLowerCase() === filterValue;
         case 'os':
-          // OS filter uses image field (e.g., "BM image" contains "bm")
-          return instance.image?.toLowerCase().includes(filterValue) ?? false;
+          return instance.os?.toLowerCase().includes(filterValue) ?? false;
         case 'flavor':
           return instance.flavor?.toLowerCase().includes(filterValue) ?? false;
         default:
@@ -1041,7 +1042,7 @@ export function InstanceListPage() {
     setSelectedInstanceForSnapshot({
       id: instance.id,
       name: instance.name,
-      image: instance.image,
+      image: instance.os,
       flavor: instance.flavor,
     });
     setIsSnapshotDrawerOpen(true);
@@ -1135,7 +1136,7 @@ export function InstanceListPage() {
     setSelectedInstanceForRebuild({
       id: instance.id,
       name: instance.name,
-      currentImage: instance.image,
+      currentImage: instance.os,
     });
     setIsRebuildDrawerOpen(true);
   };
@@ -1170,7 +1171,7 @@ export function InstanceListPage() {
     setSelectedInstanceForRescue({
       id: instance.id,
       name: instance.name,
-      currentImage: instance.image,
+      currentImage: instance.os,
       protocol: 'SSH',
     });
     setIsRescueDrawerOpen(true);
@@ -1292,6 +1293,28 @@ export function InstanceListPage() {
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 
+  const getBareMetalContextMenuItems = (_instance: BareMetalInstance): ContextMenuItem[] => [
+    {
+      id: 'instance-status',
+      label: 'Instance status',
+      submenu: [
+        { id: 'start-sub', label: 'Start' },
+        { id: 'stop-sub', label: 'Stop', status: 'danger' },
+        { id: 'reboot-sub', label: 'Reboot', status: 'danger' },
+      ],
+    },
+    {
+      id: 'configuration',
+      label: 'Configuration',
+      submenu: [
+        { id: 'lock-setting', label: 'Lock setting' },
+        { id: 'manage-tags', label: 'Manage tags' },
+        { id: 'edit', label: 'Edit' },
+      ],
+    },
+    { id: 'delete', label: 'Delete', status: 'danger' },
+  ];
+
   // Table columns definition (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Instance>[] = [
     {
@@ -1309,17 +1332,20 @@ export function InstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/instances/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
-          </span>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute/instances/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              title={row.name}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
+              ID : {row.id}
+            </span>
+          </div>
         </div>
       ),
     },
@@ -1329,47 +1355,36 @@ export function InstanceListPage() {
       width: fixedColumns.locked,
       align: 'center',
       sortable: false,
-      render: (_, row) =>
-        row.locked ? (
-          <div className="flex items-center justify-center w-full">
+      render: (_, row) => (
+        <div className="flex items-center justify-center w-full">
+          {row.locked ? (
             <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-          </div>
-        ) : null,
+          ) : (
+            <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
+          )}
+        </div>
+      ),
     },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
       minWidth: columnMinWidths.fixedIp,
-      sortable: false,
+      sortable: true,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
       minWidth: columnMinWidths.floatingIp,
-      sortable: false,
+      sortable: true,
     },
     {
-      key: 'image',
-      label: 'Image',
+      key: 'os',
+      label: 'OS',
       flex: 1,
       minWidth: columnMinWidths.image,
       sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/images/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.image}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id.substring(0, 8)}
-          </span>
-        </div>
-      ),
     },
     {
       key: 'flavor',
@@ -1381,12 +1396,13 @@ export function InstanceListPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/flavors/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            title={row.flavor}
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
             ID : {row.id.substring(0, 8)}
           </span>
         </div>
@@ -1430,7 +1446,7 @@ export function InstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionsDouble,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1488,45 +1504,50 @@ export function InstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/bare-metal/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <Tooltip content="This bare metal was created via the Container cluster." position="top">
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+              <img src={containerIcon} alt="Container" className="w-4 h-4" />
+            </div>
+          </Tooltip>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute/bare-metal/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              title={row.name}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
+              ID : {row.id}
+            </span>
+          </div>
         </div>
       ),
     },
     {
-      key: 'ip',
-      label: 'Fixed IP',
-      flex: 1,
-      minWidth: columnMinWidths.ip,
+      key: 'locked',
+      label: 'Locked',
+      width: fixedColumns.locked,
+      align: 'center',
       sortable: false,
+      render: (_, row) => (
+        <div className="flex items-center justify-center w-full">
+          {row.locked ? (
+            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+          ) : (
+            <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
+          )}
+        </div>
+      ),
     },
     {
-      key: 'image',
-      label: 'Image',
+      key: 'os',
+      label: 'OS',
       flex: 1,
       minWidth: columnMinWidths.image,
       sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/images/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.image}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id.substring(0, 8)}
-          </span>
-        </div>
-      ),
     },
     {
       key: 'flavor',
@@ -1538,12 +1559,13 @@ export function InstanceListPage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/flavors/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            title={row.flavor}
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
             ID : {row.id.substring(0, 8)}
           </span>
         </div>
@@ -1587,28 +1609,23 @@ export function InstanceListPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actionsDouble,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
-        <HStack gap={1} className="justify-center">
-          <button
-            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
-            onClick={(e) => {
-              e.stopPropagation();
-              shellPanel.openConsole(row.id, row.name);
-            }}
-            title="Open console"
-          >
-            <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-          </button>
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-            <IconDotsCircleHorizontal
-              size={16}
-              stroke={1.5}
-              className="text-[var(--action-icon-color)]"
-            />
-          </button>
-        </HStack>
+        <div
+          className="flex items-center justify-center w-full"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ContextMenu items={getBareMetalContextMenuItems(row)} trigger="click" align="right">
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
+            </button>
+          </ContextMenu>
+        </div>
       ),
     },
   ];

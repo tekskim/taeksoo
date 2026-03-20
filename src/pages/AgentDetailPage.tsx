@@ -183,7 +183,6 @@ interface InformationTabProps {
   tone: string;
   maxTokens: number;
   maxIteration: number;
-  onEditBasicInfo: () => void;
   onEditModelSettings: () => void;
   onEditPromptSettings: () => void;
 }
@@ -199,7 +198,6 @@ function InformationTab({
   tone,
   maxTokens,
   maxIteration,
-  onEditBasicInfo,
   onEditModelSettings,
   onEditPromptSettings,
 }: InformationTabProps) {
@@ -207,19 +205,7 @@ function InformationTab({
     <div className="flex flex-col gap-4 w-full">
       {/* Basic Information */}
       <SectionCard>
-        <SectionCard.Header
-          title="Basic information"
-          actions={
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<IconEdit size={12} />}
-              onClick={onEditBasicInfo}
-            >
-              Edit
-            </Button>
-          }
-        />
+        <SectionCard.Header title="Basic information" />
         <SectionCard.Content>
           <SectionCard.DataRow label="Agent name" value={agentName} />
           <SectionCard.DataRow label="Description" value={description || '-'} />
@@ -921,7 +907,6 @@ export function AgentDetailPage() {
   const handleConnectDataSource = () => console.log('Connect data source');
   const handleConnectMCPServer = () => console.log('Connect MCP server');
   const handleDelete = () => console.log('Delete agent');
-  const handleEditBasicInfo = () => console.log('Edit basic info');
   const handleEditModelSettings = () => console.log('Edit model settings');
   const handleEditPromptSettings = () => console.log('Edit prompt settings');
 
@@ -1011,7 +996,6 @@ export function AgentDetailPage() {
                 tone={agent.tone}
                 maxTokens={agent.maxTokens}
                 maxIteration={agent.maxIteration}
-                onEditBasicInfo={handleEditBasicInfo}
                 onEditModelSettings={handleEditModelSettings}
                 onEditPromptSettings={handleEditPromptSettings}
               />

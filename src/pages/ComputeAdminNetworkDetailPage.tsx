@@ -858,14 +858,7 @@ export default function NetworkDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic Information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Network name" value={network.networkName} />
                     <SectionCard.DataRow label="Description" value={network.description} />

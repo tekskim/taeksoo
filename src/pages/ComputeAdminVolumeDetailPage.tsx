@@ -624,7 +624,7 @@ export function ComputeAdminVolumeDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header title="Basic information" showEditButton onEdit={() => {}} />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
                     <SectionCard.DataRow

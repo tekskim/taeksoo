@@ -376,14 +376,7 @@ export default function L7PolicyDetailPage() {
             <TabPanel value="details" className="pt-0">
               <VStack gap={4} className="pt-4">
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Name" value={l7Policy.name} />
                     <SectionCard.DataRow label="Description" value={l7Policy.description} />
