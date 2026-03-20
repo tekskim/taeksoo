@@ -171,7 +171,7 @@ export function SemanticColorsPage() {
                     cssVar: '--color-border-strong',
                     primitive: 'slate300',
                     darkPrimitive: 'zinc600',
-                    darkHex: '#475569',
+                    darkHex: '#52525b',
                   },
                   {
                     token: 'border.focus',
