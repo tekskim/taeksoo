@@ -37,6 +37,7 @@ import {
   columnMinWidths,
   WizardSectionStatusIcon,
   FormField,
+  Popover,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -2098,12 +2099,35 @@ function FlavorSection({
         const truncatedVal = firstVal.length > 3 ? firstVal.slice(0, 3) + '...' : firstVal;
         const remaining = entries.length - 1;
         return (
-          <span className="flex items-center gap-1.5 min-w-0 text-body-md">
+          <span className="flex items-center gap-1 min-w-0 text-body-md">
             <span className="truncate min-w-0">
               {firstKey}={truncatedVal}
             </span>
             {remaining > 0 && (
-              <span className="shrink-0 text-[var(--color-text-muted)]">(+{remaining})</span>
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Metadata ({entries.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {entries.map(([k, v], i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {k}={v}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{remaining}
+                </span>
+              </Popover>
             )}
           </span>
         );
@@ -3852,7 +3876,9 @@ function AdvancedSection({
   const isV2 = useIsV2();
   const MAX_TAGS = 50;
   // Tags
-  const [tags, setTags] = useState<{ id: string; key: string; value: string }[]>([]);
+  const [tags, setTags] = useState<{ id: string; key: string; value: string }[]>([
+    { id: crypto.randomUUID(), key: '', value: '' },
+  ]);
 
   // Server group
   const [serverGroupOpen, setServerGroupOpen] = useState(isV2);
