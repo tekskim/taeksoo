@@ -655,21 +655,17 @@ export function ImageDetailPage() {
     { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
     {
       key: 'state',
-      label: 'State',
+      label: 'Protected',
       flex: 1,
       minWidth: columnMinWidths.status,
       sortable: true,
-      render: (_, row) => (
-        <Badge theme="white" size="sm">
-          {row.state}
-        </Badge>
-      ),
+      render: (_, row) => (row.state === 'protected' ? 'Yes' : 'No'),
     },
     { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     { key: 'used', label: 'Used', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     {
       key: 'created',
-      label: 'Created',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.creationDate,
       sortable: true,

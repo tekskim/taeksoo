@@ -28,6 +28,7 @@ import {
   IconCopy,
   IconSearch,
   IconDotsCircleHorizontal,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -151,14 +152,14 @@ export function ContainerHomePage() {
     {
       key: 'manage',
       label: 'Manage',
-      width: fixedColumns.actionsDouble,
+      width: '120px',
       align: 'center',
       sortable: false,
       render: (_value: string, row: ClusterRow) => (
         <Button
           variant="outline"
           size="sm"
-          className="h-[24px] min-w-[60px] !text-body-md"
+          leftIcon={<IconSettings size={12} />}
           onClick={() => navigate(`/container/clusters/${row.id}`)}
         >
           Manage

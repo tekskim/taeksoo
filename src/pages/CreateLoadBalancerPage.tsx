@@ -870,8 +870,8 @@ export default function CreateLoadBalancerPage() {
           <VStack gap={0.5} align="start">
             <HStack gap={1} align="center">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-body-md text-[var(--color-text-default)]">
-                (+{row.listenerCount})
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+                +{row.listenerCount}
               </span>
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -951,8 +951,8 @@ export default function CreateLoadBalancerPage() {
           <VStack gap={0.5} align="start">
             <HStack gap={1} align="center">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-body-md text-[var(--color-text-default)]">
-                (+{row.listenerCount})
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+                +{row.listenerCount}
               </span>
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
@@ -1075,8 +1075,8 @@ export default function CreateLoadBalancerPage() {
                 ID:{row.listenerId}
               </span>
             </VStack>
-            <span className="text-body-md text-[var(--color-text-default)]">
-              (+{row.listenerCount})
+            <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+              +{row.listenerCount}
             </span>
           </HStack>
         ),

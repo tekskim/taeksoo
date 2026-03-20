@@ -18,6 +18,8 @@ import {
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
+  Popover,
+  Badge,
   type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -284,14 +286,41 @@ export function ServerGroupsPage() {
         const extra = row.instances.length - 1;
         if (!first) return <span className="text-[var(--color-text-muted)]">—</span>;
         return (
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-body-md text-[var(--color-text-default)] truncate">
-              {first.name}
-              {extra > 0 && <span> (+{extra})</span>}
-            </span>
-            <span className="text-body-sm text-[var(--color-text-muted)] truncate">
-              ID:{first.id}
-            </span>
+          <div className="flex items-center gap-1 min-w-0">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-body-md text-[var(--color-text-default)] truncate">
+                {first.name}
+              </span>
+              <span className="text-body-sm text-[var(--color-text-muted)] truncate">
+                ID:{first.id}
+              </span>
+            </div>
+            {extra > 0 && (
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Instances ({row.instances.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {row.instances.map((inst, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {inst.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{extra}
+                </span>
+              </Popover>
+            )}
           </div>
         );
       },

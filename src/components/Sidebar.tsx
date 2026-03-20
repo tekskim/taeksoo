@@ -67,10 +67,17 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
     if (href === `${basePath}/networks` && location.pathname.startsWith(`${basePath}/subnets`)) {
       return true;
     }
-    // Match child resources - Bare metal detail pages are under Bare metal nodes
+    // Match child resources - Bare metal detail pages are under Bare metal nodes (admin)
     if (
       href === '/compute-admin/bare-metal-nodes' &&
       location.pathname.startsWith('/compute-admin/bare-metal/')
+    ) {
+      return true;
+    }
+    // Match child resources - Bare metal detail pages are under Instances (user)
+    if (
+      href === `${basePath}/instances` &&
+      location.pathname.startsWith(`${basePath}/bare-metal/`)
     ) {
       return true;
     }
