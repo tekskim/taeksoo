@@ -54,7 +54,8 @@ export function SelectionIndicator({
       data-figma-name="[TDS] SelectionIndicator"
       className={twMerge(
         'flex flex-row items-center justify-between gap-4 w-full',
-        'p-[var(--inline-message-padding)]',
+        'h-[42px]',
+        'px-[var(--inline-message-padding)] py-0',
         'rounded-[var(--inline-message-radius)]',
         showError ? 'bg-[var(--inline-message-error-bg)]' : 'bg-[var(--color-surface-subtle)]',
         className
