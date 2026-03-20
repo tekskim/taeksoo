@@ -522,7 +522,6 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
@@ -693,7 +692,6 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'center',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
