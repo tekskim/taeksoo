@@ -192,6 +192,16 @@ function UsageChartGuidelines() {
             </tr>
             <tr>
               <Td>
+                <strong>Estimate</strong>
+              </Td>
+              <Td>
+                Create 페이지 등에서 리소스 할당 시 현재 사용량 + 추가 예정량을 함께 시각화.
+                Estimate 구간은 동일 Status Color의 <strong>opacity 50%</strong>로 표시하여 기존
+                사용량과 시각적으로 구분
+              </Td>
+            </tr>
+            <tr>
+              <Td>
                 <strong>Range</strong>
               </Td>
               <Td>최소값~최대값 범위가 있고, 그 안에서 현재값의 위치를 추가로 표시할 때 사용</Td>
@@ -226,6 +236,19 @@ function UsageChartGuidelines() {
               </Td>
               <Td>현재 값에 비례한 채워진 Bar. Variant에 따라 색상 정책이 다름</Td>
               <Td>항상</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>b-1. Estimate Fill</strong>
+              </Td>
+              <Td>
+                추가 예정량에 비례한 Bar. Fill과 동일 색상의 opacity 50%로 표시.{' '}
+                <code className="text-body-sm bg-[var(--color-surface-muted)] px-1 rounded">
+                  newValue
+                </code>{' '}
+                prop으로 제공
+              </Td>
+              <Td>Estimate variant</Td>
             </tr>
             <tr>
               <Td>
@@ -575,6 +598,111 @@ export function UsageChartPage() {
                     <QuotaBarDemo label="GPU" used={6} total={8} unit="GPU" />
                   </div>
                 </GaugeHoverTooltip>
+              </div>
+            </div>
+          </VStack>
+
+          {/* Estimate Gauge Bar Example */}
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Gauge Bar Chart — Estimate Variant</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Create 페이지에서 리소스 할당 시, 현재 사용량 + 추가 예정량(estimate)을 시각화.
+                Estimate 구간은 동일 색상의 opacity 50%로 표시.
+              </span>
+            </VStack>
+            <div className="flex gap-6 flex-wrap items-start">
+              {/* Safe — 사용량 낮고 추가해도 여유 */}
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+                <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
+                  Safe (used + new &lt; 70%)
+                </div>
+                <ProgressBar
+                  variant="quota"
+                  label="vCPU"
+                  value={3}
+                  max={10}
+                  newValue={2}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+                <ProgressBar
+                  variant="quota"
+                  label="RAM"
+                  value={8}
+                  max={32}
+                  newValue={4}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+                <ProgressBar
+                  variant="quota"
+                  label="Disk"
+                  value={20}
+                  max={100}
+                  newValue={10}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+              </div>
+
+              {/* Warning — 추가하면 경고 영역 진입 */}
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+                <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
+                  Warning (used + new ≥ 70%)
+                </div>
+                <ProgressBar
+                  variant="quota"
+                  label="vCPU"
+                  value={5}
+                  max={10}
+                  newValue={3}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+                <ProgressBar
+                  variant="quota"
+                  label="RAM"
+                  value={16}
+                  max={32}
+                  newValue={8}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+                <ProgressBar
+                  variant="quota"
+                  label="Disk"
+                  value={50}
+                  max={100}
+                  newValue={25}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+              </div>
+
+              {/* Danger — 추가하면 위험 영역 진입 */}
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+                <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
+                  Danger (used + new ≥ 90%)
+                </div>
+                <ProgressBar
+                  variant="quota"
+                  label="vCPU"
+                  value={7}
+                  max={10}
+                  newValue={2}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+                <ProgressBar
+                  variant="quota"
+                  label="RAM"
+                  value={24}
+                  max={32}
+                  newValue={6}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
+                <ProgressBar
+                  variant="quota"
+                  label="Disk"
+                  value={80}
+                  max={100}
+                  newValue={15}
+                  thresholds={{ warning: 70, danger: 90 }}
+                />
               </div>
             </div>
           </VStack>
