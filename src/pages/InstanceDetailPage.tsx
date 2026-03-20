@@ -19,6 +19,8 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  Tooltip,
+  Chip,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
@@ -35,18 +37,18 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconChevronRight,
-  IconEdit,
   IconBell,
   IconCirclePlus,
   IconSquarePlus,
   IconLinkPlus,
-  IconSettings,
   IconPower,
   IconDotsCircleHorizontal,
   IconDownload,
   IconSearch,
   IconCopy,
   IconSelector,
+  IconLock,
+  IconLockOpen,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -132,6 +134,8 @@ interface InstanceDetail {
     gpu: number;
   };
   image: string;
+  os: string;
+  locked: boolean;
   interfaces: number;
   keyPair: string;
   serverGroup: string;
@@ -154,6 +158,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
+    os: 'CentOS 7',
+    locked: true,
     interfaces: 5,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
@@ -169,6 +175,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
+    os: 'CentOS 7',
+    locked: false,
     interfaces: 3,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
@@ -184,6 +192,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: 'Kubernetes master node',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
     image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
+    locked: false,
     interfaces: 4,
     keyPair: 'master-key',
     serverGroup: 'master-group',
@@ -199,6 +209,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: 'Database server',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
     image: 'CentOS 8',
+    os: 'CentOS 8',
+    locked: true,
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
@@ -214,6 +226,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: 'GPU compute node',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
     image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
+    locked: false,
     interfaces: 2,
     keyPair: 'gpu-key',
     serverGroup: 'gpu-group',
@@ -232,6 +246,8 @@ const defaultInstanceDetail: InstanceDetail = {
   description: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
   image: 'Unknown',
+  os: 'Unknown',
+  locked: false,
   interfaces: 0,
   keyPair: '-',
   serverGroup: '-',
@@ -986,7 +1002,20 @@ export function InstanceDetailPage() {
       <VStack gap={6} className="min-w-[1176px]">
         {/* Instance Header Card */}
         <DetailHeader>
-          <DetailHeader.Title>{instance.name}</DetailHeader.Title>
+          <DetailHeader.Title>
+            <span className="inline-flex items-center gap-2">
+              {instance.locked ? (
+                <Tooltip content="This instance is locked">
+                  <IconLock size={16} className="text-[var(--color-text-muted)]" />
+                </Tooltip>
+              ) : (
+                <Tooltip content="This instance is unlocked">
+                  <IconLockOpen size={16} className="text-[var(--color-text-disabled)]" />
+                </Tooltip>
+              )}
+              {instance.name}
+            </span>
+          </DetailHeader.Title>
 
           <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
@@ -1096,14 +1125,7 @@ export function InstanceDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Instance name" value={instance.name} />
                     <SectionCard.DataRow
@@ -1131,9 +1153,9 @@ export function InstanceDetailPage() {
                   </SectionCard.Content>
                 </SectionCard>
 
-                {/* Start Source */}
+                {/* Source */}
                 <SectionCard>
-                  <SectionCard.Header title="Start source" />
+                  <SectionCard.Header title="Source" />
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Image"
@@ -1141,6 +1163,7 @@ export function InstanceDetailPage() {
                       isLink
                       linkHref="/images"
                     />
+                    <SectionCard.DataRow label="OS" value={instance.os} />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -1159,16 +1182,14 @@ export function InstanceDetailPage() {
 
                 {/* Advanced */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Advanced"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
-                        Manage tags
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Advanced" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Tags" value="Team: Backend" />
+                    <SectionCard.DataRow label="Tags">
+                      <div className="flex flex-wrap items-center gap-1">
+                        <Chip label="Team" value="dev" />
+                        <Chip label="Key" value="Value" />
+                      </div>
+                    </SectionCard.DataRow>
                     <SectionCard.DataRow
                       label="Server group"
                       value={instance.serverGroup}

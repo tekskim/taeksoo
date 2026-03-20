@@ -157,14 +157,7 @@ function DetailsTabContent() {
     <div className="flex flex-col gap-4">
       {/* Basic Information */}
       <SectionCard>
-        <SectionCard.Header
-          title="Basic information"
-          actions={
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-              Edit
-            </Button>
-          }
-        />
+        <SectionCard.Header title="Basic information" />
         <SectionCard.Content>
           <SectionCard.DataRow label="Name" value="send_slack_message" />
           <SectionCard.DataRow
