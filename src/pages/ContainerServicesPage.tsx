@@ -20,6 +20,7 @@ import {
   columnMinWidths,
   Badge,
   Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -49,6 +50,7 @@ interface ServiceRow {
   target: string[];
   selector: string[];
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
+  ipAddresses: string[];
   createdAt: string;
 }
 
@@ -64,7 +66,8 @@ const servicesData: ServiceRow[] = [
     namespace: 'namespaceName',
     target: ['http + 80/TCP', 'https-internal + 444/TCP'],
     selector: ['key1=value1'],
-    type: 'ClusterIP',
+    type: 'LoadBalancer',
+    ipAddresses: ['10.96.0.1', '203.0.113.10'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -75,6 +78,7 @@ const servicesData: ServiceRow[] = [
     target: ['myport + 80/TCP'],
     selector: ['key1=value1', 'key2=value2', 'key3=value3'],
     type: 'ClusterIP (Headless)',
+    ipAddresses: ['None'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -85,6 +89,7 @@ const servicesData: ServiceRow[] = [
     target: ['my.database.example.com'],
     selector: ['-'],
     type: 'ExternalName',
+    ipAddresses: ['-'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -95,6 +100,7 @@ const servicesData: ServiceRow[] = [
     target: ['80/TCP', '443/TCP'],
     selector: ['key1=value1', 'key2=value2'],
     type: 'LoadBalancer',
+    ipAddresses: ['10.96.12.34', '203.0.113.50'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -105,6 +111,7 @@ const servicesData: ServiceRow[] = [
     target: ['[Any Node]:31575'],
     selector: ['key1=value1'],
     type: 'NodePort',
+    ipAddresses: ['10.96.5.67'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
 ];
@@ -205,19 +212,96 @@ export function ContainerServicesPage() {
       ),
     },
     {
+      key: 'type',
+      label: 'Type',
+      flex: 1,
+      minWidth: columnMinWidths.type,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
+    },
+    {
       key: 'target',
       label: 'Target',
       flex: 1,
       minWidth: columnMinWidths.target,
       sortable: false,
-      render: (value: string[]) => {
-        const text = value.join(', ');
-        return (
-          <span className="min-w-0 truncate block w-full" title={text}>
-            {text}
+      render: (value: string[]) => (
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="truncate min-w-0" title={value[0]}>
+            {value[0]}
           </span>
-        );
-      },
+          {value.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    All targets ({value.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {value.map((item, i) => (
+                      <span key={i} className="text-body-md text-[var(--color-text-default)]">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="text-body-sm text-[var(--color-text-muted)] cursor-pointer hover:underline shrink-0">
+                (+{value.length - 1})
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'ipAddresses',
+      label: 'IP addresses',
+      flex: 1,
+      minWidth: columnMinWidths.ip,
+      sortable: true,
+      render: (value: string[]) => (
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="truncate min-w-0" title={value[0]}>
+            {value[0]}
+          </span>
+          {value.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    All IP addresses ({value.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {value.map((item, i) => (
+                      <span key={i} className="text-body-md text-[var(--color-text-default)]">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="text-body-sm text-[var(--color-text-muted)] cursor-pointer hover:underline shrink-0">
+                (+{value.length - 1})
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
     },
     {
       key: 'selector',
@@ -225,28 +309,38 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.selector,
       sortable: false,
-      render: (value: string[]) => {
-        const text = value.join(', ');
-        return (
-          <span className="min-w-0 truncate block w-full" title={text}>
-            {text}
+      render: (value: string[]) => (
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="truncate min-w-0" title={value[0]}>
+            {value[0]}
           </span>
-        );
-      },
-    },
-    {
-      key: 'type',
-      label: 'Type',
-      flex: 1,
-      minWidth: columnMinWidths.type,
-      sortable: true,
-      render: (value: string) => (
-        <span
-          className="truncate block min-w-0 text-body-md text-[var(--color-text-default)]"
-          title={value}
-        >
-          {value}
-        </span>
+          {value.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    All selectors ({value.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {value.map((item, i) => (
+                      <span key={i} className="text-body-md text-[var(--color-text-default)]">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="text-body-sm text-[var(--color-text-muted)] cursor-pointer hover:underline shrink-0">
+                (+{value.length - 1})
+              </span>
+            </Popover>
+          )}
+        </div>
       ),
     },
     {
@@ -296,9 +390,9 @@ export function ContainerServicesPage() {
         ];
 
         return (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}

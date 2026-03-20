@@ -3181,7 +3181,6 @@ export function CreateCronJobPage() {
                                       key: 'status',
                                       label: 'Status',
                                       width: fixedColumns.statusLabel,
-                                      align: 'center',
                                       render: (value: string) => (
                                         <Tooltip content={value}>
                                           <Badge theme="white" size="sm" className="max-w-[80px]">
