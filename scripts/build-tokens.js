@@ -200,7 +200,7 @@ function generateCompatibilityAliases(tokens) {
     
     // Surface colors
     aliases['--color-surface-default'] = 'var(--semantic-color-surface)';
-    aliases['--color-surface-subtle'] = 'var(--semantic-color-surface-muted)';
+    aliases['--color-surface-subtle'] = 'var(--semantic-color-surface-subtle)';
     aliases['--color-surface-muted'] = 'var(--semantic-color-surface-hover)';
     aliases['--color-surface-inverse'] = 'var(--semantic-color-surface-tertiary)';
     
