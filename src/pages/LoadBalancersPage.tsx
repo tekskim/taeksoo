@@ -20,6 +20,9 @@ import {
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
+  Popover,
+  Badge,
+  Tooltip,
   type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -29,6 +32,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
 import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import containerIcon from '@/assets/appIcon/container.png';
 import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -50,6 +54,7 @@ interface LoadBalancer {
   listenerCount: number;
   createdAt: string;
   status: LoadBalancerStatus;
+  origin?: 'container' | 'manual';
 }
 
 /* ----------------------------------------
@@ -70,6 +75,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerCount: 2,
     createdAt: 'Oct 3, 2025 00:46:02',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-002',
@@ -98,6 +104,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerCount: 1,
     createdAt: 'Oct 1, 2025 10:20:28',
     status: 'building',
+    origin: 'container',
   },
   {
     id: 'lb-004',
@@ -126,6 +133,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerCount: 0,
     createdAt: 'Sep 25, 2025 10:32:16',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'lb-006',
@@ -360,15 +368,27 @@ export function LoadBalancersPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/load-balancers/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This load balancer was created via the Container cluster."
+              position="top"
+            >
+              <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                <img src={containerIcon} alt="Container" className="w-4 h-4" />
+              </div>
+            </Tooltip>
+          )}
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute/load-balancers/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          </div>
         </div>
       ),
     },
@@ -377,6 +397,7 @@ export function LoadBalancersPage() {
       label: 'VIP Address',
       flex: 1,
       minWidth: columnMinWidths.vipAddress,
+      sortable: true,
     },
     {
       key: 'ownedNetwork',
@@ -428,15 +449,44 @@ export function LoadBalancersPage() {
       flex: 1,
       minWidth: columnMinWidths.listeners,
       render: (_, row) => (
-        <div className="flex items-center gap-[5px]">
+        <div className="flex w-full items-center gap-1">
           <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {row.listeners} {row.listenerCount > 0 && `(+${row.listenerCount})`}
-            </span>
+            <span className="text-body-md text-[var(--color-text-default)]">{row.listeners}</span>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.listenerId}
             </span>
           </div>
+          {row.listenerCount > 0 && (
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Listeners ({row.listenerCount + 1})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge theme="white" size="sm">
+                        {row.listeners}
+                      </Badge>
+                      {Array.from({ length: row.listenerCount }, (_, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          listener-{i + 2}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{row.listenerCount}
+                </span>
+              </Popover>
+            </span>
+          )}
         </div>
       ),
     },

@@ -153,9 +153,16 @@ export function ChangeServerCertificateDrawer({
       label: 'Listeners',
       sortable: true,
       render: (_value, row) =>
-        row.listenersCount && row.listenersCount > 0
-          ? `${row.listeners} (+${row.listenersCount})`
-          : row.listeners,
+        row.listenersCount && row.listenersCount > 0 ? (
+          <span className="flex w-full items-center gap-1">
+            {row.listeners}
+            <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+              +{row.listenersCount}
+            </span>
+          </span>
+        ) : (
+          row.listeners
+        ),
     },
     { key: 'expiresAt', label: 'Expires at', sortable: true },
   ];

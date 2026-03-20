@@ -19,6 +19,7 @@ import {
   PageShell,
   PageHeader,
   fixedColumns,
+  Popover,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -361,14 +362,43 @@ export default function FirewallsPage() {
       sortable: true,
       render: (_, row) =>
         row.associatedPorts.length > 0 ? (
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-[var(--color-text-default)]">
-              {row.associatedPorts[0].name}
-              {row.associatedPorts.length > 1 && ` (+${row.associatedPorts.length - 1})`}
-            </span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID: {row.associatedPorts[0].id}
-            </span>
+          <div className="flex items-center gap-1 min-w-0">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-[var(--color-text-default)]">
+                {row.associatedPorts[0].name}
+              </span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                ID: {row.associatedPorts[0].id}
+              </span>
+            </div>
+            {row.associatedPorts.length > 1 && (
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Ports ({row.associatedPorts.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {row.associatedPorts.map((p, i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {p.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{row.associatedPorts.length - 1}
+                  </span>
+                </Popover>
+              </span>
+            )}
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -439,11 +469,18 @@ export default function FirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="text-[var(--color-text-default)]">
-            {row.firstRule} {row.rulesCount > 1 ? `(+${row.rulesCount - 1})` : ''}
-          </span>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.firstRuleId}</span>
+        <div className="flex items-center gap-1 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-[var(--color-text-default)]">{row.firstRule}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              ID:{row.firstRuleId}
+            </span>
+          </div>
+          {row.rulesCount > 1 && (
+            <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5 ml-auto">
+              +{row.rulesCount - 1}
+            </span>
+          )}
         </div>
       ),
     },
@@ -453,13 +490,18 @@ export default function FirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="text-[var(--color-text-default)]">
-            {row.firstFirewall} {row.firewallsCount > 1 ? `(+${row.firewallsCount - 1})` : ''}
-          </span>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID:{row.firstFirewallId}
-          </span>
+        <div className="flex items-center gap-1 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-[var(--color-text-default)]">{row.firstFirewall}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              ID:{row.firstFirewallId}
+            </span>
+          </div>
+          {row.firewallsCount > 1 && (
+            <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5 ml-auto">
+              +{row.firewallsCount - 1}
+            </span>
+          )}
         </div>
       ),
     },

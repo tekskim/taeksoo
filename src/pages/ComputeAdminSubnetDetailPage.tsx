@@ -21,6 +21,7 @@ import {
   Badge,
   Tooltip,
   fixedColumns,
+  Popover,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -280,9 +281,36 @@ export default function SubnetDetailPage() {
       label: 'SG',
       flex: 1,
       render: (_, row) => (
-        <span className="text-[var(--color-text-default)]">
+        <span className="flex items-center gap-1 text-[var(--color-text-default)]">
           {row.securityGroups[0]}
-          {row.securityGroups.length > 1 && ` (+${row.securityGroups.length - 1})`}
+          {row.securityGroups.length > 1 && (
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Security Groups ({row.securityGroups.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {row.securityGroups.map((sg, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {sg}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{row.securityGroups.length - 1}
+                </span>
+              </Popover>
+            </span>
+          )}
         </span>
       ),
     },

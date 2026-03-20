@@ -19,6 +19,8 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
+  Popover,
+  Badge,
   fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -461,15 +463,42 @@ export function ComputeAdminLoadBalancersPage() {
       label: 'Listeners',
       flex: 1,
       render: (_, row) => (
-        <div className="flex items-center gap-[5px]">
+        <div className="flex items-center gap-1">
           <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {row.listeners} {row.listenerCount > 0 && `(+${row.listenerCount})`}
-            </span>
+            <span className="text-body-md text-[var(--color-text-default)]">{row.listeners}</span>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.listenerId}
             </span>
           </div>
+          {row.listenerCount > 0 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    All Listeners ({row.listenerCount + 1})
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    <Badge theme="white" size="sm">
+                      {row.listeners}
+                    </Badge>
+                    {Array.from({ length: row.listenerCount }, (_, i) => (
+                      <Badge key={i} theme="white" size="sm">
+                        listener-{i + 2}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                +{row.listenerCount}
+              </span>
+            </Popover>
+          )}
         </div>
       ),
     },

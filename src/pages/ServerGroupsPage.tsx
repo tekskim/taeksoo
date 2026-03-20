@@ -296,30 +296,32 @@ export function ServerGroupsPage() {
               </span>
             </div>
             {extra > 0 && (
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All Instances ({row.instances.length})
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Instances ({row.instances.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {row.instances.map((inst, i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {inst.name}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-1">
-                      {row.instances.map((inst, i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {inst.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{extra}
-                </span>
-              </Popover>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{extra}
+                  </span>
+                </Popover>
+              </span>
             )}
           </div>
         );
