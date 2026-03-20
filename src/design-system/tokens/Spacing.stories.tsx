@@ -47,7 +47,9 @@ const SpacingSample = ({ name, value }: { name: string; value: string }) => (
 export const SpacingScale: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-2)]">
-      <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)]">Spacing Scale</h3>
+      <h3 className="text-label-md font-semibold uppercase mb-[var(--primitive-spacing-4)]">
+        Spacing Scale
+      </h3>
       <SpacingSample name="--spacing-1" value="4px" />
       <SpacingSample name="--spacing-2" value="8px" />
       <SpacingSample name="--spacing-3" value="12px" />
@@ -65,7 +67,7 @@ export const SpacingScale: Story = {
 export const BorderRadius: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
-      <h3 className="text-heading-h7">Border Radius</h3>
+      <h3 className="text-label-md font-semibold uppercase">Border Radius</h3>
       <div className="flex flex-wrap gap-[var(--primitive-spacing-4)]">
         {[
           { name: '--radius-sm', value: '4px' },
@@ -91,7 +93,7 @@ export const BorderRadius: Story = {
 export const Shadows: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
-      <h3 className="text-heading-h7">Shadows</h3>
+      <h3 className="text-label-md font-semibold uppercase">Shadows</h3>
       <div className="flex flex-wrap gap-[var(--primitive-spacing-8)] p-[var(--primitive-spacing-8)]">
         {[
           { name: 'shadow-sm', class: 'shadow-sm' },
@@ -115,7 +117,7 @@ export const Shadows: Story = {
 export const ComponentSpacing: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-6)]">
-      <h3 className="text-heading-h7">Common Component Spacing</h3>
+      <h3 className="text-label-md font-semibold uppercase">Common Component Spacing</h3>
 
       <div>
         <h4 className="text-body-xs text-label-md text-[var(--color-text-muted)] mb-[var(--primitive-spacing-2)]">

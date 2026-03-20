@@ -65,7 +65,9 @@ export function WizardPage() {
           <DocSection title="Card 상세 정책">
             <VStack gap={4}>
               <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)]">구성 요소</h5>
+                <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
+                  구성 요소
+                </h5>
                 <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                   <li>
                     <strong>Header 영역</strong>: 단계명, 상태 표시, Edit 버튼
@@ -79,7 +81,9 @@ export function WizardPage() {
                 </ul>
               </VStack>
               <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)]">동작 정책</h5>
+                <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
+                  동작 정책
+                </h5>
                 <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                   <li>순차적 진행</li>
                   <li>상태 시각화</li>
@@ -88,7 +92,7 @@ export function WizardPage() {
                 </ul>
               </VStack>
               <VStack gap={2}>
-                <h5 className="text-heading-h7 text-[var(--color-text-muted)]">
+                <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
                   유형 정책 (6가지 카드 상태)
                 </h5>
                 <div className="overflow-x-auto">
@@ -151,19 +155,25 @@ export function WizardPage() {
 
           <DocSection title="Floating Card 상세 정책">
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">Summary</h5>
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
+                Summary
+              </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>전체 단계 리스트, 각 단계별 상태 아이콘</li>
               </ul>
             </VStack>
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">쿼터 정보(선택)</h5>
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
+                쿼터 정보(선택)
+              </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>잔여 수량 표시, 게이지 바 표기 규칙</li>
               </ul>
             </VStack>
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">액션 영역</h5>
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
+                액션 영역
+              </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>
                   <strong>Cancel 버튼</strong>: 확인 모달
@@ -177,7 +187,9 @@ export function WizardPage() {
 
           <DocSection title="Behavior &amp; Flow">
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">기본 정책</h5>
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
+                기본 정책
+              </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>순차적 진행</li>
                 <li>입력값 보존</li>
@@ -186,7 +198,7 @@ export function WizardPage() {
               </ul>
             </VStack>
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
                 Next/Skip 버튼 동작 규칙
               </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -199,7 +211,7 @@ export function WizardPage() {
               </ul>
             </VStack>
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
                 이전 단계 수정(Edit) 시 이동 규칙
               </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -207,7 +219,7 @@ export function WizardPage() {
               </ul>
             </VStack>
             <VStack gap={2}>
-              <h5 className="text-heading-h7 text-[var(--color-text-muted)]">
+              <h5 className="text-label-md font-semibold uppercase text-[var(--color-text-muted)]">
                 종속성 변경으로 인한 단계 리셋
               </h5>
               <ul className="list-disc pl-5 text-body-sm text-[var(--color-text-muted)] space-y-1">

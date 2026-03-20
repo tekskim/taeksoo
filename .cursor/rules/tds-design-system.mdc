@@ -190,7 +190,6 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 .text-heading-h4  /* 18px/28px - 1.125rem/1.75rem */
 .text-heading-h5  /* 16px/24px - 1rem/1.5rem - 페이지 타이틀, SectionCard 타이틀 */
 .text-heading-h6  /* 14px/20px - 0.875rem/1.25rem - Drawer 타이틀 */
-.text-heading-h7  /* 12px/18px - 0.75rem/1.125rem - Card 타이틀, uppercase, muted color */
 
 /* Body - regular (400) */
 .text-body-lg     /* 14px/20px - 0.875rem/1.25rem */

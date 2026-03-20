@@ -556,7 +556,7 @@ export const pageLastUpdated: Record<string, string> = {
   // Foundation
   '/design/foundation/tokens': '2026-02-25 14:00:00',
   '/design/foundation/primitive-colors': '2026-02-25 14:00:00',
-  '/design/foundation/semantic-colors': '2026-03-18 18:00:00',
+  '/design/foundation/semantic-colors': '2026-03-20 16:00:00',
   '/design/foundation/typography': '2026-02-25 14:00:00',
   '/design/foundation/spacing': '2026-02-25 14:00:00',
   '/design/foundation/borders': '2026-02-25 14:00:00',
@@ -567,7 +567,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/policies/ux-writing': '2026-03-05 13:00:00',
   '/design/policies/accessibility': '2026-02-25 14:00:00',
   '/design/policies/error-alert': '2026-03-09 10:30:00',
-  '/design/policies/system-error': '2026-03-18 11:00:00',
+  '/design/policies/system-error': '2026-03-20 16:00:00',
   // Form Controls
   '/design/components/button': '2026-03-18 11:00:00',
   '/design/components/input': '2026-03-01 10:30:00',
@@ -587,7 +587,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/copy-button': '2026-03-13 10:00:00',
   '/design/components/selection-indicator': '2026-03-13 10:00:00',
   // Data Display
-  '/design/components/table': '2026-03-18 11:00:00',
+  '/design/components/table': '2026-03-20 16:00:00',
   '/design/components/badge': '2026-03-18 18:00:00',
   '/design/components/card': '2026-03-18 18:00:00',
   '/design/components/chip': '2026-03-09',

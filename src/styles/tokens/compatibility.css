@@ -11,7 +11,7 @@
   --color-action-primary-hover: var(--semantic-color-primary-hover);
   --color-action-primary-focus: var(--semantic-color-primary-focus);
   --color-surface-default: var(--semantic-color-surface);
-  --color-surface-subtle: var(--semantic-color-surface-muted);
+  --color-surface-subtle: var(--semantic-color-surface-subtle);
   --color-surface-muted: var(--semantic-color-surface-hover);
   --color-surface-inverse: var(--semantic-color-surface-tertiary);
   --color-border-default: var(--semantic-color-border);
