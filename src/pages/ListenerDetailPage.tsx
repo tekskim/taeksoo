@@ -34,9 +34,9 @@ import {
   IconBell,
   IconCirclePlus,
   IconDotsCircleHorizontal,
-  IconCertificate,
   IconSettings,
   IconChevronDown,
+  IconReplace,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -168,7 +168,7 @@ const defaultListenerDetail: ListenerDetail = {
   name: 'Unknown',
   status: 'active',
   adminState: 'Up',
-  createdAt: '-',
+  createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   protocol: 'HTTP',
   port: 80,
@@ -536,7 +536,6 @@ export default function ListenerDetailPage() {
           {
             id: 'edit',
             label: 'Edit',
-            icon: <IconEdit size={14} stroke={1.5} />,
             onClick: () => console.log('Edit policy', row.id),
           },
           {
@@ -632,8 +631,7 @@ export default function ListenerDetailPage() {
               return [
                 {
                   id: 'change-server-cert',
-                  label: 'Change server Certificate',
-                  icon: <IconCertificate size={14} stroke={1.5} />,
+                  label: 'Change server certificate',
                   onClick: () => console.log('Change server certificate', row.id),
                 },
               ];
@@ -642,7 +640,6 @@ export default function ListenerDetailPage() {
                 {
                   id: 'change-ca-cert',
                   label: 'Change CA certificate',
-                  icon: <IconCertificate size={14} stroke={1.5} />,
                   onClick: () => console.log('Change CA certificate', row.id),
                 },
               ];
@@ -841,10 +838,10 @@ export default function ListenerDetailPage() {
                     actions={
                       <>
                         <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                          Edit
+                          Edit default pool
                         </Button>
                         <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                          Delete
+                          Delete default pool
                         </Button>
                       </>
                     }
@@ -862,21 +859,7 @@ export default function ListenerDetailPage() {
                         '-'
                       )}
                     </SectionCard.DataRow>
-                    <SectionCard.DataRow
-                      label="Status"
-                      value={
-                        <StatusIndicator
-                          status={poolStatusMap[mockPools[0]?.status] || 'down'}
-                          label={
-                            mockPools[0]?.status === 'active'
-                              ? 'Active'
-                              : mockPools[0]?.status === 'down'
-                                ? 'Down'
-                                : 'Error'
-                          }
-                        />
-                      }
-                    />
+                    <SectionCard.DataRow label="Status" value="Available" />
                     <SectionCard.DataRow label="Description" value="-" />
                     <SectionCard.DataRow
                       label="Admin state"
@@ -952,14 +935,14 @@ export default function ListenerDetailPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Certificates</h3>
                   <div className="flex items-center gap-2">
-                    <Button variant="secondary" size="sm">
-                      Change server Certificate
+                    <Button variant="secondary" size="sm" leftIcon={<IconReplace size={12} />}>
+                      Change server certificate
                     </Button>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconReplace size={12} />}>
                       Change CA certificate
                     </Button>
                     <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
-                      Manage SNI Certificates
+                      Manage SNI certificates
                     </Button>
                   </div>
                 </div>
