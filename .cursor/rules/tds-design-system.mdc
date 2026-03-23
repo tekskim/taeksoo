@@ -2411,6 +2411,6 @@ const canCreate = isV2 || REQUIRED_SECTIONS.every(
 
 ## 버전
 
-- **Current Version**: 1.1.1
-- **Last Updated**: 2026-02-25
+- **Current Version**: 1.2.0
+- **Last Updated**: 2026-03-23
 - **Changelog**: `/CHANGELOG.md`
