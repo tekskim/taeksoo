@@ -45,6 +45,7 @@ import {
   IconStack2,
   IconSettings,
   IconPackages,
+  IconHistory,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -524,7 +525,17 @@ const testItems: NavItem[] = [
   },
 ];
 
+const changelogItems: NavItem[] = [
+  {
+    id: 'changelog',
+    label: 'Changelog',
+    icon: IconHistory,
+    path: '/design/changelog',
+  },
+];
+
 export const navGroups: NavGroup[] = [
+  { title: 'Changelog', items: changelogItems },
   { title: 'Foundation', items: foundationItems },
   { title: 'Policies', items: policyItems },
   { title: 'Form Controls', items: formControlItems },
@@ -553,6 +564,8 @@ export function isUpdatedToday(path: string): boolean {
 }
 
 export const pageLastUpdated: Record<string, string> = {
+  // Changelog
+  '/design/changelog': '2026-03-23 12:00:00',
   // Foundation
   '/design/foundation/tokens': '2026-02-25 14:00:00',
   '/design/foundation/primitive-colors': '2026-02-25 14:00:00',
