@@ -83,6 +83,11 @@ import { IAMMFAPoliciesPage } from './pages/IAMMFAPoliciesPage';
 import { IAMSessionPoliciesPage } from './pages/IAMSessionPoliciesPage';
 import { IAMTokenPoliciesPage } from './pages/IAMTokenPoliciesPage';
 import { IAMLoginPoliciesPage } from './pages/IAMLoginPoliciesPage';
+import { IAMCreateUserPage } from './pages/IAMCreateUserPage';
+import { IAMCreateUserGroupPage } from './pages/IAMCreateUserGroupPage';
+import { IAMCreateRolePage } from './pages/IAMCreateRolePage';
+import { IAMCreatePolicyPage } from './pages/IAMCreatePolicyPage';
+import { IAMCreateSysAdminPage } from './pages/IAMCreateSysAdminPage';
 import { StorageHomePage } from './pages/StorageHomePage';
 import { StorageConsolePage } from './pages/StorageConsolePage';
 import { StorageDetailPage } from './pages/StorageDetailPage';
@@ -96,16 +101,21 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route element={<IAMLayout />}>
           <Route path="/iam" element={<IAMHomePage />} />
           <Route path="/iam/users" element={<IAMUsersPage />} />
+          <Route path="/iam/users/create" element={<IAMCreateUserPage />} />
           <Route path="/iam/users/:username" element={<IAMUserDetailPage />} />
           <Route path="/iam/user-groups" element={<IAMUserGroupsPage />} />
+          <Route path="/iam/user-groups/create" element={<IAMCreateUserGroupPage />} />
           <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
           <Route path="/iam/roles" element={<IAMRolesPage />} />
+          <Route path="/iam/roles/create" element={<IAMCreateRolePage />} />
           <Route path="/iam/roles/:roleName" element={<IAMRoleDetailPage />} />
           <Route path="/iam/policies" element={<IAMPoliciesPage />} />
+          <Route path="/iam/policies/create" element={<IAMCreatePolicyPage />} />
           <Route path="/iam/policies/:policyId" element={<IAMPolicyDetailPage />} />
           <Route path="/iam/active-sessions" element={<IAMActiveSessionsPage />} />
           <Route path="/iam/domains" element={<IAMDomainsPage />} />
           <Route path="/iam/system-administrators" element={<IAMSystemAdministratorsPage />} />
+          <Route path="/iam/system-administrators/create" element={<IAMCreateSysAdminPage />} />
           <Route
             path="/iam/system-administrators/:username"
             element={<IAMSystemAdminDetailPage />}

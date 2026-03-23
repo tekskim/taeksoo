@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -31,16 +31,106 @@ interface User {
 }
 
 const mockUsers: User[] = [
-  { id: 'user-001', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: 'Sep 12, 2025', mfa: 'OTP / Email', createdAt: 'Sep 12, 2025 09:23:41' },
-  { id: 'user-002', username: 'alex.johnson', status: 'active', userGroups: 'dev-team', roles: 'viewer', lastSignIn: 'Sep 11, 2025', mfa: 'OTP', createdAt: 'Aug 15, 2025 14:07:22' },
-  { id: 'user-003', username: 'sara.connor', status: 'active', userGroups: 'ops-team (+1)', roles: 'network-admin (+1)', lastSignIn: 'Sep 10, 2025', mfa: 'Email', createdAt: 'Jul 20, 2025 11:45:33' },
-  { id: 'user-004', username: 'john.doe', status: 'disabled', userGroups: 'guest', roles: 'viewer', lastSignIn: 'Aug 1, 2025', mfa: '-', createdAt: 'Jun 10, 2025 16:52:08' },
-  { id: 'user-005', username: 'jane.smith', status: 'active', userGroups: 'admin-group', roles: 'super-admin', lastSignIn: 'Sep 12, 2025', mfa: 'OTP / Email', createdAt: 'Jan 5, 2025 08:30:15' },
-  { id: 'user-006', username: 'mike.wilson', status: 'locked', userGroups: 'dev-team', roles: 'developer', lastSignIn: 'Sep 5, 2025', mfa: 'OTP', createdAt: 'Apr 18, 2025 13:19:44' },
-  { id: 'user-007', username: 'emily.chen', status: 'active', userGroups: 'qa-team (+2)', roles: 'qa-lead (+2)', lastSignIn: 'Sep 11, 2025', mfa: 'Email', createdAt: 'Mar 22, 2025 10:41:27' },
-  { id: 'user-008', username: 'david.lee', status: 'active', userGroups: 'ops-team', roles: 'storage-admin', lastSignIn: 'Sep 12, 2025', mfa: 'OTP / Email', createdAt: 'Feb 14, 2025 17:03:56' },
-  { id: 'user-009', username: 'lisa.park', status: 'disabled', userGroups: 'external', roles: 'viewer', lastSignIn: 'Jul 15, 2025', mfa: '-', createdAt: 'May 30, 2025 12:28:19' },
-  { id: 'user-010', username: 'chris.taylor', status: 'active', userGroups: 'dev-admin-group', roles: 'iam-admin (+1)', lastSignIn: 'Sep 12, 2025', mfa: 'OTP', createdAt: 'Jan 28, 2025 15:55:02' },
+  {
+    id: 'user-001',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP / Email',
+    createdAt: 'Sep 12, 2025 09:23:41',
+  },
+  {
+    id: 'user-002',
+    username: 'alex.johnson',
+    status: 'active',
+    userGroups: 'dev-team',
+    roles: 'viewer',
+    lastSignIn: 'Sep 11, 2025',
+    mfa: 'OTP',
+    createdAt: 'Aug 15, 2025 14:07:22',
+  },
+  {
+    id: 'user-003',
+    username: 'sara.connor',
+    status: 'active',
+    userGroups: 'ops-team (+1)',
+    roles: 'network-admin (+1)',
+    lastSignIn: 'Sep 10, 2025',
+    mfa: 'Email',
+    createdAt: 'Jul 20, 2025 11:45:33',
+  },
+  {
+    id: 'user-004',
+    username: 'john.doe',
+    status: 'disabled',
+    userGroups: 'guest',
+    roles: 'viewer',
+    lastSignIn: 'Aug 1, 2025',
+    mfa: '-',
+    createdAt: 'Jun 10, 2025 16:52:08',
+  },
+  {
+    id: 'user-005',
+    username: 'jane.smith',
+    status: 'active',
+    userGroups: 'admin-group',
+    roles: 'super-admin',
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP / Email',
+    createdAt: 'Jan 5, 2025 08:30:15',
+  },
+  {
+    id: 'user-006',
+    username: 'mike.wilson',
+    status: 'locked',
+    userGroups: 'dev-team',
+    roles: 'developer',
+    lastSignIn: 'Sep 5, 2025',
+    mfa: 'OTP',
+    createdAt: 'Apr 18, 2025 13:19:44',
+  },
+  {
+    id: 'user-007',
+    username: 'emily.chen',
+    status: 'active',
+    userGroups: 'qa-team (+2)',
+    roles: 'qa-lead (+2)',
+    lastSignIn: 'Sep 11, 2025',
+    mfa: 'Email',
+    createdAt: 'Mar 22, 2025 10:41:27',
+  },
+  {
+    id: 'user-008',
+    username: 'david.lee',
+    status: 'active',
+    userGroups: 'ops-team',
+    roles: 'storage-admin',
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP / Email',
+    createdAt: 'Feb 14, 2025 17:03:56',
+  },
+  {
+    id: 'user-009',
+    username: 'lisa.park',
+    status: 'disabled',
+    userGroups: 'external',
+    roles: 'viewer',
+    lastSignIn: 'Jul 15, 2025',
+    mfa: '-',
+    createdAt: 'May 30, 2025 12:28:19',
+  },
+  {
+    id: 'user-010',
+    username: 'chris.taylor',
+    status: 'active',
+    userGroups: 'dev-admin-group',
+    roles: 'iam-admin (+1)',
+    lastSignIn: 'Sep 12, 2025',
+    mfa: 'OTP',
+    createdAt: 'Jan 28, 2025 15:55:02',
+  },
 ];
 
 const statusMap: Record<UserStatus, StatusVariant> = {
@@ -51,16 +141,22 @@ const statusMap: Record<UserStatus, StatusVariant> = {
 
 const filterKeys: FilterKey[] = [
   { key: 'username', label: 'Username', type: 'input', placeholder: 'Enter username...' },
-  { key: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'disabled', label: 'Disabled' },
-    { value: 'locked', label: 'Locked' },
-  ]},
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'disabled', label: 'Disabled' },
+      { value: 'locked', label: 'Locked' },
+    ],
+  },
   { key: 'userGroups', label: 'User groups', type: 'input', placeholder: 'Enter group name...' },
   { key: 'roles', label: 'Roles', type: 'input', placeholder: 'Enter role name...' },
 ];
 
 export function IAMUsersPage() {
+  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -86,7 +182,7 @@ export function IAMUsersPage() {
   const itemsPerPage = 10;
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const hasSelection = selectedRows.length > 0;
@@ -122,7 +218,7 @@ export function IAMUsersPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between h-8">
         <Title title="Users" />
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={() => navigate('/iam/users/create')}>
           Create user
         </Button>
       </div>
@@ -177,7 +273,10 @@ export function IAMUsersPage() {
           <button
             type="button"
             className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4"
-            onClick={() => { setAppliedFilters([]); setCurrentPage(1); }}
+            onClick={() => {
+              setAppliedFilters([]);
+              setCurrentPage(1);
+            }}
           >
             Clear Filters
           </button>
@@ -214,19 +313,32 @@ export function IAMUsersPage() {
               <StatusIndicator variant={statusMap[user.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={user} column={columns[1]}>
-              <Link to={`/iam/users/${user.username}`} className="text-primary font-medium hover:underline">
+              <Link
+                to={`/iam/users/${user.username}`}
+                className="text-primary font-medium hover:underline"
+              >
                 {user.username}
               </Link>
             </Table.Td>
-            <Table.Td rowData={user} column={columns[2]}>{user.userGroups}</Table.Td>
-            <Table.Td rowData={user} column={columns[3]}>{user.roles}</Table.Td>
-            <Table.Td rowData={user} column={columns[4]}>{user.lastSignIn}</Table.Td>
-            <Table.Td rowData={user} column={columns[5]}>{user.mfa}</Table.Td>
+            <Table.Td rowData={user} column={columns[2]}>
+              {user.userGroups}
+            </Table.Td>
+            <Table.Td rowData={user} column={columns[3]}>
+              {user.roles}
+            </Table.Td>
+            <Table.Td rowData={user} column={columns[4]}>
+              {user.lastSignIn}
+            </Table.Td>
+            <Table.Td rowData={user} column={columns[5]}>
+              {user.mfa}
+            </Table.Td>
             <Table.Td rowData={user} column={columns[6]}>
               {user.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
             <Table.Td rowData={user} column={columns[7]} preventClickPropagation>
-              <ContextMenu.Root direction="bottom-end" gap={4}
+              <ContextMenu.Root
+                direction="bottom-end"
+                gap={4}
                 trigger={({ toggle }) => (
                   <button
                     type="button"
@@ -234,21 +346,48 @@ export function IAMUsersPage() {
                     className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M5.33333 8V8.00667M8 8V8.00667M10.6667 8V8.00667M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8Z" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M5.33333 8V8.00667M8 8V8.00667M10.6667 8V8.00667M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8Z"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => { setManageGroupsUser(user.username); setManageGroupsOpen(true); }} disabled={user.status === 'disabled'}>
+                <ContextMenu.Item
+                  action={() => {
+                    setManageGroupsUser(user.username);
+                    setManageGroupsOpen(true);
+                  }}
+                  disabled={user.status === 'disabled'}
+                >
                   Manage user groups
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => { setManageRolesUser(user.username); setManageRolesOpen(true); }} disabled={user.status === 'disabled'}>
+                <ContextMenu.Item
+                  action={() => {
+                    setManageRolesUser(user.username);
+                    setManageRolesOpen(true);
+                  }}
+                  disabled={user.status === 'disabled'}
+                >
                   Manage roles
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Reset password', user.id)} disabled={user.status === 'disabled'}>
+                <ContextMenu.Item
+                  action={() => console.log('Reset password', user.id)}
+                  disabled={user.status === 'disabled'}
+                >
                   Reset password
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => { setEditDrawerUser(user.username); setEditDrawerOpen(true); }} disabled={user.status === 'disabled'}>
+                <ContextMenu.Item
+                  action={() => {
+                    setEditDrawerUser(user.username);
+                    setEditDrawerOpen(true);
+                  }}
+                  disabled={user.status === 'disabled'}
+                >
                   Edit
                 </ContextMenu.Item>
                 <ContextMenu.Item
@@ -264,9 +403,21 @@ export function IAMUsersPage() {
         ))}
       </SelectableTable>
 
-      <EditUserDrawer isOpen={editDrawerOpen} onClose={() => setEditDrawerOpen(false)} userName={editDrawerUser} />
-      <ManageUserGroupsDrawer isOpen={manageGroupsOpen} onClose={() => setManageGroupsOpen(false)} userName={manageGroupsUser} />
-      <ManageRolesDrawer isOpen={manageRolesOpen} onClose={() => setManageRolesOpen(false)} userName={manageRolesUser} />
+      <EditUserDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        userName={editDrawerUser}
+      />
+      <ManageUserGroupsDrawer
+        isOpen={manageGroupsOpen}
+        onClose={() => setManageGroupsOpen(false)}
+        userName={manageGroupsUser}
+      />
+      <ManageRolesDrawer
+        isOpen={manageRolesOpen}
+        onClose={() => setManageRolesOpen(false)}
+        userName={manageRolesUser}
+      />
     </div>
   );
 }
