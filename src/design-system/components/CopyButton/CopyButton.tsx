@@ -4,6 +4,7 @@ import {
   useCallback,
   type ButtonHTMLAttributes,
   type ReactNode,
+  type MouseEvent,
 } from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
@@ -103,23 +104,27 @@ export const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
 
     const sizeConfig = sizeStyles[size];
 
-    const handleCopy = useCallback(async () => {
-      if (disabled) return;
+    const handleCopy = useCallback(
+      async (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        if (disabled) return;
 
-      try {
-        await navigator.clipboard.writeText(value);
-        setCopied(true);
-        onCopy?.(value);
+        try {
+          await navigator.clipboard.writeText(value);
+          setCopied(true);
+          onCopy?.(value);
 
-        setTimeout(() => {
-          setCopied(false);
-        }, successDuration);
-      } catch (error) {
-        const copyError = error instanceof Error ? error : new Error('Failed to copy');
-        onError?.(copyError);
-        console.error('Failed to copy:', copyError);
-      }
-    }, [value, disabled, onCopy, onError, successDuration]);
+          setTimeout(() => {
+            setCopied(false);
+          }, successDuration);
+        } catch (error) {
+          const copyError = error instanceof Error ? error : new Error('Failed to copy');
+          onError?.(copyError);
+          console.error('Failed to copy:', copyError);
+        }
+      },
+      [value, disabled, onCopy, onError, successDuration]
+    );
 
     const defaultCopyIcon = <IconCopy size={sizeConfig.icon} stroke={1.5} />;
     const defaultSuccessIcon = <IconCheck size={sizeConfig.icon} stroke={2} />;

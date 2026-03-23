@@ -408,6 +408,7 @@ import { DesignAuditPage } from '@/pages/design/DesignAuditPage';
 import { DesignTodoPage } from '@/pages/design/DesignTodoPage';
 import { SharedComponentsPage } from '@/pages/design/SharedComponentsPage';
 import { ChangelogPage } from '@/pages/design/ChangelogPage';
+import { ProjectSelectorPage } from '@/pages/design/components/ProjectSelectorPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
@@ -1079,6 +1080,7 @@ function AppRoutes() {
         <Route path="components/disclosure" element={<DisclosurePage />} />
         <Route path="components/window-control" element={<WindowControlPage />} />
         <Route path="components/scrollbar" element={<ScrollbarPage />} />
+        <Route path="components/project-selector" element={<ProjectSelectorPage />} />
         <Route path="patterns/detail-header" element={<DetailHeaderPage />} />
         <Route path="patterns/editor" element={<EditorPage />} />
         <Route path="patterns/section-card" element={<SectionCardPage />} />

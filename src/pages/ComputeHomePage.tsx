@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   TabBar,
   TopBar,
@@ -9,12 +8,13 @@ import {
   ProgressBar,
   Table,
   STATUS_THRESHOLDS,
+  CopyButton,
   type TableColumn,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconCopy, IconCheck, IconChevronRight, IconBell } from '@tabler/icons-react';
+import { IconChevronRight, IconBell } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -189,7 +189,6 @@ export function ComputeHomePage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -199,12 +198,6 @@ export function ComputeHomePage() {
   }));
 
   const projectId = '7284d9174e81431e93060a9bbcf2cdfd';
-
-  const handleCopyId = () => {
-    navigator.clipboard.writeText(projectId);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const recentActivityColumns: TableColumn<RecentActivity>[] = [
     {
@@ -336,17 +329,7 @@ export function ComputeHomePage() {
               <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
               <div className="flex items-center gap-1">
                 <span className="text-body-md text-[var(--color-text-default)]">{projectId}</span>
-                <button
-                  onClick={handleCopyId}
-                  className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-                  title={copied ? 'Copied!' : 'Copy ID'}
-                >
-                  {copied ? (
-                    <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                  ) : (
-                    <IconCopy size={12} className="text-[var(--color-text-default)]" />
-                  )}
-                </button>
+                <CopyButton value={projectId} size="sm" iconOnly tooltip="Copy ID" />
               </div>
             </div>
             <div>

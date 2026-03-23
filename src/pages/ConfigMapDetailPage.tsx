@@ -243,12 +243,6 @@ export function ConfigMapDetailPage() {
   const dataEntries = Object.entries(configMapData.data);
   const binaryDataEntries = Object.entries(configMapData.binaryData);
 
-  // Copy to clipboard function
-  const copyToClipboard = (value: string) => {
-    navigator.clipboard.writeText(value);
-    // Could add toast notification here
-  };
-
   return (
     <PageShell
       sidebar={

@@ -14,6 +14,7 @@ import {
   TabPanel,
   ContextMenu,
   PageShell,
+  CopyButton,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
@@ -24,7 +25,6 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconChevronDown,
 } from '@tabler/icons-react';
@@ -292,9 +292,7 @@ export function ClusterDetailPage() {
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={clusterData.id} size="sm" iconOnly tooltip="Copy cluster ID" />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>

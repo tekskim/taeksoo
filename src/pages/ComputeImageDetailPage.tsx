@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   SectionCard,
   ContextMenu,
   PageShell,
+  CopyButton,
   type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -25,8 +26,6 @@ import {
   IconTrash,
   IconEdit,
   IconBell,
-  IconCopy,
-  IconCheck,
   IconChevronDown,
 } from '@tabler/icons-react';
 
@@ -360,41 +359,6 @@ const defaultImageDetail: ImageDetail = {
 };
 
 /* ----------------------------------------
-   Copyable Value Component
-   ---------------------------------------- */
-
-interface CopyableValueProps {
-  value: string;
-}
-
-function CopyableValue({ value }: CopyableValueProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      <button
-        onClick={handleCopy}
-        className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-        aria-label="Copy to clipboard"
-      >
-        {copied ? (
-          <IconCheck size={16} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={12} className="text-[var(--color-text-default)]" />
-        )}
-      </button>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Compute Image Detail Page
    ---------------------------------------- */
 
@@ -565,10 +529,20 @@ export function ComputeImageDetailPage() {
                       value={image.protected ? 'Enabled' : 'Disabled'}
                     />
                     <SectionCard.DataRow label="Filename">
-                      <CopyableValue value={image.filename} />
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {image.filename}
+                        </span>
+                        <CopyButton value={image.filename} size="sm" iconOnly />
+                      </div>
                     </SectionCard.DataRow>
                     <SectionCard.DataRow label="Checksum">
-                      <CopyableValue value={image.checksum} />
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {image.checksum}
+                        </span>
+                        <CopyButton value={image.checksum} size="sm" iconOnly />
+                      </div>
                     </SectionCard.DataRow>
                   </SectionCard.Content>
                 </SectionCard>

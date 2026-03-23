@@ -34,8 +34,6 @@ import {
   IconDotsCircleHorizontal,
   IconLock,
   IconLockOpen,
-  IconCopy,
-  IconCheck,
   IconTerminal2,
 } from '@tabler/icons-react';
 
@@ -211,34 +209,6 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     createdAt: 'Sep 30, 2025',
   },
 ];
-
-/* ----------------------------------------
-   Copy Button Component
-   ---------------------------------------- */
-
-function CopyButton({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <button
-      onClick={handleCopy}
-      className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-      aria-label="Copy to clipboard"
-    >
-      {copied ? (
-        <IconCheck size={16} className="text-[var(--color-state-success)]" />
-      ) : (
-        <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
-      )}
-    </button>
-  );
-}
 
 /* ----------------------------------------
    Server group Detail Page

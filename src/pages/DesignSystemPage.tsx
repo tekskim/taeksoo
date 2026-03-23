@@ -96,6 +96,7 @@ import {
   IconUbuntu,
   IconRocky,
   IconGrid,
+  CopyButton,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -2746,19 +2747,6 @@ const sampleKeyPairData: KeyPairData[] = [
 
 function TableDemo() {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  // Copy handler with visual feedback
-  const handleCopy = async (id: string, text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
   // Basic columns for main table demos
   const basicColumns = [
     {
@@ -2935,20 +2923,7 @@ function TableDemo() {
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
             {row.fingerprint}
           </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopy(row.id, row.fingerprint);
-            }}
-            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors flex-shrink-0 cursor-pointer"
-            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
-          >
-            {copiedId === row.id ? (
-              <IconCheck size={12} className="text-[var(--color-state-success)]" />
-            ) : (
-              <IconCopy size={12} className="text-[var(--color-text-default)]" />
-            )}
-          </button>
+          <CopyButton value={row.fingerprint} size="sm" iconOnly tooltip="Copy fingerprint" />
         </div>
       ),
     },
