@@ -20,7 +20,7 @@ export function DetailHeader({ children, className, ...props }: DetailHeaderProp
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
         'rounded-lg',
-        'px-4 pt-3 pb-4',
+        'px-4 pt-3 pb-3',
         'w-full',
         className
       )}
