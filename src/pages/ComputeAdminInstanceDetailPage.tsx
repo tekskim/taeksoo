@@ -19,11 +19,13 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
-  type ContextMenuItem,
   fixedColumns,
   CopyButton,
+  MonitoringToolbar,
+  type TimeRangeValue,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
+import { ChartWithFullScreen, chartColors } from '@/pages/design-system-sections/ChartComponents';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -35,7 +37,6 @@ import {
   IconChevronUp,
   IconChevronRight,
   IconBell,
-  IconDotsCircleHorizontal,
   IconDownload,
   IconSearch,
   IconSelector,
@@ -855,6 +856,35 @@ const mockActionLogs: ActionLog[] = [
 ];
 
 /* ----------------------------------------
+   Monitoring Mock Data
+   ---------------------------------------- */
+
+const monitoringTimeRangeOptions = [
+  { label: '1h', value: '1h' as TimeRangeValue },
+  { label: '1d', value: '1d' as TimeRangeValue },
+  { label: '1w', value: '1w' as TimeRangeValue },
+  { label: '2w', value: '2w' as TimeRangeValue },
+];
+
+function generateWaveData(base: number, amplitude: number, length = 12): number[] {
+  return Array.from({ length }, (_, i) => {
+    const t = i / (length - 1);
+    const wave = Math.sin(t * Math.PI) * amplitude;
+    const noise = (Math.random() - 0.5) * amplitude * 0.2;
+    return Math.round(base + wave + noise);
+  });
+}
+
+const cpuUtilizationData = generateWaveData(45, 30);
+const networkTrafficInData = generateWaveData(350, 180);
+const networkTrafficOutData = generateWaveData(250, 120);
+const networkPacketsInData = generateWaveData(500, 200);
+const networkPacketsOutData = generateWaveData(380, 150);
+const diskUsageData = generateWaveData(55, 20);
+const diskIOPSReadData = generateWaveData(600, 200);
+const diskIOPSWriteData = generateWaveData(420, 150);
+
+/* ----------------------------------------
    Instance Detail Page
    ---------------------------------------- */
 
@@ -893,6 +923,9 @@ export function ComputeAdminInstanceDetailPage() {
     snapshot.name.toLowerCase().includes(snapshotSearchQuery.toLowerCase())
   );
   const snapshotTotalPages = Math.ceil(filteredSnapshots.length / snapshotRowsPerPage);
+
+  // Monitoring tab state
+  const [monitoringTimeRange, setMonitoringTimeRange] = useState<TimeRangeValue>('1h');
 
   // Logs (Console Logs) state
   const [logLength, setLogLength] = useState(20);
@@ -1717,44 +1750,21 @@ export function ComputeAdminInstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
-                      render: (_: unknown, row: InstanceSnapshot) => {
-                        const snapshotMenuItems: ContextMenuItem[] = [
-                          {
-                            id: 'edit',
-                            label: 'Edit',
-                            onClick: () => console.log('Edit snapshot', row.id),
-                          },
-                          {
-                            id: 'create-instance',
-                            label: 'Create instance',
-                            onClick: () => console.log('Create instance from', row.id),
-                          },
-                          {
-                            id: 'create-volume',
-                            label: 'Create volume',
-                            onClick: () => console.log('Create volume from', row.id),
-                          },
-                          {
-                            id: 'delete',
-                            label: 'Delete',
-                            status: 'danger',
-                            onClick: () => console.log('Delete snapshot', row.id),
-                          },
-                        ];
-                        return (
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <ContextMenu items={snapshotMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                <IconDotsCircleHorizontal
-                                  size={16}
-                                  stroke={1.5}
-                                  className="text-[var(--action-icon-color)]"
-                                />
-                              </button>
-                            </ContextMenu>
-                          </div>
-                        );
-                      },
+                      render: (_: unknown, row: InstanceSnapshot) => (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                            onClick={() => console.log('Delete snapshot', row.id)}
+                            aria-label="Delete"
+                          >
+                            <IconTrash
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--action-icon-color)]"
+                            />
+                          </button>
+                        </div>
+                      ),
                     },
                   ]}
                   data={filteredSnapshots.slice(
@@ -1769,11 +1779,81 @@ export function ComputeAdminInstanceDetailPage() {
 
             {/* Monitoring Tab Panel */}
             <TabPanel value="monitoring" className="pt-0">
-              <div className="pt-6">
-                <p className="text-[var(--color-text-subtle)]">
-                  Monitoring content will be displayed here.
-                </p>
-              </div>
+              <VStack gap={3} className="pt-4">
+                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Monitoring</h2>
+
+                <MonitoringToolbar
+                  timeRangeOptions={monitoringTimeRangeOptions}
+                  timeRange={monitoringTimeRange}
+                  onTimeRangeChange={setMonitoringTimeRange}
+                  onRefresh={() => {}}
+                />
+
+                <VStack gap={3}>
+                  <div className="flex gap-3">
+                    <ChartWithFullScreen
+                      title="CPU Utilization"
+                      series={[
+                        {
+                          name: 'CPU Utilization',
+                          data: cpuUtilizationData,
+                          color: chartColors.cyan400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}%`}
+                    />
+                    <ChartWithFullScreen
+                      title="Network Traffic"
+                      series={[
+                        { name: 'In', data: networkTrafficInData, color: chartColors.cyan400 },
+                        {
+                          name: 'Out',
+                          data: networkTrafficOutData,
+                          color: chartColors.emerald400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v} MiB/s`}
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <ChartWithFullScreen
+                      title="Network Packets"
+                      series={[
+                        { name: 'In', data: networkPacketsInData, color: chartColors.cyan400 },
+                        {
+                          name: 'Out',
+                          data: networkPacketsOutData,
+                          color: chartColors.emerald400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}`}
+                    />
+                    <ChartWithFullScreen
+                      title="Disk Usage"
+                      series={[
+                        { name: 'Disk Usage', data: diskUsageData, color: chartColors.cyan400 },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}%`}
+                    />
+                  </div>
+
+                  <div className="w-[calc(50%-6px)]">
+                    <ChartWithFullScreen
+                      title="Disk IOPS"
+                      series={[
+                        { name: 'Read', data: diskIOPSReadData, color: chartColors.cyan400 },
+                        {
+                          name: 'Write',
+                          data: diskIOPSWriteData,
+                          color: chartColors.emerald400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}`}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
             </TabPanel>
 
             {/* Resource Map Tab Panel */}
@@ -1831,16 +1911,7 @@ export function ComputeAdminInstanceDetailPage() {
                     </div>
                   </div>
 
-                  {/* Right side - View Full Log */}
                   <div className="flex items-center gap-1">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="text-[var(--color-text-default)]"
-                    >
-                      <IconTerminal2 size={14} stroke={1.5} />
-                      View Full Log
-                    </Button>
                     <Button
                       variant="secondary"
                       size="sm"
@@ -1909,9 +1980,9 @@ export function ComputeAdminInstanceDetailPage() {
                 {/* Action Logs Table */}
                 <div className="w-full flex flex-col gap-1">
                   {/* Table Header */}
-                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                     <div
-                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      className="flex-1 flex items-center px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
                       onClick={() => handleActionLogSort('operationName')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -1942,7 +2013,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
                     </div>
                     <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      className="flex-1 flex items-center px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
                       onClick={() => handleActionLogSort('requestId')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -1973,7 +2044,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
                     </div>
                     <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      className="flex-1 flex items-center px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
                       onClick={() => handleActionLogSort('requestedTime')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -2016,11 +2087,11 @@ export function ComputeAdminInstanceDetailPage() {
                       return (
                         <div
                           key={log.id}
-                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
                         >
                           {/* Main Row */}
-                          <div className="flex items-center w-full">
-                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
+                          <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
+                            <div className="flex-1 flex items-center gap-2 px-3">
                               <button
                                 onClick={() => toggleLogExpansion(log.id)}
                                 className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -2043,13 +2114,13 @@ export function ComputeAdminInstanceDetailPage() {
                                 {log.operationName}
                               </span>
                             </div>
-                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
+                            <div className="flex-1 flex items-center gap-1.5 px-3">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.requestId}
                               </span>
                               <CopyButton value={log.requestId} size="sm" iconOnly />
                             </div>
-                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
+                            <div className="flex-1 flex items-center px-3">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.requestedTime}
                               </span>
@@ -2058,7 +2129,7 @@ export function ComputeAdminInstanceDetailPage() {
 
                           {/* Expanded Details */}
                           {isExpanded && (
-                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
+                            <div className="flex items-center gap-4 min-h-[var(--table-row-height)] px-8 border-t border-[var(--color-border-default)]">
                               <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                 <span className="font-medium">Result :</span>
                                 <span>{log.result}</span>
