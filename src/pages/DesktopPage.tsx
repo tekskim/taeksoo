@@ -100,7 +100,14 @@ function getInitialIconLayout(): DesktopIconItem[] {
     { id: 'settings', icon: imgSettings, label: 'Settings' },
     { id: 'admin-center', icon: imgAdminCenter, label: 'Admin center' },
   ];
-  return icons.map((item, i) => ({ ...item, col: 0, row: i }));
+  const dockHeight = 64;
+  const availableH = window.innerHeight - GRID.PAD_TOP - dockHeight;
+  const maxRows = Math.max(1, Math.floor(availableH / GRID.CELL_H));
+  return icons.map((item, i) => ({
+    ...item,
+    col: Math.floor(i / maxRows),
+    row: i % maxRows,
+  }));
 }
 
 interface DesktopIconProps {
