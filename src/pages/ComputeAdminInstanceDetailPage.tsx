@@ -19,11 +19,13 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
-  type ContextMenuItem,
   fixedColumns,
   CopyButton,
+  MonitoringToolbar,
+  type TimeRangeValue,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
+import { ChartWithFullScreen, chartColors } from '@/pages/design-system-sections/ChartComponents';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -35,11 +37,11 @@ import {
   IconChevronUp,
   IconChevronRight,
   IconBell,
-  IconDotsCircleHorizontal,
   IconDownload,
   IconSearch,
   IconSelector,
   IconLock,
+  IconLockOpen,
   IconPower,
 } from '@tabler/icons-react';
 
@@ -126,6 +128,8 @@ interface InstanceDetail {
     disk: string;
     gpu: number;
   };
+  tenant: string;
+  origin: string;
   imageName: string;
   image: string;
   interfaces: number;
@@ -149,6 +153,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 25, 2025 10:32:16',
     availabilityZone: 'keystone',
     description: '-',
+    tenant: 'tenantA',
+    origin: 'Container cluster (k8s-prod-01)',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     imageName: 'centos-7-base',
     image: 'CentOS 7',
@@ -166,6 +172,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 24, 2025 03:19:59',
     availabilityZone: 'keystone',
     description: '-',
+    tenant: 'tenantA',
+    origin: 'Container cluster (k8s-prod-01)',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     imageName: 'centos-7-base',
     image: 'CentOS 7',
@@ -183,6 +191,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 20, 2025 23:27:51',
     availabilityZone: 'nova',
     description: 'Kubernetes master node',
+    tenant: 'tenantB',
+    origin: 'Container cluster (k8s-staging)',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
     imageName: 'ubuntu-22.04-server',
     image: 'Ubuntu 22.04',
@@ -200,6 +210,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 15, 2025 12:22:26',
     availabilityZone: 'keystone',
     description: 'Database server',
+    tenant: 'tenantA',
+    origin: '-',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
     imageName: 'centos-8-base',
     image: 'CentOS 8',
@@ -217,6 +229,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 10, 2025 01:17:01',
     availabilityZone: 'nova',
     description: 'GPU compute node',
+    tenant: 'tenantC',
+    origin: 'Container cluster (ml-cluster)',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
     imageName: 'ubuntu-22.04-gpu',
     image: 'Ubuntu 22.04',
@@ -237,6 +251,8 @@ const defaultInstanceDetail: InstanceDetail = {
   createdAt: 'Jul 25, 2025 10:32:16',
   availabilityZone: 'nova',
   description: '-',
+  tenant: '-',
+  origin: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
   imageName: 'unknown-image',
   image: 'Unknown',
@@ -840,6 +856,35 @@ const mockActionLogs: ActionLog[] = [
 ];
 
 /* ----------------------------------------
+   Monitoring Mock Data
+   ---------------------------------------- */
+
+const monitoringTimeRangeOptions = [
+  { label: '1h', value: '1h' as TimeRangeValue },
+  { label: '1d', value: '1d' as TimeRangeValue },
+  { label: '1w', value: '1w' as TimeRangeValue },
+  { label: '2w', value: '2w' as TimeRangeValue },
+];
+
+function generateWaveData(base: number, amplitude: number, length = 12): number[] {
+  return Array.from({ length }, (_, i) => {
+    const t = i / (length - 1);
+    const wave = Math.sin(t * Math.PI) * amplitude;
+    const noise = (Math.random() - 0.5) * amplitude * 0.2;
+    return Math.round(base + wave + noise);
+  });
+}
+
+const cpuUtilizationData = generateWaveData(45, 30);
+const networkTrafficInData = generateWaveData(350, 180);
+const networkTrafficOutData = generateWaveData(250, 120);
+const networkPacketsInData = generateWaveData(500, 200);
+const networkPacketsOutData = generateWaveData(380, 150);
+const diskUsageData = generateWaveData(55, 20);
+const diskIOPSReadData = generateWaveData(600, 200);
+const diskIOPSWriteData = generateWaveData(420, 150);
+
+/* ----------------------------------------
    Instance Detail Page
    ---------------------------------------- */
 
@@ -878,6 +923,9 @@ export function ComputeAdminInstanceDetailPage() {
     snapshot.name.toLowerCase().includes(snapshotSearchQuery.toLowerCase())
   );
   const snapshotTotalPages = Math.ceil(filteredSnapshots.length / snapshotRowsPerPage);
+
+  // Monitoring tab state
+  const [monitoringTimeRange, setMonitoringTimeRange] = useState<TimeRangeValue>('1h');
 
   // Logs (Console Logs) state
   const [logLength, setLogLength] = useState(20);
@@ -1121,10 +1169,33 @@ export function ComputeAdminInstanceDetailPage() {
           </DetailHeader.Actions>
 
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard
+              label="Status"
+              value={instance.status.charAt(0).toUpperCase() + instance.status.slice(1)}
+              status={instance.status}
+            />
             <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={instance.tenant} />
             <DetailHeader.InfoCard label="Host" value={instance.host} />
-            <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
+            <DetailHeader.InfoCard label="Origin" value={instance.origin} />
+            <DetailHeader.InfoCard
+              label="Locked state"
+              value={
+                <span className="flex items-center gap-1">
+                  {instance.locked ? (
+                    <IconLock size={14} stroke={1.5} className="text-[var(--color-text-default)]" />
+                  ) : (
+                    <IconLockOpen
+                      size={14}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  )}
+                  {instance.locked ? 'Locked' : 'Unlocked'}
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created At" value={instance.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -1420,9 +1491,7 @@ export function ComputeAdminInstanceDetailPage() {
                       key: 'createdAt',
                       label: 'Created at',
                       sortable: true,
-                      render: (_value: string, iface: AttachedInterface) => (
-                        <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
-                      ),
+                      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                     },
                   ]}
                   data={mockAttachedInterfaces.slice(
@@ -1577,9 +1646,7 @@ export function ComputeAdminInstanceDetailPage() {
                       key: 'createdAt',
                       label: 'Created at',
                       sortable: true,
-                      render: (_value: string, row: SecurityGroup) => (
-                        <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
-                      ),
+                      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                     },
                   ]}
                   data={mockSecurityGroups.slice(
@@ -1683,44 +1750,21 @@ export function ComputeAdminInstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
-                      render: (_: unknown, row: InstanceSnapshot) => {
-                        const snapshotMenuItems: ContextMenuItem[] = [
-                          {
-                            id: 'edit',
-                            label: 'Edit',
-                            onClick: () => console.log('Edit snapshot', row.id),
-                          },
-                          {
-                            id: 'create-instance',
-                            label: 'Create instance',
-                            onClick: () => console.log('Create instance from', row.id),
-                          },
-                          {
-                            id: 'create-volume',
-                            label: 'Create volume',
-                            onClick: () => console.log('Create volume from', row.id),
-                          },
-                          {
-                            id: 'delete',
-                            label: 'Delete',
-                            status: 'danger',
-                            onClick: () => console.log('Delete snapshot', row.id),
-                          },
-                        ];
-                        return (
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <ContextMenu items={snapshotMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                                <IconDotsCircleHorizontal
-                                  size={16}
-                                  stroke={1.5}
-                                  className="text-[var(--action-icon-color)]"
-                                />
-                              </button>
-                            </ContextMenu>
-                          </div>
-                        );
-                      },
+                      render: (_: unknown, row: InstanceSnapshot) => (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                            onClick={() => console.log('Delete snapshot', row.id)}
+                            aria-label="Delete"
+                          >
+                            <IconTrash
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--action-icon-color)]"
+                            />
+                          </button>
+                        </div>
+                      ),
                     },
                   ]}
                   data={filteredSnapshots.slice(
@@ -1735,11 +1779,81 @@ export function ComputeAdminInstanceDetailPage() {
 
             {/* Monitoring Tab Panel */}
             <TabPanel value="monitoring" className="pt-0">
-              <div className="pt-6">
-                <p className="text-[var(--color-text-subtle)]">
-                  Monitoring content will be displayed here.
-                </p>
-              </div>
+              <VStack gap={3} className="pt-4">
+                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Monitoring</h2>
+
+                <MonitoringToolbar
+                  timeRangeOptions={monitoringTimeRangeOptions}
+                  timeRange={monitoringTimeRange}
+                  onTimeRangeChange={setMonitoringTimeRange}
+                  onRefresh={() => {}}
+                />
+
+                <VStack gap={3}>
+                  <div className="flex gap-3">
+                    <ChartWithFullScreen
+                      title="CPU Utilization"
+                      series={[
+                        {
+                          name: 'CPU Utilization',
+                          data: cpuUtilizationData,
+                          color: chartColors.cyan400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}%`}
+                    />
+                    <ChartWithFullScreen
+                      title="Network Traffic"
+                      series={[
+                        { name: 'In', data: networkTrafficInData, color: chartColors.cyan400 },
+                        {
+                          name: 'Out',
+                          data: networkTrafficOutData,
+                          color: chartColors.emerald400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v} MiB/s`}
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <ChartWithFullScreen
+                      title="Network Packets"
+                      series={[
+                        { name: 'In', data: networkPacketsInData, color: chartColors.cyan400 },
+                        {
+                          name: 'Out',
+                          data: networkPacketsOutData,
+                          color: chartColors.emerald400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}`}
+                    />
+                    <ChartWithFullScreen
+                      title="Disk Usage"
+                      series={[
+                        { name: 'Disk Usage', data: diskUsageData, color: chartColors.cyan400 },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}%`}
+                    />
+                  </div>
+
+                  <div className="w-[calc(50%-6px)]">
+                    <ChartWithFullScreen
+                      title="Disk IOPS"
+                      series={[
+                        { name: 'Read', data: diskIOPSReadData, color: chartColors.cyan400 },
+                        {
+                          name: 'Write',
+                          data: diskIOPSWriteData,
+                          color: chartColors.emerald400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}`}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
             </TabPanel>
 
             {/* Resource Map Tab Panel */}
@@ -1797,16 +1911,7 @@ export function ComputeAdminInstanceDetailPage() {
                     </div>
                   </div>
 
-                  {/* Right side - View Full Log */}
                   <div className="flex items-center gap-1">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="text-[var(--color-text-default)]"
-                    >
-                      <IconTerminal2 size={14} stroke={1.5} />
-                      View Full Log
-                    </Button>
                     <Button
                       variant="secondary"
                       size="sm"
@@ -1875,9 +1980,9 @@ export function ComputeAdminInstanceDetailPage() {
                 {/* Action Logs Table */}
                 <div className="w-full flex flex-col gap-1">
                   {/* Table Header */}
-                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                     <div
-                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      className="flex-1 flex items-center px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
                       onClick={() => handleActionLogSort('operationName')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -1908,7 +2013,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
                     </div>
                     <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      className="flex-1 flex items-center px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
                       onClick={() => handleActionLogSort('requestId')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -1939,7 +2044,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
                     </div>
                     <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      className="flex-1 flex items-center px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
                       onClick={() => handleActionLogSort('requestedTime')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -1982,11 +2087,11 @@ export function ComputeAdminInstanceDetailPage() {
                       return (
                         <div
                           key={log.id}
-                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
                         >
                           {/* Main Row */}
-                          <div className="flex items-center w-full">
-                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
+                          <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
+                            <div className="flex-1 flex items-center gap-2 px-3">
                               <button
                                 onClick={() => toggleLogExpansion(log.id)}
                                 className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -2009,13 +2114,13 @@ export function ComputeAdminInstanceDetailPage() {
                                 {log.operationName}
                               </span>
                             </div>
-                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
+                            <div className="flex-1 flex items-center gap-1.5 px-3">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.requestId}
                               </span>
                               <CopyButton value={log.requestId} size="sm" iconOnly />
                             </div>
-                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
+                            <div className="flex-1 flex items-center px-3">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.requestedTime}
                               </span>
@@ -2024,7 +2129,7 @@ export function ComputeAdminInstanceDetailPage() {
 
                           {/* Expanded Details */}
                           {isExpanded && (
-                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
+                            <div className="flex items-center gap-4 min-h-[var(--table-row-height)] px-8 border-t border-[var(--color-border-default)]">
                               <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                 <span className="font-medium">Result :</span>
                                 <span>{log.result}</span>
