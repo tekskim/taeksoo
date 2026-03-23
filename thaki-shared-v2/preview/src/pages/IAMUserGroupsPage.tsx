@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -32,16 +32,106 @@ interface UserGroup {
 }
 
 const mockUserGroups: UserGroup[] = [
-  { id: 'ug-001', name: 'dev-admin-group', type: 'Custom', status: 'active', roles: 'admin (+3)', userCount: 100, description: 'Development team administrators', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'ug-002', name: 'ops-team', type: 'Custom', status: 'inactive', roles: 'network-admin (+1)', userCount: 25, description: 'Operations team', createdAt: 'Sep 10, 2025 01:17:01' },
-  { id: 'ug-003', name: 'qa-team', type: 'Custom', status: 'active', roles: 'qa-lead (+2)', userCount: 15, description: 'Quality assurance team', createdAt: 'Sep 8, 2025 11:51:27' },
-  { id: 'ug-004', name: 'viewers', type: 'Built-in', status: 'active', roles: 'Viewer (+3)', userCount: 130, description: '-', createdAt: 'Sep 12, 2025 15:43:35' },
-  { id: 'ug-005', name: 'administrators', type: 'Built-in', status: 'active', roles: 'super-admin', userCount: 5, description: 'System administrators', createdAt: 'Aug 1, 2025 10:20:28' },
-  { id: 'ug-006', name: 'developers', type: 'Custom', status: 'active', roles: 'developer (+2)', userCount: 45, description: 'Development team', createdAt: 'Aug 15, 2025 12:22:26' },
-  { id: 'ug-007', name: 'security-team', type: 'Custom', status: 'inactive', roles: 'security-admin', userCount: 8, description: 'Security operations', createdAt: 'Jul 20, 2025 23:27:51' },
-  { id: 'ug-008', name: 'support-team', type: 'Custom', status: 'active', roles: 'support (+1)', userCount: 20, description: 'Customer support team', createdAt: 'Jul 10, 2025 01:17:01' },
-  { id: 'ug-009', name: 'data-analysts', type: 'Custom', status: 'active', roles: 'analyst', userCount: 12, description: 'Data analysis team', createdAt: 'Jun 25, 2025 10:32:16' },
-  { id: 'ug-010', name: 'external-users', type: 'Custom', status: 'inactive', roles: 'viewer', userCount: 50, description: 'External partners', createdAt: 'Jun 1, 2025 10:20:28' },
+  {
+    id: 'ug-001',
+    name: 'dev-admin-group',
+    type: 'Custom',
+    status: 'active',
+    roles: 'admin (+3)',
+    userCount: 100,
+    description: 'Development team administrators',
+    createdAt: 'Sep 12, 2025 15:43:35',
+  },
+  {
+    id: 'ug-002',
+    name: 'ops-team',
+    type: 'Custom',
+    status: 'inactive',
+    roles: 'network-admin (+1)',
+    userCount: 25,
+    description: 'Operations team',
+    createdAt: 'Sep 10, 2025 01:17:01',
+  },
+  {
+    id: 'ug-003',
+    name: 'qa-team',
+    type: 'Custom',
+    status: 'active',
+    roles: 'qa-lead (+2)',
+    userCount: 15,
+    description: 'Quality assurance team',
+    createdAt: 'Sep 8, 2025 11:51:27',
+  },
+  {
+    id: 'ug-004',
+    name: 'viewers',
+    type: 'Built-in',
+    status: 'active',
+    roles: 'Viewer (+3)',
+    userCount: 130,
+    description: '-',
+    createdAt: 'Sep 12, 2025 15:43:35',
+  },
+  {
+    id: 'ug-005',
+    name: 'administrators',
+    type: 'Built-in',
+    status: 'active',
+    roles: 'super-admin',
+    userCount: 5,
+    description: 'System administrators',
+    createdAt: 'Aug 1, 2025 10:20:28',
+  },
+  {
+    id: 'ug-006',
+    name: 'developers',
+    type: 'Custom',
+    status: 'active',
+    roles: 'developer (+2)',
+    userCount: 45,
+    description: 'Development team',
+    createdAt: 'Aug 15, 2025 12:22:26',
+  },
+  {
+    id: 'ug-007',
+    name: 'security-team',
+    type: 'Custom',
+    status: 'inactive',
+    roles: 'security-admin',
+    userCount: 8,
+    description: 'Security operations',
+    createdAt: 'Jul 20, 2025 23:27:51',
+  },
+  {
+    id: 'ug-008',
+    name: 'support-team',
+    type: 'Custom',
+    status: 'active',
+    roles: 'support (+1)',
+    userCount: 20,
+    description: 'Customer support team',
+    createdAt: 'Jul 10, 2025 01:17:01',
+  },
+  {
+    id: 'ug-009',
+    name: 'data-analysts',
+    type: 'Custom',
+    status: 'active',
+    roles: 'analyst',
+    userCount: 12,
+    description: 'Data analysis team',
+    createdAt: 'Jun 25, 2025 10:32:16',
+  },
+  {
+    id: 'ug-010',
+    name: 'external-users',
+    type: 'Custom',
+    status: 'inactive',
+    roles: 'viewer',
+    userCount: 50,
+    description: 'External partners',
+    createdAt: 'Jun 1, 2025 10:20:28',
+  },
 ];
 
 const statusMap: Record<GroupStatus, StatusVariant> = {
@@ -51,18 +141,29 @@ const statusMap: Record<GroupStatus, StatusVariant> = {
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter group name...' },
-  { key: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-  ]},
-  { key: 'type', label: 'Type', type: 'select', options: [
-    { value: 'Built-in', label: 'Built-in' },
-    { value: 'Custom', label: 'Custom' },
-  ]},
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+    ],
+  },
+  {
+    key: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: 'Built-in', label: 'Built-in' },
+      { value: 'Custom', label: 'Custom' },
+    ],
+  },
   { key: 'roles', label: 'Roles', type: 'input', placeholder: 'Enter role name...' },
 ];
 
 export function IAMUserGroupsPage() {
+  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -86,7 +187,7 @@ export function IAMUserGroupsPage() {
   const itemsPerPage = 10;
   const paginatedGroups = filteredGroups.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const hasSelection = selectedRows.length > 0;
@@ -117,7 +218,7 @@ export function IAMUserGroupsPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between h-8">
         <Title title="User groups" />
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={() => navigate('/iam/user-groups/create')}>
           Create user group
         </Button>
       </div>
@@ -149,19 +250,34 @@ export function IAMUserGroupsPage() {
         <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-surface-subtle rounded-md">
           <div className="flex items-center gap-1 flex-wrap">
             {appliedFilters.map((filter) => (
-              <span key={filter.id} className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border">
+              <span
+                key={filter.id}
+                className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+              >
                 <span className="flex items-center gap-1">
                   <span className="text-text">{filter.label}</span>
                   <span className="text-border">|</span>
                   <span className="text-text">{filter.displayValue ?? filter.value}</span>
                 </span>
-                <button type="button" className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none" onClick={() => handleFilterRemove(filter.id!)} aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}>
+                <button
+                  type="button"
+                  className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                  onClick={() => handleFilterRemove(filter.id!)}
+                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                >
                   <IconX size={12} strokeWidth={2} />
                 </button>
               </span>
             ))}
           </div>
-          <button type="button" className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4" onClick={() => { setAppliedFilters([]); setCurrentPage(1); }}>
+          <button
+            type="button"
+            className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4"
+            onClick={() => {
+              setAppliedFilters([]);
+              setCurrentPage(1);
+            }}
+          >
             Clear Filters
           </button>
         </div>
@@ -194,41 +310,109 @@ export function IAMUserGroupsPage() {
               <StatusIndicator variant={statusMap[group.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={group} column={columns[1]}>
-              <Link to={`/iam/user-groups/${group.name}`} className="text-primary font-medium hover:underline">
+              <Link
+                to={`/iam/user-groups/${group.name}`}
+                className="text-primary font-medium hover:underline"
+              >
                 {group.name}
               </Link>
             </Table.Td>
-            <Table.Td rowData={group} column={columns[2]}>{group.description}</Table.Td>
-            <Table.Td rowData={group} column={columns[3]}>{group.type}</Table.Td>
-            <Table.Td rowData={group} column={columns[4]}>{group.userCount}</Table.Td>
-            <Table.Td rowData={group} column={columns[5]}>{group.roles}</Table.Td>
+            <Table.Td rowData={group} column={columns[2]}>
+              {group.description}
+            </Table.Td>
+            <Table.Td rowData={group} column={columns[3]}>
+              {group.type}
+            </Table.Td>
+            <Table.Td rowData={group} column={columns[4]}>
+              {group.userCount}
+            </Table.Td>
+            <Table.Td rowData={group} column={columns[5]}>
+              {group.roles}
+            </Table.Td>
             <Table.Td rowData={group} column={columns[6]}>
               {group.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
             <Table.Td rowData={group} column={columns[7]} preventClickPropagation>
-              <ContextMenu.Root direction="bottom-end" gap={4}
+              <ContextMenu.Root
+                direction="bottom-end"
+                gap={4}
                 trigger={({ toggle }) => (
-                  <button type="button" onClick={toggle} className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none">
+                  <button
+                    type="button"
+                    onClick={toggle}
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                  >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M5.33333 8V8.00667M8 8V8.00667M10.6667 8V8.00667M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8Z" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M5.33333 8V8.00667M8 8V8.00667M10.6667 8V8.00667M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8Z"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => { setManageRolesGroup(group.name); setManageRolesOpen(true); }} disabled={group.status === 'inactive'}>Manage roles</ContextMenu.Item>
-                <ContextMenu.Item action={() => { setManageUsersGroup(group.name); setManageUsersOpen(true); }}>Manage users</ContextMenu.Item>
-                {group.status === 'active' && <ContextMenu.Item action={() => console.log('Duplicate', group.id)}>Duplicate</ContextMenu.Item>}
-                <ContextMenu.Item action={() => { setEditDrawerData({ name: group.name, description: group.description }); setEditDrawerOpen(true); }} disabled={group.status === 'inactive'}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', group.id)} danger={group.status === 'active'} disabled={group.status === 'inactive'}>Delete</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setManageRolesGroup(group.name);
+                    setManageRolesOpen(true);
+                  }}
+                  disabled={group.status === 'inactive'}
+                >
+                  Manage roles
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setManageUsersGroup(group.name);
+                    setManageUsersOpen(true);
+                  }}
+                >
+                  Manage users
+                </ContextMenu.Item>
+                {group.status === 'active' && (
+                  <ContextMenu.Item action={() => console.log('Duplicate', group.id)}>
+                    Duplicate
+                  </ContextMenu.Item>
+                )}
+                <ContextMenu.Item
+                  action={() => {
+                    setEditDrawerData({ name: group.name, description: group.description });
+                    setEditDrawerOpen(true);
+                  }}
+                  disabled={group.status === 'inactive'}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => console.log('Delete', group.id)}
+                  danger={group.status === 'active'}
+                  disabled={group.status === 'inactive'}
+                >
+                  Delete
+                </ContextMenu.Item>
               </ContextMenu.Root>
             </Table.Td>
           </Table.Tr>
         ))}
       </SelectableTable>
 
-      <EditUserGroupDrawer isOpen={editDrawerOpen} onClose={() => setEditDrawerOpen(false)} initialData={editDrawerData} />
-      <ManageUsersDrawer isOpen={manageUsersOpen} onClose={() => setManageUsersOpen(false)} userGroupName={manageUsersGroup} />
-      <ManageRolesDrawer isOpen={manageRolesOpen} onClose={() => setManageRolesOpen(false)} userName={manageRolesGroup} />
+      <EditUserGroupDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        initialData={editDrawerData}
+      />
+      <ManageUsersDrawer
+        isOpen={manageUsersOpen}
+        onClose={() => setManageUsersOpen(false)}
+        userGroupName={manageUsersGroup}
+      />
+      <ManageRolesDrawer
+        isOpen={manageRolesOpen}
+        onClose={() => setManageRolesOpen(false)}
+        userName={manageRolesGroup}
+      />
     </div>
   );
 }

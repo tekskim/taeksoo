@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
@@ -142,6 +142,7 @@ const filterKeys: FilterKey[] = [
 ];
 
 export function IAMSystemAdministratorsPage() {
+  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -191,7 +192,11 @@ export function IAMSystemAdministratorsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="System administrators" />
-        <Button variant="primary" size="md">
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => navigate('/iam/system-administrators/create')}
+        >
           Create account
         </Button>
       </div>

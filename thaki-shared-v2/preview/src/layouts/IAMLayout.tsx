@@ -8,12 +8,40 @@ import { IAMSidebar } from '../components/IAMSidebar';
 const BREADCRUMB_MAP: Record<string, BreadcrumbItem[]> = {
   '/iam': [{ label: 'IAM', path: '/iam' }, { label: 'Home' }],
   '/iam/users': [{ label: 'IAM', path: '/iam' }, { label: 'Users' }],
+  '/iam/users/create': [
+    { label: 'IAM', path: '/iam' },
+    { label: 'Users', path: '/iam/users' },
+    { label: 'Create user' },
+  ],
   '/iam/user-groups': [{ label: 'IAM', path: '/iam' }, { label: 'User groups' }],
+  '/iam/user-groups/create': [
+    { label: 'IAM', path: '/iam' },
+    { label: 'User groups', path: '/iam/user-groups' },
+    { label: 'Create user group' },
+  ],
   '/iam/roles': [{ label: 'IAM', path: '/iam' }, { label: 'Roles' }],
+  '/iam/roles/create': [
+    { label: 'IAM', path: '/iam' },
+    { label: 'Roles', path: '/iam/roles' },
+    { label: 'Create role' },
+  ],
   '/iam/policies': [{ label: 'IAM', path: '/iam' }, { label: 'Policies' }],
+  '/iam/policies/create': [
+    { label: 'IAM', path: '/iam' },
+    { label: 'Policies', path: '/iam/policies' },
+    { label: 'Create policy' },
+  ],
   '/iam/active-sessions': [{ label: 'IAM', path: '/iam' }, { label: 'Active sessions' }],
   '/iam/domains': [{ label: 'IAM', path: '/iam' }, { label: 'Domains' }],
-  '/iam/system-administrators': [{ label: 'IAM', path: '/iam' }, { label: 'System administrators' }],
+  '/iam/system-administrators': [
+    { label: 'IAM', path: '/iam' },
+    { label: 'System administrators' },
+  ],
+  '/iam/system-administrators/create': [
+    { label: 'IAM', path: '/iam' },
+    { label: 'System administrators', path: '/iam/system-administrators' },
+    { label: 'Create account' },
+  ],
   '/iam/event-logs': [{ label: 'IAM', path: '/iam' }, { label: 'Event logs' }],
   '/iam/mfa-policies': [{ label: 'IAM', path: '/iam' }, { label: 'MFA policies' }],
   '/iam/session-policies': [{ label: 'IAM', path: '/iam' }, { label: 'Session policies' }],
@@ -27,23 +55,43 @@ function getBreadcrumbItems(pathname: string): BreadcrumbItem[] {
 
   if (pathname.startsWith('/iam/users/')) {
     const userId = pathname.split('/').pop() || '';
-    return [{ label: 'IAM', path: '/iam' }, { label: 'Users', path: '/iam/users' }, { label: userId }];
+    return [
+      { label: 'IAM', path: '/iam' },
+      { label: 'Users', path: '/iam/users' },
+      { label: userId },
+    ];
   }
   if (pathname.startsWith('/iam/user-groups/')) {
     const groupId = pathname.split('/').pop() || '';
-    return [{ label: 'IAM', path: '/iam' }, { label: 'User groups', path: '/iam/user-groups' }, { label: groupId }];
+    return [
+      { label: 'IAM', path: '/iam' },
+      { label: 'User groups', path: '/iam/user-groups' },
+      { label: groupId },
+    ];
   }
   if (pathname.startsWith('/iam/roles/')) {
     const roleId = pathname.split('/').pop() || '';
-    return [{ label: 'IAM', path: '/iam' }, { label: 'Roles', path: '/iam/roles' }, { label: roleId }];
+    return [
+      { label: 'IAM', path: '/iam' },
+      { label: 'Roles', path: '/iam/roles' },
+      { label: roleId },
+    ];
   }
   if (pathname.startsWith('/iam/policies/')) {
     const policyId = pathname.split('/').pop() || '';
-    return [{ label: 'IAM', path: '/iam' }, { label: 'Policies', path: '/iam/policies' }, { label: policyId }];
+    return [
+      { label: 'IAM', path: '/iam' },
+      { label: 'Policies', path: '/iam/policies' },
+      { label: policyId },
+    ];
   }
   if (pathname.startsWith('/iam/system-administrators/')) {
     const adminId = pathname.split('/').pop() || '';
-    return [{ label: 'IAM', path: '/iam' }, { label: 'System administrators', path: '/iam/system-administrators' }, { label: adminId }];
+    return [
+      { label: 'IAM', path: '/iam' },
+      { label: 'System administrators', path: '/iam/system-administrators' },
+      { label: adminId },
+    ];
   }
 
   return [{ label: 'IAM' }];
@@ -53,18 +101,21 @@ export function IAMLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
 
-  const breadcrumbItems = useMemo(
-    () => getBreadcrumbItems(location.pathname),
-    [location.pathname],
-  );
+  const breadcrumbItems = useMemo(() => getBreadcrumbItems(location.pathname), [location.pathname]);
 
   const tabTitle = useMemo(() => {
     const p = location.pathname;
+    if (p === '/iam/users/create') return 'Create user';
+    if (p === '/iam/user-groups/create') return 'Create user group';
+    if (p === '/iam/roles/create') return 'Create role';
+    if (p === '/iam/policies/create') return 'Create policy';
+    if (p === '/iam/system-administrators/create') return 'Create account';
     if (p.startsWith('/iam/users/')) return p.split('/').pop() || 'Users';
     if (p.startsWith('/iam/user-groups/')) return p.split('/').pop() || 'User groups';
     if (p.startsWith('/iam/roles/')) return p.split('/').pop() || 'Roles';
     if (p.startsWith('/iam/policies/')) return p.split('/').pop() || 'Policies';
-    if (p.startsWith('/iam/system-administrators/')) return p.split('/').pop() || 'System administrators';
+    if (p.startsWith('/iam/system-administrators/'))
+      return p.split('/').pop() || 'System administrators';
     if (p === '/iam') return 'IAM home';
     if (p === '/iam/users') return 'Users';
     if (p === '/iam/user-groups') return 'User groups';
@@ -81,18 +132,12 @@ export function IAMLayout() {
     return 'IAM';
   }, [location.pathname]);
 
-  const tabs = useMemo(
-    () => [{ id: 'main', title: tabTitle, fixed: true }],
-    [tabTitle],
-  );
+  const tabs = useMemo(() => [{ id: 'main', title: tabTitle, fixed: true }], [tabTitle]);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-surface">
       {/* Sidebar */}
-      <IAMSidebar
-        isCollapsed={!sidebarOpen}
-        onToggle={() => setSidebarOpen((prev) => !prev)}
-      />
+      <IAMSidebar isCollapsed={!sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main panel */}
       <div className="flex flex-col flex-1 min-w-0 h-full">
