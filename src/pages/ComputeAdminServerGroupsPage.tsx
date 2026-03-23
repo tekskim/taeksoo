@@ -17,6 +17,8 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  Popover,
+  Badge,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -323,14 +325,43 @@ export function ComputeAdminServerGroupsPage() {
         const additionalCount = instanceCount - 1;
 
         return (
-          <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {firstInstance?.name || '-'}
-              {additionalCount > 0 && ` (+${additionalCount})`}
-            </span>
-            {firstInstance && (
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {firstInstance.id}
+          <div className="flex items-center gap-1 min-w-0">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-body-md text-[var(--color-text-default)]">
+                {firstInstance?.name || '-'}
+              </span>
+              {firstInstance && (
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  ID: {firstInstance.id}
+                </span>
+              )}
+            </div>
+            {additionalCount > 0 && (
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Instances ({instanceCount})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {row.instances.map((inst, i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {inst.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{additionalCount}
+                  </span>
+                </Popover>
               </span>
             )}
           </div>

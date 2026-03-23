@@ -28,6 +28,7 @@ import {
   IconShare,
   IconSend,
   IconTransfer,
+  IconReplace,
   IconLink,
   IconUnlink,
   IconLinkOff,
@@ -400,6 +401,12 @@ const iconCategories: IconCategoryData[] = [
         name: 'IconTransfer',
         label: 'Transfer',
         usage: 'Volume Transfer, ContextMenu',
+      },
+      {
+        icon: IconReplace,
+        name: 'IconReplace',
+        label: 'Replace',
+        usage: 'Change certificate buttons (Listener Detail)',
       },
       { icon: IconLink, name: 'IconLink', label: 'Link', usage: 'SectionCard DataRow isLink' },
       {

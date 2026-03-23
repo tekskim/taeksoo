@@ -13,6 +13,8 @@ import {
   PageShell,
   PageHeader,
   fixedColumns,
+  Popover,
+  Badge,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -152,7 +154,35 @@ export default function ComputeAdminMetadataDefinitionsPage() {
         const types = row.resourceTypes;
         if (types.length === 0) return '-';
         if (types.length === 1) return types[0];
-        return `${types[0]} (+${types.length - 1})`;
+        return (
+          <span className="inline-flex items-center gap-1">
+            {types[0]}
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    All Resource Types ({types.length})
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {types.map((t, i) => (
+                      <Badge key={i} theme="white" size="sm">
+                        {t}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                +{types.length - 1}
+              </span>
+            </Popover>
+          </span>
+        );
       },
     },
     {

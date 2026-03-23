@@ -868,9 +868,9 @@ export default function CreateLoadBalancerPage() {
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
-            <HStack gap={1} align="center">
+            <HStack gap={1} align="center" className="w-full">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+              <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
                 +{row.listenerCount}
               </span>
             </HStack>
@@ -949,9 +949,9 @@ export default function CreateLoadBalancerPage() {
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
-            <HStack gap={1} align="center">
+            <HStack gap={1} align="center" className="w-full">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+              <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
                 +{row.listenerCount}
               </span>
             </HStack>
@@ -1068,14 +1068,14 @@ export default function CreateLoadBalancerPage() {
         minWidth: columnMinWidths.listener,
         sortable: true,
         render: (_value, row) => (
-          <HStack gap={1} align="center">
+          <HStack gap={1} align="center" className="w-full">
             <VStack gap={0.5} align="start">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID:{row.listenerId}
               </span>
             </VStack>
-            <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+            <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
               +{row.listenerCount}
             </span>
           </HStack>

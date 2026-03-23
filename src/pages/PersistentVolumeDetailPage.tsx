@@ -217,13 +217,11 @@ export function PersistentVolumeDetailPage() {
   const labelsCount = Object.keys(pvData.labels).length;
   const firstLabel = Object.entries(pvData.labels)[0];
   const labelsDisplay = firstLabel ? `${firstLabel[0]}: ${firstLabel[1]}` : '-';
-  const labelsExtra = labelsCount > 1 ? `(+${labelsCount - 1})` : '';
 
   // Format annotations
   const annotationsCount = Object.keys(pvData.annotations).length;
   const firstAnnotation = Object.entries(pvData.annotations)[0];
   const annotationsDisplay = firstAnnotation ? `${firstAnnotation[0]}: ${firstAnnotation[1]}` : '-';
-  const annotationsExtra = annotationsCount > 1 ? `(+${annotationsCount - 1})` : '';
 
   // Operator options for node selectors
   const operatorOptions = [
