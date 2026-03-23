@@ -43,6 +43,7 @@
   "scripts": {
     "prepare": "husky",
     "tokens": "node scripts/build-tokens.js",
+    "update-timestamps": "node scripts/update-page-timestamps.js",
     "locale": "node scripts/locale/parseLocale.cjs locales",
     "dev": "rspack serve --mode development",
     "dev:vite": "vite",

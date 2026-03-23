@@ -16,7 +16,7 @@ import {
   IconArrowUp,
   IconListDetails,
 } from '@tabler/icons-react';
-import { navGroups, allNavItems, isUpdatedToday } from './_shared/navigationData';
+import { navGroups, allNavItems, isRecentlyUpdated } from './_shared/navigationData';
 
 interface DesignLayoutContext {
   mainRef: RefObject<HTMLDivElement | null>;
@@ -213,7 +213,7 @@ export function DesignSystemLayout() {
                     >
                       <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] tracking-wide hover:!text-[var(--color-text-muted)]">
                         {group.title}
-                        {group.items.some((item) => isUpdatedToday(item.path)) && (
+                        {group.items.some((item) => isRecentlyUpdated(item.path)) && (
                           <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-action-primary)]" />
                         )}
                         <span className="text-body-xs text-[var(--color-text-disabled)] ml-auto font-normal normal-case tracking-normal">
@@ -238,7 +238,7 @@ export function DesignSystemLayout() {
                             >
                               <Icon size={16} stroke={1.5} className="shrink-0" />
                               <span className="truncate flex-1 min-w-0">{label}</span>
-                              {isUpdatedToday(path) && (
+                              {isRecentlyUpdated(path) && (
                                 <span className="shrink-0 px-[5px] py-[1px] rounded-[var(--radius-sm)] text-[9px] font-bold leading-[12px] bg-[var(--color-action-primary)] text-white">
                                   N
                                 </span>
