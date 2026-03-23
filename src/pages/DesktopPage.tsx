@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import { IconLayoutDashboard, IconCheck, IconSelector } from '@tabler/icons-react';
