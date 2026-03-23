@@ -53,7 +53,7 @@ const variantStyles: Record<CopyButtonVariant, string> = {
   default:
     'bg-[var(--color-surface-muted)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-transparent',
   ghost:
-    'bg-transparent text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] border-transparent',
+    'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-transparent',
   outline:
     'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]',
 };

@@ -102,7 +102,7 @@ export function CopyButtonPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-text-muted)]"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm gap-1 bg-transparent text-[var(--color-text-default)]"
                 >
                   <span className="shrink-0 flex items-center">
                     <IconCopy size={12} stroke={1.5} />
@@ -146,7 +146,7 @@ export function CopyButtonPage() {
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Default</span>
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-transparent text-[var(--color-text-muted)]"
+                  className="inline-flex items-center justify-center border border-transparent rounded-[var(--radius-sm)] font-medium h-6 px-1.5 text-body-sm bg-transparent text-[var(--color-text-default)]"
                 >
                   <span className="shrink-0 flex items-center">
                     <IconCopy size={12} stroke={1.5} />

@@ -578,7 +578,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/foundation/tokens': '2026-02-25 14:00:00',
   '/design/foundation/primitive-colors': '2026-02-25 14:00:00',
   '/design/foundation/semantic-colors': '2026-03-20 16:00:00',
-  '/design/foundation/typography': '2026-03-23 18:00:00',
+  '/design/foundation/typography': '2026-03-23 12:00:00',
   '/design/foundation/spacing': '2026-02-25 14:00:00',
   '/design/foundation/borders': '2026-02-25 14:00:00',
   '/design/foundation/shadows': '2026-02-25 14:00:00',
@@ -605,7 +605,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/checkbox': '2026-03-18 11:00:00',
   '/design/components/radio': '2026-03-18 11:00:00',
   '/design/components/password': '2026-03-13 10:00:00',
-  '/design/components/copy-button': '2026-03-23 18:00:00',
+  '/design/components/copy-button': '2026-03-23 12:00:00',
   '/design/components/selection-indicator': '2026-03-13 10:00:00',
   // Data Display
   '/design/components/table': '2026-03-20 16:00:00',
@@ -616,7 +616,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/pagination': '2026-03-09',
   '/design/components/file-list-card': '2026-03-01 10:30:00',
   '/design/components/expandable-checklist': '2026-03-18 18:00:00',
-  '/design/components/info-box': '2026-03-23 18:00:00',
+  '/design/components/info-box': '2026-03-23 12:00:00',
   '/design/components/card-title': '2026-03-18 18:00:00',
   '/design/components/list-toolbar': '2026-03-13 10:00:00',
   // Feedback
@@ -626,8 +626,8 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/skeleton': '2026-03-09',
   '/design/components/spinner': '2026-03-09',
   '/design/components/toast': '2026-03-18 11:00:00',
-  '/design/components/snackbar': '2026-03-23 18:00:00',
-  '/design/components/notification-center': '2026-03-23 18:00:00',
+  '/design/components/snackbar': '2026-03-23 12:00:00',
+  '/design/components/notification-center': '2026-03-23 12:00:00',
   '/design/components/global-notification-panel': '2026-03-18 11:00:00',
   // Navigation
   '/design/components/topbar': '2026-03-09',
