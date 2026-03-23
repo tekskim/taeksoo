@@ -40,6 +40,7 @@ import {
   IconSearch,
   IconSelector,
   IconLock,
+  IconLockOpen,
   IconPower,
 } from '@tabler/icons-react';
 
@@ -126,6 +127,8 @@ interface InstanceDetail {
     disk: string;
     gpu: number;
   };
+  tenant: string;
+  origin: string;
   imageName: string;
   image: string;
   interfaces: number;
@@ -149,6 +152,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 25, 2025 10:32:16',
     availabilityZone: 'keystone',
     description: '-',
+    tenant: 'tenantA',
+    origin: 'Container cluster (k8s-prod-01)',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     imageName: 'centos-7-base',
     image: 'CentOS 7',
@@ -166,6 +171,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 24, 2025 03:19:59',
     availabilityZone: 'keystone',
     description: '-',
+    tenant: 'tenantA',
+    origin: 'Container cluster (k8s-prod-01)',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     imageName: 'centos-7-base',
     image: 'CentOS 7',
@@ -183,6 +190,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 20, 2025 23:27:51',
     availabilityZone: 'nova',
     description: 'Kubernetes master node',
+    tenant: 'tenantB',
+    origin: 'Container cluster (k8s-staging)',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
     imageName: 'ubuntu-22.04-server',
     image: 'Ubuntu 22.04',
@@ -200,6 +209,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 15, 2025 12:22:26',
     availabilityZone: 'keystone',
     description: 'Database server',
+    tenant: 'tenantA',
+    origin: '-',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
     imageName: 'centos-8-base',
     image: 'CentOS 8',
@@ -217,6 +228,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     createdAt: 'Jul 10, 2025 01:17:01',
     availabilityZone: 'nova',
     description: 'GPU compute node',
+    tenant: 'tenantC',
+    origin: 'Container cluster (ml-cluster)',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
     imageName: 'ubuntu-22.04-gpu',
     image: 'Ubuntu 22.04',
@@ -237,6 +250,8 @@ const defaultInstanceDetail: InstanceDetail = {
   createdAt: 'Jul 25, 2025 10:32:16',
   availabilityZone: 'nova',
   description: '-',
+  tenant: '-',
+  origin: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
   imageName: 'unknown-image',
   image: 'Unknown',
@@ -1121,10 +1136,33 @@ export function ComputeAdminInstanceDetailPage() {
           </DetailHeader.Actions>
 
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard
+              label="Status"
+              value={instance.status.charAt(0).toUpperCase() + instance.status.slice(1)}
+              status={instance.status}
+            />
             <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={instance.tenant} />
             <DetailHeader.InfoCard label="Host" value={instance.host} />
-            <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
+            <DetailHeader.InfoCard label="Origin" value={instance.origin} />
+            <DetailHeader.InfoCard
+              label="Locked state"
+              value={
+                <span className="flex items-center gap-1">
+                  {instance.locked ? (
+                    <IconLock size={14} stroke={1.5} className="text-[var(--color-text-default)]" />
+                  ) : (
+                    <IconLockOpen
+                      size={14}
+                      stroke={1.5}
+                      className="text-[var(--color-text-subtle)]"
+                    />
+                  )}
+                  {instance.locked ? 'Locked' : 'Unlocked'}
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created At" value={instance.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -1420,9 +1458,7 @@ export function ComputeAdminInstanceDetailPage() {
                       key: 'createdAt',
                       label: 'Created at',
                       sortable: true,
-                      render: (_value: string, iface: AttachedInterface) => (
-                        <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
-                      ),
+                      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                     },
                   ]}
                   data={mockAttachedInterfaces.slice(
@@ -1577,9 +1613,7 @@ export function ComputeAdminInstanceDetailPage() {
                       key: 'createdAt',
                       label: 'Created at',
                       sortable: true,
-                      render: (_value: string, row: SecurityGroup) => (
-                        <span className="text-[var(--color-text-default)]">{row.createdAt}</span>
-                      ),
+                      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
                     },
                   ]}
                   data={mockSecurityGroups.slice(
