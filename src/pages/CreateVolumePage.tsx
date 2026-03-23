@@ -696,6 +696,24 @@ export function CreateVolumePage() {
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Enter description"
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    <div className="py-6">
                       <FormField required error={!!azError}>
                         <FormField.Label>AZ (Availability zone)</FormField.Label>
                         <FormField.Description>
@@ -714,24 +732,6 @@ export function CreateVolumePage() {
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{azError}</FormField.ErrorMessage>
-                      </FormField>
-                    </div>
-                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                    <div className="py-6">
-                      <FormField>
-                        <FormField.Label>Description</FormField.Label>
-                        <FormField.Control>
-                          <Input
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Enter description"
-                            fullWidth
-                          />
-                        </FormField.Control>
-                        <FormField.HelperText>
-                          You can use letters, numbers, and special characters (+=,.@-_()), and
-                          maximum 255 characters.
-                        </FormField.HelperText>
                       </FormField>
                     </div>
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -812,6 +812,9 @@ export function CreateVolumePage() {
                       {/* Image Selection */}
                       {(isV2 || sourceType === 'image') && (
                         <VStack gap={3} align="stretch">
+                          <span className="text-label-lg italic text-[var(--color-text-default)]">
+                            Image
+                          </span>
                           {/* OS Filter Tabs */}
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
                             {[
@@ -827,13 +830,13 @@ export function CreateVolumePage() {
                                   key={tab.id}
                                   onClick={() => setImageOsFilter(tab.id)}
                                   className={`
-                                        inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
-                                        ${
-                                          isSelected
-                                            ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
-                                            : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
-                                        }
-                                      `}
+                                    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
+                                    ${
+                                      isSelected
+                                        ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)] shadow-sm'
+                                        : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                                    }
+                                  `}
                                 >
                                   <Icon size={14} />
                                   <span>{tab.label}</span>
@@ -871,7 +874,7 @@ export function CreateVolumePage() {
                               rowKey="id"
                               emptyMessage="No images found"
                               selectable
-                              hideSelectAll
+                              selectionType="radio"
                               selectedKeys={selectedImage}
                               onSelectionChange={(keys) => {
                                 setSelectedImage(keys);
@@ -898,6 +901,9 @@ export function CreateVolumePage() {
                       {/* Snapshot Selection */}
                       {(isV2 || sourceType === 'snapshot') && (
                         <VStack gap={4} align="stretch">
+                          <span className="text-label-lg italic text-[var(--color-text-default)]">
+                            Volume snapshot
+                          </span>
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
                               placeholder="Search snapshots by attributes"
@@ -927,7 +933,7 @@ export function CreateVolumePage() {
                               rowKey="id"
                               emptyMessage="No snapshots found"
                               selectable
-                              hideSelectAll
+                              selectionType="radio"
                               selectedKeys={selectedSnapshot}
                               onSelectionChange={(keys) => {
                                 setSelectedSnapshot(keys);
@@ -1058,6 +1064,11 @@ export function CreateVolumePage() {
                     {(isV2 || sourceType === 'snapshot') && (
                       <>
                         {/* Volume type - Read-only for snapshot */}
+                        <div className="pt-6 pb-2">
+                          <span className="text-label-lg italic text-[var(--color-text-default)]">
+                            Volume snapshot
+                          </span>
+                        </div>
                         <div className="py-6">
                           <VStack gap={2} align="stretch">
                             <VStack gap={1}>
@@ -1119,6 +1130,12 @@ export function CreateVolumePage() {
                     {(isV2 || sourceType !== 'snapshot') && (
                       <>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+                        <div className="pt-6 pb-2">
+                          <span className="text-label-lg italic text-[var(--color-text-default)]">
+                            Blank source or image
+                          </span>
+                        </div>
 
                         {/* Standard Volume type selection for blank/image sources */}
                         <div className="py-6">
