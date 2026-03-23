@@ -20,6 +20,7 @@ import {
   ContextMenu,
   PageShell,
   fixedColumns,
+  CopyButton,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -33,7 +34,6 @@ import {
   IconChevronRight,
   IconBell,
   IconDownload,
-  IconCopy,
   IconSelector,
   IconLock,
   IconPower,
@@ -353,10 +353,6 @@ export function ComputeAdminBareMetalDetailPage() {
       }
       return newSet;
     });
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
   };
 
   // Get bare metal data based on the ID from URL
@@ -856,16 +852,7 @@ export function ComputeAdminBareMetalDetailPage() {
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.requestId}
                               </span>
-                              <button
-                                onClick={() => copyToClipboard(log.requestId)}
-                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                <IconCopy
-                                  size={12}
-                                  stroke={1.5}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </button>
+                              <CopyButton value={log.requestId} size="sm" iconOnly />
                             </div>
                             <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
                               <span className="text-body-md text-[var(--color-text-default)]">

@@ -23,6 +23,7 @@ import {
   columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
+  CopyButton,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -33,7 +34,6 @@ import {
   IconBell,
   IconChevronDown,
   IconExternalLink,
-  IconCopy,
   IconDotsCircleHorizontal,
   IconCirclePlus,
   IconLinkPlus,
@@ -270,8 +270,6 @@ export default function PortDetailPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
-  const [copiedMac, setCopiedMac] = useState(false);
-
   // Fixed IPs tab state
   const [fixedIpSearchTerm, setFixedIpSearchTerm] = useState('');
   const [fixedIpCurrentPage, setFixedIpCurrentPage] = useState(1);
@@ -588,16 +586,6 @@ export default function PortDetailPage() {
     closable: tab.closable,
   }));
 
-  const handleCopyMac = () => {
-    navigator.clipboard.writeText(port.macAddress);
-    setCopiedMac(true);
-    setTimeout(() => setCopiedMac(false), 2000);
-  };
-
-  const handleCopyId = () => {
-    navigator.clipboard.writeText(port.id);
-  };
-
   return (
     <PageShell
       sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
@@ -672,7 +660,7 @@ export default function PortDetailPage() {
               value={port.status.charAt(0).toUpperCase() + port.status.slice(1)}
               status={portStatusMap[port.status]}
             />
-            <DetailHeader.InfoCard label="ID" value={port.id} copyable onCopy={handleCopyId} />
+            <DetailHeader.InfoCard label="ID" value={port.id} copyable />
             <DetailHeader.InfoCard label="Port security" value={port.portSecurity ? 'On' : 'Off'} />
             <DetailHeader.InfoCard label="Created at" value={port.createdAt} />
           </DetailHeader.InfoGrid>
@@ -741,17 +729,12 @@ export default function PortDetailPage() {
                       value={
                         <div className="flex items-center gap-2">
                           <span>{port.macAddress}</span>
-                          <button
-                            onClick={handleCopyMac}
-                            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
-                          >
-                            <IconCopy
-                              size={16}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          </button>
+                          <CopyButton
+                            value={port.macAddress}
+                            size="sm"
+                            iconOnly
+                            disabled={port.macAddress === '-'}
+                          />
                         </div>
                       }
                     />

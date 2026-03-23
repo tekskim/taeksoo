@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import {
   Badge,
   Button,
+  CopyButton,
   DetailHeader,
   Modal,
   ProgressBar,
@@ -22,7 +23,7 @@ import {
   Breadcrumb,
   type TableColumn,
 } from '@/design-system';
-import { IconCopy, IconBell, IconBan, IconCheck, IconPower } from '@tabler/icons-react';
+import { IconBell, IconBan, IconPower } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { FigmaCaptureWrapper } from '@/components/FigmaCaptureWrapper';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -32,33 +33,6 @@ import {
   type CloudBuilderSlug,
   CLOUD_BUILDER_SLUGS,
 } from './consoleListConfig';
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <Button
-      variant="secondary"
-      size="sm"
-      leftIcon={
-        copied ? (
-          <IconCheck size={12} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={12} stroke={1.5} />
-        )
-      }
-      data-figma-name="[TDS] CopyButton"
-      aria-label="[TDS] CopyButton"
-      onClick={() => {
-        if (!text) return;
-        navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }}
-    >
-      {copied ? 'Copied' : 'Copy'}
-    </Button>
-  );
-}
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -742,7 +716,14 @@ export function CloudBuilderDetailPage() {
               >
                 <SectionCard.Header
                   title="Configuration"
-                  actions={<CopyButton text={networkAgentMeta?.configurationText ?? ''} />}
+                  actions={
+                    <CopyButton
+                      value={networkAgentMeta?.configurationText ?? ''}
+                      size="sm"
+                      label="Copy"
+                      successLabel="Copied"
+                    />
+                  }
                   data-figma-name="[TDS] DetailCard.Header-Config"
                   aria-label="[TDS] DetailCard.Header-Config"
                 />
@@ -1120,7 +1101,14 @@ export function CloudBuilderDetailPage() {
                   >
                     <SectionCard.Header
                       title="server_info.json"
-                      actions={<CopyButton text={serverInfoJsonText} />}
+                      actions={
+                        <CopyButton
+                          value={serverInfoJsonText}
+                          size="sm"
+                          label="Copy"
+                          successLabel="Copied"
+                        />
+                      }
                       data-figma-name="[TDS] DetailCard.Header-ServerInfo"
                       aria-label="[TDS] DetailCard.Header-ServerInfo"
                     />

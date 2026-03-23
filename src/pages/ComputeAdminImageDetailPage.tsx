@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
+  CopyButton,
   VStack,
   TabBar,
   TopBar,
@@ -17,14 +18,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconCopy,
-  IconCheck,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -393,41 +387,6 @@ const defaultImageDetail: ImageDetail = {
 };
 
 /* ----------------------------------------
-   Copyable Value Component
-   ---------------------------------------- */
-
-interface CopyableValueProps {
-  value: string;
-}
-
-function CopyableValue({ value }: CopyableValueProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      <button
-        onClick={handleCopy}
-        className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-        aria-label="Copy to clipboard"
-      >
-        {copied ? (
-          <IconCheck size={16} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={12} className="text-[var(--color-text-default)]" />
-        )}
-      </button>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Compute Admin Image Detail Page
    ---------------------------------------- */
 
@@ -586,7 +545,12 @@ export function ComputeAdminImageDetailPage() {
                         <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                           Filename
                         </span>
-                        <CopyableValue value={image.filename} />
+                        <div className="flex items-center gap-2">
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            {image.filename}
+                          </span>
+                          <CopyButton value={image.filename} size="sm" iconOnly />
+                        </div>
                       </div>
                     </div>
                     {/* Checksum with copy */}
@@ -596,7 +560,12 @@ export function ComputeAdminImageDetailPage() {
                         <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                           Checksum
                         </span>
-                        <CopyableValue value={image.checksum} />
+                        <div className="flex items-center gap-2">
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            {image.checksum}
+                          </span>
+                          <CopyButton value={image.checksum} size="sm" iconOnly />
+                        </div>
                       </div>
                     </div>
                   </SectionCard.Content>

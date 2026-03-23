@@ -18,6 +18,7 @@ import {
   SectionCard,
   Table,
   PageShell,
+  CopyButton,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -35,8 +36,6 @@ import {
   IconDotsCircleHorizontal,
   IconFolderOpen,
   IconCirclePlus,
-  IconCopy,
-  IconCheck,
   IconLayoutSidebar,
   IconSelector,
 } from '@tabler/icons-react';
@@ -300,13 +299,6 @@ function ObjectRow({
   onToggleSelect,
 }: ObjectRowProps) {
   const isFolder = object.type === 'folder';
-  const [copiedField, setCopiedField] = useState<'s3Uri' | 'objectUrl' | null>(null);
-
-  const handleCopy = (text: string, field: 's3Uri' | 'objectUrl') => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
 
   return (
     <div
@@ -418,20 +410,12 @@ function ObjectRow({
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">S3 URI</span>
-                <button
-                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => object.s3Uri && handleCopy(object.s3Uri, 's3Uri')}
-                >
-                  {copiedField === 's3Uri' ? (
-                    <IconCheck
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-state-success)]"
-                    />
-                  ) : (
-                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                  )}
-                </button>
+                <CopyButton
+                  value={object.s3Uri ?? ''}
+                  size="sm"
+                  iconOnly
+                  disabled={!object.s3Uri}
+                />
               </div>
               <div className="text-body-md text-[var(--color-text-default)] break-all">
                 {object.s3Uri || '-'}
@@ -441,20 +425,12 @@ function ObjectRow({
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">Object URL</span>
-                <button
-                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => object.objectUrl && handleCopy(object.objectUrl, 'objectUrl')}
-                >
-                  {copiedField === 'objectUrl' ? (
-                    <IconCheck
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-state-success)]"
-                    />
-                  ) : (
-                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                  )}
-                </button>
+                <CopyButton
+                  value={object.objectUrl ?? ''}
+                  size="sm"
+                  iconOnly
+                  disabled={!object.objectUrl}
+                />
               </div>
               <div className="text-body-md text-[var(--color-text-default)] break-all">
                 {object.objectUrl || '-'}

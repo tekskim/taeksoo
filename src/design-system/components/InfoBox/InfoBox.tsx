@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { twMerge } from '../../utils/cn';
 import { Tooltip } from '../Tooltip';
 import { StatusIndicator, type StatusType } from '../StatusIndicator';
-import { IconInfoCircle, IconCopy, IconCheck } from '@tabler/icons-react';
+import { CopyButton } from '../CopyButton';
+import { IconInfoCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    InfoBox Types
@@ -45,16 +46,7 @@ export function InfoBox({
   status,
   className = '',
 }: InfoBoxProps) {
-  const [copied, setCopied] = useState(false);
   const isStringValue = typeof value === 'string';
-
-  const handleCopy = () => {
-    if (isStringValue) {
-      navigator.clipboard.writeText(value);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const renderValue = () => {
     if (children) return children;
@@ -101,19 +93,7 @@ export function InfoBox({
         {(renderValue() !== null || (copyable && isStringValue)) && (
           <div className="flex items-center gap-1 min-w-0">
             {renderValue()}
-            {copyable && isStringValue && (
-              <button
-                onClick={handleCopy}
-                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
-                aria-label="Copy to clipboard"
-              >
-                {copied ? (
-                  <IconCheck size={12} className="text-[var(--color-state-success)]" />
-                ) : (
-                  <IconCopy size={12} className="text-[var(--color-text-default)]" />
-                )}
-              </button>
-            )}
+            {copyable && isStringValue && <CopyButton value={value} size="sm" iconOnly />}
           </div>
         )}
       </div>

@@ -24,6 +24,7 @@ import {
   Tooltip,
   Popover,
   SearchInput,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -32,7 +33,6 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDotsCircleHorizontal,
   IconChevronDown,
@@ -789,9 +789,7 @@ export function ContainerServiceDetailPage() {
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={service.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>

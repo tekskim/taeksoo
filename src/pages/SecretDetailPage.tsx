@@ -242,12 +242,6 @@ export function SecretDetailPage() {
     }));
   };
 
-  // Copy to clipboard function
-  const copyToClipboard = (value: string) => {
-    navigator.clipboard.writeText(value);
-    // Could add toast notification here
-  };
-
   // Mask value
   const maskValue = (value: string) => {
     return '••••••••';

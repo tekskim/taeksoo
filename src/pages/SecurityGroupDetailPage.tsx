@@ -18,6 +18,7 @@ import {
   ConfirmModal,
   StatusIndicator,
   PageShell,
+  CopyButton,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -30,7 +31,6 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconCopy,
   IconCirclePlus,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
@@ -224,11 +224,6 @@ export default function SecurityGroupDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  // Copy to clipboard function
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
 
   // Context menu items for rules
   const getRuleContextMenuItems = (rule: SecurityGroupRule): ContextMenuItem[] => [
@@ -485,12 +480,7 @@ export default function SecurityGroupDetailPage() {
               <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
               <div className="flex items-center gap-1 mt-1.5">
                 <p className="text-body-md text-[var(--color-text-default)]">{securityGroup.id}</p>
-                <button
-                  onClick={() => copyToClipboard(securityGroup.id)}
-                  className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                >
-                  <IconCopy size={12} className="text-[var(--color-text-default)]" />
-                </button>
+                <CopyButton value={securityGroup.id} size="sm" iconOnly />
               </div>
             </div>
 

@@ -24,6 +24,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  CopyButton,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -40,7 +41,6 @@ import {
   IconPower,
   IconDotsCircleHorizontal,
   IconDownload,
-  IconCopy,
   IconLock,
   IconLockOpen,
 } from '@tabler/icons-react';
@@ -342,10 +342,6 @@ export function BareMetalDetailPage() {
       }
       return newSet;
     });
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
   };
 
   const instance = id ? mockBareMetalMap[id] || defaultBareMetalDetail : defaultBareMetalDetail;
@@ -795,19 +791,7 @@ export function BareMetalDetailPage() {
                       render: (_value: string, row: ActionLog) => (
                         <div className="flex items-center gap-1.5">
                           <span>{row.requestId}</span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              copyToClipboard(row.requestId);
-                            }}
-                            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                          >
-                            <IconCopy
-                              size={12}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          </button>
+                          <CopyButton value={row.requestId} size="sm" iconOnly />
                         </div>
                       ),
                     },

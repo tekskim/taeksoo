@@ -46,6 +46,7 @@ import {
   IconSettings,
   IconPackages,
   IconHistory,
+  IconFolder,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -265,6 +266,12 @@ const navigationItems: NavItem[] = [
     label: 'Scrollbar',
     icon: IconLayoutSidebar,
     path: '/design/components/scrollbar',
+  },
+  {
+    id: 'project-selector',
+    label: 'Project Selector',
+    icon: IconFolder,
+    path: '/design/components/project-selector',
   },
 ];
 
@@ -626,6 +633,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/tabbar': '2026-03-09',
   '/design/components/tabs': '2026-03-09',
   '/design/components/breadcrumb': '2026-03-05 13:00:00',
+  '/design/components/project-selector': '2026-03-23 12:00:00',
   // Overlay
   '/design/components/tooltip': '2026-03-18 11:00:00',
   '/design/components/popover': '2026-03-01 10:30:00',
