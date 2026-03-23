@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -499,15 +498,11 @@ export function PersistentVolumeDetailPage() {
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
                       Mount options
                     </h3>
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                      <FormField label="Value" disabled className="w-full">
-                        <Input
-                          placeholder="e.g. bar"
-                          value={pvData.mountOptions}
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </FormField>
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="grid grid-cols-[1fr] gap-2">
+                        <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
+                        <Input value={pvData.mountOptions} onChange={() => {}} fullWidth readOnly />
+                      </div>
                     </div>
                   </VStack>
 
@@ -520,53 +515,34 @@ export function PersistentVolumeDetailPage() {
                       {pvData.nodeSelectors.map((group) => (
                         <div
                           key={group.id}
-                          className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
+                          className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
                         >
-                          <VStack gap={2}>
-                            {/* Header Row */}
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Operator
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                              </div>
-                            </HStack>
-                            {/* Data Rows */}
+                          <div className="grid grid-cols-[1fr_140px_1fr] gap-2 items-center">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Key
+                            </span>
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Operator
+                            </span>
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Value
+                            </span>
                             {group.items.map((item) => (
-                              <HStack key={item.id} gap={2} className="w-full">
-                                <div className="flex-1">
-                                  <Input value={item.key} onChange={() => {}} fullWidth disabled />
-                                </div>
-                                <div className="flex-1">
-                                  <Select
-                                    options={operatorOptions}
-                                    value={item.operator}
-                                    onChange={() => {}}
-                                    fullWidth
-                                    disabled
-                                  />
-                                </div>
-                                <div className="flex-1">
-                                  <Input
-                                    value={item.value}
-                                    onChange={() => {}}
-                                    fullWidth
-                                    disabled
-                                  />
-                                </div>
-                              </HStack>
+                              <React.Fragment key={item.id}>
+                                <Input value={item.key} onChange={() => {}} fullWidth readOnly />
+                                <Input
+                                  value={
+                                    operatorOptions.find((o) => o.value === item.operator)?.label ??
+                                    item.operator
+                                  }
+                                  onChange={() => {}}
+                                  fullWidth
+                                  readOnly
+                                />
+                                <Input value={item.value} onChange={() => {}} fullWidth readOnly />
+                              </React.Fragment>
                             ))}
-                          </VStack>
+                          </div>
                         </div>
                       ))}
                       {pvData.nodeSelectors.length === 0 && (
