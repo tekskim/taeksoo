@@ -421,7 +421,6 @@ import { DesktopPage } from '@/pages/DesktopPage';
 import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
 import { TableStyleGuidePage } from '@/pages/TableStyleGuidePage';
 import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
-import { IconographyPage } from '@/pages/IconographyPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
@@ -1146,7 +1145,6 @@ function AppRoutes() {
       <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
       <Route path="/topology-popovers" element={<TopologyPopoversPage />} />
-      <Route path="/iconography" element={<IconographyPage />} />
       <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
       <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
       <Route path="/form-patterns" element={<FormPatternsPage />} />

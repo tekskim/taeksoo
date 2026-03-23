@@ -1,12 +1,11 @@
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Modal, HStack } from '@/design-system';
+import { Button, HStack } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
-import { IconArrowLeft, IconHome, IconLogin, IconMoon, IconSun } from '@tabler/icons-react';
+import { IconArrowLeft, IconHome, IconMoon, IconSun } from '@tabler/icons-react';
 
-type ErrorVariant = '401-b' | '403' | '404' | '500' | 'link-expired';
+type ErrorVariant = '403' | '404' | '500' | 'link-expired';
 
 interface ErrorConfig {
   statusCode?: string;
@@ -18,13 +17,6 @@ interface ErrorConfig {
 }
 
 const ERROR_CONFIGS: Record<ErrorVariant, ErrorConfig> = {
-  '401-b': {
-    title: 'Session Expired',
-    description: 'Your session has expired due to inactivity. Please sign in again to continue.',
-    showGoBack: false,
-    showGoHome: false,
-    showSignIn: true,
-  },
   '403': {
     statusCode: '403',
     title: 'Access Denied',
@@ -61,7 +53,6 @@ const ERROR_CONFIGS: Record<ErrorVariant, ErrorConfig> = {
 };
 
 const VARIANT_LABELS: { id: ErrorVariant; label: string }[] = [
-  { id: '401-b', label: '401-B Session Timeout' },
   { id: '403', label: '403 Forbidden' },
   { id: '404', label: '404 Not Found' },
   { id: '500', label: '500 Server Error' },
@@ -122,39 +113,11 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
   );
 }
 
-function SessionExpiredModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const config = ERROR_CONFIGS['401-b'];
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={config.title}
-      description={config.description}
-      closeOnEscape={false}
-      showCloseButton={false}
-    >
-      <div className="flex w-full">
-        <Button
-          variant="primary"
-          size="md"
-          leftIcon={<IconLogin size={12} />}
-          onClick={() => (window.location.href = '/')}
-          className="flex-1"
-        >
-          Sign in again
-        </Button>
-      </div>
-    </Modal>
-  );
-}
-
 export function SystemErrorPagesPage() {
   const navigate = useNavigate();
   const { isDark, toggleDarkMode } = useDarkMode();
   const { variant: urlVariant } = useParams<{ variant: string }>();
   const activeVariant: ErrorVariant = isValidVariant(urlVariant) ? urlVariant : '404';
-  const [modalOpen, setModalOpen] = useState(true);
 
   return (
     <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)] flex flex-col">
@@ -177,10 +140,7 @@ export function SystemErrorPagesPage() {
                 key={id}
                 variant={activeVariant === id ? 'secondary' : 'muted'}
                 size="sm"
-                onClick={() => {
-                  if (id === '401-b') setModalOpen(true);
-                  navigate(`/system-errors/${id}`);
-                }}
+                onClick={() => navigate(`/system-errors/${id}`)}
               >
                 {label}
               </Button>
@@ -202,13 +162,7 @@ export function SystemErrorPagesPage() {
 
       {/* Error Preview */}
       <div className="flex-1">
-        {activeVariant === '401-b' ? (
-          <div className="min-h-screen bg-[var(--color-surface-subtle)]">
-            <SessionExpiredModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
-          </div>
-        ) : (
-          <FullPageError variant={activeVariant} />
-        )}
+        <FullPageError variant={activeVariant} />
       </div>
     </div>
   );

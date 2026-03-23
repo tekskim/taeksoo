@@ -72,16 +72,6 @@ const appCards: AppCard[] = [
     available: true,
   },
   {
-    id: 'iam-shared-v2',
-    title: 'IAM (shared-v2)',
-    description: 'IAM with thaki-shared-v2 components applied',
-    icon: <img src={IAMIcon} alt="IAM shared-v2" className="w-[72px] h-[72px]" />,
-    path: '/iam-shared-v2',
-    color: 'from-amber-500 to-orange-500',
-    available: true,
-    badge: 'shared-v2',
-  },
-  {
     id: 'storage',
     title: 'Storage',
     description: 'Object storage, file systems, and data management',
@@ -208,15 +198,7 @@ export function EntryPage() {
 
   const handleCardClick = (card: AppCard) => {
     if (card.available) {
-      if (card.id === 'iam-shared-v2') {
-        const sharedV2Url =
-          window.location.hostname === 'localhost'
-            ? 'http://localhost:5174/iam'
-            : `${window.location.origin}/tds_ssot/shared-v2/iam`;
-        window.open(sharedV2Url, '_blank');
-      } else {
-        navigate(card.path);
-      }
+      navigate(card.path);
     }
   };
 
@@ -331,9 +313,6 @@ export function EntryPage() {
                   </Button>
                   <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
                     Topology Popovers
-                  </Button>
-                  <Button variant="muted" size="md" onClick={() => navigate('/iconography')}>
-                    Iconography
                   </Button>
                   <Button variant="muted" size="md" onClick={() => navigate('/create-pages')}>
                     Create Pages
