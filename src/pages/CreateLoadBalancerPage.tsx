@@ -586,7 +586,44 @@ export default function CreateLoadBalancerPage() {
   // Member form state
   const [memberPortSearch, setMemberPortSearch] = useState('');
   const [memberPortPage, setMemberPortPage] = useState(1);
-  const [allocatedMembers, setAllocatedMembers] = useState<AllocatedMember[]>([]);
+  const [allocatedMembers, setAllocatedMembers] = useState<AllocatedMember[]>([
+    {
+      id: 'member-1',
+      portId: 'port-001',
+      portName: 'port-web-01',
+      ipAddress: '10.63.0.46',
+      instanceName: 'web-server-01',
+      weight: 1,
+      monitorPort: 80,
+      monitorAddress: '',
+      backup: false,
+      adminStateUp: true,
+    },
+    {
+      id: 'member-2',
+      portId: 'port-002',
+      portName: 'port-ext-01',
+      ipAddress: '10.63.0.43',
+      instanceName: null,
+      weight: 1,
+      monitorPort: 80,
+      monitorAddress: '',
+      backup: false,
+      adminStateUp: true,
+    },
+    {
+      id: 'member-3',
+      portId: 'port-003',
+      portName: 'port-ext-02',
+      ipAddress: '10.63.0.31',
+      instanceName: null,
+      weight: 1,
+      monitorPort: 80,
+      monitorAddress: '',
+      backup: false,
+      adminStateUp: true,
+    },
+  ]);
   const [portIpSelections, setPortIpSelections] = useState<Record<string, string>>({});
 
   // External member rows (for adding members not from ports list)
@@ -2525,46 +2562,167 @@ export default function CreateLoadBalancerPage() {
               )}
               {!isV2 && sectionStatus['listener'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Listener name" value={listenerName || '-'} />
+                  <SectionCard.DataRow label="Listener Name" value={listenerName || '-'} />
                   <SectionCard.DataRow
-                    label="Protocol / Port"
-                    value={`${listenerProtocol} / ${protocolPort}`}
+                    label="Listener Description"
+                    value={listenerDescription || '-'}
+                  />
+                  <SectionCard.DataRow label="Listener Protocol" value={listenerProtocol || '-'} />
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') && (
+                    <SectionCard.DataRow
+                      label="SSL Parsing Method"
+                      value={
+                        sslParsingMethod === 'one-way'
+                          ? 'One-way authentication'
+                          : 'Two-way authentication'
+                      }
+                    />
+                  )}
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') && (
+                    <SectionCard.DataRow
+                      label="Server Certificate"
+                      value={selectedCertificate || '-'}
+                    />
+                  )}
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') &&
+                    sslParsingMethod === 'two-way' && (
+                      <SectionCard.DataRow
+                        label="CA Certificate"
+                        value={selectedCaCertificate || '-'}
+                      />
+                    )}
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') &&
+                    sniEnabled &&
+                    selectedSniCertificates.size > 0 && (
+                      <SectionCard.DataRow
+                        label="SNI Certificate"
+                        value={`${[...selectedSniCertificates][0]}${selectedSniCertificates.size > 1 ? ` (+${selectedSniCertificates.size - 1})` : ''}`}
+                      />
+                    )}
+                  <SectionCard.DataRow label="Protocol Port" value={String(protocolPort)} />
+                  <SectionCard.DataRow
+                    label="Connection Limit"
+                    value={connectionLimitType === 'unlimited' ? '-' : String(connectionLimitValue)}
                   />
                   <SectionCard.DataRow
-                    label="Connection limit"
-                    value={
-                      connectionLimitType === 'unlimited'
-                        ? 'Unlimited'
-                        : String(connectionLimitValue)
-                    }
-                  />
-                  <SectionCard.DataRow
-                    label="Admin state"
+                    label="Listener admin state"
                     value={listenerAdminState ? 'Up' : 'Down'}
+                  />
+                  <SectionCard.DataRow
+                    label="Custom Headers"
+                    value={`X-Forwarded-For : ${xForwardedFor ? 'Enabled' : 'Disabled'} / X-Forwarded-Port : ${xForwardedPort ? 'Enabled' : 'Disabled'}`}
+                  />
+                  <SectionCard.DataRow
+                    label="Client Data Timeout"
+                    value={String(clientDataTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="Member Connect Timeout"
+                    value={String(memberConnectTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="Member Data Timeout"
+                    value={String(memberDataTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="TCP Inspect Timeout"
+                    value={String(tcpInspectTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="Allowed CIDR"
+                    value={
+                      allowedCidrs.filter((c) => c.trim()).length > 0
+                        ? `${allowedCidrs.filter((c) => c.trim())[0]}${allowedCidrs.filter((c) => c.trim()).length > 1 ? ` (+${allowedCidrs.filter((c) => c.trim()).length - 1})` : ''}`
+                        : '-'
+                    }
                   />
                 </SectionCard.Content>
               )}
             </SectionCard>
             {isV2 && (
               <SectionCard>
-                <SectionCard.Header title={SECTION_LABELS['listener']} />
+                <SectionCard.Header
+                  title={SECTION_LABELS['listener']}
+                  actions={
+                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                      Edit
+                    </Button>
+                  }
+                />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Listener name" value={listenerName || '-'} />
+                  <SectionCard.DataRow label="Listener Name" value={listenerName || '-'} />
                   <SectionCard.DataRow
-                    label="Protocol / Port"
-                    value={`${listenerProtocol} / ${protocolPort}`}
+                    label="Listener Description"
+                    value={listenerDescription || '-'}
+                  />
+                  <SectionCard.DataRow label="Listener Protocol" value={listenerProtocol || '-'} />
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') && (
+                    <SectionCard.DataRow
+                      label="SSL Parsing Method"
+                      value={
+                        sslParsingMethod === 'one-way'
+                          ? 'One-way authentication'
+                          : 'Two-way authentication'
+                      }
+                    />
+                  )}
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') && (
+                    <SectionCard.DataRow
+                      label="Server Certificate"
+                      value={selectedCertificate || '-'}
+                    />
+                  )}
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') &&
+                    sslParsingMethod === 'two-way' && (
+                      <SectionCard.DataRow
+                        label="CA Certificate"
+                        value={selectedCaCertificate || '-'}
+                      />
+                    )}
+                  {(listenerProtocol === 'HTTP' || listenerProtocol === 'TERMINATED_HTTPS') &&
+                    sniEnabled &&
+                    selectedSniCertificates.size > 0 && (
+                      <SectionCard.DataRow
+                        label="SNI Certificate"
+                        value={`${[...selectedSniCertificates][0]}${selectedSniCertificates.size > 1 ? ` (+${selectedSniCertificates.size - 1})` : ''}`}
+                      />
+                    )}
+                  <SectionCard.DataRow label="Protocol Port" value={String(protocolPort)} />
+                  <SectionCard.DataRow
+                    label="Connection Limit"
+                    value={connectionLimitType === 'unlimited' ? '-' : String(connectionLimitValue)}
                   />
                   <SectionCard.DataRow
-                    label="Connection limit"
-                    value={
-                      connectionLimitType === 'unlimited'
-                        ? 'Unlimited'
-                        : String(connectionLimitValue)
-                    }
-                  />
-                  <SectionCard.DataRow
-                    label="Admin state"
+                    label="Listener admin state"
                     value={listenerAdminState ? 'Up' : 'Down'}
+                  />
+                  <SectionCard.DataRow
+                    label="Custom Headers"
+                    value={`X-Forwarded-For : ${xForwardedFor ? 'Enabled' : 'Disabled'} / X-Forwarded-Port : ${xForwardedPort ? 'Enabled' : 'Disabled'}`}
+                  />
+                  <SectionCard.DataRow
+                    label="Client Data Timeout"
+                    value={String(clientDataTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="Member Connect Timeout"
+                    value={String(memberConnectTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="Member Data Timeout"
+                    value={String(memberDataTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="TCP Inspect Timeout"
+                    value={String(tcpInspectTimeout)}
+                  />
+                  <SectionCard.DataRow
+                    label="Allowed CIDR"
+                    value={
+                      allowedCidrs.filter((c) => c.trim()).length > 0
+                        ? `${allowedCidrs.filter((c) => c.trim())[0]}${allowedCidrs.filter((c) => c.trim()).length > 1 ? ` (+${allowedCidrs.filter((c) => c.trim()).length - 1})` : ''}`
+                        : '-'
+                    }
                   />
                 </SectionCard.Content>
               </SectionCard>
@@ -3506,8 +3664,8 @@ export default function CreateLoadBalancerPage() {
               )}
               {!isV2 && sectionStatus['pool'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Create pool" value={createPool ? 'Yes' : 'No'} />
                   {createPool && <SectionCard.DataRow label="Pool name" value={poolName || '-'} />}
+                  <SectionCard.DataRow label="Pool description" value="-" />
                   {createPool && (
                     <SectionCard.DataRow
                       label="Pool algorithm"
@@ -3536,8 +3694,8 @@ export default function CreateLoadBalancerPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['pool']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Create pool" value={createPool ? 'Yes' : 'No'} />
                   {createPool && <SectionCard.DataRow label="Pool name" value={poolName || '-'} />}
+                  <SectionCard.DataRow label="Pool description" value="-" />
                   {createPool && (
                     <SectionCard.DataRow
                       label="Pool algorithm"
@@ -3782,29 +3940,60 @@ export default function CreateLoadBalancerPage() {
               )}
               {!isV2 && sectionStatus['member'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Allocated members"
-                    value={
-                      allocatedMembers.length > 0
-                        ? `${allocatedMembers.length} member(s)`
-                        : 'Skipped'
-                    }
-                  />
+                  {allocatedMembers.length === 0 &&
+                    externalMembers.filter((m) => m.ipAddress.trim()).length === 0 && (
+                      <SectionCard.DataRow label="Allocated members" value="Skipped" />
+                    )}
+                  {allocatedMembers.map((m) => (
+                    <SectionCard.DataRow
+                      key={m.id}
+                      label={m.instanceName ? 'Instance Member' : 'External Member'}
+                      value={`IP : ${m.ipAddress} / Port : ${protocolPort} / Weight : ${m.weight}`}
+                    />
+                  ))}
+                  {externalMembers
+                    .filter((m) => m.ipAddress.trim())
+                    .map((m) => (
+                      <SectionCard.DataRow
+                        key={m.id}
+                        label="External Member"
+                        value={`IP : ${m.ipAddress} / Port : ${m.port || protocolPort} / Weight : ${m.weight}`}
+                      />
+                    ))}
                 </SectionCard.Content>
               )}
             </SectionCard>
             {isV2 && (
               <SectionCard>
-                <SectionCard.Header title={SECTION_LABELS['member']} />
+                <SectionCard.Header
+                  title={SECTION_LABELS['member']}
+                  actions={
+                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                      Edit
+                    </Button>
+                  }
+                />
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Allocated members"
-                    value={
-                      allocatedMembers.length > 0
-                        ? `${allocatedMembers.length} member(s)`
-                        : 'Skipped'
-                    }
-                  />
+                  {allocatedMembers.length === 0 &&
+                    externalMembers.filter((m) => m.ipAddress.trim()).length === 0 && (
+                      <SectionCard.DataRow label="Allocated members" value="Skipped" />
+                    )}
+                  {allocatedMembers.map((m) => (
+                    <SectionCard.DataRow
+                      key={m.id}
+                      label={m.instanceName ? 'Instance Member' : 'External Member'}
+                      value={`IP : ${m.ipAddress} / Port : ${protocolPort} / Weight : ${m.weight}`}
+                    />
+                  ))}
+                  {externalMembers
+                    .filter((m) => m.ipAddress.trim())
+                    .map((m) => (
+                      <SectionCard.DataRow
+                        key={m.id}
+                        label="External Member"
+                        value={`IP : ${m.ipAddress} / Port : ${m.port || protocolPort} / Weight : ${m.weight}`}
+                      />
+                    ))}
                 </SectionCard.Content>
               </SectionCard>
             )}
@@ -4002,10 +4191,6 @@ export default function CreateLoadBalancerPage() {
               )}
               {!isV2 && sectionStatus['health-monitor'] === 'done' && (
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Create health monitor"
-                    value={createHealthMonitor ? 'Yes' : 'No'}
-                  />
                   {createHealthMonitor && (
                     <SectionCard.DataRow
                       label="Health monitor name"
@@ -4040,10 +4225,6 @@ export default function CreateLoadBalancerPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['health-monitor']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow
-                    label="Create health monitor"
-                    value={createHealthMonitor ? 'Yes' : 'No'}
-                  />
                   {createHealthMonitor && (
                     <SectionCard.DataRow
                       label="Health monitor name"
