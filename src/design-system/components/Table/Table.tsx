@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
+import { Radio } from '../Radio';
 import { cn } from '../../utils/cn';
 import { useColumnResize } from './useColumnResize';
 
@@ -39,6 +40,7 @@ export interface TableProps<T = any> extends Omit<
   rows?: T[];
   rowKey: keyof T | ((row: T) => string);
   selectable?: boolean;
+  selectionType?: 'checkbox' | 'radio';
   selectedKeys?: string[];
   onSelectionChange?: (keys: string[]) => void;
   hideSelectAll?: boolean;
@@ -91,6 +93,7 @@ export function Table<T extends Record<string, any>>({
   rows,
   rowKey,
   selectable = false,
+  selectionType = 'checkbox',
   selectedKeys = [],
   onSelectionChange,
   hideSelectAll = false,
@@ -183,10 +186,14 @@ export function Table<T extends Record<string, any>>({
   }, [tableData, sortKey, sortDirection]);
 
   const handleSelectRow = (key: string) => {
-    if (selectedKeys.includes(key)) {
-      onSelectionChange?.(selectedKeys.filter((k) => k !== key));
+    if (selectionType === 'radio') {
+      onSelectionChange?.(selectedKeys.includes(key) ? [] : [key]);
     } else {
-      onSelectionChange?.([...selectedKeys, key]);
+      if (selectedKeys.includes(key)) {
+        onSelectionChange?.(selectedKeys.filter((k) => k !== key));
+      } else {
+        onSelectionChange?.([...selectedKeys, key]);
+      }
     }
   };
 
@@ -273,7 +280,7 @@ export function Table<T extends Record<string, any>>({
           >
             {selectable && (
               <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
-                {!hideSelectAll && (
+                {!hideSelectAll && selectionType !== 'radio' && (
                   <Checkbox
                     checked={allSelected}
                     indeterminate={someSelected}
@@ -393,11 +400,19 @@ export function Table<T extends Record<string, any>>({
                           className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Checkbox
-                            checked={isSelected}
-                            onChange={() => handleSelectRow(key)}
-                            aria-label={`Select row ${rowIndex + 1}`}
-                          />
+                          {selectionType === 'radio' ? (
+                            <Radio
+                              checked={isSelected}
+                              onChange={() => handleSelectRow(key)}
+                              aria-label={`Select row ${rowIndex + 1}`}
+                            />
+                          ) : (
+                            <Checkbox
+                              checked={isSelected}
+                              onChange={() => handleSelectRow(key)}
+                              aria-label={`Select row ${rowIndex + 1}`}
+                            />
+                          )}
                         </div>
                       )}
 
