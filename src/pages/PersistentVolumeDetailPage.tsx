@@ -193,7 +193,10 @@ export function PersistentVolumeDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/persistent-volumes/${pvId}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/persistent-volumes/${pvId}/edit?name=${encodeURIComponent(pvData?.name ?? pvId)}`
+        ),
     },
     {
       id: 'edit-yaml',

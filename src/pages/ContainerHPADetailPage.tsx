@@ -378,7 +378,7 @@ export function ContainerHPADetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/hpa/${hpa.id}/edit`),
+      onClick: () => navigate(`/container/hpa/${hpa.id}/edit?name=${encodeURIComponent(hpa.name)}`),
     },
     {
       id: 'edit-yaml',

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -13,12 +13,17 @@ import {
   Input,
   NumberInput,
   Select,
-  Slider,
   SectionCard,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
+import {
+  formCpuToYaml,
+  formMemoryToYaml,
+  parseCpuSafe,
+  parseMemorySafe,
+} from '@/utils/k8sResourceUnits';
 import {
   IconBell,
   IconTerminal2,
@@ -103,6 +108,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -110,6 +116,7 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
@@ -142,7 +149,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -164,6 +171,7 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -176,6 +184,7 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -207,6 +216,7 @@ function BasicInfoSection({
                   if (limitRangeNameError) onLimitRangeNameErrorChange(null);
                 }}
                 fullWidth
+                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{limitRangeNameError}</FormField.ErrorMessage>
@@ -272,26 +282,15 @@ function ContainerResourceLimitSection({
                 Specify the minimum CPU amount reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={10}
-                    max={1000}
-                    step={10}
-                    value={parseInt(resourceLimit.cpuReservation) || 0}
-                    onChange={(val) => updateField('cpuReservation', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.cpuReservation}
-                    onChange={(val) => updateField('cpuReservation', val)}
-                    min={10}
-                    max={1000}
-                    step={1}
-                    width="xs"
-                    suffix="mCPUs"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.cpuReservation}
+                  onChange={(val) => updateField('cpuReservation', val)}
+                  min={0}
+                  step={1}
+                  width="sm"
+                  suffix="mCPUs"
+                />
               </FormField.Control>
-              <FormField.HelperText>10-1000 mCPUs</FormField.HelperText>
             </FormField>
 
             {/* CPU Limit */}
@@ -301,26 +300,15 @@ function ContainerResourceLimitSection({
                 Specify the maximum CPU amount the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={10}
-                    max={1000}
-                    step={10}
-                    value={parseInt(resourceLimit.cpuLimit) || 0}
-                    onChange={(val) => updateField('cpuLimit', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.cpuLimit}
-                    onChange={(val) => updateField('cpuLimit', val)}
-                    min={10}
-                    max={1000}
-                    step={1}
-                    width="xs"
-                    suffix="mCPUs"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.cpuLimit}
+                  onChange={(val) => updateField('cpuLimit', val)}
+                  min={0}
+                  step={1}
+                  width="sm"
+                  suffix="mCPUs"
+                />
               </FormField.Control>
-              <FormField.HelperText>10-1000 mCPUs</FormField.HelperText>
             </FormField>
 
             {/* Memory Reservation */}
@@ -330,26 +318,15 @@ function ContainerResourceLimitSection({
                 Specify the minimum memory capacity reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={4}
-                    max={128}
-                    step={4}
-                    value={parseInt(resourceLimit.memoryReservation) || 0}
-                    onChange={(val) => updateField('memoryReservation', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.memoryReservation}
-                    onChange={(val) => updateField('memoryReservation', val)}
-                    min={4}
-                    max={128}
-                    step={1}
-                    width="xs"
-                    suffix="GiB"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.memoryReservation}
+                  onChange={(val) => updateField('memoryReservation', val)}
+                  min={0}
+                  step={1}
+                  width="sm"
+                  suffix="MiB"
+                />
               </FormField.Control>
-              <FormField.HelperText>4-128 GiB</FormField.HelperText>
             </FormField>
 
             {/* Memory Limit */}
@@ -359,26 +336,15 @@ function ContainerResourceLimitSection({
                 Specify the maximum memory capacity the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={4}
-                    max={128}
-                    step={4}
-                    value={parseInt(resourceLimit.memoryLimit) || 0}
-                    onChange={(val) => updateField('memoryLimit', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.memoryLimit}
-                    onChange={(val) => updateField('memoryLimit', val)}
-                    min={4}
-                    max={128}
-                    step={1}
-                    width="xs"
-                    suffix="GiB"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.memoryLimit}
+                  onChange={(val) => updateField('memoryLimit', val)}
+                  min={0}
+                  step={1}
+                  width="sm"
+                  suffix="MiB"
+                />
               </FormField.Control>
-              <FormField.HelperText>4-128 GiB</FormField.HelperText>
             </FormField>
           </div>
         </VStack>
@@ -550,6 +516,10 @@ function LabelsAnnotationsSection({
 
 export function CreateLimitRangePage() {
   const navigate = useNavigate();
+  const { limitRangeName: limitRangeNameParam } = useParams();
+  const isEditMode = !!limitRangeNameParam;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -558,12 +528,12 @@ export function CreateLimitRangePage() {
   const [namespace, setNamespace] = useState('default');
   const [description, setDescription] = useState('');
 
-  // Container Resource Limit state
+  // Container Resource Limit state (values in form units: CPU=m, Memory=Mi)
   const [resourceLimit, setResourceLimit] = useState<ContainerResourceLimit>({
-    cpuReservation: '1000',
-    cpuLimit: '1000',
-    memoryReservation: '128',
-    memoryLimit: '128',
+    cpuReservation: '100',
+    cpuLimit: '500',
+    memoryReservation: '256',
+    memoryLimit: '512',
   });
 
   // Labels & Annotations state
@@ -590,8 +560,32 @@ export function CreateLimitRangePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create limit range');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `Limit range: ${nameFromQuery || limitRangeNameParam}` : 'Create limit range'
+    );
+  }, [updateActiveTabLabel, isEditMode, limitRangeNameParam]);
+
+  useEffect(() => {
+    if (isEditMode && limitRangeNameParam) {
+      setLimitRangeName(nameFromQuery || limitRangeNameParam);
+
+      // Mock YAML values — in a real app these would be fetched from the cluster.
+      // Demonstrates YAML → Form parsing: "500m" → 500, "1Gi" → 1024.
+      const mockYaml = {
+        cpuReservation: '100m',
+        cpuLimit: '500m',
+        memoryReservation: '256Mi',
+        memoryLimit: '1Gi',
+      };
+
+      setResourceLimit({
+        cpuReservation: String(parseCpuSafe(mockYaml.cpuReservation, 100)),
+        cpuLimit: String(parseCpuSafe(mockYaml.cpuLimit, 500)),
+        memoryReservation: String(parseMemorySafe(mockYaml.memoryReservation, 256)),
+        memoryLimit: String(parseMemorySafe(mockYaml.memoryLimit, 512)),
+      });
+    }
+  }, [isEditMode, limitRangeNameParam]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -613,13 +607,12 @@ export function CreateLimitRangePage() {
     const hasLabelsOrAnnotations = labels.length > 0 || annotations.length > 0;
 
     setSectionStatus({
+      // namespace has default → some required always filled → 'active' until name is also typed
       'basic-info': hasBasicInfo ? 'done' : 'active',
-      data: hasResourceLimit ? 'done' : hasBasicInfo ? 'active' : 'pending',
-      'labels-annotations': hasLabelsOrAnnotations
-        ? 'done'
-        : hasResourceLimit
-          ? 'active'
-          : 'pending',
+      // resource limit fields have defaults; section is optional → always done
+      data: 'done',
+      // labels & annotations have no required fields → always done
+      'labels-annotations': 'done',
     });
   }, [limitRangeName, namespace, resourceLimit, labels, annotations]);
 
@@ -628,21 +621,25 @@ export function CreateLimitRangePage() {
   }, [navigate]);
 
   const handleCreate = useCallback(() => {
-    // Validate basic info first
     if (!limitRangeName.trim()) {
       setLimitRangeNameError('Limit range name is required.');
-      setSectionStatus((prev) => ({
-        ...prev,
-        'basic-info': 'active',
-      }));
+      setSectionStatus((prev) => ({ ...prev, 'basic-info': 'active' }));
       return;
     }
 
-    console.log('Creating limit range:', {
+    // Form → YAML conversion: CPU {n} → "{n}m", Memory {n} → "{n}Mi"
+    const yamlResourceLimit = {
+      cpuReservation: formCpuToYaml(resourceLimit.cpuReservation),
+      cpuLimit: formCpuToYaml(resourceLimit.cpuLimit),
+      memoryReservation: formMemoryToYaml(resourceLimit.memoryReservation),
+      memoryLimit: formMemoryToYaml(resourceLimit.memoryLimit),
+    };
+
+    console.log('Creating limit range (YAML values):', {
       limitRangeName,
       namespace,
       description,
-      resourceLimit,
+      resourceLimit: yamlResourceLimit,
       labels,
       annotations,
     });
@@ -722,7 +719,15 @@ export function CreateLimitRangePage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Limit Ranges', href: '/container/limit-ranges' },
-                { label: 'Create limit range' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || limitRangeNameParam!,
+                        href: `/container/limit-ranges/{limitRangeNameParam}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create limit range' }]),
               ]}
             />
           }
@@ -753,7 +758,11 @@ export function CreateLimitRangePage() {
         {/* Page Header */}
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create limit range</h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              {isEditMode
+                ? `Limit range: ${nameFromQuery || limitRangeNameParam}`
+                : 'Create limit range'}
+            </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             LimitRanges define default resource requests and limits for Pods and containers within a
@@ -777,6 +786,7 @@ export function CreateLimitRangePage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
+              isEditMode={isEditMode}
             />
 
             {/* Container Resource Limit Section */}
@@ -804,6 +814,7 @@ export function CreateLimitRangePage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

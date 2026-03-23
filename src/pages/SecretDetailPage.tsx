@@ -201,7 +201,10 @@ export function SecretDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/secrets/${secretId}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/secrets/${secretId}/edit?name=${encodeURIComponent(secretData?.name ?? secretId)}`
+        ),
     },
     {
       id: 'edit-yaml',

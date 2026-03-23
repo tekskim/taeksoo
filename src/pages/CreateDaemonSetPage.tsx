@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -332,6 +332,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -341,6 +342,7 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
@@ -372,6 +374,7 @@ function SummarySidebar({
   const containerSections = [
     'Basic Information',
     'Image',
+    'Networking',
     'Command',
     'Environment Variables',
     'Service Account Name',
@@ -470,7 +473,7 @@ function SummarySidebar({
             className="flex-1 min-w-[80px]"
             disabled={isCreateDisabled}
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -491,6 +494,7 @@ interface BasicInfoSectionProps {
   onNameErrorChange: (error: string | null) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -502,6 +506,7 @@ function BasicInfoSection({
   onNameErrorChange,
   description,
   onDescriptionChange,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
@@ -516,6 +521,7 @@ function BasicInfoSection({
               value={namespace}
               onChange={(value) => onNamespaceChange(value)}
               fullWidth
+              disabled={isEditMode}
             />
           </FormField>
 
@@ -535,6 +541,7 @@ function BasicInfoSection({
               }}
               error={!!nameError}
               fullWidth
+              disabled={isEditMode}
             />
           </FormField>
 
@@ -864,6 +871,8 @@ function ScalingPolicySection({
 
 export function CreateDaemonSetPage() {
   const navigate = useNavigate();
+  const { daemonSetName } = useParams();
+  const isEditMode = !!daemonSetName;
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -947,6 +956,17 @@ export function CreateDaemonSetPage() {
     workingDir: string;
     // Ports
     ports: { name: string; containerPort: string; protocol: string }[];
+    // Networking
+    networkingPorts: {
+      id: string;
+      serviceType: string;
+      name: string;
+      privateContainerPort: string;
+      protocol: string;
+      publicHostPort: string;
+      hostIP: string;
+      listeningPort: string;
+    }[];
     // Environment Variables
     envVars: {
       name: string;
@@ -1047,6 +1067,7 @@ export function CreateDaemonSetPage() {
       workingDir: '',
       // Ports
       ports: [],
+      networkingPorts: [],
       // Environment Variables
       envVars: [
         { name: '', value: '', type: 'value' as const },
@@ -1248,8 +1269,16 @@ export function CreateDaemonSetPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create DaemonSet');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `DaemonSet: ${nameFromQuery || daemonSetName}` : 'Create DaemonSet'
+    );
+  }, [updateActiveTabLabel, isEditMode, daemonSetName]);
+
+  useEffect(() => {
+    if (isEditMode && daemonSetName) {
+      setName(nameFromQuery || daemonSetName);
+    }
+  }, [isEditMode, daemonSetName]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1259,8 +1288,14 @@ export function CreateDaemonSetPage() {
 
   // Active form tab (DaemonSet, Pod, Container-X)
   const [searchParams, setSearchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const activeTab = searchParams.get('tab') || 'daemonset';
-  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+  const setActiveTab = (tab: string) => {
+    const newParams: Record<string, string> = { tab };
+    const name = searchParams.get('name');
+    if (name) newParams['name'] = name;
+    setSearchParams(newParams, { replace: true });
+  };
   const tabListRef = useRef<HTMLDivElement>(null);
 
   // Build inner tabs for the form
@@ -1631,6 +1666,7 @@ export function CreateDaemonSetPage() {
         workingDir: '',
         // Ports
         ports: [],
+        networkingPorts: [],
         // Environment Variables
         envVars: [
           { name: '', value: '', type: 'value' as const },
@@ -1738,7 +1774,15 @@ export function CreateDaemonSetPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'DaemonSets', href: '/container/daemonsets' },
-                { label: 'Create DaemonSet' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || daemonSetName!,
+                        href: `/container/daemonsets/{daemonSetName}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create DaemonSet' }]),
               ]}
             />
           }
@@ -1769,7 +1813,7 @@ export function CreateDaemonSetPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create DaemonSet
+            {isEditMode ? `DaemonSet: ${nameFromQuery || daemonSetName}` : 'Create DaemonSet'}
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a DaemonSet to run a copy of a pod on every selected node, ensuring consistent
@@ -1829,6 +1873,7 @@ export function CreateDaemonSetPage() {
                   onNameErrorChange={setNameError}
                   description={description}
                   onDescriptionChange={setDescription}
+                  isEditMode={isEditMode}
                 />
                 <LabelsAnnotationsSection
                   labels={labels}
@@ -4527,10 +4572,6 @@ export function CreateDaemonSetPage() {
                                 Container Image{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Input
                               placeholder="nginx:latest"
@@ -4547,10 +4588,6 @@ export function CreateDaemonSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Policy
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
@@ -4573,10 +4610,6 @@ export function CreateDaemonSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Secrets
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Select
                               options={[
@@ -4597,6 +4630,211 @@ export function CreateDaemonSetPage() {
                       </SectionCard.Content>
                     </SectionCard>
 
+                    {/* 2a. Networking Section */}
+                    <SectionCard className="pb-4">
+                      <SectionCard.Header title="Networking" />
+                      <SectionCard.Content>
+                        <VStack gap={4}>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Define a Service to expose the container, or define a non-Kubernetes
+                            network port that the new service will run when the app on the container
+                            is expected to run.
+                          </span>
+                          {/* Port rows */}
+                          {(config.networkingPorts || []).map((port) => {
+                            const hasListening =
+                              port.serviceType === 'NodePort' ||
+                              port.serviceType === 'LoadBalancer';
+                            const gridCols = hasListening
+                              ? '1fr 1fr 1fr 80px 1fr 1fr 1fr 20px'
+                              : '1fr 1fr 1fr 80px 1fr 1fr 20px';
+                            return (
+                              <div
+                                key={port.id}
+                                className="grid gap-2 items-end"
+                                style={{ gridTemplateColumns: gridCols }}
+                              >
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Service Type
+                                  </span>
+                                  <Select
+                                    options={[
+                                      { value: 'DoNotCreate', label: 'Do not create a service' },
+                                      { value: 'ClusterIP', label: 'Cluster IP' },
+                                      { value: 'NodePort', label: 'Node Port' },
+                                      { value: 'LoadBalancer', label: 'Load Balancer' },
+                                    ]}
+                                    value={port.serviceType}
+                                    onChange={(val) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, serviceType: val } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Name
+                                  </span>
+                                  <Input
+                                    placeholder=""
+                                    value={port.name}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, name: e.target.value } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Private Container Port
+                                  </span>
+                                  <Input
+                                    placeholder="e.g. 8080"
+                                    value={port.privateContainerPort}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id
+                                            ? { ...p, privateContainerPort: e.target.value }
+                                            : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Protocol
+                                  </span>
+                                  <Select
+                                    options={[
+                                      { value: 'TCP', label: 'TCP' },
+                                      { value: 'UDP', label: 'UDP' },
+                                    ]}
+                                    value={port.protocol}
+                                    onChange={(val) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, protocol: val } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Public Host Port
+                                  </span>
+                                  <Input
+                                    placeholder="e.g. 80"
+                                    value={port.publicHostPort}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id
+                                            ? { ...p, publicHostPort: e.target.value }
+                                            : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Host IP
+                                  </span>
+                                  <Input
+                                    placeholder="e.g. 1.1.1.1"
+                                    value={port.hostIP}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, hostIP: e.target.value } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                {hasListening && (
+                                  <VStack gap={1}>
+                                    <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                      Listening Port
+                                    </span>
+                                    <Input
+                                      placeholder="e.g. 30080"
+                                      value={port.listeningPort}
+                                      onChange={(e) =>
+                                        updateContainerConfig(containerId, {
+                                          networkingPorts: (config.networkingPorts || []).map(
+                                            (p) =>
+                                              p.id === port.id
+                                                ? { ...p, listeningPort: e.target.value }
+                                                : p
+                                          ),
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                )}
+                                <button
+                                  onClick={() =>
+                                    updateContainerConfig(containerId, {
+                                      networkingPorts: (config.networkingPorts || []).filter(
+                                        (p) => p.id !== port.id
+                                      ),
+                                    })
+                                  }
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mb-1"
+                                >
+                                  <IconX size={14} className="text-[var(--color-text-muted)]" />
+                                </button>
+                              </div>
+                            );
+                          })}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={() =>
+                                updateContainerConfig(containerId, {
+                                  networkingPorts: [
+                                    ...(config.networkingPorts || []),
+                                    {
+                                      id: crypto.randomUUID(),
+                                      serviceType: 'DoNotCreate',
+                                      name: '',
+                                      privateContainerPort: '',
+                                      protocol: 'TCP',
+                                      publicHostPort: '',
+                                      hostIP: '',
+                                      listeningPort: '',
+                                    },
+                                  ],
+                                })
+                              }
+                            >
+                              Add Port or Service
+                            </Button>
+                          </div>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
                     {/* 2b. Command Section */}
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Command" />
@@ -4606,10 +4844,6 @@ export function CreateDaemonSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Command
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Input
@@ -4628,10 +4862,6 @@ export function CreateDaemonSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Arguments
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /usr/sbin/httpd -f httpd.conf"
@@ -4649,10 +4879,6 @@ export function CreateDaemonSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 WorkingDir
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /myapp"
@@ -4669,10 +4895,6 @@ export function CreateDaemonSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Stdin
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
@@ -4919,10 +5141,6 @@ export function CreateDaemonSetPage() {
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              The period allowed after receiving a termination request before the
-                              pod is forcibly terminated.
                             </span>
                           </VStack>
                           <Input
@@ -7134,6 +7352,7 @@ export function CreateDaemonSetPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

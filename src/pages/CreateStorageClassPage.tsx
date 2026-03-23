@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -114,21 +114,17 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   // Determine section status based on form data
   const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
     if (section === 'basic-info') {
-      return storageClassName.trim() ? 'done' : 'active';
+      // StorageClass is cluster-scoped (no namespace) → name has no default
+      // if name empty: nothing required is filled → 'pending'
+      return storageClassName.trim() ? 'done' : 'pending';
     }
-    if (section === 'storage-config') {
-      return parameters.length > 0 && parameters.some((p) => p.key.trim() || p.value.trim())
-        ? 'done'
-        : 'pending';
-    }
-    if (section === 'customize') {
-      return hasCustomizeData ? 'done' : 'pending';
-    }
-    return 'pending';
+    // storage-config, customize are optional → always done
+    return 'done';
   };
 
   return (
@@ -162,7 +158,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -182,6 +178,7 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -192,6 +189,7 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -210,6 +208,7 @@ function BasicInfoSection({
                   if (storageClassNameError) onStorageClassNameErrorChange(null);
                 }}
                 fullWidth
+                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{storageClassNameError}</FormField.ErrorMessage>
@@ -474,6 +473,10 @@ function CustomizeSection({
 
 export function CreateStorageClassPage() {
   const navigate = useNavigate();
+  const { storageClassName: storageClassNameParam } = useParams();
+  const isEditMode = !!storageClassNameParam;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -499,8 +502,18 @@ export function CreateStorageClassPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create storage class');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode
+        ? `Storage class: ${nameFromQuery || storageClassNameParam}`
+        : 'Create storage class'
+    );
+  }, [updateActiveTabLabel, isEditMode, storageClassNameParam]);
+
+  useEffect(() => {
+    if (isEditMode && storageClassNameParam) {
+      setStorageClassName(nameFromQuery || storageClassNameParam);
+    }
+  }, [isEditMode, storageClassNameParam]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -583,7 +596,15 @@ export function CreateStorageClassPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Storage Classes', href: '/container/storage-classes' },
-                { label: 'Create storage class' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || storageClassNameParam!,
+                        href: `/container/storage-classes/${storageClassNameParam}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create storage class' }]),
               ]}
             />
           }
@@ -615,7 +636,9 @@ export function CreateStorageClassPage() {
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create storage class
+              {isEditMode
+                ? `Storage class: ${nameFromQuery || storageClassNameParam}`
+                : 'Create storage class'}
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -638,6 +661,7 @@ export function CreateStorageClassPage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
+              isEditMode={isEditMode}
             />
 
             {/* Parameters Section */}
@@ -664,6 +688,7 @@ export function CreateStorageClassPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

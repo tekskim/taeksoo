@@ -646,7 +646,8 @@ export function JobDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/jobs/${job.id}/edit`),
+      onClick: () =>
+        navigate(`/container/jobs/${job.id}/edit?name=${encodeURIComponent(job.name)}`),
     },
     {
       id: 'edit-yaml',
