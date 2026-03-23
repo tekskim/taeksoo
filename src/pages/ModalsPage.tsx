@@ -856,7 +856,7 @@ export function ModalsPage() {
                     {usernameCopied ? (
                       <IconCheck size={12} className="text-[var(--color-state-success)]" />
                     ) : (
-                      <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                      <IconCopy size={12} className="text-[var(--color-text-default)]" />
                     )}
                   </button>
                 </div>
@@ -883,7 +883,7 @@ export function ModalsPage() {
                     {passwordCopied ? (
                       <IconCheck size={12} className="text-[var(--color-state-success)]" />
                     ) : (
-                      <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                      <IconCopy size={12} className="text-[var(--color-text-default)]" />
                     )}
                   </button>
                 </div>

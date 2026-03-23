@@ -123,11 +123,12 @@ export default function CreateNetworkPage() {
   const [gatewayIp, setGatewayIp] = useState('');
   const [dhcp, setDhcp] = useState(true); // true = On
   const [allocationPools, setAllocationPools] = useState('');
+  const [dns, setDns] = useState('');
   const [hostRoutes, setHostRoutes] = useState('');
 
   // Disclosure state
   const [advancedOpen, setAdvancedOpen] = useState(isV2);
-  const [descriptionOpen, setDescriptionOpen] = useState(isV2);
+
   const [subnetAdvancedOpen, setSubnetAdvancedOpen] = useState(isV2);
 
   // Check if create button should be disabled
@@ -258,7 +259,7 @@ export default function CreateNetworkPage() {
                         <FormField.Control>
                           <VStack gap={2}>
                             <Input
-                              placeholder="e.g. private-net"
+                              placeholder="Enter network name"
                               value={networkName || '-'}
                               onChange={(e) => {
                                 setNetworkName(e.target.value);
@@ -281,16 +282,36 @@ export default function CreateNetworkPage() {
                     </div>
 
                     <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+                    {/* Description (optional) */}
+                    <div className="py-6">
+                      <FormField>
+                        <FormField.Label>Description</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="Enter description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            fullWidth
+                          />
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          You can use letters, numbers, and special characters (+=,.@-_()), and
+                          maximum 255 characters.
+                        </FormField.HelperText>
+                      </FormField>
+                    </div>
+
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     {/* Advanced (optional) */}
                     <div className="py-6">
                       <Disclosure open={advancedOpen} onChange={setAdvancedOpen}>
-                        <Disclosure.Trigger>Advanced (optional)</Disclosure.Trigger>
+                        <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                         <Disclosure.Panel>
                           <VStack gap={6} align="stretch" className="mt-4">
                             {/* Admin state */}
                             <FormField
                               label="Admin state"
-                              description='Setting it to "Down" disables all related network or control operations, regardless of runtime status.'
+                              description="Indicates whether the load balancer's administrative state is Up or Down."
                               spacing="loose"
                             >
                               <Toggle
@@ -317,9 +338,7 @@ export default function CreateNetworkPage() {
                             <FormField>
                               <FormField.Label>MTU</FormField.Label>
                               <FormField.Description>
-                                Specifies the maximum transmission unit (MTU) size for a network
-                                packet. Leave blank to use the system default unless you have a
-                                specific requirement.
+                                Specifies the MTU value used by the network.
                               </FormField.Description>
                               <FormField.Control>
                                 <HStack gap={2} align="center">
@@ -327,7 +346,7 @@ export default function CreateNetworkPage() {
                                     value={mtu}
                                     onChange={setMtu}
                                     min={68}
-                                    max={9000}
+                                    max={65535}
                                     placeholder=""
                                     width="sm"
                                   />
@@ -336,28 +355,9 @@ export default function CreateNetworkPage() {
                                   </span>
                                 </HStack>
                               </FormField.Control>
-                              <FormField.HelperText>68 - 9000</FormField.HelperText>
+                              <FormField.HelperText>68 - 65535 bytes</FormField.HelperText>
                             </FormField>
                           </VStack>
-                        </Disclosure.Panel>
-                      </Disclosure>
-                    </div>
-
-                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-                    {/* Description (optional) */}
-                    <div className="py-6">
-                      <Disclosure open={descriptionOpen} onChange={setDescriptionOpen}>
-                        <Disclosure.Trigger>Description (optional)</Disclosure.Trigger>
-                        <Disclosure.Panel>
-                          <div className="mt-4">
-                            <Textarea
-                              placeholder="e.g. Internal network for production DB servers of the payment service"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              rows={3}
-                              fullWidth
-                            />
-                          </div>
                         </Disclosure.Panel>
                       </Disclosure>
                     </div>
@@ -448,8 +448,8 @@ export default function CreateNetworkPage() {
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Subnet name (optional) */}
                         <div className="py-6">
-                          <FormField>
-                            <FormField.Label>Subnet name (optional)</FormField.Label>
+                          <FormField required>
+                            <FormField.Label>Subnet name</FormField.Label>
                             <FormField.Control>
                               <Input
                                 placeholder="e.g. private-net-subnet-001"
@@ -459,7 +459,8 @@ export default function CreateNetworkPage() {
                               />
                             </FormField.Control>
                             <FormField.HelperText>
-                              Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+                              You can use letters, numbers, and special characters (+=,.@-_), and
+                              the length must be between 2-128 characters.
                             </FormField.HelperText>
                           </FormField>
                         </div>
@@ -469,6 +470,9 @@ export default function CreateNetworkPage() {
                         <div className="py-6">
                           <FormField required error={!!cidrError}>
                             <FormField.Label>CIDR</FormField.Label>
+                            <FormField.Description>
+                              Defines the network address (CIDR) for the subnet.
+                            </FormField.Description>
                             <FormField.Control>
                               <Input
                                 placeholder="e.g. 192.168.0.0/24"
@@ -481,15 +485,19 @@ export default function CreateNetworkPage() {
                               />
                             </FormField.Control>
                             <FormField.ErrorMessage>{cidrError}</FormField.ErrorMessage>
-                            <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
                           </FormField>
                         </div>
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         {/* Gateway */}
                         <div className="py-6">
-                          <FormField>
+                          <FormField required>
                             <FormField.Label>Gateway</FormField.Label>
+                            <FormField.Description>
+                              Specifies the gateway IP address for the subnet. Gateway must be an IP
+                              address within the subnet range, excluding the network and broadcast
+                              addresses.
+                            </FormField.Description>
                             <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                               <VStack gap={3}>
                                 <Toggle
@@ -507,12 +515,6 @@ export default function CreateNetworkPage() {
                                 )}
                               </VStack>
                             </FormField.Control>
-                            {(isV2 || gateway) && (
-                              <FormField.HelperText>
-                                Gateway must be an IP address within the subnet range, excluding the
-                                network and broadcast addresses.
-                              </FormField.HelperText>
-                            )}
                           </FormField>
                         </div>
 
@@ -520,7 +522,7 @@ export default function CreateNetworkPage() {
                         {/* Advanced (optional) */}
                         <div className="py-6">
                           <Disclosure open={subnetAdvancedOpen} onChange={setSubnetAdvancedOpen}>
-                            <Disclosure.Trigger>Advanced (optional)</Disclosure.Trigger>
+                            <Disclosure.Trigger>Advanced</Disclosure.Trigger>
                             <Disclosure.Panel>
                               <VStack gap={6} align="stretch" className="mt-4">
                                 {/* DHCP */}
@@ -528,7 +530,7 @@ export default function CreateNetworkPage() {
                                   <Toggle
                                     checked={dhcp}
                                     onChange={(e) => setDhcp(e.target.checked)}
-                                    label={dhcp ? 'On' : 'Off'}
+                                    label={dhcp ? 'Enabled' : 'Disabled'}
                                   />
                                 </FormField>
 
@@ -542,6 +544,21 @@ export default function CreateNetworkPage() {
                                     placeholder="e.g. 192.168.0.100,192.168.0.200"
                                     value={allocationPools}
                                     onChange={(e) => setAllocationPools(e.target.value)}
+                                    rows={3}
+                                    fullWidth
+                                  />
+                                </FormField>
+
+                                {/* DNS */}
+                                <FormField
+                                  label="DNS"
+                                  description="The address of the server that acts like a phonebook for the internet, translating domain names into IP addresses for your instances."
+                                  helperText="Enter one DNS server address per line."
+                                >
+                                  <Textarea
+                                    placeholder="e.g. 10.10.0.0/24,192.168.0.254"
+                                    value={dns}
+                                    onChange={(e) => setDns(e.target.value)}
                                     rows={3}
                                     fullWidth
                                   />
@@ -597,7 +614,7 @@ export default function CreateNetworkPage() {
                   {createSubnet && subnetName && (
                     <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
                   )}
-                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr} />}
+                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
                   {createSubnet && (
                     <SectionCard.DataRow
                       label="Gateway"
@@ -605,6 +622,13 @@ export default function CreateNetworkPage() {
                     />
                   )}
                   {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow label="Allocation pools" value={allocationPools || '-'} />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="DNS" value={dns || '-'} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow label="Host routes" value={hostRoutes || '-'} />
+                  )}
                 </SectionCard.Content>
               )}
             </SectionCard>
@@ -612,11 +636,8 @@ export default function CreateNetworkPage() {
               <SectionCard>
                 <SectionCard.Header title={SECTION_LABELS['subnet']} />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
-                  {createSubnet && subnetName && (
-                    <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
-                  )}
-                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr} />}
+                  <SectionCard.DataRow label="Subnet name" value={subnetName || '-'} />
+                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
                   {createSubnet && (
                     <SectionCard.DataRow
                       label="Gateway"
@@ -624,6 +645,13 @@ export default function CreateNetworkPage() {
                     />
                   )}
                   {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow label="Allocation pools" value={allocationPools || '-'} />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="DNS" value={dns || '-'} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow label="Host routes" value={hostRoutes || '-'} />
+                  )}
                 </SectionCard.Content>
               </SectionCard>
             )}

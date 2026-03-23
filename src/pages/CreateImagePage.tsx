@@ -494,7 +494,7 @@ export function CreateImagePage() {
                               Choose File
                             </Button>
                             <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
+                              Only RAW, QCOW2, and ISO file formats are allowed.
                             </span>
                           </VStack>
                         )}
@@ -608,11 +608,7 @@ export function CreateImagePage() {
                             options={[
                               { value: 'raw', label: 'RAW' },
                               { value: 'qcow2', label: 'QCOW2' },
-                              { value: 'vhd', label: 'VHD' },
-                              { value: 'vmdk', label: 'VMDK' },
                               { value: 'iso', label: 'ISO' },
-                              { value: 'aki', label: 'AKI' },
-                              { value: 'ari', label: 'ARI' },
                             ]}
                             fullWidth
                           />
@@ -639,12 +635,10 @@ export function CreateImagePage() {
                             }}
                             placeholder="Select OS"
                             options={[
+                              { value: 'rocky', label: 'Rocky' },
                               { value: 'ubuntu', label: 'Ubuntu' },
-                              { value: 'centos', label: 'CentOS' },
-                              { value: 'debian', label: 'Debian' },
-                              { value: 'rhel', label: 'Red Hat Enterprise Linux' },
                               { value: 'windows', label: 'Windows' },
-                              { value: 'other', label: 'Other' },
+                              { value: 'other', label: 'Others' },
                             ]}
                             fullWidth
                           />
@@ -813,10 +807,10 @@ export function CreateImagePage() {
             )}
 
             {/* Advanced Section */}
-            <SectionCard isActive={!isV2 && sectionStatus['advanced'] === 'active'}>
+            <SectionCard isActive={isV2 || sectionStatus['advanced'] === 'active'}>
               <SectionCard.Header
                 title={SECTION_LABELS['advanced']}
-                showDivider={sectionStatus['advanced'] === 'done'}
+                showDivider={!isV2 && sectionStatus['advanced'] === 'done'}
                 actions={
                   !isV2 &&
                   sectionStatus['advanced'] === 'done' && (
