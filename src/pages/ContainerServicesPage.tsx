@@ -270,35 +270,37 @@ export function ContainerServicesPage() {
       minWidth: columnMinWidths.ip,
       sortable: true,
       render: (value: string[]) => (
-        <div className="flex items-center gap-1 min-w-0">
-          <span className="truncate min-w-0" title={value[0]}>
+        <div className="flex w-full items-center gap-1 min-w-0">
+          <span className="truncate min-w-0 flex-1" title={value[0]}>
             {value[0]}
           </span>
           {value.length > 1 && (
-            <Popover
-              trigger="hover"
-              position="bottom"
-              delay={100}
-              hideDelay={100}
-              content={
-                <div className="p-3 min-w-[120px] max-w-[320px]">
-                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                    All IP addresses ({value.length})
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All IP addresses ({value.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {value.map((item, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {value.map((item, i) => (
-                      <Badge key={i} theme="white" size="sm">
-                        {item}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              }
-            >
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                +{value.length - 1}
-              </span>
-            </Popover>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{value.length - 1}
+                </span>
+              </Popover>
+            </span>
           )}
         </div>
       ),

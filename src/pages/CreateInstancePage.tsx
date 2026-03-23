@@ -2099,35 +2099,37 @@ function FlavorSection({
         const truncatedVal = firstVal.length > 3 ? firstVal.slice(0, 3) + '...' : firstVal;
         const remaining = entries.length - 1;
         return (
-          <span className="flex items-center gap-1 min-w-0 text-body-md">
-            <span className="truncate min-w-0">
+          <span className="flex w-full items-center gap-1 min-w-0 text-body-md">
+            <span className="truncate min-w-0 flex-1">
               {firstKey}={truncatedVal}
             </span>
             {remaining > 0 && (
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All Metadata ({entries.length})
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Metadata ({entries.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {entries.map(([k, v], i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {k}={v}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-1">
-                      {entries.map(([k, v], i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {k}={v}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{remaining}
-                </span>
-              </Popover>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{remaining}
+                  </span>
+                </Popover>
+              </span>
             )}
           </span>
         );

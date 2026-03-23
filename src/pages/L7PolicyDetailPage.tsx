@@ -260,6 +260,7 @@ export default function L7PolicyDetailPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
       render: (_, row) => (
         <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
           {row.adminState}
@@ -345,7 +346,7 @@ export default function L7PolicyDetailPage() {
                 Edit
               </Button>
               <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                Create L7 Rule
+                Add L7 rule
               </Button>
               <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                 Delete
@@ -410,7 +411,7 @@ export default function L7PolicyDetailPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">L7 Rules</h3>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create L7 Rule
+                    Add L7 rule
                   </Button>
                 </div>
 
@@ -428,7 +429,7 @@ export default function L7PolicyDetailPage() {
                   </div>
                   <div className="h-4 w-px bg-[var(--color-border-default)]" />
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     size="sm"
                     leftIcon={<IconTrash size={12} />}
                     disabled={selectedL7Rules.length === 0}
