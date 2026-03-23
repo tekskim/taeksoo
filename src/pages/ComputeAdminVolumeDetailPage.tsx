@@ -253,9 +253,9 @@ const defaultVolumeDetail: VolumeDetail = {
   name: 'volume',
   status: 'available',
   size: '0 GiB',
-  createdAt: '-',
-  volumeName: '-',
-  availabilityZone: '-',
+  createdAt: 'Dec 25, 2025 09:12:20',
+  volumeName: 'volume',
+  availabilityZone: 'nova',
   description: '-',
   attachedTo: null,
   attachedToId: null,
@@ -434,7 +434,7 @@ export function ComputeAdminVolumeDetailPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span>,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',
@@ -504,7 +504,7 @@ export function ComputeAdminVolumeDetailPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span>,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'action',
@@ -605,6 +605,7 @@ export function ComputeAdminVolumeDetailPage() {
             <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
             <DetailHeader.InfoCard label="Tenant" value="tenantA" />
             <DetailHeader.InfoCard label="Host" value="host" />
+            <DetailHeader.InfoCard label="Origin" value="Container cluster (k8s-prod-01)" />
             <DetailHeader.InfoCard label="Size" value={volume.size} />
             <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
           </DetailHeader.InfoGrid>
@@ -685,6 +686,14 @@ export function ComputeAdminVolumeDetailPage() {
                     />
                   </SectionCard.Content>
                 </SectionCard>
+
+                {/* Metadata */}
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" showEditButton onEdit={() => {}} />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                  </SectionCard.Content>
+                </SectionCard>
               </VStack>
             </TabPanel>
 
@@ -759,13 +768,6 @@ export function ComputeAdminVolumeDetailPage() {
                       fullWidth
                     />
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    iconOnly
-                    icon={<IconDownload size={12} stroke={1.5} />}
-                    aria-label="Download"
-                  />
                 </div>
 
                 {/* Pagination */}
