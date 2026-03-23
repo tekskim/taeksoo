@@ -178,7 +178,7 @@ export function PersistentVolumeClaimsPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/pvc/${row.id}/edit`),
+      onClick: () => navigate(`/container/pvc/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
     },
     {
       id: 'edit-yaml',

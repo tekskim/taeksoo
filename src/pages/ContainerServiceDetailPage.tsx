@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -17,6 +16,7 @@ import {
   DetailHeader,
   Badge,
   PageShell,
+  InlineMessage,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -48,6 +48,9 @@ interface ServiceData {
   namespace: string;
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
   clusterIP: string;
+  externalIP?: string;
+  loadBalancerIP?: string;
+  externalTrafficPolicy?: 'Cluster' | 'Local';
   sessionAffinity: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -98,13 +101,13 @@ interface ConditionRow {
 const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
-    name: 'capi-webhook-service',
+    name: 'frontend-web-application-loadbalancer-service',
     status: 'OK',
-    namespace: 'default',
+    namespace: 'namespaceName',
     type: 'ClusterIP',
-    clusterIP: '10.11.111.10',
+    clusterIP: '10.43.100.10',
     sessionAffinity: 'None',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Nov 10, 2025 01:17:01',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -118,19 +121,95 @@ const mockServiceData: Record<string, ServiceData> = {
   },
   '2': {
     id: '2',
-    name: 'nginx-service',
+    name: 'backend-api-gateway-cluster-internal-service',
     status: 'True',
-    namespace: 'ingress-nginx',
+    namespace: 'namespaceName',
+    type: 'ClusterIP (Headless)',
+    clusterIP: 'None',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 10, 2025 01:17:01',
+    labels: {
+      app: 'backend-api',
+      'app.kubernetes.io/component': 'gateway',
+    },
+    annotations: {
+      'kubectl.kubernetes.io/last-applied-configuration': '{}',
+    },
+  },
+  '3': {
+    id: '3',
+    name: 'external-database-connection-externalname-service',
+    status: 'None',
+    namespace: 'namespaceName',
+    type: 'ExternalName',
+    clusterIP: 'None',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 10, 2025 01:17:01',
+    labels: {
+      app: 'external-db',
+    },
+    annotations: {
+      'kubectl.kubernetes.io/last-applied-configuration': '{}',
+    },
+  },
+  '4': {
+    id: '4',
+    name: 'ingress-nginx-loadbalancer-external-service',
+    status: 'CreateContainerConfigError',
+    namespace: 'namespaceName',
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
-    sessionAffinity: 'ClientIP',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    loadBalancerIP: '192.168.10.50',
+    externalTrafficPolicy: 'Cluster',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 10, 2025 01:17:01',
     labels: {
-      'app.kubernetes.io/name': 'nginx',
+      'app.kubernetes.io/name': 'ingress-nginx',
       'app.kubernetes.io/component': 'controller',
     },
     annotations: {
       'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+    },
+  },
+  '5': {
+    id: '5',
+    name: 'legacy-application-nodeport-external-access-service',
+    status: 'ImagePullBackOff',
+    namespace: 'namespaceName',
+    type: 'NodePort',
+    clusterIP: '10.43.200.20',
+    externalIP: '203.0.113.5',
+    externalTrafficPolicy: 'Local',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 10, 2025 01:17:01',
+    labels: {
+      app: 'legacy-app',
+      version: 'v1',
+    },
+    annotations: {
+      'kubectl.kubernetes.io/last-applied-configuration': '{}',
+    },
+  },
+  '6': {
+    id: '6',
+    name: 'multi-region-loadbalancer-with-many-external-ips',
+    status: 'OK',
+    namespace: 'production',
+    type: 'LoadBalancer',
+    clusterIP: '10.43.50.100',
+    externalIP: '203.0.113.1',
+    loadBalancerIP: '192.168.10.10',
+    externalTrafficPolicy: 'Local',
+    sessionAffinity: 'ClientIP',
+    createdAt: 'Nov 10, 2025 01:17:01',
+    labels: {
+      app: 'multi-region',
+      region: 'global',
+      'app.kubernetes.io/managed-by': 'Helm',
+    },
+    annotations: {
+      'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+      'service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled': 'true',
     },
   },
 };
@@ -638,7 +717,8 @@ export function ContainerServiceDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/services/${service.id}/edit`),
+      onClick: () =>
+        navigate(`/container/services/${service.id}/edit?name=${encodeURIComponent(service.name)}`),
     },
     {
       id: 'edit-yaml',
@@ -757,22 +837,30 @@ export function ContainerServiceDetailPage() {
               }
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
-            <DetailHeader.InfoCard
-              label="Type"
-              value={`${service.type} - Cluster IP: ${service.clusterIP}`}
-              copyable
-            />
+            <DetailHeader.InfoCard label="Type" value={service.type} />
+            <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
+            {service.externalIP && (
+              <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
+            )}
+            {service.type === 'LoadBalancer' && service.loadBalancerIP && (
+              <DetailHeader.InfoCard
+                label="LoadBalancer IP"
+                value={service.loadBalancerIP}
+                copyable
+              />
+            )}
+            {(service.type === 'NodePort' || service.type === 'LoadBalancer') &&
+              service.externalTrafficPolicy && (
+                <DetailHeader.InfoCard
+                  label="External Traffic Policy"
+                  value={service.externalTrafficPolicy}
+                />
+              )}
             <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
             <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
-          </DetailHeader.InfoGrid>
-
-          {/* Second row: Labels, Annotations */}
-          <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Labels ({Object.keys(service.labels).length})
-                </span>
+            <DetailHeader.InfoCard
+              label={`Labels (${Object.keys(service.labels).length})`}
+              value={
                 <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(service.labels)
                     .slice(0, 1)
@@ -813,13 +901,11 @@ export function ContainerServiceDetailPage() {
                     </Popover>
                   )}
                 </div>
-              </VStack>
-            </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Annotations ({Object.keys(service.annotations).length})
-                </span>
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${Object.keys(service.annotations).length})`}
+              value={
                 <div className="flex items-center gap-1 min-w-0 w-full">
                   {Object.entries(service.annotations)
                     .slice(0, 1)
@@ -860,9 +946,17 @@ export function ContainerServiceDetailPage() {
                     </Popover>
                   )}
                 </div>
-              </VStack>
+              }
+            />
+          </DetailHeader.InfoGrid>
+          {service.type === 'LoadBalancer' && service.externalTrafficPolicy === 'Cluster' && (
+            <div className="mt-3">
+              <InlineMessage variant="warning">
+                Load Balancer Service를 구축할 경우 external traffic policy는 local로 되어 있어야
+                정상적인 health check 가능합니다.
+              </InlineMessage>
             </div>
-          </HStack>
+          )}
         </DetailHeader>
 
         {/* Tabs */}

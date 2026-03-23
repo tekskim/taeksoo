@@ -171,7 +171,8 @@ function JobsTab({ jobs }: JobsTabProps) {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => navigate(`/container/jobs/${row.id}/edit`),
+        onClick: () =>
+          navigate(`/container/jobs/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
       },
       {
         id: 'edit-yaml',
@@ -513,7 +514,8 @@ export function CronJobDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/cronjobs/${cronjob.id}/edit`),
+      onClick: () =>
+        navigate(`/container/cronjobs/${cronjob.id}/edit?name=${encodeURIComponent(cronjob.name)}`),
     },
     {
       id: 'edit-yaml',

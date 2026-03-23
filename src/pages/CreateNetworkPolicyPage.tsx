@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -216,7 +216,7 @@ function SummarySidebar({
             Cancel
           </Button>
           <Button variant="primary" size="md" className="flex-1">
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -1200,13 +1200,25 @@ function TrafficRulesSection({
    ---------------------------------------- */
 export function CreateNetworkPolicyPage() {
   const navigate = useNavigate();
+  const { networkPolicyName } = useParams();
+  const isEditMode = !!networkPolicyName;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
     useTabs();
 
   useEffect(() => {
-    updateActiveTabLabel('Create network policy');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `Network policy: ${nameFromQuery || networkPolicyName}` : 'Create network policy'
+    );
+  }, [updateActiveTabLabel, isEditMode, networkPolicyName]);
+
+  useEffect(() => {
+    if (isEditMode && networkPolicyName) {
+      setPolicyName(nameFromQuery || networkPolicyName);
+    }
+  }, [isEditMode, networkPolicyName]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1325,11 +1337,13 @@ export function CreateNetworkPolicyPage() {
   // Section states for summary
   const getSectionStates = (): Record<NetworkPolicySectionStep, WizardSectionState> => {
     return {
-      'basic-info': policyName ? 'done' : 'active',
-      'ingress-rules': ingressEnabled && ingressRules.length > 0 ? 'done' : 'pending',
-      'egress-rules': egressEnabled && egressRules.length > 0 ? 'done' : 'pending',
-      selector: selectorRules.length > 0 ? 'done' : 'pending',
-      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
+      // namespace has default → 'active' until name is typed
+      'basic-info': policyName.trim() ? 'done' : 'active',
+      // all other sections are optional → always done
+      'ingress-rules': 'done',
+      'egress-rules': 'done',
+      selector: 'done',
+      'labels-annotations': 'done',
     };
   };
 
@@ -1403,7 +1417,15 @@ export function CreateNetworkPolicyPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Network Policies', href: '/container/network-policies' },
-                { label: 'Create network policy' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || networkPolicyName!,
+                        href: `/container/network-policies/{networkPolicyName}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create network policy' }]),
               ]}
             />
           }
@@ -1433,7 +1455,11 @@ export function CreateNetworkPolicyPage() {
       <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
-          <h1 className="text-heading-h4">Create network policy</h1>
+          <h1 className="text-heading-h4">
+            {isEditMode
+              ? `Network policy: ${nameFromQuery || networkPolicyName}`
+              : 'Create network policy'}
+          </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Network policies are used to control the traffic flow between pods within the cluster
             based on defined rules for ingress and egress.
@@ -1456,6 +1482,7 @@ export function CreateNetworkPolicyPage() {
                       value={namespace}
                       onChange={setNamespace}
                       fullWidth
+                      disabled={isEditMode}
                     />
                   </FormField>
 
@@ -1466,6 +1493,7 @@ export function CreateNetworkPolicyPage() {
                       value={policyName}
                       onChange={(e) => setPolicyName(e.target.value)}
                       fullWidth
+                      disabled={isEditMode}
                     />
                   </FormField>
 

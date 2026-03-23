@@ -41,15 +41,88 @@ import {
    Types
    ---------------------------------------- */
 
+interface IpAddress {
+  ip: string;
+  type: 'Cluster' | 'External' | 'LoadBalancer';
+}
+
+// Structured target types per Service type
+interface ClusterIPTarget {
+  kind: 'clusterip';
+  portName: string;
+  targetPort: string;
+  protocol: string;
+}
+interface ExternalNameTarget {
+  kind: 'externalname';
+  dnsName: string;
+}
+interface LoadBalancerTarget {
+  kind: 'loadbalancer';
+  listeningPort: string;
+  protocol: string;
+}
+interface NodePortTarget {
+  kind: 'nodeport';
+  nodePort: string;
+}
+
+type ServiceTarget = ClusterIPTarget | ExternalNameTarget | LoadBalancerTarget | NodePortTarget;
+
 interface ServiceRow {
   id: string;
   status: string;
   name: string;
   namespace: string;
-  target: string[];
+  target: ServiceTarget[];
   selector: string[];
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
+  ipAddresses?: IpAddress[];
   createdAt: string;
+}
+
+// Format a single ServiceTarget into display string
+function formatTarget(t: ServiceTarget): string {
+  switch (t.kind) {
+    case 'clusterip':
+      return `${t.portName} → ${t.targetPort}/${t.protocol}`;
+    case 'externalname':
+      return t.dnsName;
+    case 'loadbalancer':
+      return `${t.listeningPort}/${t.protocol}`;
+    case 'nodeport':
+      return `[Any Node]:${t.nodePort}`;
+  }
+}
+
+// Renders first item as text + gray Badge (+N) with tooltip for the rest
+function TextOverflowCell({ items }: { items: string[] }) {
+  if (items.length === 0) {
+    return <span className="text-body-md text-[var(--color-text-subtle)]">-</span>;
+  }
+  const [first, ...rest] = items;
+  return (
+    <span className="flex items-center gap-1 min-w-0">
+      <span className="truncate text-body-md text-[var(--color-text-default)]">{first}</span>
+      {rest.length > 0 && (
+        <Tooltip
+          content={
+            <div className="flex flex-col gap-0.5 text-left">
+              {rest.map((item, i) => (
+                <span key={i} className="whitespace-nowrap">
+                  {item}
+                </span>
+              ))}
+            </div>
+          }
+        >
+          <Badge theme="gray" type="subtle" size="sm" className="shrink-0 cursor-pointer">
+            +{rest.length}
+          </Badge>
+        </Tooltip>
+      )}
+    </span>
+  );
 }
 
 /* ----------------------------------------
@@ -62,9 +135,13 @@ const servicesData: ServiceRow[] = [
     status: 'OK',
     name: 'frontend-web-application-loadbalancer-service',
     namespace: 'namespaceName',
-    target: ['http + 80/TCP', 'https-internal + 444/TCP'],
+    target: [
+      { kind: 'clusterip', portName: 'http', targetPort: '80', protocol: 'TCP' },
+      { kind: 'clusterip', portName: 'https-internal', targetPort: '444', protocol: 'TCP' },
+    ],
     selector: ['key1=value1'],
     type: 'ClusterIP',
+    ipAddresses: [{ ip: '10.43.100.10', type: 'Cluster' }],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -72,9 +149,10 @@ const servicesData: ServiceRow[] = [
     status: 'True',
     name: 'backend-api-gateway-cluster-internal-service',
     namespace: 'namespaceName',
-    target: ['myport + 80/TCP'],
+    target: [{ kind: 'clusterip', portName: 'myport', targetPort: '80', protocol: 'TCP' }],
     selector: ['key1=value1', 'key2=value2', 'key3=value3'],
     type: 'ClusterIP (Headless)',
+    ipAddresses: [],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -82,9 +160,10 @@ const servicesData: ServiceRow[] = [
     status: 'None',
     name: 'external-database-connection-externalname-service',
     namespace: 'namespaceName',
-    target: ['my.database.example.com'],
+    target: [{ kind: 'externalname', dnsName: 'my.database.example.com' }],
     selector: ['-'],
     type: 'ExternalName',
+    ipAddresses: [],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -92,9 +171,16 @@ const servicesData: ServiceRow[] = [
     status: 'CreateContainerConfigError',
     name: 'ingress-nginx-loadbalancer-external-service',
     namespace: 'namespaceName',
-    target: ['80/TCP', '443/TCP'],
+    target: [
+      { kind: 'loadbalancer', listeningPort: '80', protocol: 'TCP' },
+      { kind: 'loadbalancer', listeningPort: '443', protocol: 'TCP' },
+    ],
     selector: ['key1=value1', 'key2=value2'],
     type: 'LoadBalancer',
+    ipAddresses: [
+      { ip: '10.43.136.100', type: 'Cluster' },
+      { ip: '192.168.10.50', type: 'LoadBalancer' },
+    ],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -102,9 +188,36 @@ const servicesData: ServiceRow[] = [
     status: 'ImagePullBackOff',
     name: 'legacy-application-nodeport-external-access-service',
     namespace: 'namespaceName',
-    target: ['[Any Node]:31575'],
+    target: [{ kind: 'nodeport', nodePort: '31575' }],
     selector: ['key1=value1'],
     type: 'NodePort',
+    ipAddresses: [
+      { ip: '10.43.200.20', type: 'Cluster' },
+      { ip: '203.0.113.5', type: 'External' },
+    ],
+    createdAt: 'Nov 10, 2025 01:17:01',
+  },
+  {
+    id: '6',
+    status: 'OK',
+    name: 'multi-region-loadbalancer-with-many-external-ips',
+    namespace: 'production',
+    target: [
+      { kind: 'loadbalancer', listeningPort: '80', protocol: 'TCP' },
+      { kind: 'loadbalancer', listeningPort: '443', protocol: 'TCP' },
+      { kind: 'loadbalancer', listeningPort: '8080', protocol: 'TCP' },
+    ],
+    selector: ['app=multi-region'],
+    type: 'LoadBalancer',
+    ipAddresses: [
+      { ip: '10.43.50.100', type: 'Cluster' },
+      { ip: '192.168.10.10', type: 'LoadBalancer' },
+      { ip: '203.0.113.1', type: 'External' },
+      { ip: '203.0.113.2', type: 'External' },
+      { ip: '203.0.113.3', type: 'External' },
+      { ip: '203.0.113.4', type: 'External' },
+      { ip: '203.0.113.5', type: 'External' },
+    ],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
 ];
@@ -161,7 +274,7 @@ export function ContainerServicesPage() {
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  // Table columns configuration
+  // Table columns configuration — order: status, name, namespace, type, target, ipAddresses, selector, createdAt, actions
   const columns: TableColumn<ServiceRow>[] = [
     {
       key: 'status',
@@ -197,43 +310,41 @@ export function ContainerServicesPage() {
       sortable: true,
     },
     {
-      key: 'target',
-      label: 'Target',
-      flex: 1,
-      minWidth: columnMinWidths.target,
-      sortable: false,
-      render: (value: string[]) => {
-        const text = value.join(', ');
-        return (
-          <span className="truncate block w-full" title={text}>
-            {text}
-          </span>
-        );
-      },
-    },
-    {
-      key: 'selector',
-      label: 'Selector',
-      width: fixedColumns.selector,
-      sortable: false,
-      render: (value: string[]) => {
-        const text = value.join(', ');
-        return (
-          <span className="truncate block w-full" title={text}>
-            {text}
-          </span>
-        );
-      },
-    },
-    {
       key: 'type',
       label: 'Type',
       flex: 1,
       minWidth: columnMinWidths.type,
       sortable: true,
-      render: (value: string) => (
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      ),
+    },
+    {
+      key: 'target',
+      label: 'Target',
+      flex: 1,
+      minWidth: 160,
+      sortable: false,
+      render: (value: ServiceTarget[]) => <TextOverflowCell items={value.map(formatTarget)} />,
+    },
+    {
+      key: 'ipAddresses',
+      label: 'IP Addresses',
+      flex: 1,
+      minWidth: 160,
+      sortable: false,
+      render: (value: IpAddress[] | undefined) => {
+        const items = (value ?? []).map((item) => `${item.ip} (${item.type})`);
+        return <TextOverflowCell items={items} />;
+      },
+    },
+    {
+      key: 'selector',
+      label: 'Selector',
+      flex: 1,
+      minWidth: 140,
+      sortable: false,
+      render: (value: string[]) => {
+        const items = value[0] === '-' ? [] : value;
+        return <TextOverflowCell items={items} />;
+      },
     },
     {
       key: 'createdAt',
@@ -254,7 +365,8 @@ export function ContainerServicesPage() {
           {
             id: 'edit-config',
             label: 'Edit config',
-            onClick: () => console.log('Edit Config:', row.id),
+            onClick: () =>
+              navigate(`/container/services/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
           },
           {
             id: 'edit-yaml',
@@ -490,7 +602,6 @@ export function ContainerServicesPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
-          onRowClick={(row) => navigate(`/container/services/${row.id}`)}
         />
       </VStack>
     </PageShell>

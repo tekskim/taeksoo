@@ -1,13 +1,6 @@
-import { useState } from 'react';
 import { VStack, MenuItem, MenuSection } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import {
-  IconHome,
-  IconAffiliate,
-  IconPlus,
-  IconChevronDown,
-  IconLayoutSidebar,
-} from '@tabler/icons-react';
+import { IconHome, IconAffiliate, IconPlus, IconLayoutSidebar } from '@tabler/icons-react';
 import { FolderCog } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
@@ -55,13 +48,6 @@ function IconSidebarItem({ icon, active, onClick, tooltip }: IconSidebarItemProp
   );
 }
 
-// Sample clusters data for the sidebar
-const clusters = [
-  { id: 'cluster-001', name: 'Cluster1' },
-  { id: 'cluster-002', name: 'ClusterName' },
-  { id: 'cluster-003', name: 'production-cluster' },
-];
-
 export function ClusterManagementSidebar({
   isOpen = true,
   onToggle,
@@ -69,7 +55,6 @@ export function ClusterManagementSidebar({
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
-  const [bookmarksExpanded, setBookmarksExpanded] = useState(false);
 
   const isActive = (href: string) => {
     return location.pathname === href || location.pathname.startsWith(href + '/');
@@ -152,27 +137,6 @@ export function ClusterManagementSidebar({
           {/* Navigation */}
           <nav className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll">
             <VStack gap={4} className="w-full min-w-0">
-              {/* Bookmarks */}
-              <div className="py-2">
-                <button
-                  type="button"
-                  onClick={() => setBookmarksExpanded(!bookmarksExpanded)}
-                  className="flex items-center gap-2 px-0 py-1.5 text-label-md text-[var(--color-text-default)]"
-                >
-                  <IconChevronDown
-                    size={12}
-                    stroke={2}
-                    className={`transition-transform ${bookmarksExpanded ? '' : 'rotate-[-90deg]'}`}
-                  />
-                  <span>Bookmarks</span>
-                </button>
-                {bookmarksExpanded && (
-                  <div className="mt-2 pl-4">
-                    <p className="text-body-sm text-[var(--color-text-muted)]">No bookmarks yet</p>
-                  </div>
-                )}
-              </div>
-
               {/* Cluster Management Section */}
               <MenuSection title="Cluster management" defaultOpen={true}>
                 <MenuItem
@@ -181,19 +145,6 @@ export function ClusterManagementSidebar({
                   href="/container/cluster-management"
                   active={isActive('/container/cluster-management')}
                 />
-              </MenuSection>
-
-              {/* Cluster Section */}
-              <MenuSection title="Cluster" defaultOpen={true}>
-                {clusters.map((cluster) => (
-                  <MenuItem
-                    key={cluster.id}
-                    icon={<IconAffiliate size={16} stroke={1.5} />}
-                    label={cluster.name}
-                    href={`/container/cluster-management/${cluster.id}`}
-                    active={isActive(`/container/cluster-management/${cluster.id}`)}
-                  />
-                ))}
               </MenuSection>
             </VStack>
           </nav>

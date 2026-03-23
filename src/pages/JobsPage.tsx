@@ -265,7 +265,8 @@ export function JobsPage() {
           {
             id: 'edit-config',
             label: 'Edit config',
-            onClick: () => navigate(`/container/jobs/${row.id}/edit`),
+            onClick: () =>
+              navigate(`/container/jobs/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
           },
           {
             id: 'edit-yaml',

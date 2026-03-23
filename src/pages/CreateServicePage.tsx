@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -10,7 +10,6 @@ import {
   TopBar,
   Input,
   NumberInput,
-  Slider,
   Select,
   Disclosure,
   SectionCard,
@@ -21,19 +20,13 @@ import {
   TableLink,
   Pagination,
   PageShell,
+  WizardSummary,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
+import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconSearch, IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -48,7 +41,7 @@ type ServiceSectionStep =
   | 'session-affinity'
   | 'labels-annotations';
 
-type SectionState = 'pre' | 'active' | 'done' | 'writing';
+type SectionState = WizardSectionState;
 
 // Section labels for display
 const SERVICE_SECTION_LABELS: Record<ServiceSectionStep, string> = {
@@ -78,6 +71,7 @@ const SERVICE_TYPE_OPTIONS = [
   { value: 'Headless', label: 'Headless' },
   { value: 'LoadBalancer', label: 'Load Balancer' },
   { value: 'NodePort', label: 'Node port' },
+  { value: 'ExternalName', label: 'External Name' },
 ];
 
 // Service type descriptions
@@ -90,6 +84,8 @@ const SERVICE_TYPE_DESCRIPTIONS: Record<string, string> = {
     "Expose the Service externally using a cloud provider's load balancer. Traffic from the external load balancer is directed to the backend Pods.",
   NodePort:
     "Expose the Service on each Node's IP at a static port. A ClusterIP Service, to which the NodePort Service routes, is automatically created.",
+  ExternalName:
+    'Map the Service to a DNS name, rather than to a typical selector, by using the spec.externalName parameter.',
 };
 
 // Namespace options
@@ -153,93 +149,37 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
 ];
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
 interface SummarySidebarProps {
-  sectionStatus: Record<ServiceSectionStep, SectionState>;
+  sectionStatus: Record<ServiceSectionStep, WizardSectionState>;
+  visibleSections: ServiceSectionStep[];
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
   sectionStatus,
+  visibleSections,
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
-  // Map SectionState to WizardSectionState
-  const mapState = (state: SectionState): WizardSectionState => {
-    if (state === 'pre') return 'pre';
-    if (state === 'active') return 'active';
-    if (state === 'writing') return 'writing';
-    return 'done';
-  };
+  const items: WizardSummaryItem[] = visibleSections.map((key) => ({
+    key,
+    label: SERVICE_SECTION_LABELS[key],
+    status: sectionStatus[key],
+  }));
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
+        <WizardSummary items={items} />
 
-            <VStack gap={0}>
-              {SERVICE_SECTION_ORDER.map((key) => {
-                const status = mapState(sectionStatus[key]);
-                return (
-                  <HStack key={key} justify="between" align="center" className="py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SERVICE_SECTION_LABELS[key]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
-
-        {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel}>
             Cancel
@@ -250,7 +190,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -264,6 +204,10 @@ function SummarySidebar({
 
 export function CreateServicePage() {
   const navigate = useNavigate();
+  const { serviceId } = useParams();
+  const [searchParams] = useSearchParams();
+  const isEditMode = !!serviceId;
+  const serviceNameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -272,6 +216,15 @@ export function CreateServicePage() {
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [dnsName, setDnsName] = useState('');
+
+  // Derived: which sections are visible for the current service type
+  const showExternalName = serviceType === 'ExternalName';
+  const showServicePorts = serviceType !== 'ExternalName';
+  const showIPAddresses = ['ClusterIP', 'NodePort', 'LoadBalancer'].includes(serviceType);
+  const showLoadBalancerIP = serviceType === 'LoadBalancer';
+  const showSelectors = serviceType !== 'ExternalName';
+  const showSessionAffinity = ['ClusterIP', 'LoadBalancer', 'NodePort'].includes(serviceType);
 
   // Ports state
   const [ports, setPorts] = useState<Port[]>([
@@ -303,16 +256,52 @@ export function CreateServicePage() {
     isV2 ? [{ key: '', value: '' }] : []
   );
 
-  // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<ServiceSectionStep, SectionState>>({
-    'basic-info': 'active',
-    'external-name': 'done',
-    'service-ports': 'done',
-    'ip-addresses': 'done',
-    selectors: 'done',
-    'session-affinity': 'done',
-    'labels-annotations': 'done',
-  });
+  // Section status: computed dynamically from actual form state
+  //
+  // 상태 기준:
+  //   - 필수 입력값이 있는 섹션: 모두 채워지면 done, 일부만 채워지면 active, 아무것도 없으면 pre
+  //   - 필수 입력값이 없는 섹션: 항상 done (optional 이므로 항상 validation 통과)
+  const sectionStatus = useMemo<Record<ServiceSectionStep, WizardSectionState>>(() => {
+    const firstPort = ports[0];
+    const portRequiredFilled = !!(
+      firstPort?.name.trim() &&
+      firstPort?.listeningPort.trim() &&
+      firstPort?.targetPort.trim()
+    );
+    const portPartiallyFilled = !!(
+      firstPort?.name.trim() ||
+      firstPort?.listeningPort.trim() ||
+      firstPort?.targetPort.trim()
+    );
+
+    return {
+      // namespace & serviceType have defaults → 'active' until name is typed
+      'basic-info': name.trim() ? 'done' : 'active',
+      // external-name only required for ExternalName type; dnsName has no default → 'pre' when empty
+      'external-name': dnsName.trim() ? 'done' : 'pre',
+      // ports are optional to add; if added, required fields must be filled
+      'service-ports': portRequiredFilled ? 'done' : portPartiallyFilled ? 'active' : 'done',
+      // all remaining sections are optional → always done
+      'ip-addresses': 'done',
+      selectors: 'done',
+      'session-affinity': 'done',
+      'labels-annotations': 'done',
+    };
+  }, [name, dnsName, ports]);
+
+  // Sections visible in Summary (filtered by current service type)
+  const visibleSections = useMemo<ServiceSectionStep[]>(
+    () =>
+      SERVICE_SECTION_ORDER.filter((key) => {
+        if (key === 'external-name') return showExternalName;
+        if (key === 'service-ports') return showServicePorts;
+        if (key === 'ip-addresses') return showIPAddresses;
+        if (key === 'selectors') return showSelectors;
+        if (key === 'session-affinity') return showSessionAffinity;
+        return true; // basic-info, labels-annotations는 항상 표시
+      }),
+    [showExternalName, showServicePorts, showIPAddresses, showSelectors, showSessionAffinity]
+  );
 
   // Validation errors
   const [nameError, setNameError] = useState<string | null>(null);
@@ -323,8 +312,17 @@ export function CreateServicePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create service');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `Service: ${serviceNameFromQuery || serviceId}` : 'Create service'
+    );
+  }, [updateActiveTabLabel, isEditMode, serviceId]);
+
+  // Initialize form with mock data in edit mode
+  useEffect(() => {
+    if (isEditMode) {
+      setName(serviceNameFromQuery || serviceId || '');
+    }
+  }, [isEditMode, serviceNameFromQuery, serviceId]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -519,7 +517,15 @@ export function CreateServicePage() {
               items={[
                 { label: 'Container', href: '/container' },
                 { label: 'Services', href: '/container/services' },
-                { label: 'Create service' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: serviceNameFromQuery || serviceId!,
+                        href: `/container/services/${serviceId}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create service' }]),
               ]}
             />
           }
@@ -543,7 +549,9 @@ export function CreateServicePage() {
       <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create service</h1>
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+            {isEditMode ? `Service: ${serviceNameFromQuery || serviceId}` : 'Create service'}
+          </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Services allow you to define a logical set of Pods that can be accessed with a single IP
             address and port.
@@ -580,6 +588,7 @@ export function CreateServicePage() {
                       value={namespace}
                       onChange={(value) => setNamespace(value)}
                       fullWidth
+                      disabled={isEditMode}
                     />
                   </FormField>
 
@@ -599,6 +608,7 @@ export function CreateServicePage() {
                       }}
                       error={!!nameError}
                       fullWidth
+                      disabled={isEditMode}
                     />
                   </FormField>
 
@@ -620,79 +630,66 @@ export function CreateServicePage() {
               </SectionCard.Content>
             </SectionCard>
 
-            {/* External Name Section */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header title="External name" showDivider />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  {/* DNS Name */}
-                  <FormField
-                    label="DNS name"
-                    required
-                    error={!!nameError}
-                    errorMessage={nameError || undefined}
-                  >
+            {/* External Name Section — ExternalName 타입만 표시 */}
+            {showExternalName && (
+              <SectionCard className="pb-4">
+                <SectionCard.Header title="External name" showDivider />
+                <SectionCard.Content>
+                  <FormField label="DNS name" required>
                     <Input
                       placeholder="e.g. my.database.example.com"
-                      value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        if (nameError) setNameError(null);
-                      }}
-                      error={!!nameError}
+                      value={dnsName}
+                      onChange={(e) => setDnsName(e.target.value)}
                       fullWidth
                     />
                   </FormField>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
-            {/* Service Ports Section */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header title="Service ports" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Cluster IP, Headless
-                    </span>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
+            {/* Service Ports Section — ExternalName 제외 */}
+            {showServicePorts && (
+              <SectionCard className="pb-4">
+                <SectionCard.Header title="Service ports" />
+                <SectionCard.Content>
+                  <VStack gap={4}>
+                    {/* Port table */}
+                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={2}>
                         {/* Header row */}
-                        {ports.length > 0 && (
-                          <div
-                            className={`grid gap-1 w-full ${
-                              showNodePort
-                                ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                            }`}
-                          >
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Port name <span className="text-[#ea580c]">*</span>
+                        <div
+                          className={`grid gap-2 w-full items-center ${
+                            showNodePort
+                              ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                              : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                          }`}
+                        >
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Port name <span className="text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Listening port{' '}
+                            <span className="text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Protocol
+                          </span>
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Target port <span className="text-[var(--color-state-danger)]">*</span>
+                          </span>
+                          {showNodePort && (
+                            <span className="text-label-sm text-[var(--color-text-default)]">
+                              Node port
                             </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Listening port <span className="text-[#ea580c]">*</span>
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Protocol
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Target port <span className="text-[#ea580c]">*</span>
-                            </span>
-                            {showNodePort && (
-                              <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Node port
-                              </span>
-                            )}
-                            <div className="w-5" />
-                          </div>
-                        )}
+                          )}
+                          <div />
+                        </div>
 
                         {/* Port rows */}
-                        {ports.map((port) => (
+                        {ports.map((port, idx) => (
                           <div
                             key={port.id}
-                            className={`grid gap-1 w-full items-center ${
+                            className={`grid gap-2 w-full items-center ${
                               showNodePort
                                 ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
                                 : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
@@ -733,12 +730,12 @@ export function CreateServicePage() {
                             <button
                               onClick={() => removePort(port.id)}
                               className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              disabled={ports.length <= 1}
+                              disabled={idx === 0}
                             >
                               <IconX
                                 size={16}
                                 className={
-                                  ports.length <= 1
+                                  idx === 0
                                     ? 'text-[var(--color-text-disabled)]'
                                     : 'text-[var(--color-text-muted)]'
                                 }
@@ -748,7 +745,7 @@ export function CreateServicePage() {
                           </div>
                         ))}
 
-                        {/* Add port Button */}
+                        {/* Add port button */}
                         <div className="w-fit">
                           <Button
                             variant="secondary"
@@ -761,349 +758,105 @@ export function CreateServicePage() {
                         </div>
                       </VStack>
                     </div>
-                  </VStack>
 
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Load Balancer
-                    </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
-                            {/* Header row */}
-                            {ports.length > 0 && (
-                              <div
-                                className={`grid gap-1 w-full ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port name <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Protocol
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                {showNodePort && (
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node port
-                                  </span>
-                                )}
-                                <div className="w-5" />
-                              </div>
-                            )}
-
-                            {/* Port rows */}
-                            {ports.map((port) => (
-                              <div
-                                key={port.id}
-                                className={`grid gap-1 w-full items-center ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <Input
-                                  placeholder="e.g. myport"
-                                  value={port.name}
-                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 8080"
-                                  value={port.listeningPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'listeningPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Select
-                                  options={PROTOCOL_OPTIONS}
-                                  value={port.protocol}
-                                  onChange={(value) => updatePort(port.id, 'protocol', value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={port.targetPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'targetPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                {showNodePort && (
-                                  <Input
-                                    placeholder="e.g. 30000"
-                                    value={port.nodePort || ''}
-                                    onChange={(e) =>
-                                      updatePort(port.id, 'nodePort', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                )}
-                                <button
-                                  onClick={() => removePort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  disabled={ports.length <= 1}
-                                >
-                                  <IconX
-                                    size={16}
-                                    className={
-                                      ports.length <= 1
-                                        ? 'text-[var(--color-text-disabled)]'
-                                        : 'text-[var(--color-text-muted)]'
-                                    }
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add port Button */}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addPort}
-                              >
-                                Add port
-                              </Button>
-                            </div>
+                    {/* External Traffic Policy — NodePort/LoadBalancer만 표시 */}
+                    {showNodePort && (
+                      <VStack gap={2}>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          External traffic policy{' '}
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </span>
+                        <RadioGroup
+                          value={externalTrafficPolicy}
+                          onChange={setExternalTrafficPolicy}
+                        >
+                          <VStack gap={2}>
+                            <Radio value="Cluster" label="Cluster" />
+                            <Radio value="Local" label="Local" />
                           </VStack>
-                        </div>
-
-                        {/* External traffic policy */}
-                        <VStack gap={2}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            External traffic policy{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <RadioGroup
-                            value={externalTrafficPolicy}
-                            onChange={setExternalTrafficPolicy}
-                          >
-                            <VStack gap={2}>
-                              <Radio value="Cluster" label="Cluster" />
-                              <Radio value="Local" label="Local" />
-                            </VStack>
-                          </RadioGroup>
+                        </RadioGroup>
+                        {externalTrafficPolicy === 'Cluster' && (
                           <InlineMessage variant="warning">
                             In Cluster mode, health checks may not accurately reflect pod
                             availability on individual nodes.
                           </InlineMessage>
-                        </VStack>
-                      </VStack>
-                    </div>
-                  </VStack>
-
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Node port
-                    </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
-                            {/* Header row */}
-                            {ports.length > 0 && (
-                              <div
-                                className={`grid gap-1 w-full ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port name <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                {showNodePort && (
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node port
-                                  </span>
-                                )}
-                                <div className="w-5" />
-                              </div>
-                            )}
-
-                            {/* Port rows */}
-                            {ports.map((port) => (
-                              <div
-                                key={port.id}
-                                className={`grid gap-1 w-full items-center ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <Input
-                                  placeholder="e.g. myport"
-                                  value={port.name}
-                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 8080"
-                                  value={port.listeningPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'listeningPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={port.targetPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'targetPort', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                {showNodePort && (
-                                  <Input
-                                    placeholder="e.g. 30000"
-                                    value={port.nodePort || ''}
-                                    onChange={(e) =>
-                                      updatePort(port.id, 'nodePort', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                )}
-                                <button
-                                  onClick={() => removePort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  disabled={ports.length <= 1}
-                                >
-                                  <IconX
-                                    size={16}
-                                    className={
-                                      ports.length <= 1
-                                        ? 'text-[var(--color-text-disabled)]'
-                                        : 'text-[var(--color-text-muted)]'
-                                    }
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add port Button */}
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addPort}
-                              >
-                                Add port
-                              </Button>
-                            </div>
-                          </VStack>
-                        </div>
-
-                        {/* External traffic policy */}
-                        <VStack gap={2}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            External traffic policy{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <RadioGroup
-                            value={externalTrafficPolicy}
-                            onChange={setExternalTrafficPolicy}
-                          >
-                            <VStack gap={2}>
-                              <Radio value="Cluster" label="Cluster" />
-                              <Radio value="Local" label="Local" />
-                            </VStack>
-                          </RadioGroup>
-                          <InlineMessage variant="warning">
-                            In Cluster mode, health checks may not accurately reflect pod
-                            availability on individual nodes.
-                          </InlineMessage>
-                        </VStack>
-                      </VStack>
-                    </div>
-                  </VStack>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* IP Addresses Section */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header title="IP addresses" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  {/* Cluster IP */}
-                  <FormField label="Cluster IP">
-                    <Input
-                      placeholder="e.g. 1.1.1.1"
-                      value={clusterIP}
-                      onChange={(e) => setClusterIP(e.target.value)}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  {/* Load Balancer IP */}
-                  <FormField label="Load balancer IP">
-                    <Input
-                      placeholder="e.g. 1.1.1.1"
-                      value={loadBalancerIP}
-                      onChange={(e) => setLoadBalancerIP(e.target.value)}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  {/* External IPs */}
-                  <VStack gap={2}>
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      External IPs
-                    </label>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
-                        {externalIPs.length > 0 && (
-                          <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              External IP
-                            </span>
-                            <div className="w-5" />
-                          </div>
                         )}
-                        {externalIPs.map((ip) => (
-                          <div
-                            key={ip.id}
-                            className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="e.g. 1.1.1.1"
-                              value={ip.value}
-                              onChange={(e) => updateExternalIP(ip.id, e.target.value)}
-                              fullWidth
-                            />
-                            <button
-                              onClick={() => removeExternalIP(ip.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
+                      </VStack>
+                    )}
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
+
+            {/* IP Addresses Section — ClusterIP, NodePort, LoadBalancer만 표시 */}
+            {showIPAddresses && (
+              <SectionCard className="pb-4">
+                <SectionCard.Header title="IP addresses" />
+                <SectionCard.Content>
+                  <VStack gap={6}>
+                    {/* Cluster IP */}
+                    <FormField label="Cluster IP">
+                      <Input
+                        placeholder="e.g. 1. 1. 1. 1"
+                        value={clusterIP}
+                        onChange={(e) => setClusterIP(e.target.value)}
+                        fullWidth
+                      />
+                    </FormField>
+
+                    {/* Load Balancer IP — LoadBalancer만 표시 */}
+                    {showLoadBalancerIP && (
+                      <FormField label="Load balancer IP">
+                        <Input
+                          placeholder="e.g. 1. 1. 1. 1"
+                          value={loadBalancerIP}
+                          onChange={(e) => setLoadBalancerIP(e.target.value)}
+                          fullWidth
+                        />
+                      </FormField>
+                    )}
+
+                    {/* External IPs */}
+                    <VStack gap={2}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        External IPs
+                      </span>
+                      {externalIPs.length > 0 ? (
+                        <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={2}>
+                            {externalIPs.map((ip) => (
+                              <HStack key={ip.id} gap={2} align="center">
+                                <Input
+                                  placeholder="e.g. 1. 1. 1. 1"
+                                  value={ip.value}
+                                  onChange={(e) => updateExternalIP(ip.id, e.target.value)}
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeExternalIP(ip.id)}
+                                  className="size-6 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                                >
+                                  <IconX
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
+                              </HStack>
+                            ))}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={addExternalIP}
+                              >
+                                Add IP
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
+                      ) : (
                         <div className="w-fit">
                           <Button
                             variant="secondary"
@@ -1114,59 +867,30 @@ export function CreateServicePage() {
                             Add IP
                           </Button>
                         </div>
-                      </VStack>
-                    </div>
+                      )}
+                    </VStack>
                   </VStack>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
-            {/* Selectors Section */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header
-                title="Selectors"
-                description="Selector keys and values are intended to match labels and values on existing pods."
-              />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Keys and values
-                    </span>
-                    {selectors.length === 0 ? (
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                        <HStack gap={2}>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addSelector}
-                          >
-                            Add rule
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Read from File
-                          </Button>
-                        </HStack>
-                      </div>
-                    ) : (
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                        <VStack gap={1.5}>
-                          {selectors.length > 0 && (
-                            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                              <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Key
-                              </span>
-                              <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Value
-                              </span>
-                              <div className="w-5" />
-                            </div>
-                          )}
+            {/* Selectors Section — ExternalName 제외 */}
+            {showSelectors && (
+              <SectionCard className="pb-4">
+                <SectionCard.Header
+                  title="Selectors"
+                  description="Selector keys and values are intended to match labels and values on existing pods."
+                />
+                <SectionCard.Content>
+                  <VStack gap={6}>
+                    {/* Key-Value rows */}
+                    {selectors.length > 0 ? (
+                      <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <VStack gap={2}>
                           {selectors.map((selector, index) => (
                             <div
                               key={index}
-                              className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                              className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                             >
                               <Input
                                 placeholder="e.g. key"
@@ -1192,7 +916,6 @@ export function CreateServicePage() {
                               </button>
                             </div>
                           ))}
-
                           <HStack gap={2}>
                             <Button
                               variant="secondary"
@@ -1208,91 +931,104 @@ export function CreateServicePage() {
                           </HStack>
                         </VStack>
                       </div>
+                    ) : (
+                      <HStack gap={2}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addSelector}
+                        >
+                          Add rule
+                        </Button>
+                        <Button variant="secondary" size="sm">
+                          Read from File
+                        </Button>
+                      </HStack>
                     )}
-                  </VStack>
 
-                  {/* Matching Pods Table */}
-                  <VStack gap={2}>
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Matching Pods (1/10)
-                    </span>
-                    <Pagination
-                      currentPage={1}
-                      totalPages={1}
-                      onPageChange={() => {}}
-                      totalItems={1}
-                      showSettings
-                      onSettingsClick={() => {}}
-                    />
-                    <Table<MatchingPod>
-                      columns={[
-                        {
-                          key: 'name',
-                          label: 'Name',
-                          sortable: true,
-                          render: (value) => (
-                            <TableLink href={`/container/pods/${value}`}>{value}</TableLink>
-                          ),
-                        },
-                        {
-                          key: 'createdAt',
-                          label: 'Created at',
-                          sortable: true,
-                          render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
-                        },
-                      ]}
-                      data={MOCK_MATCHING_PODS}
-                      rowKey="id"
-                    />
+                    {/* Matching Pods Table */}
+                    <VStack gap={2}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        Matching Pods (1/10)
+                      </span>
+                      <Pagination
+                        currentPage={1}
+                        totalPages={1}
+                        onPageChange={() => {}}
+                        totalItems={1}
+                        showSettings
+                        onSettingsClick={() => {}}
+                      />
+                      <Table<MatchingPod>
+                        columns={[
+                          {
+                            key: 'name',
+                            label: 'Name',
+                            sortable: true,
+                            render: (value) => (
+                              <TableLink href={`/container/pods/${value}`}>{value}</TableLink>
+                            ),
+                          },
+                          {
+                            key: 'createdAt',
+                            label: 'Created at',
+                            sortable: true,
+                            render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+                          },
+                        ]}
+                        data={MOCK_MATCHING_PODS}
+                        rowKey="id"
+                      />
+                    </VStack>
                   </VStack>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
-            {/* Session Affinity Section */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header title="Session affinity" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  <VStack gap={3}>
+            {/* Session Affinity Section — ClusterIP, LoadBalancer, NodePort만 표시 */}
+            {showSessionAffinity && (
+              <SectionCard className="pb-4">
+                <SectionCard.Header title="Session affinity" />
+                <SectionCard.Content>
+                  <VStack gap={4}>
                     <RadioGroup
                       value={sessionAffinity}
                       onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
                     >
-                      <Radio value="None" label="There is no session affinity configured" />
-                      <Radio value="ClientIP" label="Client IP" />
+                      <VStack gap={3}>
+                        <Radio value="None" label="There is no session affinity configured" />
+                        <Radio value="ClientIP" label="Client IP" />
+                      </VStack>
                     </RadioGroup>
-                  </VStack>
 
-                  {(isV2 || sessionAffinity === 'ClientIP') && (
-                    <VStack gap={3}>
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Session sticky time
-                      </label>
-                      <HStack gap={3} align="center">
-                        <Slider
-                          min={1}
-                          max={86400}
-                          step={100}
-                          value={sessionAffinityTimeout}
-                          onChange={setSessionAffinityTimeout}
-                        />
-                        <NumberInput
-                          value={sessionAffinityTimeout}
-                          onChange={setSessionAffinityTimeout}
-                          min={1}
-                          max={86400}
-                          step={1}
-                          width="sm"
-                          suffix="Seconds"
-                        />
-                      </HStack>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">1–86400</span>
-                    </VStack>
-                  )}
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
+                    {sessionAffinity === 'ClientIP' && (
+                      <VStack gap={2}>
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Session sticky time
+                        </span>
+                        <HStack gap={2} align="center">
+                          <NumberInput
+                            value={sessionAffinityTimeout}
+                            onChange={setSessionAffinityTimeout}
+                            min={1}
+                            max={86400}
+                            step={1}
+                            width="sm"
+                          />
+                          <span className="text-body-md text-[var(--color-text-default)]">
+                            Seconds
+                          </span>
+                        </HStack>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          1–86400
+                        </span>
+                      </VStack>
+                    )}
+                  </VStack>
+                </SectionCard.Content>
+              </SectionCard>
+            )}
 
             {/* Labels & Annotations Section */}
             <SectionCard className="pb-4">
@@ -1308,10 +1044,10 @@ export function CreateServicePage() {
                       </p>
                     </VStack>
 
-                    {/* Bordered container for labels */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
-                        {labels.length > 0 && (
+                    {/* Bordered container for labels — rows가 있을 때만 border 표시 */}
+                    {labels.length > 0 ? (
+                      <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <VStack gap={1.5}>
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
@@ -1321,49 +1057,59 @@ export function CreateServicePage() {
                             </span>
                             <div className="w-5" />
                           </div>
-                        )}
-                        {labels.map((label, index) => (
-                          <div
-                            key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="label key"
-                              value={label.key}
-                              onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="label value"
-                              value={label.value}
-                              onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                              fullWidth
-                            />
-                            <button
-                              onClick={() => removeLabel(index)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          {labels.map((label, index) => (
+                            <div
+                              key={index}
+                              className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                             >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
+                              <Input
+                                placeholder="label key"
+                                value={label.key}
+                                onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                                fullWidth
                               />
-                            </button>
+                              <Input
+                                placeholder="label value"
+                                value={label.value}
+                                onChange={(e) => updateLabel(index, 'value', e.target.value)}
+                                fullWidth
+                              />
+                              <button
+                                onClick={() => removeLabel(index)}
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconX
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </div>
+                          ))}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addLabel}
+                            >
+                              Add label
+                            </Button>
                           </div>
-                        ))}
-
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addLabel}
-                          >
-                            Add label
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
+                        </VStack>
+                      </div>
+                    ) : (
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addLabel}
+                        >
+                          Add label
+                        </Button>
+                      </div>
+                    )}
                   </VStack>
 
                   {/* Annotations */}
@@ -1378,10 +1124,10 @@ export function CreateServicePage() {
                       </p>
                     </VStack>
 
-                    {/* Bordered container for annotations */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <VStack gap={1.5}>
-                        {annotations.length > 0 && (
+                    {/* Bordered container for annotations — rows가 있을 때만 border 표시 */}
+                    {annotations.length > 0 ? (
+                      <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                        <VStack gap={1.5}>
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                             <span className="block text-label-sm text-[var(--color-text-default)]">
                               Key
@@ -1391,49 +1137,59 @@ export function CreateServicePage() {
                             </span>
                             <div className="w-5" />
                           </div>
-                        )}
-                        {annotations.map((annotation, index) => (
-                          <div
-                            key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="annotation key"
-                              value={annotation.key}
-                              onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="annotation value"
-                              value={annotation.value}
-                              onChange={(e) => updateAnnotation(index, 'value', e.target.value)}
-                              fullWidth
-                            />
-                            <button
-                              onClick={() => removeAnnotation(index)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          {annotations.map((annotation, index) => (
+                            <div
+                              key={index}
+                              className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                             >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
+                              <Input
+                                placeholder="annotation key"
+                                value={annotation.key}
+                                onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
+                                fullWidth
                               />
-                            </button>
+                              <Input
+                                placeholder="annotation value"
+                                value={annotation.value}
+                                onChange={(e) => updateAnnotation(index, 'value', e.target.value)}
+                                fullWidth
+                              />
+                              <button
+                                onClick={() => removeAnnotation(index)}
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconX
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </div>
+                          ))}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addAnnotation}
+                            >
+                              Add annotation
+                            </Button>
                           </div>
-                        ))}
-
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addAnnotation}
-                          >
-                            Add annotation
-                          </Button>
-                        </div>
-                      </VStack>
-                    </div>
+                        </VStack>
+                      </div>
+                    ) : (
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addAnnotation}
+                        >
+                          Add annotation
+                        </Button>
+                      </div>
+                    )}
                   </VStack>
                 </VStack>
               </SectionCard.Content>
@@ -1443,9 +1199,11 @@ export function CreateServicePage() {
           {/* Summary Sidebar */}
           <SummarySidebar
             sectionStatus={sectionStatus}
+            visibleSections={visibleSections}
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

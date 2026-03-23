@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -228,7 +228,14 @@ interface CreatePVCVolume {
   readOnly: boolean;
 }
 
-type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume;
+interface EmptyDirVolume {
+  type: 'empty-dir';
+  volumeName: string;
+  medium: string;
+  sizeLimit: string;
+}
+
+type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume | EmptyDirVolume;
 
 // Volume Claim Template
 interface VolumeClaimTemplate {
@@ -242,6 +249,12 @@ interface VolumeClaimTemplate {
     readOnlyMany: boolean;
     readWriteMany: boolean;
   };
+  mountPoints: {
+    id: string;
+    mountPoint: string;
+    subPathInVolume: string;
+    readOnly: boolean;
+  }[];
 }
 
 // Node Affinity Term
@@ -331,6 +344,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -340,6 +354,7 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
@@ -371,6 +386,7 @@ function SummarySidebar({
   const containerSections = [
     'Basic Information',
     'Image',
+    'Networking',
     'Command',
     'Environment Variables',
     'Service Account Name',
@@ -469,7 +485,7 @@ function SummarySidebar({
             className="flex-1 min-w-[80px]"
             disabled={isCreateDisabled}
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -494,6 +510,7 @@ interface BasicInfoSectionProps {
   onServiceNameChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -509,6 +526,7 @@ function BasicInfoSection({
   onServiceNameChange,
   description,
   onDescriptionChange,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
@@ -523,6 +541,7 @@ function BasicInfoSection({
               value={namespace}
               onChange={(value) => onNamespaceChange(value)}
               fullWidth
+              disabled={isEditMode}
             />
           </FormField>
 
@@ -542,6 +561,7 @@ function BasicInfoSection({
               }}
               error={!!nameError}
               fullWidth
+              disabled={isEditMode}
             />
           </FormField>
 
@@ -873,6 +893,8 @@ function ScalingPolicySection({
 
 export function CreateStatefulSetPage() {
   const navigate = useNavigate();
+  const { statefulSetName } = useParams();
+  const isEditMode = !!statefulSetName;
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -958,6 +980,17 @@ export function CreateStatefulSetPage() {
     workingDir: string;
     // Ports
     ports: { name: string; containerPort: string; protocol: string }[];
+    // Networking
+    networkingPorts: {
+      id: string;
+      serviceType: string;
+      name: string;
+      privateContainerPort: string;
+      protocol: string;
+      publicHostPort: string;
+      hostIP: string;
+      listeningPort: string;
+    }[];
     // Environment Variables
     envVars: {
       name: string;
@@ -1058,6 +1091,7 @@ export function CreateStatefulSetPage() {
       workingDir: '',
       // Ports
       ports: [],
+      networkingPorts: [],
       // Environment Variables
       envVars: [
         { name: '', value: '', type: 'value' as const },
@@ -1190,6 +1224,7 @@ export function CreateStatefulSetPage() {
             capacity: '',
             persistentVolume: '',
             accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            mountPoints: [],
           },
         ]
       : []
@@ -1266,8 +1301,16 @@ export function CreateStatefulSetPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create StatefulSet');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `StatefulSet: ${nameFromQuery || statefulSetName}` : 'Create StatefulSet'
+    );
+  }, [updateActiveTabLabel, isEditMode, statefulSetName]);
+
+  useEffect(() => {
+    if (isEditMode && statefulSetName) {
+      setName(nameFromQuery || statefulSetName);
+    }
+  }, [isEditMode, statefulSetName]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1277,8 +1320,14 @@ export function CreateStatefulSetPage() {
 
   // Active form tab (StatefulSet, Pod, Container-X)
   const [searchParams, setSearchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const activeTab = searchParams.get('tab') || 'statefulset';
-  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+  const setActiveTab = (tab: string) => {
+    const newParams: Record<string, string> = { tab };
+    const name = searchParams.get('name');
+    if (name) newParams['name'] = name;
+    setSearchParams(newParams, { replace: true });
+  };
   const tabListRef = useRef<HTMLDivElement>(null);
 
   // Build inner tabs for the form
@@ -1490,6 +1539,8 @@ export function CreateStatefulSetPage() {
             readOnly: false,
           },
         ]);
+      } else if (type === 'empty-dir') {
+        setVolumes([...volumes, { type: 'empty-dir', volumeName: '', medium: '', sizeLimit: '' }]);
       }
     },
     [volumes]
@@ -1513,8 +1564,8 @@ export function CreateStatefulSetPage() {
 
   // Volume Claim Template management
   const addVolumeClaimTemplate = useCallback(() => {
-    setVolumeClaimTemplates([
-      ...volumeClaimTemplates,
+    setVolumeClaimTemplates((prev) => [
+      ...prev,
       {
         name: '',
         useExistingPV: false,
@@ -1522,9 +1573,10 @@ export function CreateStatefulSetPage() {
         capacity: '',
         persistentVolume: '',
         accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+        mountPoints: [],
       },
     ]);
-  }, [volumeClaimTemplates]);
+  }, []);
 
   const removeVolumeClaimTemplate = useCallback(
     (index: number) => {
@@ -1651,6 +1703,7 @@ export function CreateStatefulSetPage() {
         workingDir: '',
         // Ports
         ports: [],
+        networkingPorts: [],
         // Environment Variables
         envVars: [
           { name: '', value: '', type: 'value' as const },
@@ -1758,7 +1811,15 @@ export function CreateStatefulSetPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'StatefulSets', href: '/container/statefulsets' },
-                { label: 'Create StatefulSet' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || statefulSetName!,
+                        href: `/container/statefulsets/{statefulSetName}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create StatefulSet' }]),
               ]}
             />
           }
@@ -1789,7 +1850,7 @@ export function CreateStatefulSetPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create StatefulSet
+            {isEditMode ? `StatefulSet: ${nameFromQuery || statefulSetName}` : 'Create StatefulSet'}
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a StatefulSet to deploy and manage stateful applications with stable network
@@ -1853,6 +1914,7 @@ export function CreateStatefulSetPage() {
                   onServiceNameChange={setServiceName}
                   description={description}
                   onDescriptionChange={setDescription}
+                  isEditMode={isEditMode}
                 />
                 <LabelsAnnotationsSection
                   labels={labels}
@@ -3549,6 +3611,7 @@ export function CreateStatefulSetPage() {
                                 {volume.type === 'secret' && 'Secret'}
                                 {volume.type === 'pvc' && 'Persistent Volume Claim'}
                                 {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
+                                {volume.type === 'empty-dir' && 'Empty Dir'}
                               </h6>
                               <button
                                 onClick={() => removeVolume(index)}
@@ -3942,16 +4005,69 @@ export function CreateStatefulSetPage() {
                                 </HStack>
                               </>
                             )}
+
+                            {/* Empty Dir content */}
+                            {volume.type === 'empty-dir' && (
+                              <>
+                                <VStack gap={2} className="w-full">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Volume Name{' '}
+                                    <span className="text-[var(--color-state-danger)]">*</span>
+                                  </span>
+                                  <Input
+                                    placeholder="Input name"
+                                    value={volume.volumeName}
+                                    onChange={(e) =>
+                                      updateVolume(index, { volumeName: e.target.value })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={2} className="w-full">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Medium
+                                  </span>
+                                  <Select
+                                    options={[
+                                      { value: '', label: "Node's Default Medium" },
+                                      { value: 'Memory', label: 'Memory' },
+                                    ]}
+                                    value={(volume as EmptyDirVolume).medium}
+                                    onChange={(val) => updateVolume(index, { medium: val })}
+                                    placeholder="Node's Default Medium"
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={2} className="w-full">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
+                                    Size Limit
+                                  </span>
+                                  <HStack gap={2} align="center">
+                                    <Input
+                                      placeholder="e.g. 300"
+                                      value={(volume as EmptyDirVolume).sizeLimit}
+                                      onChange={(e) =>
+                                        updateVolume(index, { sizeLimit: e.target.value })
+                                      }
+                                    />
+                                    <span className="text-label-lg text-[var(--color-text-muted)] whitespace-nowrap">
+                                      MiB
+                                    </span>
+                                  </HStack>
+                                </VStack>
+                              </>
+                            )}
                           </VStack>
                         </div>
                       ))}
 
                       <Select
                         options={[
+                          { value: 'create-pvc', label: 'Create Persistent Volume Claim' },
+                          { value: 'pvc', label: 'Persistent Volume Claim' },
+                          { value: 'empty-dir', label: 'Empty Dir' },
                           { value: 'configmap', label: 'ConfigMap' },
                           { value: 'secret', label: 'Secret' },
-                          { value: 'pvc', label: 'Persistent volume claim' },
-                          { value: 'create-pvc', label: 'Create persistent volume claim' },
                         ]}
                         value=""
                         onChange={(val) => addVolume(val)}
@@ -4123,6 +4239,110 @@ export function CreateStatefulSetPage() {
                                     }
                                   />
                                 </VStack>
+                              </VStack>
+
+                              {/* Mount Points */}
+                              <VStack gap={3}>
+                                {(template.mountPoints || []).map((mp) => (
+                                  <div
+                                    key={mp.id}
+                                    className="grid gap-2 items-end"
+                                    style={{ gridTemplateColumns: '1fr 1fr auto 20px' }}
+                                  >
+                                    <VStack gap={1}>
+                                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                        Mount Point{' '}
+                                        <span className="text-[var(--color-state-danger)]">*</span>
+                                      </span>
+                                      <Input
+                                        placeholder="/mnt/data"
+                                        value={mp.mountPoint}
+                                        onChange={(e) =>
+                                          updateVolumeClaimTemplate(index, {
+                                            mountPoints: (template.mountPoints || []).map((m) =>
+                                              m.id === mp.id
+                                                ? { ...m, mountPoint: e.target.value }
+                                                : m
+                                            ),
+                                          })
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={1}>
+                                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                        Sub Path in Volume
+                                      </span>
+                                      <Input
+                                        placeholder=""
+                                        value={mp.subPathInVolume}
+                                        onChange={(e) =>
+                                          updateVolumeClaimTemplate(index, {
+                                            mountPoints: (template.mountPoints || []).map((m) =>
+                                              m.id === mp.id
+                                                ? { ...m, subPathInVolume: e.target.value }
+                                                : m
+                                            ),
+                                          })
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={1}>
+                                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                        Read Only
+                                      </span>
+                                      <div className="h-8 flex items-center">
+                                        <Checkbox
+                                          checked={mp.readOnly}
+                                          onChange={(e) =>
+                                            updateVolumeClaimTemplate(index, {
+                                              mountPoints: (template.mountPoints || []).map((m) =>
+                                                m.id === mp.id
+                                                  ? { ...m, readOnly: e.target.checked }
+                                                  : m
+                                              ),
+                                            })
+                                          }
+                                        />
+                                      </div>
+                                    </VStack>
+                                    <button
+                                      onClick={() =>
+                                        updateVolumeClaimTemplate(index, {
+                                          mountPoints: (template.mountPoints || []).filter(
+                                            (m) => m.id !== mp.id
+                                          ),
+                                        })
+                                      }
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mb-1"
+                                    >
+                                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                                    </button>
+                                  </div>
+                                ))}
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={() =>
+                                      updateVolumeClaimTemplate(index, {
+                                        mountPoints: [
+                                          ...(template.mountPoints || []),
+                                          {
+                                            id: crypto.randomUUID(),
+                                            mountPoint: '',
+                                            subPathInVolume: '',
+                                            readOnly: false,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  >
+                                    Add Mount
+                                  </Button>
+                                </div>
                               </VStack>
                             </VStack>
                           </div>
@@ -4732,10 +4952,6 @@ export function CreateStatefulSetPage() {
                                 Container Image{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Input
                               placeholder="nginx:latest"
@@ -4752,10 +4968,6 @@ export function CreateStatefulSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Policy
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
@@ -4778,10 +4990,6 @@ export function CreateStatefulSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Secrets
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Select
                               options={[
@@ -4802,6 +5010,211 @@ export function CreateStatefulSetPage() {
                       </SectionCard.Content>
                     </SectionCard>
 
+                    {/* 2a. Networking Section */}
+                    <SectionCard className="pb-4">
+                      <SectionCard.Header title="Networking" />
+                      <SectionCard.Content>
+                        <VStack gap={4}>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Define a Service to expose the container, or define a non-Kubernetes
+                            network port that the new service will run when the app on the container
+                            is expected to run.
+                          </span>
+                          {/* Port rows */}
+                          {(config.networkingPorts || []).map((port) => {
+                            const hasListening =
+                              port.serviceType === 'NodePort' ||
+                              port.serviceType === 'LoadBalancer';
+                            const gridCols = hasListening
+                              ? '1fr 1fr 1fr 80px 1fr 1fr 1fr 20px'
+                              : '1fr 1fr 1fr 80px 1fr 1fr 20px';
+                            return (
+                              <div
+                                key={port.id}
+                                className="grid gap-2 items-end"
+                                style={{ gridTemplateColumns: gridCols }}
+                              >
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Service Type
+                                  </span>
+                                  <Select
+                                    options={[
+                                      { value: 'DoNotCreate', label: 'Do not create a service' },
+                                      { value: 'ClusterIP', label: 'Cluster IP' },
+                                      { value: 'NodePort', label: 'Node Port' },
+                                      { value: 'LoadBalancer', label: 'Load Balancer' },
+                                    ]}
+                                    value={port.serviceType}
+                                    onChange={(val) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, serviceType: val } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Name
+                                  </span>
+                                  <Input
+                                    placeholder=""
+                                    value={port.name}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, name: e.target.value } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Private Container Port
+                                  </span>
+                                  <Input
+                                    placeholder="e.g. 8080"
+                                    value={port.privateContainerPort}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id
+                                            ? { ...p, privateContainerPort: e.target.value }
+                                            : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Protocol
+                                  </span>
+                                  <Select
+                                    options={[
+                                      { value: 'TCP', label: 'TCP' },
+                                      { value: 'UDP', label: 'UDP' },
+                                    ]}
+                                    value={port.protocol}
+                                    onChange={(val) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, protocol: val } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Public Host Port
+                                  </span>
+                                  <Input
+                                    placeholder="e.g. 80"
+                                    value={port.publicHostPort}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id
+                                            ? { ...p, publicHostPort: e.target.value }
+                                            : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                <VStack gap={1}>
+                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                    Host IP
+                                  </span>
+                                  <Input
+                                    placeholder="e.g. 1.1.1.1"
+                                    value={port.hostIP}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        networkingPorts: (config.networkingPorts || []).map((p) =>
+                                          p.id === port.id ? { ...p, hostIP: e.target.value } : p
+                                        ),
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                                {hasListening && (
+                                  <VStack gap={1}>
+                                    <span className="text-label-sm text-[var(--color-text-subtle)]">
+                                      Listening Port
+                                    </span>
+                                    <Input
+                                      placeholder="e.g. 30080"
+                                      value={port.listeningPort}
+                                      onChange={(e) =>
+                                        updateContainerConfig(containerId, {
+                                          networkingPorts: (config.networkingPorts || []).map(
+                                            (p) =>
+                                              p.id === port.id
+                                                ? { ...p, listeningPort: e.target.value }
+                                                : p
+                                          ),
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                )}
+                                <button
+                                  onClick={() =>
+                                    updateContainerConfig(containerId, {
+                                      networkingPorts: (config.networkingPorts || []).filter(
+                                        (p) => p.id !== port.id
+                                      ),
+                                    })
+                                  }
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mb-1"
+                                >
+                                  <IconX size={14} className="text-[var(--color-text-muted)]" />
+                                </button>
+                              </div>
+                            );
+                          })}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={() =>
+                                updateContainerConfig(containerId, {
+                                  networkingPorts: [
+                                    ...(config.networkingPorts || []),
+                                    {
+                                      id: crypto.randomUUID(),
+                                      serviceType: 'DoNotCreate',
+                                      name: '',
+                                      privateContainerPort: '',
+                                      protocol: 'TCP',
+                                      publicHostPort: '',
+                                      hostIP: '',
+                                      listeningPort: '',
+                                    },
+                                  ],
+                                })
+                              }
+                            >
+                              Add Port or Service
+                            </Button>
+                          </div>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
                     {/* 2b. Command Section */}
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Command" />
@@ -4811,10 +5224,6 @@ export function CreateStatefulSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Command
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Input
@@ -4833,10 +5242,6 @@ export function CreateStatefulSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Arguments
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /usr/sbin/httpd -f httpd.conf"
@@ -4854,10 +5259,6 @@ export function CreateStatefulSetPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 WorkingDir
                               </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
-                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /myapp"
@@ -4874,10 +5275,6 @@ export function CreateStatefulSetPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Stdin
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                The period allowed after receiving a termination request before the
-                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
@@ -5124,10 +5521,6 @@ export function CreateStatefulSetPage() {
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
-                            </span>
-                            <span className="text-body-md text-[var(--color-text-subtle)]">
-                              The period allowed after receiving a termination request before the
-                              pod is forcibly terminated.
                             </span>
                           </VStack>
                           <Input
@@ -7131,9 +7524,10 @@ export function CreateStatefulSetPage() {
                                         {{
                                           csi: 'CSI',
                                           pvc: 'Persistent Volume Claim',
-                                          'create-pvc': 'Create persistent volume claim',
+                                          'create-pvc': 'Create Persistent Volume Claim',
                                           configmap: 'ConfigMap',
                                           secret: 'Secret',
+                                          'empty-dir': 'Empty Dir',
                                           emptyDir: 'Empty Dir',
                                           hostPath: 'Host Path',
                                         }[selectedVol.volumeType] || selectedVol.volumeType}
@@ -7339,6 +7733,7 @@ export function CreateStatefulSetPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

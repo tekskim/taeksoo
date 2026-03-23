@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -104,6 +104,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -111,21 +112,15 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
-  // Determine section status based on form data
   const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
-    switch (section) {
-      case 'basic-info':
-        return podDisruptionBudgetName.trim() ? 'done' : 'active';
-      case 'data':
-        return 'pending';
-      case 'selector':
-        return 'pending';
-      case 'labels-annotations':
-        return 'pending';
-      default:
-        return 'pending';
+    if (section === 'basic-info') {
+      // namespace has default → 'active' until name is typed
+      return podDisruptionBudgetName.trim() ? 'done' : 'active';
     }
+    // data (budget), selector, labels-annotations are all optional → always done
+    return 'done';
   };
 
   return (
@@ -162,7 +157,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -183,6 +178,7 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -194,6 +190,7 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -225,6 +222,7 @@ function BasicInfoSection({
                   if (podDisruptionBudgetNameError) onPodDisruptionBudgetNameErrorChange(null);
                 }}
                 fullWidth
+                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{podDisruptionBudgetNameError}</FormField.ErrorMessage>
@@ -701,6 +699,10 @@ function LabelsAnnotationsSection({
 
 export function CreatePodDisruptionBudgetPage() {
   const navigate = useNavigate();
+  const { pdbName } = useParams();
+  const isEditMode = !!pdbName;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -737,8 +739,18 @@ export function CreatePodDisruptionBudgetPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create pod disruption budget');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode
+        ? `Pod disruption budget: ${nameFromQuery || pdbName}`
+        : 'Create pod disruption budget'
+    );
+  }, [updateActiveTabLabel, isEditMode, pdbName]);
+
+  useEffect(() => {
+    if (isEditMode && pdbName) {
+      setPodDisruptionBudgetName(nameFromQuery || pdbName);
+    }
+  }, [isEditMode, pdbName]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -856,7 +868,12 @@ export function CreatePodDisruptionBudgetPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Pod disruption budgets', href: '/container/pdb' },
-                { label: 'Create pod disruption budget' },
+                ...(isEditMode
+                  ? [
+                      { label: nameFromQuery || pdbName!, href: `/container/pdb/{pdbName}` },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create pod disruption budget' }]),
               ]}
             />
           }
@@ -887,7 +904,9 @@ export function CreatePodDisruptionBudgetPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-            Create pod disruption budget
+            {isEditMode
+              ? `Pod disruption budget: ${nameFromQuery || pdbName}`
+              : 'Create pod disruption budget'}
           </h1>
           <p className="text-body-md text-[var(--color-text-muted)]">
             Pod Disruption Budget defines the minimum number of pods that must remain available
@@ -909,6 +928,7 @@ export function CreatePodDisruptionBudgetPage() {
               onNamespaceChange={setNamespace}
               description={description}
               onDescriptionChange={setDescription}
+              isEditMode={isEditMode}
             />
 
             {/* Budget Section */}
@@ -948,6 +968,7 @@ export function CreatePodDisruptionBudgetPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

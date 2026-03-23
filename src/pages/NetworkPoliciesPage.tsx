@@ -156,7 +156,10 @@ export function NetworkPoliciesPage() {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => console.log('Edit Config:', row.id),
+        onClick: () =>
+          navigate(
+            `/container/network-policies/${row.id}/edit?name=${encodeURIComponent(row.name)}`
+          ),
       },
       {
         id: 'edit-yaml',

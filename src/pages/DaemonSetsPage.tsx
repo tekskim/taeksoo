@@ -289,7 +289,8 @@ export function DaemonSetsPage() {
           {
             id: 'edit-config',
             label: 'Edit config',
-            onClick: () => navigate(`/container/daemonsets/${row.id}/edit`),
+            onClick: () =>
+              navigate(`/container/daemonsets/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
           },
           {
             id: 'edit-yaml',

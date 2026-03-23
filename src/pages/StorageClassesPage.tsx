@@ -158,7 +158,10 @@ export function StorageClassesPage() {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => navigate(`/container/storage-classes/${row.id}/edit`),
+        onClick: () =>
+          navigate(
+            `/container/storage-classes/${row.id}/edit?name=${encodeURIComponent(row.name)}`
+          ),
       },
       {
         id: 'edit-yaml',
