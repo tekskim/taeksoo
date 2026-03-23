@@ -297,9 +297,9 @@ export function TypographyPage() {
             </div>
           </VStack>
 
-          {/* Button */}
+          {/* Action */}
           <VStack gap={4}>
-            <Label>Button</Label>
+            <Label>Action</Label>
             <div className="overflow-x-auto">
               <table className="w-full text-[length:var(--font-size-11)]">
                 <thead>
@@ -328,27 +328,27 @@ export function TypographyPage() {
                       size: '14px',
                       lh: '20px',
                       weight: '500',
-                      desc: 'Large button',
+                      desc: 'Large action',
                     },
                     {
                       token: 'md',
                       size: '12px',
                       lh: '16px',
                       weight: '500',
-                      desc: 'Default button',
+                      desc: 'Default action',
                     },
                     {
                       token: 'sm',
                       size: '11px',
                       lh: '16px',
                       weight: '500',
-                      desc: 'Small button',
+                      desc: 'Small action',
                     },
                   ].map(({ token, size, lh, weight, desc }) => (
                     <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                       <td className="py-2 pr-4 w-[120px]">
                         <span className="text-[var(--color-action-primary)] font-mono text-[10px]">
-                          button.{token}
+                          action.{token}
                         </span>
                       </td>
                       <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
