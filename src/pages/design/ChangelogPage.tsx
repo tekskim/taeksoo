@@ -111,6 +111,14 @@ const CHANGELOG: ChangelogVersion[] = [
       },
       {
         type: 'new',
+        date: '2026-03-23',
+        component: 'Project Selector',
+        description:
+          '문서 페이지 추가 — default / sidebar-icon 변형, 드롭다운 패널, 카드 상태 예시',
+        link: '/design/components/project-selector',
+      },
+      {
+        type: 'new',
         date: '2026-03-19',
         description: 'thaki-shared-v2 Shared Components 분석 페이지 및 IAM 프리뷰 앱',
         link: '/design/shared-components',
@@ -123,6 +131,36 @@ const CHANGELOG: ChangelogVersion[] = [
       },
 
       // Updated
+      {
+        type: 'updated',
+        date: '2026-03-23',
+        component: 'CopyButton',
+        description:
+          '전체 앱의 인라인 Copy 버튼을 DS CopyButton으로 통일 — InfoBox, DetailHeader, 40+ Detail/List 페이지 적용, stopPropagation 추가. ghost variant 기본 아이콘 색상을 text-muted → text-default로 변경',
+        link: '/design/components/copy-button',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-23',
+        component: 'Typography',
+        description:
+          'Button 타이포그래피 토큰명을 action.lg/md/sm으로 변경 (Button 컴포넌트명과의 충돌 방지)',
+        link: '/design/foundation/typography',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-23',
+        component: 'Snackbar',
+        description:
+          'Notification Card States 예시를 NotificationCenter에서 Snackbar 페이지로 이동',
+        link: '/design/components/snackbar',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-23',
+        description:
+          '사이드바 New 뱃지를 "오늘만" → "최근 3일" 기간으로 확장, 자동 타임스탬프 갱신 스크립트 추가',
+      },
       {
         type: 'updated',
         date: '2026-03-19',

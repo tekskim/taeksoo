@@ -1,5 +1,41 @@
 [
   {
+    "id": "0a",
+    "date": "2026-03-23",
+    "app": "feat",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Extend new badge to 3-day window with auto-timestamp script",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Add Project Selector documentation page",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "0b",
+    "date": "2026-03-23",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Unify all copy buttons with DS CopyButton component (40+ pages)",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Rename typography token button to action (action.lg/md/sm)",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Move Notification Card States from NotificationCenter to Snackbar page",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
     "id": "1",
     "date": "2026-03-19",
     "app": "fix",
