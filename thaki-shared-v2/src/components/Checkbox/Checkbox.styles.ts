@@ -1,8 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 /** Container: flex, gap 6px, items center */
-export const checkboxContainerStyles =
-  'inline-flex items-center gap-[6px] cursor-pointer';
+export const checkboxContainerStyles = 'inline-flex items-center gap-[6px] cursor-pointer';
 
 export const checkboxContainerDisabledStyles = 'cursor-not-allowed opacity-50';
 
@@ -13,7 +12,7 @@ export const checkboxInputVariants = cva(
     variants: {
       size: {
         xs: 'size-3 checkbox-sm',
-        sm: 'size-[14px] checkbox-sm',
+        sm: 'size-4 checkbox-sm',
         md: 'size-4 checkbox-md',
         lg: 'size-[18px] checkbox-lg',
       },

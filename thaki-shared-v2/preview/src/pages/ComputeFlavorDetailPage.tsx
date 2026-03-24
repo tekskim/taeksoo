@@ -1,135 +1,665 @@
-import { useParams, useSearchParams } from 'react-router-dom';
-import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
+import { useMemo, useState, useCallback } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
-import type { DetailCardField } from '@shared/components/DetailCard/DetailCard';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
+import { Table } from '@shared/components/Table';
+import { StatusIndicator } from '@shared/components/StatusIndicator';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
-import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import { cn } from '@shared/services/utils/cn';
+import {
+  IconCirclePlus,
+  IconDotsCircleHorizontal,
+  IconLock,
+  IconLockOpen,
+  IconTerminal2,
+  IconSearch,
+} from '@tabler/icons-react';
+
+type VisibilityType = 'Public' | 'Private' | 'Project';
+type InstanceStatus = 'active' | 'building' | 'error' | 'shutoff' | 'paused';
 
 interface FlavorDetail {
   id: string;
   name: string;
-  vCpu: string;
+  category: string;
+  vcpu: number;
   ram: string;
-  rootDisk: string;
-  isPublic: boolean;
+  visibility: VisibilityType;
   createdAt: string;
+  architecture: string;
   ephemeralDisk: string;
-  swap: string;
-  rxtxFactor: string;
+  numaNodes: string;
+  cpuPolicy: string;
+  cpuThreadPolicy: string;
+  memoryPage: string;
+  internalNetworkBandwidth: string;
+  storageIOPS: string;
 }
 
-const mockMap: Record<string, FlavorDetail> = {
+interface FlavorInstance {
+  id: string;
+  name: string;
+  status: InstanceStatus;
+  locked: boolean;
+  image: string;
+  fixedIP: string;
+  az: string;
+  createdAt: string;
+}
+
+const mockFlavorsMap: Record<string, FlavorDetail> = {
   'flv-001': {
     id: 'flv-001',
-    name: 'm1.small',
-    vCpu: '1',
-    ram: '2 GiB',
-    rootDisk: '20 GiB',
-    isPublic: true,
-    createdAt: 'Jan 10, 2025 08:00:00',
-    ephemeralDisk: '0 GiB',
-    swap: '0 GiB',
-    rxtxFactor: '1.0',
+    name: 'c5.large',
+    category: 'CPU',
+    vcpu: 2,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: 'Sep 15, 2025 12:22:26',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-002': {
+    id: 'flv-002',
+    name: 'c5.xlarge',
+    category: 'Compute Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    visibility: 'Public',
+    createdAt: 'Sep 10, 2025 01:17:01',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
   },
   'flv-003': {
     id: 'flv-003',
-    name: 'c1.xlarge',
-    vCpu: '8',
-    ram: '16 GiB',
-    rootDisk: '80 GiB',
-    isPublic: true,
-    createdAt: 'Jan 12, 2025 11:22:33',
-    ephemeralDisk: '0 GiB',
-    swap: '0 GiB',
-    rxtxFactor: '1.0',
+    name: 'm5.large',
+    category: 'General Purpose',
+    vcpu: 2,
+    ram: '8GiB',
+    visibility: 'Public',
+    createdAt: 'Sep 5, 2025 14:12:36',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-004': {
+    id: 'flv-004',
+    name: 'm5.xlarge',
+    category: 'General Purpose',
+    vcpu: 4,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: 'Sep 1, 2025 10:20:28',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
+  },
+  'flv-005': {
+    id: 'flv-005',
+    name: 'r5.large',
+    category: 'Memory Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 30, 2025 21:37:41',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-006': {
+    id: 'flv-006',
+    name: 'r5.xlarge',
+    category: 'Memory Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 25, 2025 10:32:16',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
+  },
+  'flv-007': {
+    id: 'flv-007',
+    name: 't3.micro',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '1GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 20, 2025 23:27:51',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-008': {
+    id: 'flv-008',
+    name: 't3.small',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '2GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 15, 2025 12:22:26',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-009': {
+    id: 'flv-009',
+    name: 'g4dn.xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 4,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 10, 2025 01:17:01',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '125GiB',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+    memoryPage: 'Large',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '3000',
+  },
+  'flv-010': {
+    id: 'flv-010',
+    name: 'g4dn.2xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 8,
+    ram: '32GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 5, 2025 14:12:36',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '225GiB',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+    memoryPage: 'Large',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '5000',
+  },
+  'flv-011': {
+    id: 'flv-011',
+    name: 'p3.2xlarge',
+    category: 'GPU Compute',
+    vcpu: 8,
+    ram: '61GiB',
+    visibility: 'Public',
+    createdAt: 'Aug 1, 2025 10:20:28',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+    memoryPage: 'Large',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '3000',
+  },
+  'flv-012': {
+    id: 'flv-012',
+    name: 'inf1.xlarge',
+    category: 'ML Inference',
+    vcpu: 4,
+    ram: '8GiB',
+    visibility: 'Public',
+    createdAt: 'Jul 28, 2025 07:11:07',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '-',
+  },
+  'flv-013': {
+    id: 'flv-013',
+    name: 'inf1.2xlarge',
+    category: 'ML Inference',
+    vcpu: 8,
+    ram: '16GiB',
+    visibility: 'Public',
+    createdAt: 'Jul 25, 2025 10:32:16',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '0GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '25Gbps',
+    storageIOPS: '-',
+  },
+  'flv-014': {
+    id: 'flv-014',
+    name: 'custom.small',
+    category: 'Custom',
+    vcpu: 2,
+    ram: '4GiB',
+    visibility: 'Private',
+    createdAt: 'Jul 20, 2025 23:27:51',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '20GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '-',
+    storageIOPS: '-',
+  },
+  'flv-015': {
+    id: 'flv-015',
+    name: 'custom.medium',
+    category: 'Custom',
+    vcpu: 4,
+    ram: '8GiB',
+    visibility: 'Private',
+    createdAt: 'Jul 15, 2025 12:22:26',
+    architecture: 'X86 Architecture',
+    ephemeralDisk: '50GiB',
+    numaNodes: '0',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Prefer',
+    memoryPage: 'Any',
+    internalNetworkBandwidth: '10Gbps',
+    storageIOPS: '-',
   },
 };
 
-const defaultDetail: FlavorDetail = {
-  id: '-',
-  name: 'Unknown flavor',
-  vCpu: '-',
-  ram: '-',
-  rootDisk: '-',
-  isPublic: false,
+const defaultFlavorDetail: FlavorDetail = {
+  id: 'unknown',
+  name: 'Unknown Flavor',
+  category: '-',
+  vcpu: 0,
+  ram: '0GiB',
+  visibility: 'Public',
   createdAt: '-',
-  ephemeralDisk: '-',
-  swap: '-',
-  rxtxFactor: '-',
+  architecture: '-',
+  ephemeralDisk: '0GiB',
+  numaNodes: '0',
+  cpuPolicy: '-',
+  cpuThreadPolicy: '-',
+  memoryPage: '-',
+  internalNetworkBandwidth: '-',
+  storageIOPS: '-',
 };
+
+const mockFlavorParameters = {
+  id: 'b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+  name: 'c5.large',
+  ram: 4096,
+  disk: 0,
+  swap: 0,
+  'OS-FLV-EXT-DATA:ephemeral': 0,
+  'OS-FLV-DISABLED:disabled': false,
+  vcpus: 2,
+  'os-flavor-access:is_public': true,
+  rxtx_factor: 1,
+  links: [
+    {
+      rel: 'self',
+      href: 'http://10.7.12.10/v2.1/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+    },
+    {
+      rel: 'bookmark',
+      href: 'http://10.7.12.10/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+    },
+  ],
+  description: null,
+  extra_specs: {
+    ':architecture': 'x86_architecture',
+    ':category': 'compute_optimized',
+    'hw:mem_page_size': 'any',
+    'hw:numa_nodes': '1',
+  },
+};
+
+const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i) => ({
+  id: `inst-${String(i + 1).padStart(3, '0')}`,
+  name: `web-server-${String(i + 1).padStart(2, '0')}`,
+  status: (['active', 'building', 'error', 'shutoff', 'paused'] as InstanceStatus[])[i % 5],
+  locked: i % 3 === 0,
+  image: ['Ubuntu24.04', 'CentOS8', 'Debian12', 'Rocky9'][i % 4],
+  fixedIP: `10.62.0.${30 + i}`,
+  az: ['zone-a', 'zone-b', 'zone-o'][i % 3],
+  createdAt: `Sep ${String(30 - (i % 28)).padStart(2, '0')}, 2025`,
+}));
+
+const STATUS_COL_WIDTH = 60;
+const LOCKED_COL_WIDTH = 60;
+const ACTION_COL_WIDTH = 72;
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
+  <button
+    type="button"
+    onClick={(e) => {
+      e.stopPropagation();
+      toggle();
+    }}
+    className="p-1.5 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none inline-flex"
+    aria-label="Row actions"
+  >
+    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-text-subtle" />
+  </button>
+);
+
+function instanceStatusVariant(s: InstanceStatus): StatusVariant {
+  const m: Record<InstanceStatus, StatusVariant> = {
+    active: 'active',
+    building: 'building',
+    error: 'error',
+    shutoff: 'shutoff',
+    paused: 'paused',
+  };
+  return m[s];
+}
+
+function SearchField({
+  placeholder,
+  value,
+  onChange,
+  className,
+}: {
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 h-8 px-2.5 rounded-md border border-border-strong bg-surface-default w-full max-w-[320px]',
+        className
+      )}
+    >
+      <IconSearch size={14} className="shrink-0 text-text-muted" stroke={1.5} />
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="flex-1 min-w-0 text-12 leading-[18px] text-text bg-transparent border-none outline-none placeholder:text-text-muted"
+      />
+    </div>
+  );
+}
 
 export function ComputeFlavorDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'details';
+  const activeDetailTab = searchParams.get('tab') || 'details';
+  const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
-  const f = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
+  const flavor = useMemo(
+    () => (id ? (mockFlavorsMap[id] ?? defaultFlavorDetail) : defaultFlavorDetail),
+    [id]
+  );
+
+  const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
+  const [instanceCurrentPage, setInstanceCurrentPage] = useState(1);
+  const instancesPerPage = 10;
+  const [sort, setSort] = useState('');
+  const [order, setOrder] = useState<SortOrder>('asc');
+  const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
+    setSort(nextSort ?? '');
+    setOrder(nextOrder);
+  }, []);
+
+  const filteredInstances = useMemo(() => {
+    if (!instanceSearchQuery) return mockFlavorInstances;
+    const query = instanceSearchQuery.toLowerCase();
+    return mockFlavorInstances.filter(
+      (inst) =>
+        inst.name.toLowerCase().includes(query) ||
+        inst.id.toLowerCase().includes(query) ||
+        inst.image.toLowerCase().includes(query) ||
+        inst.fixedIP.toLowerCase().includes(query)
+    );
+  }, [instanceSearchQuery]);
+
+  const instanceTotalPages = Math.ceil(filteredInstances.length / instancesPerPage);
+  const paginatedInstances = filteredInstances.slice(
+    (instanceCurrentPage - 1) * instancesPerPage,
+    instanceCurrentPage * instancesPerPage
+  );
 
   const infoFields: DetailPageHeaderInfoField[] = [
-    { label: 'Name', value: f.name },
-    { label: 'vCPU', value: f.vCpu },
-    { label: 'RAM', value: f.ram },
-    { label: 'Root disk', value: f.rootDisk },
-    { label: 'Is public', value: f.isPublic ? 'Yes' : 'No' },
-    { label: 'Created at', value: f.createdAt },
+    { label: 'ID', value: flavor.id, showCopyButton: true, copyText: flavor.id },
+    { label: 'Category', value: flavor.category },
+    { label: 'vCPU', value: String(flavor.vcpu) },
+    { label: 'RAM', value: flavor.ram },
+    { label: 'Root disk', value: flavor.ephemeralDisk },
+    { label: 'Public', value: flavor.visibility === 'Public' ? 'On' : 'Off' },
   ];
 
-  const specFields: DetailCardField[] = [
-    { label: 'vCPU', value: f.vCpu },
-    { label: 'RAM', value: f.ram },
-    { label: 'Root disk', value: f.rootDisk },
-    { label: 'Ephemeral disk', value: f.ephemeralDisk },
-    { label: 'Swap', value: f.swap },
-    { label: 'RX/TX factor', value: f.rxtxFactor },
-  ];
-
-  const metaFields: DetailCardField[] = [
-    { label: 'Flavor ID', value: f.id },
-    { label: 'Visibility', value: f.isPublic ? 'Public' : 'Private' },
-    { label: 'Created at', value: f.createdAt },
-  ];
-
-  const actions = (
-    <ContextMenu.Root
-      direction="bottom-end"
-      gap={4}
-      trigger={({ toggle }) => (
-        <Button variant="secondary" appearance="outline" size="sm" onClick={toggle}>
-          Actions <IconChevronDown size={12} stroke={1.5} />
-        </Button>
-      )}
-    >
-      <ContextMenu.Item action={() => {}}>
-        <span className="inline-flex items-center gap-1">
-          <IconEdit size={12} stroke={1.5} /> Edit
-        </span>
-      </ContextMenu.Item>
-      <ContextMenu.Item action={() => {}} danger>
-        <span className="inline-flex items-center gap-1">
-          <IconTrash size={12} stroke={1.5} /> Delete
-        </span>
-      </ContextMenu.Item>
-    </ContextMenu.Root>
+  const instanceColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'locked', header: 'Locked', width: LOCKED_COL_WIDTH, align: 'center' },
+      { key: 'image', header: 'OS', sortable: true },
+      { key: 'fixedIP', header: 'Fixed IP' },
+      { key: 'az', header: 'AZ' },
+      { key: 'createdAt', header: 'Created at', sortable: true },
+      {
+        key: 'actions',
+        header: 'Action',
+        width: ACTION_COL_WIDTH,
+        align: 'center',
+        clickable: false,
+      },
+    ],
+    []
   );
 
   return (
     <div className="flex flex-col gap-6 min-w-0">
-      <DetailPageHeader title={f.name} actions={actions} infoFields={infoFields} />
+      <DetailPageHeader
+        title={flavor.name}
+        actions={
+          <div className="flex items-center gap-1 flex-wrap">
+            <Button variant="secondary" appearance="outline" size="sm">
+              <IconCirclePlus size={12} stroke={1.5} /> Create instance
+            </Button>
+            <Button variant="secondary" appearance="outline" size="sm">
+              <IconCirclePlus size={12} stroke={1.5} /> Create instance template
+            </Button>
+          </div>
+        }
+        infoFields={infoFields}
+      />
 
       <div className="w-full">
-        <Tabs
-          activeTabId={activeTab}
-          onChange={(tab) => setSearchParams({ tab }, { replace: true })}
-          variant="line"
-          size="sm"
-        >
+        <Tabs activeTabId={activeDetailTab} onChange={setActiveDetailTab} variant="line" size="sm">
           <Tab id="details" label="Details">
             <div className="flex flex-col gap-4 pt-4">
-              <DetailCard title="Specs" fields={specFields} />
-              <DetailCard title="Basic information" fields={metaFields} />
+              <SectionCard>
+                <SectionCard.Header title="Basic information" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Flavor name" value={flavor.name} />
+                  <SectionCard.DataRow label="Category" value={flavor.category} />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Specification" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
+                  <SectionCard.DataRow label="RAM" value={flavor.ram} />
+                  <SectionCard.DataRow label="Root disk" value={flavor.ephemeralDisk} />
+                  <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
+                  <SectionCard.DataRow label="Swap disk" value={flavor.numaNodes} />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Security" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Public"
+                    value={flavor.visibility === 'Public' ? 'On' : 'Off'}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Metadata" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="{metadata}" value="{value}" />
+                </SectionCard.Content>
+              </SectionCard>
+            </div>
+          </Tab>
+
+          <Tab id="instances" label="Instances">
+            <div className="flex flex-col gap-4 pt-4">
+              <h2 className="text-16 font-semibold leading-6 text-text m-0">Instances</h2>
+              <SearchField
+                placeholder="Search instance by attributes"
+                value={instanceSearchQuery}
+                onChange={(v) => {
+                  setInstanceSearchQuery(v);
+                  setInstanceCurrentPage(1);
+                }}
+              />
+              <Pagination
+                totalCount={filteredInstances.length}
+                size={instancesPerPage}
+                currentAt={instanceCurrentPage}
+                onPageChange={setInstanceCurrentPage}
+                totalCountLabel="items"
+              />
+              <Table<FlavorInstance>
+                columns={instanceColumns}
+                rows={paginatedInstances}
+                sort={sort}
+                order={order}
+                onSortChange={handleSortChange}
+                stickyLastColumn
+              >
+                {paginatedInstances.map((row) => (
+                  <Table.Tr key={row.id} rowData={row}>
+                    <Table.Td rowData={row} column={instanceColumns[0]}>
+                      <StatusIndicator
+                        variant={instanceStatusVariant(row.status)}
+                        layout="iconOnly"
+                      />
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[1]}>
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <Link
+                          to={`/compute/instances/${row.id}`}
+                          className={`${linkClass} truncate`}
+                        >
+                          {row.name}
+                        </Link>
+                        <span className="text-11 leading-16 text-text-muted truncate">
+                          ID : {row.id}
+                        </span>
+                      </div>
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[2]}>
+                      {row.locked ? (
+                        <IconLock size={16} stroke={1.5} className="text-text mx-auto" />
+                      ) : (
+                        <IconLockOpen size={16} stroke={1.5} className="text-text-muted mx-auto" />
+                      )}
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[3]}>
+                      {row.image}
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[4]}>
+                      {row.fixedIP}
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[5]}>
+                      {row.az}
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[6]}>
+                      {row.createdAt}
+                    </Table.Td>
+                    <Table.Td rowData={row} column={instanceColumns[7]} preventClickPropagation>
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          type="button"
+                          className="p-1.5 rounded-md hover:bg-surface-muted transition-colors"
+                          title="Console"
+                        >
+                          <IconTerminal2 size={16} stroke={1.5} className="text-text-muted" />
+                        </button>
+                        <ContextMenu.Root
+                          direction="bottom-end"
+                          gap={4}
+                          trigger={({ toggle }) => <ActionTrigger toggle={toggle} />}
+                        >
+                          <ContextMenu.Item action={() => {}}>View details</ContextMenu.Item>
+                          <ContextMenu.Item action={() => {}}>Start</ContextMenu.Item>
+                          <ContextMenu.Item action={() => {}}>Stop</ContextMenu.Item>
+                          <ContextMenu.Item action={() => {}}>Restart</ContextMenu.Item>
+                          <ContextMenu.Item action={() => {}} danger>
+                            Delete
+                          </ContextMenu.Item>
+                        </ContextMenu.Root>
+                      </div>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table>
+            </div>
+          </Tab>
+
+          <Tab id="parameters" label="Parameters">
+            <div className="pt-6">
+              <div className="bg-[#1e293b] border border-border rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                <pre className="font-mono text-12 leading-[18px] text-slate-200 whitespace-pre-wrap break-all">
+                  {JSON.stringify(mockFlavorParameters, null, 5)}
+                </pre>
+              </div>
             </div>
           </Tab>
         </Tabs>

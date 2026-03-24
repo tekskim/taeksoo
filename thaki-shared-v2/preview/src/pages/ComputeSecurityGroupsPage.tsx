@@ -7,83 +7,125 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
+import { Tooltip } from '@shared/components/Tooltip';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import containerIcon from '@shared/assets/app-icons/container.png';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-interface SecurityGroupRow {
+type SecurityGroupStatus = 'active' | 'error';
+
+interface SecurityGroup {
   id: string;
   name: string;
   description: string;
+  ingressRules: number;
+  egressRules: number;
   createdAt: string;
+  status: SecurityGroupStatus;
+  origin?: 'container';
   [key: string]: unknown;
 }
 
-const mockRows: SecurityGroupRow[] = [
+const mockSecurityGroups: SecurityGroup[] = [
   {
     id: 'sg-001',
-    name: 'default',
-    description: 'Default security group for project',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    name: 'sg-01',
+    description: 'Web server access group',
+    ingressRules: 3,
+    egressRules: 3,
+    createdAt: 'Jan 15, 2024 12:22:26',
+    status: 'active',
+    origin: 'container',
   },
   {
     id: 'sg-002',
-    name: 'web-tier',
-    description: 'HTTP/HTTPS from anywhere',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    name: 'default',
+    description: 'Default security group',
+    ingressRules: 2,
+    egressRules: 2,
+    createdAt: 'Jan 10, 2024 01:17:01',
+    status: 'active',
+    origin: 'container',
   },
   {
     id: 'sg-003',
-    name: 'db-internal',
-    description: 'PostgreSQL from app tier only',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    name: 'db-sg',
+    description: 'Database access group',
+    ingressRules: 5,
+    egressRules: 1,
+    createdAt: 'Feb 1, 2024 10:20:28',
+    status: 'active',
   },
   {
     id: 'sg-004',
-    name: 'bastion-ssh',
-    description: 'SSH from office CIDR',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    name: 'app-sg',
+    description: 'Application server security group',
+    ingressRules: 8,
+    egressRules: 4,
+    createdAt: 'Feb 15, 2024 12:22:26',
+    status: 'active',
+    origin: 'container',
   },
   {
     id: 'sg-005',
-    name: 'k8s-nodes',
-    description: 'Kubernetes worker node rules',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    name: 'lb-sg',
+    description: 'Load balancer security group',
+    ingressRules: 4,
+    egressRules: 2,
+    createdAt: 'Mar 1, 2024 10:20:28',
+    status: 'active',
   },
   {
     id: 'sg-006',
-    name: 'lb-health',
-    description: 'Health check sources for LBs',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    name: 'cache-sg',
+    description: 'Cache server access group',
+    ingressRules: 2,
+    egressRules: 1,
+    createdAt: 'Mar 10, 2024 01:17:01',
+    status: 'active',
   },
   {
     id: 'sg-007',
-    name: 'analytics-batch',
-    description: 'Batch jobs to warehouse',
-    createdAt: 'Mar 22, 2025 10:41:27',
+    name: 'monitor-sg',
+    description: 'Monitoring access group',
+    ingressRules: 6,
+    egressRules: 3,
+    createdAt: 'Apr 1, 2024 10:20:28',
+    status: 'error',
   },
   {
     id: 'sg-008',
-    name: 'vpn-clients',
-    description: 'Remote VPN user subnet',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    name: 'vpn-sg',
+    description: 'VPN access group',
+    ingressRules: 10,
+    egressRules: 5,
+    createdAt: 'Apr 15, 2024 12:22:26',
+    status: 'active',
   },
   {
     id: 'sg-009',
-    name: 'staging-all',
-    description: 'Permissive staging (legacy)',
-    createdAt: 'May 30, 2025 12:28:19',
+    name: 'admin-sg',
+    description: 'Admin access group',
+    ingressRules: 15,
+    egressRules: 8,
+    createdAt: 'May 1, 2024 10:20:28',
+    status: 'active',
   },
   {
     id: 'sg-010',
-    name: 'pci-scoped',
-    description: 'Restricted PCI segment',
-    createdAt: 'Jan 28, 2025 15:55:02',
+    name: 'test-sg',
+    description: 'Test environment security group',
+    ingressRules: 1,
+    egressRules: 1,
+    createdAt: 'May 10, 2024 01:17:01',
+    status: 'active',
   },
 ];
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'description', label: 'Description', type: 'input', placeholder: 'Enter description...' },
 ];
 
 export function ComputeSecurityGroupsPage() {
@@ -95,11 +137,11 @@ export function ComputeSecurityGroupsPage() {
   const [order, setOrder] = useState<SortOrder>('asc');
 
   const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
+    if (appliedFilters.length === 0) return mockSecurityGroups;
+    return mockSecurityGroups.filter((sg) =>
       appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
+        const value = String(sg[filter.key as keyof SecurityGroup] || '').toLowerCase();
+        return value.includes(String(filter.value ?? '').toLowerCase());
       })
     );
   }, [appliedFilters]);
@@ -126,9 +168,13 @@ export function ComputeSecurityGroupsPage() {
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name', sortable: true },
     { key: 'description', header: 'Description' },
+    { key: 'ingressRules', header: 'Ingress rules', sortable: true },
+    { key: 'egressRules', header: 'Egress rules', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
     <div className="flex flex-col gap-3">
@@ -149,7 +195,7 @@ export function ComputeSecurityGroupsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search security groups by attributes"
+            placeholder="Search security group by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -211,7 +257,7 @@ export function ComputeSecurityGroupsPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<SecurityGroupRow>
+      <SelectableTable<SecurityGroup>
         columns={columns}
         rows={pageRows}
         selectionType="checkbox"
@@ -225,21 +271,43 @@ export function ComputeSecurityGroupsPage() {
       >
         {pageRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={columns[0]}>
-              <Link
-                to={`/compute/security-groups/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+            <Table.Td rowData={row} column={c('name')}>
+              <div className="flex items-center gap-2 min-w-0">
+                {row.origin === 'container' && (
+                  <Tooltip
+                    content="This security group was created via the Container cluster."
+                    direction="top"
+                    focusable={false}
+                  >
+                    <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[4px] border border-border bg-surface">
+                      <img src={containerIcon} alt="" className="w-4 h-4" />
+                    </div>
+                  </Tooltip>
+                )}
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute/security-groups/${row.id}`}
+                    className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                  >
+                    {row.name}
+                  </Link>
+                  <span className="text-11 leading-16 text-text-muted truncate">ID : {row.id}</span>
+                </div>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[1]}>
+            <Table.Td rowData={row} column={c('description')}>
               {row.description}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[2]}>
+            <Table.Td rowData={row} column={c('ingressRules')}>
+              {row.ingressRules}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('egressRules')}>
+              {row.egressRules}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('createdAt')}>
               {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[3]} preventClickPropagation>
+            <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -247,7 +315,7 @@ export function ComputeSecurityGroupsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -261,6 +329,9 @@ export function ComputeSecurityGroupsPage() {
                   </button>
                 )}
               >
+                <ContextMenu.Item action={() => console.log('Create rule', row.id)}>
+                  Create rule
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete

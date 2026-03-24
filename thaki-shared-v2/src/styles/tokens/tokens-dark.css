@@ -707,12 +707,12 @@
   --component-button-outline-warning-border: #fb923c;
   --component-button-outline-warning-borderHover: #b45309;
 
-  --component-button-outline-muted-bg: transparent;
-  --component-button-outline-muted-bgHover: #f1f5f9;
-  --component-button-outline-muted-text: #d1d5db;
-  --component-button-outline-muted-textHover: #171717;
-  --component-button-outline-muted-border: #d1d5db;
-  --component-button-outline-muted-borderHover: #171717;
+  --component-button-outline-muted-bg: #ffffff;
+  --component-button-outline-muted-bgHover: #f8fafc;
+  --component-button-outline-muted-text: #475569;
+  --component-button-outline-muted-textHover: #0f172a;
+  --component-button-outline-muted-border: #cbd5e1;
+  --component-button-outline-muted-borderHover: #cbd5e1;
 
   --component-button-ghost-primary-bg: transparent;
   --component-button-ghost-primary-bgHover: #f1f5f9;

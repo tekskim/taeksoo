@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -13,128 +13,172 @@ import type { TableColumn, SortOrder } from '@shared/components/Table/Table.type
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type VolumeSnapshotStatus = 'available' | 'error';
+type SnapshotStatus = 'active' | 'creating' | 'error' | 'deleting';
 
 interface VolumeSnapshot {
   id: string;
   name: string;
-  status: VolumeSnapshotStatus;
-  volume: string;
   size: string;
+  sourceVolume: string;
+  sourceVolumeId: string;
   createdAt: string;
-  [key: string]: unknown;
+  status: SnapshotStatus;
 }
 
-const mockRows: VolumeSnapshot[] = [
+const mockVolumeSnapshots: VolumeSnapshot[] = [
   {
     id: 'vsnap-001',
-    name: 'db-primary-daily',
-    status: 'available',
-    volume: 'db-primary-vol',
-    size: '500 GiB',
-    createdAt: 'Mar 10, 2025 02:00:00',
+    name: 'db-data-snap',
+    size: '1500GiB',
+    sourceVolume: 'vol-1',
+    sourceVolumeId: 'vol-001',
+    createdAt: 'Sep 12, 2025 15:43:35',
+    status: 'active',
   },
   {
     id: 'vsnap-002',
-    name: 'web-data-weekly',
-    status: 'available',
-    volume: 'web-data-01',
-    size: '100 GiB',
-    createdAt: 'Mar 9, 2025 03:15:30',
+    name: 'app-storage-snap',
+    size: '500GiB',
+    sourceVolume: 'vol-2',
+    sourceVolumeId: 'vol-002',
+    createdAt: 'Sep 10, 2025 01:17:01',
+    status: 'active',
   },
   {
     id: 'vsnap-003',
-    name: 'failed-backup',
-    status: 'error',
-    volume: 'archive-cold',
-    size: '-',
-    createdAt: 'Mar 8, 2025 22:40:11',
+    name: 'backup-vol-snap',
+    size: '2000GiB',
+    sourceVolume: 'vol-3',
+    sourceVolumeId: 'vol-003',
+    createdAt: 'Sep 8, 2025 11:51:27',
+    status: 'active',
   },
   {
     id: 'vsnap-004',
-    name: 'pre-upgrade',
-    status: 'available',
-    volume: 'k8s-etcd',
-    size: '20 GiB',
-    createdAt: 'Mar 5, 2025 14:00:00',
+    name: 'log-storage-snap',
+    size: '100GiB',
+    sourceVolume: 'vol-4',
+    sourceVolumeId: 'vol-004',
+    createdAt: 'Sep 5, 2025 14:12:36',
+    status: 'creating',
   },
   {
     id: 'vsnap-005',
-    name: 'ml-checkpoint',
-    status: 'available',
-    volume: 'ml-dataset',
-    size: '1 TiB',
-    createdAt: 'Feb 27, 2025 19:22:44',
+    name: 'cache-vol-snap',
+    size: '256GiB',
+    sourceVolume: 'vol-5',
+    sourceVolumeId: 'vol-005',
+    createdAt: 'Aug 30, 2025 21:37:41',
+    status: 'active',
   },
   {
     id: 'vsnap-006',
-    name: 'temp-snap-784',
-    status: 'available',
-    volume: 'temp-clone',
-    size: '80 GiB',
-    createdAt: 'Feb 14, 2025 11:11:11',
+    name: 'media-storage-snap',
+    size: '5000GiB',
+    sourceVolume: 'vol-6',
+    sourceVolumeId: 'vol-006',
+    createdAt: 'Aug 25, 2025 10:32:16',
+    status: 'active',
   },
   {
     id: 'vsnap-007',
-    name: 'corrupt-chain',
+    name: 'temp-vol-snap',
+    size: '50GiB',
+    sourceVolume: 'vol-7',
+    sourceVolumeId: 'vol-007',
+    createdAt: 'Aug 20, 2025 23:27:51',
     status: 'error',
-    volume: 'logs-buffer',
-    size: '200 GiB',
-    createdAt: 'Jan 25, 2025 08:30:00',
   },
   {
     id: 'vsnap-008',
-    name: 'year-end-archive',
-    status: 'available',
-    volume: 'archive-cold',
-    size: '2 TiB',
-    createdAt: 'Dec 31, 2024 23:59:59',
+    name: 'ml-data-snap',
+    size: '1000GiB',
+    sourceVolume: 'vol-8',
+    sourceVolumeId: 'vol-008',
+    createdAt: 'Aug 15, 2025 12:22:26',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-009',
+    name: 'archive-vol-snap',
+    size: '10000GiB',
+    sourceVolume: 'vol-9',
+    sourceVolumeId: 'vol-009',
+    createdAt: 'Aug 10, 2025 01:17:01',
+    status: 'active',
+  },
+  {
+    id: 'vsnap-010',
+    name: 'boot-vol-snap',
+    size: '100GiB',
+    sourceVolume: 'vol-10',
+    sourceVolumeId: 'vol-010',
+    createdAt: 'Aug 5, 2025 14:12:36',
+    status: 'deleting',
   },
 ];
 
-const statusMap: Record<VolumeSnapshotStatus, StatusVariant> = {
-  available: 'active',
+const statusMap: Record<SnapshotStatus, StatusVariant> = {
+  active: 'active',
+  creating: 'building',
   error: 'error',
+  deleting: 'deleting',
 };
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
   {
+    key: 'sourceVolume',
+    label: 'Source volume',
+    type: 'input',
+    placeholder: 'Enter source volume...',
+  },
+  {
     key: 'status',
     label: 'Status',
     type: 'select',
     options: [
-      { value: 'available', label: 'Available' },
+      { value: 'active', label: 'Active' },
+      { value: 'creating', label: 'Creating' },
       { value: 'error', label: 'Error' },
+      { value: 'deleting', label: 'Deleting' },
     ],
   },
 ];
 
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function rowMatches(s: VolumeSnapshot, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const v = s[filter.key as keyof VolumeSnapshot];
+  if (typeof v === 'string') return v.toLowerCase().includes(fv);
+  return true;
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
+
 export function ComputeVolumeSnapshotsPage() {
-  const navigate = useNavigate();
+  const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
-
   const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
-  const hasSelection = selectedRows.length > 0;
+  const filteredRows = useMemo(() => {
+    if (appliedFilters.length === 0) return snapshots;
+    return snapshots.filter((s) => appliedFilters.every((f) => rowMatches(s, f)));
+  }, [snapshots, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -151,26 +195,30 @@ export function ComputeVolumeSnapshotsPage() {
     setCurrentPage(1);
   }, []);
 
+  const handleBulkDelete = () => {
+    setSnapshots((prev) => prev.filter((s) => !selectedRows.includes(s.id)));
+    setSelectedRows([]);
+  };
+
+  const handleRowDelete = (row: VolumeSnapshot) => {
+    setSnapshots((prev) => prev.filter((s) => s.id !== row.id));
+  };
+
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'volume', header: 'Volume', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
+    { key: 'sourceVolume', header: 'Source volume' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Volume snapshots" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/volume-snapshots/create')}
-        >
-          Create volume snapshot
-        </Button>
       </div>
 
       <div className="flex items-center gap-2">
@@ -179,7 +227,7 @@ export function ComputeVolumeSnapshotsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search volume snapshots by attributes"
+            placeholder="Search snapshot by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -187,11 +235,15 @@ export function ComputeVolumeSnapshotsPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={handleBulkDelete}
+        >
+          <IconTrash size={12} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -211,7 +263,7 @@ export function ComputeVolumeSnapshotsPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -259,21 +311,28 @@ export function ComputeVolumeSnapshotsPage() {
               <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/volume-snapshots/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/volume-snapshots/${row.id}`} className={linkClass}>
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">{row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.volume}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
               {row.size}
             </Table.Td>
+            <Table.Td rowData={row} column={columns[3]}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/volumes/${row.sourceVolumeId}`} className={linkClass}>
+                  {row.sourceVolume}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">
+                  ID : {row.sourceVolumeId}
+                </span>
+              </div>
+            </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              {stripTime(row.createdAt)}
             </Table.Td>
             <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
               <ContextMenu.Root
@@ -283,7 +342,7 @@ export function ComputeVolumeSnapshotsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -297,8 +356,14 @@ export function ComputeVolumeSnapshotsPage() {
                   </button>
                 )}
               >
+                <ContextMenu.Item action={() => console.log('Create volume', row.id)}>
+                  Create volume
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Manage metadata:', row.id)}>
+                  Manage metadata
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>

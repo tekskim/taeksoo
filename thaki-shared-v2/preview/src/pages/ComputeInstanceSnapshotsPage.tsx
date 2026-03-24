@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -13,7 +13,7 @@ import type { TableColumn, SortOrder } from '@shared/components/Table/Table.type
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type SnapshotStatus = 'active' | 'queued' | 'saving' | 'error';
+type SnapshotStatus = 'active' | 'creating' | 'error' | 'deleting';
 
 interface InstanceSnapshot {
   id: string;
@@ -21,124 +21,217 @@ interface InstanceSnapshot {
   status: SnapshotStatus;
   size: string;
   diskFormat: string;
+  sourceInstance: string;
+  sourceInstanceId: string;
+  description: string;
   createdAt: string;
-  [key: string]: unknown;
 }
 
-const mockRows: InstanceSnapshot[] = [
+const mockSnapshots: InstanceSnapshot[] = [
   {
-    id: 'isnap-001',
-    name: 'prod-web-20250310',
+    id: 'snap-001',
+    name: 'Ubuntu-22.04-base',
     status: 'active',
-    size: '40 GiB',
-    diskFormat: 'QCOW2',
-    createdAt: 'Mar 10, 2025 07:15:30',
-  },
-  {
-    id: 'isnap-002',
-    name: 'db-primary-backup',
-    status: 'saving',
-    size: '200 GiB',
+    size: '16GiB',
     diskFormat: 'RAW',
-    createdAt: 'Mar 9, 2025 22:40:11',
+    sourceInstance: 'web-server-01',
+    sourceInstanceId: 'vm-001',
+    description: 'Base web server snapshot',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
-    id: 'isnap-003',
-    name: 'staging-app',
-    status: 'queued',
-    size: '20 GiB',
+    id: 'snap-002',
+    name: 'CentOS-8-web',
+    status: 'active',
+    size: '32GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Mar 9, 2025 18:02:00',
+    sourceInstance: 'db-server-01',
+    sourceInstanceId: 'vm-002',
+    description: 'Database server backup',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
-    id: 'isnap-004',
-    name: 'failed-clone',
+    id: 'snap-003',
+    name: 'Debian-12-db',
+    status: 'active',
+    size: '64GiB',
+    diskFormat: 'RAW',
+    sourceInstance: 'app-server-01',
+    sourceInstanceId: 'vm-003',
+    description: 'Application server snapshot',
+    createdAt: 'Sep 8, 2025 11:51:27',
+  },
+  {
+    id: 'snap-004',
+    name: 'Rocky-9-ml',
+    status: 'creating',
+    size: '128GiB',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'ml-worker-01',
+    sourceInstanceId: 'vm-004',
+    description: 'ML worker with GPU config',
+    createdAt: 'Sep 7, 2025 04:38:10',
+  },
+  {
+    id: 'snap-005',
+    name: 'Ubuntu-22.04-k8s',
+    status: 'active',
+    size: '24GiB',
+    diskFormat: 'RAW',
+    sourceInstance: 'k8s-node-01',
+    sourceInstanceId: 'vm-005',
+    description: 'Kubernetes node snapshot',
+    createdAt: 'Sep 5, 2025 14:12:36',
+  },
+  {
+    id: 'snap-006',
+    name: 'Alpine-3.18-minimal',
+    status: 'active',
+    size: '8GiB',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'gateway-01',
+    sourceInstanceId: 'vm-006',
+    description: 'Gateway server backup',
+    createdAt: 'Sep 3, 2025 00:46:02',
+  },
+  {
+    id: 'snap-007',
+    name: 'Windows-Server-2022',
+    status: 'active',
+    size: '80GiB',
+    diskFormat: 'RAW',
+    sourceInstance: 'win-server-01',
+    sourceInstanceId: 'vm-007',
+    description: 'Windows server snapshot',
+    createdAt: 'Sep 1, 2025 10:20:28',
+  },
+  {
+    id: 'snap-008',
+    name: 'RHEL-8-enterprise',
     status: 'error',
-    size: '10 GiB',
+    size: '48GiB',
     diskFormat: 'QCOW2',
-    createdAt: 'Mar 8, 2025 12:33:44',
+    sourceInstance: 'enterprise-01',
+    sourceInstanceId: 'vm-008',
+    description: 'Enterprise app backup',
+    createdAt: 'Aug 28, 2025 07:11:07',
   },
   {
-    id: 'isnap-005',
-    name: 'analytics-node',
+    id: 'snap-009',
+    name: 'Fedora-39-dev',
     status: 'active',
-    size: '120 GiB',
-    diskFormat: 'QCOW2',
-    createdAt: 'Mar 5, 2025 09:00:05',
-  },
-  {
-    id: 'isnap-006',
-    name: 'ci-build-7842',
-    status: 'active',
-    size: '60 GiB',
-    diskFormat: 'QCOW2',
-    createdAt: 'Feb 28, 2025 16:21:18',
-  },
-  {
-    id: 'isnap-007',
-    name: 'gpu-worker-snap',
-    status: 'queued',
-    size: '500 GiB',
+    size: '20GiB',
     diskFormat: 'RAW',
-    createdAt: 'Feb 20, 2025 11:11:11',
+    sourceInstance: 'dev-server-01',
+    sourceInstanceId: 'vm-009',
+    description: 'Development environment',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
-    id: 'isnap-008',
-    name: 'legacy-vm',
+    id: 'snap-010',
+    name: 'Ubuntu-20.04-legacy',
     status: 'active',
-    size: '30 GiB',
-    diskFormat: 'VMDK',
-    createdAt: 'Jan 12, 2025 14:50:22',
+    size: '40GiB',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'legacy-app-01',
+    sourceInstanceId: 'vm-010',
+    description: 'Legacy application backup',
+    createdAt: 'Aug 20, 2025 23:27:51',
+  },
+  {
+    id: 'snap-011',
+    name: 'Arch-Linux-custom',
+    status: 'active',
+    size: '12GiB',
+    diskFormat: 'RAW',
+    sourceInstance: 'custom-build-01',
+    sourceInstanceId: 'vm-011',
+    description: 'Custom build environment',
+    createdAt: 'Aug 18, 2025 09:01:17',
+  },
+  {
+    id: 'snap-012',
+    name: 'openSUSE-15-prod',
+    status: 'active',
+    size: '36GiB',
+    diskFormat: 'QCOW2',
+    sourceInstance: 'prod-server-01',
+    sourceInstanceId: 'vm-012',
+    description: 'Production server snapshot',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
 ];
 
 const statusMap: Record<SnapshotStatus, StatusVariant> = {
   active: 'active',
-  queued: 'pending',
-  saving: 'building',
+  creating: 'building',
   error: 'error',
+  deleting: 'shutoff',
 };
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  {
+    key: 'sourceInstance',
+    label: 'Source instance',
+    type: 'input',
+    placeholder: 'Enter source...',
+  },
+  {
+    key: 'diskFormat',
+    label: 'Disk Format',
+    type: 'select',
+    options: [
+      { value: 'RAW', label: 'RAW' },
+      { value: 'QCOW2', label: 'QCOW2' },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'queued', label: 'Queued' },
-      { value: 'saving', label: 'Saving' },
+      { value: 'creating', label: 'Creating' },
       { value: 'error', label: 'Error' },
+      { value: 'deleting', label: 'Deleting' },
     ],
   },
 ];
 
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function snapMatchesFilter(s: InstanceSnapshot, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const key = filter.key as keyof InstanceSnapshot;
+  const value = String(s[key] ?? '').toLowerCase();
+  return value.includes(fv);
+}
+
+function stripTime(iso: string): string {
+  return iso.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
+
 export function ComputeInstanceSnapshotsPage() {
-  const navigate = useNavigate();
+  const [snapshots, setSnapshots] = useState(mockSnapshots);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
-
   const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
-  const hasSelection = selectedRows.length > 0;
+  const filteredRows = useMemo(() => {
+    if (appliedFilters.length === 0) return snapshots;
+    return snapshots.filter((s) => appliedFilters.every((f) => snapMatchesFilter(s, f)));
+  }, [snapshots, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -155,26 +248,32 @@ export function ComputeInstanceSnapshotsPage() {
     setCurrentPage(1);
   }, []);
 
+  const handleBulkDelete = () => {
+    setSnapshots((prev) => prev.filter((s) => !selectedRows.includes(s.id)));
+    setSelectedRows([]);
+  };
+
+  const handleRowDelete = (row: InstanceSnapshot) => {
+    setSnapshots((prev) => prev.filter((s) => s.id !== row.id));
+  };
+
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
-    { key: 'diskFormat', header: 'Disk Format', sortable: true },
+    { key: 'diskFormat', header: 'Disk format', sortable: true },
+    { key: 'sourceInstance', header: 'Source instance', sortable: true },
+    { key: 'description', header: 'Description', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Instance snapshots" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/instance-snapshots/create')}
-        >
-          Create instance snapshot
-        </Button>
       </div>
 
       <div className="flex items-center gap-2">
@@ -183,7 +282,7 @@ export function ComputeInstanceSnapshotsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search instance snapshots by attributes"
+            placeholder="Search snapshot by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -191,11 +290,15 @@ export function ComputeInstanceSnapshotsPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={handleBulkDelete}
+        >
+          <IconTrash size={12} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -215,7 +318,7 @@ export function ComputeInstanceSnapshotsPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -263,12 +366,12 @@ export function ComputeInstanceSnapshotsPage() {
               <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/instance-snapshots/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/instance-snapshots/${row.id}`} className={linkClass}>
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID : {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
               {row.size}
@@ -277,9 +380,22 @@ export function ComputeInstanceSnapshotsPage() {
               {row.diskFormat}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/instances/${row.sourceInstanceId}`} className={linkClass}>
+                  {row.sourceInstance}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">
+                  ID : {row.sourceInstanceId}
+                </span>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[5]}>
+              {row.description}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -287,7 +403,7 @@ export function ComputeInstanceSnapshotsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -301,8 +417,18 @@ export function ComputeInstanceSnapshotsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item
+                  action={() => console.log('Create instance from snapshot:', row.id)}
+                >
+                  Create instance
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Create volume', row.id)}>
+                  Create volume
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Edit snapshot', row.id)}>
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>

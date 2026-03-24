@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
-import type { DetailCardField } from '@shared/components/DetailCard/DetailCard';
+import { default as SectionCard } from '@shared/components/SectionCard/SectionCard';
+import type { SectionCardField } from '@shared/components/SectionCard/SectionCard';
 import { Badge } from '@shared/components/Badge';
 import { Button } from '@shared/components/Button';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
@@ -51,7 +51,7 @@ function PoolDetail({ id }: { id: string }) {
     { label: 'Crush ruleset', value: row.crushRuleset },
   ];
 
-  const basicFields: DetailCardField[] = [
+  const basicFields: SectionCardField[] = [
     { label: 'Description', value: 'Ceph storage pool for block volumes' },
     { label: 'Cache mode', value: 'none' },
     { label: 'Tier pool', value: '-' },
@@ -61,19 +61,19 @@ function PoolDetail({ id }: { id: string }) {
     { label: 'Max bytes', value: '0 (unlimited)' },
   ];
 
-  const loadFields: DetailCardField[] = [
+  const loadFields: SectionCardField[] = [
     { label: 'PG autoscale mode', value: 'on' },
     { label: 'Target size ratio', value: '0' },
   ];
 
-  const pgFields: DetailCardField[] = [
+  const pgFields: SectionCardField[] = [
     { label: 'PG num', value: '128' },
     { label: 'PGP num', value: '128' },
     { label: 'Min size', value: '2' },
     { label: 'Size', value: '3' },
   ];
 
-  const advancedFields: DetailCardField[] = [
+  const advancedFields: SectionCardField[] = [
     { label: 'Compression mode', value: 'none' },
     { label: 'Compression algorithm', value: 'snappy' },
   ];
@@ -90,7 +90,7 @@ function PoolDetail({ id }: { id: string }) {
       >
         <Tab id="details" label="Details">
           <div className="flex flex-col gap-6">
-            <DetailCard
+            <SectionCard
               title="Basic information"
               fields={basicFields}
               actions={
@@ -99,7 +99,7 @@ function PoolDetail({ id }: { id: string }) {
                 </Button>
               }
             />
-            <DetailCard
+            <SectionCard
               title="Pool flags & limits"
               fields={[
                 { label: 'No scrub', value: 'false' },
@@ -108,16 +108,16 @@ function PoolDetail({ id }: { id: string }) {
                 { label: 'Max bytes', value: '0 (unlimited)' },
               ]}
             />
-            <DetailCard title="Load balancing" fields={loadFields} />
-            <DetailCard
+            <SectionCard title="Load balancing" fields={loadFields} />
+            <SectionCard
               title="Snapshots & history"
               fields={[
                 { label: 'Snapshots', value: '3' },
                 { label: 'Last snapshot', value: '2025-03-01' },
               ]}
             />
-            <DetailCard title="PG & data placement" fields={pgFields} />
-            <DetailCard title="Advanced" fields={advancedFields} />
+            <SectionCard title="PG & data placement" fields={pgFields} />
+            <SectionCard title="Advanced" fields={advancedFields} />
           </div>
         </Tab>
         <Tab id="performance" label="Performance">
@@ -168,7 +168,7 @@ function HostDetail({ id }: { id: string }) {
     { label: 'Labels', value: row.labels || '-' },
   ];
 
-  const basicFields: DetailCardField[] = [
+  const basicFields: SectionCardField[] = [
     { label: 'Model', value: row.model },
     { label: 'CPUs', value: row.cpus },
     { label: 'Cores', value: row.cores },
@@ -241,7 +241,7 @@ function HostDetail({ id }: { id: string }) {
         contentClassName="pt-6"
       >
         <Tab id="details" label="Details">
-          <DetailCard title="Basic information" fields={basicFields} />
+          <SectionCard title="Basic information" fields={basicFields} />
         </Tab>
         <Tab id="devices" label="Devices">
           <div className="flex flex-col gap-4">
@@ -346,7 +346,7 @@ function OSDDetail({ id }: { id: string }) {
     { label: 'ID', value: row.osdId, showCopyButton: true, copyText: row.osdId },
   ];
 
-  const basicFields: DetailCardField[] = [
+  const basicFields: SectionCardField[] = [
     {
       label: 'Device class',
       value: '',
@@ -383,7 +383,7 @@ function OSDDetail({ id }: { id: string }) {
         contentClassName="pt-6"
       >
         <Tab id="details" label="Details">
-          <DetailCard title="Basic information" fields={basicFields} />
+          <SectionCard title="Basic information" fields={basicFields} />
         </Tab>
         <Tab id="devices" label="Devices">
           <div className="flex flex-col gap-4">
@@ -419,7 +419,7 @@ function OSDDetail({ id }: { id: string }) {
           </div>
         </Tab>
         <Tab id="device-health" label="Device health">
-          <DetailCard
+          <SectionCard
             title="Device information"
             fields={[
               { label: 'Model', value: 'ST4000NM000A-2HZ100' },
@@ -462,7 +462,7 @@ function ImageDetail({ id }: { id: string }) {
     { label: 'Total provisioned', value: row.totalProvisioned },
   ];
 
-  const basicFields: DetailCardField[] = [
+  const basicFields: SectionCardField[] = [
     { label: 'Namespace', value: row.namespace },
     { label: 'Parent', value: row.parent },
     {
@@ -586,7 +586,7 @@ function ImageDetail({ id }: { id: string }) {
         contentClassName="pt-6"
       >
         <Tab id="details" label="Details">
-          <DetailCard title="Basic information" fields={basicFields} />
+          <SectionCard title="Basic information" fields={basicFields} />
         </Tab>
         <Tab id="snapshots" label="Snapshots">
           <div className="flex flex-col gap-4">
@@ -671,7 +671,7 @@ function BucketDetail({ id }: { id: string }) {
     { label: 'Created at', value: row.creationDate },
   ];
 
-  const basicFields: DetailCardField[] = [
+  const basicFields: SectionCardField[] = [
     { label: 'Region', value: 'default' },
     { label: 'Versioning', value: 'Suspended' },
     { label: 'MFA Delete', value: 'Disabled' },
@@ -718,10 +718,10 @@ function BucketDetail({ id }: { id: string }) {
         contentClassName="pt-6"
       >
         <Tab id="details" label="Details">
-          <DetailCard title="Basic information" fields={basicFields} />
+          <SectionCard title="Basic information" fields={basicFields} />
         </Tab>
         <Tab id="policies" label="Policies">
-          <DetailCard
+          <SectionCard
             title="Policies"
             fields={[
               {
@@ -841,7 +841,7 @@ function FileSystemDetail({ id }: { id: string }) {
       >
         <Tab id="details" label="Details">
           <div className="flex flex-col gap-6">
-            <DetailCard
+            <SectionCard
               title="Ranks"
               fields={[
                 {
@@ -873,7 +873,7 @@ function FileSystemDetail({ id }: { id: string }) {
                 },
               ]}
             />
-            <DetailCard
+            <SectionCard
               title="Pools"
               fields={[
                 {
@@ -904,7 +904,7 @@ function FileSystemDetail({ id }: { id: string }) {
                 },
               ]}
             />
-            <DetailCard
+            <SectionCard
               title="Standbys"
               fields={[{ label: 'Standby daemons', value: `mds.${row.name}.s` }]}
             />
@@ -937,7 +937,7 @@ function FileSystemDetail({ id }: { id: string }) {
           <div className="text-12 text-text-muted py-8 text-center">No active clients.</div>
         </Tab>
         <Tab id="performance" label="Performance">
-          <DetailCard
+          <SectionCard
             title="Performance Details"
             fields={[
               { label: 'Read throughput', value: '-' },
@@ -961,7 +961,7 @@ function NFSDetail({ id }: { id: string }) {
 
   if (!row) return <div className="text-text-muted">NFS Export not found.</div>;
 
-  const basicFields: DetailCardField[] = [
+  const basicFields: SectionCardField[] = [
     { label: 'Access Type', value: row.accessType },
     { label: 'Storage Backend', value: row.storageBackend },
     { label: 'Cluster', value: row.cluster },
@@ -996,7 +996,7 @@ function NFSDetail({ id }: { id: string }) {
         contentClassName="pt-6"
       >
         <Tab id="details" label="Details">
-          <DetailCard title="Basic information" fields={basicFields} />
+          <SectionCard title="Basic information" fields={basicFields} />
         </Tab>
         <Tab id="clients" label="Clients">
           <div className="flex flex-col gap-4">

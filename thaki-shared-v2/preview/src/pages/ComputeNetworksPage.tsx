@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -8,148 +8,260 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
+import { Badge } from '@shared/components/Badge';
+import { Popover } from '@shared/components/Popover';
+import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type NetworkStatus = 'active' | 'error' | 'pending';
+type NetworkStatus = 'active' | 'error' | 'building';
 
-interface NetworkRow {
+interface Network {
   id: string;
   name: string;
+  subnetCidr: string[];
+  external: boolean;
+  shared: boolean;
+  adminState: 'Up' | 'Down';
+  diskTag: string;
   status: NetworkStatus;
-  subnets: string;
-  shared: string;
-  external: string;
   createdAt: string;
   [key: string]: unknown;
 }
 
-const mockRows: NetworkRow[] = [
+const mockNetworks: Network[] = [
   {
     id: 'net-001',
-    name: 'prod-vpc-main',
+    name: 'net-01',
+    subnetCidr: ['10.62.0.0/24', '10.62.1.0/24', '10.62.2.0/24'],
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
     status: 'active',
-    subnets: '4',
-    shared: 'No',
-    external: 'No',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    createdAt: '2026-01-15 09:30:00',
   },
   {
     id: 'net-002',
-    name: 'shared-services',
+    name: 'internal-net',
+    subnetCidr: ['192.168.1.0/24', '192.168.2.0/24'],
+    external: false,
+    shared: false,
+    adminState: 'Up',
+    diskTag: 'Project',
     status: 'active',
-    subnets: '2',
-    shared: 'Yes',
-    external: 'No',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    createdAt: '2026-01-20 14:15:00',
   },
   {
     id: 'net-003',
-    name: 'edge-uplink',
+    name: 'dev-network',
+    subnetCidr: ['10.10.0.0/16'],
+    external: false,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
     status: 'active',
-    subnets: '1',
-    shared: 'No',
-    external: 'Yes',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    createdAt: '2026-02-01 11:00:00',
   },
   {
     id: 'net-004',
-    name: 'qa-isolated',
-    status: 'pending',
-    subnets: '0',
-    shared: 'No',
-    external: 'No',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    name: 'prod-net',
+    subnetCidr: ['172.16.0.0/12', '172.17.0.0/16'],
+    external: true,
+    shared: false,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'building',
+    createdAt: '2026-02-10 08:45:00',
   },
   {
     id: 'net-005',
-    name: 'dmz-net',
+    name: 'test-network',
+    subnetCidr: ['10.20.0.0/24'],
+    external: false,
+    shared: false,
+    adminState: 'Down',
+    diskTag: 'Project',
     status: 'active',
-    subnets: '3',
-    shared: 'No',
-    external: 'Yes',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    createdAt: '2026-02-15 16:30:00',
   },
   {
     id: 'net-006',
-    name: 'tenant-bridge',
-    status: 'error',
-    subnets: '2',
-    shared: 'Yes',
-    external: 'No',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    name: 'dmz-net',
+    subnetCidr: ['10.30.0.0/24'],
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'active',
+    createdAt: '2026-02-20 10:00:00',
   },
   {
     id: 'net-007',
-    name: 'analytics-net',
-    status: 'active',
-    subnets: '6',
-    shared: 'No',
-    external: 'No',
-    createdAt: 'Mar 22, 2025 10:41:27',
+    name: 'management-net',
+    subnetCidr: ['10.0.0.0/8'],
+    external: false,
+    shared: false,
+    adminState: 'Down',
+    diskTag: 'Project',
+    status: 'error',
+    createdAt: '2026-03-01 13:20:00',
   },
   {
     id: 'net-008',
-    name: 'legacy-flat',
+    name: 'backup-network',
+    subnetCidr: ['192.168.100.0/24'],
+    external: false,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
     status: 'active',
-    subnets: '1',
-    shared: 'Yes',
-    external: 'No',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    createdAt: '2026-03-05 07:50:00',
   },
   {
     id: 'net-009',
-    name: 'staging-net',
+    name: 'external-gateway',
+    subnetCidr: ['203.0.113.0/24'],
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Shared',
     status: 'active',
-    subnets: '2',
-    shared: 'No',
-    external: 'No',
-    createdAt: 'May 30, 2025 12:28:19',
+    createdAt: '2026-03-10 15:10:00',
+  },
+  {
+    id: 'net-010',
+    name: 'provider-net',
+    subnetCidr: ['198.51.100.0/24'],
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'External',
+    status: 'active',
+    createdAt: '2026-03-15 12:00:00',
   },
 ];
 
-const statusMap: Record<NetworkStatus, StatusVariant> = {
+const networkStatusMap: Record<NetworkStatus, StatusVariant> = {
   active: 'active',
   error: 'error',
-  pending: 'pending',
+  building: 'building',
 };
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'subnetCidr', label: 'Subnet CIDR', type: 'input', placeholder: 'Enter subnet CIDR...' },
+  {
+    key: 'external',
+    label: 'External',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
   {
     key: 'shared',
     label: 'Shared',
     type: 'select',
     options: [
-      { value: 'yes', label: 'Yes' },
-      { value: 'no', label: 'No' },
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  {
+    key: 'adminState',
+    label: 'Admin state',
+    type: 'select',
+    options: [
+      { value: 'Up', label: 'Up' },
+      { value: 'Down', label: 'Down' },
+    ],
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
     ],
   },
 ];
 
+function filterCellValue(n: Network, field: string): string {
+  const raw = n[field as keyof Network];
+  if (Array.isArray(raw)) {
+    return String(raw).toLowerCase();
+  }
+  return String(raw || '').toLowerCase();
+}
+
 export function ComputeNetworksPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'current';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
+  const filteredNetworks = useMemo(() => {
+    let filtered = mockNetworks;
+
+    if (activeTab === 'current') {
+      filtered = filtered.filter((n) => n.diskTag === 'Project');
+    } else if (activeTab === 'shared') {
+      filtered = filtered.filter((n) => n.diskTag === 'Shared');
+    } else if (activeTab === 'external') {
+      filtered = filtered.filter((n) => n.diskTag === 'External');
+    }
+
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((n) =>
+        appliedFilters.every((filter) => {
+          const value = filterCellValue(n, filter.key);
+          return value.includes(String(filter.value ?? '').toLowerCase());
+        })
+      );
+    }
+
+    return filtered;
+  }, [appliedFilters, activeTab]);
 
   const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const pageRows = filteredNetworks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   const hasSelection = selectedRows.length > 0;
+
+  const sharedColumnHeader = activeTab === 'current' ? 'Shared' : 'Is Current Tenant';
+
+  const columns: TableColumn[] = useMemo(() => {
+    const base: TableColumn[] = [
+      { key: 'status', header: 'Status', width: 80, align: 'center' },
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'subnetCidr', header: 'Subnet CIDR' },
+      { key: 'external', header: 'External' },
+      { key: 'diskTag', header: sharedColumnHeader, sortable: true },
+      { key: 'adminState', header: 'Admin state' },
+      { key: 'createdAt', header: 'Created at', sortable: true },
+      { key: 'actions', header: 'Action', width: 60, align: 'center' },
+    ];
+    if (activeTab === 'external') {
+      return base.filter((col) => col.key !== 'external');
+    }
+    return base;
+  }, [activeTab, sharedColumnHeader]);
+
+  const c = (key: string) => columns.find((col) => col.key === key)!;
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -166,16 +278,6 @@ export function ComputeNetworksPage() {
     setCurrentPage(1);
   }, []);
 
-  const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'subnets', header: 'Subnets', align: 'right' },
-    { key: 'shared', header: 'Shared' },
-    { key: 'external', header: 'External' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
-
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
@@ -185,13 +287,32 @@ export function ComputeNetworksPage() {
         </Button>
       </div>
 
+      <Tabs
+        activeTabId={activeTab}
+        onChange={setActiveTab}
+        size="sm"
+        variant="line"
+        contentClassName="hidden"
+        fullWidth
+      >
+        <Tab id="current" label="Current tenant">
+          {null}
+        </Tab>
+        <Tab id="shared" label="Shared">
+          {null}
+        </Tab>
+        <Tab id="external" label="External">
+          {null}
+        </Tab>
+      </Tabs>
+
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <FilterSearchInput
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search networks by attributes"
+            placeholder="Search network by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -244,7 +365,7 @@ export function ComputeNetworksPage() {
       )}
 
       <Pagination
-        totalCount={filteredRows.length}
+        totalCount={filteredNetworks.length}
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -253,7 +374,7 @@ export function ComputeNetworksPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<NetworkRow>
+      <SelectableTable<Network>
         columns={columns}
         rows={pageRows}
         selectionType="checkbox"
@@ -267,30 +388,69 @@ export function ComputeNetworksPage() {
       >
         {pageRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+            <Table.Td rowData={row} column={c('status')}>
+              <StatusIndicator variant={networkStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
-            <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/networks/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+            <Table.Td rowData={row} column={c('name')}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/networks/${row.id}`}
+                  className="text-12 leading-18 font-medium text-primary hover:underline no-underline"
+                >
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">{row.id}</span>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[2]}>
-              {row.subnets}
+            <Table.Td rowData={row} column={c('subnetCidr')}>
+              <span className="flex items-center gap-1 min-w-0">
+                <span className="truncate">{row.subnetCidr[0]}</span>
+                {row.subnetCidr.length > 1 && (
+                  <span className="ml-auto shrink-0">
+                    <Popover
+                      trigger="click"
+                      position="bottom"
+                      aria-label={`All subnet CIDRs (${row.subnetCidr.length})`}
+                      content={
+                        <div className="p-4 min-w-[160px] max-w-[320px]">
+                          <div className="text-[10px] font-normal leading-[14px] text-text-muted mb-2">
+                            All Subnet CIDRs ({row.subnetCidr.length})
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {row.subnetCidr.map((cidr, i) => (
+                              <Badge key={i} theme="gry" size="sm" type="subtle">
+                                {cidr}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-pointer">
+                        +{row.subnetCidr.length - 1}
+                      </span>
+                    </Popover>
+                  </span>
+                )}
+              </span>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
-              {row.shared}
+            {activeTab !== 'external' && (
+              <Table.Td rowData={row} column={c('external')}>
+                {row.external ? 'Yes' : 'No'}
+              </Table.Td>
+            )}
+            <Table.Td rowData={row} column={c('diskTag')}>
+              {row.shared ? 'On' : 'Off'}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
-              {row.external}
+            <Table.Td rowData={row} column={c('adminState')}>
+              <Badge theme={row.adminState === 'Up' ? 'gre' : 'gry'} size="sm" type="subtle">
+                {row.adminState}
+              </Badge>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]}>
+            <Table.Td rowData={row} column={c('createdAt')}>
               {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -298,7 +458,7 @@ export function ComputeNetworksPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -312,6 +472,9 @@ export function ComputeNetworksPage() {
                   </button>
                 )}
               >
+                <ContextMenu.Item action={() => console.log('Create subnet', row.id)}>
+                  Create subnet
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete

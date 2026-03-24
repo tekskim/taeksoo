@@ -115,10 +115,10 @@ const Pagination = ({
   size = 5,
   currentAt = 1,
   disabled = false,
-  prevIcon = <ChevronLeftIcon size={16} />,
-  nextIcon = <ChevronRightIcon size={16} />,
+  prevIcon = <ChevronLeftIcon size={14} weight="thin" />,
+  nextIcon = <ChevronRightIcon size={14} weight="thin" />,
   onSettingClick,
-  settingIcon = <SettingIcon size={16} />,
+  settingIcon = <SettingIcon size={16} weight="thin" />,
   settingAriaLabel = 'Open pagination settings',
   settingTooltip,
   totalCountLabel = 'items',
@@ -128,10 +128,7 @@ const Pagination = ({
   const shouldRenderSettingButton = Boolean(onSettingClick);
 
   /** 페이지네이션 처리할 총 페이지 수 */
-  const numberOfPages = useMemo(
-    () => Math.ceil(totalCount / size),
-    [totalCount, size]
-  );
+  const numberOfPages = useMemo(() => Math.ceil(totalCount / size), [totalCount, size]);
 
   /** 최종 페이지 버튼 리스트 (말줄임표 포함) */
   const pageList = useMemo(() => {
@@ -204,10 +201,7 @@ const Pagination = ({
   return (
     <>
       {totalCount > 0 && (
-        <nav
-          className={cn(paginationContainerStyles, className)}
-          aria-label="Pagination"
-        >
+        <nav className={cn(paginationContainerStyles, className)} aria-label="Pagination">
           <ul className={pageListStyles}>
             <li>
               <Button
@@ -221,7 +215,7 @@ const Pagination = ({
                 {prevIcon}
               </Button>
             </li>
-            {pageList.map(page => {
+            {pageList.map((page) => {
               // 말줄임표 렌더링
               if (typeof page === 'string') {
                 return (
@@ -285,8 +279,12 @@ const Pagination = ({
                 <li className={totalCountStyles}>
                   {selectedCount > 0 ? (
                     <>
-                      <span className="font-medium" style={{ color: 'var(--semantic-color-text)' }}>{selectedCount} selected</span>
-                      <span>/ {totalCount} {totalCountLabel}</span>
+                      <span className="font-medium" style={{ color: 'var(--semantic-color-text)' }}>
+                        {selectedCount} selected
+                      </span>
+                      <span>
+                        / {totalCount} {totalCountLabel}
+                      </span>
                     </>
                   ) : (
                     <>
