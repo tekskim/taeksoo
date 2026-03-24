@@ -1,7 +1,7 @@
-export const floatingCardStyles = 'flex flex-col gap-3 w-full';
+export const floatingCardStyles = 'flex flex-col gap-4 w-full';
 
 export const summaryCardStyles =
-  'flex items-start gap-1 bg-surface-subtle border border-border rounded-base6 px-4 py-4 min-h-[160px]';
+  'flex items-start gap-1 bg-surface-subtle border border-border rounded-base6 px-4 py-4';
 
 export const summaryContentStyles = 'flex flex-col gap-4 w-full min-w-0';
 
@@ -61,7 +61,7 @@ export const quotaBarErrorLightStyles = 'bg-error-light';
 
 // Footer action buttons — no extra padding (sidebarInner p-4 handles spacing)
 export const footerStyles = 'flex flex-row gap-2';
-export const footerCancelStyles = '';
+export const footerCancelStyles = '[color:var(--semantic-color-text)] bg-surface';
 export const footerActionStyles = 'flex-1';
 
 // StatusIcon styles

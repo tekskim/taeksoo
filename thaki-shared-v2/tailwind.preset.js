@@ -392,6 +392,7 @@ export default {
       fontSize: {
         '11': 'var(--semantic-font-size11)',
         '12': 'var(--semantic-font-size12)',
+        '13': 'var(--semantic-font-size13)',
         '14': 'var(--semantic-font-size14)',
         '16': [
           'var(--semantic-font-size16)',

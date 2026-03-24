@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Input } from '@shared/components/Input';
@@ -7,9 +7,9 @@ import { Checkbox } from '@shared/components/Checkbox';
 import { ActionModal } from '@shared/components/ActionModal';
 import { CreateLayout } from '@shared/components/CreateLayout';
 import { FloatingCard } from '@shared/components/FloatingCard';
-import { Fieldset } from '@shared/components/Fieldset';
-import Layout from '@shared/components/Layout';
+import { Stepper } from '@shared/components/Stepper';
 import { IconPlus, IconX, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
 
 interface Permission {
   id: string;
@@ -54,23 +54,30 @@ const ACTION_CATEGORIES = [
 
 const MAX_PERMISSIONS = 50;
 
+const STEP_IDS = ['basic', 'editor'] as const;
+
 export function IAMCreatePolicyPage() {
   const navigate = useNavigate();
 
   const [submitted, setSubmitted] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [allComplete, setAllComplete] = useState(false);
 
   const [policyName, setPolicyName] = useState('');
   const [description, setDescription] = useState('');
   const [permissions, setPermissions] = useState<Permission[]>([createEmptyPermission()]);
   const [conditionsExpanded, setConditionsExpanded] = useState(false);
 
+  const [stepStatuses, setStepStatuses] = useState<Record<string, FloatingCardStatus>>({
+    basic: 'processing',
+    editor: 'default',
+  });
+
   const nameError = submitted && !policyName.trim() ? 'Policy name is required.' : null;
   const permissionError =
     submitted && permissions.length === 0 ? 'At least one permission is required.' : null;
 
   const canSubmit = !!policyName.trim() && permissions.length > 0;
-  const basicInfoFilled = !!policyName.trim();
 
   const addPermission = () => {
     setPermissions((prev) => [...prev, createEmptyPermission()]);
@@ -110,6 +117,37 @@ export function IAMCreatePolicyPage() {
     setPermissions((prev) => prev.map((p) => ({ ...p, mfaRequired: checked })));
   };
 
+  const validateBasicInfo = useCallback((): boolean => {
+    setSubmitted(true);
+    return !!policyName.trim();
+  }, [policyName]);
+
+  const handleStepChange = useCallback(
+    ({ current }: { prev: string | number; current: string | number }) => {
+      setStepStatuses((prev) => {
+        const next = { ...prev };
+        for (const id of STEP_IDS) {
+          if (id === current) {
+            next[id] = 'processing';
+          } else if (prev[id] === 'processing') {
+            next[id] = 'writing';
+          }
+        }
+        return next;
+      });
+    },
+    []
+  );
+
+  const handleAllComplete = useCallback(() => {
+    setAllComplete(true);
+    setStepStatuses((prev) => {
+      const next = { ...prev };
+      for (const id of STEP_IDS) next[id] = 'success';
+      return next;
+    });
+  }, []);
+
   return (
     <CreateLayout
       title="Create policy"
@@ -119,11 +157,8 @@ export function IAMCreatePolicyPage() {
           sections={[
             {
               items: [
-                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
-                {
-                  label: 'Policy editor',
-                  status: permissions.length > 0 ? 'processing' : undefined,
-                },
+                { label: 'Basic information', status: stepStatuses.basic },
+                { label: 'Policy editor', status: stepStatuses.editor },
               ],
             },
           ]}
@@ -135,175 +170,235 @@ export function IAMCreatePolicyPage() {
             if (!canSubmit) return;
             setConfirmOpen(true);
           }}
-          actionEnabled
+          actionEnabled={allComplete}
           cancelLabel="Cancel"
           actionLabel="Create"
         />
       }
     >
-      <Layout.VStack gap="md">
-        <Fieldset legend="Basic information" variant="bordered" active>
-          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
-            <div className="col-span-4">
-              <div className="text-12 font-medium text-text">
-                Policy name <span className="text-error">*</span>
+      <Stepper
+        stepIds={STEP_IDS}
+        defaultOpenedId="basic"
+        onAllStepsCompleted={handleAllComplete}
+        onStepChange={handleStepChange}
+      >
+        {[
+          {
+            id: 'basic' as const,
+            label: 'Basic information',
+            onComplete: validateBasicInfo,
+            editUI: (
+              <div className="flex flex-col gap-0">
+                <div className="py-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-13 font-medium text-text">
+                        Policy name <span className="text-error">*</span>
+                      </span>
+                    </div>
+                    <Input
+                      placeholder="e.g. ComputeAdminAccess"
+                      value={policyName}
+                      onChange={(e) => setPolicyName(e.target.value)}
+                      error={!!nameError}
+                    />
+                    <span className="text-11 text-text-subtle">
+                      You can use letters, numbers, and special characters (+=,.@-_), and the length
+                      must be between 2-128 characters.
+                    </span>
+                    {nameError && <span className="text-11 text-error">{nameError}</span>}
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-border-muted" />
+
+                <div className="py-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-13 font-medium text-text">Description</span>
+                      <span className="text-12 text-text-muted">Optional policy description</span>
+                    </div>
+                    <Input
+                      placeholder="e.g. Full access to compute resources"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <span className="text-11 text-text-subtle">
+                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                      maximum 255 characters.
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-1 text-11 text-text-muted">2-128 characters</div>
-            </div>
-            <div className="col-span-8">
-              <Input
-                placeholder="e.g. ComputeAdminAccess"
-                value={policyName}
-                onChange={(e) => setPolicyName(e.target.value)}
-                error={!!nameError}
-              />
-              {nameError && <span className="text-11 text-error mt-1 block">{nameError}</span>}
-            </div>
+            ),
+            doneUI: (
+              <div className="flex flex-col gap-3 py-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Policy name</span>
+                  <span className="text-12 text-text">{policyName}</span>
+                </div>
+                <div className="h-px w-full bg-border-muted" />
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Description</span>
+                  <span className="text-12 text-text">{description || '-'}</span>
+                </div>
+              </div>
+            ),
+          },
+          {
+            id: 'editor' as const,
+            label: 'Policy editor',
+            onComplete: () => {
+              setSubmitted(true);
+              return permissions.length > 0;
+            },
+            editUI: (
+              <div className="flex flex-col gap-4">
+                <span className="text-12 text-text-muted">
+                  A permission consists of a Target resource and allowed Actions. You can create a
+                  single policy for various targets by adding multiple permissions.
+                </span>
+                {permissions.map((perm, idx) => (
+                  <div key={perm.id} className="border border-border rounded-md bg-surface-subtle">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
+                      <span className="text-12 font-medium text-text">Permission {idx + 1}</span>
+                      {permissions.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removePermission(perm.id)}
+                          className="flex items-center justify-center w-5 h-5 rounded bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none text-text-muted hover:text-text"
+                        >
+                          <IconX size={14} />
+                        </button>
+                      )}
+                    </div>
 
-            <div className="col-span-4">
-              <div className="text-12 font-medium text-text">Description</div>
-              <div className="mt-1 text-11 text-text-muted">Optional policy description</div>
-            </div>
-            <div className="col-span-8">
-              <Input
-                placeholder="e.g. Full access to compute resources"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-          </div>
-        </Fieldset>
+                    <div className="px-4 py-4 flex flex-col gap-4">
+                      <div>
+                        <div className="text-11 font-medium text-text mb-2">Target</div>
+                        <div className="grid grid-cols-4 gap-2">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-11 text-text-muted">Application</span>
+                            <Dropdown.Select
+                              placeholder="Select"
+                              value={perm.application}
+                              onChange={(v) =>
+                                updatePermission(perm.id, { application: String(v) })
+                              }
+                            >
+                              {APPLICATION_OPTIONS.map((opt) => (
+                                <Dropdown.Option key={opt} value={opt} label={opt} />
+                              ))}
+                            </Dropdown.Select>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-11 text-text-muted">Partition</span>
+                            <Dropdown.Select
+                              placeholder="Select"
+                              value={perm.partition}
+                              onChange={(v) => updatePermission(perm.id, { partition: String(v) })}
+                            >
+                              {PARTITION_OPTIONS.map((opt) => (
+                                <Dropdown.Option key={opt} value={opt} label={opt} />
+                              ))}
+                            </Dropdown.Select>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-11 text-text-muted">Resource</span>
+                            <Dropdown.Select
+                              placeholder="Select"
+                              value={perm.resource}
+                              onChange={(v) => updatePermission(perm.id, { resource: String(v) })}
+                            >
+                              {RESOURCE_OPTIONS.map((opt) => (
+                                <Dropdown.Option key={opt} value={opt} label={opt} />
+                              ))}
+                            </Dropdown.Select>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-11 text-text-muted">Resource ID</span>
+                            <Dropdown.Select
+                              placeholder="Select"
+                              value={perm.resourceId}
+                              onChange={(v) => updatePermission(perm.id, { resourceId: String(v) })}
+                            >
+                              {RESOURCE_ID_OPTIONS.map((opt) => (
+                                <Dropdown.Option key={opt} value={opt} label={opt} />
+                              ))}
+                            </Dropdown.Select>
+                          </div>
+                        </div>
+                      </div>
 
-        <Fieldset
-          legend="Policy editor"
-          description="Define permissions by specifying targets and actions."
-          variant="bordered"
-          active
-        >
-          <div className="flex flex-col gap-4">
-            {permissions.map((perm, idx) => (
-              <div key={perm.id} className="border border-border rounded-md bg-surface-subtle">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
-                  <span className="text-12 font-medium text-text">Permission {idx + 1}</span>
-                  {permissions.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removePermission(perm.id)}
-                      className="flex items-center justify-center w-5 h-5 rounded bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none text-text-muted hover:text-text"
-                    >
-                      <IconX size={14} />
-                    </button>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-11 font-medium text-text">Actions</span>
+                        </div>
+                        <div className="flex items-center gap-4 p-3 bg-surface rounded-md border border-border-subtle">
+                          <Checkbox
+                            checked={Object.values(perm.actions).every((v) => v)}
+                            onChange={() => toggleAllActions(perm.id)}
+                            label="All actions"
+                          />
+                          <div className="h-4 w-px bg-border-subtle" />
+                          {ACTION_CATEGORIES.map((cat) => (
+                            <Checkbox
+                              key={cat.key}
+                              checked={perm.actions[cat.key]}
+                              onChange={() => toggleAction(perm.id, cat.key)}
+                              label={cat.label}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {permissionError && <span className="text-11 text-error">{permissionError}</span>}
+
+                <Button appearance="outline" variant="secondary" size="sm" onClick={addPermission}>
+                  <IconPlus size={12} /> Add Permission
+                </Button>
+
+                <div className="border-t border-border-subtle pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setConditionsExpanded(!conditionsExpanded)}
+                    className="flex items-center gap-1 text-12 font-medium text-text bg-transparent border-none cursor-pointer p-0"
+                  >
+                    {conditionsExpanded ? (
+                      <IconChevronDown size={14} />
+                    ) : (
+                      <IconChevronRight size={14} />
+                    )}
+                    Conditions
+                  </button>
+                  {conditionsExpanded && (
+                    <div className="mt-3 p-3 bg-surface-subtle rounded-md">
+                      <Checkbox
+                        checked={permissions[0]?.mfaRequired ?? false}
+                        onChange={(checked) => toggleMfa(checked)}
+                        label="Only applies if the user has completed MFA"
+                      />
+                    </div>
                   )}
                 </div>
-
-                <div className="px-4 py-4 flex flex-col gap-4">
-                  <div>
-                    <div className="text-11 font-medium text-text mb-2">Target</div>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-11 text-text-muted">Application</span>
-                        <Dropdown.Select
-                          placeholder="Select"
-                          value={perm.application}
-                          onChange={(v) => updatePermission(perm.id, { application: String(v) })}
-                        >
-                          {APPLICATION_OPTIONS.map((opt) => (
-                            <Dropdown.Option key={opt} value={opt} label={opt} />
-                          ))}
-                        </Dropdown.Select>
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-11 text-text-muted">Partition</span>
-                        <Dropdown.Select
-                          placeholder="Select"
-                          value={perm.partition}
-                          onChange={(v) => updatePermission(perm.id, { partition: String(v) })}
-                        >
-                          {PARTITION_OPTIONS.map((opt) => (
-                            <Dropdown.Option key={opt} value={opt} label={opt} />
-                          ))}
-                        </Dropdown.Select>
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-11 text-text-muted">Resource</span>
-                        <Dropdown.Select
-                          placeholder="Select"
-                          value={perm.resource}
-                          onChange={(v) => updatePermission(perm.id, { resource: String(v) })}
-                        >
-                          {RESOURCE_OPTIONS.map((opt) => (
-                            <Dropdown.Option key={opt} value={opt} label={opt} />
-                          ))}
-                        </Dropdown.Select>
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <span className="text-11 text-text-muted">Resource ID</span>
-                        <Dropdown.Select
-                          placeholder="Select"
-                          value={perm.resourceId}
-                          onChange={(v) => updatePermission(perm.id, { resourceId: String(v) })}
-                        >
-                          {RESOURCE_ID_OPTIONS.map((opt) => (
-                            <Dropdown.Option key={opt} value={opt} label={opt} />
-                          ))}
-                        </Dropdown.Select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-11 font-medium text-text">Actions</span>
-                    </div>
-                    <div className="flex items-center gap-4 p-3 bg-surface rounded-md border border-border-subtle">
-                      <Checkbox
-                        checked={Object.values(perm.actions).every((v) => v)}
-                        onChange={() => toggleAllActions(perm.id)}
-                        label="All actions"
-                      />
-                      <div className="h-4 w-px bg-border-subtle" />
-                      {ACTION_CATEGORIES.map((cat) => (
-                        <Checkbox
-                          key={cat.key}
-                          checked={perm.actions[cat.key]}
-                          onChange={() => toggleAction(perm.id, cat.key)}
-                          label={cat.label}
-                        />
-                      ))}
-                    </div>
-                  </div>
+              </div>
+            ),
+            doneUI: (
+              <div className="flex flex-col gap-3 py-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Permissions</span>
+                  <span className="text-12 text-text">
+                    {permissions.length} permission{permissions.length === 1 ? '' : 's'}
+                  </span>
                 </div>
               </div>
-            ))}
-
-            {permissionError && <span className="text-11 text-error">{permissionError}</span>}
-
-            <Button appearance="outline" variant="secondary" size="sm" onClick={addPermission}>
-              <IconPlus size={12} /> Add Permission
-            </Button>
-          </div>
-
-          <div className="mt-4 border-t border-border-subtle pt-4">
-            <button
-              type="button"
-              onClick={() => setConditionsExpanded(!conditionsExpanded)}
-              className="flex items-center gap-1 text-12 font-medium text-text bg-transparent border-none cursor-pointer p-0"
-            >
-              {conditionsExpanded ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
-              Conditions
-            </button>
-            {conditionsExpanded && (
-              <div className="mt-3 p-3 bg-surface-subtle rounded-md">
-                <Checkbox
-                  checked={permissions[0]?.mfaRequired ?? false}
-                  onChange={(checked) => toggleMfa(checked)}
-                  label="Only applies if the user has completed MFA"
-                />
-              </div>
-            )}
-          </div>
-        </Fieldset>
-      </Layout.VStack>
+            ),
+          },
+        ]}
+      </Stepper>
 
       {confirmOpen && (
         <ActionModal

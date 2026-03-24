@@ -451,7 +451,8 @@ const FloatingCard = ({
           ) : null}
           {onAction ? (
             <Button
-              variant="primary"
+              appearance={actionEnabled ? 'solid' : 'outline'}
+              variant={actionEnabled ? 'primary' : 'secondary'}
               size="md"
               onClick={onAction}
               disabled={!actionEnabled}

@@ -1,13 +1,13 @@
 // React 훅, 타입
-import { useEffect, useRef, useState } from "react";
-import type { MouseEvent } from "react";
+import { useEffect, useRef, useState } from 'react';
+import type { MouseEvent } from 'react';
 // Stepper 타입, 아코디언, 스타일, 헬퍼
-import type { StepperProps, StepId, StepperLocaleText } from "./Stepper.types";
-import { TcAccordion } from "../TcAccordion/TcAccordion";
-import { useTcAccordionContext } from "../TcAccordion/TcAccordion.context";
-import { cn } from "../../services";
-import { Button } from "../Button/Button";
-import { EditIcon } from "../Icon/svg/wrapped";
+import type { StepperProps, StepId, StepperLocaleText } from './Stepper.types';
+import { TcAccordion } from '../TcAccordion/TcAccordion';
+import { useTcAccordionContext } from '../TcAccordion/TcAccordion.context';
+import { cn } from '../../services';
+import { Button } from '../Button/Button';
+import { EditIcon } from '../Icon/svg/wrapped';
 import {
   stepperItemBaseClassnames,
   stepperItemActiveClassnames,
@@ -16,7 +16,7 @@ import {
   stepperLabelBaseClassnames,
   stepperLabelActiveClassnames,
   stepperLabelDisabledClassnames,
-} from "./Stepper.styles";
+} from './Stepper.styles';
 import {
   addManyToSet,
   createOpenedStateForFocus,
@@ -28,17 +28,17 @@ import {
   isStepAccessible,
   removeManyFromSet,
   toStepKey,
-} from "./Stepper.helpers";
+} from './Stepper.helpers';
 
 const DEFAULT_LOCALE_TEXT: Readonly<StepperLocaleText> = {
-  writing: "writing...",
-  autoFilled: "Auto-Filled",
-  notConfigured: "Not configured",
-  skip: "Skip",
-  cancel: "Cancel",
-  done: "Done",
-  next: "Next",
-  edit: "Edit",
+  writing: 'writing...',
+  autoFilled: 'Auto-Filled',
+  notConfigured: 'Not configured',
+  skip: 'Skip',
+  cancel: 'Cancel',
+  done: 'Done',
+  next: 'Next',
+  edit: 'Edit',
 };
 
 // 스텝 진행 상태를 관리하는 로컬 상태 타입
@@ -75,7 +75,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     // defaultOpenedId 이전 + autoFilled를 초기 완료로 설정
     const initialCompleted = addManyToSet(
       getInitialCompletedStepIds(steps, defaultOpenedId),
-      autoFilledStepIds,
+      autoFilledStepIds
     );
     return {
       completedStepIds: initialCompleted,
@@ -85,21 +85,15 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
   });
   const { completedStepIds, everCompletedStepIds, writingStepIds } = stepState;
   // 사용자가 수정한 자동채움 스텝, 스킵한 스텝, 편집 시 해제할 의존 스텝
-  const [editedAutoFilledStepIds, setEditedAutoFilledStepIds] = useState<
-    Set<StepId>
-  >(new Set<StepId>());
+  const [editedAutoFilledStepIds, setEditedAutoFilledStepIds] = useState<Set<StepId>>(
+    new Set<StepId>()
+  );
   // "Skip"으로 완료된 스텝을 추적해 "Not configured" 표시와 스킵 전용 액션 분기에 사용한다.
-  const [skippedStepIds, setSkippedStepIds] = useState<Set<StepId>>(
-    new Set<StepId>(),
-  );
+  const [skippedStepIds, setSkippedStepIds] = useState<Set<StepId>>(new Set<StepId>());
   // 비동기 onComplete 실행 중인 스텝을 추적해 중복 실행을 방지한다.
-  const [completingStepIds, setCompletingStepIds] = useState<Set<StepId>>(
-    new Set<StepId>(),
-  );
+  const [completingStepIds, setCompletingStepIds] = useState<Set<StepId>>(new Set<StepId>());
   // 편집 시 함께 해제된 의존 스텝 id를 저장해 Cancel 시 복구에 사용한다.
-  const invalidatedDependentsByStepRef = useRef<Map<string, StepId[]>>(
-    new Map(),
-  );
+  const invalidatedDependentsByStepRef = useRef<Map<string, StepId[]>>(new Map());
 
   // 현재 활성 스텝 변경 시 onStepChange 콜백 호출
   const emitStepChange = (prev: T | undefined, current: T | undefined) => {
@@ -135,13 +129,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     }
 
     setOpenedAccordionIds(initialOpened);
-  }, [
-    defaultOpenedId,
-    openedAccordionIds.size,
-    completedStepIds,
-    setOpenedAccordionIds,
-    steps,
-  ]);
+  }, [defaultOpenedId, openedAccordionIds.size, completedStepIds, setOpenedAccordionIds, steps]);
 
   // steps 변경 시 유효하지 않은 id는 완료/편집/열림 상태에서 제거
   useEffect(() => {
@@ -149,18 +137,12 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     const validStepKeys = new Set(steps.map(toStepKey));
     setStepState((prev) => {
       // 완료/everCompleted/writing 각각 유효 키만 남김
-      const nextCompletedStepIds = filterStepSetByValidKeys(
-        prev.completedStepIds,
-        validStepKeys,
-      );
+      const nextCompletedStepIds = filterStepSetByValidKeys(prev.completedStepIds, validStepKeys);
       const nextEverCompletedStepIds = filterStepSetByValidKeys(
         prev.everCompletedStepIds,
-        validStepKeys,
+        validStepKeys
       );
-      const nextWritingStepIds = filterStepSetByValidKeys(
-        prev.writingStepIds,
-        validStepKeys,
-      );
+      const nextWritingStepIds = filterStepSetByValidKeys(prev.writingStepIds, validStepKeys);
       // 변경 없으면 prev 그대로 반환(불필요 리렌더 방지)
       if (
         nextCompletedStepIds === prev.completedStepIds &&
@@ -176,13 +158,9 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
       };
     });
     // edited/skipped/opened도 유효 키만 유지
-    setEditedAutoFilledStepIds((prev) =>
-      filterStepSetByValidKeys(prev, validStepKeys),
-    );
+    setEditedAutoFilledStepIds((prev) => filterStepSetByValidKeys(prev, validStepKeys));
     setSkippedStepIds((prev) => filterStepSetByValidKeys(prev, validStepKeys));
-    setOpenedAccordionIds((prev) =>
-      filterStepSetByValidKeys(prev, validStepKeys),
-    );
+    setOpenedAccordionIds((prev) => filterStepSetByValidKeys(prev, validStepKeys));
   }, [steps, setOpenedAccordionIds]);
 
   // onComplete 통과 시 해당 스텝을 완료 처리
@@ -194,14 +172,12 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     setCompletingStepIds((prev) => addManyToSet(prev, [id]));
     try {
       // onComplete 없으면 true, 있으면 sync/async 반환값 모두 지원
-      const canComplete = config
-        ? await Promise.resolve(config.onComplete?.() ?? true)
-        : true;
+      const canComplete = config ? await Promise.resolve(config.onComplete?.() ?? true) : true;
       if (canComplete) {
         completeStep(id, false);
       }
     } catch (error) {
-      console.error("[Stepper] onComplete failed:", {
+      console.error('[Stepper] onComplete failed:', {
         stepId: id,
         error,
       });
@@ -222,30 +198,19 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     // 유효하지 않거나 이미 완료된 스텝이면 무시
     if (idx < 0 || completedStepIds.has(id)) return;
     // 현재 편집 중인 스텝, 이전 writing 스텝, 완료할 스텝 목록 계산
-    const prevEditingId = findCurrentEditingStepId(
-      steps,
-      openedAccordionIds,
-      completedStepIds,
-    );
+    const prevEditingId = findCurrentEditingStepId(steps, openedAccordionIds, completedStepIds);
 
     // 다른 writing 스텝이 있으면 해당 스텝만 완료, 없으면 이전 스텝들 포함
     const previousWritingStepId = steps.find(
-      (stepId) => stepId !== id && writingStepIds.has(stepId),
+      (stepId) => stepId !== id && writingStepIds.has(stepId)
     );
-    const stepsToComplete =
-      previousWritingStepId === undefined ? steps.slice(0, idx + 1) : [id];
+    const stepsToComplete = previousWritingStepId === undefined ? steps.slice(0, idx + 1) : [id];
     const nextCompleted = addManyToSet(completedStepIds, stepsToComplete);
     // 다음 포커스: writing 중이던 스텝 또는 첫 미완료 스텝
-    const nextStepId =
-      previousWritingStepId ??
-      steps.find((stepId) => !nextCompleted.has(stepId));
+    const nextStepId = previousWritingStepId ?? steps.find((stepId) => !nextCompleted.has(stepId));
 
     // 다음 포커스 스텝 기준으로 아코디언 열림 상태 생성
-    const nextOpenedIds = createOpenedStateForFocus(
-      openedAccordionIds,
-      nextCompleted,
-      nextStepId,
-    );
+    const nextOpenedIds = createOpenedStateForFocus(openedAccordionIds, nextCompleted, nextStepId);
     // 스킵 시 해당 스텝만 닫음, Apply 시 완료 스텝은 펼쳐둠
     if (isSkipped) {
       nextOpenedIds.delete(toStepKey(id));
@@ -255,16 +220,13 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     // 완료 목록 갱신, writing에서 완료 스텝 제거
     setStepState((prev) => ({
       completedStepIds: nextCompleted,
-      everCompletedStepIds: addManyToSet(
-        prev.everCompletedStepIds,
-        stepsToComplete,
-      ),
+      everCompletedStepIds: addManyToSet(prev.everCompletedStepIds, stepsToComplete),
       writingStepIds: removeManyFromSet(prev.writingStepIds, stepsToComplete),
     }));
     setOpenedAccordionIds(nextOpenedIds);
     // 스킵이면 skipped에 추가, 아니면 제거
     setSkippedStepIds((prev) =>
-      isSkipped ? addManyToSet(prev, [id]) : removeManyFromSet(prev, [id]),
+      isSkipped ? addManyToSet(prev, [id]) : removeManyFromSet(prev, [id])
     );
     invalidatedDependentsByStepRef.current.delete(toStepKey(id));
     emitStepChange(prevEditingId, nextStepId);
@@ -277,37 +239,18 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
     const config = stepConfigById.get(id);
     // 비편집 스텝이면 무시
     if (config?.editable === false) return;
-    const prevEditingId = findCurrentEditingStepId(
-      steps,
-      openedAccordionIds,
-      completedStepIds,
-    );
+    const prevEditingId = findCurrentEditingStepId(steps, openedAccordionIds, completedStepIds);
 
     // 이 스텝이 완료 해제될 때 같이 해제해야 할 의존 스텝들
-    const dependentClearedIds = getDependentClearedIds(
-      stepConfigs,
-      id,
-      completedStepIds,
-    );
-    invalidatedDependentsByStepRef.current.set(
-      toStepKey(id),
-      dependentClearedIds,
-    );
+    const dependentClearedIds = getDependentClearedIds(stepConfigs, id, completedStepIds);
+    invalidatedDependentsByStepRef.current.set(toStepKey(id), dependentClearedIds);
     // 현재 스텝+의존 스텝을 완료 해제 대상으로
     const clearedIds = [
-      ...new Set(
-        completedStepIds.has(id)
-          ? [id, ...dependentClearedIds]
-          : dependentClearedIds,
-      ),
+      ...new Set(completedStepIds.has(id) ? [id, ...dependentClearedIds] : dependentClearedIds),
     ];
     const nextCompleted = removeManyFromSet(completedStepIds, clearedIds);
     // 편집 타겟(id)에 포커스 맞춘 열림 상태
-    const nextOpenedIds = createOpenedStateForFocus(
-      openedAccordionIds,
-      nextCompleted,
-      id,
-    );
+    const nextOpenedIds = createOpenedStateForFocus(openedAccordionIds, nextCompleted, id);
     // 이전 스텝 중 완료된 것만 펼침(미완료는 닫힘 유지)
     steps.slice(0, idx).forEach((stepId) => {
       if (nextCompleted.has(stepId)) {
@@ -319,7 +262,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
       writingStepIds,
       prevEditingId !== undefined && prevEditingId !== id
         ? [prevEditingId, id, ...dependentClearedIds]
-        : [id, ...dependentClearedIds],
+        : [id, ...dependentClearedIds]
     );
     setStepState((prev) => ({
       ...prev,
@@ -336,16 +279,8 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
 
   // 아코디언 헤더 클릭 시 해당 스텝을 열고, 이전 편집 중이던 스텝을 writing 유지
   const handleHeaderOpen = (id: T) => {
-    const prevEditingId = findCurrentEditingStepId(
-      steps,
-      openedAccordionIds,
-      completedStepIds,
-    );
-    const nextOpenedIds = createOpenedStateForFocus(
-      openedAccordionIds,
-      completedStepIds,
-      id,
-    );
+    const prevEditingId = findCurrentEditingStepId(steps, openedAccordionIds, completedStepIds);
+    const nextOpenedIds = createOpenedStateForFocus(openedAccordionIds, completedStepIds, id);
     setOpenedAccordionIds(nextOpenedIds);
     // 다른 스텝 편집 중이었다면 해당 스텝을 writing으로 유지
     if (prevEditingId !== undefined && prevEditingId !== id) {
@@ -361,31 +296,19 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
   const cancelEditing = (currentId: T) => {
     const currentKey = toStepKey(currentId);
     // editStep 시 저장해둔 의존 스텝 목록
-    const dependentIds =
-      invalidatedDependentsByStepRef.current.get(currentKey) ?? [];
+    const dependentIds = invalidatedDependentsByStepRef.current.get(currentKey) ?? [];
     // 현재+의존 스텝을 다시 완료 처리
-    const nextCompleted = addManyToSet(completedStepIds, [
-      currentId,
-      ...dependentIds,
-    ]);
-    const nextWriting = removeManyFromSet(writingStepIds, [
-      currentId,
-      ...dependentIds,
-    ]);
+    const nextCompleted = addManyToSet(completedStepIds, [currentId, ...dependentIds]);
+    const nextWriting = removeManyFromSet(writingStepIds, [currentId, ...dependentIds]);
     // Cancel 후 포커스할 스텝 결정
-    const nextFocusId = getCancelFocusStepId(
-      steps,
-      currentId,
-      nextWriting,
-      nextCompleted,
-    );
+    const nextFocusId = getCancelFocusStepId(steps, currentId, nextWriting, nextCompleted);
     setStepState((prev) => ({
       ...prev,
       completedStepIds: nextCompleted,
       writingStepIds: nextWriting,
     }));
     setOpenedAccordionIds(
-      createOpenedStateForFocus(openedAccordionIds, nextCompleted, nextFocusId),
+      createOpenedStateForFocus(openedAccordionIds, nextCompleted, nextFocusId)
     );
     invalidatedDependentsByStepRef.current.delete(currentKey);
     emitStepChange(currentId, nextFocusId);
@@ -402,7 +325,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
           : {
               ...prev,
               writingStepIds: addManyToSet(prev.writingStepIds, [id]),
-            },
+            }
       );
     }
     // 열림 Set에서 해당 스텝 제거
@@ -422,10 +345,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
 
   useEffect(() => {
     // 스텝이 있고 전부 완료·writing 없음이면 allDone
-    const allDone =
-      stepsLen > 0 &&
-      completedStepIds.size === stepsLen &&
-      writingStepIds.size === 0;
+    const allDone = stepsLen > 0 && completedStepIds.size === stepsLen && writingStepIds.size === 0;
     // 첫 렌더는 이전값만 저장하고 콜백 스킵
     if (!hasInitializedRef.current) {
       hasInitializedRef.current = true;
@@ -464,28 +384,18 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
 
         /** Auto-Filled 텍스트 표시 여부 (자동채움 스텝이 edit 되지 않은 경우) */
         const showAutoFilledBadge =
-          Boolean(config.autoFilled) &&
-          isCompleted &&
-          !editedAutoFilledStepIds.has(config.id);
+          Boolean(config.autoFilled) && isCompleted && !editedAutoFilledStepIds.has(config.id);
 
         // 열림·편집 중·미완료·이전 완료 이력 있음 → Apply/Cancel 표시
         const showHeaderApplyActions =
-          isOpen &&
-          isWriting &&
-          !isCompleted &&
-          everCompletedStepIds.has(config.id);
+          isOpen && isWriting && !isCompleted && everCompletedStepIds.has(config.id);
         // 이전에 Skip으로 완료된 스텝을 다시 편집 중이면 Cancel 대신 Skip 버튼을 유지한다.
         const showHeaderSkipActions = showHeaderApplyActions && isSkipped;
         // 접힌 상태에서 작성 중임을 헤더 배지("writing...")로만 표시한다.
         const showWritingBadge = isWriting && !isOpen;
         const isCompleting = completingStepIds.has(config.id);
         // 이전 스텝 완료 시에만 접근 가능
-        const isAccessible = isStepAccessible(
-          config.id,
-          i,
-          steps,
-          completedStepIds,
-        );
+        const isAccessible = isStepAccessible(config.id, i, steps, completedStepIds);
 
         const disabled = !isAccessible;
 
@@ -503,9 +413,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
             // 미완료+열림이면 active, 아니면 default 스타일
             className={cn(
               stepperItemBaseClassnames,
-              !isCompleted && isOpen
-                ? stepperItemActiveClassnames
-                : stepperItemDefaultClassnames,
+              !isCompleted && isOpen ? stepperItemActiveClassnames : stepperItemDefaultClassnames
             )}
             header={
               <div className="w-full">
@@ -514,9 +422,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
                   <div
                     className={cn(
                       stepperLabelBaseClassnames,
-                      isAccessible
-                        ? stepperLabelActiveClassnames
-                        : stepperLabelDisabledClassnames,
+                      isAccessible ? stepperLabelActiveClassnames : stepperLabelDisabledClassnames
                     )}
                   >
                     {config.label}
@@ -614,7 +520,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
                 {config.editUI}
                 {/* 헤더에 Apply가 없을 때만 하단 Complete/Skip 표시 */}
                 {!showHeaderApplyActions && (
-                  <div className="mt-4 border-t border-border-muted pt-4 flex items-center justify-end gap-2">
+                  <div className="border-t border-border-muted pt-3 flex items-center justify-end gap-2">
                     {/* skippable이면 Skip 버튼 표시 */}
                     {config.skippable && (
                       <Button
@@ -651,7 +557,7 @@ export const StepperInner = <const TStepIds extends readonly StepId[]>({
 
 // 다중 아코디언 그룹으로 StepperInner 래핑
 export const Stepper = <const TStepIds extends readonly StepId[]>(
-  props: StepperProps<TStepIds>,
+  props: StepperProps<TStepIds>
 ) => (
   <TcAccordion.Group multiple={true}>
     <StepperInner {...props} />

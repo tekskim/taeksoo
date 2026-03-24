@@ -9,10 +9,11 @@ import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { ActionModal } from '@shared/components/ActionModal';
 import { CreateLayout } from '@shared/components/CreateLayout';
 import { FloatingCard } from '@shared/components/FloatingCard';
-import { Fieldset } from '@shared/components/Fieldset';
-import Layout from '@shared/components/Layout';
+import { Stepper } from '@shared/components/Stepper';
+import { Tag } from '@shared/components/Tag';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
 
 interface Policy {
   id: string;
@@ -120,11 +121,14 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const STEP_IDS = ['basic', 'policies'] as const;
+
 export function IAMCreateRolePage() {
   const navigate = useNavigate();
 
   const [submitted, setSubmitted] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [allComplete, setAllComplete] = useState(false);
 
   const [roleName, setRoleName] = useState('');
   const [description, setDescription] = useState('');
@@ -133,8 +137,12 @@ export function IAMCreateRolePage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [stepStatuses, setStepStatuses] = useState<Record<string, FloatingCardStatus>>({
+    basic: 'processing',
+    policies: 'default',
+  });
+
   const nameError = submitted && !roleName.trim() ? 'Role name is required.' : null;
-  const basicInfoFilled = !!roleName.trim();
 
   const filteredPolicies = useMemo(() => {
     if (appliedFilters.length === 0) return mockPolicies;
@@ -157,6 +165,37 @@ export function IAMCreateRolePage() {
     setCurrentPage(1);
   }, []);
 
+  const validateBasicInfo = useCallback((): boolean => {
+    setSubmitted(true);
+    return !!roleName.trim();
+  }, [roleName]);
+
+  const handleStepChange = useCallback(
+    ({ current }: { prev: string | number; current: string | number }) => {
+      setStepStatuses((prev) => {
+        const next = { ...prev };
+        for (const id of STEP_IDS) {
+          if (id === current) {
+            next[id] = 'processing';
+          } else if (prev[id] === 'processing') {
+            next[id] = 'writing';
+          }
+        }
+        return next;
+      });
+    },
+    []
+  );
+
+  const handleAllComplete = useCallback(() => {
+    setAllComplete(true);
+    setStepStatuses((prev) => {
+      const next = { ...prev };
+      for (const id of STEP_IDS) next[id] = 'success';
+      return next;
+    });
+  }, []);
+
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name' },
     { key: 'type', header: 'Type', width: 100 },
@@ -174,11 +213,8 @@ export function IAMCreateRolePage() {
           sections={[
             {
               items: [
-                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
-                {
-                  label: 'Attach policies',
-                  status: selectedPolicies.length > 0 ? 'success' : undefined,
-                },
+                { label: 'Basic information', status: stepStatuses.basic },
+                { label: 'Attach policies', status: stepStatuses.policies },
               ],
             },
           ]}
@@ -188,106 +224,178 @@ export function IAMCreateRolePage() {
             if (!roleName.trim()) return;
             setConfirmOpen(true);
           }}
-          actionEnabled
+          actionEnabled={allComplete}
           cancelLabel="Cancel"
           actionLabel="Create"
         />
       }
     >
-      <Layout.VStack gap="md">
-        <Fieldset legend="Basic information" variant="bordered" active>
-          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
-            <div className="col-span-4">
-              <div className="text-12 font-medium text-text">
-                Role name <span className="text-error">*</span>
+      <Stepper
+        stepIds={STEP_IDS}
+        defaultOpenedId="basic"
+        onAllStepsCompleted={handleAllComplete}
+        onStepChange={handleStepChange}
+      >
+        {[
+          {
+            id: 'basic' as const,
+            label: 'Basic information',
+            onComplete: validateBasicInfo,
+            editUI: (
+              <div className="flex flex-col gap-0">
+                <div className="py-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-13 font-medium text-text">
+                        Role name <span className="text-error">*</span>
+                      </span>
+                      <span className="text-11 text-text-subtle">
+                        You can use letters, numbers, and special characters (+=,.@-_), and the
+                        length must be between 2-128 characters.
+                      </span>
+                    </div>
+                    <Input
+                      placeholder="e.g. compute-admin"
+                      value={roleName}
+                      onChange={(e) => setRoleName(e.target.value)}
+                      error={!!nameError}
+                    />
+                    {nameError && <span className="text-11 text-error">{nameError}</span>}
+                  </div>
+                </div>
+                <div className="w-full h-px bg-border-muted" />
+                <div className="py-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-13 font-medium text-text">Description</span>
+                      <span className="text-12 text-text-muted">Optional role description</span>
+                    </div>
+                    <Input
+                      placeholder="e.g. Admin access to compute resources"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <span className="text-11 text-text-subtle">
+                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                      maximum 255 characters.
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-1 text-11 text-text-muted">2-64 characters</div>
-            </div>
-            <div className="col-span-8">
-              <Input
-                placeholder="e.g. compute-admin"
-                value={roleName}
-                onChange={(e) => setRoleName(e.target.value)}
-                error={!!nameError}
-              />
-              {nameError && <span className="text-11 text-error mt-1 block">{nameError}</span>}
-            </div>
+            ),
+            doneUI: (
+              <div className="flex flex-col gap-3 py-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Role name</span>
+                  <span className="text-12 text-text">{roleName}</span>
+                </div>
+                <div className="h-px w-full bg-border-muted" />
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Description</span>
+                  <span className="text-12 text-text">{description || '-'}</span>
+                </div>
+              </div>
+            ),
+          },
+          {
+            id: 'policies' as const,
+            label: 'Attach policies',
+            skippable: true,
+            editUI: (
+              <div className="flex flex-col gap-3">
+                <span className="text-12 text-text-muted">
+                  Select policies to apply to this role. If policies include conditions, all
+                  conditions must be satisfied for the permission to be granted.
+                </span>
 
-            <div className="col-span-4">
-              <div className="text-12 font-medium text-text">Description</div>
-              <div className="mt-1 text-11 text-text-muted">Optional role description</div>
-            </div>
-            <div className="col-span-8">
-              <Input
-                placeholder="e.g. Admin access to compute resources"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-          </div>
-        </Fieldset>
+                <FilterSearchInput
+                  filterKeys={filterKeys}
+                  onFilterAdd={handleFilterAdd}
+                  selectedFilters={appliedFilters}
+                  placeholder="Search policies by attributes"
+                  defaultFilterKey="name"
+                />
 
-        <Fieldset
-          legend="Attach policies"
-          description="Select policies to attach to this role. You can skip this step."
-          variant="bordered"
-          active
-        >
-          <div className="flex flex-col gap-3">
-            <FilterSearchInput
-              filterKeys={filterKeys}
-              onFilterAdd={handleFilterAdd}
-              selectedFilters={appliedFilters}
-              placeholder="Search policies by attributes"
-              defaultFilterKey="name"
-            />
+                <Pagination
+                  totalCount={filteredPolicies.length}
+                  size={itemsPerPage}
+                  currentAt={currentPage}
+                  onPageChange={setCurrentPage}
+                  totalCountLabel="policies"
+                  selectedCount={selectedPolicies.length}
+                />
 
-            <Pagination
-              totalCount={filteredPolicies.length}
-              size={itemsPerPage}
-              currentAt={currentPage}
-              onPageChange={setCurrentPage}
-              totalCountLabel="policies"
-              selectedCount={selectedPolicies.length}
-            />
+                <SelectableTable<Policy>
+                  columns={columns}
+                  rows={paginatedPolicies}
+                  selectionType="checkbox"
+                  selectedRows={selectedPolicies}
+                  onRowSelectionChange={setSelectedPolicies}
+                  getRowId={(row) => row.id}
+                >
+                  {paginatedPolicies.map((policy) => (
+                    <Table.Tr key={policy.id} rowData={policy}>
+                      <Table.Td rowData={policy} column={columns[0]}>
+                        <span className="text-text font-medium">{policy.name}</span>
+                      </Table.Td>
+                      <Table.Td rowData={policy} column={columns[1]}>
+                        <Badge
+                          theme={policy.type === 'Built-in' ? 'blu' : 'gry'}
+                          type="subtle"
+                          size="sm"
+                        >
+                          {policy.type}
+                        </Badge>
+                      </Table.Td>
+                      <Table.Td rowData={policy} column={columns[2]}>
+                        {policy.apps}
+                      </Table.Td>
+                      <Table.Td rowData={policy} column={columns[3]}>
+                        {policy.description}
+                      </Table.Td>
+                      <Table.Td rowData={policy} column={columns[4]}>
+                        {policy.editedAt}
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </SelectableTable>
 
-            <SelectableTable<Policy>
-              columns={columns}
-              rows={paginatedPolicies}
-              selectionType="checkbox"
-              selectedRows={selectedPolicies}
-              onRowSelectionChange={setSelectedPolicies}
-              getRowId={(row) => row.id}
-            >
-              {paginatedPolicies.map((policy) => (
-                <Table.Tr key={policy.id} rowData={policy}>
-                  <Table.Td rowData={policy} column={columns[0]}>
-                    <span className="text-text font-medium">{policy.name}</span>
-                  </Table.Td>
-                  <Table.Td rowData={policy} column={columns[1]}>
-                    <Badge
-                      theme={policy.type === 'Built-in' ? 'blu' : 'gry'}
-                      type="subtle"
-                      size="sm"
-                    >
-                      {policy.type}
-                    </Badge>
-                  </Table.Td>
-                  <Table.Td rowData={policy} column={columns[2]}>
-                    {policy.apps}
-                  </Table.Td>
-                  <Table.Td rowData={policy} column={columns[3]}>
-                    {policy.description}
-                  </Table.Td>
-                  <Table.Td rowData={policy} column={columns[4]}>
-                    {policy.editedAt}
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </SelectableTable>
-          </div>
-        </Fieldset>
-      </Layout.VStack>
+                <div className="flex flex-wrap items-center gap-1 min-h-[32px] p-2 rounded-md border border-border bg-surface-muted">
+                  {selectedPolicies.length === 0 ? (
+                    <span className="text-11 text-text-muted">No policies selected</span>
+                  ) : (
+                    selectedPolicies.map((policyId) => {
+                      const policy = mockPolicies.find((p) => p.id === String(policyId));
+                      return (
+                        <Tag
+                          key={String(policyId)}
+                          label={policy?.name || String(policyId)}
+                          variant="multiSelect"
+                          onClose={() =>
+                            setSelectedPolicies(selectedPolicies.filter((id) => id !== policyId))
+                          }
+                        />
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            ),
+            doneUI: (
+              <div className="flex flex-col gap-3 py-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Selected policies</span>
+                  <span className="text-12 text-text">
+                    {selectedPolicies.length > 0
+                      ? `${selectedPolicies.length} polic${selectedPolicies.length === 1 ? 'y' : 'ies'} selected`
+                      : 'Skipped'}
+                  </span>
+                </div>
+              </div>
+            ),
+          },
+        ]}
+      </Stepper>
 
       {confirmOpen && (
         <ActionModal
