@@ -139,6 +139,8 @@ const RuleMenuTrigger = ({ toggle }: { toggle: () => void }) => (
 
 export function ComputeSecurityGroupDetailPage() {
   const [editOpen, setEditOpen] = useState(false);
+  const [createRuleOpen, setCreateRuleOpen] = useState(false);
+  const [allowedPairOpen, setAllowedPairOpen] = useState(false);
 
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -216,10 +218,20 @@ export function ComputeSecurityGroupDetailPage() {
         title={securityGroup.name}
         actions={
           <div className="flex items-center gap-1 flex-wrap">
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setCreateRuleOpen(true)}
+            >
               <IconCirclePlus size={12} stroke={1.5} /> Create rule
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditOpen(true)}
+            >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">
@@ -236,7 +248,12 @@ export function ComputeSecurityGroupDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-16 font-semibold text-text m-0">Rules</h3>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setCreateRuleOpen(true)}
+                >
                   <IconCirclePlus size={12} stroke={1.5} /> Create rule
                 </Button>
               </div>

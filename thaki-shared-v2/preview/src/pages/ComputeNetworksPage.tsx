@@ -218,6 +218,9 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 
 export function ComputeNetworksPage() {
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
+  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
+  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -490,10 +493,22 @@ export function ComputeNetworksPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Create subnet', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedNetwork(row);
+                    setCreateSubnetOpen(true);
+                  }}
+                >
                   Create subnet
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedNetwork(row);
+                    setEditNetworkOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -506,6 +521,31 @@ export function ComputeNetworksPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <EditNetworkDrawer
+        isOpen={editNetworkOpen}
+        onClose={() => {
+          setEditNetworkOpen(false);
+          setSelectedNetwork(null);
+        }}
+        networkId={selectedNetwork?.id}
+        initialData={
+          selectedNetwork
+            ? {
+                name: selectedNetwork.name,
+                shared: selectedNetwork.shared,
+                adminStateUp: selectedNetwork.adminState === 'Up',
+              }
+            : undefined
+        }
+      />
+      <CreateSubnetDrawer
+        isOpen={createSubnetOpen}
+        onClose={() => {
+          setCreateSubnetOpen(false);
+          setSelectedNetwork(null);
+        }}
+        networkName={selectedNetwork?.name}
       />
     </div>
   );

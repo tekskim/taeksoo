@@ -9,6 +9,9 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { CreateRouterDrawer } from '../drawers/compute/network/CreateRouterDrawer';
 import { EditRouterDrawer } from '../drawers/compute/network/EditRouterDrawer';
+import { ConnectSubnetDrawer } from '../drawers/compute/network/ConnectSubnetDrawer';
+import { DisconnectSubnetDrawer } from '../drawers/compute/network/DisconnectSubnetDrawer';
+import { ExternalGatewaySettingDrawer } from '../drawers/compute/network/ExternalGatewaySettingDrawer';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
@@ -227,6 +230,12 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 
 export function ComputeRoutersPage() {
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [createRouterOpen, setCreateRouterOpen] = useState(false);
+  const [editRouterOpen, setEditRouterOpen] = useState(false);
+  const [connectSubnetOpen, setConnectSubnetOpen] = useState(false);
+  const [disconnectSubnetOpen, setDisconnectSubnetOpen] = useState(false);
+  const [externalGwOpen, setExternalGwOpen] = useState(false);
+  const [selectedRouter, setSelectedRouter] = useState<Router | null>(null);
 
   const [routers] = useState(mockRouters);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -279,7 +288,7 @@ export function ComputeRoutersPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Routers" />
-        <Button variant="primary" size="md" onClick={() => console.log('Create router')}>
+        <Button variant="primary" size="md" onClick={() => setCreateRouterOpen(true)}>
           Create router
         </Button>
       </div>

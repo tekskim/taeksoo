@@ -466,35 +466,47 @@ export function ComputeInstanceDetailPage() {
           <ContextMenu.Item action={() => {}}>Unpause</ContextMenu.Item>
           <ContextMenu.Item action={() => {}}>Resume</ContextMenu.Item>
           <ContextMenu.Item action={() => {}}>Unshelve</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Rescue</ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('rescue')}>Rescue</ContextMenu.Item>
           <ContextMenu.Item action={() => {}}>Unrescue</ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Storage&Snapshot" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => {}}>Attach volume</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => setDrawerOpen('attachVol')}>
+            Attach volume
+          </ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('detachVol')} danger>
             Detach volume
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Create instance snapshot</ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('snapshot')}>
+            Create instance snapshot
+          </ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Network" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => {}}>Attach interface</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => setDrawerOpen('attachIf')}>
+            Attach interface
+          </ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('detachIf')} danger>
             Detach interface
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Associate floating IP</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => setDrawerOpen('assocFip')}>
+            Associate floating IP
+          </ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('disassocFip')} danger>
             Disassociate floating IP
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Manage security groups</ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('manageSg')}>
+            Manage security groups
+          </ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Configuration" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => {}}>Lock setting</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => setDrawerOpen('lock')}>Lock setting</ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('rebuild')} danger>
             Rebuild
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Resize</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Manage tags</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('resize')}>Resize</ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('manageTags')}>
+            Manage tags
+          </ContextMenu.Item>
+          <ContextMenu.Item action={() => setDrawerOpen('edit')}>Edit</ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.Item action={() => {}}>Confirm resize</ContextMenu.Item>
         <ContextMenu.Item action={() => {}}>Revert resize</ContextMenu.Item>
@@ -650,7 +662,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between w-full">
                 <h2 className="text-16 font-semibold leading-6 text-text m-0">Volumes</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setDrawerOpen('attachVol')}
+                >
                   <IconSquarePlus size={12} stroke={1.5} /> Attach volume
                 </Button>
               </div>
@@ -725,7 +742,7 @@ export function ComputeInstanceDetailPage() {
                         </ContextMenu.SubItems>
                         <ContextMenu.Item action={() => {}}>Extend volume</ContextMenu.Item>
                         <ContextMenu.Item action={() => {}}>Bootable</ContextMenu.Item>
-                        <ContextMenu.Item action={() => {}} danger>
+                        <ContextMenu.Item action={() => setDrawerOpen('detachVol')} danger>
                           Detach
                         </ContextMenu.Item>
                       </ContextMenu.Root>
@@ -740,7 +757,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between w-full">
                 <h2 className="text-16 font-semibold leading-6 text-text m-0">Interfaces</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setDrawerOpen('attachIf')}
+                >
                   <IconSquarePlus size={12} stroke={1.5} /> Attach interface
                 </Button>
               </div>
@@ -809,7 +831,7 @@ export function ComputeInstanceDetailPage() {
                     </Table.Td>
                     <Table.Td rowData={iface} column={interfaceColumns[6]} preventClickPropagation>
                       <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
-                        <ContextMenu.Item action={() => {}} danger>
+                        <ContextMenu.Item action={() => setDrawerOpen('detachIf')} danger>
                           Detach
                         </ContextMenu.Item>
                       </ContextMenu.Root>
@@ -824,7 +846,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between w-full">
                 <h2 className="text-16 font-semibold leading-6 text-text m-0">Floating IPs</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setDrawerOpen('assocFip')}
+                >
                   <IconLinkPlus size={12} stroke={1.5} /> Associate floating IP
                 </Button>
               </div>
@@ -876,7 +903,7 @@ export function ComputeInstanceDetailPage() {
                     </Table.Td>
                     <Table.Td rowData={row} column={floatingColumns[4]} preventClickPropagation>
                       <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
-                        <ContextMenu.Item action={() => {}} danger>
+                        <ContextMenu.Item action={() => setDrawerOpen('disassocFip')} danger>
                           Disassociate
                         </ContextMenu.Item>
                       </ContextMenu.Root>
@@ -891,7 +918,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between w-full">
                 <h2 className="text-16 font-semibold leading-6 text-text m-0">Security groups</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setDrawerOpen('manageSg')}
+                >
                   <IconSettings size={12} stroke={1.5} /> Manage security group
                 </Button>
               </div>
@@ -917,7 +949,12 @@ export function ComputeInstanceDetailPage() {
                 <h2 className="text-16 font-semibold leading-6 text-text m-0">
                   Instance snapshots
                 </h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setDrawerOpen('snapshot')}
+                >
                   <IconCirclePlus size={12} stroke={1.5} /> Create Snapshot
                 </Button>
               </div>

@@ -450,12 +450,16 @@ export function ComputeRouterDetailPage() {
                 </Button>
               )}
             >
-              <ContextMenu.Item action={() => {}} danger>
+              <ContextMenu.Item action={() => setDisconnectSubnetOpen(true)} danger>
                 Disconnect subnet
               </ContextMenu.Item>
-              <ContextMenu.Item action={() => {}}>External gateway Setting</ContextMenu.Item>
-              <ContextMenu.Item action={() => {}}>Create static Route</ContextMenu.Item>
-              <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
+              <ContextMenu.Item action={() => setExternalGwOpen(true)}>
+                External gateway Setting
+              </ContextMenu.Item>
+              <ContextMenu.Item action={() => setStaticRouteOpen(true)}>
+                Create static Route
+              </ContextMenu.Item>
+              <ContextMenu.Item action={() => setEditRouterOpen(true)}>Edit</ContextMenu.Item>
             </ContextMenu.Root>
           </div>
         }
@@ -640,7 +644,12 @@ export function ComputeRouterDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between min-h-[28px]">
                 <h3 className="text-16 font-semibold text-text m-0">Static Route</h3>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setStaticRouteOpen(true)}
+                >
                   <IconCirclePlus size={12} stroke={1.5} /> Create static route
                 </Button>
               </div>
@@ -714,30 +723,30 @@ export function ComputeRouterDetailPage() {
         onClose={() => setEditRouterOpen(false)}
         routerId={id}
         initialData={{
-          name: data.name,
-          description: '',
-          adminStateUp: data.adminState === 'UP',
+          name: router.name,
+          description: router.description,
+          adminStateUp: router.adminState === 'Up',
         }}
       />
       <ExternalGatewaySettingDrawer
         isOpen={externalGwOpen}
         onClose={() => setExternalGwOpen(false)}
-        routerName={data.name}
+        routerName={router.name}
       />
       <ConnectSubnetDrawer
         isOpen={connectSubnetOpen}
         onClose={() => setConnectSubnetOpen(false)}
-        routerName={data.name}
+        routerName={router.name}
       />
       <DisconnectSubnetDrawer
         isOpen={disconnectSubnetOpen}
         onClose={() => setDisconnectSubnetOpen(false)}
-        routerName={data.name}
+        routerName={router.name}
       />
       <CreateStaticRouteDrawer
         isOpen={staticRouteOpen}
         onClose={() => setStaticRouteOpen(false)}
-        routerName={data.name}
+        routerName={router.name}
       />
     </div>
   );

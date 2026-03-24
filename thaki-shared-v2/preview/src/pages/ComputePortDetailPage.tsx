@@ -276,6 +276,10 @@ export function ComputePortDetailPage() {
   const [detachModalOpen, setDetachModalOpen] = useState(false);
   const [securityGroupToDetach, setSecurityGroupToDetach] = useState<SecurityGroup | null>(null);
 
+  const [editPortOpen, setEditPortOpen] = useState(false);
+  const [manageSgOpen, setManageSgOpen] = useState(false);
+  const [allowedPairOpen, setAllowedPairOpen] = useState(false);
+
   const [fSort, setFSort] = useState('');
   const [fOrder, setFOrder] = useState<SortOrder>('asc');
   const [aapSort, setAapSort] = useState('');
@@ -397,7 +401,12 @@ export function ComputePortDetailPage() {
         title={port.name}
         actions={
           <div className="flex items-center gap-1 flex-wrap">
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditPortOpen(true)}
+            >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">
@@ -417,8 +426,12 @@ export function ComputePortDetailPage() {
               <ContextMenu.Item action={() => {}}>Associate floating IP</ContextMenu.Item>
               <ContextMenu.Item action={() => {}}>Disassociate floating IP</ContextMenu.Item>
               <ContextMenu.Item action={() => {}}>Allocate IP</ContextMenu.Item>
-              <ContextMenu.Item action={() => {}}>Manage security groups</ContextMenu.Item>
-              <ContextMenu.Item action={() => {}}>Create allowed address pair</ContextMenu.Item>
+              <ContextMenu.Item action={() => setManageSgOpen(true)}>
+                Manage security groups
+              </ContextMenu.Item>
+              <ContextMenu.Item action={() => setAllowedPairOpen(true)}>
+                Create allowed address pair
+              </ContextMenu.Item>
             </ContextMenu.Root>
           </div>
         }
@@ -579,7 +592,12 @@ export function ComputePortDetailPage() {
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <h3 className="text-16 font-semibold text-text m-0">Allowed Address Pairs</h3>
-                  <Button variant="secondary" appearance="outline" size="sm">
+                  <Button
+                    variant="secondary"
+                    appearance="outline"
+                    size="sm"
+                    onClick={() => setAllowedPairOpen(true)}
+                  >
                     <IconCirclePlus size={12} stroke={1.5} /> Create Allowed Address Pair
                   </Button>
                 </div>
@@ -643,7 +661,12 @@ export function ComputePortDetailPage() {
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <h3 className="text-16 font-semibold text-text m-0">Security groups</h3>
-                  <Button variant="secondary" appearance="outline" size="sm">
+                  <Button
+                    variant="secondary"
+                    appearance="outline"
+                    size="sm"
+                    onClick={() => setManageSgOpen(true)}
+                  >
                     <IconSettings size={12} stroke={1.5} /> Manage security Group
                   </Button>
                 </div>
@@ -756,10 +779,25 @@ export function ComputePortDetailPage() {
         </ActionModal>
       )}
 
+      <EditPortDrawer
+        isOpen={editPortOpen}
+        onClose={() => setEditPortOpen(false)}
+        portId={id}
+        initialData={{
+          name: port.name,
+          description: port.description === '-' ? '' : port.description,
+          adminStateUp: port.status !== 'down',
+        }}
+      />
+      <EditPortSecurityGroupsDrawer
+        isOpen={manageSgOpen}
+        onClose={() => setManageSgOpen(false)}
+        portName={port.name}
+      />
       <CreateAllowedAddressPairDrawer
         isOpen={allowedPairOpen}
         onClose={() => setAllowedPairOpen(false)}
-        portName={data.name}
+        portName={port.name}
       />
     </div>
   );

@@ -17,7 +17,6 @@ import { CreateVolumeBackupDrawer } from '../drawers/compute/volume/CreateVolume
 import { CreateVolumeSnapshotDrawer } from '../drawers/compute/volume/CreateVolumeSnapshotDrawer';
 import { EditVolumeDrawer } from '../drawers/compute/volume/EditVolumeDrawer';
 import { ExtendVolumeDrawer } from '../drawers/compute/volume/ExtendVolumeDrawer';
-import { MigrateVolumeDrawer } from '../drawers/compute/volume/MigrateVolumeDrawer';
 import { RestoreFromSnapshotDrawer } from '../drawers/compute/volume/RestoreFromSnapshotDrawer';
 import {
   ViewPreferencesDrawer,
@@ -194,6 +193,24 @@ const filterKeys: FilterKey[] = [
 
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
+/** Parse size label (e.g. "1500GiB", "80 GiB") to GiB for ExtendVolumeDrawer. */
+function volumeSizeToGiB(sizeLabel: string): number {
+  const s = String(sizeLabel);
+  const numMatch = s.match(/([\d.]+)/);
+  if (!numMatch) return 100;
+  const n = parseFloat(numMatch[1]);
+  if (!Number.isFinite(n)) return 100;
+  if (/\bti?b\b/i.test(s) && !/gib/i.test(s)) return Math.round(n * 1024);
+  return Math.round(n);
+}
+
+function mapVolumeTypeForDrawer(t: string): 'SSD' | 'HDD' | 'NVMe' {
+  const u = t.toUpperCase();
+  if (u === 'SSD' || u === 'HDD') return u;
+  if (u === 'NVME') return 'NVMe';
+  return 'SSD';
+}
+
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
@@ -205,11 +222,21 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeVolumesPage() {
+  const [selectedVolume, setSelectedVolume] = useState<Volume | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [extendOpen, setExtendOpen] = useState(false);
   const [snapshotOpen, setSnapshotOpen] = useState(false);
   const [backupOpen, setBackupOpen] = useState(false);
+  const [cloneOpen, setCloneOpen] = useState(false);
+  const [restoreOpen, setRestoreOpen] = useState(false);
+  const [createImageOpen, setCreateImageOpen] = useState(false);
+  const [bootSettingOpen, setBootSettingOpen] = useState(false);
+  const [changeTypeOpen, setChangeTypeOpen] = useState(false);
+  const [createTransferOpen, setCreateTransferOpen] = useState(false);
+  const [acceptTransferOpen, setAcceptTransferOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+
+  const clearSelectedVolume = useCallback(() => setSelectedVolume(null), []);
 
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -276,11 +303,7 @@ export function ComputeVolumesPage() {
       <div className="flex items-center justify-between h-8 gap-2 flex-wrap">
         <Title title="Volumes" />
         <div className="flex items-center gap-2">
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => console.log('[Volumes] Accept transfer')}
-          >
+          <Button variant="primary" size="md" onClick={() => setAcceptTransferOpen(true)}>
             Accept Volume Transfer
           </Button>
           <Button variant="primary" size="md" onClick={() => navigate('/compute/volumes/create')}>
@@ -444,20 +467,34 @@ export function ComputeVolumesPage() {
               >
                 <ContextMenu.SubItems label="Data protection">
                   <ContextMenu.Item
-                    action={() => console.log('[Volumes] Create volume snapshot', row.id)}
+                    action={() => {
+                      setSelectedVolume(row);
+                      setSnapshotOpen(true);
+                    }}
                   >
                     Create volume snapshot
                   </ContextMenu.Item>
                   <ContextMenu.Item
-                    action={() => console.log('[Volumes] Create volume backup', row.id)}
+                    action={() => {
+                      setSelectedVolume(row);
+                      setBackupOpen(true);
+                    }}
                   >
                     Create volume backup
                   </ContextMenu.Item>
-                  <ContextMenu.Item action={() => console.log('[Volumes] Clone volume', row.id)}>
+                  <ContextMenu.Item
+                    action={() => {
+                      setSelectedVolume(row);
+                      setCloneOpen(true);
+                    }}
+                  >
                     Clone volume
                   </ContextMenu.Item>
                   <ContextMenu.Item
-                    action={() => console.log('[Volumes] Restore from Snapshot', row.id)}
+                    action={() => {
+                      setSelectedVolume(row);
+                      setRestoreOpen(true);
+                    }}
                   >
                     Restore from Snapshot
                   </ContextMenu.Item>
@@ -466,7 +503,12 @@ export function ComputeVolumesPage() {
                   <ContextMenu.Item action={() => console.log('[Volumes] Create instance', row.id)}>
                     Create instance
                   </ContextMenu.Item>
-                  <ContextMenu.Item action={() => console.log('[Volumes] Create image', row.id)}>
+                  <ContextMenu.Item
+                    action={() => {
+                      setSelectedVolume(row);
+                      setCreateImageOpen(true);
+                    }}
+                  >
                     Create image
                   </ContextMenu.Item>
                   <ContextMenu.Item action={() => console.log('[Volumes] Attach instance', row.id)}>
@@ -478,27 +520,50 @@ export function ComputeVolumesPage() {
                   >
                     Detach instance
                   </ContextMenu.Item>
-                  <ContextMenu.Item action={() => console.log('[Volumes] Boot setting', row.id)}>
+                  <ContextMenu.Item
+                    action={() => {
+                      setSelectedVolume(row);
+                      setBootSettingOpen(true);
+                    }}
+                  >
                     Boot setting
                   </ContextMenu.Item>
                 </ContextMenu.SubItems>
                 <ContextMenu.SubItems label="Configuration">
-                  <ContextMenu.Item action={() => console.log('[Volumes] Edit', row.id)}>
+                  <ContextMenu.Item
+                    action={() => {
+                      setSelectedVolume(row);
+                      setEditOpen(true);
+                    }}
+                  >
                     Edit
                   </ContextMenu.Item>
-                  <ContextMenu.Item action={() => console.log('[Volumes] Extend volume', row.id)}>
+                  <ContextMenu.Item
+                    action={() => {
+                      setSelectedVolume(row);
+                      setExtendOpen(true);
+                    }}
+                  >
                     Extend volume
                   </ContextMenu.Item>
                   <ContextMenu.Item action={() => console.log('[Volumes] Manage metadata', row.id)}>
                     Manage metadata
                   </ContextMenu.Item>
                   <ContextMenu.Item
-                    action={() => console.log('[Volumes] Change volume Type', row.id)}
+                    action={() => {
+                      setSelectedVolume(row);
+                      setChangeTypeOpen(true);
+                    }}
                   >
                     Change volume Type
                   </ContextMenu.Item>
                 </ContextMenu.SubItems>
-                <ContextMenu.Item action={() => console.log('[Volumes] Create transfer', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedVolume(row);
+                    setCreateTransferOpen(true);
+                  }}
+                >
                   Create transfer
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('[Volumes] Cancel transfer', row.id)}>
@@ -512,6 +577,101 @@ export function ComputeVolumesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <AcceptVolumeTransferDrawer
+        isOpen={acceptTransferOpen}
+        onClose={() => setAcceptTransferOpen(false)}
+      />
+      <EditVolumeDrawer
+        isOpen={editOpen}
+        onClose={() => {
+          setEditOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeId={selectedVolume?.id}
+        initialData={
+          selectedVolume
+            ? { name: selectedVolume.name, description: '' }
+            : { name: '', description: '' }
+        }
+      />
+      <ExtendVolumeDrawer
+        isOpen={extendOpen}
+        onClose={() => {
+          setExtendOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+        currentSizeLabel={selectedVolume?.size}
+        currentSizeGiB={selectedVolume ? volumeSizeToGiB(selectedVolume.size) : undefined}
+      />
+      <CreateVolumeSnapshotDrawer
+        isOpen={snapshotOpen}
+        onClose={() => {
+          setSnapshotOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+      />
+      <CreateVolumeBackupDrawer
+        isOpen={backupOpen}
+        onClose={() => {
+          setBackupOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+      />
+      <CloneVolumeDrawer
+        isOpen={cloneOpen}
+        onClose={() => {
+          setCloneOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+        volumeType={selectedVolume?.type}
+        volumeSize={selectedVolume?.size}
+      />
+      <RestoreFromSnapshotDrawer
+        isOpen={restoreOpen}
+        onClose={() => {
+          setRestoreOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+      />
+      <CreateImageFromVolumeDrawer
+        isOpen={createImageOpen}
+        onClose={() => {
+          setCreateImageOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+      />
+      <BootSettingDrawer
+        isOpen={bootSettingOpen}
+        onClose={() => {
+          setBootSettingOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+        initialBootable={false}
+      />
+      <ChangeVolumeTypeDrawer
+        isOpen={changeTypeOpen}
+        onClose={() => {
+          setChangeTypeOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+        initialType={selectedVolume ? mapVolumeTypeForDrawer(selectedVolume.type) : 'SSD'}
+      />
+      <CreateTransferDrawer
+        isOpen={createTransferOpen}
+        onClose={() => {
+          setCreateTransferOpen(false);
+          clearSelectedVolume();
+        }}
+        volumeName={selectedVolume?.name}
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

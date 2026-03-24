@@ -229,6 +229,7 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeInstanceSnapshotsPage() {
+  const [selectedSnapshot, setSelectedSnapshot] = useState<InstanceSnapshot | null>(null);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [createVolDrawerOpen, setCreateVolDrawerOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -441,10 +442,20 @@ export function ComputeInstanceSnapshotsPage() {
                 >
                   Create instance
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Create volume', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedSnapshot(row);
+                    setCreateVolDrawerOpen(true);
+                  }}
+                >
                   Create volume
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit snapshot', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedSnapshot(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
                   Edit
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => handleRowDelete(row)} danger>
@@ -455,6 +466,29 @@ export function ComputeInstanceSnapshotsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditInstanceSnapshotDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setSelectedSnapshot(null);
+        }}
+        snapshotId={selectedSnapshot?.id}
+        initialData={
+          selectedSnapshot
+            ? { name: selectedSnapshot.name, description: selectedSnapshot.description }
+            : undefined
+        }
+      />
+      <CreateVolumeFromSnapshotDrawer
+        isOpen={createVolDrawerOpen}
+        onClose={() => {
+          setCreateVolDrawerOpen(false);
+          setSelectedSnapshot(null);
+        }}
+        snapshotName={selectedSnapshot?.name ?? ''}
+      />
+
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

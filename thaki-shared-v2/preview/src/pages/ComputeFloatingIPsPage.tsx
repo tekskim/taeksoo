@@ -203,7 +203,11 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeFloatingIPsPage() {
+  const [allocateOpen, setAllocateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [associateOpen, setAssociateOpen] = useState(false);
+  const [disassociateOpen, setDisassociateOpen] = useState(false);
+  const [selectedFloatingIP, setSelectedFloatingIP] = useState<FloatingIP | null>(null);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
   const [floatingIPs] = useState(mockFloatingIPs);
@@ -260,7 +264,7 @@ export function ComputeFloatingIPsPage() {
           variant="primary"
           size="md"
           leftIcon={<IconBinaryTree size={12} stroke={1.5} />}
-          onClick={() => console.log('Allocate Floating IP')}
+          onClick={() => setAllocateOpen(true)}
         >
           Allocate Floating IP
         </Button>
@@ -439,18 +443,29 @@ export function ComputeFloatingIPsPage() {
                 )}
               >
                 <ContextMenu.Item
-                  action={() => console.log('Associate:', row.id)}
+                  action={() => {
+                    setSelectedFloatingIP(row);
+                    setAssociateOpen(true);
+                  }}
                   disabled={!!row.associatedTo}
                 >
                   Associate
                 </ContextMenu.Item>
                 <ContextMenu.Item
-                  action={() => console.log('Disassociate:', row.id)}
+                  action={() => {
+                    setSelectedFloatingIP(row);
+                    setDisassociateOpen(true);
+                  }}
                   disabled={!row.associatedTo}
                 >
                   Disassociate
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedFloatingIP(row);
+                    setEditOpen(true);
+                  }}
+                >
                   Edit
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Release:', row.id)} danger>
@@ -461,6 +476,36 @@ export function ComputeFloatingIPsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <AllocateFloatingIPDrawer isOpen={allocateOpen} onClose={() => setAllocateOpen(false)} />
+      <EditFloatingIPDrawer
+        isOpen={editOpen}
+        onClose={() => {
+          setEditOpen(false);
+          setSelectedFloatingIP(null);
+        }}
+        floatingIpAddress={selectedFloatingIP?.floatingIp}
+      />
+      <AssociateFloatingIPToPortDrawer
+        isOpen={associateOpen}
+        onClose={() => {
+          setAssociateOpen(false);
+          setSelectedFloatingIP(null);
+        }}
+        floatingIpAddress={selectedFloatingIP?.floatingIp}
+      />
+      <DisassociateFloatingIPDrawer
+        isOpen={disassociateOpen}
+        onClose={() => {
+          setDisassociateOpen(false);
+          setSelectedFloatingIP(null);
+        }}
+        floatingIpAddress={selectedFloatingIP?.floatingIp}
+        associatedTo={
+          selectedFloatingIP?.associatedTo
+            ? `${selectedFloatingIP.associatedTo} · ${selectedFloatingIP.fixedIp}`
+            : undefined
+        }
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

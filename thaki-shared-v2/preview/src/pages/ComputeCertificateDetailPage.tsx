@@ -12,7 +12,7 @@ import { Pagination } from '@shared/components/Pagination';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Badge } from '@shared/components/Badge';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import { IconTrash, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconEdit } from '@tabler/icons-react';
 
 type CertificateStatus = 'valid' | 'expired' | 'revoked' | 'pending';
 
@@ -216,6 +216,14 @@ export function ComputeCertificateDetailPage() {
             <Button variant="secondary" appearance="outline" size="sm">
               <IconDownload size={12} stroke={1.5} /> Download
             </Button>
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditDrawerOpen(true)}
+            >
+              <IconEdit size={12} stroke={1.5} /> Edit
+            </Button>
             <Button variant="secondary" appearance="outline" size="sm">
               <IconTrash size={12} stroke={1.5} /> Delete
             </Button>
@@ -361,8 +369,8 @@ export function ComputeCertificateDetailPage() {
       <EditCertificateDrawer
         isOpen={editDrawerOpen}
         onClose={() => setEditDrawerOpen(false)}
-        certificateId={id}
-        initialData={{ name: certificate.name, description: '' }}
+        certificateId={certificate.id}
+        initialData={{ name: certificate.name, description: certificate.description }}
       />
     </div>
   );

@@ -226,7 +226,7 @@ export function ComputeServerGroupsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Server groups" />
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={() => setCreateDrawerOpen(true)}>
           Create Server Group
         </Button>
       </div>
@@ -399,6 +399,14 @@ export function ComputeServerGroupsPage() {
                   >
                     Create instance
                   </ContextMenu.Item>
+                  <ContextMenu.Item
+                    action={() => {
+                      setEditTarget(row);
+                      setEditDrawerOpen(true);
+                    }}
+                  >
+                    Edit
+                  </ContextMenu.Item>
                   <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                     Delete
                   </ContextMenu.Item>
@@ -408,6 +416,21 @@ export function ComputeServerGroupsPage() {
           );
         })}
       </SelectableTable>
+
+      <CreateServerGroupDrawer
+        isOpen={createDrawerOpen}
+        onClose={() => setCreateDrawerOpen(false)}
+      />
+      <EditServerGroupDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setEditTarget(null);
+        }}
+        serverGroupId={editTarget?.id}
+        initialData={editTarget ? { name: editTarget.name, description: '' } : undefined}
+      />
+
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

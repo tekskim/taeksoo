@@ -376,7 +376,12 @@ export function ComputeImageDetailPage() {
       <Button variant="secondary" appearance="outline" size="sm">
         <IconCirclePlus size={12} stroke={1.5} /> Create instance
       </Button>
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button
+        variant="secondary"
+        appearance="outline"
+        size="sm"
+        onClick={() => setEditDrawerOpen(true)}
+      >
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <Button variant="secondary" appearance="outline" size="sm">
@@ -467,7 +472,12 @@ export function ComputeImageDetailPage() {
                 <SectionCard.Header
                   title="Advanced"
                   actions={
-                    <Button variant="secondary" appearance="outline" size="sm">
+                    <Button
+                      variant="secondary"
+                      appearance="outline"
+                      size="sm"
+                      onClick={() => setEditDrawerOpen(true)}
+                    >
                       <IconEdit size={12} stroke={1.5} /> Edit
                     </Button>
                   }
@@ -487,7 +497,19 @@ export function ComputeImageDetailPage() {
           <Tab id="metadata" label="Metadata">
             <div className="flex flex-col gap-4 pt-4">
               <SectionCard>
-                <SectionCard.Header title="Metadata" />
+                <SectionCard.Header
+                  title="Metadata"
+                  actions={
+                    <Button
+                      variant="secondary"
+                      appearance="outline"
+                      size="sm"
+                      onClick={() => setMetadataDrawerOpen(true)}
+                    >
+                      Manage metadata
+                    </Button>
+                  }
+                />
                 <SectionCard.Content>
                   {Object.entries(image.metadata).length > 0 ? (
                     Object.entries(image.metadata).map(([key, value]) => (

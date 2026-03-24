@@ -177,7 +177,7 @@ export function ComputeKeyPairsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Key pairs" />
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={() => setCreateDrawerOpen(true)}>
           Create Key Pair
         </Button>
       </div>
@@ -306,6 +306,14 @@ export function ComputeKeyPairsPage() {
                   </button>
                 )}
               >
+                <ContextMenu.Item
+                  action={() => {
+                    setEditTarget(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -314,6 +322,18 @@ export function ComputeKeyPairsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <CreateKeyPairDrawer isOpen={createDrawerOpen} onClose={() => setCreateDrawerOpen(false)} />
+      <EditKeyPairDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setEditTarget(null);
+        }}
+        keyPairName={editTarget?.name}
+        initialDescription={editTarget ? '' : undefined}
+      />
+
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

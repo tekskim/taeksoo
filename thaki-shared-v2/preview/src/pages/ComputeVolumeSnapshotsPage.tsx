@@ -176,8 +176,12 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeVolumeSnapshotsPage() {
+  const [selectedSnapshot, setSelectedSnapshot] = useState<VolumeSnapshot | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [createFromSnapOpen, setCreateFromSnapOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+
+  const clearSelectedSnapshot = useCallback(() => setSelectedSnapshot(null), []);
 
   const [snapshots, setSnapshots] = useState(mockVolumeSnapshots);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -374,13 +378,25 @@ export function ComputeVolumeSnapshotsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Create volume', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedSnapshot(row);
+                    setCreateFromSnapOpen(true);
+                  }}
+                >
                   Create volume
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Manage metadata:', row.id)}>
                   Manage metadata
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedSnapshot(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -389,6 +405,27 @@ export function ComputeVolumeSnapshotsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <EditVolumeSnapshotDrawer
+        isOpen={editOpen}
+        onClose={() => {
+          setEditOpen(false);
+          clearSelectedSnapshot();
+        }}
+        snapshotId={selectedSnapshot?.id}
+        initialData={
+          selectedSnapshot
+            ? { name: selectedSnapshot.name, description: '' }
+            : { name: '', description: '' }
+        }
+      />
+      <CreateVolumeFromVolumeSnapshotDrawer
+        isOpen={createFromSnapOpen}
+        onClose={() => {
+          setCreateFromSnapOpen(false);
+          clearSelectedSnapshot();
+        }}
+        snapshotName={selectedSnapshot?.name}
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

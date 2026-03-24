@@ -235,6 +235,9 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 
 export function ComputePortsPage() {
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [editPortOpen, setEditPortOpen] = useState(false);
+  const [manageSgOpen, setManageSgOpen] = useState(false);
+  const [selectedPort, setSelectedPort] = useState<Port | null>(null);
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -572,10 +575,20 @@ export function ComputePortsPage() {
                 <ContextMenu.Item action={() => console.log('Allocate IP:', row.id)}>
                   Allocate IP
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Manage security groups:', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedPort(row);
+                    setManageSgOpen(true);
+                  }}
+                >
                   Manage security groups
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedPort(row);
+                    setEditPortOpen(true);
+                  }}
+                >
                   Edit
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
@@ -590,6 +603,31 @@ export function ComputePortsPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <EditPortDrawer
+        isOpen={editPortOpen}
+        onClose={() => {
+          setEditPortOpen(false);
+          setSelectedPort(null);
+        }}
+        portId={selectedPort?.id}
+        initialData={
+          selectedPort
+            ? {
+                name: selectedPort.name,
+                description: '',
+                adminStateUp: selectedPort.status !== 'down',
+              }
+            : undefined
+        }
+      />
+      <EditPortSecurityGroupsDrawer
+        isOpen={manageSgOpen}
+        onClose={() => {
+          setManageSgOpen(false);
+          setSelectedPort(null);
+        }}
+        portName={selectedPort?.name}
       />
     </div>
   );

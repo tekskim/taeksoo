@@ -18,6 +18,7 @@ import {
   IconLock,
   IconLockOpen,
   IconTerminal2,
+  IconEdit,
 } from '@tabler/icons-react';
 import { stripTimeFromTableDate } from './tableDateDisplay';
 
@@ -295,6 +296,14 @@ export function ComputeServerGroupDetailPage() {
             <Button variant="secondary" appearance="outline" size="sm">
               <IconCirclePlus size={12} stroke={1.5} /> Create instance
             </Button>
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditDrawerOpen(true)}
+            >
+              <IconEdit size={12} stroke={1.5} /> Edit
+            </Button>
             <Button variant="secondary" appearance="outline" size="sm">
               <IconTrash size={12} stroke={1.5} /> Delete
             </Button>
@@ -426,8 +435,8 @@ export function ComputeServerGroupDetailPage() {
       <EditServerGroupDrawer
         isOpen={editDrawerOpen}
         onClose={() => setEditDrawerOpen(false)}
-        serverGroupId={g.id}
-        initialData={{ name: g.name, description: g.description }}
+        serverGroupId={serverGroup.id}
+        initialData={{ name: serverGroup.name, description: '' }}
       />
     </div>
   );

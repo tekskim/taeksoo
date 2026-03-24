@@ -139,6 +139,7 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeVolumeBackupsPage() {
+  const [rows, setRows] = useState<VolumeBackupRow[]>(mockRows);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -151,14 +152,14 @@ export function ComputeVolumeBackupsPage() {
   const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
+    if (appliedFilters.length === 0) return rows;
+    return rows.filter((row) =>
       appliedFilters.every((filter) => {
         const val = String(row[filter.key] ?? '').toLowerCase();
         return val.includes(String(filter.value ?? '').toLowerCase());
       })
     );
-  }, [appliedFilters]);
+  }, [rows, appliedFilters]);
 
   const itemsPerPage = 10;
   const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -177,6 +178,15 @@ export function ComputeVolumeBackupsPage() {
   const handleFilterRemove = useCallback((filterId: string) => {
     setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
     setCurrentPage(1);
+  }, []);
+
+  const handleBulkDelete = useCallback(() => {
+    setRows((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
+    setSelectedRows([]);
+  }, [selectedRows]);
+
+  const handleRowDelete = useCallback((row: VolumeBackupRow) => {
+    setRows((prev) => prev.filter((r) => r.id !== row.id));
   }, []);
 
   const columns: TableColumn[] = [
@@ -340,7 +350,7 @@ export function ComputeVolumeBackupsPage() {
                 >
                   Create volume from backup
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => {}} danger>
+                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
