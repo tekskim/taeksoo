@@ -353,15 +353,15 @@ export function ComputeNetworkDetailPage() {
     [id]
   );
 
+  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
+  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
+
   const [subnetSearchTerm, setSubnetSearchTerm] = useState('');
   const [subnetCurrentPage, setSubnetCurrentPage] = useState(1);
   const [subnetSort, setSubnetSort] = useState('');
   const [subnetOrder, setSubnetOrder] = useState<SortOrder>('asc');
   const [selectedSubnets, setSelectedSubnets] = useState<(string | number)[]>([]);
   const subnetsPerPage = 10;
-
-  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
-  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
 
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);

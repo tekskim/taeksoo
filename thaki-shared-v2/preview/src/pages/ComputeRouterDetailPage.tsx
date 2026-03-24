@@ -325,6 +325,12 @@ export function ComputeRouterDetailPage() {
     [id]
   );
 
+  const [editRouterOpen, setEditRouterOpen] = useState(false);
+  const [externalGwOpen, setExternalGwOpen] = useState(false);
+  const [connectSubnetOpen, setConnectSubnetOpen] = useState(false);
+  const [disconnectSubnetOpen, setDisconnectSubnetOpen] = useState(false);
+  const [staticRouteOpen, setStaticRouteOpen] = useState(false);
+
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);
   const [portSort, setPortSort] = useState('');

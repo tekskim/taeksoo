@@ -22,7 +22,7 @@ const styles = {
     'm-0 font-sans text-12 font-regular leading-16 text-text whitespace-nowrap overflow-hidden text-ellipsis',
   infoAccessory: 'flex-shrink-0',
   copyButton:
-    'flex items-center justify-center w-3 h-3 text-primary cursor-pointer border-none bg-transparent p-0 transition-colors duration-200 flex-shrink-0',
+    'flex items-center justify-center w-3 h-3 text-text-subtle hover:text-text cursor-pointer border-none bg-transparent p-0 transition-colors duration-200 flex-shrink-0',
   titleSkeleton: 'w-[200px] h-6',
   skeletonLabel: 'w-[80px] h-4',
   skeletonValue: 'w-[120px] h-4',

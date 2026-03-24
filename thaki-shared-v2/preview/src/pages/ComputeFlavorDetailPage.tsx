@@ -11,14 +11,14 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import { cn } from '@shared/services/utils/cn';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   IconCirclePlus,
   IconDotsCircleHorizontal,
   IconLock,
   IconLockOpen,
   IconTerminal2,
-  IconSearch,
 } from '@tabler/icons-react';
 
 type VisibilityType = 'Public' | 'Private' | 'Project';
@@ -400,36 +400,6 @@ function instanceStatusVariant(s: InstanceStatus): StatusVariant {
   return m[s];
 }
 
-function SearchField({
-  placeholder,
-  value,
-  onChange,
-  className,
-}: {
-  placeholder: string;
-  value: string;
-  onChange: (v: string) => void;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        'flex items-center gap-2 h-8 px-2.5 rounded-md border border-border-strong bg-surface-default w-full max-w-[320px]',
-        className
-      )}
-    >
-      <IconSearch size={14} className="shrink-0 text-text-muted" stroke={1.5} />
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 min-w-0 text-12 leading-[18px] text-text bg-transparent border-none outline-none placeholder:text-text-muted"
-      />
-    </div>
-  );
-}
-
 export function ComputeFlavorDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -560,13 +530,28 @@ export function ComputeFlavorDetailPage() {
           <Tab id="instances" label="Instances">
             <div className="flex flex-col gap-4 pt-4">
               <h2 className="text-16 font-semibold leading-6 text-text m-0">Instances</h2>
-              <SearchField
-                placeholder="Search instance by attributes"
-                value={instanceSearchQuery}
-                onChange={(v) => {
-                  setInstanceSearchQuery(v);
+              <FilterSearchInput
+                filterKeys={[{ key: 'name', label: 'Name', type: 'input' as const }]}
+                onFilterAdd={(f: FilterKeyWithValue) => {
+                  setInstanceSearchQuery(String(f.value ?? ''));
                   setInstanceCurrentPage(1);
                 }}
+                selectedFilters={
+                  instanceSearchQuery
+                    ? [
+                        {
+                          id: 'search',
+                          key: 'name',
+                          label: 'Name',
+                          value: instanceSearchQuery,
+                          type: 'input' as const,
+                        },
+                      ]
+                    : []
+                }
+                placeholder="Search by attributes"
+                defaultFilterKey="name"
+                className="w-full max-w-[320px]"
               />
               <Pagination
                 totalCount={filteredInstances.length}

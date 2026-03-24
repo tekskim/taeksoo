@@ -1,0 +1,228 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Table } from '@shared/components/Table';
+import { Button } from '@shared/components/Button';
+import { Pagination } from '@shared/components/Pagination';
+import { ContextMenu } from '@shared/components/ContextMenu';
+import { Badge } from '@shared/components/Badge';
+import { Tooltip } from '@shared/components/Tooltip';
+import type { TableColumn } from '@shared/components/Table/Table.types';
+import { IconDotsCircleHorizontal, IconSettings } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
+
+interface ClusterRow extends Record<string, unknown> {
+  id: string;
+  name: string;
+  status: string;
+  kubernetesVersion: string;
+  createdAt: string;
+  cpu: string;
+  memory: string;
+  pods: string;
+  manage: string;
+  actions: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const clustersData: ClusterRow[] = [
+  {
+    id: '1',
+    name: 'ClusterName',
+    status: 'OK',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
+  },
+  {
+    id: '2',
+    name: 'ClusterName',
+    status: 'OK',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
+  },
+];
+
+const searchInputClass =
+  'h-8 px-2.5 rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-body-md outline-none shrink-0 w-[var(--search-input-width)]';
+
+/* ----------------------------------------
+   Container Home Page
+   ---------------------------------------- */
+
+export function ContainerHomePage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
+
+  const columns: TableColumn[] = [
+    { key: 'status', header: 'Status', width: '120px', align: 'center' },
+    { key: 'name', header: 'Name', sortable: true },
+    { key: 'kubernetesVersion', header: 'Kubernetes Version', sortable: true },
+    { key: 'cpu', header: 'CPU', sortable: true },
+    { key: 'memory', header: 'Memory', sortable: true },
+    { key: 'pods', header: 'Pods', sortable: true },
+    { key: 'createdAt', header: 'Created At', sortable: true },
+    { key: 'manage', header: 'Manage', width: '120px', align: 'center' },
+    { key: 'actions', header: 'Action', width: '72px', align: 'center' },
+  ];
+
+  const col = (key: string) => columns.find((c) => c.key === key)!;
+
+  return (
+    <div className="flex flex-col gap-6 min-w-[1176px]">
+      <div className="p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-[var(--color-text-default)]">
+            Welcome to Thaki Cloud Container
+          </h1>
+          <p className="text-body-lg text-[var(--color-text-muted)]">
+            Manage effortlessly, scale and optimize your Kubernetes clusters, workloads, and
+            resources from a single platform.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex gap-6 items-start">
+        <div className="flex-1 p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+          <div className="flex items-center justify-between mb-4">
+            <h6 className="text-heading-h6 m-0">Clusters</h6>
+          </div>
+          <div className="flex flex-col gap-4">
+            <input
+              type="search"
+              placeholder="Search clusters by attributes"
+              className={searchInputClass}
+              aria-label="Search clusters by attributes"
+            />
+            <Pagination
+              totalCount={clustersData.length}
+              size={10}
+              currentAt={currentPage}
+              onPageChange={setCurrentPage}
+              totalCountLabel="items"
+            />
+            <Table columns={columns} rows={clustersData}>
+              {clustersData.map((row) => (
+                <Table.Tr key={row.id} rowData={row}>
+                  <Table.Td rowData={row} column={col('status')} preventClickPropagation>
+                    <div className="min-w-0 flex justify-center">
+                      <Tooltip content={row.status}>
+                        <Badge theme="white" size="sm" className="max-w-[80px]">
+                          <span className="truncate">{row.status}</span>
+                        </Badge>
+                      </Tooltip>
+                    </div>
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('name')}>
+                    <div className="min-w-0">
+                      <span
+                        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+                        title={row.name}
+                        onClick={() => navigate('/container/dashboard')}
+                      >
+                        {row.name}
+                      </span>
+                    </div>
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('kubernetesVersion')}>
+                    {row.kubernetesVersion}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('cpu')}>
+                    {row.cpu}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('memory')}>
+                    {row.memory}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('pods')}>
+                    {row.pods}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('createdAt')}>
+                    {row.createdAt}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('manage')} preventClickPropagation>
+                    <div className="flex justify-center">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => navigate(`/container/clusters/${row.id}`)}
+                      >
+                        <span className="inline-flex items-center gap-1">
+                          <IconSettings size={12} />
+                          Manage
+                        </span>
+                      </Button>
+                    </div>
+                  </Table.Td>
+                  <Table.Td rowData={row} column={col('actions')} preventClickPropagation>
+                    <div className="flex items-center justify-center">
+                      <ContextMenu.Root
+                        direction="bottom-end"
+                        gap={4}
+                        trigger={({ toggle }) => (
+                          <button
+                            type="button"
+                            onClick={toggle}
+                            className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors border-none bg-transparent cursor-pointer"
+                            aria-label="Row actions"
+                          >
+                            <IconDotsCircleHorizontal
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        )}
+                      >
+                        <ContextMenu.Item action={() => {}}>Kubectl Shell</ContextMenu.Item>
+                        <ContextMenu.Item action={() => {}}>Download KubeConfig</ContextMenu.Item>
+                        <ContextMenu.Item action={() => {}}>
+                          Copy KubeConfig to Clipboard
+                        </ContextMenu.Item>
+                        <ContextMenu.Item action={() => {}}>View YAML</ContextMenu.Item>
+                        <ContextMenu.Item action={() => {}}>Download YAML</ContextMenu.Item>
+                        <ContextMenu.Item danger action={() => {}}>
+                          Delete
+                        </ContextMenu.Item>
+                      </ContextMenu.Root>
+                    </div>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table>
+          </div>
+        </div>
+
+        <div className="w-[var(--search-input-width)] shrink-0 p-4 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+          <div className="flex flex-col gap-4">
+            <h3 className="text-heading-h5 text-[var(--color-text-default)] m-0">
+              Create a cluster
+            </h3>
+            <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed m-0">
+              Create a Kubernetes cluster to start running and managing your containerized
+              workloads.
+            </p>
+            <div className="w-full flex justify-end">
+              <Button variant="primary" size="md">
+                Create cluster
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -7,6 +7,8 @@ import { EditServerGroupDrawer } from '../drawers/compute/misc/EditServerGroupDr
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Table } from '@shared/components/Table';
 import { Pagination } from '@shared/components/Pagination';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKeyWithValue } from '@shared/components/FilterSearch';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
@@ -322,18 +324,29 @@ export function ComputeServerGroupDetailPage() {
           <Tab id="instances" label="Instances">
             <div className="flex flex-col gap-4 pt-4">
               <h2 className="text-16 font-semibold leading-6 text-text m-0">Instances</h2>
-              <div className="flex items-center gap-2 h-8 px-2.5 rounded-md border border-border-strong bg-surface-default w-full max-w-[320px]">
-                <input
-                  type="search"
-                  value={instanceSearchQuery}
-                  onChange={(e) => {
-                    setInstanceSearchQuery(e.target.value);
-                    setInstanceCurrentPage(1);
-                  }}
-                  placeholder="Search instance by attributes"
-                  className="flex-1 min-w-0 text-12 leading-[18px] text-text bg-transparent border-none outline-none placeholder:text-text-muted"
-                />
-              </div>
+              <FilterSearchInput
+                filterKeys={[{ key: 'name', label: 'Name', type: 'input' as const }]}
+                onFilterAdd={(f: FilterKeyWithValue) => {
+                  setInstanceSearchQuery(String(f.value ?? ''));
+                  setInstanceCurrentPage(1);
+                }}
+                selectedFilters={
+                  instanceSearchQuery
+                    ? [
+                        {
+                          id: 'search',
+                          key: 'name',
+                          label: 'Name',
+                          value: instanceSearchQuery,
+                          type: 'input' as const,
+                        },
+                      ]
+                    : []
+                }
+                placeholder="Search by attributes"
+                defaultFilterKey="name"
+                className="w-full max-w-[320px]"
+              />
               <Pagination
                 totalCount={filteredInstances.length}
                 size={instancesPerPage}

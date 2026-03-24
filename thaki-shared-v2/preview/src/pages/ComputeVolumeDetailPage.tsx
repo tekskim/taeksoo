@@ -748,25 +748,25 @@ export function ComputeVolumeDetailPage() {
       <EditVolumeDrawer
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
-        volumeId={v.id}
-        initialData={{ name: v.name, description: '' }}
+        volumeId={volume.id}
+        initialData={{ name: volume.name, description: '' }}
       />
       <ExtendVolumeDrawer
         isOpen={extendOpen}
         onClose={() => setExtendOpen(false)}
-        volumeName={v.name}
-        currentSizeLabel={v.size}
-        currentSizeGiB={volumeSizeToGiB(v.size)}
+        volumeName={volume.name}
+        currentSizeLabel={volume.size}
+        currentSizeGiB={parseInt(volume.size, 10) || 0}
       />
       <CreateVolumeSnapshotDrawer
         isOpen={snapshotOpen}
         onClose={() => setSnapshotOpen(false)}
-        volumeName={v.name}
+        volumeName={volume.name}
       />
       <CreateVolumeBackupDrawer
         isOpen={backupOpen}
         onClose={() => setBackupOpen(false)}
-        volumeName={v.name}
+        volumeName={volume.name}
       />
     </div>
   );
