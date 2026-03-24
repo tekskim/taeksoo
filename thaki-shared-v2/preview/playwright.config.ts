@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   outputDir: './test-results',
-  timeout: 120_000,
+  timeout: 600_000,
   expect: {
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.05,

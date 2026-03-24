@@ -636,6 +636,194 @@ test('Cloud Builder visual regression: capture + compare all pages', async ({ br
 
 /* ─── Storage visual regression ─── */
 
+/* ─── Compute pages ─── */
+
+const COMPUTE_PAGES = [
+  { name: 'cp-instances-list', path: '/compute/instances' },
+  { name: 'cp-instance-detail', path: '/compute/instances/vm-001' },
+  { name: 'cp-instance-create', path: '/compute/instances/create' },
+  { name: 'cp-instance-templates-list', path: '/compute/instance-templates' },
+  { name: 'cp-instance-template-detail', path: '/compute/instance-templates/tpl-001' },
+  { name: 'cp-instance-snapshots-list', path: '/compute/instance-snapshots' },
+  { name: 'cp-instance-snapshot-detail', path: '/compute/instance-snapshots/isnap-001' },
+  { name: 'cp-images-list', path: '/compute/images' },
+  { name: 'cp-image-detail', path: '/compute/images/img-001' },
+  { name: 'cp-image-create', path: '/compute/images/create' },
+  { name: 'cp-flavors-list', path: '/compute/flavors' },
+  { name: 'cp-flavor-detail', path: '/compute/flavors/flv-001' },
+  { name: 'cp-key-pairs-list', path: '/compute/key-pairs' },
+  { name: 'cp-key-pair-detail', path: '/compute/key-pairs/kp-001' },
+  { name: 'cp-server-groups-list', path: '/compute/server-groups' },
+  { name: 'cp-server-group-detail', path: '/compute/server-groups/sg-001' },
+  { name: 'cp-volumes-list', path: '/compute/volumes' },
+  { name: 'cp-volume-detail', path: '/compute/volumes/vol-001' },
+  { name: 'cp-volume-create', path: '/compute/volumes/create' },
+  { name: 'cp-volume-snapshots-list', path: '/compute/volume-snapshots' },
+  { name: 'cp-volume-snapshot-detail', path: '/compute/volume-snapshots/vsnap-001' },
+  { name: 'cp-volume-backups-list', path: '/compute/volume-backups' },
+  { name: 'cp-volume-backup-detail', path: '/compute/volume-backups/vbak-001' },
+  { name: 'cp-networks-list', path: '/compute/networks' },
+  { name: 'cp-network-detail', path: '/compute/networks/net-001' },
+  { name: 'cp-network-create', path: '/compute/networks/create' },
+  { name: 'cp-routers-list', path: '/compute/routers' },
+  { name: 'cp-router-detail', path: '/compute/routers/rtr-001' },
+  { name: 'cp-ports-list', path: '/compute/ports' },
+  { name: 'cp-port-detail', path: '/compute/ports/port-001' },
+  { name: 'cp-floating-ips-list', path: '/compute/floating-ips' },
+  { name: 'cp-floating-ip-detail', path: '/compute/floating-ips/fip-001' },
+  { name: 'cp-security-groups-list', path: '/compute/security-groups' },
+  { name: 'cp-security-group-detail', path: '/compute/security-groups/sg-001' },
+  { name: 'cp-load-balancers-list', path: '/compute/load-balancers' },
+  { name: 'cp-load-balancer-detail', path: '/compute/load-balancers/lb-001' },
+  { name: 'cp-load-balancer-create', path: '/compute/load-balancers/create' },
+  { name: 'cp-firewalls-list', path: '/compute/firewalls' },
+  { name: 'cp-firewall-detail', path: '/compute/firewalls/fw-001' },
+  { name: 'cp-certificates-list', path: '/compute/certificates' },
+  { name: 'cp-certificate-detail', path: '/compute/certificates/cert-001' },
+  { name: 'cp-dns-zones-list', path: '/compute/dns-zones' },
+  { name: 'cp-backup-policies-list', path: '/compute/backup-policies' },
+  { name: 'cp-scheduled-tasks-list', path: '/compute/scheduled-tasks' },
+];
+
+test('Compute content check: verify all pages render with correct components', async ({
+  browser,
+}) => {
+  const cpOutputDir = path.resolve(__dirname, '../../visual-report-compute');
+  fs.mkdirSync(path.join(cpOutputDir, 'screenshots'), { recursive: true });
+
+  const results: Array<{
+    page: string;
+    route: string;
+    status: 'PASS' | 'FAIL';
+    checks: string[];
+    errors: string[];
+  }> = [];
+
+  for (const pg of COMPUTE_PAGES) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const page = await context.newPage();
+    const errors: string[] = [];
+    const checks: string[] = [];
+
+    page.on('pageerror', (err) => errors.push(`JS Error: ${err.message}`));
+
+    try {
+      await page.goto(`${SHARED_BASE}${pg.path}`, { waitUntil: 'networkidle', timeout: 15000 });
+      await page.waitForTimeout(1000);
+
+      const hasSidebar = (await page.locator('aside').count()) > 0;
+      checks.push(hasSidebar ? 'Sidebar: present' : 'Sidebar: MISSING');
+
+      const hasTabBar = (await page.locator('[role="tab"], .bg-surface.h-9').count()) > 0;
+      checks.push(hasTabBar ? 'TabBar: present' : 'TabBar: MISSING');
+
+      const hasToolBar =
+        (await page.locator('nav[aria-label="Breadcrumb"], [class*="breadcrumb"]').count()) > 0;
+      checks.push(hasToolBar ? 'Breadcrumb: present' : 'Breadcrumb: not found');
+
+      const isListPage = pg.name.includes('-list');
+      const isDetailPage = pg.name.includes('-detail');
+      const isCreatePage = pg.name.includes('-create');
+
+      if (isListPage) {
+        const hasTitle = (await page.locator('main h2, main h1').count()) > 0;
+        checks.push(hasTitle ? 'Title: present' : 'Title: MISSING');
+
+        const hasTable = (await page.locator('main table').count()) > 0;
+        checks.push(hasTable ? 'Table: present' : 'Table: MISSING');
+
+        const hasPagination =
+          (await page.locator('[aria-label*="Page"], [class*="pagination"]').count()) > 0;
+        checks.push(hasPagination ? 'Pagination: present' : 'Pagination: not found');
+
+        const hasSearch =
+          (await page
+            .locator('main input[placeholder*="Search"], main input[placeholder*="search"]')
+            .count()) > 0;
+        checks.push(hasSearch ? 'Search: present' : 'Search: not found');
+      }
+
+      if (isDetailPage) {
+        const hasHeader =
+          (await page.locator('main h2, main h1, [class*="detail-header"]').count()) > 0;
+        checks.push(hasHeader ? 'Detail header: present' : 'Detail header: MISSING');
+
+        const hasTabs = (await page.locator('[role="tablist"], [role="tab"]').count()) > 0;
+        checks.push(hasTabs ? 'Tabs: present' : 'Tabs: not found');
+      }
+
+      if (isCreatePage) {
+        const hasTitle = (await page.locator('main h2, main h1').count()) > 0;
+        checks.push(hasTitle ? 'Title: present' : 'Title: MISSING');
+
+        const hasForm = (await page.locator('main input, main select, main textarea').count()) > 0;
+        checks.push(hasForm ? 'Form inputs: present' : 'Form inputs: MISSING');
+
+        const hasButtons = (await page.locator('main button').count()) > 0;
+        checks.push(hasButtons ? 'Buttons: present' : 'Buttons: MISSING');
+      }
+
+      const mainContent = await page.locator('main').textContent();
+      const isEmpty = !mainContent || mainContent.trim().length < 10;
+      if (isEmpty) errors.push('Main content is empty or too short');
+
+      await page.screenshot({
+        path: path.join(cpOutputDir, 'screenshots', `${pg.name}.png`),
+        fullPage: false,
+      });
+    } catch (err) {
+      errors.push(`Navigation error: ${(err as Error).message}`);
+    }
+
+    const hasCriticalMissing = checks.some((c) => c.includes('MISSING'));
+    const hasJsErrors = errors.length > 0;
+    const status = hasCriticalMissing || hasJsErrors ? 'FAIL' : 'PASS';
+
+    results.push({ page: pg.name, route: pg.path, status, checks, errors });
+    console.log(`  ${pg.name}: ${status} (${checks.length} checks, ${errors.length} errors)`);
+
+    await context.close();
+  }
+
+  const passCount = results.filter((r) => r.status === 'PASS').length;
+  const failCount = results.filter((r) => r.status === 'FAIL').length;
+
+  const report = [
+    '# Compute Content & Design Check Report',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    `Pages tested: ${results.length}`,
+    `PASS: ${passCount} | FAIL: ${failCount}`,
+    '',
+    '## Page-by-Page Results',
+    '',
+  ];
+
+  for (const r of results) {
+    report.push(`### ${r.page} (\`${r.route}\`) - **${r.status}**`);
+    report.push('');
+    if (r.checks.length > 0) {
+      report.push('**Component checks:**');
+      for (const c of r.checks) report.push(`- ${c}`);
+      report.push('');
+    }
+    if (r.errors.length > 0) {
+      report.push('**Errors:**');
+      for (const e of r.errors) report.push(`- ${e}`);
+      report.push('');
+    }
+  }
+
+  report.push('## Screenshots');
+  report.push(`All screenshots saved to: \`${path.join(cpOutputDir, 'screenshots')}\``);
+
+  fs.writeFileSync(path.join(cpOutputDir, 'REPORT.md'), report.join('\n'));
+  console.log(`\nReport: ${path.join(cpOutputDir, 'REPORT.md')}`);
+  console.log(`PASS: ${passCount}/${results.length}, FAIL: ${failCount}/${results.length}`);
+
+  expect(failCount).toBeLessThan(results.length * 0.2);
+});
+
 const STORAGE_PAGES = [
   // Home & Performance
   { name: 'st-home', path: '/storage' },
