@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { cn } from '../../services/utils/cn';
 import { Title } from '../Title';
+import { titleWrapperVariants } from '../Title/Title.styles';
 import { Skeleton } from '../Skeleton';
 
 // Tailwind styles
 const styles = {
-  container:
-    'flex flex-col gap-3 pt-3 px-4 pb-4 bg-surface border border-border rounded-base8',
+  container: 'flex flex-col gap-3 pt-3 px-4 pb-4 bg-surface border border-border rounded-base8',
   header: 'flex flex-col gap-4',
   actions: 'flex gap-[var(--component-layout-gap-xs)] items-center',
   infoGrid: 'flex gap-2 items-center w-full',
@@ -47,7 +47,8 @@ export interface DetailPageHeaderInfoField {
 }
 
 export interface DetailPageHeaderProps {
-  title: string;
+  /** Plain string uses `<Title />`; pass a React node for custom title UI (e.g. icon + tooltip). */
+  title: React.ReactNode;
   actions?: React.ReactNode;
   infoFields?: DetailPageHeaderInfoField[];
   /**
@@ -64,16 +65,12 @@ export interface DetailPageHeaderProps {
   isLoading?: boolean;
 }
 
-const CopyButton: React.FC<{ text: string }> = ({
-  text,
-}): React.ReactElement => {
+const CopyButton: React.FC<{ text: string }> = ({ text }): React.ReactElement => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = useCallback(async (): Promise<void> => {
     if (!navigator.clipboard || !window.isSecureContext) {
-      console.warn(
-        'Clipboard API is not available. Requires HTTPS (secure context).'
-      );
+      console.warn('Clipboard API is not available. Requires HTTPS (secure context).');
       return;
     }
 
@@ -140,18 +137,17 @@ const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({
   isLoading = false,
 }): React.ReactElement => {
   return (
-    <div
-      className={styles.container}
-      style={maxWidth ? { maxWidth: `${maxWidth}px` } : undefined}
-    >
+    <div className={styles.container} style={maxWidth ? { maxWidth: `${maxWidth}px` } : undefined}>
       {/* 헤더 */}
       <div className={styles.header}>
         {isLoading ? (
           <div className={styles.titleSkeleton}>
             <Skeleton />
           </div>
-        ) : (
+        ) : typeof title === 'string' ? (
           <Title title={title} />
+        ) : (
+          <h2 className={titleWrapperVariants({ size: 'large' })}>{title}</h2>
         )}
       </div>
 
@@ -164,10 +160,7 @@ const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({
           {infoFields.map((field, index) => (
             <div
               key={index}
-              className={cn(
-                styles.infoCard,
-                field.width && styles.infoCardFixed
-              )}
+              className={cn(styles.infoCard, field.width && styles.infoCardFixed)}
               style={field.width ? { width: `${field.width}px` } : undefined}
             >
               {isLoading ? (
@@ -189,9 +182,7 @@ const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({
                           <div className={cn(styles.infoValue, 'flex-1 min-w-0')}>
                             {field.value}
                           </div>
-                          {field.copyText && (
-                            <CopyButton text={field.copyText} />
-                          )}
+                          {field.copyText && <CopyButton text={field.copyText} />}
                         </div>
                       </>
                     ) : (
@@ -201,11 +192,7 @@ const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({
                       </>
                     )}
                   </div>
-                  {field.accessory && (
-                    <div className={styles.infoAccessory}>
-                      {field.accessory}
-                    </div>
-                  )}
+                  {field.accessory && <div className={styles.infoAccessory}>{field.accessory}</div>}
                 </>
               )}
             </div>

@@ -1,163 +1,688 @@
-import { useParams, useSearchParams } from 'react-router-dom';
-import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
+import { useState, type ReactNode } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
-import type { DetailCardField } from '@shared/components/DetailCard/DetailCard';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
-import { StatusIndicator } from '@shared/components/StatusIndicator';
-import { ContextMenu } from '@shared/components/ContextMenu';
-import { Tabs, Tab } from '@shared/components/Tabs';
-import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import { FormField } from '@shared/components/FormField';
+import { Input } from '@shared/components/Input';
+import { Textarea } from '@shared/components/Textarea';
+import { Toggle } from '@shared/components/Toggle';
+import { Dropdown } from '@shared/components/Dropdown';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { cn } from '@shared/services/utils/cn';
 
-type TemplateStatus = 'active' | 'disabled';
+type AccessType = 'Personal' | 'Project' | 'Public';
+type WizardSectionState = 'pre' | 'active' | 'done' | 'skipped' | 'writing';
 
 interface InstanceTemplateDetail {
   id: string;
   name: string;
-  status: TemplateStatus;
-  vCpu: string;
+  description: string;
+  image: string;
+  imageId: string;
+  flavor: string;
+  flavorId: string;
+  vcpu: number;
   ram: string;
   disk: string;
-  image: string;
+  systemDisk: string;
+  dataDisk: string;
+  network: string;
+  networkId: string;
+  subnet: string;
+  subnetId: string;
+  securityGroups: string[];
+  floatingIp: string;
+  port: string;
   keyPair: string;
+  access: AccessType;
+  favorite: boolean;
   createdAt: string;
+  createdBy: string;
   availabilityZone: string;
-  description: string;
-  metadata: string;
+  serverGroup: string;
+  userData: string;
+  tags: { key: string; value: string }[];
 }
 
-const mockMap: Record<string, InstanceTemplateDetail> = {
+type SectionStep = 'template-info' | 'basic-info' | 'source' | 'flavor' | 'network' | 'advanced';
+
+const SECTION_LABELS: Record<SectionStep, string> = {
+  'template-info': 'Template Information',
+  'basic-info': 'Basic information',
+  source: 'Source',
+  flavor: 'Flavor',
+  network: 'Network',
+  advanced: 'Advanced',
+};
+
+const SECTION_ORDER: SectionStep[] = [
+  'template-info',
+  'basic-info',
+  'source',
+  'flavor',
+  'network',
+  'advanced',
+];
+
+const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
   'tpl-001': {
     id: 'tpl-001',
-    name: 'web-standard',
-    status: 'active',
-    vCpu: '4',
-    ram: '8 GiB',
-    disk: '80 GiB',
-    image: 'Ubuntu 24.04',
-    keyPair: 'default-key',
-    createdAt: 'Mar 10, 2025 09:12:00',
-    availabilityZone: 'keystone',
-    description: 'Standard web tier template with balanced CPU and memory.',
-    metadata: 'team=web, env=shared',
+    name: 'hj-small',
+    description: '-',
+    image: 'Ubuntu 22.04 LTS',
+    imageId: 'img-ubuntu-2204',
+    flavor: 'm1.medium',
+    flavorId: 'flv-m1-medium',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '10GiB',
+    systemDisk: '30 GiB',
+    dataDisk: '-',
+    network: '-',
+    networkId: '',
+    subnet: '-',
+    subnetId: '',
+    securityGroups: [],
+    floatingIp: '-',
+    port: '-',
+    keyPair: 'my-keypair',
+    access: 'Personal',
+    favorite: true,
+    createdAt: 'Jul 25, 2025 10:32:16',
+    createdBy: 'admin@thaki.cloud',
+    availabilityZone: 'nova',
+    serverGroup: '-',
+    userData: '-',
+    tags: [],
   },
   'tpl-002': {
     id: 'tpl-002',
-    name: 'db-optimized',
-    status: 'active',
-    vCpu: '8',
-    ram: '32 GiB',
-    disk: '200 GiB',
-    image: 'PostgreSQL 16 (Rocky 9)',
-    keyPair: 'db-key',
-    createdAt: 'Mar 8, 2025 14:30:22',
+    name: 'My-web-template',
+    description: '-',
+    image: 'ubuntu 22.04',
+    imageId: 'img-ubuntu-2204',
+    flavor: 'th.medium',
+    flavorId: 'flv-th-medium',
+    vcpu: 2,
+    ram: '4GiB',
+    disk: '40GiB',
+    systemDisk: '30 GiB',
+    dataDisk: '-',
+    network: '-',
+    networkId: '',
+    subnet: '-',
+    subnetId: '',
+    securityGroups: [],
+    floatingIp: '-',
+    port: '-',
+    keyPair: 'my-keypair',
+    access: 'Project',
+    favorite: false,
+    createdAt: 'Jul 24, 2025 03:19:59',
+    createdBy: 'admin@thaki.cloud',
     availabilityZone: 'nova',
-    description: 'High-memory profile for database workloads.',
-    metadata: 'role=database',
+    serverGroup: '-',
+    userData: '-',
+    tags: [],
+  },
+  'tpl-003': {
+    id: 'tpl-003',
+    name: 'db-template',
+    description: 'Database server template',
+    image: 'CentOS 8',
+    imageId: 'img-centos-8',
+    flavor: 'm1.xlarge',
+    flavorId: 'flv-m1-xlarge',
+    vcpu: 32,
+    ram: '64GiB',
+    disk: '200GiB',
+    systemDisk: '200 GiB',
+    dataDisk: '500 GiB',
+    network: 'db-net',
+    networkId: 'net-db-001',
+    subnet: '10.0.1.0/24',
+    subnetId: 'subnet-002',
+    securityGroups: ['default', 'db-access'],
+    floatingIp: '-',
+    port: '-',
+    keyPair: 'db-keypair',
+    access: 'Personal',
+    favorite: false,
+    createdAt: 'Jul 23, 2025 20:06:42',
+    createdBy: 'admin@thaki.cloud',
+    availabilityZone: 'nova',
+    serverGroup: 'db-group',
+    userData: '',
+    tags: [],
   },
 };
 
-const defaultDetail: InstanceTemplateDetail = {
-  id: '-',
-  name: 'Unknown template',
-  status: 'disabled',
-  vCpu: '-',
+const defaultTemplateDetail: InstanceTemplateDetail = {
+  id: 'tpl-default',
+  name: 'Unknown Template',
+  description: '-',
+  image: '-',
+  imageId: '',
+  flavor: '-',
+  flavorId: '',
+  vcpu: 0,
   ram: '-',
   disk: '-',
-  image: '-',
+  systemDisk: '-',
+  dataDisk: '-',
+  network: '-',
+  networkId: '',
+  subnet: '-',
+  subnetId: '',
+  securityGroups: [],
+  floatingIp: '-',
+  port: '-',
   keyPair: '-',
+  access: 'Personal',
+  favorite: false,
   createdAt: '-',
+  createdBy: '-',
   availabilityZone: '-',
-  description: '-',
-  metadata: '-',
+  serverGroup: '-',
+  userData: '',
+  tags: [],
 };
 
-function statusVariant(s: TemplateStatus): StatusVariant {
-  return s === 'active' ? 'active' : 'shutoff';
+const availabilityZoneOptions = [
+  { value: 'nova', label: 'nova' },
+  { value: 'az-1', label: 'az-1' },
+  { value: 'az-2', label: 'az-2' },
+];
+
+const imageOptions = [
+  { value: 'Ubuntu 22.04 LTS', label: 'Ubuntu 22.04 LTS' },
+  { value: 'Ubuntu 20.04 LTS', label: 'Ubuntu 20.04 LTS' },
+  { value: 'CentOS 8', label: 'CentOS 8' },
+  { value: 'Rocky Linux 9', label: 'Rocky Linux 9' },
+];
+
+const flavorOptions = [
+  { value: 'm1.small', label: 'm1.small (1 vCPU / 2GiB / 20GiB)' },
+  { value: 'm1.medium', label: 'm1.medium (2 vCPU / 4GiB / 40GiB)' },
+  { value: 'm1.large', label: 'm1.large (4 vCPU / 8GiB / 80GiB)' },
+  { value: 'm1.xlarge', label: 'm1.xlarge (8 vCPU / 16GiB / 160GiB)' },
+];
+
+function DoneSection({
+  title,
+  onEdit,
+  children,
+}: {
+  title: string;
+  onEdit: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <SectionCard>
+      <SectionCard.Header
+        title={title}
+        actions={
+          <Button variant="secondary" appearance="outline" size="sm" onClick={onEdit}>
+            <IconEdit size={12} stroke={1.5} /> Edit
+          </Button>
+        }
+      />
+      <SectionCard.Content>{children}</SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+function ActiveSection({
+  title,
+  onSave,
+  onCancel,
+  children,
+}: {
+  title: string;
+  onSave: () => void;
+  onCancel: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <SectionCard isActive>
+      <SectionCard.Header
+        title={title}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" appearance="outline" size="sm" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" size="sm" onClick={onSave}>
+              Done
+            </Button>
+          </div>
+        }
+      />
+      <SectionCard.Content>{children}</SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+function statusLabel(s: WizardSectionState): string {
+  if (s === 'done') return 'Done';
+  if (s === 'active') return 'Active';
+  if (s === 'writing') return 'Writing';
+  if (s === 'skipped') return 'Skipped';
+  return 'Pre';
+}
+
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onSave,
+  onDelete,
+}: {
+  sectionStatus: Record<SectionStep, WizardSectionState>;
+  onCancel: () => void;
+  onSave: () => void;
+  onDelete: () => void;
+}) {
+  const isAllDone = SECTION_ORDER.every((key) => sectionStatus[key] === 'done');
+
+  return (
+    <div className="w-[280px] shrink-0 self-start">
+      <div className="flex flex-col gap-4 p-4 bg-surface border border-border rounded-base8">
+        <h3 className="text-14 font-semibold leading-5 text-text m-0">Summary</h3>
+        <ul className="list-none m-0 p-0 flex flex-col gap-2">
+          {SECTION_ORDER.map((key) => (
+            <li
+              key={key}
+              className="flex items-center justify-between gap-2 text-12 leading-18 text-text"
+            >
+              <span className="text-text-muted">{SECTION_LABELS[key]}</span>
+              <span className="font-medium text-text">{statusLabel(sectionStatus[key])}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="flex gap-2">
+          <Button variant="secondary" appearance="outline" onClick={onCancel} className="w-20">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={onSave} className="flex-1" disabled={!isAllDone}>
+            Save
+          </Button>
+        </div>
+      </div>
+      <div className="flex justify-center mt-4">
+        <Button
+          variant="secondary"
+          appearance="outline"
+          size="sm"
+          onClick={onDelete}
+          className="w-20 h-8"
+        >
+          <IconTrash size={12} stroke={1.5} /> Delete
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export function ComputeInstanceTemplateDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'details';
+  const navigate = useNavigate();
+  const originalTemplate = id
+    ? mockTemplatesMap[id] || defaultTemplateDetail
+    : defaultTemplateDetail;
 
-  const t = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
+  const [formData, setFormData] = useState<InstanceTemplateDetail>(originalTemplate);
+  const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
+  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>(
+    () => {
+      const initial = {} as Record<SectionStep, WizardSectionState>;
+      SECTION_ORDER.forEach((key) => {
+        initial[key] = 'done';
+      });
+      return initial;
+    }
+  );
+
+  const handleCancel = () => navigate('/compute/instance-templates');
+  const handleSave = () => {
+    navigate('/compute/instance-templates');
+  };
+  const handleDelete = () => {
+    if (window.confirm('Removing the selected instances is permanent and cannot be undone.')) {
+      navigate('/compute/instance-templates');
+    }
+  };
+
+  const handleEdit = (section: SectionStep) => {
+    setEditingSection(section);
+    setSectionStatus((prev) => ({ ...prev, [section]: 'active' }));
+  };
+
+  const handleSectionSave = (section: SectionStep) => {
+    setEditingSection(null);
+    setSectionStatus((prev) => ({ ...prev, [section]: 'done' }));
+  };
+
+  const handleSectionCancel = (section: SectionStep) => {
+    setFormData((prev) => {
+      const updated = { ...prev };
+      if (section === 'template-info') {
+        updated.name = originalTemplate.name;
+        updated.description = originalTemplate.description;
+        updated.favorite = originalTemplate.favorite;
+      } else if (section === 'basic-info') {
+        updated.availabilityZone = originalTemplate.availabilityZone;
+      } else if (section === 'source') {
+        updated.image = originalTemplate.image;
+        updated.systemDisk = originalTemplate.systemDisk;
+        updated.dataDisk = originalTemplate.dataDisk;
+      } else if (section === 'flavor') {
+        updated.flavor = originalTemplate.flavor;
+      } else if (section === 'network') {
+        updated.network = originalTemplate.network;
+        updated.floatingIp = originalTemplate.floatingIp;
+        updated.securityGroups = originalTemplate.securityGroups;
+        updated.port = originalTemplate.port;
+      } else if (section === 'advanced') {
+        updated.tags = originalTemplate.tags;
+        updated.userData = originalTemplate.userData;
+      }
+      return updated;
+    });
+    setEditingSection(null);
+    setSectionStatus((prev) => ({ ...prev, [section]: 'done' }));
+  };
+
+  const updateFormData = <K extends keyof InstanceTemplateDetail>(
+    key: K,
+    value: InstanceTemplateDetail[K]
+  ) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const headerTitle = (
+    <span className="inline-flex items-center gap-1 flex-wrap">
+      <span>Edit template</span>
+      <span className="text-11 font-medium leading-4 text-text-muted">(ID: {formData.id})</span>
+    </span>
+  );
 
   const infoFields: DetailPageHeaderInfoField[] = [
-    { label: 'Name', value: t.name },
-    {
-      label: 'Status',
-      value: t.status === 'active' ? 'Active' : 'Disabled',
-      accessory: <StatusIndicator variant={statusVariant(t.status)} layout="iconOnly" />,
-    },
-    { label: 'vCPU', value: t.vCpu },
-    { label: 'RAM', value: t.ram },
-    { label: 'Disk', value: t.disk },
-    { label: 'Image', value: t.image },
-    { label: 'Key pair', value: t.keyPair },
-    { label: 'Created at', value: t.createdAt },
+    { label: 'Created at', value: formData.createdAt },
+    { label: 'Created by', value: formData.createdBy },
+    { label: 'Access', value: formData.access },
+    { label: 'Key pair', value: formData.keyPair },
   ];
 
-  const basicFields: DetailCardField[] = [
-    { label: 'Template name', value: t.name },
-    { label: 'Template ID', value: t.id },
-    { label: 'Status', value: t.status === 'active' ? 'Active' : 'Disabled' },
-    { label: 'Availability zone', value: t.availabilityZone },
-    { label: 'Description', value: t.description },
-    { label: 'Created at', value: t.createdAt },
-  ];
-
-  const configFields: DetailCardField[] = [
-    { label: 'vCPU', value: t.vCpu },
-    { label: 'RAM', value: t.ram },
-    { label: 'Root disk', value: t.disk },
-    { label: 'Image', value: t.image },
-    { label: 'Key pair', value: t.keyPair },
-    { label: 'Metadata', value: t.metadata },
-  ];
-
-  const actions = (
-    <ContextMenu.Root
-      direction="bottom-end"
-      gap={4}
-      trigger={({ toggle }) => (
-        <Button variant="secondary" appearance="outline" size="sm" onClick={toggle}>
-          Actions <IconChevronDown size={12} stroke={1.5} />
-        </Button>
-      )}
-    >
-      <ContextMenu.Item action={() => {}}>
-        <span className="inline-flex items-center gap-1">
-          <IconEdit size={12} stroke={1.5} /> Edit
-        </span>
-      </ContextMenu.Item>
-      <ContextMenu.Item action={() => {}} danger>
-        <span className="inline-flex items-center gap-1">
-          <IconTrash size={12} stroke={1.5} /> Delete
-        </span>
-      </ContextMenu.Item>
-    </ContextMenu.Root>
-  );
+  const fieldStack = 'flex flex-col gap-4 w-full';
 
   return (
     <div className="flex flex-col gap-6 min-w-0">
-      <DetailPageHeader title={t.name} actions={actions} infoFields={infoFields} />
+      <DetailPageHeader title={headerTitle} infoFields={infoFields} />
 
-      <div className="w-full">
-        <Tabs
-          activeTabId={activeTab}
-          onChange={(tab) => setSearchParams({ tab }, { replace: true })}
-          variant="line"
-          size="sm"
-        >
-          <Tab id="details" label="Details">
-            <div className="flex flex-col gap-4 pt-4">
-              <DetailCard title="Basic information" fields={basicFields} />
-              <DetailCard title="Configuration" fields={configFields} />
-            </div>
-          </Tab>
-        </Tabs>
+      <div className={cn('flex gap-6 items-start w-full')}>
+        <div className="flex flex-col gap-4 flex-1 min-w-0">
+          {editingSection === 'template-info' ? (
+            <ActiveSection
+              title={SECTION_LABELS['template-info']}
+              onSave={() => handleSectionSave('template-info')}
+              onCancel={() => handleSectionCancel('template-info')}
+            >
+              <div className={fieldStack}>
+                <FormField label="Template name">
+                  <Input
+                    value={formData.name}
+                    onChange={(e) => updateFormData('name', e.target.value)}
+                    className="w-full"
+                  />
+                </FormField>
+                <FormField label="Favorite">
+                  <Toggle
+                    checked={formData.favorite}
+                    onChange={(e) => updateFormData('favorite', e.target.checked)}
+                  />
+                </FormField>
+                <FormField label="Description">
+                  <Textarea
+                    value={formData.description === '-' ? '' : formData.description}
+                    onChange={(e) => updateFormData('description', e.target.value || '-')}
+                    rows={3}
+                    className="w-full"
+                  />
+                </FormField>
+              </div>
+            </ActiveSection>
+          ) : (
+            <DoneSection
+              title={SECTION_LABELS['template-info']}
+              onEdit={() => handleEdit('template-info')}
+            >
+              <SectionCard.DataRow label="Template name" value={formData.name} />
+              <SectionCard.DataRow label="Favorite" value={formData.favorite ? 'Yes' : '-'} />
+              <SectionCard.DataRow label="Description" value={formData.description} />
+            </DoneSection>
+          )}
+
+          {editingSection === 'basic-info' ? (
+            <ActiveSection
+              title={SECTION_LABELS['basic-info']}
+              onSave={() => handleSectionSave('basic-info')}
+              onCancel={() => handleSectionCancel('basic-info')}
+            >
+              <FormField label="Availability zone">
+                <Dropdown.Select
+                  value={formData.availabilityZone}
+                  onChange={(v) => updateFormData('availabilityZone', v)}
+                  placeholder="Select AZ"
+                  className="w-full"
+                >
+                  {availabilityZoneOptions.map((o) => (
+                    <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                  ))}
+                </Dropdown.Select>
+              </FormField>
+            </ActiveSection>
+          ) : (
+            <DoneSection
+              title={SECTION_LABELS['basic-info']}
+              onEdit={() => handleEdit('basic-info')}
+            >
+              <SectionCard.DataRow label="Availability zone" value={formData.availabilityZone} />
+            </DoneSection>
+          )}
+
+          {editingSection === 'source' ? (
+            <ActiveSection
+              title={SECTION_LABELS.source}
+              onSave={() => handleSectionSave('source')}
+              onCancel={() => handleSectionCancel('source')}
+            >
+              <div className={fieldStack}>
+                <FormField label="Image">
+                  <Dropdown.Select
+                    value={formData.image}
+                    onChange={(v) => updateFormData('image', v)}
+                    placeholder="Select image"
+                    className="w-full"
+                  >
+                    {imageOptions.map((o) => (
+                      <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                    ))}
+                  </Dropdown.Select>
+                </FormField>
+                <FormField label="System disk">
+                  <Input
+                    value={formData.systemDisk}
+                    onChange={(e) => updateFormData('systemDisk', e.target.value)}
+                    className="w-full"
+                  />
+                </FormField>
+                <FormField label="Data disk">
+                  <Input
+                    value={formData.dataDisk === '-' ? '' : formData.dataDisk}
+                    onChange={(e) => updateFormData('dataDisk', e.target.value || '-')}
+                    placeholder="Optional"
+                    className="w-full"
+                  />
+                </FormField>
+              </div>
+            </ActiveSection>
+          ) : (
+            <DoneSection title={SECTION_LABELS.source} onEdit={() => handleEdit('source')}>
+              <SectionCard.DataRow label="Image" value={formData.image} />
+              <SectionCard.DataRow label="System disk" value={formData.systemDisk} />
+              <SectionCard.DataRow label="Data disk" value={formData.dataDisk} />
+            </DoneSection>
+          )}
+
+          {editingSection === 'flavor' ? (
+            <ActiveSection
+              title={SECTION_LABELS.flavor}
+              onSave={() => handleSectionSave('flavor')}
+              onCancel={() => handleSectionCancel('flavor')}
+            >
+              <FormField label="Flavor">
+                <Dropdown.Select
+                  value={formData.flavor}
+                  onChange={(v) => updateFormData('flavor', v)}
+                  placeholder="Select flavor"
+                  className="w-full"
+                >
+                  {flavorOptions.map((o) => (
+                    <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                  ))}
+                </Dropdown.Select>
+              </FormField>
+            </ActiveSection>
+          ) : (
+            <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
+              <SectionCard.DataRow
+                label="Flavor"
+                value={`${formData.flavor} (${formData.vcpu} vCPU / ${formData.ram} / ${formData.disk})`}
+              />
+            </DoneSection>
+          )}
+
+          {editingSection === 'network' ? (
+            <ActiveSection
+              title={SECTION_LABELS.network}
+              onSave={() => handleSectionSave('network')}
+              onCancel={() => handleSectionCancel('network')}
+            >
+              <div className={fieldStack}>
+                <FormField label="Network">
+                  <Input
+                    value={formData.network === '-' ? '' : formData.network}
+                    onChange={(e) => updateFormData('network', e.target.value || '-')}
+                    placeholder="Select network"
+                    className="w-full"
+                  />
+                </FormField>
+                <FormField label="Floating IP">
+                  <Input
+                    value={formData.floatingIp === '-' ? '' : formData.floatingIp}
+                    onChange={(e) => updateFormData('floatingIp', e.target.value || '-')}
+                    placeholder="Optional"
+                    className="w-full"
+                  />
+                </FormField>
+                <FormField label="Security groups">
+                  <Input
+                    value={formData.securityGroups.join(', ')}
+                    onChange={(e) =>
+                      updateFormData(
+                        'securityGroups',
+                        e.target.value
+                          .split(',')
+                          .map((s) => s.trim())
+                          .filter(Boolean)
+                      )
+                    }
+                    placeholder="Comma-separated"
+                    className="w-full"
+                  />
+                </FormField>
+                <FormField label="Port">
+                  <Input
+                    value={formData.port === '-' ? '' : formData.port}
+                    onChange={(e) => updateFormData('port', e.target.value || '-')}
+                    placeholder="Optional"
+                    className="w-full"
+                  />
+                </FormField>
+              </div>
+            </ActiveSection>
+          ) : (
+            <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
+              <SectionCard.DataRow label="Network" value={formData.network} />
+              <SectionCard.DataRow label="Floating IP" value={formData.floatingIp} />
+              <SectionCard.DataRow
+                label="Security group"
+                value={
+                  formData.securityGroups.length > 0 ? formData.securityGroups.join(', ') : '-'
+                }
+              />
+              <SectionCard.DataRow label="Port" value={formData.port} />
+            </DoneSection>
+          )}
+
+          {editingSection === 'advanced' ? (
+            <ActiveSection
+              title={SECTION_LABELS.advanced}
+              onSave={() => handleSectionSave('advanced')}
+              onCancel={() => handleSectionCancel('advanced')}
+            >
+              <div className={fieldStack}>
+                <FormField label="Tags" hint="Enter tags as key:value pairs, separated by commas">
+                  <Input
+                    value={formData.tags.map((t) => `${t.key}:${t.value}`).join(', ')}
+                    onChange={(e) => {
+                      const tags = e.target.value
+                        .split(',')
+                        .map((s) => {
+                          const [key, value] = s.trim().split(':');
+                          return { key: key || '', value: value || '' };
+                        })
+                        .filter((t) => t.key);
+                      updateFormData('tags', tags);
+                    }}
+                    placeholder="key:value, key:value"
+                    className="w-full"
+                  />
+                </FormField>
+                <FormField label="User data">
+                  <Textarea
+                    value={formData.userData === '-' ? '' : formData.userData}
+                    onChange={(e) => updateFormData('userData', e.target.value || '-')}
+                    rows={5}
+                    placeholder="Enter cloud-init script or user data"
+                    className="w-full"
+                  />
+                </FormField>
+              </div>
+            </ActiveSection>
+          ) : (
+            <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
+              <SectionCard.DataRow
+                label="Tag"
+                value={
+                  formData.tags.length > 0
+                    ? formData.tags.map((t) => `${t.key}: ${t.value}`).join(', ')
+                    : '-'
+                }
+              />
+              <SectionCard.DataRow label="User data" value={formData.userData || '-'} />
+            </DoneSection>
+          )}
+        </div>
+
+        <SummarySidebar
+          sectionStatus={sectionStatus}
+          onCancel={handleCancel}
+          onSave={handleSave}
+          onDelete={handleDelete}
+        />
       </div>
     </div>
   );

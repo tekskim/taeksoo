@@ -62,13 +62,14 @@ export * from './Dim'; // Background overlay
 export * from './Overlay'; // Overlay.Template: type="modal" | "drawer-horizontal"
 export * from './ResourceActionModal'; // Resource action confirmation modal
 export * from './Tooltip'; // Hover tooltip
+export * from './Popover'; // Interactive popover (click/hover trigger, arrow, positioning)
 
 // ============================================================================
 // DATA DISPLAY
 // Tables, cards, lists
 // ============================================================================
 export * from './CardList'; // Card grid
-export * from './DetailCard'; // Key-value display
+export * from './SectionCard'; // Section card with compound API (Header, Content, DataRow)
 export * from './DetailPageHeader';
 export * from './EmptyUI'; // Empty state for tables/lists
 export * from './FloatingCard';
