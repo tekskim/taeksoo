@@ -268,7 +268,7 @@ export function ComputeLayout() {
           langButton={null}
         />
 
-        <main className="flex-1 overflow-auto pt-4 px-8 pb-20 content-scroll">
+        <main className="flex-1 overflow-auto py-6 px-8 content-scroll">
           <Outlet />
         </main>
       </div>

@@ -36,8 +36,7 @@ export const sidebarStyles = cva(
 );
 
 // Sidebar content container - px: 12px, no vertical padding (header sits flush)
-export const sidebarContentStyles =
-  'px-3 py-2 h-full flex flex-col overflow-hidden';
+export const sidebarContentStyles = 'px-3 py-2 h-full flex flex-col overflow-hidden';
 
 // Sidebar title
 export const sidebarTitleStyles = 'text-text font-semibold m-0';
@@ -47,8 +46,7 @@ export const sidebarToggleStyles =
   'py-xs px-sm rounded-sm transition-all min-w-[32px] min-h-[32px] hover:bg-surface-hover hover:scale-105 active:bg-surface-pressed active:scale-[0.98]';
 
 // Menu area - py: 8px, gap between sections: 16px
-export const sidebarMenuStyles =
-  'flex-1 flex flex-col overflow-y-auto min-h-0';
+export const sidebarMenuStyles = 'flex-1 flex flex-col overflow-y-auto min-h-0';
 
 // Fixed menu item (Dashboard, Home, etc.) - py: 6px, px: 8px, gap: 6px, radius: 6px
 export const fixedMenuItemStyles = cva(
@@ -72,17 +70,17 @@ export const fixedMenuItemStyles = cva(
   }
 );
 
-// Fixed menu text - 11px Regular/Medium (matches TDS text-body-sm)
+// Fixed menu text - 11px Regular (matches TDS text-body-sm)
 export const fixedMenuTextStyles = cva(
   [
-    'font-sans text-[length:var(--semantic-font-size11,0.6875rem)] leading-[var(--semantic-font-lineHeight16,1rem)] m-0',
+    'font-sans text-[length:var(--semantic-font-size11,0.6875rem)] leading-[var(--semantic-font-lineHeight16,1rem)] font-normal m-0',
     'text-text',
   ],
   {
     variants: {
       active: {
-        true: 'font-medium text-primary',
-        false: 'font-normal',
+        true: 'text-primary',
+        false: '',
       },
     },
     defaultVariants: {
@@ -119,8 +117,7 @@ export const accordionArrowStyles =
 export const accordionArrowOpenStyles = 'rotate-90';
 
 // Accordion content - gap between header and menu: 6px (matches TDS MenuSection VStack gap={1.5})
-export const accordionContentStyles =
-  'p-0 mt-1.5 flex flex-col gap-0 bg-transparent';
+export const accordionContentStyles = 'p-0 mt-1.5 flex flex-col gap-0 bg-transparent';
 
 // Submenu item - py: 6px, px: 8px, gap: 6px, radius: 6px
 export const submenuItemStyles = cva(
@@ -145,17 +142,17 @@ export const submenuItemStyles = cva(
   }
 );
 
-// Submenu text - 11px Regular/Medium (matches TDS text-body-sm)
+// Submenu text - 11px Regular (matches TDS text-body-sm)
 export const submenuTextStyles = cva(
   [
-    'font-sans text-[length:var(--semantic-font-size11,0.6875rem)] leading-[var(--semantic-font-lineHeight16,1rem)] whitespace-nowrap m-0',
+    'font-sans text-[length:var(--semantic-font-size11,0.6875rem)] leading-[var(--semantic-font-lineHeight16,1rem)] whitespace-nowrap font-normal m-0',
     'text-text',
   ],
   {
     variants: {
       active: {
-        true: 'font-medium text-primary',
-        false: 'font-normal',
+        true: 'text-primary',
+        false: '',
       },
     },
     defaultVariants: {
