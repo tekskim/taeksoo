@@ -9,11 +9,12 @@ import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { ActionModal } from '@shared/components/ActionModal';
 import { CreateLayout } from '@shared/components/CreateLayout';
 import { FloatingCard } from '@shared/components/FloatingCard';
-import { Fieldset } from '@shared/components/Fieldset';
-import Layout from '@shared/components/Layout';
+import { Stepper } from '@shared/components/Stepper';
+import { Tag } from '@shared/components/Tag';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
 
 interface User {
   id: string;
@@ -128,11 +129,14 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const STEP_IDS = ['basic', 'users'] as const;
+
 export function IAMCreateUserGroupPage() {
   const navigate = useNavigate();
 
   const [submitted, setSubmitted] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [allComplete, setAllComplete] = useState(false);
 
   const [groupName, setGroupName] = useState('');
   const [description, setDescription] = useState('');
@@ -141,8 +145,12 @@ export function IAMCreateUserGroupPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [stepStatuses, setStepStatuses] = useState<Record<string, FloatingCardStatus>>({
+    basic: 'processing',
+    users: 'default',
+  });
+
   const nameError = submitted && !groupName.trim() ? 'Group name is required.' : null;
-  const basicInfoFilled = !!groupName.trim();
 
   const filteredUsers = useMemo(() => {
     if (appliedFilters.length === 0) return mockUsers;
@@ -165,6 +173,37 @@ export function IAMCreateUserGroupPage() {
     setCurrentPage(1);
   }, []);
 
+  const validateBasicInfo = useCallback((): boolean => {
+    setSubmitted(true);
+    return !!groupName.trim();
+  }, [groupName]);
+
+  const handleStepChange = useCallback(
+    ({ current }: { prev: string | number; current: string | number }) => {
+      setStepStatuses((prev) => {
+        const next = { ...prev };
+        for (const id of STEP_IDS) {
+          if (id === current) {
+            next[id] = 'processing';
+          } else if (prev[id] === 'processing') {
+            next[id] = 'writing';
+          }
+        }
+        return next;
+      });
+    },
+    []
+  );
+
+  const handleAllComplete = useCallback(() => {
+    setAllComplete(true);
+    setStepStatuses((prev) => {
+      const next = { ...prev };
+      for (const id of STEP_IDS) next[id] = 'success';
+      return next;
+    });
+  }, []);
+
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'username', header: 'Username' },
@@ -182,11 +221,8 @@ export function IAMCreateUserGroupPage() {
           sections={[
             {
               items: [
-                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
-                {
-                  label: 'Add users to the group',
-                  status: selectedUsers.length > 0 ? 'success' : undefined,
-                },
+                { label: 'Basic information', status: stepStatuses.basic },
+                { label: 'Add users to the group', status: stepStatuses.users },
               ],
             },
           ]}
@@ -196,100 +232,178 @@ export function IAMCreateUserGroupPage() {
             if (!groupName.trim()) return;
             setConfirmOpen(true);
           }}
-          actionEnabled
+          actionEnabled={allComplete}
           cancelLabel="Cancel"
           actionLabel="Create"
         />
       }
     >
-      <Layout.VStack gap="md">
-        <Fieldset legend="Basic information" variant="bordered" active>
-          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
-            <div className="col-span-4">
-              <div className="text-12 font-medium text-text">
-                Group name <span className="text-error">*</span>
+      <Stepper
+        stepIds={STEP_IDS}
+        defaultOpenedId="basic"
+        onAllStepsCompleted={handleAllComplete}
+        onStepChange={handleStepChange}
+      >
+        {[
+          {
+            id: 'basic' as const,
+            label: 'Basic information',
+            onComplete: validateBasicInfo,
+            editUI: (
+              <div className="flex flex-col gap-0">
+                <div className="py-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-13 font-medium text-text">
+                        Group name <span className="text-error">*</span>
+                      </span>
+                      <span className="text-12 text-text-muted">
+                        Enter a unique name for the user group. This will be used to identify the
+                        group across the system.
+                      </span>
+                    </div>
+                    <Input
+                      placeholder="e.g. dev-admin-group"
+                      value={groupName}
+                      onChange={(e) => setGroupName(e.target.value)}
+                      error={!!nameError}
+                    />
+                    <span className="text-11 text-text-subtle">
+                      You can use letters, numbers, and special characters (-_.), and the length
+                      must be between 3-64 characters.
+                    </span>
+                    {nameError && <span className="text-11 text-error">{nameError}</span>}
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-border-muted" />
+
+                <div className="py-6">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-13 font-medium text-text">Description</span>
+                      <span className="text-12 text-text-muted">Optional group description</span>
+                    </div>
+                    <Input
+                      placeholder="e.g. Development team administrators"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <span className="text-11 text-text-subtle">
+                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                      maximum 255 characters.
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-1 text-11 text-text-muted">2-64 characters</div>
-            </div>
-            <div className="col-span-8">
-              <Input
-                placeholder="e.g. dev-admin-group"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
-                error={!!nameError}
-              />
-              {nameError && <span className="text-11 text-error mt-1 block">{nameError}</span>}
-            </div>
+            ),
+            doneUI: (
+              <div className="flex flex-col gap-3 py-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Group name</span>
+                  <span className="text-12 text-text">{groupName}</span>
+                </div>
+                <div className="h-px w-full bg-border-muted" />
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Description</span>
+                  <span className="text-12 text-text">{description || '-'}</span>
+                </div>
+              </div>
+            ),
+          },
+          {
+            id: 'users' as const,
+            label: 'Add users to the group',
+            skippable: true,
+            editUI: (
+              <div className="flex flex-col gap-3">
+                <span className="text-12 text-text-muted">
+                  Select users to include in this group. All selected users will receive the
+                  group&apos;s assigned roles and policies.
+                </span>
 
-            <div className="col-span-4">
-              <div className="text-12 font-medium text-text">Description</div>
-              <div className="mt-1 text-11 text-text-muted">Optional group description</div>
-            </div>
-            <div className="col-span-8">
-              <Input
-                placeholder="e.g. Development team administrators"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-          </div>
-        </Fieldset>
+                <FilterSearchInput
+                  filterKeys={filterKeys}
+                  onFilterAdd={handleFilterAdd}
+                  selectedFilters={appliedFilters}
+                  placeholder="Search users by attributes"
+                  defaultFilterKey="username"
+                />
 
-        <Fieldset
-          legend="Add users to the group"
-          description="Select users to add to this group. You can skip this step."
-          variant="bordered"
-          active
-        >
-          <div className="flex flex-col gap-3">
-            <FilterSearchInput
-              filterKeys={filterKeys}
-              onFilterAdd={handleFilterAdd}
-              selectedFilters={appliedFilters}
-              placeholder="Search users by attributes"
-              defaultFilterKey="username"
-            />
+                <Pagination
+                  totalCount={filteredUsers.length}
+                  size={itemsPerPage}
+                  currentAt={currentPage}
+                  onPageChange={setCurrentPage}
+                  totalCountLabel="users"
+                  selectedCount={selectedUsers.length}
+                />
 
-            <Pagination
-              totalCount={filteredUsers.length}
-              size={itemsPerPage}
-              currentAt={currentPage}
-              onPageChange={setCurrentPage}
-              totalCountLabel="users"
-              selectedCount={selectedUsers.length}
-            />
+                <SelectableTable<User>
+                  columns={columns}
+                  rows={paginatedUsers}
+                  selectionType="checkbox"
+                  selectedRows={selectedUsers}
+                  onRowSelectionChange={setSelectedUsers}
+                  getRowId={(row) => row.id}
+                >
+                  {paginatedUsers.map((user) => (
+                    <Table.Tr key={user.id} rowData={user}>
+                      <Table.Td rowData={user} column={columns[0]}>
+                        <StatusIndicator variant={statusMap[user.status]} layout="iconOnly" />
+                      </Table.Td>
+                      <Table.Td rowData={user} column={columns[1]}>
+                        <span className="text-text font-medium">{user.username}</span>
+                      </Table.Td>
+                      <Table.Td rowData={user} column={columns[2]}>
+                        {user.email}
+                      </Table.Td>
+                      <Table.Td rowData={user} column={columns[3]}>
+                        {user.lastSignIn}
+                      </Table.Td>
+                      <Table.Td rowData={user} column={columns[4]}>
+                        {user.createdAt}
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </SelectableTable>
 
-            <SelectableTable<User>
-              columns={columns}
-              rows={paginatedUsers}
-              selectionType="checkbox"
-              selectedRows={selectedUsers}
-              onRowSelectionChange={setSelectedUsers}
-              getRowId={(row) => row.id}
-            >
-              {paginatedUsers.map((user) => (
-                <Table.Tr key={user.id} rowData={user}>
-                  <Table.Td rowData={user} column={columns[0]}>
-                    <StatusIndicator variant={statusMap[user.status]} layout="iconOnly" />
-                  </Table.Td>
-                  <Table.Td rowData={user} column={columns[1]}>
-                    <span className="text-text font-medium">{user.username}</span>
-                  </Table.Td>
-                  <Table.Td rowData={user} column={columns[2]}>
-                    {user.email}
-                  </Table.Td>
-                  <Table.Td rowData={user} column={columns[3]}>
-                    {user.lastSignIn}
-                  </Table.Td>
-                  <Table.Td rowData={user} column={columns[4]}>
-                    {user.createdAt}
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </SelectableTable>
-          </div>
-        </Fieldset>
-      </Layout.VStack>
+                <div className="flex flex-wrap items-center gap-1 min-h-[32px] p-2 rounded-md border border-border bg-surface-muted">
+                  {selectedUsers.length === 0 ? (
+                    <span className="text-11 text-text-muted">No users selected</span>
+                  ) : (
+                    selectedUsers.map((userId) => {
+                      const user = mockUsers.find((u) => u.id === String(userId));
+                      return (
+                        <Tag
+                          key={String(userId)}
+                          label={user?.username || String(userId)}
+                          variant="multiSelect"
+                          onClose={() =>
+                            setSelectedUsers(selectedUsers.filter((id) => id !== userId))
+                          }
+                        />
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            ),
+            doneUI: (
+              <div className="flex flex-col gap-3 py-3">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-11 font-medium text-text-muted">Selected users</span>
+                  <span className="text-12 text-text">
+                    {selectedUsers.length > 0
+                      ? `${selectedUsers.length} user(s) selected`
+                      : 'Skipped — no users selected'}
+                  </span>
+                </div>
+              </div>
+            ),
+          },
+        ]}
+      </Stepper>
 
       {confirmOpen && (
         <ActionModal

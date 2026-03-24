@@ -1,0 +1,162 @@
+[
+  {
+    "pageName": "iam-users-create",
+    "route": "/iam/users/create",
+    "tds": {
+      "hasSidebar": true,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 3,
+      "pageTitle": "Create user"
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 2,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 4,
+      "pageTitle": "Create user"
+    }
+  },
+  {
+    "pageName": "iam-user-groups-create",
+    "route": "/iam/user-groups/create",
+    "tds": {
+      "hasSidebar": true,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 2,
+      "pageTitle": "Create user group"
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 2,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 3,
+      "pageTitle": "Create user group"
+    }
+  },
+  {
+    "pageName": "iam-roles-create",
+    "route": "/iam/roles/create",
+    "tds": {
+      "hasSidebar": true,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 2,
+      "pageTitle": "Create role"
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 2,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 3,
+      "pageTitle": "Create role"
+    }
+  },
+  {
+    "pageName": "iam-policies-create",
+    "route": "/iam/policies/create",
+    "tds": {
+      "hasSidebar": true,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 2,
+      "pageTitle": "Create policy"
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 2,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 2,
+      "pageTitle": "Create policy"
+    }
+  },
+  {
+    "pageName": "iam-sysadmin-create",
+    "route": "/iam/system-administrators/create",
+    "tds": {
+      "hasSidebar": true,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 3,
+      "pageTitle": "Create account"
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 2,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 4,
+      "pageTitle": "Create account"
+    }
+  },
+  {
+    "pageName": "st-bucket-create",
+    "route": "/storage/buckets/create",
+    "tds": {
+      "hasSidebar": true,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 1,
+      "pageTitle": "Create bucket"
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 3,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 1,
+      "pageTitle": "Create Bucket"
+    }
+  },
+  {
+    "pageName": "cb-discovery-create",
+    "route": "/cloudbuilder/discovery/create",
+    "tds": {
+      "hasSidebar": false,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 5,
+      "pageTitle": null
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 2,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 5,
+      "pageTitle": "Register discovery"
+    }
+  },
+  {
+    "pageName": "cb-servers-create",
+    "route": "/cloudbuilder/servers/create",
+    "tds": {
+      "hasSidebar": false,
+      "sectionCount": 0,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 5,
+      "pageTitle": null
+    },
+    "shared": {
+      "hasSidebar": true,
+      "stepCount": 1,
+      "hasCreateBtn": true,
+      "hasCancelBtn": true,
+      "inputCount": 5,
+      "pageTitle": "Create Servers"
+    }
+  }
+]

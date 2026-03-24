@@ -20,7 +20,7 @@ const CREATE_PAGES = [
   { name: 'iam-policies-create', path: '/iam/policies/create' },
   { name: 'iam-sysadmin-create', path: '/iam/system-administrators/create' },
   { name: 'st-bucket-create', path: '/storage/buckets/create' },
-  { name: 'cb-discovery-create', path: '/cloudbuilder/discovery-rules/create' },
+  { name: 'cb-discovery-create', path: '/cloudbuilder/discovery/create' },
   { name: 'cb-servers-create', path: '/cloudbuilder/servers/create' },
 ];
 
@@ -71,18 +71,18 @@ const CREATE_ELEMENT_TARGETS: ElementTarget[] = [
     styleFile: 'CreateLayout.styles.ts',
   },
   {
-    name: 'Section container (first fieldset)',
+    name: 'Step container (first accordion)',
     tdsSelector: 'main [data-component="section-card"]',
-    sharedSelector: 'main fieldset',
-    component: 'Fieldset',
-    styleFile: 'Fieldset.styles.ts',
+    sharedSelector: 'main div[role="button"][aria-expanded="true"]',
+    component: 'Stepper/TcAccordion',
+    styleFile: 'Stepper.styles.ts',
   },
   {
-    name: 'Section legend/title',
+    name: 'Step label',
     tdsSelector: 'main [data-component="section-card"] h5',
-    sharedSelector: 'main fieldset legend',
-    component: 'Fieldset',
-    styleFile: 'Fieldset.styles.ts',
+    sharedSelector: 'main div[role="button"][aria-expanded="true"] div',
+    component: 'Stepper',
+    styleFile: 'Stepper.styles.ts',
   },
   {
     name: 'First text input',
@@ -150,7 +150,7 @@ interface StructureInfo {
   };
   shared: {
     hasSidebar: boolean;
-    fieldsetCount: number;
+    stepCount: number;
     hasCreateBtn: boolean;
     hasCancelBtn: boolean;
     inputCount: number;
@@ -267,7 +267,7 @@ async function extractStructure(page: Page, variant: 'tds' | 'shared') {
       };
     } else {
       const sidebar = main.querySelector('aside');
-      const fieldsets = main.querySelectorAll('fieldset');
+      const stepHeaders = main.querySelectorAll('div[role="button"][aria-expanded]');
       const createBtn = Array.from(document.querySelectorAll('button')).find(
         (b) => b.textContent?.trim() === 'Create'
       );
@@ -278,7 +278,7 @@ async function extractStructure(page: Page, variant: 'tds' | 'shared') {
       const h4 = main.querySelector('h4');
       return {
         hasSidebar: !!sidebar,
-        fieldsetCount: fieldsets.length,
+        stepCount: stepHeaders.length,
         hasCreateBtn: !!createBtn,
         hasCancelBtn: !!cancelBtn,
         inputCount: inputs.length,
@@ -584,7 +584,7 @@ test('Create pages: layout structure comparison', async ({ browser }) => {
 
     console.log(
       `  ${pg.name}: TDS(sidebar=${tdsStructure.hasSidebar}, sections=${tdsStructure.sectionCount}) ` +
-        `shared(sidebar=${sharedStructure.hasSidebar}, fieldsets=${sharedStructure.fieldsetCount})`
+        `shared(sidebar=${sharedStructure.hasSidebar}, steps=${sharedStructure.stepCount})`
     );
 
     await tdsContext.close();
@@ -604,11 +604,11 @@ test('Create pages: layout structure comparison', async ({ browser }) => {
     '',
     '## Structure Comparison',
     '',
-    '| Page | TDS Sidebar | TDS Sections | Shared Sidebar | Shared Fieldsets | TDS Title | Shared Title |',
-    '|------|-------------|--------------|----------------|------------------|-----------|--------------|',
+    '| Page | TDS Sidebar | TDS Sections | Shared Sidebar | Shared Steps | TDS Title | Shared Title |',
+    '|------|-------------|--------------|----------------|--------------|-----------|--------------|',
     ...allStructures.map(
       (s) =>
-        `| ${s.pageName} | ${s.tds.hasSidebar} | ${s.tds.sectionCount} | ${s.shared.hasSidebar} | ${s.shared.fieldsetCount} | ${s.tds.pageTitle || '-'} | ${s.shared.pageTitle || '-'} |`
+        `| ${s.pageName} | ${s.tds.hasSidebar} | ${s.tds.sectionCount} | ${s.shared.hasSidebar} | ${s.shared.stepCount} | ${s.tds.pageTitle || '-'} | ${s.shared.pageTitle || '-'} |`
     ),
     '',
     '## Detail',

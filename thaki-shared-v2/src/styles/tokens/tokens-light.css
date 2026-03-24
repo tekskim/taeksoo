@@ -256,7 +256,7 @@
   --primitive-font-weight700: 700;
   --primitive-font-weight800: 800;
   --primitive-font-weight900: 900;
-  --primitive-font-lineHeight3: .75rem;
+  --primitive-font-lineHeight3: 0.75rem;
   --primitive-font-lineHeight4: 1rem;
   --primitive-font-lineHeight5: 1.25rem;
   --primitive-font-lineHeight6: 1.5rem;
@@ -278,6 +278,7 @@
   --primitive-font-letterSpacingWidest: 0.1em;
   --primitive-font-size11: 0.6875rem;
   --primitive-font-size12: 0.75rem;
+  --primitive-font-size13: 0.8125rem;
   --primitive-font-size14: 0.875rem;
   --primitive-font-size16: 1rem;
   --primitive-font-size18: 1.125rem;
@@ -397,8 +398,11 @@
 
   --primitive-transition-none: none;
   --primitive-transition-all: all;
-  --primitive-transition-default: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  --primitive-transition-colors: color, background-color, border-color, text-decoration-color, fill, stroke;
+  --primitive-transition-default:
+    color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow,
+    transform, filter, backdrop-filter;
+  --primitive-transition-colors:
+    color, background-color, border-color, text-decoration-color, fill, stroke;
   --primitive-transition-opacity: opacity;
   --primitive-transition-shadow: box-shadow;
   --primitive-transition-transform: transform;
@@ -438,8 +442,6 @@
   --primitive-textDecoration-underline-textDecorationStyle: solid;
   --primitive-textDecoration-underline-textDecorationThickness: 0.0625rem;
   --primitive-textDecoration-underline-textUnderlineOffset: 0.125rem;
-
-
 
   /* Semantic Tokens */
   --semantic-color-primary: #2563eb;
@@ -518,6 +520,7 @@
   --semantic-font-letterSpacingWide: 0.025em;
   --semantic-font-size11: 0.6875rem;
   --semantic-font-size12: 0.75rem;
+  --semantic-font-size13: 0.8125rem;
   --semantic-font-size14: 0.875rem;
   --semantic-font-size16: 1rem;
   --semantic-font-size18: 1.125rem;
@@ -612,7 +615,6 @@
   --semantic-control-padding-y-md: 0.5rem;
   --semantic-control-padding-y-lg: 0.625rem;
 
-
   --semantic-control-font-size-sm: 0.75rem;
   --semantic-control-font-size-md: 0.875rem;
   --semantic-control-font-size-lg: 1rem;
@@ -624,7 +626,6 @@
   --semantic-control-icon-size-md: 6rem;
   --semantic-control-icon-size-lg: var(--primitive-space-28);
 
-
   --semantic-control-gap: 0.25rem;
   --semantic-control-radius: 0.25rem;
   --semantic-control-transition-duration: 150ms;
@@ -634,9 +635,6 @@
   --semantic-control-border-focus-width: 2px;
   --semantic-control-border-focus-color: #3b82f6;
   --semantic-control-border-focus-shadow: 0 0 0 3px {primitive.color.blue500}40;
-
-
-
 
   /* Component Tokens */
   --component-button-solid-primary-bg: #2563eb;
@@ -666,7 +664,6 @@
   --component-button-solid-muted-bg: #d1d5db;
   --component-button-solid-muted-bgHover: #171717;
   --component-button-solid-muted-text: #ffffff;
-
 
   --component-button-outline-primary-bg: transparent;
   --component-button-outline-primary-bgHover: #f1f5f9;
@@ -717,7 +714,6 @@
   --component-button-outline-muted-border: #d1d5db;
   --component-button-outline-muted-borderHover: #171717;
 
-
   --component-button-ghost-primary-bg: transparent;
   --component-button-ghost-primary-bgHover: #f1f5f9;
   --component-button-ghost-primary-text: #2563eb;
@@ -753,8 +749,6 @@
   --component-button-ghost-muted-text: #d1d5db;
   --component-button-ghost-muted-textHover: #171717;
 
-
-
   --component-input-color-bg: #ffffff;
   --component-input-color-bgHover: #f1f5f9;
   --component-input-color-bgDisabled: #f8fafc;
@@ -764,7 +758,6 @@
   --component-input-color-borderFocus: #3b82f6;
   --component-input-color-borderError: #dc2626;
   --component-input-color-borderSuccess: #4ade80;
-
 
   --component-card-space-padding: 1.5rem;
   --component-card-space-paddingSm: 1rem;
@@ -781,7 +774,6 @@
   --component-card-transition-duration: 200ms;
   --component-card-transition-easing: cubic-bezier(0, 0, 0.2, 1);
 
-
   --component-modal-space-radius: 0.75rem;
   --component-modal-space-maxWidth: var(--primitive-space-384);
 
@@ -789,10 +781,10 @@
   --component-modal-color-overlay: var(--semantic-color-blueGray900);
   --component-modal-color-overlayOpacity: 0.75;
 
-  --component-modal-shadow-base: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --component-modal-shadow-base:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
   --component-modal-zIndex-base: 40;
-
 
   --component-tooltip-space-radius: 0.125rem;
   --component-tooltip-space-maxWidth: var(--primitive-space-256);
@@ -800,10 +792,10 @@
   --component-tooltip-color-bg: var(--semantic-color-blueGray800);
   --component-tooltip-color-text: var(--semantic-color-white);
 
-  --component-tooltip-shadow-base: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --component-tooltip-shadow-base:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
   --component-tooltip-zIndex-base: 50;
-
 
   --component-layout-grid-columns: 12;
   --component-layout-grid-gap: 1rem;
@@ -837,7 +829,6 @@
 
   --component-layout-section-subtitle-size: 0.875rem;
 
-
   --component-layout-fieldset-label-size: 0.875rem;
   --component-layout-fieldset-label-weight: 500;
   --component-layout-fieldset-label-color: #737373;
@@ -850,7 +841,6 @@
   --component-layout-fieldset-error-color: #dc2626;
 
   --component-layout-fieldset-required-color: #dc2626;
-
 
   --component-layout-surface-default-bg: #ffffff;
 
@@ -871,8 +861,6 @@
   --component-layout-surface-error-bg: #fffafa;
   --component-layout-surface-error-border: #fecaca;
   --component-layout-surface-error-text: #7f1d1d;
-
-
 
   --component-accordion-background-group: transparent;
   --component-accordion-background-default: #ffffff;
@@ -956,10 +944,4 @@
   --component-accordion-menu-item-indicator-width: 3px;
   --component-accordion-menu-item-indicator-color: #2563eb;
   --component-accordion-menu-item-indicator-radius: 2px;
-
-
-
-
-
-
 }

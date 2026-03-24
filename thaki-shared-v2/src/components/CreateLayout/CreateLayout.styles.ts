@@ -38,7 +38,7 @@ export const createLayoutContentStyles = cva('flex gap-6 items-start w-full');
 export const createLayoutMainStyles = cva('relative z-0 flex-1 min-w-0');
 
 export const createLayoutSidebarStyles = cva(
-  'relative z-20 shrink-0 sticky top-4 self-start h-fit',
+  'relative z-20 shrink-0 sticky top-4 self-start h-fit text-12 leading-18',
   {
     variants: {
       width: {
