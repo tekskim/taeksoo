@@ -1,13 +1,79 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 
 import '@shared/styles/index.css';
 
 import { IAMLayout } from './layouts/IAMLayout';
 import { CloudBuilderLayout } from './layouts/CloudBuilderLayout';
 import { StorageLayout } from './layouts/StorageLayout';
-import { EntryPage } from './pages/EntryPage';
+
+function EntryPage() {
+  const apps = [
+    {
+      name: 'IAM',
+      description: 'Identity & Access Management',
+      href: '/iam/users',
+      color: '#2563eb',
+    },
+    {
+      name: 'Cloud Builder',
+      description: 'Infrastructure inventory & system info',
+      href: '/cloudbuilder/discovery',
+      color: '#059669',
+    },
+    {
+      name: 'Storage',
+      description: 'Ceph storage cluster management',
+      href: '/storage',
+      color: '#7c3aed',
+    },
+    {
+      name: 'Compute',
+      description: 'Virtual machines and networking',
+      href: '/compute/instances',
+      color: '#ea580c',
+    },
+    {
+      name: 'Design',
+      description: 'Component catalog & visual reference',
+      href: '/design',
+      color: '#8b5cf6',
+    },
+  ];
+  return (
+    <div className="min-h-screen bg-surface-subtle flex items-center justify-center p-8">
+      <div className="max-w-[600px] w-full flex flex-col gap-8">
+        <div className="text-center flex flex-col gap-2">
+          <h1 className="text-[28px] leading-[36px] font-semibold text-text m-0">
+            shared-v2 Preview
+          </h1>
+          <p className="text-13 leading-20 text-text-muted m-0">Select an application to preview</p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {apps.map((app) => (
+            <Link
+              key={app.href}
+              to={app.href}
+              className="flex flex-col gap-3 p-5 rounded-xl border border-border bg-surface hover:border-[color:var(--color-border-strong)] hover:shadow-sm transition-all no-underline"
+            >
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-[18px] font-bold text-white"
+                style={{ backgroundColor: app.color }}
+              >
+                {app.name[0]}
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-14 font-semibold leading-20 text-text">{app.name}</span>
+                <span className="text-12 leading-18 text-text-muted">{app.description}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 import { CloudBuilderConsolePage } from './pages/CloudBuilderConsolePage';
 import { CloudBuilderDetailPage } from './pages/CloudBuilderDetailPage';
 import { CloudBuilderCreatePage } from './pages/CloudBuilderCreatePage';
@@ -40,12 +106,19 @@ import { StorageDetailPage } from './pages/StorageDetailPage';
 import { StoragePerformancePage } from './pages/StoragePerformancePage';
 import { StorageCreatePage } from './pages/StorageCreatePage';
 import { ComputeLayout } from './layouts/ComputeLayout';
+import { DesignLayout } from './layouts/DesignLayout';
+import { DesignOverviewPage } from './pages/DesignOverviewPage';
+import { DesignLayoutComponentsPage } from './pages/DesignLayoutComponentsPage';
+import { DesignFeedbackPage } from './pages/DesignFeedbackPage';
+import { DesignNavigationPage } from './pages/DesignNavigationPage';
+import { DesignOverlaysPage } from './pages/DesignOverlaysPage';
+import { DesignFormControlsPage } from './pages/DesignFormControlsPage';
+import { DesignDataDisplayPage } from './pages/DesignDataDisplayPage';
 import { ComputeHomePage } from './pages/ComputeHomePage';
 import { ComputeInstancesPage } from './pages/ComputeInstancesPage';
 import { ComputeInstanceDetailPage } from './pages/ComputeInstanceDetailPage';
 import { ComputeCreateInstancePage } from './pages/ComputeCreateInstancePage';
 import { ComputeInstanceTemplatesPage } from './pages/ComputeInstanceTemplatesPage';
-import { ComputeCreateInstanceTemplatePage } from './pages/ComputeCreateInstanceTemplatePage';
 import { ComputeInstanceTemplateDetailPage } from './pages/ComputeInstanceTemplateDetailPage';
 import { ComputeInstanceSnapshotsPage } from './pages/ComputeInstanceSnapshotsPage';
 import { ComputeInstanceSnapshotDetailPage } from './pages/ComputeInstanceSnapshotDetailPage';
@@ -72,7 +145,6 @@ import { ComputeRoutersPage } from './pages/ComputeRoutersPage';
 import { ComputeRouterDetailPage } from './pages/ComputeRouterDetailPage';
 import { ComputePortsPage } from './pages/ComputePortsPage';
 import { ComputePortDetailPage } from './pages/ComputePortDetailPage';
-import { ComputeCreateVirtualAdapterPage } from './pages/ComputeCreateVirtualAdapterPage';
 import { ComputeFloatingIPsPage } from './pages/ComputeFloatingIPsPage';
 import { ComputeFloatingIPDetailPage } from './pages/ComputeFloatingIPDetailPage';
 import { ComputeSecurityGroupsPage } from './pages/ComputeSecurityGroupsPage';
@@ -139,7 +211,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="instances/create" element={<ComputeCreateInstancePage />} />
           <Route path="instances/:id" element={<ComputeInstanceDetailPage />} />
           <Route path="instance-templates" element={<ComputeInstanceTemplatesPage />} />
-          <Route path="instance-templates/create" element={<ComputeCreateInstanceTemplatePage />} />
           <Route path="instance-templates/:id" element={<ComputeInstanceTemplateDetailPage />} />
           <Route path="instance-snapshots" element={<ComputeInstanceSnapshotsPage />} />
           <Route path="instance-snapshots/:id" element={<ComputeInstanceSnapshotDetailPage />} />
@@ -165,7 +236,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="routers" element={<ComputeRoutersPage />} />
           <Route path="routers/:id" element={<ComputeRouterDetailPage />} />
           <Route path="ports" element={<ComputePortsPage />} />
-          <Route path="ports/create" element={<ComputeCreateVirtualAdapterPage />} />
           <Route path="ports/:id" element={<ComputePortDetailPage />} />
           <Route path="floating-ips" element={<ComputeFloatingIPsPage />} />
           <Route path="floating-ips/:id" element={<ComputeFloatingIPDetailPage />} />
@@ -181,6 +251,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="dns-zones" element={<ComputeDNSZonesPage />} />
           <Route path="backup-policies" element={<ComputeBackupPoliciesPage />} />
           <Route path="scheduled-tasks" element={<ComputeScheduledTasksPage />} />
+        </Route>
+        <Route path="/design" element={<DesignLayout />}>
+          <Route index element={<DesignOverviewPage />} />
+          <Route path="form-controls" element={<DesignFormControlsPage />} />
+          <Route path="data-display" element={<DesignDataDisplayPage />} />
+          <Route path="layout" element={<DesignLayoutComponentsPage />} />
+          <Route path="feedback" element={<DesignFeedbackPage />} />
+          <Route path="overlays" element={<DesignOverlaysPage />} />
+          <Route path="navigation" element={<DesignNavigationPage />} />
         </Route>
         <Route path="/" element={<EntryPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

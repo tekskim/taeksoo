@@ -8,8 +8,7 @@ export const tabNoneStyles = 'hidden';
 
 export const tabChildrenStyles = 'pt-6';
 
-export const tabHeaderWrapperStyles =
-  'flex items-center relative w-full overflow-hidden';
+export const tabHeaderWrapperStyles = 'flex items-center relative w-full overflow-hidden';
 
 export const scrollButtonStyles = cva(
   [
@@ -30,42 +29,34 @@ export const scrollButtonStyles = cva(
         true: 'opacity-disabled cursor-not-allowed',
       },
     },
-  },
+  }
 );
 
-export const tabHeaderStyles = cva(
-  ['inline-flex items-start min-w-0', 'relative'],
-  {
-    variants: {
-      variant: {
-        line: ['border-b border-border', 'gap-2'],
-        button: [
-          'bg-surface-subtle',
-          'border border-border rounded-base6',
-          'p-1 gap-2',
-          'w-full',
-        ],
-      },
-      scrollable: {
-        true: [
-          'overflow-x-auto overflow-y-hidden',
-          'scrollbar-hide',
-          'flex-nowrap flex-1 min-w-0 w-full',
-          'px-sm -mx-sm',
-          '[scrollbar-width:none] [-ms-overflow-style:none]',
-          '[&::-webkit-scrollbar]:hidden',
-        ],
-      },
-      fullWidth: {
-        true: 'w-full',
-        false: 'w-auto',
-      },
+export const tabHeaderStyles = cva(['inline-flex items-stretch min-w-0', 'relative'], {
+  variants: {
+    variant: {
+      line: ['border-b border-border', 'gap-2'],
+      button: ['bg-surface-subtle', 'border border-border rounded-base6', 'p-1 gap-2', 'w-full'],
     },
-    defaultVariants: {
-      variant: 'line',
+    scrollable: {
+      true: [
+        'overflow-x-auto overflow-y-hidden',
+        'scrollbar-hide',
+        'flex-nowrap flex-1 min-w-0 w-full',
+        'px-sm -mx-sm',
+        '[scrollbar-width:none] [-ms-overflow-style:none]',
+        '[&::-webkit-scrollbar]:hidden',
+      ],
+    },
+    fullWidth: {
+      true: 'w-full',
+      false: 'w-auto',
     },
   },
-);
+  defaultVariants: {
+    variant: 'line',
+  },
+});
 
 export const tabButtonStyles = cva(
   [
@@ -75,7 +66,7 @@ export const tabButtonStyles = cva(
     'whitespace-nowrap flex-shrink-0 min-w-[80px] text-center',
     'font-medium font-sans',
     'relative',
-    'transition-colors duration-normal ease-out',
+    'transition-colors duration-150 ease-out',
     'disabled:opacity-disabled disabled:cursor-not-allowed',
   ],
   {
@@ -86,10 +77,10 @@ export const tabButtonStyles = cva(
       },
       variant: {
         line: [
-          'flex flex-col items-center',
-          'px-3 pt-0 pb-3',
+          'flex flex-col items-center gap-[10px]',
+          'px-0 pt-0 pb-0',
           'text-text-subtle',
-          'after:content-[""] after:absolute after:-bottom-px after:left-0 after:right-0 after:h-[2px] after:bg-transparent',
+          'after:content-[""] after:relative after:w-full after:h-[2px] after:bg-transparent after:z-20',
         ],
         button: [
           'grow',
@@ -113,7 +104,7 @@ export const tabButtonStyles = cva(
       {
         variant: 'line',
         active: false,
-        className: 'hover:text-text-muted',
+        className: 'hover:text-text',
       },
       // button sm: 1(border) + 3(py) + 16(leading) + 3(py) + 1(border) = 24px
       {
@@ -143,5 +134,5 @@ export const tabButtonStyles = cva(
       variant: 'line',
       active: false,
     },
-  },
+  }
 );

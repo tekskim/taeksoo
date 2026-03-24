@@ -8,101 +8,140 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 type VolumeStatus = 'active' | 'in-use' | 'error' | 'pending';
-type VolumeType = 'SSD' | 'NVMe' | 'HDD';
 
 interface Volume {
   id: string;
   name: string;
-  status: VolumeStatus;
   size: string;
-  type: VolumeType;
-  attachedTo: string;
+  type: string;
+  diskTag: string;
+  attachedTo: string | null;
+  attachedToId: string | null;
   createdAt: string;
+  status: VolumeStatus;
   [key: string]: unknown;
 }
 
-const mockRows: Volume[] = [
+const mockVolumes: Volume[] = [
   {
     id: 'vol-001',
-    name: 'web-data-01',
+    name: 'db-data',
+    size: '1500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data disk',
+    attachedTo: 'web-server-1',
+    attachedToId: 'inst-001',
+    createdAt: 'Sep 12, 2025 15:43:35',
     status: 'in-use',
-    size: '100 GiB',
-    type: 'SSD',
-    attachedTo: 'instance-web-01',
-    createdAt: 'Mar 9, 2025 15:20:00',
   },
   {
     id: 'vol-002',
-    name: 'db-primary-vol',
+    name: 'app-storage',
+    size: '500GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Data disk',
+    attachedTo: 'app-server-1',
+    attachedToId: 'inst-002',
+    createdAt: 'Sep 10, 2025 01:17:01',
     status: 'in-use',
-    size: '500 GiB',
-    type: 'NVMe',
-    attachedTo: 'instance-db-01',
-    createdAt: 'Mar 7, 2025 11:05:22',
   },
   {
     id: 'vol-003',
-    name: 'archive-cold',
+    name: 'backup-vol',
+    size: '2000GiB',
+    type: 'SSD',
+    diskTag: 'Backup',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Sep 8, 2025 11:51:27',
     status: 'active',
-    size: '2 TiB',
-    type: 'HDD',
-    attachedTo: '-',
-    createdAt: 'Mar 2, 2025 09:12:45',
   },
   {
     id: 'vol-004',
-    name: 'broken-attach',
-    status: 'error',
-    size: '50 GiB',
-    type: 'SSD',
-    attachedTo: '-',
-    createdAt: 'Feb 28, 2025 18:33:10',
+    name: 'log-storage',
+    size: '100GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Logs',
+    attachedTo: 'log-server',
+    attachedToId: 'inst-003',
+    createdAt: 'Sep 5, 2025 14:12:36',
+    status: 'in-use',
   },
   {
     id: 'vol-005',
-    name: 'k8s-etcd',
-    status: 'in-use',
-    size: '20 GiB',
+    name: 'cache-vol',
+    size: '256GiB',
     type: 'NVMe',
-    attachedTo: 'instance-cp-01',
-    createdAt: 'Feb 20, 2025 07:40:33',
+    diskTag: 'Cache',
+    attachedTo: 'cache-01',
+    attachedToId: 'inst-004',
+    createdAt: 'Aug 30, 2025 21:37:41',
+    status: 'in-use',
   },
   {
     id: 'vol-006',
-    name: 'temp-clone',
-    status: 'pending',
-    size: '80 GiB',
-    type: 'SSD',
-    attachedTo: '-',
-    createdAt: 'Feb 15, 2025 13:00:00',
+    name: 'media-storage',
+    size: '5000GiB',
+    type: 'HDD',
+    diskTag: 'Media',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Aug 25, 2025 10:32:16',
+    status: 'active',
   },
   {
     id: 'vol-007',
-    name: 'logs-buffer',
-    status: 'active',
-    size: '200 GiB',
-    type: 'HDD',
-    attachedTo: '-',
-    createdAt: 'Jan 30, 2025 16:16:16',
+    name: 'temp-vol',
+    size: '50GiB',
+    type: '_DEFAULT_',
+    diskTag: 'Temporary',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Aug 20, 2025 23:27:51',
+    status: 'pending',
   },
   {
     id: 'vol-008',
-    name: 'ml-dataset',
-    status: 'in-use',
-    size: '1 TiB',
+    name: 'ml-data',
+    size: '1000GiB',
     type: 'NVMe',
-    attachedTo: 'instance-gpu-02',
-    createdAt: 'Jan 8, 2025 10:22:55',
+    diskTag: 'ML Dataset',
+    attachedTo: 'gpu-server-1',
+    attachedToId: 'inst-005',
+    createdAt: 'Aug 15, 2025 12:22:26',
+    status: 'in-use',
+  },
+  {
+    id: 'vol-009',
+    name: 'archive-vol',
+    size: '10000GiB',
+    type: 'HDD',
+    diskTag: 'Archive',
+    attachedTo: null,
+    attachedToId: null,
+    createdAt: 'Aug 10, 2025 01:17:01',
+    status: 'active',
+  },
+  {
+    id: 'vol-010',
+    name: 'boot-vol-01',
+    size: '100GiB',
+    type: 'SSD',
+    diskTag: 'Boot',
+    attachedTo: 'web-server-2',
+    attachedToId: 'inst-006',
+    createdAt: 'Aug 5, 2025 14:12:36',
+    status: 'in-use',
   },
 ];
 
-const statusMap: Record<VolumeStatus, StatusVariant> = {
+const volumeStatusMap: Record<VolumeStatus, StatusVariant> = {
   active: 'active',
   'in-use': 'inUse',
   error: 'error',
@@ -110,7 +149,20 @@ const statusMap: Record<VolumeStatus, StatusVariant> = {
 };
 
 const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'name', label: 'Name', type: 'input' },
+  {
+    key: 'type',
+    label: 'Type',
+    type: 'select',
+    options: [
+      { value: '_DEFAULT_', label: '_DEFAULT_' },
+      { value: 'SSD', label: 'SSD' },
+      { value: 'NVMe', label: 'NVMe' },
+      { value: 'HDD', label: 'HDD' },
+    ],
+  },
+  { key: 'diskTag', label: 'Disk tag', type: 'input' },
+  { key: 'attachedTo', label: 'Attached to', type: 'input' },
   {
     key: 'status',
     label: 'Status',
@@ -122,17 +174,9 @@ const filterKeys: FilterKey[] = [
       { value: 'pending', label: 'Pending' },
     ],
   },
-  {
-    key: 'type',
-    label: 'Type',
-    type: 'select',
-    options: [
-      { value: 'SSD', label: 'SSD' },
-      { value: 'NVMe', label: 'NVMe' },
-      { value: 'HDD', label: 'HDD' },
-    ],
-  },
 ];
+
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
 export function ComputeVolumesPage() {
   const navigate = useNavigate();
@@ -142,18 +186,21 @@ export function ComputeVolumesPage() {
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
+  const itemsPerPage = 10;
+
+  const filteredVolumes = useMemo(() => {
+    if (appliedFilters.length === 0) return mockVolumes;
+
+    return mockVolumes.filter((v) => {
+      return appliedFilters.every((filter) => {
+        const key = filter.key as keyof Volume;
+        const value = String(v[key] ?? '').toLowerCase();
+        return value.includes(String(filter.value ?? '').toLowerCase());
+      });
+    });
   }, [appliedFilters]);
 
-  const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
+  const paginatedRows = filteredVolumes.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -175,23 +222,39 @@ export function ComputeVolumesPage() {
     setCurrentPage(1);
   }, []);
 
+  const openInstanceInNewTab = useCallback((instanceId: string, instanceName: string) => {
+    const path = `/compute/instances/${instanceId}`;
+    window.open(path, '_blank', 'noopener,noreferrer');
+    console.log('[Volumes] Open instance in new tab', instanceName, path);
+  }, []);
+
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
     { key: 'type', header: 'Type', sortable: true },
-    { key: 'attachedTo', header: 'Attached To', sortable: true },
+    { key: 'diskTag', header: 'Disk tag', sortable: true },
+    { key: 'attachedTo', header: 'Attached to', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between h-8">
+      <div className="flex items-center justify-between h-8 gap-2 flex-wrap">
         <Title title="Volumes" />
-        <Button variant="primary" size="md" onClick={() => navigate('/compute/volumes/create')}>
-          Create volume
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => console.log('[Volumes] Accept transfer')}
+          >
+            Accept Volume Transfer
+          </Button>
+          <Button variant="primary" size="md" onClick={() => navigate('/compute/volumes/create')}>
+            Create volume
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -200,7 +263,7 @@ export function ComputeVolumesPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search volumes by attributes"
+            placeholder="Search volume by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -209,7 +272,13 @@ export function ComputeVolumesPage() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <Button
+            appearance="outline"
+            variant="muted"
+            size="sm"
+            disabled={!hasSelection}
+            onClick={() => console.log('[Volumes] Bulk Delete', selectedRows)}
+          >
             <IconTrash size={12} /> Delete
           </Button>
         </div>
@@ -252,15 +321,17 @@ export function ComputeVolumesPage() {
         </div>
       )}
 
-      <Pagination
-        totalCount={filteredRows.length}
-        size={itemsPerPage}
-        currentAt={currentPage}
-        onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
-        totalCountLabel="items"
-        selectedCount={selectedRows.length}
-      />
+      {filteredVolumes.length > 0 && (
+        <Pagination
+          totalCount={filteredVolumes.length}
+          size={itemsPerPage}
+          currentAt={currentPage}
+          onPageChange={setCurrentPage}
+          onSettingClick={() => {}}
+          totalCountLabel="items"
+          selectedCount={selectedRows.length}
+        />
+      )}
 
       <SelectableTable<Volume>
         columns={columns}
@@ -277,15 +348,21 @@ export function ComputeVolumesPage() {
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+              <StatusIndicator variant={volumeStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/volumes/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/volumes/${row.id}`}
+                  className={`${linkClass} truncate`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.name}
+                </Link>
+                <span className="text-11 text-text-muted truncate" title={row.id}>
+                  {row.id}
+                </span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
               {row.size}
@@ -294,12 +371,31 @@ export function ComputeVolumesPage() {
               {row.type}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.attachedTo}
+              {row.diskTag}
             </Table.Td>
             <Table.Td rowData={row} column={columns[5]}>
+              {row.attachedTo && row.attachedToId ? (
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openInstanceInNewTab(row.attachedToId!, row.attachedTo!);
+                    }}
+                    className={`inline-flex items-center gap-1.5 min-w-0 ${linkClass} truncate text-left bg-transparent border-none cursor-pointer p-0`}
+                  >
+                    {row.attachedTo}
+                  </button>
+                  <span className="text-11 text-text-muted">ID : {row.attachedToId}</span>
+                </div>
+              ) : (
+                <span className="text-text-muted">-</span>
+              )}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]}>
               {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -307,22 +403,76 @@ export function ComputeVolumesPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    aria-label="Row actions"
                   >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path
-                        d="M5.33333 8V8.00667M8 8V8.00667M10.6667 8V8.00667M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8Z"
-                        stroke="currentColor"
-                        strokeWidth="1"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-text-subtle" />
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.SubItems label="Data protection">
+                  <ContextMenu.Item
+                    action={() => console.log('[Volumes] Create volume snapshot', row.id)}
+                  >
+                    Create volume snapshot
+                  </ContextMenu.Item>
+                  <ContextMenu.Item
+                    action={() => console.log('[Volumes] Create volume backup', row.id)}
+                  >
+                    Create volume backup
+                  </ContextMenu.Item>
+                  <ContextMenu.Item action={() => console.log('[Volumes] Clone volume', row.id)}>
+                    Clone volume
+                  </ContextMenu.Item>
+                  <ContextMenu.Item
+                    action={() => console.log('[Volumes] Restore from Snapshot', row.id)}
+                  >
+                    Restore from Snapshot
+                  </ContextMenu.Item>
+                </ContextMenu.SubItems>
+                <ContextMenu.SubItems label="Operate">
+                  <ContextMenu.Item action={() => console.log('[Volumes] Create instance', row.id)}>
+                    Create instance
+                  </ContextMenu.Item>
+                  <ContextMenu.Item action={() => console.log('[Volumes] Create image', row.id)}>
+                    Create image
+                  </ContextMenu.Item>
+                  <ContextMenu.Item action={() => console.log('[Volumes] Attach instance', row.id)}>
+                    Attach instance
+                  </ContextMenu.Item>
+                  <ContextMenu.Item
+                    action={() => console.log('[Volumes] Detach instance', row.id)}
+                    disabled={!row.attachedTo}
+                  >
+                    Detach instance
+                  </ContextMenu.Item>
+                  <ContextMenu.Item action={() => console.log('[Volumes] Boot setting', row.id)}>
+                    Boot setting
+                  </ContextMenu.Item>
+                </ContextMenu.SubItems>
+                <ContextMenu.SubItems label="Configuration">
+                  <ContextMenu.Item action={() => console.log('[Volumes] Edit', row.id)}>
+                    Edit
+                  </ContextMenu.Item>
+                  <ContextMenu.Item action={() => console.log('[Volumes] Extend volume', row.id)}>
+                    Extend volume
+                  </ContextMenu.Item>
+                  <ContextMenu.Item action={() => console.log('[Volumes] Manage metadata', row.id)}>
+                    Manage metadata
+                  </ContextMenu.Item>
+                  <ContextMenu.Item
+                    action={() => console.log('[Volumes] Change volume Type', row.id)}
+                  >
+                    Change volume Type
+                  </ContextMenu.Item>
+                </ContextMenu.SubItems>
+                <ContextMenu.Item action={() => console.log('[Volumes] Create transfer', row.id)}>
+                  Create transfer
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('[Volumes] Cancel transfer', row.id)}>
+                  Cancel transfer
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('[Volumes] Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>

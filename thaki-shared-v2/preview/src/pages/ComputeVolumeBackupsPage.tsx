@@ -163,7 +163,7 @@ export function ComputeVolumeBackupsPage() {
     { key: 'name', header: 'Name', sortable: true },
     { key: 'volume', header: 'Volume' },
     { key: 'backupMode', header: 'Backup Mode' },
-    { key: 'size', header: 'Size', align: 'right' },
+    { key: 'size', header: 'Size' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
@@ -269,7 +269,7 @@ export function ComputeVolumeBackupsPage() {
             <Table.Td rowData={row} column={columns[1]}>
               <Link
                 to={`/compute/volume-backups/${row.id}`}
-                className="text-primary font-medium hover:underline"
+                className="text-12 leading-18 font-medium text-primary hover:underline no-underline"
               >
                 {row.name}
               </Link>
@@ -294,7 +294,7 @@ export function ComputeVolumeBackupsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path

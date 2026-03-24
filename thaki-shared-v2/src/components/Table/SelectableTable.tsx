@@ -14,7 +14,7 @@ import { useTableSelection } from './useTableSelection';
  */
 const flattenChildren = (children: React.ReactNode): React.ReactNode[] => {
   const result: React.ReactNode[] = [];
-  React.Children.forEach(children, child => {
+  React.Children.forEach(children, (child) => {
     if (React.isValidElement(child) && child.type === React.Fragment) {
       const fragmentProps = child.props as { children?: React.ReactNode };
       result.push(...flattenChildren(fragmentProps.children));
@@ -25,11 +25,10 @@ const flattenChildren = (children: React.ReactNode): React.ReactNode[] => {
   return result;
 };
 
-export interface SelectableTableProps<TData extends Record<string, unknown>>
-  extends Omit<
-    TableProps<TData>,
-    'renderHeaderCell' | 'getRowId' | 'children'
-  > {
+export interface SelectableTableProps<TData extends Record<string, unknown>> extends Omit<
+  TableProps<TData>,
+  'renderHeaderCell' | 'getRowId' | 'children'
+> {
   /** 선택 타입 */
   selectionType: 'radio' | 'checkbox';
   /** 선택된 행 ID 배열 */
@@ -100,6 +99,7 @@ export const SelectableTable = <TData extends Record<string, unknown>>({
         header: '',
         clickable: false,
         align: 'left' as const,
+        width: 40,
       },
       ...columns,
     ],
@@ -122,11 +122,7 @@ export const SelectableTable = <TData extends Record<string, unknown>>({
           >
             <div className="flex items-center justify-center">
               {selectionType === 'checkbox' && (
-                <Checkbox
-                  checked={isAllSelected}
-                  onChange={handleSelectAll}
-                  size="sm"
-                />
+                <Checkbox checked={isAllSelected} onChange={handleSelectAll} size="sm" />
               )}
             </div>
           </Table.Th>
@@ -156,11 +152,7 @@ export const SelectableTable = <TData extends Record<string, unknown>>({
               column.sortable && onSortChange
                 ? () => {
                     const nextOrder =
-                      sort === column.key
-                        ? order === 'asc'
-                          ? 'desc'
-                          : 'asc'
-                        : 'asc';
+                      sort === column.key ? (order === 'asc' ? 'desc' : 'asc') : 'asc';
                     onSortChange(column.key, nextOrder);
                   }
                 : undefined
@@ -203,14 +195,8 @@ export const SelectableTable = <TData extends Record<string, unknown>>({
           children?: React.ReactNode;
           className?: string;
           rowData?: TData;
-          onClickRow?: (
-            rowData: TData,
-            e: React.MouseEvent<HTMLTableRowElement>
-          ) => void;
-          onClick?: (
-            rowData: TData,
-            e: React.MouseEvent<HTMLTableRowElement>
-          ) => void;
+          onClickRow?: (rowData: TData, e: React.MouseEvent<HTMLTableRowElement>) => void;
+          onClick?: (rowData: TData, e: React.MouseEvent<HTMLTableRowElement>) => void;
         };
         const childrenArray = React.Children.toArray(trProps.children);
 
@@ -240,9 +226,7 @@ export const SelectableTable = <TData extends Record<string, unknown>>({
               ) : (
                 <Checkbox
                   checked={isSelected}
-                  onChange={checked =>
-                    handleRowSelection(rowId, checked, row, index)
-                  }
+                  onChange={(checked) => handleRowSelection(rowId, checked, row, index)}
                   size="sm"
                   disabled={isDisabled}
                 />
@@ -252,10 +236,7 @@ export const SelectableTable = <TData extends Record<string, unknown>>({
         );
 
         // 클릭 핸들러 추가 - onClick과 onClickRow 모두 처리
-        const handleRowClick = (
-          rowData: TData,
-          e: React.MouseEvent<HTMLTableRowElement>
-        ): void => {
+        const handleRowClick = (rowData: TData, e: React.MouseEvent<HTMLTableRowElement>): void => {
           // selectOnRowClick이 true일 때만 행 클릭으로 선택
           if (selectOnRowClick) {
             handleRowSelection(rowId, !isSelected, row, index);

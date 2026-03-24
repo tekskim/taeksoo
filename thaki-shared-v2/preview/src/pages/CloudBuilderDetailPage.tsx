@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
-import type { DetailCardField } from '@shared/components/DetailCard/DetailCard';
+import { default as SectionCard } from '@shared/components/SectionCard/SectionCard';
+import type { SectionCardField } from '@shared/components/SectionCard/SectionCard';
 import { Badge } from '@shared/components/Badge';
 import { Button } from '@shared/components/Button';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
@@ -287,7 +287,7 @@ export function CloudBuilderDetailPage() {
       { label: 'Created at', value: networkAgentMeta?.createdAt ?? '-' },
     ];
 
-    const basicInfoFields: DetailCardField[] = [
+    const basicInfoFields: SectionCardField[] = [
       { label: 'Type', value: row?.type ?? '-' },
       { label: 'Host', value: row?.host ?? '-' },
       { label: 'Availability zone', value: row?.availabilityZone ?? '-' },
@@ -335,10 +335,10 @@ export function CloudBuilderDetailPage() {
           contentClassName="pt-6"
         >
           <Tab id="basic-information" label="Basic information">
-            <DetailCard title="Basic information" fields={basicInfoFields} />
+            <SectionCard title="Basic information" fields={basicInfoFields} />
           </Tab>
           <Tab id="configuration" label="Configuration">
-            <DetailCard
+            <SectionCard
               title="Configuration"
               fields={[
                 {
@@ -409,7 +409,7 @@ export function CloudBuilderDetailPage() {
           title={`${config.title} #${id}`}
           infoFields={[{ label: 'ID', value: id, showCopyButton: true, copyText: id }]}
         />
-        <DetailCard title="Details" fields={[{ label: 'Status', value: 'Data not found' }]} />
+        <SectionCard title="Details" fields={[{ label: 'Status', value: 'Data not found' }]} />
       </div>
     );
   }
@@ -445,7 +445,7 @@ export function CloudBuilderDetailPage() {
       },
     ];
 
-    const basicFields: DetailCardField[] = [
+    const basicFields: SectionCardField[] = [
       { label: 'Type', value: serverDerived?.type ?? '-' },
       { label: 'MAC (Primary)', value: (row as any)?.macPrimary ?? '-' },
       { label: 'NIC (primary name)', value: (row as any)?.nicPrimaryName ?? '-' },
@@ -457,7 +457,7 @@ export function CloudBuilderDetailPage() {
       { label: 'Domain', value: serverDerived?.domain ?? '-' },
     ];
 
-    const bmcFields: DetailCardField[] = [
+    const bmcFields: SectionCardField[] = [
       { label: 'Hostname', value: serverDerived?.bmc.hostname ?? '-' },
       { label: 'Machine type', value: serverDerived?.bmc.machineType ?? '-' },
       { label: 'Power state', value: serverDerived?.bmc.powerState ?? '-' },
@@ -480,11 +480,11 @@ export function CloudBuilderDetailPage() {
           contentClassName="pt-6"
         >
           <Tab id="details" label="Details">
-            <DetailCard title="Basic info" fields={basicFields} />
+            <SectionCard title="Basic info" fields={basicFields} />
           </Tab>
           <Tab id="disk" label="Disk">
             <div className="flex flex-col gap-4">
-              <DetailCard
+              <SectionCard
                 title="Storage detail"
                 fields={[
                   {
@@ -552,10 +552,10 @@ export function CloudBuilderDetailPage() {
           <Tab id="bmc-info" label="BMC info">
             <div className="grid grid-cols-12 gap-6 items-start">
               <div className="col-span-12 lg:col-span-4">
-                <DetailCard title="BMC" fields={bmcFields} />
+                <SectionCard title="BMC" fields={bmcFields} />
               </div>
               <div className="col-span-12 lg:col-span-8">
-                <DetailCard
+                <SectionCard
                   title="server_info.json"
                   fields={[
                     {
@@ -580,7 +580,7 @@ export function CloudBuilderDetailPage() {
   }
 
   // Generic detail (discovery, switch, etc.)
-  const genericFields: DetailCardField[] = columns.map((column) => {
+  const genericFields: SectionCardField[] = columns.map((column) => {
     const value = String((row as any)?.[column.key] ?? '-') || '-';
 
     if (column.key === 'storageCapacityGiB') {
@@ -636,7 +636,7 @@ export function CloudBuilderDetailPage() {
         contentClassName="pt-6"
       >
         <Tab id="details" label="Details">
-          <DetailCard title="Details" fields={genericFields} />
+          <SectionCard title="Details" fields={genericFields} />
         </Tab>
       </Tabs>
     </div>
