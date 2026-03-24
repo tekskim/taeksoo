@@ -7,7 +7,7 @@ import { Button } from '@shared/components/Button';
 import { EditKeyPairDrawer } from '../drawers/compute/misc/EditKeyPairDrawer';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import CopyButton from '@shared/components/CopyButton/CopyButton';
-import { IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 interface KeyPairDetail {
   id: string;
@@ -132,9 +132,19 @@ export function ComputeKeyPairDetailPage() {
       <DetailPageHeader
         title={keyPair.name}
         actions={
-          <Button variant="secondary" appearance="outline" size="sm">
-            <IconTrash size={12} stroke={1.5} /> Delete
-          </Button>
+          <div className="flex flex-wrap items-center gap-1">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditDrawerOpen(true)}
+            >
+              <IconEdit size={12} stroke={1.5} /> Edit
+            </Button>
+            <Button variant="secondary" appearance="outline" size="sm">
+              <IconTrash size={12} stroke={1.5} /> Delete
+            </Button>
+          </div>
         }
         infoFields={infoFields}
       />

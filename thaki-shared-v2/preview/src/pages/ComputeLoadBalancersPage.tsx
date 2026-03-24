@@ -224,7 +224,7 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 export function ComputeLoadBalancersPage() {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [associateFipDrawerOpen, setAssociateFipDrawerOpen] = useState(false);
-  const [menuTargetLb, setMenuTargetLb] = useState<LoadBalancerRow | null>(null);
+  const [menuTargetLb, setMenuTargetLb] = useState<LoadBalancer | null>(null);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -498,13 +498,16 @@ export function ComputeLoadBalancersPage() {
                 )}
               >
                 <ContextMenu.Item
-                  disabled={!!row.floatingIp}
-                  action={() => console.log('Associate floating IP', row.id)}
+                  disabled={!!row.floatingIpId}
+                  action={() => {
+                    setMenuTargetLb(row);
+                    setAssociateFipDrawerOpen(true);
+                  }}
                 >
                   Associate floating IP
                 </ContextMenu.Item>
                 <ContextMenu.Item
-                  disabled={!row.floatingIp}
+                  disabled={!row.floatingIpId}
                   action={() => console.log('Disassociate floating IP', row.id)}
                 >
                   Disassociate floating IP
@@ -512,7 +515,14 @@ export function ComputeLoadBalancersPage() {
                 <ContextMenu.Item action={() => console.log('Create listener', row.id)}>
                   Create listener
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuTargetLb(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -521,6 +531,26 @@ export function ComputeLoadBalancersPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <EditLoadBalancerDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setMenuTargetLb(null);
+        }}
+        loadBalancerId={menuTargetLb?.id}
+        initialData={
+          menuTargetLb ? { name: menuTargetLb.name, description: '', adminUp: true } : undefined
+        }
+      />
+      <AssociateFloatingIPToLBDrawer
+        isOpen={associateFipDrawerOpen}
+        onClose={() => {
+          setAssociateFipDrawerOpen(false);
+          setMenuTargetLb(null);
+        }}
+        loadBalancerName={menuTargetLb?.name}
+        vipAddress={menuTargetLb?.vipAddress}
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

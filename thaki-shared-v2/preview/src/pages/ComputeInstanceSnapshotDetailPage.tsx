@@ -194,7 +194,7 @@ export function ComputeInstanceSnapshotDetailPage() {
         <ContextMenu.Item action={() => console.log('Create volume')}>
           Create volume
         </ContextMenu.Item>
-        <ContextMenu.Item action={() => console.log('Edit')}>Edit</ContextMenu.Item>
+        <ContextMenu.Item action={() => setEditDrawerOpen(true)}>Edit</ContextMenu.Item>
       </ContextMenu.Root>
     </div>
   );

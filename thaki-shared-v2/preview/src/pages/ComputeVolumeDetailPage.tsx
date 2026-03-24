@@ -400,17 +400,19 @@ export function ComputeVolumeDetailPage() {
           </Button>
         )}
       >
-        <ContextMenu.Item action={() => console.log('Data protection')}>
-          Data protection
-        </ContextMenu.Item>
-        <ContextMenu.Item action={() => console.log('Operate')}>Operate</ContextMenu.Item>
-        <ContextMenu.SubItems label="Configuration" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => console.log('Extend volume')}>
-            Extend volume
+        <ContextMenu.SubItems label="Data protection" subContextMenuDirection="right-top">
+          <ContextMenu.Item action={() => setSnapshotOpen(true)}>
+            Create volume snapshot
           </ContextMenu.Item>
+          <ContextMenu.Item action={() => setBackupOpen(true)}>
+            Create volume backup
+          </ContextMenu.Item>
+        </ContextMenu.SubItems>
+        <ContextMenu.SubItems label="Configuration" subContextMenuDirection="right-top">
+          <ContextMenu.Item action={() => setExtendOpen(true)}>Extend volume</ContextMenu.Item>
           <ContextMenu.Item action={() => console.log('Change type')}>Change type</ContextMenu.Item>
         </ContextMenu.SubItems>
-        <ContextMenu.Item action={() => console.log('Edit')}>Edit</ContextMenu.Item>
+        <ContextMenu.Item action={() => setEditOpen(true)}>Edit</ContextMenu.Item>
       </ContextMenu.Root>
     </div>
   );
@@ -560,7 +562,12 @@ export function ComputeVolumeDetailPage() {
                 <SectionCard.Header
                   title="Specifications"
                   actions={
-                    <Button variant="secondary" appearance="outline" size="sm">
+                    <Button
+                      variant="secondary"
+                      appearance="outline"
+                      size="sm"
+                      onClick={() => setEditOpen(true)}
+                    >
                       <IconEdit size={12} stroke={1.5} /> Edit
                     </Button>
                   }

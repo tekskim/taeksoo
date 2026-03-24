@@ -196,11 +196,7 @@ export function ComputeSecurityGroupsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Security groups" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/security-groups/create')}
-        >
+        <Button variant="primary" size="md" onClick={() => setCreateSgOpen(true)}>
           Create security group
         </Button>
       </div>
@@ -348,7 +344,14 @@ export function ComputeSecurityGroupsPage() {
                 <ContextMenu.Item action={() => console.log('Create rule', row.id)}>
                   Create rule
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedSg(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>

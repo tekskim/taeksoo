@@ -360,6 +360,9 @@ export function ComputeNetworkDetailPage() {
   const [selectedSubnets, setSelectedSubnets] = useState<(string | number)[]>([]);
   const subnetsPerPage = 10;
 
+  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
+  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
+
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);
   const [portSort, setPortSort] = useState('');
@@ -485,10 +488,20 @@ export function ComputeNetworkDetailPage() {
         title={network.name}
         actions={
           <div className="flex items-center gap-1 flex-wrap">
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setCreateSubnetOpen(true)}
+            >
               <IconCirclePlus size={12} stroke={1.5} /> Create subnet
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditNetworkOpen(true)}
+            >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">
@@ -548,7 +561,12 @@ export function ComputeNetworkDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex items-center justify-between h-7">
                 <h3 className="text-16 font-semibold leading-6 text-text m-0">Subnets</h3>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setCreateSubnetOpen(true)}
+                >
                   <IconCirclePlus size={12} stroke={1.5} /> Create subnet
                 </Button>
               </div>
@@ -785,15 +803,15 @@ export function ComputeNetworkDetailPage() {
         onClose={() => setEditNetworkOpen(false)}
         networkId={id}
         initialData={{
-          name: data.name,
-          shared: data.shared,
-          adminStateUp: data.adminState === 'UP',
+          name: network.name,
+          shared: network.access === 'Shared',
+          adminStateUp: network.adminState === 'Up',
         }}
       />
       <CreateSubnetDrawer
         isOpen={createSubnetOpen}
         onClose={() => setCreateSubnetOpen(false)}
-        networkName={data.name}
+        networkName={network.name}
       />
     </div>
   );

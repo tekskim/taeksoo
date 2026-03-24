@@ -217,10 +217,20 @@ export function ComputeFloatingIPDetailPage() {
         title={floatingIP.floatingIp}
         actions={
           <div className="flex items-center gap-1 flex-wrap">
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setDisassociateOpen(true)}
+            >
               <IconLinkOff size={12} stroke={1.5} /> Disassociate
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditOpen(true)}
+            >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">

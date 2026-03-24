@@ -252,7 +252,12 @@ export function ComputeLoadBalancerDetailPage() {
         title={loadBalancer.name}
         actions={
           <div className="flex items-center gap-1 flex-wrap">
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setAssociateFipOpen(true)}
+            >
               <IconLinkPlus size={12} stroke={1.5} /> Associate floating IP
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">
@@ -261,7 +266,12 @@ export function ComputeLoadBalancerDetailPage() {
             <Button variant="secondary" appearance="outline" size="sm">
               <IconCirclePlus size={12} stroke={1.5} /> Create listener
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditLbOpen(true)}
+            >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">
@@ -419,7 +429,12 @@ export function ComputeLoadBalancerDetailPage() {
                         gap={4}
                         trigger={({ toggle }) => <ListenerMenuTrigger toggle={toggle} />}
                       >
-                        <ContextMenu.Item action={() => console.log('Edit', row.id)}>
+                        <ContextMenu.Item
+                          action={() => {
+                            setActiveListener(row);
+                            setEditListenerOpen(true);
+                          }}
+                        >
                           Edit
                         </ContextMenu.Item>
                         <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>

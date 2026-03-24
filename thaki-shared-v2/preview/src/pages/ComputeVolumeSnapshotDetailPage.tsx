@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -116,7 +116,12 @@ export function ComputeVolumeSnapshotDetailPage() {
             <Button variant="secondary" appearance="outline" size="sm">
               <IconSettings size={12} stroke={1.5} /> Manage metadata
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setEditOpen(true)}
+            >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
             <Button variant="secondary" appearance="outline" size="sm">
@@ -179,8 +184,8 @@ export function ComputeVolumeSnapshotDetailPage() {
       <EditVolumeSnapshotDrawer
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
-        snapshotId={s.id}
-        initialData={{ name: s.name, description: s.description }}
+        snapshotId={snapshot.id}
+        initialData={{ name: snapshot.name, description: snapshot.description }}
       />
     </div>
   );

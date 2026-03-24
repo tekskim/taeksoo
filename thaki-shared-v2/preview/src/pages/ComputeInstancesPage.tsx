@@ -128,11 +128,26 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
+type InstanceRow = Instance | BareMetalInstance;
+
 export function ComputeInstancesPage() {
+  const [selectedInstance, setSelectedInstance] = useState<InstanceRow | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [snapshotOpen, setSnapshotOpen] = useState(false);
   const [lockOpen, setLockOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [attachVolumeOpen, setAttachVolumeOpen] = useState(false);
+  const [detachVolumeOpen, setDetachVolumeOpen] = useState(false);
+  const [attachInterfaceOpen, setAttachInterfaceOpen] = useState(false);
+  const [detachInterfaceOpen, setDetachInterfaceOpen] = useState(false);
+  const [associateFipOpen, setAssociateFipOpen] = useState(false);
+  const [disassociateFipOpen, setDisassociateFipOpen] = useState(false);
+  const [manageSecurityGroupsOpen, setManageSecurityGroupsOpen] = useState(false);
+  const [manageTagsOpen, setManageTagsOpen] = useState(false);
+  const [resizeOpen, setResizeOpen] = useState(false);
+  const [rebuildOpen, setRebuildOpen] = useState(false);
+  const [rescueOpen, setRescueOpen] = useState(false);
+  const [liveMigrateOpen, setLiveMigrateOpen] = useState(false);
 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'vm' | 'bare-metal'>('vm');
@@ -548,57 +563,116 @@ export function ComputeInstancesPage() {
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
                     <ContextMenu.SubItems label="Storage&Snapshot">
-                      <ContextMenu.Item action={() => logAction('Attach volume', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setAttachVolumeOpen(true);
+                        }}
+                      >
                         Attach volume
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Detach volume', instance)} danger>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setDetachVolumeOpen(true);
+                        }}
+                        danger
+                      >
                         Detach volume
                       </ContextMenu.Item>
                       <ContextMenu.Item
-                        action={() => logAction('Create instance snapshot', instance)}
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setSnapshotOpen(true);
+                        }}
                       >
                         Create instance snapshot
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
                     <ContextMenu.SubItems label="Network">
-                      <ContextMenu.Item action={() => logAction('Attach interface', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setAttachInterfaceOpen(true);
+                        }}
+                      >
                         Attach interface
                       </ContextMenu.Item>
                       <ContextMenu.Item
-                        action={() => logAction('Detach interface', instance)}
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setDetachInterfaceOpen(true);
+                        }}
                         danger
                       >
                         Detach interface
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Associate floating IP', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setAssociateFipOpen(true);
+                        }}
+                      >
                         Associate floating IP
                       </ContextMenu.Item>
                       <ContextMenu.Item
-                        action={() => logAction('Disassociate floating IP', instance)}
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setDisassociateFipOpen(true);
+                        }}
                         danger
                       >
                         Disassociate floating IP
                       </ContextMenu.Item>
                       <ContextMenu.Item
-                        action={() => logAction('Manage security groups', instance)}
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setManageSecurityGroupsOpen(true);
+                        }}
                       >
                         Manage security groups
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
                     <ContextMenu.SubItems label="Configuration">
-                      <ContextMenu.Item action={() => logAction('Lock setting', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setLockOpen(true);
+                        }}
+                      >
                         Lock setting
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Rebuild', instance)} danger>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setRebuildOpen(true);
+                        }}
+                        danger
+                      >
                         Rebuild
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Resize', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setResizeOpen(true);
+                        }}
+                      >
                         Resize
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Manage tags', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setManageTagsOpen(true);
+                        }}
+                      >
                         Manage tags
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Edit', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setEditOpen(true);
+                        }}
+                      >
                         Edit
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
@@ -737,13 +811,28 @@ export function ComputeInstancesPage() {
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
                     <ContextMenu.SubItems label="Configuration">
-                      <ContextMenu.Item action={() => logAction('Lock setting', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setLockOpen(true);
+                        }}
+                      >
                         Lock setting
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Manage tags', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setManageTagsOpen(true);
+                        }}
+                      >
                         Manage tags
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => logAction('Edit', instance)}>
+                      <ContextMenu.Item
+                        action={() => {
+                          setSelectedInstance(instance);
+                          setEditOpen(true);
+                        }}
+                      >
                         Edit
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
@@ -761,6 +850,90 @@ export function ComputeInstancesPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <EditInstanceDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        instanceId={selectedInstance?.id ?? ''}
+        initialData={{
+          name: selectedInstance?.name ?? '',
+          description:
+            selectedInstance &&
+            'description' in selectedInstance &&
+            typeof selectedInstance.description === 'string'
+              ? selectedInstance.description
+              : '',
+        }}
+      />
+      <CreateInstanceSnapshotDrawer
+        isOpen={snapshotOpen}
+        onClose={() => setSnapshotOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <LockSettingDrawer
+        isOpen={lockOpen}
+        onClose={() => setLockOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <AttachVolumeDrawer
+        isOpen={attachVolumeOpen}
+        onClose={() => setAttachVolumeOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <DetachVolumeDrawer
+        isOpen={detachVolumeOpen}
+        onClose={() => setDetachVolumeOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <AttachInterfaceDrawer
+        isOpen={attachInterfaceOpen}
+        onClose={() => setAttachInterfaceOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <DetachInterfaceDrawer
+        isOpen={detachInterfaceOpen}
+        onClose={() => setDetachInterfaceOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <AssociateFloatingIPDrawer
+        isOpen={associateFipOpen}
+        onClose={() => setAssociateFipOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <DisassociateFloatingIPDrawer
+        isOpen={disassociateFipOpen}
+        onClose={() => setDisassociateFipOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <ManageSecurityGroupsDrawer
+        isOpen={manageSecurityGroupsOpen}
+        onClose={() => setManageSecurityGroupsOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <ManageTagsDrawer
+        isOpen={manageTagsOpen}
+        onClose={() => setManageTagsOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <ResizeInstanceDrawer
+        isOpen={resizeOpen}
+        onClose={() => setResizeOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <RebuildInstanceDrawer
+        isOpen={rebuildOpen}
+        onClose={() => setRebuildOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <RescueInstanceDrawer
+        isOpen={rescueOpen}
+        onClose={() => setRescueOpen(false)}
+        instanceName={selectedInstance?.name || ''}
+      />
+      <LiveMigrateInstanceDrawer
+        isOpen={liveMigrateOpen}
+        onClose={() => setLiveMigrateOpen(false)}
+        instanceName={selectedInstance?.name || ''}
       />
     </div>
   );

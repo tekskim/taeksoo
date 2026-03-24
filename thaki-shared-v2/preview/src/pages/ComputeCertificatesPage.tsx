@@ -282,7 +282,7 @@ export function ComputeCertificatesPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Certificates" />
-        <Button variant="primary" size="md" onClick={() => console.log('Register certificate')}>
+        <Button variant="primary" size="md" onClick={() => setRegisterDrawerOpen(true)}>
           Register certificate
         </Button>
       </div>
@@ -486,6 +486,14 @@ export function ComputeCertificatesPage() {
                 <ContextMenu.Item action={() => console.log('Download:', row.id)}>
                   Download
                 </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuTargetCert(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -494,6 +502,21 @@ export function ComputeCertificatesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <RegisterCertificateDrawer
+        isOpen={registerDrawerOpen}
+        onClose={() => setRegisterDrawerOpen(false)}
+      />
+      <EditCertificateDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setMenuTargetCert(null);
+        }}
+        certificateId={menuTargetCert?.id}
+        initialData={menuTargetCert ? { name: menuTargetCert.name, description: '' } : undefined}
+      />
+
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
