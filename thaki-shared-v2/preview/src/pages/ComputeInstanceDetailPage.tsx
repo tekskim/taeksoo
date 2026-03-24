@@ -26,7 +26,11 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Tooltip } from '@shared/components/Tooltip';
 import { Badge } from '@shared/components/Badge';
+import { MonitoringToolbar } from '@shared/components/MonitoringToolbar';
+import Tag from '@shared/components/Tag/Tag';
 import CopyButton from '@shared/components/CopyButton/CopyButton';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import { cn } from '@shared/services/utils/cn';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import {
@@ -102,34 +106,21 @@ function floatingStatusVariant(s: FloatingIP['status']): StatusVariant {
   return 'shutoff';
 }
 
-function SearchField({
-  placeholder,
-  value,
-  onChange,
-  className,
-}: {
-  placeholder: string;
-  value: string;
-  onChange: (v: string) => void;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        'flex items-center gap-2 h-8 px-2.5 rounded-md border border-border-strong bg-surface-default w-full max-w-[320px]',
-        className
-      )}
-    >
-      <IconSearch size={14} className="shrink-0 text-text-muted" stroke={1.5} />
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 min-w-0 text-12 leading-[18px] text-text bg-transparent border-none outline-none placeholder:text-text-muted"
-      />
-    </div>
-  );
+/** Single-key attribute search wiring for FilterSearchInput + existing string query state */
+const ATTRIBUTE_SEARCH_FILTER_KEYS: FilterKey[] = [
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter value...' },
+];
+
+function attributeSearchSelectedFilters(query: string): FilterKeyWithValue[] {
+  const q = query.trim();
+  if (!q) return [];
+  return [
+    {
+      ...ATTRIBUTE_SEARCH_FILTER_KEYS[0],
+      id: 'search',
+      value: q,
+    },
+  ];
 }
 
 const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
@@ -515,12 +506,15 @@ export function ComputeInstanceDetailPage() {
   );
 
   const securityToolbar = (
-    <div className="flex flex-col gap-4 pt-2">
-      <SearchField
+    <div className="flex flex-col gap-4 pt-4">
+      <FilterSearchInput
+        className="w-full max-w-[320px]"
+        filterKeys={ATTRIBUTE_SEARCH_FILTER_KEYS}
         placeholder="Search security group by attributes"
-        value={securitySearchQuery}
-        onChange={(v) => {
-          setSecuritySearchQuery(v);
+        defaultFilterKey="name"
+        selectedFilters={attributeSearchSelectedFilters(securitySearchQuery)}
+        onFilterAdd={(f: FilterKeyWithValue) => {
+          setSecuritySearchQuery(String(f.value ?? ''));
           setSecurityCurrentPage(1);
         }}
       />
@@ -638,12 +632,8 @@ export function ComputeInstanceDetailPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Tags">
                     <div className="flex flex-wrap items-center gap-1">
-                      <Badge theme="gry" size="sm" type="subtle">
-                        Team=dev
-                      </Badge>
-                      <Badge theme="gry" size="sm" type="subtle">
-                        Key=Value
-                      </Badge>
+                      <Tag label="Team" value="dev" />
+                      <Tag label="Key" value="Value" />
                     </div>
                   </SectionCard.DataRow>
                   <SectionCard.DataRow
@@ -671,11 +661,14 @@ export function ComputeInstanceDetailPage() {
                   <IconSquarePlus size={12} stroke={1.5} /> Attach volume
                 </Button>
               </div>
-              <SearchField
+              <FilterSearchInput
+                className="w-full max-w-[320px]"
+                filterKeys={ATTRIBUTE_SEARCH_FILTER_KEYS}
                 placeholder="Search volume by attributes"
-                value={volSearchQuery}
-                onChange={(v) => {
-                  setVolSearchQuery(v);
+                defaultFilterKey="name"
+                selectedFilters={attributeSearchSelectedFilters(volSearchQuery)}
+                onFilterAdd={(f: FilterKeyWithValue) => {
+                  setVolSearchQuery(String(f.value ?? ''));
                   setVolPage(1);
                 }}
               />
@@ -766,11 +759,14 @@ export function ComputeInstanceDetailPage() {
                   <IconSquarePlus size={12} stroke={1.5} /> Attach interface
                 </Button>
               </div>
-              <SearchField
+              <FilterSearchInput
+                className="w-full max-w-[320px]"
+                filterKeys={ATTRIBUTE_SEARCH_FILTER_KEYS}
                 placeholder="Search interface by attributes"
-                value={ifSearchQuery}
-                onChange={(v) => {
-                  setIfSearchQuery(v);
+                defaultFilterKey="name"
+                selectedFilters={attributeSearchSelectedFilters(ifSearchQuery)}
+                onFilterAdd={(f: FilterKeyWithValue) => {
+                  setIfSearchQuery(String(f.value ?? ''));
                   setInterfaceCurrentPage(1);
                 }}
               />
@@ -855,11 +851,14 @@ export function ComputeInstanceDetailPage() {
                   <IconLinkPlus size={12} stroke={1.5} /> Associate floating IP
                 </Button>
               </div>
-              <SearchField
+              <FilterSearchInput
+                className="w-full max-w-[320px]"
+                filterKeys={ATTRIBUTE_SEARCH_FILTER_KEYS}
                 placeholder="Search floating IP by attributes"
-                value={fipSearchQuery}
-                onChange={(v) => {
-                  setFipSearchQuery(v);
+                defaultFilterKey="name"
+                selectedFilters={attributeSearchSelectedFilters(fipSearchQuery)}
+                onFilterAdd={(f: FilterKeyWithValue) => {
+                  setFipSearchQuery(String(f.value ?? ''));
                   setFloatingIpCurrentPage(1);
                 }}
               />
@@ -958,11 +957,14 @@ export function ComputeInstanceDetailPage() {
                   <IconCirclePlus size={12} stroke={1.5} /> Create Snapshot
                 </Button>
               </div>
-              <SearchField
+              <FilterSearchInput
+                className="w-full max-w-[320px]"
+                filterKeys={ATTRIBUTE_SEARCH_FILTER_KEYS}
                 placeholder="Search instance snapshot by attributes"
-                value={snapshotSearchQuery}
-                onChange={(v) => {
-                  setSnapshotSearchQuery(v);
+                defaultFilterKey="name"
+                selectedFilters={attributeSearchSelectedFilters(snapshotSearchQuery)}
+                onFilterAdd={(f: FilterKeyWithValue) => {
+                  setSnapshotSearchQuery(String(f.value ?? ''));
                   setSnapshotCurrentPage(1);
                 }}
               />
@@ -1032,22 +1034,19 @@ export function ComputeInstanceDetailPage() {
           <Tab id="monitoring" label="Monitoring">
             <div className="flex flex-col gap-3 pt-4">
               <h2 className="text-16 font-semibold leading-6 text-text m-0">Monitoring</h2>
-              <div className="flex flex-wrap items-center gap-1">
-                {(['1h', '1d', '1w', '2w'] as const).map((r) => (
-                  <Button
-                    key={r}
-                    variant="secondary"
-                    appearance={monitoringTimeRange === r ? 'solid' : 'outline'}
-                    size="sm"
-                    onClick={() => setMonitoringTimeRange(r)}
-                  >
-                    {r}
-                  </Button>
-                ))}
-                <Button variant="secondary" appearance="outline" size="sm" onClick={() => {}}>
-                  Refresh
-                </Button>
-              </div>
+              <MonitoringToolbar
+                timeRange={monitoringTimeRange}
+                onTimeRangeChange={(v) => setMonitoringTimeRange(v as TimeRange)}
+                timeRangeOptions={[
+                  { label: '1h', value: '1h' },
+                  { label: '1d', value: '1d' },
+                  { label: '1w', value: '1w' },
+                  { label: '2w', value: '2w' },
+                ]}
+                customPeriod={null}
+                onCustomPeriodChange={() => {}}
+                onRefresh={() => {}}
+              />
               <div className="flex flex-col gap-3">
                 <div className="flex gap-3 flex-wrap">
                   <div className="flex-1 min-w-[280px] min-h-[200px] rounded-lg border border-border bg-surface-muted" />
@@ -1123,11 +1122,14 @@ export function ComputeInstanceDetailPage() {
                 <h2 className="text-16 font-semibold leading-6 text-text m-0">Action logs</h2>
               </div>
               <div className="flex items-center gap-1 flex-wrap">
-                <SearchField
+                <FilterSearchInput
+                  className="flex-1 min-w-0 max-w-[320px]"
+                  filterKeys={ATTRIBUTE_SEARCH_FILTER_KEYS}
                   placeholder="Search action logs by attributes"
-                  value={actionLogSearchQuery}
-                  onChange={(v) => {
-                    setActionLogSearchQuery(v);
+                  defaultFilterKey="name"
+                  selectedFilters={attributeSearchSelectedFilters(actionLogSearchQuery)}
+                  onFilterAdd={(f: FilterKeyWithValue) => {
+                    setActionLogSearchQuery(String(f.value ?? ''));
                     setActionLogCurrentPage(1);
                   }}
                 />

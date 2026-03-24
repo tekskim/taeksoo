@@ -362,13 +362,13 @@ export function ComputeSecurityGroupDetailPage() {
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
         securityGroupId={id}
-        initialName={data.name}
-        initialDescription={data.description}
+        initialName={securityGroup.name}
+        initialDescription={securityGroup.description}
       />
       <CreateSecurityGroupRuleDrawer
         isOpen={createRuleOpen}
         onClose={() => setCreateRuleOpen(false)}
-        securityGroupName={data.name}
+        securityGroupName={securityGroup.name}
       />
       <CreateAllowedAddressPairDrawer
         isOpen={allowedPairOpen}
