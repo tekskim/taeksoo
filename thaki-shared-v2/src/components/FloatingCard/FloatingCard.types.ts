@@ -1,4 +1,4 @@
-export type FloatingCardStatus = 'processing' | 'success' | 'warning';
+export type FloatingCardStatus = 'processing' | 'success' | 'warning' | 'default' | 'writing';
 
 export type FloatingCardSectionItem = {
   label: string;
@@ -33,4 +33,9 @@ export type FloatingCardProps = {
   defaultExpandedSectionIds?: string[];
   expandedSectionIds?: string[];
   onExpandedSectionIdsChange?: (sectionIds: string[]) => void;
+  cancelLabel?: string;
+  actionLabel?: string;
+  actionEnabled?: boolean;
+  onCancel?: () => void;
+  onAction?: () => void;
 };

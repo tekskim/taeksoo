@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@shared/components/Button';
 import { Input } from '@shared/components/Input';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -10,7 +9,10 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { ActionModal } from '@shared/components/ActionModal';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import { Fieldset } from '@shared/components/Fieldset';
+import Layout from '@shared/components/Layout';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
@@ -106,6 +108,8 @@ export function IAMCreateSysAdminPage() {
     selectedDomain.length > 0 &&
     (passwordOption === 'auto' || (!!password.trim() && password === confirmPassword));
 
+  const basicInfoFilled = !!username.trim() && !!email.trim();
+
   const filteredDomains = useMemo(() => {
     if (appliedFilters.length === 0) return mockDomains;
     return mockDomains.filter((domain) =>
@@ -135,24 +139,37 @@ export function IAMCreateSysAdminPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between h-8">
-        <Title title="Create account" />
-        <Button
-          appearance="ghost"
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate('/iam/system-administrators')}
-        >
-          Back
-        </Button>
-      </div>
-
-      {/* Basic Information */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Basic information</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+    <CreateLayout
+      title="Create account"
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: [
+                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
+                {
+                  label: 'Default domain',
+                  status: selectedDomain.length > 0 ? 'success' : undefined,
+                },
+              ],
+            },
+          ]}
+          onCancel={() => navigate('/iam/system-administrators')}
+          onAction={() => {
+            setSubmitted(true);
+            if (!canSubmit) return;
+            setConfirmOpen(true);
+          }}
+          actionEnabled
+          cancelLabel="Cancel"
+          actionLabel="Create"
+        />
+      }
+    >
+      <Layout.VStack gap="md">
+        <Fieldset legend="Basic information" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">
                 Username <span className="text-error">*</span>
@@ -283,20 +300,15 @@ export function IAMCreateSysAdminPage() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </Fieldset>
 
-      {/* Default domain */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">
-            Default domain <span className="text-error">*</span>
-          </div>
-          <div className="mt-1 text-12 text-text-muted">
-            Select the default domain for this system administrator.
-          </div>
-
-          <div className="mt-4 flex flex-col gap-3">
+        <Fieldset
+          legend="Default domain"
+          description="Select the default domain for this system administrator."
+          variant="bordered"
+          active
+        >
+          <div className="flex flex-col gap-3">
             <FilterSearchInput
               filterKeys={filterKeys}
               onFilterAdd={handleFilterAdd}
@@ -342,31 +354,8 @@ export function IAMCreateSysAdminPage() {
             </SelectableTable>
             {domainError && <span className="text-11 text-error">{domainError}</span>}
           </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          appearance="outline"
-          variant="secondary"
-          size="md"
-          onClick={() => navigate('/iam/system-administrators')}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => {
-            setSubmitted(true);
-            if (!canSubmit) return;
-            setConfirmOpen(true);
-          }}
-        >
-          Create
-        </Button>
-      </div>
+        </Fieldset>
+      </Layout.VStack>
 
       {confirmOpen && (
         <ActionModal
@@ -384,7 +373,7 @@ export function IAMCreateSysAdminPage() {
           }}
         />
       )}
-    </div>
+    </CreateLayout>
   );
 }
 

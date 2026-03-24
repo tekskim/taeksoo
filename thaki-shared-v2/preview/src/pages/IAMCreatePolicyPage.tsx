@@ -5,7 +5,10 @@ import { Input } from '@shared/components/Input';
 import { Dropdown } from '@shared/components/Dropdown';
 import { Checkbox } from '@shared/components/Checkbox';
 import { ActionModal } from '@shared/components/ActionModal';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import { Fieldset } from '@shared/components/Fieldset';
+import Layout from '@shared/components/Layout';
 import { IconPlus, IconX, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
 interface Permission {
@@ -49,6 +52,8 @@ const ACTION_CATEGORIES = [
   { key: 'admin' as const, label: 'Admin' },
 ];
 
+const MAX_PERMISSIONS = 50;
+
 export function IAMCreatePolicyPage() {
   const navigate = useNavigate();
 
@@ -65,6 +70,7 @@ export function IAMCreatePolicyPage() {
     submitted && permissions.length === 0 ? 'At least one permission is required.' : null;
 
   const canSubmit = !!policyName.trim() && permissions.length > 0;
+  const basicInfoFilled = !!policyName.trim();
 
   const addPermission = () => {
     setPermissions((prev) => [...prev, createEmptyPermission()]);
@@ -105,24 +111,39 @@ export function IAMCreatePolicyPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between h-8">
-        <Title title="Create policy" />
-        <Button
-          appearance="ghost"
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate('/iam/policies')}
-        >
-          Back
-        </Button>
-      </div>
-
-      {/* Basic Information */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Basic information</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+    <CreateLayout
+      title="Create policy"
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: [
+                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
+                {
+                  label: 'Policy editor',
+                  status: permissions.length > 0 ? 'processing' : undefined,
+                },
+              ],
+            },
+          ]}
+          quotaTitle="Quota"
+          quotas={[{ label: 'Permissions', used: permissions.length, limit: MAX_PERMISSIONS }]}
+          onCancel={() => navigate('/iam/policies')}
+          onAction={() => {
+            setSubmitted(true);
+            if (!canSubmit) return;
+            setConfirmOpen(true);
+          }}
+          actionEnabled
+          cancelLabel="Cancel"
+          actionLabel="Create"
+        />
+      }
+    >
+      <Layout.VStack gap="md">
+        <Fieldset legend="Basic information" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">
                 Policy name <span className="text-error">*</span>
@@ -151,23 +172,17 @@ export function IAMCreatePolicyPage() {
               />
             </div>
           </div>
-        </div>
-      </div>
+        </Fieldset>
 
-      {/* Policy Editor */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">
-            Policy editor <span className="text-error">*</span>
-          </div>
-          <div className="mt-1 text-12 text-text-muted">
-            Define permissions by specifying targets and actions.
-          </div>
-
-          <div className="mt-4 flex flex-col gap-4">
+        <Fieldset
+          legend="Policy editor"
+          description="Define permissions by specifying targets and actions."
+          variant="bordered"
+          active
+        >
+          <div className="flex flex-col gap-4">
             {permissions.map((perm, idx) => (
               <div key={perm.id} className="border border-border rounded-md bg-surface-subtle">
-                {/* Permission header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
                   <span className="text-12 font-medium text-text">Permission {idx + 1}</span>
                   {permissions.length > 1 && (
@@ -182,7 +197,6 @@ export function IAMCreatePolicyPage() {
                 </div>
 
                 <div className="px-4 py-4 flex flex-col gap-4">
-                  {/* Target */}
                   <div>
                     <div className="text-11 font-medium text-text mb-2">Target</div>
                     <div className="grid grid-cols-4 gap-2">
@@ -237,7 +251,6 @@ export function IAMCreatePolicyPage() {
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-11 font-medium text-text">Actions</span>
@@ -270,7 +283,6 @@ export function IAMCreatePolicyPage() {
             </Button>
           </div>
 
-          {/* Conditions */}
           <div className="mt-4 border-t border-border-subtle pt-4">
             <button
               type="button"
@@ -290,31 +302,8 @@ export function IAMCreatePolicyPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          appearance="outline"
-          variant="secondary"
-          size="md"
-          onClick={() => navigate('/iam/policies')}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => {
-            setSubmitted(true);
-            if (!canSubmit) return;
-            setConfirmOpen(true);
-          }}
-        >
-          Create
-        </Button>
-      </div>
+        </Fieldset>
+      </Layout.VStack>
 
       {confirmOpen && (
         <ActionModal
@@ -332,7 +321,7 @@ export function IAMCreatePolicyPage() {
           }}
         />
       )}
-    </div>
+    </CreateLayout>
   );
 }
 

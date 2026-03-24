@@ -6,7 +6,10 @@ import { Textarea } from '@shared/components/Textarea';
 import { Dropdown } from '@shared/components/Dropdown';
 import { RadioButton } from '@shared/components/RadioButton';
 import { ActionModal } from '@shared/components/ActionModal';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import { Fieldset } from '@shared/components/Fieldset';
+import Layout from '@shared/components/Layout';
 import { IconPlus, IconX } from '@tabler/icons-react';
 
 type Tag = { id: string; key: string; value: string };
@@ -63,26 +66,44 @@ export function StorageCreatePage() {
   const nameError = submitted && !bucketName.trim() ? 'Bucket name is required.' : null;
   const ownerError = submitted && !owner ? 'Please select an owner.' : null;
   const canSubmit = !!bucketName.trim() && !!owner;
+  const basicInfoFilled = !!bucketName.trim() && !!owner;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between h-8">
-        <Title title="Create Bucket" />
-        <Button
-          appearance="ghost"
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate('/storage/buckets')}
-        >
-          Back
-        </Button>
-      </div>
-
-      {/* Basic Information */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Basic information</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+    <CreateLayout
+      title="Create Bucket"
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: [
+                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
+                {
+                  label: 'Settings',
+                  status:
+                    tags.length > 0 || objectLocking === 'enabled' || versioning === 'enabled'
+                      ? 'success'
+                      : undefined,
+                },
+                { label: 'Policy', status: bucketPolicy.trim() ? 'success' : undefined },
+              ],
+            },
+          ]}
+          onCancel={() => navigate('/storage/buckets')}
+          onAction={() => {
+            setSubmitted(true);
+            if (!canSubmit) return;
+            setConfirmOpen(true);
+          }}
+          actionEnabled
+          cancelLabel="Cancel"
+          actionLabel="Create"
+        />
+      }
+    >
+      <Layout.VStack gap="md">
+        <Fieldset legend="Basic information" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">
                 Bucket name <span className="text-error">*</span>
@@ -129,14 +150,10 @@ export function StorageCreatePage() {
               {ownerError && <span className="text-11 text-error mt-1 block">{ownerError}</span>}
             </div>
           </div>
-        </div>
-      </div>
+        </Fieldset>
 
-      {/* Settings */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Settings</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+        <Fieldset legend="Settings" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">Object locking</div>
               <div className="mt-1 text-11 text-text-muted">Once enabled, cannot be disabled</div>
@@ -244,14 +261,10 @@ export function StorageCreatePage() {
               </Dropdown.Select>
             </div>
           </div>
-        </div>
-      </div>
+        </Fieldset>
 
-      {/* Policy */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Policy</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+        <Fieldset legend="Policy" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">Bucket policy</div>
               <div className="mt-1 text-11 text-text-muted">JSON format</div>
@@ -301,31 +314,8 @@ export function StorageCreatePage() {
               </Dropdown.Select>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          appearance="outline"
-          variant="secondary"
-          size="md"
-          onClick={() => navigate('/storage/buckets')}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => {
-            setSubmitted(true);
-            if (!canSubmit) return;
-            setConfirmOpen(true);
-          }}
-        >
-          Create
-        </Button>
-      </div>
+        </Fieldset>
+      </Layout.VStack>
 
       {confirmOpen && (
         <ActionModal
@@ -343,7 +333,7 @@ export function StorageCreatePage() {
           }}
         />
       )}
-    </div>
+    </CreateLayout>
   );
 }
 

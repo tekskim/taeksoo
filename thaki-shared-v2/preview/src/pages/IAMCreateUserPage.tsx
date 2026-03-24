@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@shared/components/Button';
 import { Input } from '@shared/components/Input';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -9,7 +8,10 @@ import { Toggle } from '@shared/components/Toggle';
 import { Pagination } from '@shared/components/Pagination';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { ActionModal } from '@shared/components/ActionModal';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import { Fieldset } from '@shared/components/Fieldset';
+import Layout from '@shared/components/Layout';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
@@ -125,6 +127,8 @@ export function IAMCreateUserPage() {
     !!email.trim() &&
     (passwordOption === 'auto' || (!!password.trim() && password === confirmPassword));
 
+  const basicInfoFilled = !!username.trim() && !!email.trim();
+
   const filteredGroups = useMemo(() => {
     if (appliedFilters.length === 0) return mockUserGroups;
     return mockUserGroups.filter((group) =>
@@ -155,24 +159,37 @@ export function IAMCreateUserPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between h-8">
-        <Title title="Create user" />
-        <Button
-          appearance="ghost"
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate('/iam/users')}
-        >
-          Back
-        </Button>
-      </div>
-
-      {/* Basic Information */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Basic information</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+    <CreateLayout
+      title="Create user"
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: [
+                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
+                {
+                  label: 'Add user to group',
+                  status: selectedGroups.length > 0 ? 'success' : undefined,
+                },
+              ],
+            },
+          ]}
+          onCancel={() => navigate('/iam/users')}
+          onAction={() => {
+            setSubmitted(true);
+            if (!canSubmit) return;
+            setConfirmOpen(true);
+          }}
+          actionEnabled
+          cancelLabel="Cancel"
+          actionLabel="Create"
+        />
+      }
+    >
+      <Layout.VStack gap="md">
+        <Fieldset legend="Basic information" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">
                 Username <span className="text-error">*</span>
@@ -303,18 +320,15 @@ export function IAMCreateUserPage() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </Fieldset>
 
-      {/* Add user to group */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Add user to group</div>
-          <div className="mt-1 text-12 text-text-muted">
-            Select groups to add this user to. You can skip this step.
-          </div>
-
-          <div className="mt-4 flex flex-col gap-3">
+        <Fieldset
+          legend="Add user to group"
+          description="Select groups to add this user to. You can skip this step."
+          variant="bordered"
+          active
+        >
+          <div className="flex flex-col gap-3">
             <FilterSearchInput
               filterKeys={filterKeys}
               onFilterAdd={handleFilterAdd}
@@ -361,31 +375,8 @@ export function IAMCreateUserPage() {
               ))}
             </SelectableTable>
           </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          appearance="outline"
-          variant="secondary"
-          size="md"
-          onClick={() => navigate('/iam/users')}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => {
-            setSubmitted(true);
-            if (!canSubmit) return;
-            setConfirmOpen(true);
-          }}
-        >
-          Create
-        </Button>
-      </div>
+        </Fieldset>
+      </Layout.VStack>
 
       {confirmOpen && (
         <ActionModal
@@ -403,7 +394,7 @@ export function IAMCreateUserPage() {
           }}
         />
       )}
-    </div>
+    </CreateLayout>
   );
 }
 

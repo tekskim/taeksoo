@@ -49,10 +49,7 @@ export const Default: Story = {
     description: '사용자의 기본 정보를 입력해주세요',
   },
   render: (args) => (
-    <Fieldset 
-      legend={args.legend}
-      description={args.description}
-    >
+    <Fieldset legend={args.legend} description={args.description}>
       <Layout.VStack gap="md">
         <Input placeholder="이름" />
         <Input placeholder="이메일" type="email" />
@@ -69,11 +66,7 @@ export const WithCheckboxes: Story = {
     variant: 'bordered',
   },
   render: (args) => (
-    <Fieldset 
-      legend={args.legend}
-      description={args.description}
-      variant={args.variant}
-    >
+    <Fieldset legend={args.legend} description={args.description} variant={args.variant}>
       <Layout.VStack gap="sm">
         <Checkbox label="웹 개발" />
         <Checkbox label="모바일 개발" />
@@ -91,11 +84,7 @@ export const WithRadioGroup: Story = {
     direction: 'horizontal',
   },
   render: (args) => (
-    <Fieldset 
-      legend={args.legend}
-      description={args.description}
-      direction={args.direction}
-    >
+    <Fieldset legend={args.legend} description={args.description} direction={args.direction}>
       <RadioGroup
         name="experience"
         selectedValue=""
@@ -122,10 +111,29 @@ export const Variants: Story = {
           </Layout.VStack>
         </Fieldset>
       </Layout.VStack>
-      
+
       <Layout.VStack gap="md">
         <Typography.Text>Bordered Variant</Typography.Text>
-        <Fieldset legend="테두리 스타일" description="테두리가 있는 필드셋 스타일입니다" variant="bordered">
+        <Fieldset
+          legend="테두리 스타일"
+          description="테두리가 있는 필드셋 스타일입니다"
+          variant="bordered"
+        >
+          <Layout.VStack gap="sm">
+            <Input placeholder="입력 필드 1" />
+            <Input placeholder="입력 필드 2" />
+          </Layout.VStack>
+        </Fieldset>
+      </Layout.VStack>
+
+      <Layout.VStack gap="md">
+        <Typography.Text>Active Bordered Variant</Typography.Text>
+        <Fieldset
+          legend="활성 섹션"
+          description="현재 편집 중인 섹션을 나타냅니다"
+          variant="bordered"
+          active
+        >
           <Layout.VStack gap="sm">
             <Input placeholder="입력 필드 1" />
             <Input placeholder="입력 필드 2" />
@@ -147,10 +155,14 @@ export const Directions: Story = {
           <Checkbox label="옵션 3" />
         </Fieldset>
       </Layout.VStack>
-      
+
       <Layout.VStack gap="md">
         <Typography.Text>Horizontal Direction</Typography.Text>
-        <Fieldset legend="가로 배치" description="요소들이 가로로 배치됩니다" direction="horizontal">
+        <Fieldset
+          legend="가로 배치"
+          description="요소들이 가로로 배치됩니다"
+          direction="horizontal"
+        >
           <Checkbox label="옵션 1" />
           <Checkbox label="옵션 2" />
           <Checkbox label="옵션 3" />

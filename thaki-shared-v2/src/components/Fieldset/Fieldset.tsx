@@ -9,8 +9,7 @@ import {
   legendVariants,
 } from './Fieldset.styles';
 
-export interface FieldsetProps
-  extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
+export interface FieldsetProps extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
   /** 그룹의 제목 (필수) - <legend> 태그로 렌더링됩니다 */
   legend: string;
   /** 그룹에 대한 추가적인 설명 (선택사항) */
@@ -21,6 +20,8 @@ export interface FieldsetProps
   disabled?: boolean;
   /** 시각적 변형 */
   variant?: 'default' | 'bordered' | 'elevated';
+  /** 활성 상태 (primary 2px border) */
+  active?: boolean;
   /** 그룹 내 필드들의 배치 방향 */
   direction?: 'vertical' | 'horizontal';
   /** 필수 필드 표시 방식 */
@@ -35,6 +36,7 @@ export const Fieldset = forwardRef<HTMLFieldSetElement, FieldsetProps>(
       error,
       disabled = false,
       variant = 'default',
+      active = false,
       direction = 'vertical',
       requiredIndicator = 'asterisk',
       className,
@@ -64,6 +66,7 @@ export const Fieldset = forwardRef<HTMLFieldSetElement, FieldsetProps>(
           className={cn(
             fieldsetVariants({
               variant,
+              active,
               disabled,
               error: Boolean(error),
             }),
@@ -71,9 +74,7 @@ export const Fieldset = forwardRef<HTMLFieldSetElement, FieldsetProps>(
           )}
           disabled={disabled}
           aria-invalid={error ? 'true' : undefined}
-          aria-describedby={
-            [descriptionId, errorId].filter(Boolean).join(' ') || undefined
-          }
+          aria-describedby={[descriptionId, errorId].filter(Boolean).join(' ') || undefined}
           {...props}
         >
           <legend

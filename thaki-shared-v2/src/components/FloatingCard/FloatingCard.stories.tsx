@@ -9,7 +9,7 @@ const meta: Meta<typeof FloatingCard> = {
   },
   tags: ['autodocs'],
   decorators: [
-    Story => (
+    (Story) => (
       <div style={{ width: '300px' }}>
         <Story />
       </div>
@@ -29,25 +29,11 @@ export const Default: Story = {
         title: 'Tab title',
         status: 'processing',
         items: [
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'success' },
-          { label: 'Section title', status: 'warning' },
-        ],
-      },
-      {
-        title: 'Tab title',
-        status: 'processing',
-        items: [
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'processing' },
-          { label: 'Section title', status: 'success' },
-          { label: 'Section title', status: 'warning' },
+          { label: 'Basic Information', status: 'success' },
+          { label: 'Configuration', status: 'processing' },
+          { label: 'Network', status: 'default' },
+          { label: 'Storage', status: 'writing' },
+          { label: 'Security', status: 'warning' },
         ],
       },
     ],
@@ -59,6 +45,45 @@ export const Default: Story = {
       { label: 'Disk', used: 4, limit: 10, pending: 2 },
       { label: 'Disk Capacity (GiB)', used: 100, limit: 700, pending: 50 },
     ],
+  },
+};
+
+export const WithFooter: Story = {
+  args: {
+    summaryTitle: 'Summary',
+    sections: [
+      {
+        items: [
+          { label: 'Basic Information', status: 'success' },
+          { label: 'Configuration', status: 'processing' },
+          { label: 'Network', status: 'default' },
+        ],
+      },
+    ],
+    onCancel: () => alert('Cancel'),
+    onAction: () => alert('Create'),
+    actionEnabled: true,
+    cancelLabel: 'Cancel',
+    actionLabel: 'Create',
+  },
+};
+
+export const WithFooter: Story = {
+  args: {
+    summaryTitle: 'Create user',
+    sections: [
+      {
+        items: [
+          { label: 'Basic information', status: 'success' },
+          { label: 'Add user to group', status: 'default' },
+        ],
+      },
+    ],
+    cancelLabel: 'Cancel',
+    actionLabel: 'Create',
+    actionEnabled: false,
+    onCancel: () => console.log('Cancel'),
+    onAction: () => console.log('Create'),
   },
 };
 
