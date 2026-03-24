@@ -1,48 +1,112 @@
+import { useMemo } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
+import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
-import type { DetailCardField } from '@shared/components/DetailCard/DetailCard';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
-import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
-import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import CopyButton from '@shared/components/CopyButton/CopyButton';
+import { IconTrash } from '@tabler/icons-react';
 
 interface KeyPairDetail {
   id: string;
   name: string;
-  type: string;
-  fingerprint: string;
-  createdAt: string;
   userId: string;
+  fingerprint: string;
+  publicKey: string;
+  createdAt: string;
 }
 
-const mockMap: Record<string, KeyPairDetail> = {
+const mockKeyPairsMap: Record<string, KeyPairDetail> = {
   'kp-001': {
     id: 'kp-001',
-    name: 'prod-deploy',
-    type: 'RSA',
-    fingerprint: 'SHA256:ab12cd34ef567890abcdef1234567890abcdef12',
-    createdAt: 'Mar 10, 2025 11:22:33',
-    userId: 'user-88421',
+    name: 'tk-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk...',
+    createdAt: 'Sep 10, 2025 09:23:41',
   },
   'kp-002': {
     id: 'kp-002',
-    name: 'dev-laptop',
-    type: 'ED25519',
-    fingerprint: 'SHA256:9f8e7d6c5b4a3210fedcba9876543210abcdef99',
-    createdAt: 'Mar 8, 2025 09:15:00',
-    userId: 'user-44102',
+    name: 'dev-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDl...',
+    createdAt: 'Sep 8, 2025 14:07:22',
+  },
+  'kp-003': {
+    id: 'kp-003',
+    name: 'prod-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDm...',
+    createdAt: 'Sep 5, 2025 11:45:33',
+  },
+  'kp-004': {
+    id: 'kp-004',
+    name: 'staging-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDn...',
+    createdAt: 'Aug 30, 2025 16:52:08',
+  },
+  'kp-005': {
+    id: 'kp-005',
+    name: 'test-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDo...',
+    createdAt: 'Aug 25, 2025 08:30:15',
+  },
+  'kp-006': {
+    id: 'kp-006',
+    name: 'backup-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDp...',
+    createdAt: 'Aug 20, 2025 13:19:44',
+  },
+  'kp-007': {
+    id: 'kp-007',
+    name: 'jenkins-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDq...',
+    createdAt: 'Aug 15, 2025 10:41:27',
+  },
+  'kp-008': {
+    id: 'kp-008',
+    name: 'ansible-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr...',
+    createdAt: 'Aug 10, 2025 17:03:56',
+  },
+  'kp-009': {
+    id: 'kp-009',
+    name: 'terraform-keypair',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDs...',
+    createdAt: 'Aug 5, 2025 12:28:19',
+  },
+  'kp-010': {
+    id: 'kp-010',
+    name: 'github-deploy-key',
+    userId: '514aa9f6265d4fb397b4345000b2ee9f',
+    fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
+    publicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDt...',
+    createdAt: 'Aug 1, 2025 15:55:02',
   },
 };
 
-const defaultDetail: KeyPairDetail = {
-  id: '-',
-  name: 'Unknown key pair',
-  type: '-',
-  fingerprint: '-',
-  createdAt: '-',
+const defaultKeyPairDetail: KeyPairDetail = {
+  id: 'unknown',
+  name: 'Unknown Key pair',
   userId: '-',
+  fingerprint: '-',
+  publicKey: '-',
+  createdAt: '-',
 };
 
 export function ComputeKeyPairDetailPage() {
@@ -50,50 +114,26 @@ export function ComputeKeyPairDetailPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
 
-  const kp = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
+  const keyPair = useMemo(
+    () => (id ? mockKeyPairsMap[id] || defaultKeyPairDetail : defaultKeyPairDetail),
+    [id]
+  );
 
   const infoFields: DetailPageHeaderInfoField[] = [
-    { label: 'Name', value: kp.name },
-    { label: 'Type', value: kp.type },
-    { label: 'Fingerprint', value: kp.fingerprint, showCopyButton: true, copyText: kp.fingerprint },
-    { label: 'Created at', value: kp.createdAt },
+    { label: 'Created at', value: keyPair.createdAt },
   ];
-
-  const detailFields: DetailCardField[] = [
-    { label: 'Key pair name', value: kp.name },
-    { label: 'Key pair ID', value: kp.id },
-    { label: 'Type', value: kp.type },
-    { label: 'Fingerprint', value: kp.fingerprint },
-    { label: 'Owner user ID', value: kp.userId },
-    { label: 'Created at', value: kp.createdAt },
-  ];
-
-  const actions = (
-    <ContextMenu.Root
-      direction="bottom-end"
-      gap={4}
-      trigger={({ toggle }) => (
-        <Button variant="secondary" appearance="outline" size="sm" onClick={toggle}>
-          Actions <IconChevronDown size={12} stroke={1.5} />
-        </Button>
-      )}
-    >
-      <ContextMenu.Item action={() => {}}>
-        <span className="inline-flex items-center gap-1">
-          <IconEdit size={12} stroke={1.5} /> Edit
-        </span>
-      </ContextMenu.Item>
-      <ContextMenu.Item action={() => {}} danger>
-        <span className="inline-flex items-center gap-1">
-          <IconTrash size={12} stroke={1.5} /> Delete
-        </span>
-      </ContextMenu.Item>
-    </ContextMenu.Root>
-  );
 
   return (
     <div className="flex flex-col gap-6 min-w-0">
-      <DetailPageHeader title={kp.name} actions={actions} infoFields={infoFields} />
+      <DetailPageHeader
+        title={keyPair.name}
+        actions={
+          <Button variant="secondary" appearance="outline" size="sm">
+            <IconTrash size={12} stroke={1.5} /> Delete
+          </Button>
+        }
+        infoFields={infoFields}
+      />
 
       <div className="w-full">
         <Tabs
@@ -104,7 +144,38 @@ export function ComputeKeyPairDetailPage() {
         >
           <Tab id="details" label="Details">
             <div className="flex flex-col gap-4 pt-4">
-              <DetailCard title="Basic information" fields={detailFields} />
+              <SectionCard>
+                <SectionCard.Header title="Basic information" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
+                  <SectionCard.DataRow label="User ID">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-12 leading-18 text-text">{keyPair.userId}</span>
+                      <CopyButton text={keyPair.userId} />
+                    </div>
+                  </SectionCard.DataRow>
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Key identity" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Fingerprint">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-12 leading-18 text-text">{keyPair.fingerprint}</span>
+                      <CopyButton text={keyPair.fingerprint} />
+                    </div>
+                  </SectionCard.DataRow>
+                  <SectionCard.DataRow label="Public key">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-12 leading-18 text-text truncate">
+                        {keyPair.publicKey}
+                      </span>
+                      <CopyButton text={keyPair.publicKey} />
+                    </div>
+                  </SectionCard.DataRow>
+                </SectionCard.Content>
+              </SectionCard>
             </div>
           </Tab>
         </Tabs>

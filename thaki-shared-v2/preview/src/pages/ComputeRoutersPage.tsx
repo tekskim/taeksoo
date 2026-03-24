@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -8,88 +8,183 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import { Badge } from '@shared/components/Badge';
+import { IconDownload, IconExternalLink, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type RouterStatus = 'active' | 'error';
+type RouterStatus = 'active' | 'error' | 'building';
 
-interface RouterRow {
+interface Router {
   id: string;
   name: string;
+  portsCount: number;
+  externalGateway: boolean;
+  externalFixedIp: string;
+  externalNetwork: string;
+  externalNetworkId: string;
+  adminState: boolean;
   status: RouterStatus;
-  externalGateway: string;
   createdAt: string;
-  [key: string]: unknown;
 }
 
-const mockRows: RouterRow[] = [
+const mockRouters: Router[] = [
   {
-    id: 'rtr-001',
-    name: 'prod-edge-router',
+    id: '29tgj234',
+    name: 'router-01',
+    portsCount: 5,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.91',
+    externalNetwork: 'net-01',
+    externalNetworkId: '29tgj234',
+    adminState: true,
     status: 'active',
-    externalGateway: 'ext-gw-01 (203.0.113.10)',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
-    id: 'rtr-002',
-    name: 'qa-router',
+    id: 'router-002',
+    name: 'main-router',
+    portsCount: 3,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.92',
+    externalNetwork: 'external-net',
+    externalNetworkId: 'net-002',
+    adminState: true,
     status: 'active',
-    externalGateway: '—',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
-    id: 'rtr-003',
+    id: 'router-003',
+    name: 'dev-router',
+    portsCount: 2,
+    externalGateway: false,
+    externalFixedIp: '-',
+    externalNetwork: '-',
+    externalNetworkId: '',
+    adminState: true,
+    status: 'active',
+    createdAt: 'Sep 8, 2025 11:51:27',
+  },
+  {
+    id: 'router-004',
+    name: 'prod-router',
+    portsCount: 8,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.93',
+    externalNetwork: 'prod-net',
+    externalNetworkId: 'net-003',
+    adminState: true,
+    status: 'building',
+    createdAt: 'Sep 5, 2025 14:12:36',
+  },
+  {
+    id: 'router-005',
+    name: 'test-router',
+    portsCount: 1,
+    externalGateway: false,
+    externalFixedIp: '-',
+    externalNetwork: '-',
+    externalNetworkId: '',
+    adminState: false,
+    status: 'active',
+    createdAt: 'Aug 30, 2025 21:37:41',
+  },
+  {
+    id: 'router-006',
+    name: 'backup-router',
+    portsCount: 4,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.94',
+    externalNetwork: 'backup-net',
+    externalNetworkId: 'net-004',
+    adminState: true,
+    status: 'active',
+    createdAt: 'Aug 25, 2025 10:32:16',
+  },
+  {
+    id: 'router-007',
     name: 'dmz-router',
-    status: 'active',
-    externalGateway: 'ext-gw-dmz',
-    createdAt: 'Sep 10, 2025 11:45:33',
-  },
-  {
-    id: 'rtr-004',
-    name: 'broken-uplink',
+    portsCount: 6,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.95',
+    externalNetwork: 'dmz-net',
+    externalNetworkId: 'net-005',
+    adminState: false,
     status: 'error',
-    externalGateway: 'ext-gw-legacy',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
-    id: 'rtr-005',
-    name: 'shared-services-rtr',
+    id: 'router-008',
+    name: 'internal-router',
+    portsCount: 2,
+    externalGateway: false,
+    externalFixedIp: '-',
+    externalNetwork: '-',
+    externalNetworkId: '',
+    adminState: true,
     status: 'active',
-    externalGateway: 'nat-pool-2',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
-    id: 'rtr-006',
-    name: 'analytics-router',
+    id: 'router-009',
+    name: 'edge-router',
+    portsCount: 7,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.96',
+    externalNetwork: 'edge-net',
+    externalNetworkId: 'net-006',
+    adminState: true,
     status: 'active',
-    externalGateway: '—',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   {
-    id: 'rtr-007',
-    name: 'staging-rtr',
+    id: 'router-010',
+    name: 'vpn-router',
+    portsCount: 3,
+    externalGateway: true,
+    externalFixedIp: '10.7.60.97',
+    externalNetwork: 'vpn-net',
+    externalNetworkId: 'net-007',
+    adminState: true,
     status: 'active',
-    externalGateway: 'ext-gw-stg',
-    createdAt: 'Mar 22, 2025 10:41:27',
-  },
-  {
-    id: 'rtr-008',
-    name: 'tenant-router-7',
-    status: 'error',
-    externalGateway: 'pending',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    createdAt: 'Aug 5, 2025 14:12:36',
   },
 ];
 
-const statusMap: Record<RouterStatus, StatusVariant> = {
+const routerStatusMap: Record<RouterStatus, StatusVariant> = {
   active: 'active',
   error: 'error',
+  building: 'building',
 };
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  {
+    key: 'externalGateway',
+    label: 'External gateway',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  { key: 'externalFixedIp', label: 'External fixed IP', type: 'input', placeholder: 'Enter IP...' },
+  {
+    key: 'externalNetwork',
+    label: 'External network',
+    type: 'input',
+    placeholder: 'Enter network...',
+  },
+  {
+    key: 'adminState',
+    label: 'Admin state',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Up' },
+      { value: 'false', label: 'Down' },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
@@ -97,31 +192,44 @@ const filterKeys: FilterKey[] = [
     options: [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
     ],
   },
 ];
 
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function routerMatches(r: Router, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const key = filter.key as keyof Router;
+  const value = String(r[key] ?? '').toLowerCase();
+  return value.includes(fv);
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
+
 export function ComputeRoutersPage() {
-  const navigate = useNavigate();
+  const [routers] = useState(mockRouters);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
-
   const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+
+  const filteredRows = useMemo(() => {
+    if (appliedFilters.length === 0) return routers;
+    return routers.filter((r) => appliedFilters.every((f) => routerMatches(r, f)));
+  }, [routers, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -141,16 +249,21 @@ export function ComputeRoutersPage() {
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'externalGateway', header: 'External Gateway' },
+    { key: 'externalGateway', header: 'External gateway' },
+    { key: 'externalFixedIp', header: 'External fixed IP', sortable: true },
+    { key: 'externalNetwork', header: 'External network', sortable: true },
+    { key: 'adminState', header: 'Admin state', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Routers" />
-        <Button variant="primary" size="md" onClick={() => navigate('/compute/routers/create')}>
+        <Button variant="primary" size="md" onClick={() => console.log('Create router')}>
           Create router
         </Button>
       </div>
@@ -161,7 +274,7 @@ export function ComputeRoutersPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search routers by attributes"
+            placeholder="Search router by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -169,11 +282,9 @@ export function ComputeRoutersPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconTrash size={12} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -193,7 +304,7 @@ export function ComputeRoutersPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -223,9 +334,9 @@ export function ComputeRoutersPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<RouterRow>
+      <SelectableTable<Router>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -235,26 +346,52 @@ export function ComputeRoutersPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+              <StatusIndicator variant={routerStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/routers/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/routers/${row.id}`} className={linkClass}>
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">{row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.externalGateway}
+              {row.externalGateway ? 'Yes' : 'No'}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              {row.externalFixedIp}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[4]}>
+              {row.externalNetworkId ? (
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute/networks/${row.externalNetworkId}`}
+                    className={`inline-flex items-center gap-1 min-w-0 ${linkClass}`}
+                  >
+                    <span className="truncate">{row.externalNetwork}</span>
+                    <IconExternalLink size={12} className="shrink-0 text-primary" />
+                  </Link>
+                  <span className="text-11 leading-16 text-text-muted">
+                    ID : {row.externalNetworkId}
+                  </span>
+                </div>
+              ) : (
+                '-'
+              )}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[5]}>
+              <Badge theme={row.adminState ? 'gre' : 'gry'} size="sm" type="subtle">
+                {row.adminState ? 'Up' : 'Down'}
+              </Badge>
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -262,7 +399,7 @@ export function ComputeRoutersPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -276,8 +413,11 @@ export function ComputeRoutersPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => {}}>Connect subnet</ContextMenu.Item>
+                <ContextMenu.Item action={() => {}}>Disconnect subnet</ContextMenu.Item>
+                <ContextMenu.Item action={() => {}}>External gateway Setting</ContextMenu.Item>
+                <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
+                <ContextMenu.Item action={() => {}} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>

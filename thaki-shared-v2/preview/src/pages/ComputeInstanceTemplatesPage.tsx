@@ -1,140 +1,232 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
-import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import { Tabs, Tab } from '@shared/components/Tabs';
+import { IconDownload, IconStar, IconStarFilled, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type TemplateStatus = 'active' | 'disabled';
+type AccessType = 'Personal' | 'Project' | 'Public';
 
 interface InstanceTemplate {
   id: string;
   name: string;
-  status: TemplateStatus;
-  vCpu: string;
+  image: string;
+  flavor: string;
+  vcpu: number;
   ram: string;
   disk: string;
-  createdAt: string;
-  [key: string]: unknown;
+  network: string;
+  floatingIp: string;
+  access: AccessType;
+  favorite: boolean;
 }
 
-const mockRows: InstanceTemplate[] = [
+const mockTemplates: InstanceTemplate[] = [
   {
     id: 'tpl-001',
-    name: 'web-standard',
-    status: 'active',
-    vCpu: '4',
-    ram: '8 GiB',
-    disk: '80 GiB',
-    createdAt: 'Mar 10, 2025 09:12:00',
+    name: 'hj-small',
+    image: '-',
+    flavor: 'Jan 3, 2025',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '10GiB',
+    network: 'in-net',
+    floatingIp: 'None',
+    access: 'Personal',
+    favorite: true,
   },
   {
     id: 'tpl-002',
-    name: 'db-optimized',
-    status: 'active',
-    vCpu: '8',
-    ram: '32 GiB',
-    disk: '200 GiB',
-    createdAt: 'Mar 8, 2025 14:30:22',
+    name: 'web-server-template',
+    image: '-',
+    flavor: 'Jan 2, 2025',
+    vcpu: 16,
+    ram: '32GiB',
+    disk: '50GiB',
+    network: 'public-net',
+    floatingIp: 'Auto',
+    access: 'Project',
+    favorite: true,
   },
   {
     id: 'tpl-003',
-    name: 'gpu-ml',
-    status: 'disabled',
-    vCpu: '16',
-    ram: '64 GiB',
-    disk: '500 GiB',
-    createdAt: 'Feb 28, 2025 11:05:41',
+    name: 'db-template',
+    image: '-',
+    flavor: 'Dec 28, 2024',
+    vcpu: 32,
+    ram: '64GiB',
+    disk: '200GiB',
+    network: 'db-net',
+    floatingIp: 'None',
+    access: 'Personal',
+    favorite: false,
   },
   {
     id: 'tpl-004',
-    name: 'small-dev',
-    status: 'active',
-    vCpu: '2',
-    ram: '4 GiB',
-    disk: '40 GiB',
-    createdAt: 'Feb 20, 2025 16:44:09',
+    name: 'gpu-ml-template',
+    image: '-',
+    flavor: 'Dec 25, 2024',
+    vcpu: 16,
+    ram: '128GiB',
+    disk: '500GiB',
+    network: 'ml-net',
+    floatingIp: 'Auto',
+    access: 'Public',
+    favorite: true,
   },
   {
     id: 'tpl-005',
-    name: 'batch-worker',
-    status: 'active',
-    vCpu: '8',
-    ram: '16 GiB',
-    disk: '120 GiB',
-    createdAt: 'Jan 15, 2025 08:20:33',
+    name: 'minimal-template',
+    image: '-',
+    flavor: 'Dec 20, 2024',
+    vcpu: 2,
+    ram: '4GiB',
+    disk: '10GiB',
+    network: 'in-net',
+    floatingIp: 'None',
+    access: 'Personal',
+    favorite: false,
   },
   {
     id: 'tpl-006',
-    name: 'legacy-app',
-    status: 'disabled',
-    vCpu: '2',
-    ram: '8 GiB',
-    disk: '60 GiB',
-    createdAt: 'Dec 3, 2024 13:11:55',
+    name: 'k8s-worker',
+    image: '-',
+    flavor: 'Dec 18, 2024',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '100GiB',
+    network: 'k8s-net',
+    floatingIp: 'None',
+    access: 'Project',
+    favorite: true,
   },
   {
     id: 'tpl-007',
-    name: 'ci-runner',
-    status: 'active',
-    vCpu: '4',
-    ram: '16 GiB',
-    disk: '100 GiB',
-    createdAt: 'Nov 22, 2024 10:00:12',
+    name: 'k8s-master',
+    image: '-',
+    flavor: 'Dec 18, 2024',
+    vcpu: 4,
+    ram: '8GiB',
+    disk: '50GiB',
+    network: 'k8s-net',
+    floatingIp: 'Auto',
+    access: 'Project',
+    favorite: true,
+  },
+  {
+    id: 'tpl-008',
+    name: 'dev-environment',
+    image: '-',
+    flavor: 'Dec 15, 2024',
+    vcpu: 4,
+    ram: '8GiB',
+    disk: '30GiB',
+    network: 'dev-net',
+    floatingIp: 'Auto',
+    access: 'Personal',
+    favorite: false,
+  },
+  {
+    id: 'tpl-009',
+    name: 'monitoring-stack',
+    image: '-',
+    flavor: 'Dec 10, 2024',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '100GiB',
+    network: 'monitor-net',
+    floatingIp: 'Auto',
+    access: 'Public',
+    favorite: true,
+  },
+  {
+    id: 'tpl-010',
+    name: 'cache-server',
+    image: '-',
+    flavor: 'Dec 5, 2024',
+    vcpu: 4,
+    ram: '32GiB',
+    disk: '20GiB',
+    network: 'cache-net',
+    floatingIp: 'None',
+    access: 'Project',
+    favorite: false,
   },
 ];
 
-const statusMap: Record<TemplateStatus, StatusVariant> = {
-  active: 'active',
-  disabled: 'shutoff',
-};
-
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'network', label: 'Network', type: 'input', placeholder: 'Enter network...' },
   {
-    key: 'status',
-    label: 'Status',
+    key: 'access',
+    label: 'Access',
     type: 'select',
     options: [
-      { value: 'active', label: 'Active' },
-      { value: 'disabled', label: 'Disabled' },
+      { value: 'Personal', label: 'Personal' },
+      { value: 'Project', label: 'Project' },
+      { value: 'Public', label: 'Public' },
     ],
   },
 ];
 
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function templateMatchesFilter(t: InstanceTemplate, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const field = filter.key as keyof InstanceTemplate;
+  const value = String(t[field] ?? '').toLowerCase();
+  return value.includes(fv);
+}
+
 export function ComputeInstanceTemplatesPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'favorites';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  const [templates, setTemplates] = useState(mockTemplates);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
-
   const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
-  const hasSelection = selectedRows.length > 0;
+  const filteredTemplates = useMemo(() => {
+    let filtered = templates;
+    switch (activeTab) {
+      case 'favorites':
+        filtered = filtered.filter((t) => t.favorite);
+        break;
+      case 'personal':
+        filtered = filtered.filter((t) => t.access === 'Personal');
+        break;
+      case 'project':
+        filtered = filtered.filter((t) => t.access === 'Project');
+        break;
+      case 'public':
+        filtered = filtered.filter((t) => t.access === 'Public');
+        break;
+      default:
+        break;
+    }
+    if (appliedFilters.length === 0) return filtered;
+    return filtered.filter((t) => appliedFilters.every((f) => templateMatchesFilter(t, f)));
+  }, [templates, activeTab, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredTemplates.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredTemplates, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -151,15 +243,28 @@ export function ComputeInstanceTemplatesPage() {
     setCurrentPage(1);
   }, []);
 
+  const toggleFavorite = (id: string) => {
+    setTemplates((prev) => prev.map((t) => (t.id === id ? { ...t, favorite: !t.favorite } : t)));
+  };
+
+  const handleBulkDelete = () => {
+    setTemplates((prev) => prev.filter((t) => !selectedRows.includes(t.id)));
+    setSelectedRows([]);
+  };
+
+  const handleRowDelete = (row: InstanceTemplate) => {
+    setTemplates((prev) => prev.filter((t) => t.id !== row.id));
+  };
+
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'favorite', header: '', width: 48, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'vCpu', header: 'vCPU', sortable: true },
-    { key: 'ram', header: 'RAM', sortable: true },
-    { key: 'disk', header: 'Disk', sortable: true },
-    { key: 'createdAt', header: 'Created at', sortable: true },
+    { key: 'image', header: 'Description', sortable: true },
+    { key: 'flavor', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
@@ -170,9 +275,25 @@ export function ComputeInstanceTemplatesPage() {
           size="md"
           onClick={() => navigate('/compute/instance-templates/create')}
         >
-          Create instance template
+          Create template
         </Button>
       </div>
+
+      <Tabs
+        activeTabId={activeTab}
+        onChange={(id) => setActiveTab(id)}
+        variant="line"
+        size="sm"
+        fullWidth
+        contentClassName="hidden"
+      >
+        <Tab id="favorites" label="Current tenant">
+          <></>
+        </Tab>
+        <Tab id="personal" label="Public">
+          <></>
+        </Tab>
+      </Tabs>
 
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
@@ -180,7 +301,7 @@ export function ComputeInstanceTemplatesPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search instance templates by attributes"
+            placeholder="Search template by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -189,7 +310,13 @@ export function ComputeInstanceTemplatesPage() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <Button
+            appearance="outline"
+            variant="muted"
+            size="sm"
+            disabled={!hasSelection}
+            onClick={handleBulkDelete}
+          >
             <IconTrash size={12} /> Delete
           </Button>
         </div>
@@ -233,7 +360,7 @@ export function ComputeInstanceTemplatesPage() {
       )}
 
       <Pagination
-        totalCount={filteredRows.length}
+        totalCount={filteredTemplates.length}
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -257,29 +384,34 @@ export function ComputeInstanceTemplatesPage() {
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(row.id);
+                }}
+                className="p-1 rounded hover:bg-surface-muted transition-colors border-none bg-transparent cursor-pointer"
+                aria-label={row.favorite ? 'Remove favorite' : 'Add favorite'}
+              >
+                {row.favorite ? (
+                  <IconStarFilled size={14} className="text-[var(--primitive-color-yellow400)]" />
+                ) : (
+                  <IconStar size={14} stroke={1.5} className="text-text-muted" />
+                )}
+              </button>
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/instance-templates/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
+              <Link to={`/compute/instance-templates/${row.id}`} className={linkClass}>
                 {row.name}
               </Link>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.vCpu}
+              {row.image}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.ram}
+              {row.flavor}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
-              {row.disk}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[5]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[4]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -287,7 +419,7 @@ export function ComputeInstanceTemplatesPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -301,8 +433,15 @@ export function ComputeInstanceTemplatesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item
+                  action={() => console.log('Create instance from template:', row.id)}
+                >
+                  Create instance
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Duplicate template:', row.id)}>
+                  Duplicate
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
