@@ -1,7 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { EditPortDrawer } from '../drawers/compute/network/EditPortDrawer';
-import { EditPortSecurityGroupsDrawer } from '../drawers/compute/network/EditPortSecurityGroupsDrawer';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -9,128 +7,220 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { EditPortDrawer } from '../drawers/compute/network/EditPortDrawer';
+import { EditPortSecurityGroupsDrawer } from '../drawers/compute/network/EditPortSecurityGroupsDrawer';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import { Tabs, Tab } from '@shared/components/Tabs';
+import { Badge } from '@shared/components/Badge';
+import { Popover } from '@shared/components/Popover';
+import { Tooltip } from '@shared/components/Tooltip';
+import { IconCube, IconDownload, IconRouter, IconTrash, IconX } from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type PortStatus = 'active' | 'error' | 'down';
+type PortStatus = 'active' | 'error' | 'building' | 'down';
 
-interface PortRow {
+interface Port {
   id: string;
   name: string;
-  status: PortStatus;
-  network: string;
-  fixedIps: string;
+  attachedTo: string | null;
+  attachedToId: string | null;
+  attachedType: 'instance' | 'router' | null;
+  ownedNetwork: string;
+  ownedNetworkId: string;
+  securityGroupNames: string[];
+  fixedIp: string;
+  floatingIp: string;
   macAddress: string;
-  createdAt: string;
-  [key: string]: unknown;
+  status: PortStatus;
 }
 
-const mockRows: PortRow[] = [
+const mockPorts: Port[] = [
   {
     id: 'port-001',
-    name: 'instance-01-eth0',
+    name: 'port-01',
+    attachedTo: 'web-01',
+    attachedToId: 'inst-001',
+    attachedType: 'instance',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    securityGroupNames: ['default-sg', 'web-sg', 'lb-sg', 'monitor-sg', 'backup-sg'],
+    fixedIp: '10.7.60.91',
+    floatingIp: '10.7.65.39',
+    macAddress: 'fa:16:3e:34:85:32',
     status: 'active',
-    network: 'prod-vpc-main',
-    fixedIps: '10.0.1.24',
-    macAddress: 'fa:16:3e:4a:2b:c1',
-    createdAt: 'Sep 12, 2025 09:23:41',
   },
   {
     id: 'port-002',
-    name: 'lb-vip-port',
+    name: 'port-02',
+    attachedTo: 'app-server',
+    attachedToId: 'inst-002',
+    attachedType: 'instance',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    securityGroupNames: ['app-sg', 'internal-sg', 'cache-sg'],
+    fixedIp: '10.7.60.92',
+    floatingIp: '10.7.65.40',
+    macAddress: 'fa:16:3e:34:85:33',
     status: 'active',
-    network: 'shared-services',
-    fixedIps: '10.0.10.5, 10.0.10.6',
-    macAddress: 'fa:16:3e:88:aa:01',
-    createdAt: 'Sep 11, 2025 14:07:22',
   },
   {
     id: 'port-003',
-    name: 'orphan-dhcp',
+    name: 'port-03',
+    attachedTo: null,
+    attachedToId: null,
+    attachedType: null,
+    ownedNetwork: 'net-03',
+    ownedNetworkId: 'net-003',
+    securityGroupNames: ['default-sg'],
+    fixedIp: '10.7.60.93',
+    floatingIp: '-',
+    macAddress: 'fa:16:3e:34:85:34',
     status: 'down',
-    network: 'qa-isolated',
-    fixedIps: '—',
-    macAddress: 'fa:16:3e:11:22:33',
-    createdAt: 'Sep 10, 2025 11:45:33',
   },
   {
     id: 'port-004',
-    name: 'router-gw-int',
+    name: 'db-port',
+    attachedTo: 'db-server',
+    attachedToId: 'inst-003',
+    attachedType: 'instance',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    securityGroupNames: ['db-sg'],
+    fixedIp: '10.7.60.94',
+    floatingIp: '-',
+    macAddress: 'fa:16:3e:34:85:35',
     status: 'active',
-    network: 'edge-uplink',
-    fixedIps: '203.0.113.2',
-    macAddress: 'fa:16:3e:de:ad:00',
-    createdAt: 'Aug 1, 2025 16:52:08',
   },
   {
     id: 'port-005',
-    name: 'db-cluster-port',
-    status: 'error',
-    network: 'prod-vpc-main',
-    fixedIps: '10.0.2.101',
-    macAddress: 'fa:16:3e:ff:ee:dd',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    name: 'router-port-1',
+    attachedTo: 'main-router',
+    attachedToId: 'router-001',
+    attachedType: 'router',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    securityGroupNames: [],
+    fixedIp: '10.7.60.1',
+    floatingIp: '-',
+    macAddress: 'fa:16:3e:34:85:36',
+    status: 'active',
   },
   {
     id: 'port-006',
-    name: 'staging-app-port',
+    name: 'lb-port',
+    attachedTo: 'load-balancer-01',
+    attachedToId: 'lb-001',
+    attachedType: 'instance',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    securityGroupNames: ['lb-sg', 'public-sg'],
+    fixedIp: '10.7.60.95',
+    floatingIp: '10.7.65.41',
+    macAddress: 'fa:16:3e:34:85:37',
     status: 'active',
-    network: 'staging-net',
-    fixedIps: '172.16.5.40',
-    macAddress: 'fa:16:3e:01:ab:cd',
-    createdAt: 'Apr 18, 2025 13:19:44',
   },
   {
     id: 'port-007',
-    name: 'analytics-tap',
+    name: 'cache-port',
+    attachedTo: 'redis-01',
+    attachedToId: 'inst-004',
+    attachedType: 'instance',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    securityGroupNames: ['cache-sg'],
+    fixedIp: '10.7.60.96',
+    floatingIp: '-',
+    macAddress: 'fa:16:3e:34:85:38',
     status: 'active',
-    network: 'analytics-net',
-    fixedIps: '10.30.0.12',
-    macAddress: 'fa:16:3e:55:66:77',
-    createdAt: 'Mar 22, 2025 10:41:27',
   },
   {
     id: 'port-008',
-    name: 'vpn-peer',
-    status: 'down',
-    network: 'dmz-net',
-    fixedIps: '192.168.50.2',
-    macAddress: 'fa:16:3e:99:88:77',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    name: 'monitor-port',
+    attachedTo: 'prometheus',
+    attachedToId: 'inst-005',
+    attachedType: 'instance',
+    ownedNetwork: 'net-03',
+    ownedNetworkId: 'net-003',
+    securityGroupNames: ['monitor-sg'],
+    fixedIp: '10.7.60.97',
+    floatingIp: '10.7.65.42',
+    macAddress: 'fa:16:3e:34:85:39',
+    status: 'building',
+  },
+  {
+    id: 'port-009',
+    name: 'test-port',
+    attachedTo: null,
+    attachedToId: null,
+    attachedType: null,
+    ownedNetwork: 'net-04',
+    ownedNetworkId: 'net-004',
+    securityGroupNames: ['default-sg'],
+    fixedIp: '10.7.60.98',
+    floatingIp: '-',
+    macAddress: 'fa:16:3e:34:85:40',
+    status: 'error',
+  },
+  {
+    id: 'port-010',
+    name: 'vpn-port',
+    attachedTo: 'vpn-gateway',
+    attachedToId: 'vpn-001',
+    attachedType: 'instance',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    securityGroupNames: ['vpn-sg'],
+    fixedIp: '10.7.60.99',
+    floatingIp: '10.7.65.43',
+    macAddress: 'fa:16:3e:34:85:41',
+    status: 'active',
   },
 ];
 
-const statusMap: Record<PortStatus, StatusVariant> = {
+const portStatusMap: Record<PortStatus, StatusVariant> = {
   active: 'active',
   error: 'error',
-  down: 'shutoff',
+  building: 'building',
+  down: 'down',
 };
 
 const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
-  { key: 'network', label: 'Network', type: 'input', placeholder: 'Enter network...' },
+  { key: 'name', label: 'Name', type: 'input' },
+  { key: 'attachedTo', label: 'Attached to', type: 'input' },
+  { key: 'ownedNetwork', label: 'Network', type: 'input' },
+  { key: 'fixedIp', label: 'Fixed IP', type: 'input' },
+  { key: 'floatingIp', label: 'Floating IP', type: 'input' },
+  { key: 'macAddress', label: 'MAC Address', type: 'input' },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
+      { value: 'down', label: 'Down' },
+    ],
+  },
 ];
 
-function rowMatchesFilter(row: PortRow, filter: FilterKeyWithValue): boolean {
-  const fieldId = filter.key;
-  const filterValue = (filter.value ?? '').toLowerCase();
-  if (!fieldId || !filterValue) return true;
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
-  switch (fieldId) {
-    case 'name':
-      return row.name?.toLowerCase().includes(filterValue) ?? false;
-    case 'network':
-      return row.network?.toLowerCase().includes(filterValue) ?? false;
-    default:
-      return true;
+function portMatches(p: Port, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  if (filter.key === 'securityGroups') {
+    return p.securityGroupNames.some((n) => n.toLowerCase().includes(fv));
   }
+  const key = filter.key as keyof Port;
+  const value = String(p[key] ?? '').toLowerCase();
+  return value.includes(fv);
 }
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
@@ -144,25 +234,35 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputePortsPage() {
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
   const navigate = useNavigate();
-  const [editPortOpen, setEditPortOpen] = useState(false);
-  const [editSgOpen, setEditSgOpen] = useState(false);
-  const [menuPort, setMenuPort] = useState<PortRow | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'all';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  const [ports] = useState(mockPorts);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const [prefsOpen, setPrefsOpen] = useState(false);
-
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) => appliedFilters.every((f) => rowMatchesFilter(row, f)));
-  }, [appliedFilters]);
 
   const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+
+  const filteredRows = useMemo(() => {
+    let list = ports;
+    if (activeTab === 'instance') {
+      list = list.filter((p) => p.attachedType === 'instance');
+    }
+    if (appliedFilters.length === 0) return list;
+    return list.filter((p) => appliedFilters.every((f) => portMatches(p, f)));
+  }, [ports, appliedFilters, activeTab]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -182,21 +282,44 @@ export function ComputePortsPage() {
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'network', header: 'Network' },
-    { key: 'fixedIps', header: 'Fixed IPs' },
+    { key: 'attachedTo', header: 'Attached to' },
+    { key: 'ownedNetwork', header: 'Owned network', sortable: true },
+    { key: 'securityGroups', header: 'SG' },
+    { key: 'fixedIp', header: 'Fixed IP' },
+    { key: 'floatingIp', header: 'Floating IP' },
     { key: 'macAddress', header: 'MAC Address' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Ports" />
         <Button variant="primary" size="md" onClick={() => navigate('/compute/ports/create')}>
-          Create port
+          Create virtual adapter
         </Button>
       </div>
+
+      <Tabs
+        activeTabId={activeTab}
+        onChange={(id) => {
+          setActiveTab(id);
+          setCurrentPage(1);
+        }}
+        variant="line"
+        size="sm"
+        fullWidth
+        contentClassName="hidden"
+      >
+        <Tab id="all" label="All">
+          <></>
+        </Tab>
+        <Tab id="instance" label="Instance ports">
+          <></>
+        </Tab>
+      </Tabs>
 
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
@@ -204,19 +327,17 @@ export function ComputePortsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search ports by attributes"
+            placeholder="Search port by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
+            <IconDownload size={12} stroke={1.5} />
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconTrash size={12} stroke={1.5} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -236,7 +357,7 @@ export function ComputePortsPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -266,9 +387,9 @@ export function ComputePortsPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<PortRow>
+      <SelectableTable<Port>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -278,33 +399,131 @@ export function ComputePortsPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+              <StatusIndicator variant={portStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/ports/${row.id}`}
-                className="text-primary font-medium hover:underline"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/ports/${row.id}`}
+                  className={`${linkClass} truncate`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.name}
+                </Link>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.network}
+              {row.attachedTo ? (
+                <div className="flex items-center gap-2 justify-between w-full">
+                  <div className="flex flex-col gap-0.5 min-w-0 text-left">
+                    <Tooltip content={row.attachedTo} direction="top">
+                      <Link
+                        to={
+                          row.attachedType === 'router'
+                            ? `/routers/${row.attachedToId}`
+                            : `/instances/${row.attachedToId}`
+                        }
+                        className={`inline-flex items-center gap-1 min-w-0 ${linkClass} truncate`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="truncate">{row.attachedTo}</span>
+                      </Link>
+                    </Tooltip>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                      ID : {row.attachedToId?.substring(0, 8)}
+                    </span>
+                  </div>
+                  <Tooltip
+                    content={row.attachedType === 'router' ? 'Router' : 'Instance'}
+                    direction="top"
+                  >
+                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
+                      {row.attachedType === 'router' ? (
+                        <IconRouter
+                          size={12}
+                          stroke={1.5}
+                          className="text-[var(--color-text-subtle)]"
+                        />
+                      ) : (
+                        <IconCube
+                          size={12}
+                          stroke={1.5}
+                          className="text-[var(--color-text-subtle)]"
+                        />
+                      )}
+                    </div>
+                  </Tooltip>
+                </div>
+              ) : (
+                <span className="block text-left w-full">-</span>
+              )}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.fixedIps}
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Tooltip content={row.ownedNetwork} direction="top">
+                  <Link
+                    to={`/compute/networks/${row.ownedNetworkId}`}
+                    className={`inline-flex items-center gap-1 min-w-0 ${linkClass} truncate`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="truncate">{row.ownedNetwork}</span>
+                  </Link>
+                </Tooltip>
+                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                  ID : {row.ownedNetworkId.substring(0, 8)}
+                </span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.macAddress}
+              {row.securityGroupNames.length === 0 ? (
+                '-'
+              ) : (
+                <span className="flex items-center gap-1 min-w-0">
+                  <span className="truncate min-w-0">{row.securityGroupNames[0]}</span>
+                  {row.securityGroupNames.length > 1 && (
+                    <span className="ml-auto shrink-0">
+                      <Popover
+                        trigger="click"
+                        position="bottom"
+                        aria-label={`All security groups (${row.securityGroupNames.length})`}
+                        content={
+                          <div className="p-4 min-w-[160px] max-w-[320px]">
+                            <div className="text-[10px] font-normal leading-[14px] text-text-muted mb-2">
+                              All security groups ({row.securityGroupNames.length})
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {row.securityGroupNames.map((name, i) => (
+                                <Badge key={i} theme="gry" size="sm" type="subtle">
+                                  {name}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-pointer">
+                          +{row.securityGroupNames.length - 1}
+                        </span>
+                      </Popover>
+                    </span>
+                  )}
+                </span>
+              )}
             </Table.Td>
             <Table.Td rowData={row} column={columns[5]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              {row.fixedIp}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[6]}>
+              {row.floatingIp}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]}>
+              {row.macAddress}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -312,7 +531,7 @@ export function ComputePortsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -327,22 +546,39 @@ export function ComputePortsPage() {
                 )}
               >
                 <ContextMenu.Item
-                  action={() => {
-                    setMenuPort(row);
-                    setEditPortOpen(true);
-                  }}
+                  action={() => console.log('Attach instance:', row.id)}
+                  disabled={!!row.attachedTo}
                 >
-                  Edit
+                  Attach instance
                 </ContextMenu.Item>
                 <ContextMenu.Item
-                  action={() => {
-                    setMenuPort(row);
-                    setEditSgOpen(true);
-                  }}
+                  action={() => console.log('Detach instance:', row.id)}
+                  disabled={!row.attachedTo}
                 >
+                  Detach instance
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => console.log('Associate floating IP:', row.id)}
+                  disabled={!!row.floatingIp}
+                >
+                  Associate floating IP
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => console.log('Disassociate floating IP:', row.id)}
+                  disabled={!row.floatingIp}
+                >
+                  Disassociate floating IP
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Allocate IP:', row.id)}>
+                  Allocate IP
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Manage security groups:', row.id)}>
                   Manage security groups
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -350,34 +586,6 @@ export function ComputePortsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
-
-      <EditPortDrawer
-        isOpen={editPortOpen}
-        onClose={() => {
-          setEditPortOpen(false);
-          setMenuPort(null);
-        }}
-        portId={menuPort?.id}
-        initialData={
-          menuPort
-            ? {
-                name: menuPort.name,
-                description: '',
-                adminStateUp: menuPort.status === 'active',
-                bindingHost: '',
-              }
-            : undefined
-        }
-      />
-      <EditPortSecurityGroupsDrawer
-        isOpen={editSgOpen}
-        onClose={() => {
-          setEditSgOpen(false);
-          setMenuPort(null);
-        }}
-        portName={menuPort?.name}
-        initialSelectedIds={['psg-1']}
-      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

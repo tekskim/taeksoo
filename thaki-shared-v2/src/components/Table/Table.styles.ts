@@ -12,8 +12,7 @@ export const tableStyles = {
   // Table
   table:
     'w-full min-w-[600px] border-separate text-left table-fixed box-border bg-transparent relative',
-  tableAuto:
-    'w-full border-separate text-left table-auto box-border bg-transparent relative',
+  tableAuto: 'w-full border-separate text-left table-auto box-border bg-transparent relative',
   tableSpacing: '[border-spacing:0_var(--semantic-space-xs)]',
   resizing:
     'select-none cursor-col-resize pointer-events-auto [&_*]:pointer-events-none [&_.resize-handle]:pointer-events-auto [&_*]:!transition-none',
@@ -24,20 +23,16 @@ export const tableStyles = {
 
   // Header Cell (th) - font-size: 11px, line-height: 16px
   th: 'relative box-border h-12 px-[12px] py-0 min-w-[50px] text-text text-11 font-medium leading-16 bg-inherit border-t border-b border-border overflow-hidden text-ellipsis whitespace-nowrap select-none',
-  thFirst:
-    '!rounded-tl-base6 !rounded-bl-base6 !pl-[12px] !border-l !border-border',
-  thLast:
-    '!rounded-tr-base6 !rounded-br-base6 !pr-[12px] !border-r !border-border',
+  thFirst: '!rounded-tl-base6 !rounded-bl-base6 !pl-[12px] !border-l !border-border',
+  thLast: '!rounded-tr-base6 !rounded-br-base6 !pr-[12px] !border-r !border-border',
   thSelectionCell:
-    '!pl-[12px] !pr-[12px] !overflow-visible !whitespace-normal !text-clip !rounded-tl-base6 !rounded-bl-base6 !border-l !border-border',
-  thContent:
-    'flex items-center gap-[var(--semantic-space-1-5)] min-w-0 overflow-hidden',
+    '!w-[40px] !min-w-[40px] !max-w-[40px] !px-0 !overflow-visible !whitespace-normal !text-clip !rounded-tl-base6 !rounded-bl-base6 !border-l !border-border [&>div]:!justify-center [&>div]:!overflow-visible',
+  thContent: 'flex items-center gap-[var(--semantic-space-1-5)] min-w-0 overflow-hidden',
   thLabel: 'min-w-0 truncate',
   thClickable: 'cursor-pointer select-none hover:opacity-80',
 
   // Sort icon
-  sortIcon:
-    'inline-flex items-center justify-center text-text-muted opacity-40 shrink-0',
+  sortIcon: 'inline-flex items-center justify-center text-text-muted opacity-40 shrink-0',
   sortIconActive: 'opacity-100 text-text',
   sortIconHover: 'opacity-70',
 
@@ -50,11 +45,10 @@ export const tableStyles = {
   // Data Cell (td)
   td: 'box-border py-[6px] px-[12px] text-[0.75rem] leading-[1rem] text-text align-middle border-t border-b border-border bg-inherit [&>[data-layout="stack"][data-direction="vertical"]]:gap-[var(--semantic-space-0-5)]',
   tdText: 'block min-w-0',
-  tdFirst:
-    'rounded-tl-base6 rounded-bl-base6 border-l border-border',
+  tdFirst: 'rounded-tl-base6 rounded-bl-base6 border-l border-border',
   tdLast: 'rounded-tr-base6 rounded-br-base6 border-r border-border',
   tdSelectionCell:
-    'pl-[12px] pr-[12px] !overflow-visible !whitespace-normal !text-clip text-left cursor-pointer !rounded-tl-base6 !rounded-bl-base6 !border-l !border-border',
+    '!w-[40px] !min-w-[40px] !max-w-[40px] !px-0 !overflow-visible !whitespace-normal !text-clip cursor-pointer !rounded-tl-base6 !rounded-bl-base6 !border-l !border-border [&>*]:!justify-center',
   tdActionCell: 'overflow-visible text-clip whitespace-normal',
   tdActionColumn:
     '[&>[data-layout="stack"][data-direction="horizontal"]]:gap-[var(--semantic-space-xs)] [&>[data-layout="stack"][data-direction="horizontal"]]:justify-center [&>[data-layout="stack"][data-direction="horizontal"]]:items-center [&>[data-layout="stack"][data-direction="horizontal"]]:w-full',
@@ -133,15 +127,7 @@ export function getThClasses(options: {
   align?: 'left' | 'center' | 'right';
   className?: string;
 }): string {
-  const {
-    isFirst,
-    isLast,
-    isSelectionCell,
-    isSortable,
-    isSticky,
-    align,
-    className,
-  } = options;
+  const { isFirst, isLast, isSelectionCell, isSortable, isSticky, align, className } = options;
 
   return [
     tableStyles.th,

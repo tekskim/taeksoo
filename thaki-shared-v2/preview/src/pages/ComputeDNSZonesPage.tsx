@@ -3,97 +3,134 @@ import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
+import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import { Badge } from '@shared/components/Badge';
+import { IconDownload, IconEdit, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
 
-interface DNSZoneRow {
+type ZoneStatus = 'active' | 'pending' | 'error';
+
+interface DNSZone {
   id: string;
   name: string;
-  type: string;
-  records: string;
-  ttl: string;
+  type: 'Public' | 'Private';
+  status: ZoneStatus;
+  recordCount: number;
+  ttl: number;
+  serial: string;
+  description: string;
   createdAt: string;
-  [key: string]: unknown;
 }
 
-const mockRows: DNSZoneRow[] = [
+const mockZones: DNSZone[] = [
   {
-    id: 'dz-001',
+    id: 'zone-001',
     name: 'example.com.',
     type: 'Public',
-    records: '42',
-    ttl: '300',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    status: 'active',
+    recordCount: 24,
+    ttl: 3600,
+    serial: '2025111001',
+    description: 'Production domain',
+    createdAt: 'Nov 10, 2025 09:15:22',
   },
   {
-    id: 'dz-002',
-    name: 'internal.corp.',
-    type: 'Private',
-    records: '128',
-    ttl: '60',
-    createdAt: 'Sep 11, 2025 14:07:22',
-  },
-  {
-    id: 'dz-003',
+    id: 'zone-002',
     name: 'staging.example.com.',
     type: 'Public',
-    records: '18',
-    ttl: '600',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    status: 'active',
+    recordCount: 12,
+    ttl: 3600,
+    serial: '2025110901',
+    description: 'Staging environment',
+    createdAt: 'Nov 9, 2025 11:32:45',
   },
   {
-    id: 'dz-004',
-    name: 'k8s.cluster.local.',
+    id: 'zone-003',
+    name: 'internal.local.',
     type: 'Private',
-    records: '256',
-    ttl: '30',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    status: 'active',
+    recordCount: 45,
+    ttl: 300,
+    serial: '2025110801',
+    description: 'Internal services',
+    createdAt: 'Nov 8, 2025 14:18:33',
   },
   {
-    id: 'dz-005',
-    name: 'apps.example.com.',
+    id: 'zone-004',
+    name: 'dev.example.com.',
     type: 'Public',
-    records: '64',
-    ttl: '300',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    status: 'pending',
+    recordCount: 3,
+    ttl: 3600,
+    serial: '2025110701',
+    description: 'Development environment',
+    createdAt: 'Nov 7, 2025 08:42:17',
   },
   {
-    id: 'dz-006',
-    name: 'analytics.internal.',
+    id: 'zone-005',
+    name: 'api.example.com.',
+    type: 'Public',
+    status: 'active',
+    recordCount: 8,
+    ttl: 1800,
+    serial: '2025110601',
+    description: 'API gateway domain',
+    createdAt: 'Nov 6, 2025 16:25:51',
+  },
+  {
+    id: 'zone-006',
+    name: 'db.internal.local.',
     type: 'Private',
-    records: '33',
-    ttl: '120',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    status: 'error',
+    recordCount: 6,
+    ttl: 60,
+    serial: '2025110501',
+    description: 'Database cluster DNS',
+    createdAt: 'Nov 5, 2025 10:55:28',
   },
   {
-    id: 'dz-007',
-    name: 'legacy-dns.',
+    id: 'zone-007',
+    name: 'cdn.example.com.',
     type: 'Public',
-    records: '9',
-    ttl: '86400',
-    createdAt: 'Mar 22, 2025 10:41:27',
+    status: 'active',
+    recordCount: 15,
+    ttl: 86400,
+    serial: '2025110401',
+    description: 'CDN endpoint records',
+    createdAt: 'Nov 4, 2025 13:38:42',
   },
   {
-    id: 'dz-008',
-    name: 'vpn.example.com.',
+    id: 'zone-008',
+    name: 'mail.example.com.',
     type: 'Public',
-    records: '12',
-    ttl: '300',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    status: 'active',
+    recordCount: 10,
+    ttl: 3600,
+    serial: '2025110301',
+    description: 'Mail server records',
+    createdAt: 'Nov 3, 2025 09:12:15',
   },
 ];
 
+const statusMap: Record<ZoneStatus, StatusVariant> = {
+  active: 'active',
+  pending: 'building',
+  error: 'error',
+};
+
 const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter zone name...' },
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Search zones by name' },
 ];
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
@@ -105,7 +142,18 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
+function zoneMatches(z: DNSZone, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  return z.name.toLowerCase().includes(fv);
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
+
 export function ComputeDNSZonesPage() {
+  const [zones] = useState(mockZones);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -113,19 +161,17 @@ export function ComputeDNSZonesPage() {
   const [order, setOrder] = useState<SortOrder>('asc');
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
-
   const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+
+  const filteredRows = useMemo(() => {
+    if (appliedFilters.length === 0) return zones;
+    return zones.filter((z) => appliedFilters.every((f) => zoneMatches(z, f)));
+  }, [zones, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -143,18 +189,29 @@ export function ComputeDNSZonesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'name', header: 'Name', sortable: true },
+    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'name', header: 'Zone Name', sortable: true },
     { key: 'type', header: 'Type' },
-    { key: 'records', header: 'Records', align: 'right' },
-    { key: 'ttl', header: 'TTL', align: 'right' },
+    { key: 'recordCount', header: 'Records', sortable: true },
+    { key: 'ttl', header: 'TTL' },
+    { key: 'serial', header: 'Serial' },
+    { key: 'description', header: 'Description' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
 
+  const hasSelection = selectedRows.length > 0;
+
+  const linkClass =
+    'text-12 leading-18 font-medium text-primary hover:underline no-underline truncate';
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center h-8">
-        <Title title="DNS zones" />
+      <div className="flex items-center justify-between h-8">
+        <Title title="DNS Zones" />
+        <Button variant="primary" size="md" leftIcon={<IconPlus size={14} stroke={1.5} />}>
+          Create Zone
+        </Button>
       </div>
 
       <div className="flex items-center gap-2">
@@ -163,19 +220,20 @@ export function ComputeDNSZonesPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search DNS zones by attributes"
+            placeholder="Search zones by name"
             defaultFilterKey="name"
           />
-          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
+          <Button appearance="outline" variant="secondary" size="sm" aria-label="Export">
+            <IconDownload size={12} stroke={1.5} />
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="secondary" size="sm" disabled={!hasSelection}>
+          <IconEdit size={12} stroke={1.5} /> Edit TTL
+        </Button>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconTrash size={12} stroke={1.5} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -195,7 +253,7 @@ export function ComputeDNSZonesPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -225,9 +283,9 @@ export function ComputeDNSZonesPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<DNSZoneRow>
+      <SelectableTable<DNSZone>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -237,29 +295,37 @@ export function ComputeDNSZonesPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <Link
-                to={`/compute/dns-zones/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
+              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[1]}>
+              <Link to={`/compute/dns-zones/${row.id}`} className={linkClass}>
                 {row.name}
               </Link>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[1]}>
-              {row.type}
-            </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.records}
+              <Badge theme={row.type === 'Public' ? 'blu' : 'gry'} size="sm" type="subtle">
+                {row.type}
+              </Badge>
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.ttl}
+              {row.recordCount}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              {row.ttl}s
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[5]}>
+              {row.serial}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]}>
+              {row.description}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -267,7 +333,7 @@ export function ComputeDNSZonesPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -281,8 +347,16 @@ export function ComputeDNSZonesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                  Edit zone
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Add record:', row.id)}>
+                  Add record
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Export:', row.id)}>
+                  Export zone file
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>

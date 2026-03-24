@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
+import { default as SectionCard } from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
+import { ResetPasswordDrawer } from '../drawers/iam/ResetPasswordDrawer';
+import { AdminLockSettingDrawer } from '../drawers/iam/AdminLockSettingDrawer';
+import { EditSystemAdminDrawer } from '../drawers/iam/EditSystemAdminDrawer';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
@@ -21,9 +24,6 @@ import {
   IconRefresh,
   IconCircleX,
 } from '@tabler/icons-react';
-import { EditSystemAdminDrawer } from '../drawers/iam/EditSystemAdminDrawer';
-import { AdminLockSettingDrawer } from '../drawers/iam/AdminLockSettingDrawer';
-import { ResetPasswordDrawer } from '../drawers/iam/ResetPasswordDrawer';
 
 interface SystemAdminDetail {
   username: string;
@@ -140,7 +140,7 @@ const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
   <button
     type="button"
     onClick={toggle}
-    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
     aria-label="Actions"
   >
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -168,9 +168,6 @@ export function IAMSystemAdminDetailPage() {
 
   const [sessionFilters, setSessionFilters] = useState<FilterKeyWithValue[]>([]);
   const [sessionPage, setSessionPage] = useState(1);
-  const [editAdminOpen, setEditAdminOpen] = useState(false);
-  const [lockSettingOpen, setLockSettingOpen] = useState(false);
-  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
 
   const admin = username ? mockAdminsMap[username] || defaultAdmin : defaultAdmin;
   const statusVariant: StatusVariant = admin.status === 'online' ? 'active' : 'shutoff';
@@ -210,23 +207,13 @@ export function IAMSystemAdminDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button
-        variant="secondary"
-        appearance="outline"
-        size="sm"
-        onClick={() => setEditAdminOpen(true)}
-      >
+      <Button variant="secondary" appearance="outline" size="sm">
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <Button variant="secondary" appearance="outline" size="sm">
         <IconTrash size={12} stroke={1.5} /> Delete
       </Button>
-      <Button
-        variant="secondary"
-        appearance="outline"
-        size="sm"
-        onClick={() => setLockSettingOpen(true)}
-      >
+      <Button variant="secondary" appearance="outline" size="sm">
         <IconLock size={12} /> Lock setting
       </Button>
       <ContextMenu.Root
@@ -238,9 +225,7 @@ export function IAMSystemAdminDetailPage() {
           </Button>
         )}
       >
-        <ContextMenu.Item action={() => setResetPasswordOpen(true)}>
-          Reset password
-        </ContextMenu.Item>
+        <ContextMenu.Item action={() => {}}>Reset password</ContextMenu.Item>
         <ContextMenu.Item action={() => {}}>Reset MFA</ContextMenu.Item>
         <ContextMenu.Item action={() => {}}>View activity logs</ContextMenu.Item>
       </ContextMenu.Root>
@@ -270,7 +255,7 @@ export function IAMSystemAdminDetailPage() {
         <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
           <Tab id="security-credentials" label="Security credentials">
             <div className="flex flex-col gap-4 pt-4">
-              <DetailCard
+              <SectionCard
                 title="Password"
                 actions={
                   <Button variant="secondary" appearance="outline" size="sm">
@@ -281,7 +266,7 @@ export function IAMSystemAdminDetailPage() {
                   { label: 'Last updated at', value: '2025.09.12 15:43:35 (Updated by admin)' },
                 ]}
               />
-              <DetailCard title={`MFA (${mockMFAMethods.length})`} fields={[]} />
+              <SectionCard title={`MFA (${mockMFAMethods.length})`} fields={[]} />
               <div className="mt-1">
                 <Table columns={mfaColumns} rows={mockMFAMethods}>
                   {mockMFAMethods.map((row) => (

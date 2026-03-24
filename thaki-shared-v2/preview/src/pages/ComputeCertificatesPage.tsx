@@ -1,122 +1,217 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { RegisterCertificateDrawer } from '../drawers/compute/certificate/RegisterCertificateDrawer';
-import { EditCertificateDrawer } from '../drawers/compute/certificate/EditCertificateDrawer';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
+import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { RegisterCertificateDrawer } from '../drawers/compute/certificate/RegisterCertificateDrawer';
+import { EditCertificateDrawer } from '../drawers/compute/certificate/EditCertificateDrawer';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import { Badge } from '@shared/components/Badge';
+import { Popover } from '@shared/components/Popover';
+import { Tabs, Tab } from '@shared/components/Tabs';
+import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type CertType = 'server' | 'ca' | 'client';
+type CertificateStatus = 'active' | 'error' | 'pending';
+type CertificateType = 'server' | 'ca';
 
-interface CertificateRow {
+interface Certificate {
   id: string;
   name: string;
-  type: CertType;
-  domain: string;
-  expiration: string;
+  /** SAN / subject alternative names; empty for CA or N/A */
+  sanDomains: string[];
+  listener: string;
+  listenerId: string;
+  listenerCount: number;
+  expiresAt: string;
   createdAt: string;
-  [key: string]: unknown;
+  type: CertificateType;
+  status: CertificateStatus;
 }
 
-const mockRows: CertificateRow[] = [
+const mockCertificates: Certificate[] = [
   {
     id: 'cert-001',
-    name: 'api-prod-tls',
+    name: 'server-cert-1',
+    sanDomains: ['www.domain.com', 'api.domain.com', 'cdn.domain.com', 'static.domain.com'],
+    listener: 'listener-1',
+    listenerId: '294u92s2',
+    listenerCount: 10,
+    expiresAt: 'Oct 5, 2025',
+    createdAt: 'Oct 3, 2025 00:46:02',
     type: 'server',
-    domain: 'api.example.com',
-    expiration: 'Dec 31, 2026',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    status: 'active',
   },
   {
     id: 'cert-002',
-    name: 'internal-ca',
-    type: 'ca',
-    domain: '—',
-    expiration: 'Jan 15, 2030',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    name: 'api-cert',
+    sanDomains: ['api.example.com', 'api-staging.example.com', 'api-internal.example.com'],
+    listener: 'listener-api',
+    listenerId: '38fj29dk',
+    listenerCount: 2,
+    expiresAt: 'Jan 15, 2026',
+    createdAt: 'Sep 28, 2025 07:11:07',
+    type: 'server',
+    status: 'active',
   },
   {
     id: 'cert-003',
-    name: 'vpn-client-bundle',
-    type: 'client',
-    domain: 'vpn.example.com',
-    expiration: 'Mar 1, 2027',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    name: 'wildcard-cert',
+    sanDomains: [
+      'www.example.org',
+      'api.example.org',
+      'app.example.org',
+      'cdn.example.org',
+      'mail.example.org',
+      'docs.example.org',
+    ],
+    listener: 'listener-web',
+    listenerId: '9dk38fj2',
+    listenerCount: 0,
+    expiresAt: 'Dec 1, 2025',
+    createdAt: 'Sep 20, 2025 23:27:51',
+    type: 'server',
+    status: 'active',
   },
   {
     id: 'cert-004',
-    name: 'wildcard-app',
+    name: 'staging-cert',
+    sanDomains: ['staging.domain.com', 'staging-api.domain.com'],
+    listener: 'listener-staging',
+    listenerId: 'k29dk38f',
+    listenerCount: 0,
+    expiresAt: 'Nov 15, 2025',
+    createdAt: 'Sep 15, 2025 12:22:26',
     type: 'server',
-    domain: '*.apps.example.com',
-    expiration: 'Jun 20, 2026',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    status: 'pending',
   },
   {
     id: 'cert-005',
-    name: 'staging-ingress',
+    name: 'internal-cert',
+    sanDomains: [
+      'internal.company.com',
+      'svc.internal.company.com',
+      'db.internal.company.com',
+      'cache.internal.company.com',
+      'queue.internal.company.com',
+    ],
+    listener: 'listener-internal',
+    listenerId: 'fj29dk38',
+    listenerCount: 5,
+    expiresAt: 'Mar 20, 2026',
+    createdAt: 'Sep 10, 2025 01:17:01',
     type: 'server',
-    domain: 'staging.example.com',
-    expiration: 'Nov 5, 2025',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    status: 'active',
   },
   {
     id: 'cert-006',
-    name: 'mtls-sidecar',
-    type: 'client',
-    domain: 'mesh.local',
-    expiration: 'Apr 12, 2028',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    name: 'root-ca',
+    sanDomains: [],
+    listener: '-',
+    listenerId: '',
+    listenerCount: 0,
+    expiresAt: 'Jan 1, 2030',
+    createdAt: 'Jan 1, 2025 10:20:28',
+    type: 'ca',
+    status: 'active',
   },
   {
     id: 'cert-007',
-    name: 'subordinate-ca',
+    name: 'intermediate-ca',
+    sanDomains: [],
+    listener: '-',
+    listenerId: '',
+    listenerCount: 0,
+    expiresAt: 'Jun 15, 2028',
+    createdAt: 'Jun 15, 2025 12:22:26',
     type: 'ca',
-    domain: '—',
-    expiration: 'Sep 9, 2029',
-    createdAt: 'Mar 22, 2025 10:41:27',
+    status: 'active',
   },
   {
     id: 'cert-008',
-    name: 'ldap-tls',
+    name: 'expired-cert',
+    sanDomains: ['old.domain.com', 'legacy.old.domain.com', 'redirect.old.domain.com'],
+    listener: '-',
+    listenerId: '',
+    listenerCount: 0,
+    expiresAt: 'Aug 1, 2025',
+    createdAt: 'Aug 1, 2024 10:20:28',
     type: 'server',
-    domain: 'ldap.corp.internal',
-    expiration: 'Feb 28, 2026',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    status: 'error',
   },
   {
     id: 'cert-009',
-    name: 'backup-s3',
-    type: 'client',
-    domain: 's3.amazonaws.com',
-    expiration: 'Jul 4, 2027',
-    createdAt: 'May 30, 2025 12:28:19',
+    name: 'dev-ca',
+    sanDomains: [],
+    listener: '-',
+    listenerId: '',
+    listenerCount: 0,
+    expiresAt: 'Dec 31, 2027',
+    createdAt: 'Jan 15, 2025 12:22:26',
+    type: 'ca',
+    status: 'active',
+  },
+  {
+    id: 'cert-010',
+    name: 'client-auth-cert',
+    sanDomains: ['auth.domain.com', 'auth-admin.domain.com'],
+    listener: 'listener-auth',
+    listenerId: '29dk38fj',
+    listenerCount: 0,
+    expiresAt: 'Jun 1, 2026',
+    createdAt: 'Jun 1, 2025 10:20:28',
+    type: 'server',
+    status: 'active',
   },
 ];
 
+const certStatusMap: Record<CertificateStatus, StatusVariant> = {
+  active: 'active',
+  error: 'error',
+  pending: 'building',
+};
+
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'domain', label: 'Domain', type: 'input', placeholder: 'Enter domain...' },
   {
-    key: 'type',
-    label: 'Type',
+    key: 'status',
+    label: 'Status',
     type: 'select',
     options: [
-      { value: 'server', label: 'Server' },
-      { value: 'ca', label: 'CA' },
-      { value: 'client', label: 'Client' },
+      { value: 'active', label: 'Active' },
+      { value: 'error', label: 'Error' },
+      { value: 'pending', label: 'Pending' },
     ],
   },
 ];
+
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function certMatches(c: Certificate, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  if (filter.key === 'domain') {
+    return c.sanDomains.some((d) => d.toLowerCase().includes(fv));
+  }
+  const v = c[filter.key as keyof Certificate];
+  if (typeof v === 'string') return v.toLowerCase().includes(fv);
+  return true;
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
@@ -128,30 +223,33 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeCertificatesPage() {
-  const navigate = useNavigate();
+  const [registerDrawerOpen, setRegisterDrawerOpen] = useState(false);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [menuTargetCert, setMenuTargetCert] = useState<Certificate | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'server';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const [registerDrawerOpen, setRegisterDrawerOpen] = useState(false);
-  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
-  const [menuTargetCert, setMenuTargetCert] = useState<CertificateRow | null>(null);
-  const [prefsOpen, setPrefsOpen] = useState(false);
-
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
 
   const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+
+  const filteredRows = useMemo(() => {
+    let filtered = mockCertificates.filter((c) => c.type === activeTab);
+    if (appliedFilters.length === 0) return filtered;
+    return filtered.filter((c) => appliedFilters.every((f) => certMatches(c, f)));
+  }, [activeTab, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -169,36 +267,41 @@ export function ComputeCertificatesPage() {
   }, []);
 
   const columns: TableColumn[] = [
+    { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'type', header: 'Type' },
-    { key: 'domain', header: 'Domain' },
-    { key: 'expiration', header: 'Expiration', sortable: true },
+    { key: 'domain', header: 'SAN', sortable: true },
+    { key: 'listener', header: 'Listener', sortable: true },
+    { key: 'expiresAt', header: 'Expires at', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Certificates" />
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            appearance="outline"
-            size="md"
-            onClick={() => setRegisterDrawerOpen(true)}
-          >
-            Register certificate
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => navigate('/compute/certificates/create')}
-          >
-            Create certificate
-          </Button>
-        </div>
+        <Button variant="primary" size="md" onClick={() => console.log('Register certificate')}>
+          Register certificate
+        </Button>
       </div>
+
+      <Tabs
+        activeTabId={activeTab}
+        onChange={(id) => setActiveTab(id)}
+        variant="line"
+        size="sm"
+        fullWidth
+        contentClassName="hidden"
+      >
+        <Tab id="server" label="Server">
+          <></>
+        </Tab>
+        <Tab id="ca" label="CA">
+          <></>
+        </Tab>
+      </Tabs>
 
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
@@ -206,7 +309,7 @@ export function ComputeCertificatesPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search certificates by attributes"
+            placeholder="Search certificate by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -214,11 +317,9 @@ export function ComputeCertificatesPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconTrash size={12} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -238,7 +339,7 @@ export function ComputeCertificatesPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -268,9 +369,9 @@ export function ComputeCertificatesPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<CertificateRow>
+      <SelectableTable<Certificate>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -280,29 +381,87 @@ export function ComputeCertificatesPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <Link
-                to={`/compute/certificates/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+              <StatusIndicator variant={certStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              {row.type}
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/certificates/${row.id}`} className={linkClass}>
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID : {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.domain}
+              {row.sanDomains.length === 0 ? (
+                '-'
+              ) : (
+                <span className="flex items-center gap-1 min-w-0 max-w-full">
+                  <span className="truncate min-w-0">{row.sanDomains[0]}</span>
+                  {row.sanDomains.length > 1 && (
+                    <span className="ml-auto shrink-0">
+                      <Popover
+                        trigger="click"
+                        position="bottom"
+                        aria-label={`All SANs (${row.sanDomains.length})`}
+                        content={
+                          <div className="p-4 min-w-[160px] max-w-[320px]">
+                            <div className="text-[10px] font-normal leading-[14px] text-text-muted mb-2">
+                              All SANs ({row.sanDomains.length})
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {row.sanDomains.map((d, i) => (
+                                <Badge key={i} theme="gry" size="sm" type="subtle">
+                                  {d}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        }
+                      >
+                        <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-pointer">
+                          +{row.sanDomains.length - 1}
+                        </span>
+                      </Popover>
+                    </span>
+                  )}
+                </span>
+              )}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.expiration}
+              {row.listener === '-' ? (
+                '-'
+              ) : (
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <div className="flex w-full items-center gap-1">
+                    <span className="text-12 leading-18 text-text">{row.listener}</span>
+                    {row.listenerCount > 0 && (
+                      <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-10 leading-14 font-medium text-text-muted bg-surface-subtle h-5">
+                        +{row.listenerCount}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-11 leading-16 text-text-muted">ID : {row.listenerId}</span>
+                </div>
+              )}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              <span
+                className={
+                  new Date(row.expiresAt) < new Date()
+                    ? 'text-[var(--semantic-color-text-danger)]'
+                    : ''
+                }
+              >
+                {row.expiresAt}
+              </span>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[5]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -310,7 +469,7 @@ export function ComputeCertificatesPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -324,13 +483,8 @@ export function ComputeCertificatesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item
-                  action={() => {
-                    setMenuTargetCert(row);
-                    setEditDrawerOpen(true);
-                  }}
-                >
-                  Edit
+                <ContextMenu.Item action={() => console.log('Download:', row.id)}>
+                  Download
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
@@ -340,20 +494,6 @@ export function ComputeCertificatesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
-
-      <RegisterCertificateDrawer
-        isOpen={registerDrawerOpen}
-        onClose={() => setRegisterDrawerOpen(false)}
-      />
-      <EditCertificateDrawer
-        isOpen={editDrawerOpen}
-        onClose={() => {
-          setEditDrawerOpen(false);
-          setMenuTargetCert(null);
-        }}
-        certificateId={menuTargetCert?.id}
-        initialData={menuTargetCert ? { name: menuTargetCert.name, description: '' } : undefined}
-      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

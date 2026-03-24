@@ -7,11 +7,6 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import { AllocateFloatingIPDrawer } from '../drawers/compute/floating-ip/AllocateFloatingIPDrawer';
 import { EditFloatingIPDrawer } from '../drawers/compute/floating-ip/EditFloatingIPDrawer';
 import { AssociateFloatingIPToPortDrawer } from '../drawers/compute/floating-ip/AssociateFloatingIPToPortDrawer';
@@ -20,95 +15,183 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import { Tooltip } from '@shared/components/Tooltip';
+import {
+  IconBinaryTree,
+  IconCube,
+  IconDownload,
+  IconExternalLink,
+  IconUnlink,
+  IconX,
+} from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type FipStatus = 'active' | 'down' | 'error';
+type FloatingIPStatus = 'active' | 'error' | 'down';
 
-interface FloatingIPRow {
+interface FloatingIP {
   id: string;
   floatingIp: string;
-  status: FipStatus;
+  associatedTo: string | null;
+  associatedToId: string | null;
   fixedIp: string;
-  port: string;
+  network: string;
+  networkId: string;
   createdAt: string;
-  [key: string]: unknown;
+  status: FloatingIPStatus;
 }
 
-const mockRows: FloatingIPRow[] = [
+const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-001',
-    floatingIp: '203.0.113.50',
+    floatingIp: '172.24.4.228',
+    associatedTo: 'web-01',
+    associatedToId: 'inst-001',
+    fixedIp: '10.7.65.39',
+    network: 'net-01',
+    networkId: 'net-001',
+    createdAt: 'Oct 1, 2025 10:20:28',
     status: 'active',
-    fixedIp: '10.0.1.24',
-    port: 'instance-01-eth0',
-    createdAt: 'Sep 12, 2025 09:23:41',
   },
   {
     id: 'fip-002',
-    floatingIp: '203.0.113.51',
+    floatingIp: '172.24.4.229',
+    associatedTo: 'app-server',
+    associatedToId: 'inst-002',
+    fixedIp: '10.7.65.40',
+    network: 'net-02',
+    networkId: 'net-002',
+    createdAt: 'Oct 2, 2025 17:33:45',
     status: 'active',
-    fixedIp: '10.0.10.5',
-    port: 'lb-vip-port',
-    createdAt: 'Sep 11, 2025 14:07:22',
   },
   {
     id: 'fip-003',
-    floatingIp: '198.51.100.20',
+    floatingIp: '172.24.4.230',
+    associatedTo: null,
+    associatedToId: null,
+    fixedIp: '-',
+    network: 'net-01',
+    networkId: 'net-001',
+    createdAt: 'Oct 3, 2025 00:46:02',
     status: 'down',
-    fixedIp: '—',
-    port: '—',
-    createdAt: 'Sep 10, 2025 11:45:33',
   },
   {
     id: 'fip-004',
-    floatingIp: '203.0.113.88',
+    floatingIp: '172.24.4.231',
+    associatedTo: 'db-server',
+    associatedToId: 'inst-003',
+    fixedIp: '10.7.65.41',
+    network: 'net-03',
+    networkId: 'net-003',
+    createdAt: 'Sep 28, 2025 07:11:07',
     status: 'active',
-    fixedIp: '10.20.1.9',
-    port: 'orphan-port',
-    createdAt: 'Aug 1, 2025 16:52:08',
   },
   {
     id: 'fip-005',
-    floatingIp: '203.0.113.90',
-    status: 'error',
-    fixedIp: '10.0.2.101',
-    port: 'db-cluster-port',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    floatingIp: '172.24.4.232',
+    associatedTo: 'load-balancer',
+    associatedToId: 'lb-001',
+    fixedIp: '10.7.65.42',
+    network: 'net-01',
+    networkId: 'net-001',
+    createdAt: 'Sep 25, 2025 10:32:16',
+    status: 'active',
   },
   {
     id: 'fip-006',
-    floatingIp: '192.0.2.100',
-    status: 'active',
-    fixedIp: '172.16.5.40',
-    port: 'staging-app-port',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    floatingIp: '172.24.4.233',
+    associatedTo: null,
+    associatedToId: null,
+    fixedIp: '-',
+    network: 'net-02',
+    networkId: 'net-002',
+    createdAt: 'Sep 20, 2025 23:27:51',
+    status: 'error',
   },
   {
     id: 'fip-007',
-    floatingIp: '203.0.113.120',
+    floatingIp: '172.24.4.234',
+    associatedTo: 'monitoring',
+    associatedToId: 'inst-004',
+    fixedIp: '10.7.65.43',
+    network: 'net-01',
+    networkId: 'net-001',
+    createdAt: 'Sep 15, 2025 12:22:26',
     status: 'active',
-    fixedIp: '10.30.0.12',
-    port: 'analytics-port',
-    createdAt: 'Mar 22, 2025 10:41:27',
   },
   {
     id: 'fip-008',
-    floatingIp: '198.51.100.44',
+    floatingIp: '172.24.4.235',
+    associatedTo: 'vpn-gateway',
+    associatedToId: 'vpn-001',
+    fixedIp: '10.7.65.44',
+    network: 'net-04',
+    networkId: 'net-004',
+    createdAt: 'Sep 10, 2025 01:17:01',
     status: 'active',
-    fixedIp: '10.0.1.200',
-    port: 'floating-bind',
-    createdAt: 'Feb 14, 2025 17:03:56',
+  },
+  {
+    id: 'fip-009',
+    floatingIp: '172.24.4.236',
+    associatedTo: null,
+    associatedToId: null,
+    fixedIp: '-',
+    network: 'net-03',
+    networkId: 'net-003',
+    createdAt: 'Sep 5, 2025 14:12:36',
+    status: 'down',
+  },
+  {
+    id: 'fip-010',
+    floatingIp: '172.24.4.237',
+    associatedTo: 'backup-server',
+    associatedToId: 'inst-005',
+    fixedIp: '10.7.65.45',
+    network: 'net-01',
+    networkId: 'net-001',
+    createdAt: 'Sep 1, 2025 10:20:28',
+    status: 'active',
   },
 ];
 
-const statusMap: Record<FipStatus, StatusVariant> = {
+const floatingIPStatusMap: Record<FloatingIPStatus, StatusVariant> = {
   active: 'active',
-  down: 'shutoff',
   error: 'error',
+  down: 'down',
 };
 
 const filterKeys: FilterKey[] = [
-  { key: 'floatingIp', label: 'Floating IP', type: 'input', placeholder: 'Enter address...' },
+  { key: 'floatingIp', label: 'Floating IP', type: 'input' },
+  { key: 'associatedTo', label: 'Associated to', type: 'input' },
+  { key: 'fixedIp', label: 'Fixed IP', type: 'input' },
+  { key: 'network', label: 'Network', type: 'input' },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'error', label: 'Error' },
+      { value: 'down', label: 'Down' },
+    ],
+  },
 ];
+
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
+
+function fipMatches(f: FloatingIP, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const key = filter.key as keyof FloatingIP;
+  const value = String(f[key] ?? '').toLowerCase();
+  return value.includes(fv);
+}
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
@@ -120,32 +203,27 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeFloatingIPsPage() {
+  const [editOpen, setEditOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
+  const [floatingIPs] = useState(mockFloatingIPs);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
-  const [allocateOpen, setAllocateOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [associateOpen, setAssociateOpen] = useState(false);
-  const [disassociateOpen, setDisassociateOpen] = useState(false);
-  const [activeFipRow, setActiveFipRow] = useState<FloatingIPRow | null>(null);
-  const [prefsOpen, setPrefsOpen] = useState(false);
+  const itemsPerPage = 10;
 
   const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
+    if (appliedFilters.length === 0) return floatingIPs;
+    return floatingIPs.filter((f) => appliedFilters.every((fl) => fipMatches(f, fl)));
+  }, [floatingIPs, appliedFilters]);
 
-  const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -165,18 +243,26 @@ export function ComputeFloatingIPsPage() {
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'floatingIp', header: 'Floating IP', sortable: true },
-    { key: 'fixedIp', header: 'Fixed IP' },
-    { key: 'port', header: 'Port' },
+    { key: 'associatedTo', header: 'Associated to' },
+    { key: 'fixedIp', header: 'Fixed IP', sortable: true },
+    { key: 'network', header: 'Network', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Floating IPs" />
-        <Button variant="primary" size="md" onClick={() => setAllocateOpen(true)}>
-          Allocate floating IP
+        <Button
+          variant="primary"
+          size="md"
+          leftIcon={<IconBinaryTree size={12} stroke={1.5} />}
+          onClick={() => console.log('Allocate Floating IP')}
+        >
+          Allocate Floating IP
         </Button>
       </div>
 
@@ -186,19 +272,17 @@ export function ComputeFloatingIPsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search floating IPs by attributes"
+            placeholder="Search floating IP by attributes"
             defaultFilterKey="floatingIp"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
+            <IconDownload size={12} stroke={1.5} />
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconUnlink size={12} stroke={1.5} /> Release
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -218,7 +302,7 @@ export function ComputeFloatingIPsPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -248,9 +332,9 @@ export function ComputeFloatingIPsPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<FloatingIPRow>
+      <SelectableTable<FloatingIP>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -260,29 +344,79 @@ export function ComputeFloatingIPsPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+              <StatusIndicator variant={floatingIPStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/floating-ips/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.floatingIp}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/floating-ips/${row.id}`}
+                  className={`${linkClass} truncate`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.floatingIp}
+                </Link>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.fixedIp}
+              {row.associatedTo ? (
+                <div className="flex items-center gap-2 justify-between w-full">
+                  <div className="flex flex-col gap-0.5 min-w-0 text-left">
+                    <Tooltip content={row.associatedTo} direction="top">
+                      <Link
+                        to={`/compute/instances/${row.associatedToId}`}
+                        className={`inline-flex items-center gap-1 min-w-0 ${linkClass} truncate`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="truncate">{row.associatedTo}</span>
+                        <IconExternalLink size={12} className="flex-shrink-0 text-primary" />
+                      </Link>
+                    </Tooltip>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                      ID : {row.associatedToId?.substring(0, 8)}
+                    </span>
+                  </div>
+                  <Tooltip content="Instance" direction="top">
+                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
+                      <IconCube
+                        size={12}
+                        stroke={1.5}
+                        className="text-[var(--color-text-subtle)]"
+                      />
+                    </div>
+                  </Tooltip>
+                </div>
+              ) : (
+                <span className="block text-left w-full">-</span>
+              )}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.port}
+              {row.fixedIp}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Tooltip content={row.network} direction="top">
+                  <Link
+                    to={`/compute/networks/${row.networkId}`}
+                    className={`inline-flex items-center gap-1 min-w-0 ${linkClass} truncate`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="truncate">{row.network}</span>
+                    <IconExternalLink size={12} className="flex-shrink-0 text-primary" />
+                  </Link>
+                </Tooltip>
+                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                  ID : {row.networkId.substring(0, 8)}
+                </span>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[5]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -290,7 +424,7 @@ export function ComputeFloatingIPsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -305,68 +439,28 @@ export function ComputeFloatingIPsPage() {
                 )}
               >
                 <ContextMenu.Item
-                  action={() => {
-                    setActiveFipRow(row);
-                    setEditOpen(true);
-                  }}
-                >
-                  Edit
-                </ContextMenu.Item>
-                <ContextMenu.Item
-                  action={() => {
-                    setActiveFipRow(row);
-                    setAssociateOpen(true);
-                  }}
+                  action={() => console.log('Associate:', row.id)}
+                  disabled={!!row.associatedTo}
                 >
                   Associate
                 </ContextMenu.Item>
                 <ContextMenu.Item
-                  action={() => {
-                    setActiveFipRow(row);
-                    setDisassociateOpen(true);
-                  }}
+                  action={() => console.log('Disassociate:', row.id)}
+                  disabled={!row.associatedTo}
                 >
                   Disassociate
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
-                  Delete
+                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Release:', row.id)} danger>
+                  Release
                 </ContextMenu.Item>
               </ContextMenu.Root>
             </Table.Td>
           </Table.Tr>
         ))}
       </SelectableTable>
-
-      <AllocateFloatingIPDrawer isOpen={allocateOpen} onClose={() => setAllocateOpen(false)} />
-      <EditFloatingIPDrawer
-        isOpen={editOpen}
-        onClose={() => {
-          setEditOpen(false);
-          setActiveFipRow(null);
-        }}
-        floatingIpAddress={activeFipRow?.floatingIp}
-      />
-      <AssociateFloatingIPToPortDrawer
-        isOpen={associateOpen}
-        onClose={() => {
-          setAssociateOpen(false);
-          setActiveFipRow(null);
-        }}
-        floatingIpAddress={activeFipRow?.floatingIp}
-      />
-      <DisassociateFloatingIPDrawer
-        isOpen={disassociateOpen}
-        onClose={() => {
-          setDisassociateOpen(false);
-          setActiveFipRow(null);
-        }}
-        floatingIpAddress={activeFipRow?.floatingIp}
-        associatedTo={
-          activeFipRow
-            ? `${activeFipRow.port} · ${activeFipRow.fixedIp !== '—' ? activeFipRow.fixedIp : '—'}`
-            : undefined
-        }
-      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

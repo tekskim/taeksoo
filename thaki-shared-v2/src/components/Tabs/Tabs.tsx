@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../../services';
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icon/svg/wrapped';
 import {
@@ -30,13 +24,7 @@ interface TabButtonProps {
   onClick: (id: string) => void;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({
-  tab,
-  isActive,
-  size,
-  variant,
-  onClick,
-}) => {
+const TabButton: React.FC<TabButtonProps> = ({ tab, isActive, size, variant, onClick }) => {
   return (
     <button
       disabled={tab.props.disabled}
@@ -48,7 +36,7 @@ const TabButton: React.FC<TabButtonProps> = ({
       id={`tab-${tab.props.id}`}
       tabIndex={isActive ? 0 : -1}
     >
-      {tab.props.label}
+      <span className="px-3 py-0">{tab.props.label}</span>
     </button>
   );
 };
@@ -145,7 +133,7 @@ export const Tabs: React.FC<TabsProps> = ({
   activeTabId,
   defaultActiveTabId,
   onChange,
-  size = 'md',
+  size = 'sm',
   variant = 'line',
   destroyOnHidden = true,
   fullWidth = true,
@@ -153,13 +141,11 @@ export const Tabs: React.FC<TabsProps> = ({
   // 자식 요소 중 Tab 컴포넌트만 필터링
   const tabElements = useMemo(() => {
     return React.Children.toArray(children).filter(
-      (child) => React.isValidElement(child) && child.type === Tab,
+      (child) => React.isValidElement(child) && child.type === Tab
     ) as React.ReactElement<TabProps>[];
   }, [children]);
 
-  const [tabId, setTabId] = useState(
-    () => defaultActiveTabId || tabElements[0]?.props.id,
-  );
+  const [tabId, setTabId] = useState(() => defaultActiveTabId || tabElements[0]?.props.id);
 
   // activeTabId가 전달되지 않으면 tabId를 사용
   const currentActiveTabId = activeTabId ?? tabId;
@@ -256,9 +242,7 @@ export const Tabs: React.FC<TabsProps> = ({
     onChange?.(id);
   };
 
-  const currentIndex = tabElements.findIndex(
-    (tab) => tab.props.id === currentActiveTabId,
-  );
+  const currentIndex = tabElements.findIndex((tab) => tab.props.id === currentActiveTabId);
   const currentTab = currentIndex >= 0 ? tabElements[currentIndex] : undefined;
 
   // 탭 버튼들 렌더링 함수
@@ -284,7 +268,7 @@ export const Tabs: React.FC<TabsProps> = ({
               scrollButtonStyles({
                 position: 'left',
                 disabled: !canScrollLeft,
-              }),
+              })
             )}
             onClick={scrollLeft}
             disabled={!canScrollLeft}
@@ -300,7 +284,7 @@ export const Tabs: React.FC<TabsProps> = ({
               variant,
               scrollable: showScrollButtons,
               fullWidth,
-            }),
+            })
           )}
           role="tablist"
           aria-label="tabs"
@@ -313,7 +297,7 @@ export const Tabs: React.FC<TabsProps> = ({
               scrollButtonStyles({
                 position: 'right',
                 disabled: !canScrollRight,
-              }),
+              })
             )}
             onClick={scrollRight}
             disabled={!canScrollRight}

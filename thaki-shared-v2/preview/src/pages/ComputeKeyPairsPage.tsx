@@ -6,88 +6,106 @@ import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import { CreateKeyPairDrawer } from '../drawers/compute/misc/CreateKeyPairDrawer';
 import { EditKeyPairDrawer } from '../drawers/compute/misc/EditKeyPairDrawer';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import CopyButton from '@shared/components/CopyButton';
+import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 interface KeyPair {
   id: string;
   name: string;
-  type: string;
   fingerprint: string;
   createdAt: string;
-  [key: string]: unknown;
 }
 
-const mockRows: KeyPair[] = [
+const mockKeyPairs: KeyPair[] = [
   {
     id: 'kp-001',
-    name: 'prod-deploy',
-    type: 'RSA',
-    fingerprint: 'SHA256:ab12cd34ef56...',
-    createdAt: 'Mar 10, 2025 11:22:33',
+    name: 'tk-keypair',
+    fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
     id: 'kp-002',
-    name: 'dev-laptop',
-    type: 'ED25519',
-    fingerprint: 'SHA256:9f8e7d6c5b4a...',
-    createdAt: 'Mar 8, 2025 09:15:00',
+    name: 'dev-keypair',
+    fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
+    createdAt: 'Sep 8, 2025 11:51:27',
   },
   {
     id: 'kp-003',
-    name: 'ci-runner-key',
-    type: 'RSA',
-    fingerprint: 'SHA256:112233445566...',
-    createdAt: 'Feb 28, 2025 16:40:12',
+    name: 'prod-keypair',
+    fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
   {
     id: 'kp-004',
-    name: 'backup-access',
-    type: 'RSA',
-    fingerprint: 'SHA256:aabbccddeeff...',
-    createdAt: 'Feb 14, 2025 08:08:08',
+    name: 'staging-keypair',
+    fingerprint: 'ff:ee:dd:cc:bb:aa:99:88:77:66:55:44:33:22:11:00',
+    createdAt: 'Aug 30, 2025 21:37:41',
   },
   {
     id: 'kp-005',
-    name: 'team-shared',
-    type: 'ED25519',
-    fingerprint: 'SHA256:fedcba098765...',
-    createdAt: 'Jan 30, 2025 13:13:13',
+    name: 'test-keypair',
+    fingerprint: '12:34:56:78:9a:bc:de:f0:12:34:56:78:9a:bc:de:f0',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 'kp-006',
-    name: 'legacy-openstack',
-    type: 'RSA',
-    fingerprint: 'SHA256:001122334455...',
-    createdAt: 'Jan 5, 2025 07:00:45',
+    name: 'backup-keypair',
+    fingerprint: 'ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67:89',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'kp-007',
-    name: 'security-audit',
-    type: 'ED25519',
-    fingerprint: 'SHA256:deadbeefcafe...',
-    createdAt: 'Dec 20, 2024 12:00:00',
+    name: 'jenkins-keypair',
+    fingerprint: '98:76:54:32:10:fe:dc:ba:98:76:54:32:10:fe:dc:ba',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: 'kp-008',
-    name: 'oncall-macbook',
-    type: 'ED25519',
-    fingerprint: 'SHA256:424242424242...',
-    createdAt: 'Nov 11, 2024 11:11:11',
+    name: 'ansible-keypair',
+    fingerprint: '01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10',
+    createdAt: 'Aug 10, 2025 01:17:01',
+  },
+  {
+    id: 'kp-009',
+    name: 'terraform-keypair',
+    fingerprint: 'f0:e1:d2:c3:b4:a5:96:87:78:69:5a:4b:3c:2d:1e:0f',
+    createdAt: 'Aug 5, 2025 14:12:36',
+  },
+  {
+    id: 'kp-010',
+    name: 'github-deploy-key',
+    fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
 ];
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'fingerprint', label: 'Fingerprint', type: 'input', placeholder: 'Enter fingerprint...' },
 ];
+
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function kpMatchesFilter(kp: KeyPair, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const key = filter.key as keyof KeyPair;
+  const value = String(kp[key] ?? '').toLowerCase();
+  return value.includes(fv);
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
@@ -98,33 +116,29 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeKeyPairsPage() {
-  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [sort, setSort] = useState<string>('');
-  const [order, setOrder] = useState<SortOrder>('asc');
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<KeyPair | null>(null);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
+  const [keyPairs, setKeyPairs] = useState(mockKeyPairs);
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [sort, setSort] = useState<string>('');
+  const [order, setOrder] = useState<SortOrder>('asc');
 
   const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
-  const hasSelection = selectedRows.length > 0;
+  const filteredRows = useMemo(() => {
+    if (appliedFilters.length === 0) return keyPairs;
+    return keyPairs.filter((kp) => appliedFilters.every((f) => kpMatchesFilter(kp, f)));
+  }, [keyPairs, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -141,20 +155,30 @@ export function ComputeKeyPairsPage() {
     setCurrentPage(1);
   }, []);
 
+  const handleBulkDelete = () => {
+    setKeyPairs((prev) => prev.filter((kp) => !selectedRows.includes(kp.id)));
+    setSelectedRows([]);
+  };
+
+  const handleRowDelete = (row: KeyPair) => {
+    setKeyPairs((prev) => prev.filter((kp) => kp.id !== row.id));
+  };
+
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'type', header: 'Type', sortable: true },
     { key: 'fingerprint', header: 'Fingerprint' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
 
+  const hasSelection = selectedRows.length > 0;
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Key pairs" />
-        <Button variant="primary" size="md" onClick={() => setCreateDrawerOpen(true)}>
-          Create key pair
+        <Button variant="primary" size="md">
+          Create Key Pair
         </Button>
       </div>
 
@@ -164,7 +188,7 @@ export function ComputeKeyPairsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search key pairs by attributes"
+            placeholder="Search key pair by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -172,11 +196,15 @@ export function ComputeKeyPairsPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={handleBulkDelete}
+        >
+          <IconTrash size={12} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -196,7 +224,7 @@ export function ComputeKeyPairsPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -241,23 +269,22 @@ export function ComputeKeyPairsPage() {
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <Link
-                to={`/compute/key-pairs/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
+              <Link to={`/compute/key-pairs/${row.id}`} className={linkClass}>
                 {row.name}
               </Link>
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              {row.type}
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-mono text-11 leading-16 text-text truncate">
+                  {row.fingerprint}
+                </span>
+                <CopyButton text={row.fingerprint} />
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.fingerprint}
+              {stripTime(row.createdAt)}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[4]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[3]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -265,7 +292,7 @@ export function ComputeKeyPairsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -279,15 +306,7 @@ export function ComputeKeyPairsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item
-                  action={() => {
-                    setEditTarget(row);
-                    setEditDrawerOpen(true);
-                  }}
-                >
-                  Edit
-                </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -295,17 +314,6 @@ export function ComputeKeyPairsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
-
-      <CreateKeyPairDrawer isOpen={createDrawerOpen} onClose={() => setCreateDrawerOpen(false)} />
-      <EditKeyPairDrawer
-        isOpen={editDrawerOpen}
-        onClose={() => {
-          setEditDrawerOpen(false);
-          setEditTarget(null);
-        }}
-        keyPairName={editTarget?.name}
-        initialDescription=""
-      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

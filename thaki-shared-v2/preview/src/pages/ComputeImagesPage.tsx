@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -8,6 +8,7 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
+import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
@@ -22,95 +23,211 @@ import {
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
 
-type ImageStatus = 'active' | 'queued' | 'error';
-type ImageType = 'image' | 'snapshot';
-type Visibility = 'public' | 'private';
+type AccessType = 'Private' | 'Shared' | 'Public';
+type ImageStatus = 'active' | 'error' | 'pending' | 'deactivated';
 
-interface ComputeImage {
+interface Image {
   id: string;
   name: string;
-  status: ImageStatus;
-  type: ImageType;
+  os: string;
   size: string;
-  visibility: Visibility;
+  diskFormat: string;
+  protected: boolean;
+  visibility: 'Public' | 'Private' | 'Shared' | 'Community';
+  access: AccessType;
+  description: string;
   createdAt: string;
-  [key: string]: unknown;
+  status: ImageStatus;
 }
 
-const mockRows: ComputeImage[] = [
+const mockImages: Image[] = [
   {
-    id: 'img-001',
-    name: 'ubuntu-22.04-lts',
+    id: '29tgj234',
+    name: 'Ubuntu-22.04-base',
+    os: 'Ubuntu24.04',
+    size: '16GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    visibility: 'Private',
+    access: 'Private',
+    description: 'Base Ubuntu 22.04 image',
+    createdAt: 'Sep 12, 2025 15:43:35',
     status: 'active',
-    type: 'image',
-    size: '2.1 GiB',
-    visibility: 'public',
-    createdAt: 'Mar 1, 2025 10:00:00',
   },
   {
     id: 'img-002',
-    name: 'custom-app-golden',
+    name: 'CentOS-8-minimal',
+    os: 'CentOS8',
+    size: '8GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    visibility: 'Private',
+    access: 'Private',
+    description: 'Minimal CentOS 8 installation',
+    createdAt: 'Sep 10, 2025 01:17:01',
     status: 'active',
-    type: 'snapshot',
-    size: '45 GiB',
-    visibility: 'private',
-    createdAt: 'Feb 26, 2025 15:30:45',
   },
   {
     id: 'img-003',
-    name: 'windows-2022',
-    status: 'queued',
-    type: 'image',
-    size: '8.4 GiB',
-    visibility: 'public',
-    createdAt: 'Feb 20, 2025 09:12:33',
+    name: 'Rocky-Linux-9',
+    os: 'Rocky Linux 9',
+    size: '12GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    visibility: 'Shared',
+    access: 'Shared',
+    description: 'Rocky Linux 9 server image',
+    createdAt: 'Sep 8, 2025 11:51:27',
+    status: 'active',
   },
   {
     id: 'img-004',
-    name: 'broken-import',
-    status: 'error',
-    type: 'image',
-    size: '-',
-    visibility: 'private',
-    createdAt: 'Feb 18, 2025 11:05:00',
+    name: 'Debian-12-standard',
+    os: 'Debian 12',
+    size: '10GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    visibility: 'Public',
+    access: 'Public',
+    description: 'Standard Debian 12 image',
+    createdAt: 'Sep 5, 2025 14:12:36',
+    status: 'active',
   },
   {
     id: 'img-005',
-    name: 'debian-12-minimal',
+    name: 'Ubuntu-20.04-LTS',
+    os: 'Ubuntu20.04',
+    size: '14GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    visibility: 'Private',
+    access: 'Private',
+    description: 'Ubuntu 20.04 LTS server',
+    createdAt: 'Aug 28, 2025 07:11:07',
     status: 'active',
-    type: 'image',
-    size: '380 MiB',
-    visibility: 'public',
-    createdAt: 'Jan 30, 2025 08:44:21',
   },
   {
     id: 'img-006',
-    name: 'ml-base-cuda',
-    status: 'active',
-    type: 'snapshot',
-    size: '12 GiB',
-    visibility: 'private',
-    createdAt: 'Jan 15, 2025 13:22:10',
+    name: 'Windows-Server-2022',
+    os: 'Windows Server 2022',
+    size: '32GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    visibility: 'Shared',
+    access: 'Shared',
+    description: 'Windows Server 2022 Datacenter',
+    createdAt: 'Aug 25, 2025 10:32:16',
+    status: 'pending',
   },
   {
     id: 'img-007',
-    name: 'rocky-9',
+    name: 'Alpine-3.18-minimal',
+    os: 'Alpine 3.18',
+    size: '256MiB',
+    diskFormat: 'RAW',
+    protected: false,
+    visibility: 'Public',
+    access: 'Public',
+    description: 'Lightweight Alpine Linux',
+    createdAt: 'Aug 20, 2025 23:27:51',
     status: 'active',
-    type: 'image',
-    size: '1.9 GiB',
-    visibility: 'public',
-    createdAt: 'Dec 8, 2024 17:00:55',
   },
   {
     id: 'img-008',
-    name: 'backup-snap-weekly',
+    name: 'Fedora-39-workstation',
+    os: 'Fedora 39',
+    size: '20GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    visibility: 'Community',
+    access: 'Private',
+    description: 'Fedora 39 workstation image',
+    createdAt: 'Aug 15, 2025 12:22:26',
     status: 'active',
-    type: 'snapshot',
-    size: '100 GiB',
-    visibility: 'private',
-    createdAt: 'Nov 3, 2024 12:12:12',
+  },
+  {
+    id: 'img-009',
+    name: 'Oracle-Linux-8',
+    os: 'Oracle Linux 8',
+    size: '18GiB',
+    diskFormat: 'QCOW2',
+    protected: false,
+    visibility: 'Shared',
+    access: 'Shared',
+    description: 'Oracle Linux 8 for databases',
+    createdAt: 'Aug 10, 2025 01:17:01',
+    status: 'deactivated',
+  },
+  {
+    id: 'img-010',
+    name: 'Ubuntu-22.04-GPU',
+    os: 'Ubuntu22.04',
+    size: '24GiB',
+    diskFormat: 'RAW',
+    protected: true,
+    visibility: 'Private',
+    access: 'Private',
+    description: 'Ubuntu with GPU drivers',
+    createdAt: 'Aug 5, 2025 14:12:36',
+    status: 'active',
   },
 ];
+
+const filterKeys: FilterKey[] = [
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'os', label: 'OS', type: 'input', placeholder: 'Enter OS...' },
+  {
+    key: 'diskFormat',
+    label: 'Disk Format',
+    type: 'select',
+    options: [
+      { value: 'RAW', label: 'RAW' },
+      { value: 'QCOW2', label: 'QCOW2' },
+    ],
+  },
+  {
+    key: 'access',
+    label: 'Access',
+    type: 'select',
+    options: [
+      { value: 'Private', label: 'Private' },
+      { value: 'Shared', label: 'Shared' },
+      { value: 'Public', label: 'Public' },
+    ],
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'error', label: 'Error' },
+      { value: 'deactivated', label: 'Deactivated' },
+    ],
+  },
+];
+
+const imageStatusVariant: Record<ImageStatus, StatusVariant> = {
+  active: 'active',
+  error: 'error',
+  pending: 'building',
+  deactivated: 'shutoff',
+};
+
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
+
+function imgMatchesFilter(img: Image, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  const key = filter.key as keyof Image;
+  const value = String(img[key] ?? '').toLowerCase();
+  return value.includes(fv);
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
 
 function imageSizeToMinGiB(size: string): number {
   const g = size.match(/^([\d.]+)\s*GiB/i);
@@ -122,39 +239,13 @@ function imageSizeToMinGiB(size: string): number {
   return 1;
 }
 
-const statusMap: Record<ImageStatus, StatusVariant> = {
-  active: 'active',
-  queued: 'pending',
-  error: 'error',
-};
-
-const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
-  {
-    key: 'type',
-    label: 'Type',
-    type: 'select',
-    options: [
-      { value: 'image', label: 'Image' },
-      { value: 'snapshot', label: 'Snapshot' },
-    ],
-  },
-  {
-    key: 'visibility',
-    label: 'Visibility',
-    type: 'select',
-    options: [
-      { value: 'public', label: 'Public' },
-      { value: 'private', label: 'Private' },
-    ],
-  },
-];
-
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'type', label: 'Type', visible: true },
+  { key: 'os', label: 'OS', visible: true },
   { key: 'size', label: 'Size', visible: true },
+  { key: 'diskFormat', label: 'Disk format', visible: true },
+  { key: 'protected', label: 'Protected', visible: true },
   { key: 'visibility', label: 'Visibility', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
@@ -162,35 +253,46 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 
 export function ComputeImagesPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'current';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  const [images, setImages] = useState(mockImages);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<ComputeImage | null>(null);
-  const [createVolumeFromImageRow, setCreateVolumeFromImageRow] = useState<ComputeImage | null>(
-    null
-  );
+  const [editTarget, setEditTarget] = useState<Image | null>(null);
+  const [createVolumeFromImageRow, setCreateVolumeFromImageRow] = useState<Image | null>(null);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
-
   const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
-  const hasSelection = selectedRows.length > 0;
+  const filteredRows = useMemo(() => {
+    let filtered = images;
+    switch (activeTab) {
+      case 'current':
+        filtered = filtered.filter((img) => img.access === 'Private');
+        break;
+      case 'shared':
+        filtered = filtered.filter((img) => img.access === 'Shared');
+        break;
+      case 'public':
+        filtered = filtered.filter((img) => img.access === 'Public');
+        break;
+      default:
+        break;
+    }
+    if (appliedFilters.length === 0) return filtered;
+    return filtered.filter((img) => appliedFilters.every((f) => imgMatchesFilter(img, f)));
+  }, [images, activeTab, appliedFilters]);
+
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -207,15 +309,28 @@ export function ComputeImagesPage() {
     setCurrentPage(1);
   }, []);
 
+  const handleBulkDelete = () => {
+    setImages((prev) => prev.filter((img) => !selectedRows.includes(img.id)));
+    setSelectedRows([]);
+  };
+
+  const handleRowDelete = (row: Image) => {
+    setImages((prev) => prev.filter((img) => img.id !== row.id));
+  };
+
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'type', header: 'Type', sortable: true },
+    { key: 'os', header: 'OS', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
+    { key: 'diskFormat', header: 'Disk format', sortable: true },
+    { key: 'protected', header: 'Protected', sortable: true },
     { key: 'visibility', header: 'Visibility', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const hasSelection = selectedRows.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
@@ -226,13 +341,35 @@ export function ComputeImagesPage() {
         </Button>
       </div>
 
+      <Tabs
+        activeTabId={activeTab}
+        onChange={(id) => setActiveTab(id)}
+        variant="line"
+        size="sm"
+        fullWidth
+        contentClassName="hidden"
+      >
+        <Tab id="current" label="Current tenant">
+          <></>
+        </Tab>
+        <Tab id="shared" label="Shared">
+          <></>
+        </Tab>
+        <Tab id="public" label="Public">
+          <></>
+        </Tab>
+        <Tab id="all" label="All">
+          <></>
+        </Tab>
+      </Tabs>
+
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <FilterSearchInput
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search images by attributes"
+            placeholder="Search image by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -240,11 +377,15 @@ export function ComputeImagesPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={handleBulkDelete}
+        >
+          <IconTrash size={12} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -264,7 +405,7 @@ export function ComputeImagesPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -294,7 +435,7 @@ export function ComputeImagesPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<ComputeImage>
+      <SelectableTable<Image>
         columns={columns}
         rows={paginatedRows}
         selectionType="checkbox"
@@ -309,29 +450,35 @@ export function ComputeImagesPage() {
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+              <StatusIndicator variant={imageStatusVariant[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/images/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link to={`/compute/images/${row.id}`} className={linkClass}>
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID : {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.type}
+              {row.os}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
               {row.size}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.visibility}
+              {row.diskFormat}
             </Table.Td>
             <Table.Td rowData={row} column={columns[5]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              {row.protected ? 'On' : 'Off'}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[6]}>
+              {row.visibility}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -339,7 +486,7 @@ export function ComputeImagesPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -353,6 +500,17 @@ export function ComputeImagesPage() {
                   </button>
                 )}
               >
+                <ContextMenu.Item action={() => console.log('Create instance from image:', row.id)}>
+                  Create instance
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => console.log('Create instance template from image:', row.id)}
+                >
+                  Create instance Template
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => setCreateVolumeFromImageRow(row)}>
+                  Create volume
+                </ContextMenu.Item>
                 <ContextMenu.Item
                   action={() => {
                     setEditTarget(row);
@@ -361,14 +519,7 @@ export function ComputeImagesPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item
-                  action={() => {
-                    setCreateVolumeFromImageRow(row);
-                  }}
-                >
-                  Create volume from image
-                </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -388,13 +539,14 @@ export function ComputeImagesPage() {
           editTarget
             ? {
                 name: editTarget.name,
-                description: '',
+                description: editTarget.description ?? '',
                 minDiskGiB: 20,
                 minRamMiB: 2048,
-                visibility: (editTarget.visibility === 'public'
-                  ? 'Public'
-                  : 'Private') as EditImageVisibility,
-                protected: false,
+                visibility:
+                  editTarget.visibility === 'Public' || editTarget.visibility === 'Community'
+                    ? ('Public' as EditImageVisibility)
+                    : ('Private' as EditImageVisibility),
+                protected: editTarget.protected,
               }
             : undefined
         }

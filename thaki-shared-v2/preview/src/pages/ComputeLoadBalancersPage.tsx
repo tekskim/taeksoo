@@ -1,7 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { EditLoadBalancerDrawer } from '../drawers/compute/load-balancer/EditLoadBalancerDrawer';
-import { AssociateFloatingIPToLBDrawer } from '../drawers/compute/load-balancer/AssociateFloatingIPToLBDrawer';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -9,103 +7,198 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { EditLoadBalancerDrawer } from '../drawers/compute/load-balancer/EditLoadBalancerDrawer';
+import { AssociateFloatingIPToLBDrawer } from '../drawers/compute/load-balancer/AssociateFloatingIPToLBDrawer';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import { Badge } from '@shared/components/Badge';
+import { Tooltip } from '@shared/components/Tooltip';
+import { Popover } from '@shared/components/Popover';
+import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import containerIcon from '@shared/assets/app-icons/container.png';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
-type LBStatus = 'active' | 'error' | 'pending';
+type LoadBalancerStatus = 'active' | 'error' | 'building' | 'pending';
 
-interface LoadBalancerRow {
+interface LoadBalancer {
   id: string;
   name: string;
-  status: LBStatus;
   vipAddress: string;
-  provider: string;
+  ownedNetwork: string;
+  ownedNetworkId: string;
+  floatingIp: string;
+  floatingIpId: string;
+  listeners: string;
+  listenerId: string;
+  listenerCount: number;
   createdAt: string;
+  status: LoadBalancerStatus;
+  origin?: 'container' | 'manual';
   [key: string]: unknown;
 }
 
-const mockRows: LoadBalancerRow[] = [
+const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-001',
-    name: 'prod-api-lb',
+    name: 'web-lb-01',
+    vipAddress: '192.168.10.13',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    floatingIp: '192.168.10.13',
+    floatingIpId: 'fip-001',
+    listeners: 'listener-http-80',
+    listenerId: '29tgj234',
+    listenerCount: 2,
+    createdAt: 'Oct 3, 2025 00:46:02',
     status: 'active',
-    vipAddress: '10.0.10.5',
-    provider: 'Amphora',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    origin: 'container',
   },
   {
     id: 'lb-002',
-    name: 'ingress-public',
+    name: 'api-lb',
+    vipAddress: '192.168.10.14',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '192.168.10.14',
+    floatingIpId: 'fip-002',
+    listeners: 'listener-https-443',
+    listenerId: '38fk29dk',
+    listenerCount: 0,
+    createdAt: 'Oct 2, 2025 17:33:45',
     status: 'active',
-    vipAddress: '203.0.113.70',
-    provider: 'Amphora',
-    createdAt: 'Sep 11, 2025 14:07:22',
   },
   {
     id: 'lb-003',
-    name: 'staging-web',
-    status: 'pending',
-    vipAddress: '—',
-    provider: 'Amphora',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    name: 'app-lb',
+    vipAddress: '192.168.10.15',
+    ownedNetwork: 'net-03',
+    ownedNetworkId: 'net-003',
+    floatingIp: '192.168.10.15',
+    floatingIpId: 'fip-003',
+    listeners: 'listener-tcp-8080',
+    listenerId: '9dk38fj2',
+    listenerCount: 1,
+    createdAt: 'Oct 1, 2025 10:20:28',
+    status: 'building',
+    origin: 'container',
   },
   {
     id: 'lb-004',
-    name: 'legacy-octavia',
-    status: 'error',
-    vipAddress: '192.0.2.55',
-    provider: 'Octavia',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    name: 'db-lb',
+    vipAddress: '192.168.10.16',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-mysql-3306',
+    listenerId: 'k29dk38f',
+    listenerCount: 0,
+    createdAt: 'Sep 28, 2025 07:11:07',
+    status: 'active',
   },
   {
     id: 'lb-005',
-    name: 'internal-grpc',
+    name: 'cache-lb',
+    vipAddress: '192.168.10.17',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-redis-6379',
+    listenerId: 'fj29dk38',
+    listenerCount: 0,
+    createdAt: 'Sep 25, 2025 10:32:16',
     status: 'active',
-    vipAddress: '10.0.20.30',
-    provider: 'Amphora',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    origin: 'container',
   },
   {
     id: 'lb-006',
-    name: 'analytics-lb',
-    status: 'active',
-    vipAddress: '10.30.0.88',
-    provider: 'Amphora',
-    createdAt: 'Apr 18, 2025 13:19:44',
+    name: 'internal-lb',
+    vipAddress: '192.168.10.18',
+    ownedNetwork: 'net-04',
+    ownedNetworkId: 'net-004',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-grpc-9090',
+    listenerId: '8fj29dk3',
+    listenerCount: 3,
+    createdAt: 'Sep 20, 2025 23:27:51',
+    status: 'error',
   },
   {
     id: 'lb-007',
-    name: 'vpn-dashboard',
-    status: 'pending',
-    vipAddress: '—',
-    provider: 'Amphora',
-    createdAt: 'Mar 22, 2025 10:41:27',
+    name: 'streaming-lb',
+    vipAddress: '192.168.10.19',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '192.168.10.19',
+    floatingIpId: 'fip-007',
+    listeners: 'listener-rtmp-1935',
+    listenerId: 'dk38fj29',
+    listenerCount: 0,
+    createdAt: 'Sep 15, 2025 12:22:26',
+    status: 'active',
   },
   {
     id: 'lb-008',
-    name: 'qa-smoke-lb',
+    name: 'mail-lb',
+    vipAddress: '192.168.10.20',
+    ownedNetwork: 'net-02',
+    ownedNetworkId: 'net-002',
+    floatingIp: '192.168.10.20',
+    floatingIpId: 'fip-008',
+    listeners: 'listener-smtp-25',
+    listenerId: '29dk38fj',
+    listenerCount: 0,
+    createdAt: 'Sep 10, 2025 01:17:01',
+    status: 'pending',
+  },
+  {
+    id: 'lb-009',
+    name: 'vpn-lb',
+    vipAddress: '192.168.10.21',
+    ownedNetwork: 'net-03',
+    ownedNetworkId: 'net-003',
+    floatingIp: '192.168.10.21',
+    floatingIpId: 'fip-009',
+    listeners: 'listener-openvpn-1194',
+    listenerId: '3fj29dk8',
+    listenerCount: 0,
+    createdAt: 'Sep 5, 2025 14:12:36',
     status: 'active',
-    vipAddress: '172.16.8.2',
-    provider: 'Octavia',
-    createdAt: 'Feb 14, 2025 17:03:56',
+  },
+  {
+    id: 'lb-010',
+    name: 'monitoring-lb',
+    vipAddress: '192.168.10.22',
+    ownedNetwork: 'net-01',
+    ownedNetworkId: 'net-001',
+    floatingIp: '-',
+    floatingIpId: '',
+    listeners: 'listener-http-3000',
+    listenerId: 'j29dk38f',
+    listenerCount: 4,
+    createdAt: 'Sep 1, 2025 10:20:28',
+    status: 'active',
   },
 ];
 
-const statusMap: Record<LBStatus, StatusVariant> = {
+const lbStatusMap: Record<LoadBalancerStatus, StatusVariant> = {
   active: 'active',
   error: 'error',
+  building: 'building',
   pending: 'pending',
 };
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'vipAddress', label: 'VIP Address', type: 'input', placeholder: 'Enter VIP...' },
+  { key: 'ownedNetwork', label: 'Network', type: 'input', placeholder: 'Enter network...' },
   {
     key: 'status',
     label: 'Status',
@@ -113,6 +206,7 @@ const filterKeys: FilterKey[] = [
     options: [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
       { value: 'pending', label: 'Pending' },
     ],
   },
@@ -128,23 +222,27 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeLoadBalancersPage() {
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [associateFipDrawerOpen, setAssociateFipDrawerOpen] = useState(false);
+  const [menuTargetLb, setMenuTargetLb] = useState<LoadBalancerRow | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
-  const [associateFipDrawerOpen, setAssociateFipDrawerOpen] = useState(false);
-  const [menuTargetLb, setMenuTargetLb] = useState<LoadBalancerRow | null>(null);
-  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
+    if (appliedFilters.length === 0) return mockLoadBalancers;
+    return mockLoadBalancers.filter((lb) =>
       appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
+        const value = lb[filter.key as keyof LoadBalancer];
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(String(filter.value ?? '').toLowerCase());
+        }
+        return true;
       })
     );
   }, [appliedFilters]);
@@ -171,11 +269,15 @@ export function ComputeLoadBalancersPage() {
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'vipAddress', header: 'VIP Address' },
-    { key: 'provider', header: 'Provider' },
+    { key: 'vipAddress', header: 'VIP Address', sortable: true },
+    { key: 'ownedNetwork', header: 'Owned network', sortable: true },
+    { key: 'floatingIp', header: 'Floating IP' },
+    { key: 'listeners', header: 'Listeners' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
     <div className="flex flex-col gap-3">
@@ -186,7 +288,7 @@ export function ComputeLoadBalancersPage() {
           size="md"
           onClick={() => navigate('/compute/load-balancers/create')}
         >
-          Create load balancer
+          Create Load Balancer
         </Button>
       </div>
 
@@ -196,7 +298,7 @@ export function ComputeLoadBalancersPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search load balancers by attributes"
+            placeholder="Search load balancer by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -258,7 +360,7 @@ export function ComputeLoadBalancersPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<LoadBalancerRow>
+      <SelectableTable<LoadBalancer>
         columns={columns}
         rows={pageRows}
         selectionType="checkbox"
@@ -272,27 +374,108 @@ export function ComputeLoadBalancersPage() {
       >
         {pageRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={columns[0]}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
+            <Table.Td rowData={row} column={c('status')}>
+              <StatusIndicator variant={lbStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
-            <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute/load-balancers/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+            <Table.Td rowData={row} column={c('name')}>
+              <div className="flex items-center gap-2 min-w-0">
+                {row.origin === 'container' && (
+                  <Tooltip
+                    content="This load balancer was created via the Container cluster."
+                    direction="top"
+                    focusable={false}
+                  >
+                    <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[4px] border border-border bg-surface">
+                      <img src={containerIcon} alt="" className="w-4 h-4" />
+                    </div>
+                  </Tooltip>
+                )}
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute/load-balancers/${row.id}`}
+                    className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                  >
+                    {row.name}
+                  </Link>
+                  <span className="text-11 leading-16 text-text-muted truncate">ID : {row.id}</span>
+                </div>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[2]}>
+            <Table.Td rowData={row} column={c('vipAddress')}>
               {row.vipAddress}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
-              {row.provider}
+            <Table.Td rowData={row} column={c('ownedNetwork')}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/networks/${row.ownedNetworkId}`}
+                  className="inline-flex items-center gap-1.5 min-w-0 text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                >
+                  {row.ownedNetwork}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">
+                  ID : {row.ownedNetworkId.substring(0, 8)}
+                </span>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
+            <Table.Td rowData={row} column={c('floatingIp')}>
+              {row.floatingIpId ? (
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute/floating-ips/${row.floatingIpId}`}
+                    className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                  >
+                    {row.floatingIp}
+                  </Link>
+                  <span className="text-11 leading-16 text-text-muted">
+                    ID : {row.floatingIpId}
+                  </span>
+                </div>
+              ) : (
+                '-'
+              )}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('listeners')}>
+              <div className="flex w-full items-center gap-1 min-w-0">
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <span className="text-12 leading-18 text-text truncate">{row.listeners}</span>
+                  <span className="text-11 leading-16 text-text-muted">ID : {row.listenerId}</span>
+                </div>
+                {row.listenerCount > 0 && (
+                  <span className="ml-auto shrink-0">
+                    <Popover
+                      trigger="click"
+                      position="bottom"
+                      aria-label={`All listeners (${row.listenerCount + 1})`}
+                      content={
+                        <div className="p-4 min-w-[160px] max-w-[320px]">
+                          <div className="text-[10px] font-normal leading-[14px] text-text-muted mb-2">
+                            All Listeners ({row.listenerCount + 1})
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            <Badge theme="gry" size="sm" type="subtle">
+                              {row.listeners}
+                            </Badge>
+                            {Array.from({ length: row.listenerCount }, (_, i) => (
+                              <Badge key={i} theme="gry" size="sm" type="subtle">
+                                listener-{i + 2}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-pointer">
+                        +{row.listenerCount}
+                      </span>
+                    </Popover>
+                  </span>
+                )}
+              </div>
+            </Table.Td>
+            <Table.Td rowData={row} column={c('createdAt')}>
               {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -300,7 +483,7 @@ export function ComputeLoadBalancersPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -315,21 +498,21 @@ export function ComputeLoadBalancersPage() {
                 )}
               >
                 <ContextMenu.Item
-                  action={() => {
-                    setMenuTargetLb(row);
-                    setEditDrawerOpen(true);
-                  }}
-                >
-                  Edit
-                </ContextMenu.Item>
-                <ContextMenu.Item
-                  action={() => {
-                    setMenuTargetLb(row);
-                    setAssociateFipDrawerOpen(true);
-                  }}
+                  disabled={!!row.floatingIp}
+                  action={() => console.log('Associate floating IP', row.id)}
                 >
                   Associate floating IP
                 </ContextMenu.Item>
+                <ContextMenu.Item
+                  disabled={!row.floatingIp}
+                  action={() => console.log('Disassociate floating IP', row.id)}
+                >
+                  Disassociate floating IP
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Create listener', row.id)}>
+                  Create listener
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -338,27 +521,6 @@ export function ComputeLoadBalancersPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
-
-      <EditLoadBalancerDrawer
-        isOpen={editDrawerOpen}
-        onClose={() => {
-          setEditDrawerOpen(false);
-          setMenuTargetLb(null);
-        }}
-        loadBalancerId={menuTargetLb?.id}
-        initialData={
-          menuTargetLb ? { name: menuTargetLb.name, description: '', adminUp: true } : undefined
-        }
-      />
-      <AssociateFloatingIPToLBDrawer
-        isOpen={associateFipDrawerOpen}
-        onClose={() => {
-          setAssociateFipDrawerOpen(false);
-          setMenuTargetLb(null);
-        }}
-        loadBalancerName={menuTargetLb?.name}
-        vipAddress={menuTargetLb?.vipAddress === '—' ? '—' : menuTargetLb?.vipAddress}
-      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

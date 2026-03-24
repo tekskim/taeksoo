@@ -6,14 +6,14 @@ import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconRefresh, IconCircleX, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import { IconRefresh, IconCircleX, IconX } from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 interface ActiveSession {
   id: string;
@@ -124,10 +124,11 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function IAMActiveSessionsPage() {
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredSessions = useMemo(() => {
     if (appliedFilters.length === 0) return mockSessions;
@@ -253,7 +254,7 @@ export function IAMActiveSessionsPage() {
             <Table.Td rowData={session} column={columns[0]}>
               <Link
                 to={`/iam/users/${session.user}`}
-                className="text-primary font-medium hover:underline"
+                className="text-12 leading-18 font-medium text-primary hover:underline no-underline"
               >
                 {session.user}
               </Link>
@@ -278,7 +279,7 @@ export function IAMActiveSessionsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path

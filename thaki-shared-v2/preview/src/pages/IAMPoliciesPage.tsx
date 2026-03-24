@@ -223,7 +223,7 @@ const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
   <button
     type="button"
     onClick={toggle}
-    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
     aria-label="Actions"
   >
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -459,7 +459,7 @@ export function IAMPoliciesPage() {
                   </button>
                   <Link
                     to={`/iam/policies/${policy.name}`}
-                    className="text-primary font-medium hover:underline truncate"
+                    className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
                   >
                     {policy.name}
                   </Link>

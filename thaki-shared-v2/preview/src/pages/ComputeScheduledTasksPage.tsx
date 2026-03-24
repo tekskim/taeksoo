@@ -2,106 +2,153 @@ import { useState, useMemo, useCallback } from 'react';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
+import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import { Badge } from '@shared/components/Badge';
+import { IconPlayerPlay, IconPlayerStop, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
 
-interface ScheduledTaskRow {
+type TaskStatus = 'running' | 'scheduled' | 'completed' | 'failed' | 'paused';
+
+interface ScheduledTask {
   id: string;
   name: string;
-  type: string;
+  status: TaskStatus;
+  type: 'Snapshot' | 'Resize' | 'Restart' | 'Backup' | 'Cleanup';
+  target: string;
   schedule: string;
-  lastRun: string;
-  status: string;
+  lastExecution: string;
+  nextExecution: string;
+  createdBy: string;
   createdAt: string;
-  [key: string]: unknown;
 }
 
-const mockRows: ScheduledTaskRow[] = [
+const mockTasks: ScheduledTask[] = [
   {
-    id: 'st-001',
-    name: 'volume-backup-sweep',
+    id: 'task-001',
+    name: 'Auto-snapshot DB volumes',
+    status: 'scheduled',
+    type: 'Snapshot',
+    target: 'db-data, db-logs',
+    schedule: 'Daily at 02:00 UTC',
+    lastExecution: 'Nov 10, 2025 02:00',
+    nextExecution: 'Nov 11, 2025 02:00',
+    createdBy: 'admin',
+    createdAt: 'Oct 1, 2025 09:23:41',
+  },
+  {
+    id: 'task-002',
+    name: 'Weekly instance restart',
+    status: 'scheduled',
+    type: 'Restart',
+    target: 'web-server-01, web-server-02',
+    schedule: 'Sunday at 04:00 UTC',
+    lastExecution: 'Nov 9, 2025 04:00',
+    nextExecution: 'Nov 16, 2025 04:00',
+    createdBy: 'devops',
+    createdAt: 'Sep 20, 2025 14:07:22',
+  },
+  {
+    id: 'task-003',
+    name: 'Temp file cleanup',
+    status: 'running',
+    type: 'Cleanup',
+    target: 'All instances',
+    schedule: 'Every 6 hours',
+    lastExecution: 'Nov 10, 2025 12:00',
+    nextExecution: 'Nov 10, 2025 18:00',
+    createdBy: 'system',
+    createdAt: 'Aug 15, 2025 11:45:33',
+  },
+  {
+    id: 'task-004',
+    name: 'Scale-down dev instances',
+    status: 'paused',
+    type: 'Resize',
+    target: 'dev-*',
+    schedule: 'Weekdays at 20:00 UTC',
+    lastExecution: 'Nov 8, 2025 20:00',
+    nextExecution: '-',
+    createdBy: 'admin',
+    createdAt: 'Oct 15, 2025 16:52:08',
+  },
+  {
+    id: 'task-005',
+    name: 'Nightly backup - prod',
+    status: 'completed',
     type: 'Backup',
-    schedule: 'Daily 02:00',
-    lastRun: 'Sep 12, 2025',
-    status: 'Success',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    target: 'prod-*',
+    schedule: 'Daily at 01:00 UTC',
+    lastExecution: 'Nov 10, 2025 01:00',
+    nextExecution: 'Nov 11, 2025 01:00',
+    createdBy: 'admin',
+    createdAt: 'Jul 1, 2025 08:30:15',
   },
   {
-    id: 'st-002',
-    name: 'image-gc',
-    type: 'Maintenance',
-    schedule: 'Weekly Sun',
-    lastRun: 'Sep 8, 2025',
-    status: 'Success',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    id: 'task-006',
+    name: 'GPU node snapshot',
+    status: 'failed',
+    type: 'Snapshot',
+    target: 'gpu-node-01, gpu-node-02',
+    schedule: 'Every 12 hours',
+    lastExecution: 'Nov 10, 2025 00:00',
+    nextExecution: 'Nov 10, 2025 12:00',
+    createdBy: 'ml-team',
+    createdAt: 'Nov 1, 2025 13:19:44',
   },
   {
-    id: 'st-003',
-    name: 'fip-reconcile',
-    type: 'Sync',
-    schedule: 'Every 15m',
-    lastRun: 'Sep 12, 2025',
-    status: 'Running',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    id: 'task-007',
+    name: 'Log rotation',
+    status: 'scheduled',
+    type: 'Cleanup',
+    target: 'monitoring-*, logging-*',
+    schedule: 'Daily at 03:00 UTC',
+    lastExecution: 'Nov 10, 2025 03:00',
+    nextExecution: 'Nov 11, 2025 03:00',
+    createdBy: 'system',
+    createdAt: 'Jun 1, 2025 10:41:27',
   },
   {
-    id: 'st-004',
-    name: 'cert-expiry-scan',
-    type: 'Report',
-    schedule: 'Daily 06:00',
-    lastRun: 'Sep 11, 2025',
-    status: 'Failed',
-    createdAt: 'Aug 1, 2025 16:52:08',
-  },
-  {
-    id: 'st-005',
-    name: 'quota-alerts',
-    type: 'Notification',
-    schedule: 'Hourly',
-    lastRun: 'Sep 12, 2025',
-    status: 'Success',
-    createdAt: 'Jan 5, 2025 08:30:15',
-  },
-  {
-    id: 'st-006',
-    name: 'router-health',
-    type: 'Health check',
-    schedule: 'Every 5m',
-    lastRun: 'Sep 12, 2025',
-    status: 'Success',
-    createdAt: 'Apr 18, 2025 13:19:44',
-  },
-  {
-    id: 'st-007',
-    name: 'dns-zone-sync',
-    type: 'Sync',
-    schedule: 'Every 1h',
-    lastRun: 'Sep 12, 2025',
-    status: 'Success',
-    createdAt: 'Mar 22, 2025 10:41:27',
-  },
-  {
-    id: 'st-008',
-    name: 'audit-export',
-    type: 'Export',
-    schedule: 'Monthly 1st',
-    lastRun: 'Sep 1, 2025',
-    status: 'Success',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    id: 'task-008',
+    name: 'Scale-up prod instances',
+    status: 'scheduled',
+    type: 'Resize',
+    target: 'prod-api-*',
+    schedule: 'Weekdays at 08:00 UTC',
+    lastExecution: 'Nov 10, 2025 08:00',
+    nextExecution: 'Nov 11, 2025 08:00',
+    createdBy: 'admin',
+    createdAt: 'Oct 15, 2025 16:52:08',
   },
 ];
 
+const statusMap: Record<TaskStatus, StatusVariant> = {
+  running: 'active',
+  scheduled: 'building',
+  completed: 'shutoff',
+  failed: 'error',
+  paused: 'paused',
+};
+
+const typeThemes: Record<string, 'blu' | 'ylw' | 'red' | 'gre' | 'gry'> = {
+  Snapshot: 'blu',
+  Resize: 'ylw',
+  Restart: 'red',
+  Backup: 'gre',
+  Cleanup: 'gry',
+};
+
 const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Search tasks by name' },
 ];
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
@@ -114,6 +161,12 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
+function taskMatches(t: ScheduledTask, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  return t.name.toLowerCase().includes(fv);
+}
+
 export function ComputeScheduledTasksPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,19 +175,17 @@ export function ComputeScheduledTasksPage() {
   const [order, setOrder] = useState<SortOrder>('asc');
   const [prefsOpen, setPrefsOpen] = useState(false);
 
+  const itemsPerPage = 10;
+
   const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
+    if (appliedFilters.length === 0) return mockTasks;
+    return mockTasks.filter((t) => appliedFilters.every((f) => taskMatches(t, f)));
   }, [appliedFilters]);
 
-  const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -152,40 +203,49 @@ export function ComputeScheduledTasksPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'name', header: 'Name', sortable: true },
+    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'name', header: 'Task Name', sortable: true },
     { key: 'type', header: 'Type' },
+    { key: 'target', header: 'Target' },
     { key: 'schedule', header: 'Schedule' },
-    { key: 'lastRun', header: 'Last Run', sortable: true },
-    { key: 'status', header: 'Status' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
+    { key: 'lastExecution', header: 'Last Run', sortable: true },
+    { key: 'nextExecution', header: 'Next Run' },
+    { key: 'createdBy', header: 'Created by' },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
 
+  const hasSelection = selectedRows.length > 0;
+
+  const nameClass =
+    'text-12 leading-18 font-medium text-primary hover:underline cursor-pointer no-underline';
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center h-8">
-        <Title title="Scheduled tasks" />
+      <div className="flex items-center justify-between h-8">
+        <Title title="Scheduled Tasks" />
+        <Button variant="primary" size="md" leftIcon={<IconPlus size={14} stroke={1.5} />}>
+          Create Task
+        </Button>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          <FilterSearchInput
-            filterKeys={filterKeys}
-            onFilterAdd={handleFilterAdd}
-            selectedFilters={appliedFilters}
-            placeholder="Search scheduled tasks by attributes"
-            defaultFilterKey="name"
-          />
-          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
-          </Button>
-        </div>
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
+          placeholder="Search tasks by name"
+          defaultFilterKey="name"
+        />
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="secondary" size="sm" disabled={!hasSelection}>
+          <IconPlayerPlay size={12} stroke={1.5} /> Run Now
+        </Button>
+        <Button appearance="outline" variant="secondary" size="sm" disabled={!hasSelection}>
+          <IconPlayerStop size={12} stroke={1.5} /> Pause
+        </Button>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconTrash size={12} stroke={1.5} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -205,7 +265,7 @@ export function ComputeScheduledTasksPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -235,9 +295,9 @@ export function ComputeScheduledTasksPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<ScheduledTaskRow>
+      <SelectableTable<ScheduledTask>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -247,27 +307,35 @@ export function ComputeScheduledTasksPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              {row.name}
+              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              {row.type}
+              <span className={nameClass}>{row.name}</span>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.schedule}
+              <Badge theme={typeThemes[row.type] ?? 'gry'} size="sm" type="subtle">
+                {row.type}
+              </Badge>
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.lastRun}
+              {row.target}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.status}
+              {row.schedule}
             </Table.Td>
             <Table.Td rowData={row} column={columns[5]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              {row.lastExecution}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[6]}>
+              {row.nextExecution}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]}>
+              {row.createdBy}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -275,7 +343,7 @@ export function ComputeScheduledTasksPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -289,8 +357,19 @@ export function ComputeScheduledTasksPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                  Edit task
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Run now:', row.id)}>
+                  Run now
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Toggle:', row.id)}>
+                  {row.status === 'paused' ? 'Resume' : 'Pause'}
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Logs:', row.id)}>
+                  View execution logs
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
