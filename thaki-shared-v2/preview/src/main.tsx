@@ -1,73 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import '@shared/styles/index.css';
 
 import { IAMLayout } from './layouts/IAMLayout';
 import { CloudBuilderLayout } from './layouts/CloudBuilderLayout';
 import { StorageLayout } from './layouts/StorageLayout';
-
-function EntryPage() {
-  const apps = [
-    {
-      name: 'IAM',
-      description: 'Identity & Access Management',
-      href: '/iam/users',
-      color: '#2563eb',
-    },
-    {
-      name: 'Cloud Builder',
-      description: 'Infrastructure inventory & system info',
-      href: '/cloudbuilder/discovery',
-      color: '#059669',
-    },
-    {
-      name: 'Storage',
-      description: 'Ceph storage cluster management',
-      href: '/storage',
-      color: '#7c3aed',
-    },
-    {
-      name: 'Compute',
-      description: 'Virtual machines and networking',
-      href: '/compute/instances',
-      color: '#ea580c',
-    },
-  ];
-  return (
-    <div className="min-h-screen bg-surface-subtle flex items-center justify-center p-8">
-      <div className="max-w-[600px] w-full flex flex-col gap-8">
-        <div className="text-center flex flex-col gap-2">
-          <h1 className="text-[28px] leading-[36px] font-semibold text-text m-0">
-            shared-v2 Preview
-          </h1>
-          <p className="text-13 leading-20 text-text-muted m-0">Select an application to preview</p>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {apps.map((app) => (
-            <Link
-              key={app.href}
-              to={app.href}
-              className="flex flex-col gap-3 p-5 rounded-xl border border-border bg-surface hover:border-[color:var(--color-border-strong)] hover:shadow-sm transition-all no-underline"
-            >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-[18px] font-bold text-white"
-                style={{ backgroundColor: app.color }}
-              >
-                {app.name[0]}
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-14 font-semibold leading-20 text-text">{app.name}</span>
-                <span className="text-12 leading-18 text-text-muted">{app.description}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { EntryPage } from './pages/EntryPage';
 import { CloudBuilderConsolePage } from './pages/CloudBuilderConsolePage';
 import { CloudBuilderDetailPage } from './pages/CloudBuilderDetailPage';
 import { CloudBuilderCreatePage } from './pages/CloudBuilderCreatePage';
@@ -105,6 +45,7 @@ import { ComputeInstancesPage } from './pages/ComputeInstancesPage';
 import { ComputeInstanceDetailPage } from './pages/ComputeInstanceDetailPage';
 import { ComputeCreateInstancePage } from './pages/ComputeCreateInstancePage';
 import { ComputeInstanceTemplatesPage } from './pages/ComputeInstanceTemplatesPage';
+import { ComputeCreateInstanceTemplatePage } from './pages/ComputeCreateInstanceTemplatePage';
 import { ComputeInstanceTemplateDetailPage } from './pages/ComputeInstanceTemplateDetailPage';
 import { ComputeInstanceSnapshotsPage } from './pages/ComputeInstanceSnapshotsPage';
 import { ComputeInstanceSnapshotDetailPage } from './pages/ComputeInstanceSnapshotDetailPage';
@@ -131,6 +72,7 @@ import { ComputeRoutersPage } from './pages/ComputeRoutersPage';
 import { ComputeRouterDetailPage } from './pages/ComputeRouterDetailPage';
 import { ComputePortsPage } from './pages/ComputePortsPage';
 import { ComputePortDetailPage } from './pages/ComputePortDetailPage';
+import { ComputeCreateVirtualAdapterPage } from './pages/ComputeCreateVirtualAdapterPage';
 import { ComputeFloatingIPsPage } from './pages/ComputeFloatingIPsPage';
 import { ComputeFloatingIPDetailPage } from './pages/ComputeFloatingIPDetailPage';
 import { ComputeSecurityGroupsPage } from './pages/ComputeSecurityGroupsPage';
@@ -197,6 +139,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="instances/create" element={<ComputeCreateInstancePage />} />
           <Route path="instances/:id" element={<ComputeInstanceDetailPage />} />
           <Route path="instance-templates" element={<ComputeInstanceTemplatesPage />} />
+          <Route path="instance-templates/create" element={<ComputeCreateInstanceTemplatePage />} />
           <Route path="instance-templates/:id" element={<ComputeInstanceTemplateDetailPage />} />
           <Route path="instance-snapshots" element={<ComputeInstanceSnapshotsPage />} />
           <Route path="instance-snapshots/:id" element={<ComputeInstanceSnapshotDetailPage />} />
@@ -222,6 +165,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="routers" element={<ComputeRoutersPage />} />
           <Route path="routers/:id" element={<ComputeRouterDetailPage />} />
           <Route path="ports" element={<ComputePortsPage />} />
+          <Route path="ports/create" element={<ComputeCreateVirtualAdapterPage />} />
           <Route path="ports/:id" element={<ComputePortDetailPage />} />
           <Route path="floating-ips" element={<ComputeFloatingIPsPage />} />
           <Route path="floating-ips/:id" element={<ComputeFloatingIPDetailPage />} />
