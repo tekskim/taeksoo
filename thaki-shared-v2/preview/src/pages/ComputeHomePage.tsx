@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Table } from '@shared/components/Table';
 import { Badge } from '@shared/components/Badge';
 import { ProgressBar } from '@shared/components/ProgressBar';
+import { CopyButton } from '@shared/components/CopyButton';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import { IconChevronRight } from '@tabler/icons-react';
 
@@ -161,6 +162,8 @@ const activityColumns: TableColumn[] = [
   { key: 'requestedTime', header: 'Requested Time' },
 ];
 
+const PROJECT_ID = '7284d9174e81431e93060a9bbcf2cdfd';
+
 export function ComputeHomePage() {
   return (
     <div className="flex flex-col gap-6">
@@ -172,7 +175,10 @@ export function ComputeHomePage() {
           <div className="flex flex-col gap-4 mt-auto">
             <div>
               <div className="text-[10px] leading-[14px] text-text-muted mb-1">ID</div>
-              <div className="text-12 leading-18 text-text">7284d9174e81431e93060a9bbcf2cdfd</div>
+              <div className="flex items-center gap-1">
+                <span className="text-12 leading-18 text-text break-all">{PROJECT_ID}</span>
+                <CopyButton text={PROJECT_ID} />
+              </div>
             </div>
             <div>
               <div className="text-[10px] leading-[14px] text-text-muted mb-1">Description</div>

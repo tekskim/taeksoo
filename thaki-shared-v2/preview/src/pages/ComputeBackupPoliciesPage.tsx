@@ -1,99 +1,113 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
+import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import { Badge } from '@shared/components/Badge';
+import { IconDownload, IconPlayerPlay, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
 
-interface BackupPolicyRow {
+type PolicyStatus = 'active' | 'paused' | 'error';
+
+interface BackupPolicy {
   id: string;
   name: string;
+  status: PolicyStatus;
   schedule: string;
   retention: string;
-  enabled: string;
+  targetCount: number;
+  lastRun: string;
+  nextRun: string;
   createdAt: string;
-  [key: string]: unknown;
 }
 
-const mockRows: BackupPolicyRow[] = [
+const mockPolicies: BackupPolicy[] = [
   {
     id: 'bp-001',
-    name: 'nightly-volumes',
-    schedule: 'Daily 02:00',
-    retention: '14 days',
-    enabled: 'Yes',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    name: 'daily-db-backup',
+    status: 'active',
+    schedule: 'Every day at 02:00 UTC',
+    retention: '30 days',
+    targetCount: 3,
+    lastRun: 'Nov 10, 2025 02:00',
+    nextRun: 'Nov 11, 2025 02:00',
+    createdAt: 'Oct 1, 2025 10:20:28',
   },
   {
     id: 'bp-002',
-    name: 'weekly-full',
-    schedule: 'Sun 03:30',
-    retention: '8 weeks',
-    enabled: 'Yes',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    name: 'weekly-full-backup',
+    status: 'active',
+    schedule: 'Every Sunday at 00:00 UTC',
+    retention: '90 days',
+    targetCount: 12,
+    lastRun: 'Nov 9, 2025 00:00',
+    nextRun: 'Nov 16, 2025 00:00',
+    createdAt: 'Sep 15, 2025 12:22:26',
   },
   {
     id: 'bp-003',
-    name: 'hourly-crit-db',
-    schedule: 'Every 1h',
-    retention: '48 hours',
-    enabled: 'Yes',
-    createdAt: 'Sep 10, 2025 11:45:33',
+    name: 'hourly-log-snapshot',
+    status: 'active',
+    schedule: 'Every hour',
+    retention: '7 days',
+    targetCount: 2,
+    lastRun: 'Nov 10, 2025 14:00',
+    nextRun: 'Nov 10, 2025 15:00',
+    createdAt: 'Oct 20, 2025 23:27:51',
   },
   {
     id: 'bp-004',
-    name: 'legacy-archive',
-    schedule: 'Monthly 1st',
-    retention: '12 months',
-    enabled: 'No',
-    createdAt: 'Aug 1, 2025 16:52:08',
+    name: 'monthly-archive',
+    status: 'paused',
+    schedule: '1st of every month at 03:00 UTC',
+    retention: '365 days',
+    targetCount: 8,
+    lastRun: 'Nov 1, 2025 03:00',
+    nextRun: '-',
+    createdAt: 'Aug 1, 2025 10:20:28',
   },
   {
     id: 'bp-005',
-    name: 'qa-ephemeral',
-    schedule: 'Daily 12:00',
-    retention: '3 days',
-    enabled: 'Yes',
-    createdAt: 'Jan 5, 2025 08:30:15',
+    name: 'staging-backup',
+    status: 'error',
+    schedule: 'Every day at 04:00 UTC',
+    retention: '14 days',
+    targetCount: 5,
+    lastRun: 'Nov 9, 2025 04:00',
+    nextRun: 'Nov 11, 2025 04:00',
+    createdAt: 'Oct 10, 2025 01:17:01',
   },
   {
     id: 'bp-006',
-    name: 'compliance-snap',
-    schedule: 'Weekly Mon',
-    retention: '7 years',
-    enabled: 'Yes',
-    createdAt: 'Apr 18, 2025 13:19:44',
-  },
-  {
-    id: 'bp-007',
-    name: 'analytics-warehouse',
-    schedule: 'Daily 04:15',
-    retention: '30 days',
-    enabled: 'No',
-    createdAt: 'Mar 22, 2025 10:41:27',
-  },
-  {
-    id: 'bp-008',
-    name: 'k8s-etcd',
-    schedule: 'Every 6h',
-    retention: '72 hours',
-    enabled: 'Yes',
-    createdAt: 'Feb 14, 2025 17:03:56',
+    name: 'gpu-cluster-snapshot',
+    status: 'active',
+    schedule: 'Every 6 hours',
+    retention: '3 days',
+    targetCount: 4,
+    lastRun: 'Nov 10, 2025 12:00',
+    nextRun: 'Nov 10, 2025 18:00',
+    createdAt: 'Nov 1, 2025 10:20:28',
   },
 ];
 
+const statusMap: Record<PolicyStatus, StatusVariant> = {
+  active: 'active',
+  paused: 'paused',
+  error: 'error',
+};
+
 const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Search policies by name' },
 ];
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
@@ -105,6 +119,16 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
+function policyMatches(p: BackupPolicy, filter: FilterKeyWithValue): boolean {
+  const fv = String(filter.value ?? '').toLowerCase();
+  if (!fv) return true;
+  return p.name.toLowerCase().includes(fv);
+}
+
+function stripTime(s: string): string {
+  return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+}
+
 export function ComputeBackupPoliciesPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,19 +137,17 @@ export function ComputeBackupPoliciesPage() {
   const [order, setOrder] = useState<SortOrder>('asc');
   const [prefsOpen, setPrefsOpen] = useState(false);
 
+  const itemsPerPage = 10;
+
   const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockRows;
-    return mockRows.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
+    if (appliedFilters.length === 0) return mockPolicies;
+    return mockPolicies.filter((p) => appliedFilters.every((f) => policyMatches(p, f)));
   }, [appliedFilters]);
 
-  const itemsPerPage = 10;
-  const pageRows = filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
+  const paginatedRows = useMemo(
+    () => filteredRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+    [filteredRows, currentPage, itemsPerPage]
+  );
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -143,18 +165,26 @@ export function ComputeBackupPoliciesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'name', header: 'Name', sortable: true },
+    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'name', header: 'Policy Name', sortable: true },
     { key: 'schedule', header: 'Schedule' },
     { key: 'retention', header: 'Retention' },
-    { key: 'enabled', header: 'Enabled' },
+    { key: 'targetCount', header: 'Targets', sortable: true },
+    { key: 'lastRun', header: 'Last Run', sortable: true },
+    { key: 'nextRun', header: 'Next Run' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
 
+  const hasSelection = selectedRows.length > 0;
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center h-8">
-        <Title title="Backup policies" />
+      <div className="flex items-center justify-between h-8">
+        <Title title="Backup Policies" />
+        <Button variant="primary" size="md" leftIcon={<IconPlus size={14} stroke={1.5} />}>
+          Create Policy
+        </Button>
       </div>
 
       <div className="flex items-center gap-2">
@@ -163,19 +193,20 @@ export function ComputeBackupPoliciesPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search backup policies by attributes"
+            placeholder="Search policies by name"
             defaultFilterKey="name"
           />
-          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
+          <Button appearance="outline" variant="secondary" size="sm" aria-label="Export">
+            <IconDownload size={12} stroke={1.5} />
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+        <Button appearance="outline" variant="secondary" size="sm" disabled={!hasSelection}>
+          <IconPlayerPlay size={12} stroke={1.5} /> Run Now
+        </Button>
+        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <IconTrash size={12} stroke={1.5} /> Delete
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -195,7 +226,7 @@ export function ComputeBackupPoliciesPage() {
                   type="button"
                   className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
                   onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                  aria-label={`Remove ${filter.label}`}
                 >
                   <IconX size={12} strokeWidth={2} />
                 </button>
@@ -225,9 +256,9 @@ export function ComputeBackupPoliciesPage() {
         selectedCount={selectedRows.length}
       />
 
-      <SelectableTable<BackupPolicyRow>
+      <SelectableTable<BackupPolicy>
         columns={columns}
-        rows={pageRows}
+        rows={paginatedRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -237,30 +268,37 @@ export function ComputeBackupPoliciesPage() {
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pageRows.map((row) => (
+        {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <Link
-                to={`/compute/backup-policies/${row.id}`}
-                className="text-primary font-medium hover:underline"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {row.name}
-              </Link>
+              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              {row.schedule}
+              <span className="text-12 leading-18 font-medium text-primary hover:underline cursor-pointer">
+                {row.name}
+              </span>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              {row.retention}
+              {row.schedule}
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.enabled}
+              {row.retention}
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
-              {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+              <Badge theme="gry" size="sm" type="subtle">
+                {row.targetCount}
+              </Badge>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[5]}>
+              {row.lastRun}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[6]}>
+              {row.nextRun}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[7]}>
+              {stripTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -268,7 +306,7 @@ export function ComputeBackupPoliciesPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -282,8 +320,19 @@ export function ComputeBackupPoliciesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => console.log('Edit:', row.id)}>
+                  Edit policy
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Run now:', row.id)}>
+                  Run now
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Toggle:', row.id)}>
+                  {row.status === 'paused' ? 'Resume' : 'Pause'}
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('History:', row.id)}>
+                  View history
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>

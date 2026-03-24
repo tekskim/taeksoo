@@ -1,25 +1,42 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState, type ReactElement } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
-import type { DetailCardField } from '@shared/components/DetailCard/DetailCard';
+import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
+import { LiveMigrateInstanceDrawer } from '../drawers/compute/instance/LiveMigrateInstanceDrawer';
+import { RescueInstanceDrawer } from '../drawers/compute/instance/RescueInstanceDrawer';
+import { RebuildInstanceDrawer } from '../drawers/compute/instance/RebuildInstanceDrawer';
+import { ResizeInstanceDrawer } from '../drawers/compute/instance/ResizeInstanceDrawer';
+import { ManageTagsDrawer } from '../drawers/compute/instance/ManageTagsDrawer';
+import { ManageSecurityGroupsDrawer } from '../drawers/compute/instance/ManageSecurityGroupsDrawer';
+import { DisassociateFloatingIPDrawer } from '../drawers/compute/instance/DisassociateFloatingIPDrawer';
+import { AssociateFloatingIPDrawer } from '../drawers/compute/instance/AssociateFloatingIPDrawer';
+import { DetachInterfaceDrawer } from '../drawers/compute/instance/DetachInterfaceDrawer';
+import { AttachInterfaceDrawer } from '../drawers/compute/instance/AttachInterfaceDrawer';
+import { DetachVolumeDrawer } from '../drawers/compute/instance/DetachVolumeDrawer';
+import { AttachVolumeDrawer } from '../drawers/compute/instance/AttachVolumeDrawer';
+import { LockSettingDrawer } from '../drawers/compute/instance/LockSettingDrawer';
+import { CreateInstanceSnapshotDrawer } from '../drawers/compute/instance/CreateInstanceSnapshotDrawer';
+import { EditInstanceDrawer } from '../drawers/compute/instance/EditInstanceDrawer';
 import { Table } from '@shared/components/Table';
-import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
-import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Tabs, Tab } from '@shared/components/Tabs';
+import { Tooltip } from '@shared/components/Tooltip';
+import { Badge } from '@shared/components/Badge';
+import CopyButton from '@shared/components/CopyButton/CopyButton';
+import { cn } from '@shared/services/utils/cn';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   IconTerminal2,
   IconPlayerPlay,
   IconPlayerStop,
   IconTrash,
   IconChevronDown,
+  IconChevronUp,
+  IconChevronRight,
   IconSquarePlus,
   IconLinkPlus,
   IconPower,
@@ -27,388 +44,40 @@ import {
   IconCirclePlus,
   IconLock,
   IconLockOpen,
+  IconDotsCircleHorizontal,
+  IconDownload,
+  IconSearch,
 } from '@tabler/icons-react';
-import { EditInstanceDrawer } from '../drawers/compute/instance/EditInstanceDrawer';
-import { CreateInstanceSnapshotDrawer } from '../drawers/compute/instance/CreateInstanceSnapshotDrawer';
-import { LockSettingDrawer } from '../drawers/compute/instance/LockSettingDrawer';
-import { AttachVolumeDrawer } from '../drawers/compute/instance/AttachVolumeDrawer';
-import { DetachVolumeDrawer } from '../drawers/compute/instance/DetachVolumeDrawer';
-import { AttachInterfaceDrawer } from '../drawers/compute/instance/AttachInterfaceDrawer';
-import { DetachInterfaceDrawer } from '../drawers/compute/instance/DetachInterfaceDrawer';
-import { AssociateFloatingIPDrawer } from '../drawers/compute/instance/AssociateFloatingIPDrawer';
-import { DisassociateFloatingIPDrawer } from '../drawers/compute/instance/DisassociateFloatingIPDrawer';
-import { ManageSecurityGroupsDrawer } from '../drawers/compute/instance/ManageSecurityGroupsDrawer';
-import { ManageTagsDrawer } from '../drawers/compute/instance/ManageTagsDrawer';
-import { ResizeInstanceDrawer } from '../drawers/compute/instance/ResizeInstanceDrawer';
-import { RebuildInstanceDrawer } from '../drawers/compute/instance/RebuildInstanceDrawer';
-import { RescueInstanceDrawer } from '../drawers/compute/instance/RescueInstanceDrawer';
-import { LiveMigrateInstanceDrawer } from '../drawers/compute/instance/LiveMigrateInstanceDrawer';
+import {
+  mockInstancesMap,
+  defaultInstanceDetail,
+  mockAttachedVolumes,
+  mockAttachedInterfaces,
+  mockFloatingIPs,
+  mockNetworkInterfaces,
+  mockSecurityGroups,
+  mockInstanceSnapshots,
+  mockActionLogs,
+  CONSOLE_LOG_SAMPLE,
+  type AttachedVolume,
+  type AttachedInterface,
+  type FloatingIP,
+  type SecurityGroup,
+  type InstanceSnapshot,
+  type ActionLog,
+  type InstanceDetail,
+} from './instanceDetailPageMockData';
 
-type InstanceStatus = 'active' | 'shutoff' | 'building' | 'error' | 'paused';
+const STATUS_COL_WIDTH = 60;
+const ACTION_COL_WIDTH = 72;
 
-interface InstanceDetail {
-  id: string;
-  name: string;
-  status: InstanceStatus;
-  host: string;
-  createdAt: string;
-  availabilityZone: string;
-  description: string;
-  flavor: { name: string; vcpu: number; ram: string; disk: string; gpu: number };
-  image: string;
-  os: string;
-  locked: boolean;
-  keyPair: string;
-  serverGroup: string;
-  userData: string;
-}
+type TimeRange = '1h' | '1d' | '1w' | '2w';
 
-interface AttachedVolume {
-  id: string;
-  name: string;
-  status: 'active' | 'inUse' | 'available' | 'error';
-  size: string;
-  type: string;
-  diskTag: string;
-  bootable: boolean;
-  access: string;
-  [key: string]: unknown;
-}
-
-interface AttachedInterface {
-  id: string;
-  name: string;
-  network: string;
-  portStatus: 'Active' | 'Inactive' | 'Down' | 'Build';
-  fixedIp: string;
-  macAddress: string;
-  createdAt: string;
-  [key: string]: unknown;
-}
-
-interface FloatingIPRow {
-  id: string;
-  floatingIp: string;
-  fixedIp: string;
-  status: 'active' | 'shutoff' | 'error';
-  createdAt: string;
-  [key: string]: unknown;
-}
-
-interface SecurityGroupRow {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  [key: string]: unknown;
-}
-
-interface NetworkIfaceTab {
-  id: string;
-  name: string;
-  ip: string;
-}
-
-interface InstanceSnapshotRow {
-  id: string;
-  name: string;
-  status: 'active' | 'queued' | 'saving' | 'error';
-  size: string;
-  diskFormat: string;
-  createdAt: string;
-  [key: string]: unknown;
-}
-
-/** Aligns with `ComputeInstancesPage` mock IDs (vm-001 … vm-010). */
-const mockInstancesMap: Record<string, InstanceDetail> = {
-  'vm-001': {
-    id: 'vm-001',
-    name: 'worker-node-01',
-    status: 'active',
-    host: 'compute-03',
-    createdAt: 'Jul 25, 2025 10:32:16',
-    availabilityZone: 'keystone',
-    description: '-',
-    flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
-    image: 'Ubuntu 24.04',
-    os: 'Ubuntu 24.04',
-    locked: true,
-    keyPair: 'default-key',
-    serverGroup: 'worker-group',
-    userData: '-',
-  },
-  'vm-002': {
-    id: 'vm-002',
-    name: 'worker-node-02',
-    status: 'active',
-    host: 'compute-03',
-    createdAt: 'Jul 24, 2025 03:19:59',
-    availabilityZone: 'keystone',
-    description: '-',
-    flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
-    image: 'CentOS 7',
-    os: 'CentOS 7',
-    locked: false,
-    keyPair: 'default-key',
-    serverGroup: 'worker-group',
-    userData: '-',
-  },
-  'vm-003': {
-    id: 'vm-003',
-    name: 'master-node-01',
-    status: 'active',
-    host: 'compute-01',
-    createdAt: 'Jul 20, 2025 23:27:51',
-    availabilityZone: 'nova',
-    description: 'Kubernetes master node',
-    flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
-    image: 'Ubuntu 22.04',
-    os: 'Ubuntu 22.04',
-    locked: true,
-    keyPair: 'master-key',
-    serverGroup: 'master-group',
-    userData: '-',
-  },
-  'vm-004': {
-    id: 'vm-004',
-    name: 'db-server-01',
-    status: 'shutoff',
-    host: 'compute-02',
-    createdAt: 'Jul 15, 2025 12:22:26',
-    availabilityZone: 'keystone',
-    description: 'Database server',
-    flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
-    image: 'CentOS 8',
-    os: 'CentOS 8',
-    locked: true,
-    keyPair: 'db-key',
-    serverGroup: 'db-group',
-    userData: '-',
-  },
-  'vm-005': {
-    id: 'vm-005',
-    name: 'gpu-node-01',
-    status: 'active',
-    host: 'compute-gpu-01',
-    createdAt: 'Jul 10, 2025 01:17:01',
-    availabilityZone: 'nova',
-    description: 'GPU compute node',
-    flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
-    image: 'Ubuntu 22.04',
-    os: 'Ubuntu 22.04',
-    locked: false,
-    keyPair: 'gpu-key',
-    serverGroup: 'gpu-group',
-    userData: '-',
-  },
-  'vm-006': {
-    id: 'vm-006',
-    name: 'gpu-node-02',
-    status: 'active',
-    host: 'compute-gpu-02',
-    createdAt: 'Jul 9, 2025 18:40:12',
-    availabilityZone: 'nova',
-    description: '-',
-    flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
-    image: 'Ubuntu 22.04',
-    os: 'Ubuntu 22.04',
-    locked: false,
-    keyPair: 'gpu-key',
-    serverGroup: 'gpu-group',
-    userData: '-',
-  },
-  'vm-007': {
-    id: 'vm-007',
-    name: 'web-server-01',
-    status: 'paused',
-    host: 'compute-04',
-    createdAt: 'Jul 8, 2025 09:05:00',
-    availabilityZone: 'keystone',
-    description: '-',
-    flavor: { name: 'Small', vcpu: 2, ram: '4 GiB', disk: '50 GiB', gpu: 0 },
-    image: 'Rocky Linux 9',
-    os: 'Rocky Linux 9',
-    locked: false,
-    keyPair: 'default-key',
-    serverGroup: '-',
-    userData: '-',
-  },
-  'vm-008': {
-    id: 'vm-008',
-    name: 'web-server-02',
-    status: 'building',
-    host: 'compute-04',
-    createdAt: 'Jul 7, 2025 14:22:33',
-    availabilityZone: 'keystone',
-    description: '-',
-    flavor: { name: 'Small', vcpu: 2, ram: '4 GiB', disk: '50 GiB', gpu: 0 },
-    image: 'Rocky Linux 9',
-    os: 'Rocky Linux 9',
-    locked: false,
-    keyPair: 'default-key',
-    serverGroup: '-',
-    userData: '-',
-  },
-  'vm-009': {
-    id: 'vm-009',
-    name: 'analytics-01',
-    status: 'error',
-    host: 'compute-02',
-    createdAt: 'Jul 5, 2025 11:18:45',
-    availabilityZone: 'nova',
-    description: '-',
-    flavor: { name: 'XLarge', vcpu: 16, ram: '32 GiB', disk: '500 GiB', gpu: 2 },
-    image: 'Debian 12',
-    os: 'Debian 12',
-    locked: true,
-    keyPair: 'default-key',
-    serverGroup: '-',
-    userData: '-',
-  },
-  'vm-010': {
-    id: 'vm-010',
-    name: 'cache-server-01',
-    status: 'active',
-    host: 'compute-03',
-    createdAt: 'Jul 4, 2025 08:12:01',
-    availabilityZone: 'keystone',
-    description: '-',
-    flavor: { name: 'Medium', vcpu: 4, ram: '16 GiB', disk: '100 GiB', gpu: 0 },
-    image: 'Debian 12',
-    os: 'Debian 12',
-    locked: false,
-    keyPair: 'default-key',
-    serverGroup: '-',
-    userData: '-',
-  },
-};
-
-const defaultInstanceDetail: InstanceDetail = {
-  id: 'unknown',
-  name: 'Unknown instance',
-  status: 'active',
-  host: '-',
-  createdAt: '-',
-  availabilityZone: '-',
-  description: '-',
-  flavor: { name: '-', vcpu: 0, ram: '-', disk: '-', gpu: 0 },
-  image: '-',
-  os: '-',
-  locked: false,
-  keyPair: '-',
-  serverGroup: '-',
-  userData: '-',
-};
-
-const mockVolumes: AttachedVolume[] = [
-  {
-    id: 'vol-001',
-    name: 'vol34',
-    status: 'active',
-    size: '1500GiB',
-    type: '_DEFAULT_',
-    diskTag: 'OS Disk',
-    bootable: true,
-    access: 'Nov 11, 2025',
-  },
-  {
-    id: 'vol-002',
-    name: 'data-volume-01',
-    status: 'inUse',
-    size: '500GiB',
-    type: 'SSD',
-    diskTag: 'Data disk',
-    bootable: false,
-    access: 'Nov 10, 2025',
-  },
-];
-
-const mockInterfaces: AttachedInterface[] = [
-  {
-    id: 'if-001',
-    name: 'port-01',
-    network: 'net-01',
-    portStatus: 'Active',
-    fixedIp: '10.0.0.6',
-    macAddress: 'fa:16:3e:12:34:56',
-    createdAt: 'Nov 11, 2025 08:30:18',
-  },
-  {
-    id: 'if-002',
-    name: 'port-02',
-    network: 'net-02',
-    portStatus: 'Inactive',
-    fixedIp: '10.0.0.5',
-    macAddress: 'fa:16:3e:ab:cd:ef',
-    createdAt: 'Nov 10, 2025 01:17:01',
-  },
-];
-
-const mockFloatingIps: FloatingIPRow[] = [
-  {
-    id: 'fip-001',
-    floatingIp: '203.0.113.10',
-    fixedIp: '10.0.1.10',
-    status: 'active',
-    createdAt: 'Sep 10, 2025 01:17:01',
-  },
-  {
-    id: 'fip-002',
-    floatingIp: '203.0.113.20',
-    fixedIp: '10.0.1.20',
-    status: 'shutoff',
-    createdAt: 'Sep 12, 2025 15:43:35',
-  },
-];
-
-const mockNetworkTabs: NetworkIfaceTab[] = [
-  { id: 'net-001', name: 'private-net', ip: '10.0.0.5' },
-  { id: 'net-002', name: 'public-net', ip: '72.116.0.10' },
-];
-
-const mockSecurityGroups: SecurityGroupRow[] = [
-  { id: 'sg-001', name: 'sg-02', description: 'Web tier', createdAt: 'Nov 11, 2025 08:30:18' },
-  {
-    id: 'sg-002',
-    name: 'default',
-    description: 'Default security group',
-    createdAt: 'Nov 10, 2025 01:17:01',
-  },
-];
-
-const mockSnapshots: InstanceSnapshotRow[] = [
-  {
-    id: 'snap-001',
-    name: 'snap-01',
-    status: 'active',
-    size: '30GiB',
-    diskFormat: 'RAW',
-    createdAt: 'Sep 1, 2025 10:20:28',
-  },
-  {
-    id: 'snap-002',
-    name: 'pre-upgrade',
-    status: 'queued',
-    size: '45GiB',
-    diskFormat: 'QCOW2',
-    createdAt: 'Aug 20, 2025 23:27:51',
-  },
-];
-
-const statusLabel: Record<InstanceStatus, string> = {
-  active: 'Active',
-  shutoff: 'Shut off',
-  building: 'Building',
-  error: 'Error',
-  paused: 'Paused',
-};
-
-function instanceStatusVariant(s: InstanceStatus): StatusVariant {
-  if (s === 'active') return 'active';
-  if (s === 'building') return 'building';
+function volumeStatusVariant(s: AttachedVolume['status']): StatusVariant {
   if (s === 'error') return 'error';
-  if (s === 'paused') return 'paused';
-  return 'shutoff';
+  if (s === 'in-use') return 'inUse';
+  if (s === 'available') return 'mounted';
+  return 'active';
 }
 
 function portStatusVariant(portStatus: AttachedInterface['portStatus']): StatusVariant {
@@ -421,233 +90,309 @@ function portStatusVariant(portStatus: AttachedInterface['portStatus']): StatusV
   return m[portStatus] ?? 'down';
 }
 
-function snapshotStatusVariant(s: InstanceSnapshotRow['status']): StatusVariant {
+function snapshotStatusVariant(s: InstanceSnapshot['status']): StatusVariant {
   if (s === 'active') return 'active';
   if (s === 'queued' || s === 'saving') return 'building';
   return 'error';
 }
 
-function volumeStatusVariant(s: AttachedVolume['status']): StatusVariant {
+function floatingStatusVariant(s: FloatingIP['status']): StatusVariant {
   if (s === 'error') return 'error';
-  if (s === 'inUse') return 'inUse';
-  if (s === 'available') return 'mounted';
-  return 'active';
+  if (s === 'active') return 'active';
+  return 'shutoff';
 }
 
-const volumeFilterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Volume name…' },
-];
-const ifaceFilterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Interface name…' },
-];
-const fipFilterKeys: FilterKey[] = [
-  { key: 'floatingIp', label: 'Floating IP', type: 'input', placeholder: 'IP…' },
-];
-const sgFilterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Security group…' },
-];
-const snapFilterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Snapshot name…' },
-];
+function SearchField({
+  placeholder,
+  value,
+  onChange,
+  className,
+}: {
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-2 h-8 px-2.5 rounded-md border border-border-strong bg-surface-default w-full max-w-[320px]',
+        className
+      )}
+    >
+      <IconSearch size={14} className="shrink-0 text-text-muted" stroke={1.5} />
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="flex-1 min-w-0 text-12 leading-[18px] text-text bg-transparent border-none outline-none placeholder:text-text-muted"
+      />
+    </div>
+  );
+}
 
 const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
   <button
     type="button"
-    onClick={toggle}
-    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+    onClick={(e) => {
+      e.stopPropagation();
+      toggle();
+    }}
+    className="p-1.5 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none inline-flex"
     aria-label="Row actions"
   >
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M5.33333 8V8.00667M8 8V8.00667M10.6667 8V8.00667M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8Z"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-text-subtle" />
   </button>
 );
 
-function applyFilters<T extends Record<string, unknown>>(
-  rows: T[],
-  filters: FilterKeyWithValue[]
-): T[] {
-  if (filters.length === 0) return rows;
-  return rows.filter((row) =>
-    filters.every((f) =>
-      String(row[f.key] ?? '')
-        .toLowerCase()
-        .includes(String(f.value ?? '').toLowerCase())
-    )
-  );
-}
-
-const tagPill = (text: string) => (
-  <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-surface-muted text-11 font-medium text-text border border-border">
-    {text}
-  </span>
-);
-
-function getDetailCardFields(instance: InstanceDetail): {
-  basic: DetailCardField[];
-  flavor: DetailCardField[];
-  source: DetailCardField[];
-  authentication: DetailCardField[];
-  advanced: DetailCardField[];
-} {
-  return {
-    basic: [
-      { label: 'Instance name', value: instance.name },
-      { label: 'Availability zone', value: instance.availabilityZone },
-      { label: 'Description', value: instance.description },
-    ],
-    flavor: [
-      {
-        label: 'Flavor name',
-        type: 'component',
-        value: null,
-        component: (
-          <Link to="/compute/flavors" className="text-primary font-medium hover:underline">
-            {instance.flavor.name}
-          </Link>
-        ),
-      },
-      {
-        label: 'Spec',
-        value: `vCPU : ${instance.flavor.vcpu} / RAM : ${instance.flavor.ram} / Disk : ${instance.flavor.disk} / GPU : ${instance.flavor.gpu}`,
-      },
-    ],
-    source: [
-      {
-        label: 'Image',
-        type: 'component',
-        value: null,
-        component: (
-          <Link to="/compute/images" className="text-primary font-medium hover:underline">
-            {instance.image}
-          </Link>
-        ),
-      },
-      { label: 'OS', value: instance.os },
-    ],
-    authentication: [
-      {
-        label: 'Key pair',
-        type: 'component',
-        value: null,
-        component: (
-          <Link to="/compute/key-pairs" className="text-primary font-medium hover:underline">
-            {instance.keyPair}
-          </Link>
-        ),
-      },
-    ],
-    advanced: [
-      {
-        label: 'Tags',
-        type: 'component',
-        value: null,
-        component: (
-          <div className="flex flex-wrap gap-1">
-            {tagPill('Team=dev')}
-            {tagPill('Key=Value')}
-          </div>
-        ),
-      },
-      {
-        label: 'Server group',
-        type: 'component',
-        value: null,
-        component: (
-          <Link to="/compute/server-groups" className="text-primary font-medium hover:underline">
-            {instance.serverGroup}
-          </Link>
-        ),
-      },
-      { label: 'User data', value: instance.userData },
-    ],
-  };
-}
-
 export function ComputeInstanceDetailPage() {
+  const [drawerOpen, setDrawerOpen] = useState<string | null>(null);
+  const closeDrawer = () => setDrawerOpen(null);
+
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
-  const instance = id ? (mockInstancesMap[id] ?? defaultInstanceDetail) : defaultInstanceDetail;
-  const [drawerOpen, setDrawerOpen] = useState<string | null>(null);
-  const openDrawer = (name: string) => setDrawerOpen(name);
-  const closeDrawer = () => setDrawerOpen(null);
-  const detailFields = useMemo(() => getDetailCardFields(instance), [instance]);
+  const instance: InstanceDetail = id
+    ? (mockInstancesMap[id] ?? defaultInstanceDetail)
+    : defaultInstanceDetail;
 
-  const itemsPerPage = 10;
+  const [selectedNetworkInterface, setSelectedNetworkInterface] = useState(
+    mockNetworkInterfaces[0]?.id ?? ''
+  );
+
+  const [interfaceCurrentPage, setInterfaceCurrentPage] = useState(1);
+  const interfaceRowsPerPage = 10;
+
+  const [floatingIpCurrentPage, setFloatingIpCurrentPage] = useState(1);
+  const floatingIpRowsPerPage = 10;
+
+  const [securityCurrentPage, setSecurityCurrentPage] = useState(1);
+  const securityRowsPerPage = 10;
+  const [securitySearchQuery, setSecuritySearchQuery] = useState('');
+
+  const [snapshotCurrentPage, setSnapshotCurrentPage] = useState(1);
+  const [snapshotSearchQuery, setSnapshotSearchQuery] = useState('');
+  const snapshotRowsPerPage = 10;
+  const filteredSnapshots = mockInstanceSnapshots.filter((snapshot) =>
+    snapshot.name.toLowerCase().includes(snapshotSearchQuery.toLowerCase())
+  );
+  const snapshotTotalPages = Math.ceil(filteredSnapshots.length / snapshotRowsPerPage);
+
+  const [monitoringTimeRange, setMonitoringTimeRange] = useState<TimeRange>('1h');
+
+  const [logLength, setLogLength] = useState(20);
+
+  const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
+  const [actionLogSearchQuery, setActionLogSearchQuery] = useState('');
+  const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set());
+  const actionLogRowsPerPage = 10;
+  const filteredActionLogs = mockActionLogs.filter(
+    (log) =>
+      log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
+      log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
+  );
+  const actionLogTotalPages = Math.ceil(filteredActionLogs.length / actionLogRowsPerPage);
+
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
+  const handleSortChange = (nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
     setOrder(nextOrder);
-  }, []);
+  };
 
-  const [volFilters, setVolFilters] = useState<FilterKeyWithValue[]>([]);
+  const [volSearchQuery, setVolSearchQuery] = useState('');
   const [volPage, setVolPage] = useState(1);
-  const [volSelected, setVolSelected] = useState<(string | number)[]>([]);
+  const volRowsPerPage = 10;
 
-  const [ifFilters, setIfFilters] = useState<FilterKeyWithValue[]>([]);
-  const [ifPage, setIfPage] = useState(1);
-  const [ifSelected, setIfSelected] = useState<(string | number)[]>([]);
+  const [ifSearchQuery, setIfSearchQuery] = useState('');
+  const [fipSearchQuery, setFipSearchQuery] = useState('');
 
-  const [fipFilters, setFipFilters] = useState<FilterKeyWithValue[]>([]);
-  const [fipPage, setFipPage] = useState(1);
-  const [fipSelected, setFipSelected] = useState<(string | number)[]>([]);
+  const toggleLogExpansion = (logId: string) => {
+    setExpandedLogIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(logId)) next.delete(logId);
+      else next.add(logId);
+      return next;
+    });
+  };
 
-  const [sgIfaceTab, setSgIfaceTab] = useState(mockNetworkTabs[0]?.id ?? '');
-  const [sgFilters, setSgFilters] = useState<FilterKeyWithValue[]>([]);
-  const [sgPage, setSgPage] = useState(1);
-  const [sgSelected, setSgSelected] = useState<(string | number)[]>([]);
+  const filteredVolumes = useMemo(() => {
+    const q = volSearchQuery.trim().toLowerCase();
+    if (!q) return mockAttachedVolumes;
+    return mockAttachedVolumes.filter(
+      (v) => v.name.toLowerCase().includes(q) || v.id.toLowerCase().includes(q)
+    );
+  }, [volSearchQuery]);
 
-  const [snapFilters, setSnapFilters] = useState<FilterKeyWithValue[]>([]);
-  const [snapPage, setSnapPage] = useState(1);
-  const [snapSelected, setSnapSelected] = useState<(string | number)[]>([]);
+  const filteredInterfaces = useMemo(() => {
+    const q = ifSearchQuery.trim().toLowerCase();
+    if (!q) return mockAttachedInterfaces;
+    return mockAttachedInterfaces.filter(
+      (i) =>
+        i.name.toLowerCase().includes(q) ||
+        i.id.toLowerCase().includes(q) ||
+        i.network.toLowerCase().includes(q)
+    );
+  }, [ifSearchQuery]);
 
-  const filteredVolumes = useMemo(() => applyFilters(mockVolumes, volFilters), [volFilters]);
-  const paginatedVolumes = useMemo(
-    () => filteredVolumes.slice((volPage - 1) * itemsPerPage, volPage * itemsPerPage),
-    [filteredVolumes, volPage]
+  const filteredFloatingIps = useMemo(() => {
+    const q = fipSearchQuery.trim().toLowerCase();
+    if (!q) return mockFloatingIPs;
+    return mockFloatingIPs.filter(
+      (f) =>
+        f.floatingIp.toLowerCase().includes(q) ||
+        f.fixedIp.toLowerCase().includes(q) ||
+        f.id.toLowerCase().includes(q) ||
+        f.name.toLowerCase().includes(q)
+    );
+  }, [fipSearchQuery]);
+
+  const filteredSecurityGroups = useMemo(() => {
+    const q = securitySearchQuery.trim().toLowerCase();
+    if (!q) return mockSecurityGroups;
+    return mockSecurityGroups.filter(
+      (g) =>
+        g.name.toLowerCase().includes(q) ||
+        g.id.toLowerCase().includes(q) ||
+        g.description.toLowerCase().includes(q)
+    );
+  }, [securitySearchQuery]);
+
+  const paginatedVolumes = filteredVolumes.slice(
+    (volPage - 1) * volRowsPerPage,
+    volPage * volRowsPerPage
   );
 
-  const filteredIfaces = useMemo(() => applyFilters(mockInterfaces, ifFilters), [ifFilters]);
-  const paginatedIfaces = useMemo(
-    () => filteredIfaces.slice((ifPage - 1) * itemsPerPage, ifPage * itemsPerPage),
-    [filteredIfaces, ifPage]
+  const paginatedInterfaces = filteredInterfaces.slice(
+    (interfaceCurrentPage - 1) * interfaceRowsPerPage,
+    interfaceCurrentPage * interfaceRowsPerPage
   );
 
-  const filteredFips = useMemo(() => applyFilters(mockFloatingIps, fipFilters), [fipFilters]);
-  const paginatedFips = useMemo(
-    () => filteredFips.slice((fipPage - 1) * itemsPerPage, fipPage * itemsPerPage),
-    [filteredFips, fipPage]
+  const paginatedFloatingIps = filteredFloatingIps.slice(
+    (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
+    floatingIpCurrentPage * floatingIpRowsPerPage
   );
 
-  const filteredSg = useMemo(() => applyFilters(mockSecurityGroups, sgFilters), [sgFilters]);
-  const paginatedSg = useMemo(
-    () => filteredSg.slice((sgPage - 1) * itemsPerPage, sgPage * itemsPerPage),
-    [filteredSg, sgPage]
+  const paginatedSecurity = filteredSecurityGroups.slice(
+    (securityCurrentPage - 1) * securityRowsPerPage,
+    securityCurrentPage * securityRowsPerPage
+  );
+  const paginatedSnapshots = filteredSnapshots.slice(
+    (snapshotCurrentPage - 1) * snapshotRowsPerPage,
+    snapshotCurrentPage * snapshotRowsPerPage
+  );
+  const paginatedActionLogs = filteredActionLogs.slice(
+    (actionLogCurrentPage - 1) * actionLogRowsPerPage,
+    actionLogCurrentPage * actionLogRowsPerPage
   );
 
-  const filteredSnaps = useMemo(() => applyFilters(mockSnapshots, snapFilters), [snapFilters]);
-  const paginatedSnaps = useMemo(
-    () => filteredSnaps.slice((snapPage - 1) * itemsPerPage, snapPage * itemsPerPage),
-    [filteredSnaps, snapPage]
+  const volumeColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'size', header: 'Size', sortable: true },
+      { key: 'type', header: 'Type', sortable: true },
+      { key: 'diskTag', header: 'Disk tag' },
+      { key: 'bootable', header: 'Bootable' },
+      { key: 'access', header: 'Created at' },
+      {
+        key: 'actions',
+        header: 'Action',
+        width: ACTION_COL_WIDTH,
+        align: 'center',
+        clickable: false,
+      },
+    ],
+    []
+  );
+
+  const interfaceColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'network', header: 'Network', sortable: true },
+      { key: 'fixedIp', header: 'Fixed IP' },
+      { key: 'macAddress', header: 'Mac address' },
+      { key: 'createdAt', header: 'Created at', sortable: true },
+      {
+        key: 'actions',
+        header: 'Action',
+        width: ACTION_COL_WIDTH,
+        align: 'center',
+        clickable: false,
+      },
+    ],
+    []
+  );
+
+  const floatingColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+      { key: 'floatingIp', header: 'Floating IP' },
+      { key: 'fixedIp', header: 'Fixed IP' },
+      { key: 'createdAt', header: 'Created at', sortable: true },
+      {
+        key: 'actions',
+        header: 'Action',
+        width: ACTION_COL_WIDTH,
+        align: 'center',
+        clickable: false,
+      },
+    ],
+    []
+  );
+
+  const securityColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'description', header: 'Description', sortable: true },
+      { key: 'createdAt', header: 'Created at', sortable: true },
+      {
+        key: 'actions',
+        header: 'Action',
+        width: ACTION_COL_WIDTH,
+        align: 'center',
+        clickable: false,
+      },
+    ],
+    []
+  );
+
+  const snapshotColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'size', header: 'Size', sortable: true },
+      { key: 'diskFormat', header: 'Disk format', sortable: true },
+      { key: 'createdAt', header: 'Created at', sortable: true },
+      {
+        key: 'actions',
+        header: 'Action',
+        width: ACTION_COL_WIDTH,
+        align: 'center',
+        clickable: false,
+      },
+    ],
+    []
+  );
+
+  const actionLogColumns: TableColumn[] = useMemo(
+    () => [
+      { key: 'operationName', header: 'Action', sortable: true },
+      { key: 'requestId', header: 'Request ID', sortable: true },
+      { key: 'requestedTime', header: 'Requested time', sortable: true },
+    ],
+    []
   );
 
   const infoFields = [
     {
       label: 'Status',
-      value: statusLabel[instance.status],
-      accessory: (
-        <StatusIndicator variant={instanceStatusVariant(instance.status)} layout="iconOnly" />
-      ),
+      value: 'Active',
+      accessory: <StatusIndicator variant="active" layout="iconOnly" />,
     },
     { label: 'ID', value: instance.id, showCopyButton: true as const, copyText: instance.id },
     { label: 'Host', value: instance.host },
@@ -667,6 +412,24 @@ export function ComputeInstanceDetailPage() {
     },
     { label: 'Created at', value: instance.createdAt },
   ];
+
+  const headerTitle = (
+    <span className="inline-flex items-center gap-2">
+      <Tooltip
+        content={instance.locked ? 'This instance is locked' : 'This instance is unlocked'}
+        focusable={false}
+      >
+        <span className="inline-flex cursor-default">
+          {instance.locked ? (
+            <IconLock size={16} className="text-text-muted" stroke={1.5} />
+          ) : (
+            <IconLockOpen size={16} className="text-text-muted" stroke={1.5} />
+          )}
+        </span>
+      </Tooltip>
+      {instance.name}
+    </span>
+  );
 
   const actions = (
     <div className="flex items-center gap-1 flex-wrap">
@@ -698,142 +461,218 @@ export function ComputeInstanceDetailPage() {
         <ContextMenu.SubItems label="Instance status" subContextMenuDirection="right-top">
           <ContextMenu.Item action={() => {}}>Soft reboot</ContextMenu.Item>
           <ContextMenu.Item action={() => {}}>Pause</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
-            Suspend
-          </ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('rescue')}>Rescue</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Suspend</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Shelve</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Unpause</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Resume</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Unshelve</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Rescue</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Unrescue</ContextMenu.Item>
         </ContextMenu.SubItems>
-        <ContextMenu.SubItems label="Storage & snapshot" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => openDrawer('attachVol')}>Attach volume</ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('detachVol')} danger>
+        <ContextMenu.SubItems label="Storage&Snapshot" subContextMenuDirection="right-top">
+          <ContextMenu.Item action={() => {}}>Attach volume</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}} danger>
             Detach volume
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('snapshot')}>
-            Create instance snapshot
-          </ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Create instance snapshot</ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Network" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => openDrawer('attachIf')}>
-            Attach interface
-          </ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('detachIf')} danger>
+          <ContextMenu.Item action={() => {}}>Attach interface</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}} danger>
             Detach interface
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('assocFip')}>
-            Associate floating IP
+          <ContextMenu.Item action={() => {}}>Associate floating IP</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}} danger>
+            Disassociate floating IP
           </ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Manage security groups</ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Configuration" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => openDrawer('lock')}>Lock setting</ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('edit')}>Edit</ContextMenu.Item>
-          <ContextMenu.Item action={() => openDrawer('rebuild')} danger>
+          <ContextMenu.Item action={() => {}}>Lock setting</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}} danger>
             Rebuild
           </ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Resize</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Manage tags</ContextMenu.Item>
+          <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
         </ContextMenu.SubItems>
+        <ContextMenu.Item action={() => {}}>Confirm resize</ContextMenu.Item>
+        <ContextMenu.Item action={() => {}}>Revert resize</ContextMenu.Item>
       </ContextMenu.Root>
     </div>
   );
 
-  const volumeColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 72, align: 'center' },
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'size', header: 'Size', sortable: true },
-    { key: 'type', header: 'Type' },
-    { key: 'diskTag', header: 'Disk tag' },
-    { key: 'bootable', header: 'Bootable' },
-    { key: 'access', header: 'Created at' },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
-
-  const ifaceColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 72, align: 'center' },
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'network', header: 'Network', sortable: true },
-    { key: 'fixedIp', header: 'Fixed IP' },
-    { key: 'macAddress', header: 'MAC address' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
-
-  const fipColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 72, align: 'center' },
-    { key: 'floatingIp', header: 'Floating IP', sortable: true },
-    { key: 'fixedIp', header: 'Fixed IP' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
-
-  const sgColumns: TableColumn[] = [
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'description', header: 'Description' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
-
-  const snapColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 72, align: 'center' },
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'size', header: 'Size', sortable: true },
-    { key: 'diskFormat', header: 'Disk format' },
-    { key: 'createdAt', header: 'Created at', sortable: true },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
+  const securityToolbar = (
+    <div className="flex flex-col gap-4 pt-2">
+      <SearchField
+        placeholder="Search security group by attributes"
+        value={securitySearchQuery}
+        onChange={(v) => {
+          setSecuritySearchQuery(v);
+          setSecurityCurrentPage(1);
+        }}
+      />
+      <Pagination
+        totalCount={filteredSecurityGroups.length}
+        size={securityRowsPerPage}
+        currentAt={securityCurrentPage}
+        onPageChange={(page) => setSecurityCurrentPage(page)}
+        onSettingClick={() => {}}
+        totalCountLabel="items"
+      />
+      <Table<SecurityGroup>
+        columns={securityColumns}
+        rows={paginatedSecurity}
+        sort={sort}
+        order={order}
+        onSortChange={handleSortChange}
+        stickyLastColumn
+      >
+        {paginatedSecurity.map((row) => (
+          <Table.Tr key={row.id} rowData={row}>
+            <Table.Td rowData={row} column={securityColumns[0]}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/security-groups/${row.id}`}
+                  className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                >
+                  {row.name}
+                </Link>
+                <span className="text-11 text-text-muted truncate">ID : {row.id}</span>
+              </div>
+            </Table.Td>
+            <Table.Td rowData={row} column={securityColumns[1]}>
+              {row.description}
+            </Table.Td>
+            <Table.Td rowData={row} column={securityColumns[2]}>
+              {row.createdAt}
+            </Table.Td>
+            <Table.Td rowData={row} column={securityColumns[3]} preventClickPropagation>
+              <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
+                <ContextMenu.Item action={() => {}} danger>
+                  Detach
+                </ContextMenu.Item>
+              </ContextMenu.Root>
+            </Table.Td>
+          </Table.Tr>
+        ))}
+      </Table>
+    </div>
+  );
 
   return (
-    <div className="flex flex-col gap-6 min-w-0">
-      <DetailPageHeader title={instance.name} actions={actions} infoFields={infoFields} />
+    <div className="flex flex-col gap-6 min-w-[1176px]">
+      <DetailPageHeader title={headerTitle} actions={actions} infoFields={infoFields} />
 
       <div className="w-full">
         <Tabs activeTabId={activeDetailTab} onChange={setActiveDetailTab} variant="line" size="sm">
           <Tab id="details" label="Details">
             <div className="flex flex-col gap-4 pt-4">
-              <DetailCard title="Basic information" fields={detailFields.basic} />
-              <DetailCard title="Flavor" fields={detailFields.flavor} />
-              <DetailCard title="Source" fields={detailFields.source} />
-              <DetailCard title="Authentication" fields={detailFields.authentication} />
-              <DetailCard title="Advanced" fields={detailFields.advanced} />
+              <SectionCard>
+                <SectionCard.Header title="Basic information" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Instance name" value={instance.name} />
+                  <SectionCard.DataRow
+                    label="Availability zone"
+                    value={instance.availabilityZone}
+                  />
+                  <SectionCard.DataRow label="Description" value={instance.description} />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Flavor" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Flavor name"
+                    value={instance.flavor.name}
+                    isLink
+                    linkHref="/compute/flavors"
+                  />
+                  <SectionCard.DataRow
+                    label="Spec"
+                    value={`vCPU : ${instance.flavor.vcpu} / RAM : ${instance.flavor.ram} / Disk : ${instance.flavor.disk} / GPU : ${instance.flavor.gpu}`}
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Source" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Image"
+                    value={instance.image}
+                    isLink
+                    linkHref="/compute/images"
+                  />
+                  <SectionCard.DataRow label="OS" value={instance.os} />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Authentication" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Key pair"
+                    value={instance.keyPair}
+                    isLink
+                    linkHref="/compute/key-pairs"
+                  />
+                </SectionCard.Content>
+              </SectionCard>
+
+              <SectionCard>
+                <SectionCard.Header title="Advanced" />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Tags">
+                    <div className="flex flex-wrap items-center gap-1">
+                      <Badge theme="gry" size="sm" type="subtle">
+                        Team=dev
+                      </Badge>
+                      <Badge theme="gry" size="sm" type="subtle">
+                        Key=Value
+                      </Badge>
+                    </div>
+                  </SectionCard.DataRow>
+                  <SectionCard.DataRow
+                    label="Server group"
+                    value={instance.serverGroup}
+                    isLink
+                    linkHref="/compute/server-groups"
+                  />
+                  <SectionCard.DataRow label="User data" value={instance.userData} />
+                </SectionCard.Content>
+              </SectionCard>
             </div>
           </Tab>
 
           <Tab id="volumes" label="Volumes">
             <div className="flex flex-col gap-4 pt-4">
-              <div className="flex justify-between items-center w-full">
-                <h2 className="text-14 font-semibold leading-5 text-text m-0">Volumes</h2>
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={() => openDrawer('attachVol')}
-                >
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">Volumes</h2>
+                <Button variant="secondary" appearance="outline" size="sm">
                   <IconSquarePlus size={12} stroke={1.5} /> Attach volume
                 </Button>
               </div>
-              <FilterSearchInput
-                filterKeys={volumeFilterKeys}
-                onFilterAdd={(f) => {
-                  setVolFilters((p) => [...p, f]);
+              <SearchField
+                placeholder="Search volume by attributes"
+                value={volSearchQuery}
+                onChange={(v) => {
+                  setVolSearchQuery(v);
                   setVolPage(1);
                 }}
-                selectedFilters={volFilters}
-                placeholder="Search volumes by attributes"
-                defaultFilterKey="name"
               />
               <Pagination
                 totalCount={filteredVolumes.length}
-                size={itemsPerPage}
+                size={volRowsPerPage}
                 currentAt={volPage}
-                onPageChange={setVolPage}
+                onPageChange={(page) => setVolPage(page)}
                 onSettingClick={() => {}}
                 totalCountLabel="items"
-                selectedCount={volSelected.length}
               />
-              <SelectableTable<AttachedVolume>
+              <Table<AttachedVolume>
                 columns={volumeColumns}
                 rows={paginatedVolumes}
-                selectionType="checkbox"
-                selectedRows={volSelected}
-                onRowSelectionChange={setVolSelected}
-                getRowId={(row) => row.id}
                 sort={sort}
                 order={order}
                 onSortChange={handleSortChange}
@@ -851,7 +690,7 @@ export function ComputeInstanceDetailPage() {
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <Link
                           to={`/compute/volumes/${row.id}`}
-                          className="text-primary font-medium hover:underline truncate"
+                          className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
                         >
                           {row.name}
                         </Link>
@@ -882,7 +721,10 @@ export function ComputeInstanceDetailPage() {
                           <ContextMenu.Item action={() => {}}>
                             Create volume backup
                           </ContextMenu.Item>
+                          <ContextMenu.Item action={() => {}}>Clone volume</ContextMenu.Item>
                         </ContextMenu.SubItems>
+                        <ContextMenu.Item action={() => {}}>Extend volume</ContextMenu.Item>
+                        <ContextMenu.Item action={() => {}}>Bootable</ContextMenu.Item>
                         <ContextMenu.Item action={() => {}} danger>
                           Detach
                         </ContextMenu.Item>
@@ -890,91 +732,82 @@ export function ComputeInstanceDetailPage() {
                     </Table.Td>
                   </Table.Tr>
                 ))}
-              </SelectableTable>
+              </Table>
             </div>
           </Tab>
 
           <Tab id="interfaces" label="Interfaces">
             <div className="flex flex-col gap-4 pt-4">
-              <div className="flex justify-between items-center w-full">
-                <h2 className="text-14 font-semibold leading-5 text-text m-0">Interfaces</h2>
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={() => openDrawer('attachIf')}
-                >
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">Interfaces</h2>
+                <Button variant="secondary" appearance="outline" size="sm">
                   <IconSquarePlus size={12} stroke={1.5} /> Attach interface
                 </Button>
               </div>
-              <FilterSearchInput
-                filterKeys={ifaceFilterKeys}
-                onFilterAdd={(f) => {
-                  setIfFilters((p) => [...p, f]);
-                  setIfPage(1);
+              <SearchField
+                placeholder="Search interface by attributes"
+                value={ifSearchQuery}
+                onChange={(v) => {
+                  setIfSearchQuery(v);
+                  setInterfaceCurrentPage(1);
                 }}
-                selectedFilters={ifFilters}
-                placeholder="Search interfaces by attributes"
-                defaultFilterKey="name"
               />
               <Pagination
-                totalCount={filteredIfaces.length}
-                size={itemsPerPage}
-                currentAt={ifPage}
-                onPageChange={setIfPage}
+                totalCount={filteredInterfaces.length}
+                size={interfaceRowsPerPage}
+                currentAt={interfaceCurrentPage}
+                onPageChange={(page) => setInterfaceCurrentPage(page)}
                 onSettingClick={() => {}}
                 totalCountLabel="items"
-                selectedCount={ifSelected.length}
               />
-              <SelectableTable<AttachedInterface>
-                columns={ifaceColumns}
-                rows={paginatedIfaces}
-                selectionType="checkbox"
-                selectedRows={ifSelected}
-                onRowSelectionChange={setIfSelected}
-                getRowId={(row) => row.id}
+              <Table<AttachedInterface>
+                columns={interfaceColumns}
+                rows={paginatedInterfaces}
                 sort={sort}
                 order={order}
                 onSortChange={handleSortChange}
                 stickyLastColumn
               >
-                {paginatedIfaces.map((row) => (
-                  <Table.Tr key={row.id} rowData={row}>
-                    <Table.Td rowData={row} column={ifaceColumns[0]}>
+                {paginatedInterfaces.map((iface) => (
+                  <Table.Tr key={iface.id} rowData={iface}>
+                    <Table.Td rowData={iface} column={interfaceColumns[0]}>
                       <StatusIndicator
-                        variant={portStatusVariant(row.portStatus)}
+                        variant={portStatusVariant(iface.portStatus)}
                         layout="iconOnly"
                       />
                     </Table.Td>
-                    <Table.Td rowData={row} column={ifaceColumns[1]}>
+                    <Table.Td rowData={iface} column={interfaceColumns[1]}>
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <Link
-                          to={`/compute/ports/${row.id}`}
-                          className="text-primary font-medium hover:underline truncate"
+                          to={`/compute/ports/${iface.id}`}
+                          className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
                         >
-                          {row.name}
+                          {iface.name}
                         </Link>
-                        <span className="text-11 text-text-muted truncate">ID : {row.id}</span>
+                        <span className="text-11 text-text-muted truncate">ID : {iface.id}</span>
                       </div>
                     </Table.Td>
-                    <Table.Td rowData={row} column={ifaceColumns[2]}>
-                      <Link
-                        to={`/compute/networks/${row.id}`}
-                        className="text-primary font-medium hover:underline truncate"
-                      >
-                        {row.network}
-                      </Link>
+                    <Table.Td rowData={iface} column={interfaceColumns[2]}>
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <Link
+                          to={`/compute/networks/${iface.id}`}
+                          className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                        >
+                          {iface.network}
+                        </Link>
+                        <span className="text-11 text-text-muted truncate">ID : {iface.id}</span>
+                      </div>
                     </Table.Td>
-                    <Table.Td rowData={row} column={ifaceColumns[3]}>
-                      {row.fixedIp}
+                    <Table.Td rowData={iface} column={interfaceColumns[3]}>
+                      {iface.fixedIp}
                     </Table.Td>
-                    <Table.Td rowData={row} column={ifaceColumns[4]}>
-                      {row.macAddress}
+                    <Table.Td rowData={iface} column={interfaceColumns[4]}>
+                      {iface.macAddress}
                     </Table.Td>
-                    <Table.Td rowData={row} column={ifaceColumns[5]}>
-                      {row.createdAt}
+                    <Table.Td rowData={iface} column={interfaceColumns[5]}>
+                      {iface.createdAt}
                     </Table.Td>
-                    <Table.Td rowData={row} column={ifaceColumns[6]} preventClickPropagation>
+                    <Table.Td rowData={iface} column={interfaceColumns[6]} preventClickPropagation>
                       <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
                         <ContextMenu.Item action={() => {}} danger>
                           Detach
@@ -983,83 +816,65 @@ export function ComputeInstanceDetailPage() {
                     </Table.Td>
                   </Table.Tr>
                 ))}
-              </SelectableTable>
+              </Table>
             </div>
           </Tab>
 
           <Tab id="floating-ips" label="Floating IPs">
             <div className="flex flex-col gap-4 pt-4">
-              <div className="flex justify-between items-center w-full">
-                <h2 className="text-14 font-semibold leading-5 text-text m-0">Floating IPs</h2>
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={() => openDrawer('assocFip')}
-                >
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">Floating IPs</h2>
+                <Button variant="secondary" appearance="outline" size="sm">
                   <IconLinkPlus size={12} stroke={1.5} /> Associate floating IP
                 </Button>
               </div>
-              <FilterSearchInput
-                filterKeys={fipFilterKeys}
-                onFilterAdd={(f) => {
-                  setFipFilters((p) => [...p, f]);
-                  setFipPage(1);
+              <SearchField
+                placeholder="Search floating IP by attributes"
+                value={fipSearchQuery}
+                onChange={(v) => {
+                  setFipSearchQuery(v);
+                  setFloatingIpCurrentPage(1);
                 }}
-                selectedFilters={fipFilters}
-                placeholder="Search floating IPs by attributes"
-                defaultFilterKey="floatingIp"
               />
               <Pagination
-                totalCount={filteredFips.length}
-                size={itemsPerPage}
-                currentAt={fipPage}
-                onPageChange={setFipPage}
+                totalCount={filteredFloatingIps.length}
+                size={floatingIpRowsPerPage}
+                currentAt={floatingIpCurrentPage}
+                onPageChange={(page) => setFloatingIpCurrentPage(page)}
                 onSettingClick={() => {}}
                 totalCountLabel="items"
-                selectedCount={fipSelected.length}
               />
-              <SelectableTable<FloatingIPRow>
-                columns={fipColumns}
-                rows={paginatedFips}
-                selectionType="checkbox"
-                selectedRows={fipSelected}
-                onRowSelectionChange={setFipSelected}
-                getRowId={(row) => row.id}
+              <Table<FloatingIP>
+                columns={floatingColumns}
+                rows={paginatedFloatingIps}
                 sort={sort}
                 order={order}
                 onSortChange={handleSortChange}
                 stickyLastColumn
               >
-                {paginatedFips.map((row) => (
+                {paginatedFloatingIps.map((row) => (
                   <Table.Tr key={row.id} rowData={row}>
-                    <Table.Td rowData={row} column={fipColumns[0]}>
+                    <Table.Td rowData={row} column={floatingColumns[0]}>
                       <StatusIndicator
-                        variant={
-                          row.status === 'error'
-                            ? 'error'
-                            : row.status === 'active'
-                              ? 'active'
-                              : 'shutoff'
-                        }
+                        variant={floatingStatusVariant(row.status)}
                         layout="iconOnly"
                       />
                     </Table.Td>
-                    <Table.Td rowData={row} column={fipColumns[1]}>
+                    <Table.Td rowData={row} column={floatingColumns[1]}>
                       <Link
                         to={`/compute/floating-ips/${row.id}`}
-                        className="text-primary font-medium hover:underline"
+                        className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
                       >
                         {row.floatingIp}
                       </Link>
                     </Table.Td>
-                    <Table.Td rowData={row} column={fipColumns[2]}>
+                    <Table.Td rowData={row} column={floatingColumns[2]}>
                       {row.fixedIp}
                     </Table.Td>
-                    <Table.Td rowData={row} column={fipColumns[3]}>
+                    <Table.Td rowData={row} column={floatingColumns[3]}>
                       {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
                     </Table.Td>
-                    <Table.Td rowData={row} column={fipColumns[4]} preventClickPropagation>
+                    <Table.Td rowData={row} column={floatingColumns[4]} preventClickPropagation>
                       <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
                         <ContextMenu.Item action={() => {}} danger>
                           Disassociate
@@ -1068,94 +883,28 @@ export function ComputeInstanceDetailPage() {
                     </Table.Td>
                   </Table.Tr>
                 ))}
-              </SelectableTable>
+              </Table>
             </div>
           </Tab>
 
           <Tab id="security" label="Security">
             <div className="flex flex-col gap-4 pt-4">
-              <div className="flex justify-between items-center w-full">
-                <h2 className="text-14 font-semibold leading-5 text-text m-0">Security groups</h2>
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={() => openDrawer('manageSg')}
-                >
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">Security groups</h2>
+                <Button variant="secondary" appearance="outline" size="sm">
                   <IconSettings size={12} stroke={1.5} /> Manage security group
                 </Button>
               </div>
-              <Tabs activeTabId={sgIfaceTab} onChange={setSgIfaceTab} variant="button" size="sm">
-                {mockNetworkTabs.map((n) => (
-                  <Tab key={n.id} id={n.id} label={`${n.name} (${n.ip})`}>
-                    <div className="flex flex-col gap-4 pt-2">
-                      <FilterSearchInput
-                        filterKeys={sgFilterKeys}
-                        onFilterAdd={(f) => {
-                          setSgFilters((p) => [...p, f]);
-                          setSgPage(1);
-                        }}
-                        selectedFilters={sgFilters}
-                        placeholder="Search security groups by attributes"
-                        defaultFilterKey="name"
-                      />
-                      <Pagination
-                        totalCount={filteredSg.length}
-                        size={itemsPerPage}
-                        currentAt={sgPage}
-                        onPageChange={setSgPage}
-                        onSettingClick={() => {}}
-                        totalCountLabel="items"
-                        selectedCount={sgSelected.length}
-                      />
-                      <SelectableTable<SecurityGroupRow>
-                        columns={sgColumns}
-                        rows={paginatedSg}
-                        selectionType="checkbox"
-                        selectedRows={sgSelected}
-                        onRowSelectionChange={setSgSelected}
-                        getRowId={(row) => row.id}
-                        sort={sort}
-                        order={order}
-                        onSortChange={handleSortChange}
-                        stickyLastColumn
-                      >
-                        {paginatedSg.map((row) => (
-                          <Table.Tr key={row.id} rowData={row}>
-                            <Table.Td rowData={row} column={sgColumns[0]}>
-                              <div className="flex flex-col gap-0.5 min-w-0">
-                                <Link
-                                  to={`/compute/security-groups/${row.id}`}
-                                  className="text-primary font-medium hover:underline truncate"
-                                >
-                                  {row.name}
-                                </Link>
-                                <span className="text-11 text-text-muted truncate">
-                                  ID : {row.id}
-                                </span>
-                              </div>
-                            </Table.Td>
-                            <Table.Td rowData={row} column={sgColumns[1]}>
-                              {row.description}
-                            </Table.Td>
-                            <Table.Td rowData={row} column={sgColumns[2]}>
-                              {row.createdAt}
-                            </Table.Td>
-                            <Table.Td rowData={row} column={sgColumns[3]} preventClickPropagation>
-                              <ContextMenu.Root
-                                direction="bottom-end"
-                                gap={4}
-                                trigger={ActionTrigger}
-                              >
-                                <ContextMenu.Item action={() => {}} danger>
-                                  Detach
-                                </ContextMenu.Item>
-                              </ContextMenu.Root>
-                            </Table.Td>
-                          </Table.Tr>
-                        ))}
-                      </SelectableTable>
-                    </div>
+              <Tabs
+                activeTabId={selectedNetworkInterface}
+                onChange={setSelectedNetworkInterface}
+                variant="button"
+                size="sm"
+                destroyOnHidden={false}
+              >
+                {mockNetworkInterfaces.map((net) => (
+                  <Tab key={net.id} id={net.id} label={`${net.name}(${net.ip})`}>
+                    {securityToolbar}
                   </Tab>
                 ))}
               </Tabs>
@@ -1164,82 +913,74 @@ export function ComputeInstanceDetailPage() {
 
           <Tab id="snapshots" label="Instance snapshots">
             <div className="flex flex-col gap-4 pt-4">
-              <div className="flex justify-between items-center w-full">
-                <h2 className="text-14 font-semibold leading-5 text-text m-0">
+              <div className="flex items-center justify-between w-full">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">
                   Instance snapshots
                 </h2>
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={() => openDrawer('snapshot')}
-                >
-                  <IconCirclePlus size={12} stroke={1.5} /> Create snapshot
+                <Button variant="secondary" appearance="outline" size="sm">
+                  <IconCirclePlus size={12} stroke={1.5} /> Create Snapshot
                 </Button>
               </div>
-              <FilterSearchInput
-                filterKeys={snapFilterKeys}
-                onFilterAdd={(f) => {
-                  setSnapFilters((p) => [...p, f]);
-                  setSnapPage(1);
+              <SearchField
+                placeholder="Search instance snapshot by attributes"
+                value={snapshotSearchQuery}
+                onChange={(v) => {
+                  setSnapshotSearchQuery(v);
+                  setSnapshotCurrentPage(1);
                 }}
-                selectedFilters={snapFilters}
-                placeholder="Search snapshots by attributes"
-                defaultFilterKey="name"
               />
               <Pagination
-                totalCount={filteredSnaps.length}
-                size={itemsPerPage}
-                currentAt={snapPage}
-                onPageChange={setSnapPage}
+                totalCount={filteredSnapshots.length}
+                size={snapshotRowsPerPage}
+                currentAt={snapshotCurrentPage}
+                onPageChange={(page) => setSnapshotCurrentPage(page)}
                 onSettingClick={() => {}}
                 totalCountLabel="items"
-                selectedCount={snapSelected.length}
               />
-              <SelectableTable<InstanceSnapshotRow>
-                columns={snapColumns}
-                rows={paginatedSnaps}
-                selectionType="checkbox"
-                selectedRows={snapSelected}
-                onRowSelectionChange={setSnapSelected}
-                getRowId={(row) => row.id}
+              <Table<InstanceSnapshot>
+                columns={snapshotColumns}
+                rows={paginatedSnapshots}
                 sort={sort}
                 order={order}
                 onSortChange={handleSortChange}
                 stickyLastColumn
+                emptyUI={
+                  <span className="text-12 text-text-muted">No instance snapshots found</span>
+                }
               >
-                {paginatedSnaps.map((row) => (
+                {paginatedSnapshots.map((row) => (
                   <Table.Tr key={row.id} rowData={row}>
-                    <Table.Td rowData={row} column={snapColumns[0]}>
+                    <Table.Td rowData={row} column={snapshotColumns[0]}>
                       <StatusIndicator
                         variant={snapshotStatusVariant(row.status)}
                         layout="iconOnly"
                       />
                     </Table.Td>
-                    <Table.Td rowData={row} column={snapColumns[1]}>
+                    <Table.Td rowData={row} column={snapshotColumns[1]}>
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <Link
                           to={`/compute/instance-snapshots/${row.id}`}
-                          className="text-primary font-medium hover:underline truncate"
+                          className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
                         >
                           {row.name}
                         </Link>
                         <span className="text-11 text-text-muted truncate">ID : {row.id}</span>
                       </div>
                     </Table.Td>
-                    <Table.Td rowData={row} column={snapColumns[2]}>
+                    <Table.Td rowData={row} column={snapshotColumns[2]}>
                       {row.size}
                     </Table.Td>
-                    <Table.Td rowData={row} column={snapColumns[3]}>
+                    <Table.Td rowData={row} column={snapshotColumns[3]}>
                       {row.diskFormat}
                     </Table.Td>
-                    <Table.Td rowData={row} column={snapColumns[4]}>
+                    <Table.Td rowData={row} column={snapshotColumns[4]}>
                       {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
                     </Table.Td>
-                    <Table.Td rowData={row} column={snapColumns[5]} preventClickPropagation>
+                    <Table.Td rowData={row} column={snapshotColumns[5]} preventClickPropagation>
                       <ContextMenu.Root direction="bottom-end" gap={4} trigger={ActionTrigger}>
                         <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
                         <ContextMenu.Item action={() => {}}>Create instance</ContextMenu.Item>
+                        <ContextMenu.Item action={() => {}}>Create volume</ContextMenu.Item>
                         <ContextMenu.Item action={() => {}} danger>
                           Delete
                         </ContextMenu.Item>
@@ -1247,7 +988,195 @@ export function ComputeInstanceDetailPage() {
                     </Table.Td>
                   </Table.Tr>
                 ))}
-              </SelectableTable>
+              </Table>
+            </div>
+          </Tab>
+
+          <Tab id="monitoring" label="Monitoring">
+            <div className="flex flex-col gap-3 pt-4">
+              <h2 className="text-16 font-semibold leading-6 text-text m-0">Monitoring</h2>
+              <div className="flex flex-wrap items-center gap-1">
+                {(['1h', '1d', '1w', '2w'] as const).map((r) => (
+                  <Button
+                    key={r}
+                    variant="secondary"
+                    appearance={monitoringTimeRange === r ? 'solid' : 'outline'}
+                    size="sm"
+                    onClick={() => setMonitoringTimeRange(r)}
+                  >
+                    {r}
+                  </Button>
+                ))}
+                <Button variant="secondary" appearance="outline" size="sm" onClick={() => {}}>
+                  Refresh
+                </Button>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-3 flex-wrap">
+                  <div className="flex-1 min-w-[280px] min-h-[200px] rounded-lg border border-border bg-surface-muted" />
+                  <div className="flex-1 min-w-[280px] min-h-[200px] rounded-lg border border-border bg-surface-muted" />
+                </div>
+                <div className="flex gap-3 flex-wrap">
+                  <div className="flex-1 min-w-[280px] min-h-[200px] rounded-lg border border-border bg-surface-muted" />
+                  <div className="flex-1 min-w-[280px] min-h-[200px] rounded-lg border border-border bg-surface-muted" />
+                </div>
+                <div className="w-full max-w-[calc(50%-6px)] min-h-[200px] rounded-lg border border-border bg-surface-muted" />
+              </div>
+            </div>
+          </Tab>
+
+          <Tab id="resource-map" label="Resource map">
+            <div className="pt-6">
+              <p className="text-12 text-text-muted m-0">
+                Resource Map content will be displayed here.
+              </p>
+            </div>
+          </Tab>
+
+          <Tab id="logs" label="Logs">
+            <div className="flex flex-col gap-4 pt-4">
+              <div className="flex items-center h-7">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">Console Logs</h2>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3 bg-surface-default border border-border rounded-md w-full">
+                <div className="flex items-center gap-3">
+                  <span className="text-13 font-medium leading-[18px] text-text">Log Length</span>
+                  <div className="flex items-center gap-1">
+                    <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-surface-default border border-border-strong rounded-md">
+                      <span className="text-12 leading-[18px] text-text">{logLength}</span>
+                      <div className="flex flex-col">
+                        <button
+                          type="button"
+                          onClick={() => setLogLength((p) => p + 1)}
+                          className="text-text hover:text-primary p-0 border-none bg-transparent cursor-pointer"
+                          aria-label="Increase log length"
+                        >
+                          <IconChevronUp size={12} stroke={1.5} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setLogLength((p) => Math.max(1, p - 1))}
+                          className="text-text hover:text-primary p-0 border-none bg-transparent cursor-pointer"
+                          aria-label="Decrease log length"
+                        >
+                          <IconChevronDown size={12} stroke={1.5} />
+                        </button>
+                      </div>
+                    </div>
+                    <Button variant="secondary" appearance="outline" size="sm" aria-label="Search">
+                      <IconSearch size={12} stroke={1.5} />
+                    </Button>
+                  </div>
+                </div>
+                <Button variant="secondary" appearance="outline" size="sm" aria-label="Download">
+                  <IconDownload size={12} stroke={1.5} />
+                </Button>
+              </div>
+              <div className="w-full flex-1 min-h-[500px] bg-[#1e293b] border border-border rounded-lg p-6 overflow-auto">
+                <pre className="font-mono text-12 leading-[22px] text-[#cbd5e1] whitespace-pre-wrap m-0">
+                  {CONSOLE_LOG_SAMPLE}
+                </pre>
+              </div>
+            </div>
+          </Tab>
+
+          <Tab id="action-logs" label="Action logs">
+            <div className="flex flex-col gap-4 pt-4">
+              <div className="flex items-center h-7">
+                <h2 className="text-16 font-semibold leading-6 text-text m-0">Action logs</h2>
+              </div>
+              <div className="flex items-center gap-1 flex-wrap">
+                <SearchField
+                  placeholder="Search action logs by attributes"
+                  value={actionLogSearchQuery}
+                  onChange={(v) => {
+                    setActionLogSearchQuery(v);
+                    setActionLogCurrentPage(1);
+                  }}
+                />
+                <Button variant="secondary" appearance="outline" size="sm" aria-label="Download">
+                  <IconDownload size={12} stroke={1.5} />
+                </Button>
+              </div>
+              <Pagination
+                totalCount={filteredActionLogs.length}
+                size={actionLogRowsPerPage}
+                currentAt={actionLogCurrentPage}
+                onPageChange={(page) => setActionLogCurrentPage(page)}
+                onSettingClick={() => {}}
+                totalCountLabel="items"
+              />
+              <Table<ActionLog>
+                columns={actionLogColumns}
+                rows={paginatedActionLogs}
+                sort={sort}
+                order={order}
+                onSortChange={handleSortChange}
+              >
+                {paginatedActionLogs.flatMap((row) => {
+                  const expanded = expandedLogIds.has(row.id);
+                  const r = row;
+                  const rowsOut: ReactElement[] = [
+                    <Table.Tr key={row.id} rowData={r} onClick={() => toggleLogExpansion(row.id)}>
+                      <Table.Td rowData={r} column={actionLogColumns[0]}>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleLogExpansion(row.id);
+                            }}
+                            className="p-0.5 hover:bg-surface-muted rounded border-none bg-transparent cursor-pointer"
+                            aria-expanded={expanded}
+                            aria-label={expanded ? 'Collapse row' : 'Expand row'}
+                          >
+                            {expanded ? (
+                              <IconChevronDown size={12} stroke={1.5} className="text-text" />
+                            ) : (
+                              <IconChevronRight size={12} stroke={1.5} className="text-text" />
+                            )}
+                          </button>
+                          <span>{row.operationName}</span>
+                        </div>
+                      </Table.Td>
+                      <Table.Td rowData={r} column={actionLogColumns[1]}>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="truncate">{row.requestId}</span>
+                          <CopyButton text={row.requestId} />
+                        </div>
+                      </Table.Td>
+                      <Table.Td rowData={r} column={actionLogColumns[2]}>
+                        {row.requestedTime}
+                      </Table.Td>
+                    </Table.Tr>,
+                  ];
+                  if (expanded) {
+                    rowsOut.push(
+                      <Table.Tr key={`${row.id}-detail`} rowData={r}>
+                        <Table.Td rowData={r} column={actionLogColumns[0]} colSpan={3}>
+                          <div className="flex items-center gap-4 px-8 py-3">
+                            <div className="flex items-center gap-2 text-12 text-text">
+                              <span className="font-medium">Result :</span>
+                              <span>{row.result}</span>
+                            </div>
+                            <div className="w-px h-3 bg-border" />
+                            <div className="flex items-center gap-2 text-12 text-text">
+                              <span className="font-medium">Start Time :</span>
+                              <span>{row.startTime}</span>
+                            </div>
+                            <div className="w-px h-3 bg-border" />
+                            <div className="flex items-center gap-2 text-12 text-text">
+                              <span className="font-medium">End Time :</span>
+                              <span>{row.endTime}</span>
+                            </div>
+                          </div>
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  }
+                  return rowsOut;
+                })}
+              </Table>
             </div>
           </Tab>
         </Tabs>

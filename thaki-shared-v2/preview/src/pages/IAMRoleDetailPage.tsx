@@ -8,6 +8,8 @@ import { Pagination } from '@shared/components/Pagination';
 import { Badge } from '@shared/components/Badge';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
+import { ManagePoliciesDrawer } from '../drawers/iam/ManagePoliciesDrawer';
+import { EditRoleDrawer } from '../drawers/iam/EditRoleDrawer';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { TabSelector } from '@shared/components/TabSelector';
 import type { TableColumn } from '@shared/components/Table/Table.types';
@@ -19,8 +21,6 @@ import {
   IconChevronRight,
   IconSettings,
 } from '@tabler/icons-react';
-import { EditRoleDrawer } from '../drawers/iam/EditRoleDrawer';
-import { ManagePoliciesDrawer } from '../drawers/iam/ManagePoliciesDrawer';
 
 /* ----------------------------------------
    Types
@@ -424,12 +424,7 @@ export function IAMRoleDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button
-        variant="secondary"
-        appearance="outline"
-        size="sm"
-        onClick={() => setEditRoleOpen(true)}
-      >
+      <Button variant="secondary" appearance="outline" size="sm">
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <Button variant="secondary" appearance="outline" size="sm">
@@ -444,7 +439,7 @@ export function IAMRoleDetailPage() {
           </Button>
         )}
       >
-        <ContextMenu.Item action={() => setManagePoliciesOpen(true)}>
+        <ContextMenu.Item action={() => console.log('Manage policies')}>
           Manage policies
         </ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Duplicate')}>Duplicate</ContextMenu.Item>
@@ -462,12 +457,7 @@ export function IAMRoleDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex justify-between items-center w-full">
                 <h2 className="text-16 font-semibold leading-24 text-text">Policies</h2>
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={() => setManagePoliciesOpen(true)}
-                >
+                <Button variant="secondary" appearance="outline" size="sm">
                   <IconSettings size={12} /> Manage policies
                 </Button>
               </div>
@@ -530,7 +520,7 @@ export function IAMRoleDetailPage() {
                         </button>
                         <Link
                           to={`/iam/policies/${policy.name}`}
-                          className="text-primary font-medium hover:underline truncate"
+                          className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
                         >
                           {policy.name}
                         </Link>
@@ -555,7 +545,7 @@ export function IAMRoleDetailPage() {
                             <button
                               type="button"
                               onClick={toggle}
-                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                               aria-label="Actions"
                             >
                               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -634,7 +624,7 @@ export function IAMRoleDetailPage() {
                         <Table.Td rowData={row} column={userGroupColumns[0]}>
                           <Link
                             to={`/iam/user-groups/${row.name}`}
-                            className="text-primary font-medium hover:underline"
+                            className="text-12 leading-18 font-medium text-primary hover:underline no-underline"
                           >
                             {row.name}
                           </Link>
@@ -667,7 +657,7 @@ export function IAMRoleDetailPage() {
                         <Table.Td rowData={row} column={userColumns[0]}>
                           <Link
                             to={`/iam/users/${row.name}`}
-                            className="text-primary font-medium hover:underline"
+                            className="text-12 leading-18 font-medium text-primary hover:underline no-underline"
                           >
                             {row.name}
                           </Link>

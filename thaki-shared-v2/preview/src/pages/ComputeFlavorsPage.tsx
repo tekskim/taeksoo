@@ -1,99 +1,257 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
-import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { Title } from '@shared/components/Title';
+import { Badge } from '@shared/components/Badge';
+import { Popover } from '@shared/components/Popover';
+import { Tabs, Tab } from '@shared/components/Tabs';
+import { IconDownload, IconX } from '@tabler/icons-react';
+import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+
+type FlavorType = 'CPU' | 'GPU' | 'MPU' | 'Custom';
+type AccessType = 'Public' | 'Private';
 
 interface Flavor {
   id: string;
   name: string;
-  vCpu: string;
+  category: string;
+  vcpu: number;
   ram: string;
-  rootDisk: string;
-  isPublic: boolean;
+  ephemeralDisk: string;
+  internalNetworkBandwidth: string;
+  access: AccessType;
+  metadata: string;
+  type: FlavorType;
+  gpuType?: string;
+  numaNodes?: string;
+  cpuPolicy?: string;
+  cpuThreadPolicy?: string;
   [key: string]: unknown;
 }
 
 const mockFlavors: Flavor[] = [
   {
     id: 'flv-001',
-    name: 'm1.small',
-    vCpu: '1',
-    ram: '2 GiB',
-    rootDisk: '20 GiB',
-    isPublic: true,
+    name: 'c5.large',
+    category: 'Compute Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-002',
-    name: 'm1.medium',
-    vCpu: '2',
-    ram: '4 GiB',
-    rootDisk: '40 GiB',
-    isPublic: true,
+    name: 'c5.xlarge',
+    category: 'Compute Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-003',
-    name: 'c1.xlarge',
-    vCpu: '8',
-    ram: '16 GiB',
-    rootDisk: '80 GiB',
-    isPublic: true,
+    name: 'm5.large',
+    category: 'General Purpose',
+    vcpu: 2,
+    ram: '8GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-004',
-    name: 'gpu.a100',
-    vCpu: '24',
-    ram: '120 GiB',
-    rootDisk: '200 GiB',
-    isPublic: false,
+    name: 'm5.xlarge',
+    category: 'General Purpose',
+    vcpu: 4,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-005',
-    name: 'r1.large',
-    vCpu: '4',
-    ram: '32 GiB',
-    rootDisk: '40 GiB',
-    isPublic: true,
+    name: 'r5.large',
+    category: 'Memory Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-006',
-    name: 'custom-team-a',
-    vCpu: '6',
-    ram: '12 GiB',
-    rootDisk: '100 GiB',
-    isPublic: false,
+    name: 'r5.xlarge',
+    category: 'Memory Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-007',
-    name: 'm1.tiny',
-    vCpu: '1',
-    ram: '512 MiB',
-    rootDisk: '10 GiB',
-    isPublic: true,
+    name: 't3.micro',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '1GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
   },
   {
     id: 'flv-008',
-    name: 'h1.storage',
-    vCpu: '16',
-    ram: '64 GiB',
-    rootDisk: '2 TiB',
-    isPublic: true,
+    name: 't3.small',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '2GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-009',
+    name: 'g4dn.xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 4,
+    ram: '16GiB',
+    ephemeralDisk: '125GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'GPU',
+    gpuType: 'NVIDIA T4',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+  },
+  {
+    id: 'flv-010',
+    name: 'g4dn.2xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 8,
+    ram: '32GiB',
+    ephemeralDisk: '225GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'GPU',
+    gpuType: 'NVIDIA T4',
+    numaNodes: '2',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+  },
+  {
+    id: 'flv-011',
+    name: 'p3.2xlarge',
+    category: 'GPU Compute',
+    vcpu: 8,
+    ram: '61GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'GPU',
+    gpuType: 'NVIDIA V100',
+    numaNodes: '2',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Require',
+  },
+  {
+    id: 'flv-012',
+    name: 'inf1.xlarge',
+    category: 'ML Inference',
+    vcpu: 4,
+    ram: '8GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'MPU',
+    gpuType: 'AWS Inferentia',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+  },
+  {
+    id: 'flv-013',
+    name: 'inf1.2xlarge',
+    category: 'ML Inference',
+    vcpu: 8,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'MPU',
+    gpuType: 'AWS Inferentia',
+    numaNodes: '2',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Isolate',
+  },
+  {
+    id: 'flv-014',
+    name: 'custom.small',
+    category: 'Custom',
+    vcpu: 2,
+    ram: '4GiB',
+    ephemeralDisk: '20GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Private',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'Custom',
+  },
+  {
+    id: 'flv-015',
+    name: 'custom.medium',
+    category: 'Custom',
+    vcpu: 4,
+    ram: '8GiB',
+    ephemeralDisk: '50GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Private',
+    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
+    type: 'Custom',
   },
 ];
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  {
+    key: 'access',
+    label: 'Access',
+    type: 'select',
+    options: [
+      { value: 'Public', label: 'Public' },
+      { value: 'Private', label: 'Private' },
+    ],
+  },
 ];
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
@@ -106,31 +264,54 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeFlavorsPage() {
-  const navigate = useNavigate();
-  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [sort, setSort] = useState<string>('');
-  const [order, setOrder] = useState<SortOrder>('asc');
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  const filteredRows = useMemo(() => {
-    if (appliedFilters.length === 0) return mockFlavors;
-    return mockFlavors.filter((row) =>
-      appliedFilters.every((filter) => {
-        const val = String(row[filter.key] ?? '').toLowerCase();
-        return val.includes(String(filter.value ?? '').toLowerCase());
-      })
-    );
-  }, [appliedFilters]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'cpu';
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sort, setSort] = useState<string>('');
+  const [order, setOrder] = useState<SortOrder>('asc');
+
+  const filteredFlavors = useMemo(() => {
+    let filtered = mockFlavors;
+
+    switch (activeTab) {
+      case 'cpu':
+        filtered = filtered.filter((f) => f.type === 'CPU');
+        break;
+      case 'gpu':
+        filtered = filtered.filter((f) => f.type === 'GPU');
+        break;
+      case 'mpu':
+        filtered = filtered.filter((f) => f.type === 'MPU');
+        break;
+      case 'custom':
+        filtered = filtered.filter((f) => f.type === 'Custom');
+        break;
+      default:
+        break;
+    }
+
+    if (appliedFilters.length > 0) {
+      filtered = filtered.filter((f) =>
+        appliedFilters.every((filter) => {
+          const value = String(f[filter.key as keyof Flavor] || '').toLowerCase();
+          return value.includes(String(filter.value ?? '').toLowerCase());
+        })
+      );
+    }
+
+    return filtered;
+  }, [activeTab, appliedFilters]);
 
   const itemsPerPage = 10;
-  const paginatedRows = filteredRows.slice(
+  const paginatedRows = filteredFlavors.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
-  const hasSelection = selectedRows.length > 0;
 
   const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
     setSort(nextSort ?? '');
@@ -149,41 +330,55 @@ export function ComputeFlavorsPage() {
 
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'vCpu', header: 'vCPU', sortable: true },
+    { key: 'vcpu', header: 'vCPU', sortable: true },
     { key: 'ram', header: 'RAM', sortable: true },
-    { key: 'rootDisk', header: 'Root Disk', sortable: true },
-    { key: 'isPublic', header: 'Is Public', sortable: true },
+    { key: 'ephemeralDisk', header: 'Root disk', sortable: true },
+    { key: 'access', header: 'Public', sortable: true },
+    { key: 'metadata', header: 'Metadata' },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
+
+  const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Flavors" />
-        <Button variant="primary" size="md" onClick={() => navigate('/compute/flavors/create')}>
-          Create flavor
-        </Button>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          <FilterSearchInput
-            filterKeys={filterKeys}
-            onFilterAdd={handleFilterAdd}
-            selectedFilters={appliedFilters}
-            placeholder="Search flavors by attributes"
-            defaultFilterKey="name"
-          />
-          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
-          </Button>
-        </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-            <IconTrash size={12} /> Delete
-          </Button>
-        </div>
+      <Tabs
+        activeTabId={activeTab}
+        onChange={setActiveTab}
+        size="sm"
+        variant="line"
+        contentClassName="hidden"
+        fullWidth
+      >
+        <Tab id="cpu" label="CPU">
+          {null}
+        </Tab>
+        <Tab id="gpu" label="GPU">
+          {null}
+        </Tab>
+        <Tab id="mpu" label="MPU">
+          {null}
+        </Tab>
+        <Tab id="custom" label="Bare metal">
+          {null}
+        </Tab>
+      </Tabs>
+
+      <div className="flex items-center gap-1">
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
+          placeholder="Search flavor by attributes"
+          defaultFilterKey="name"
+        />
+        <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
+          <IconDownload size={12} />
+        </Button>
       </div>
 
       {appliedFilters.length > 0 && (
@@ -223,23 +418,21 @@ export function ComputeFlavorsPage() {
         </div>
       )}
 
-      <Pagination
-        totalCount={filteredRows.length}
-        size={itemsPerPage}
-        currentAt={currentPage}
-        onPageChange={setCurrentPage}
-        onSettingClick={() => setPrefsOpen(true)}
-        totalCountLabel="items"
-        selectedCount={selectedRows.length}
-      />
+      {filteredFlavors.length > 0 && (
+        <Pagination
+          totalCount={filteredFlavors.length}
+          size={itemsPerPage}
+          currentAt={currentPage}
+          onPageChange={setCurrentPage}
+          onSettingClick={() => setPrefsOpen(true)}
+          totalCountLabel="items"
+          selectedCount={0}
+        />
+      )}
 
-      <SelectableTable<Flavor>
+      <Table<Flavor>
         columns={columns}
         rows={paginatedRows}
-        selectionType="checkbox"
-        selectedRows={selectedRows}
-        onRowSelectionChange={setSelectedRows}
-        getRowId={(row) => row.id}
         sort={sort}
         order={order}
         onSortChange={handleSortChange}
@@ -247,27 +440,71 @@ export function ComputeFlavorsPage() {
       >
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={columns[0]}>
-              <Link
-                to={`/compute/flavors/${row.id}`}
-                className="text-primary font-medium hover:underline"
-              >
-                {row.name}
-              </Link>
+            <Table.Td rowData={row} column={c('name')}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute/flavors/${row.id}`}
+                  className="text-12 leading-18 font-medium text-primary hover:underline no-underline truncate"
+                >
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted truncate">ID:{row.id}</span>
+              </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[1]}>
-              {row.vCpu}
+            <Table.Td rowData={row} column={c('vcpu')}>
+              {row.vcpu}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[2]}>
+            <Table.Td rowData={row} column={c('ram')}>
               {row.ram}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
-              {row.rootDisk}
+            <Table.Td rowData={row} column={c('ephemeralDisk')}>
+              {row.ephemeralDisk}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
-              {row.isPublic ? 'Yes' : 'No'}
+            <Table.Td rowData={row} column={c('access')}>
+              {row.access === 'Public' ? 'On' : 'Off'}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={c('metadata')} isEllipsis={false}>
+              {(() => {
+                const value = row.metadata;
+                if (!value || value === '-') return <span>-</span>;
+                const pairs = value.split(',');
+                const first = pairs[0];
+                const extra = pairs.length - 1;
+                return (
+                  <span className="flex items-center gap-1 min-w-0">
+                    <span className="truncate min-w-0">{first}</span>
+                    {extra > 0 && (
+                      <span className="ml-auto shrink-0">
+                        <Popover
+                          trigger="click"
+                          position="bottom"
+                          aria-label={`All metadata (${pairs.length})`}
+                          content={
+                            <div className="p-4 min-w-[160px] max-w-[320px]">
+                              <div className="text-[10px] font-normal leading-[14px] text-text-muted mb-2">
+                                All Metadata ({pairs.length})
+                              </div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {pairs.map((pair, i) => (
+                                  <Badge key={i} theme="gry" size="sm" type="subtle">
+                                    {pair.trim()}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          }
+                        >
+                          <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-pointer">
+                            +{extra}
+                          </span>
+                        </Popover>
+                      </span>
+                    )}
+                  </span>
+                );
+              })()}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}
@@ -275,7 +512,7 @@ export function ComputeFlavorsPage() {
                   <button
                     type="button"
                     onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none"
+                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                   >
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
@@ -289,15 +526,17 @@ export function ComputeFlavorsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
-                  Delete
+                <ContextMenu.Item action={() => console.log('Create instance', row.id)}>
+                  Create instance
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('Create instance template', row.id)}>
+                  Create instance template
                 </ContextMenu.Item>
               </ContextMenu.Root>
             </Table.Td>
           </Table.Tr>
         ))}
-      </SelectableTable>
+      </Table>
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
