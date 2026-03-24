@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -10,6 +10,12 @@ import { Title } from '@shared/components/Title';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { CreateSecurityGroupDrawer } from '../drawers/compute/security-group/CreateSecurityGroupDrawer';
+import { EditSecurityGroupDrawer } from '../drawers/compute/security-group/EditSecurityGroupDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 interface SecurityGroupRow {
   id: string;
@@ -86,13 +92,24 @@ const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'description', label: 'Description', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeSecurityGroupsPage() {
-  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [activeSgRow, setActiveSgRow] = useState<SecurityGroupRow | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -134,11 +151,7 @@ export function ComputeSecurityGroupsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Security groups" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/security-groups/create')}
-        >
+        <Button variant="primary" size="md" onClick={() => setCreateOpen(true)}>
           Create security group
         </Button>
       </div>
@@ -206,7 +219,7 @@ export function ComputeSecurityGroupsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -261,7 +274,14 @@ export function ComputeSecurityGroupsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setActiveSgRow(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -270,6 +290,23 @@ export function ComputeSecurityGroupsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <CreateSecurityGroupDrawer isOpen={createOpen} onClose={() => setCreateOpen(false)} />
+      <EditSecurityGroupDrawer
+        isOpen={editOpen}
+        onClose={() => {
+          setEditOpen(false);
+          setActiveSgRow(null);
+        }}
+        securityGroupId={activeSgRow?.id}
+        initialName={activeSgRow?.name}
+        initialDescription={activeSgRow?.description}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

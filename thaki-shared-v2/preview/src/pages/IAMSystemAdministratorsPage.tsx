@@ -11,6 +11,13 @@ import { IconDownload, IconLock } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { EditSystemAdminDrawer } from '../drawers/iam/EditSystemAdminDrawer';
+import { AdminLockSettingDrawer } from '../drawers/iam/AdminLockSettingDrawer';
+import { ResetPasswordDrawer } from '../drawers/iam/ResetPasswordDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 interface SystemAdmin {
   id: string;
@@ -141,10 +148,28 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'username', label: 'Username', visible: true, locked: true },
+  { key: 'locked', label: 'Locked', visible: true },
+  { key: 'lastSignIn', label: 'Last sign-in', visible: true },
+  { key: 'mfa', label: 'MFA', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function IAMSystemAdministratorsPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editAdminOpen, setEditAdminOpen] = useState(false);
+  const [editAdminUser, setEditAdminUser] = useState('');
+  const [lockSettingOpen, setLockSettingOpen] = useState(false);
+  const [lockSettingUser, setLockSettingUser] = useState('');
+  const [lockSettingLocked, setLockSettingLocked] = useState(false);
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const [resetPasswordUser, setResetPasswordUser] = useState('');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const handleFilterAdd = (filter: FilterKeyWithValue) => {
     setAppliedFilters((prev) => {
@@ -219,7 +244,7 @@ export function IAMSystemAdministratorsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
       />
 
@@ -274,9 +299,29 @@ export function IAMSystemAdministratorsPage() {
                 )}
               >
                 <ContextMenu.Item action={() => {}}>View details</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}}>Edit account</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}}>Reset password</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}}>
+                <ContextMenu.Item
+                  action={() => {
+                    setEditAdminUser(admin.username);
+                    setEditAdminOpen(true);
+                  }}
+                >
+                  Edit account
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setResetPasswordUser(admin.username);
+                    setResetPasswordOpen(true);
+                  }}
+                >
+                  Reset password
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setLockSettingUser(admin.username);
+                    setLockSettingLocked(admin.locked);
+                    setLockSettingOpen(true);
+                  }}
+                >
                   {admin.locked ? 'Unlock account' : 'Lock account'}
                 </ContextMenu.Item>
                 <ContextMenu.Item action={() => {}} danger>
@@ -287,6 +332,27 @@ export function IAMSystemAdministratorsPage() {
           </Table.Tr>
         ))}
       </Table>
+      <EditSystemAdminDrawer
+        isOpen={editAdminOpen}
+        onClose={() => setEditAdminOpen(false)}
+        userName={editAdminUser}
+      />
+      <AdminLockSettingDrawer
+        isOpen={lockSettingOpen}
+        onClose={() => setLockSettingOpen(false)}
+        userName={lockSettingUser}
+        initialLocked={lockSettingLocked}
+      />
+      <ResetPasswordDrawer
+        isOpen={resetPasswordOpen}
+        onClose={() => setResetPasswordOpen(false)}
+        userName={resetPasswordUser}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

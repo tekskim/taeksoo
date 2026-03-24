@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { RegisterCertificateDrawer } from '../drawers/compute/certificate/RegisterCertificateDrawer';
+import { EditCertificateDrawer } from '../drawers/compute/certificate/EditCertificateDrawer';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -10,6 +12,10 @@ import { Title } from '@shared/components/Title';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type CertType = 'server' | 'ca' | 'client';
 
@@ -112,6 +118,15 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'type', label: 'Type', visible: true },
+  { key: 'domain', label: 'Domain', visible: true },
+  { key: 'expiration', label: 'Expiration', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeCertificatesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -119,6 +134,10 @@ export function ComputeCertificatesPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [registerDrawerOpen, setRegisterDrawerOpen] = useState(false);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [menuTargetCert, setMenuTargetCert] = useState<CertificateRow | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -162,13 +181,23 @@ export function ComputeCertificatesPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Certificates" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/certificates/create')}
-        >
-          Create certificate
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            appearance="outline"
+            size="md"
+            onClick={() => setRegisterDrawerOpen(true)}
+          >
+            Register certificate
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => navigate('/compute/certificates/create')}
+          >
+            Create certificate
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -234,7 +263,7 @@ export function ComputeCertificatesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -295,7 +324,14 @@ export function ComputeCertificatesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuTargetCert(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -304,6 +340,25 @@ export function ComputeCertificatesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <RegisterCertificateDrawer
+        isOpen={registerDrawerOpen}
+        onClose={() => setRegisterDrawerOpen(false)}
+      />
+      <EditCertificateDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setMenuTargetCert(null);
+        }}
+        certificateId={menuTargetCert?.id}
+        initialData={menuTargetCert ? { name: menuTargetCert.name, description: '' } : undefined}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

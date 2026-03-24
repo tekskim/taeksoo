@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { EditLoadBalancerDrawer } from '../drawers/compute/load-balancer/EditLoadBalancerDrawer';
+import { AssociateFloatingIPToLBDrawer } from '../drawers/compute/load-balancer/AssociateFloatingIPToLBDrawer';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +14,10 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type LBStatus = 'active' | 'error' | 'pending';
 
@@ -112,6 +118,15 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'vipAddress', label: 'VIP Address', visible: true },
+  { key: 'provider', label: 'Provider', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeLoadBalancersPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -119,6 +134,10 @@ export function ComputeLoadBalancersPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [associateFipDrawerOpen, setAssociateFipDrawerOpen] = useState(false);
+  const [menuTargetLb, setMenuTargetLb] = useState<LoadBalancerRow | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -234,7 +253,7 @@ export function ComputeLoadBalancersPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -295,7 +314,22 @@ export function ComputeLoadBalancersPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuTargetLb(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuTargetLb(row);
+                    setAssociateFipDrawerOpen(true);
+                  }}
+                >
+                  Associate floating IP
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -304,6 +338,32 @@ export function ComputeLoadBalancersPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditLoadBalancerDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setMenuTargetLb(null);
+        }}
+        loadBalancerId={menuTargetLb?.id}
+        initialData={
+          menuTargetLb ? { name: menuTargetLb.name, description: '', adminUp: true } : undefined
+        }
+      />
+      <AssociateFloatingIPToLBDrawer
+        isOpen={associateFipDrawerOpen}
+        onClose={() => {
+          setAssociateFipDrawerOpen(false);
+          setMenuTargetLb(null);
+        }}
+        loadBalancerName={menuTargetLb?.name}
+        vipAddress={menuTargetLb?.vipAddress === '—' ? '—' : menuTargetLb?.vipAddress}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

@@ -11,6 +11,13 @@ import { ArrowRightLeft } from 'lucide-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { CreateDomainDrawer } from '../drawers/iam/CreateDomainDrawer';
+import { EditDomainDrawer } from '../drawers/iam/EditDomainDrawer';
+import { SetDefaultDomainDrawer } from '../drawers/iam/SetDefaultDomainDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 interface Domain {
   id: string;
@@ -114,9 +121,25 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'description', label: 'Description', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function IAMDomainsPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [createDomainOpen, setCreateDomainOpen] = useState(false);
+  const [editDomainOpen, setEditDomainOpen] = useState(false);
+  const [editDomainId, setEditDomainId] = useState('');
+  const [editDomainData, setEditDomainData] = useState<
+    { name: string; description: string; enabled: boolean } | undefined
+  >();
+  const [setDefaultOpen, setSetDefaultOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const handleFilterAdd = (filter: FilterKeyWithValue) => {
     setAppliedFilters((prev) => {
@@ -162,7 +185,7 @@ export function IAMDomainsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Domains" />
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={() => setCreateDomainOpen(true)}>
           Create domain
         </Button>
       </div>
@@ -178,6 +201,9 @@ export function IAMDomainsPage() {
         <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
           <IconDownload size={12} />
         </Button>
+        <Button variant="secondary" size="sm" onClick={() => setSetDefaultOpen(true)}>
+          Set default
+        </Button>
       </div>
 
       <Pagination
@@ -185,7 +211,7 @@ export function IAMDomainsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
       />
 
@@ -234,7 +260,19 @@ export function IAMDomainsPage() {
                     </button>
                   )}
                 >
-                  <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
+                  <ContextMenu.Item
+                    action={() => {
+                      setEditDomainId(domain.id);
+                      setEditDomainData({
+                        name: domain.name,
+                        description: domain.description,
+                        enabled: domain.status === 'active',
+                      });
+                      setEditDomainOpen(true);
+                    }}
+                  >
+                    Edit
+                  </ContextMenu.Item>
                   <ContextMenu.Item action={() => {}} danger disabled={isLastDomain}>
                     Delete
                   </ContextMenu.Item>
@@ -244,6 +282,19 @@ export function IAMDomainsPage() {
           </Table.Tr>
         ))}
       </Table>
+      <CreateDomainDrawer isOpen={createDomainOpen} onClose={() => setCreateDomainOpen(false)} />
+      <EditDomainDrawer
+        isOpen={editDomainOpen}
+        onClose={() => setEditDomainOpen(false)}
+        domainId={editDomainId}
+        initialData={editDomainData}
+      />
+      <SetDefaultDomainDrawer isOpen={setDefaultOpen} onClose={() => setSetDefaultOpen(false)} />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { EditPortDrawer } from '../drawers/compute/network/EditPortDrawer';
+import { EditPortSecurityGroupsDrawer } from '../drawers/compute/network/EditPortSecurityGroupsDrawer';
 import { DetailPageHeader } from '@shared/components/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader';
 import { DetailCard } from '@shared/components/DetailCard';
@@ -9,6 +12,7 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import { CreateAllowedAddressPairDrawer } from '../drawers/compute/security-group/CreateAllowedAddressPairDrawer';
 
 interface PortDetail {
   name: string;
@@ -60,7 +64,10 @@ const statusVariant: Record<PortDetail['status'], StatusVariant> = {
 export function ComputePortDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [editPortOpen, setEditPortOpen] = useState(false);
+  const [editSgOpen, setEditSgOpen] = useState(false);
   const activeTab = searchParams.get('tab') || 'details';
+  const [allowedPairOpen, setAllowedPairOpen] = useState(false);
 
   const data =
     id && mockPorts[id]
@@ -90,7 +97,12 @@ export function ComputePortDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button
+        variant="secondary"
+        appearance="outline"
+        size="sm"
+        onClick={() => setEditPortOpen(true)}
+      >
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <ContextMenu.Root
@@ -102,6 +114,12 @@ export function ComputePortDetailPage() {
           </Button>
         )}
       >
+        <ContextMenu.Item action={() => setAllowedPairOpen(true)}>
+          Add allowed address pair
+        </ContextMenu.Item>
+        <ContextMenu.Item action={() => setEditSgOpen(true)}>
+          Manage security groups
+        </ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Detach', id)}>
           Detach interface
         </ContextMenu.Item>
@@ -127,6 +145,12 @@ export function ComputePortDetailPage() {
           <DetailCard title="Port information" fields={detailFields} />
         </Tab>
       </Tabs>
+
+      <CreateAllowedAddressPairDrawer
+        isOpen={allowedPairOpen}
+        onClose={() => setAllowedPairOpen(false)}
+        portName={data.name}
+      />
     </div>
   );
 }

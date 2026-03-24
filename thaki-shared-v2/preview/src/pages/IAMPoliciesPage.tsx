@@ -15,6 +15,10 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 interface PolicyPermission {
   application: string;
@@ -249,12 +253,23 @@ const filterKeys: FilterKey[] = [
   { key: 'roles', label: 'Roles', type: 'input', placeholder: 'Enter role name...' },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'type', label: 'Type', visible: true },
+  { key: 'apps', label: 'Apps', visible: true },
+  { key: 'roles', label: 'Roles', visible: true },
+  { key: 'description', label: 'Description', visible: true },
+  { key: 'editedAt', label: 'Edited at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function IAMPoliciesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['p-002']));
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredPolicies = useMemo(() => {
     if (appliedFilters.length === 0) return mockPolicies;
@@ -372,7 +387,7 @@ export function IAMPoliciesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -490,6 +505,11 @@ export function IAMPoliciesPage() {
           );
         })}
       </div>
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

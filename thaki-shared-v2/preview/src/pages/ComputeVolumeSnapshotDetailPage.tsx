@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -9,6 +10,7 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import { EditVolumeSnapshotDrawer } from '../drawers/compute/volume/EditVolumeSnapshotDrawer';
 
 type VolumeSnapshotStatus = 'available' | 'error';
 
@@ -65,6 +67,7 @@ export function ComputeVolumeSnapshotDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editOpen, setEditOpen] = useState(false);
 
   const s = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -113,7 +116,7 @@ export function ComputeVolumeSnapshotDetailPage() {
         </Button>
       )}
     >
-      <ContextMenu.Item action={() => {}}>
+      <ContextMenu.Item action={() => setEditOpen(true)}>
         <span className="inline-flex items-center gap-1">
           <IconEdit size={12} stroke={1.5} /> Edit
         </span>
@@ -144,6 +147,13 @@ export function ComputeVolumeSnapshotDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditVolumeSnapshotDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        snapshotId={s.id}
+        initialData={{ name: s.name, description: s.description }}
+      />
     </div>
   );
 }

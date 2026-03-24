@@ -14,7 +14,19 @@ import { FilterSearchInput } from '@shared/components/FilterSearch';
 import type { FilterKeyWithValue, FilterKey } from '@shared/components/FilterSearch';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
-import { IconPlus, IconDownload, IconTrash, IconX, IconCheck } from '@tabler/icons-react';
+import {
+  IconPlus,
+  IconDownload,
+  IconTrash,
+  IconX,
+  IconCheck,
+  IconFolderPlus,
+  IconUpload,
+  IconArrowsMove,
+} from '@tabler/icons-react';
+import { CreateFolderDrawer } from '../drawers/storage/CreateFolderDrawer';
+import { CreateObjectDrawer } from '../drawers/storage/CreateObjectDrawer';
+import { MoveFilesDrawer } from '../drawers/storage/MoveFilesDrawer';
 import {
   STORAGE_SLUGS,
   getStorageListConfig,
@@ -22,6 +34,10 @@ import {
   type StorageSlug,
   type ListColumn,
 } from '../data/storageListConfig';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type RowData = Record<string, string> & { id: string };
 
@@ -89,6 +105,11 @@ export function StorageConsolePage() {
   const [confirmRemoveOpen, setConfirmRemoveOpen] = useState(false);
   const [rowToRemove, setRowToRemove] = useState<RowData | null>(null);
 
+  const [createFolderOpen, setCreateFolderOpen] = useState(false);
+  const [createObjectOpen, setCreateObjectOpen] = useState(false);
+  const [moveFilesOpen, setMoveFilesOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
+
   useEffect(() => {
     setRows(config.rows);
     setSelected([]);
@@ -145,6 +166,17 @@ export function StorageConsolePage() {
   const columns = useMemo(
     () => buildTableColumns(config.columns, { showActionColumn }),
     [config.columns, showActionColumn]
+  );
+
+  const viewPreferenceColumns = useMemo<ColumnPreference[]>(
+    () =>
+      columns.map((c) => ({
+        key: c.key,
+        label: typeof c.header === 'string' ? c.header : String(c.key),
+        visible: true,
+        locked: c.key === '__actions' || c.key === 'name',
+      })),
+    [columns]
   );
 
   const filterKeys: FilterKey[] = useMemo(
@@ -328,6 +360,15 @@ export function StorageConsolePage() {
     if (config.createHref) navigate(config.createHref);
   };
 
+  const bucketContextPath = useMemo(() => {
+    if (slug !== 'buckets' || selected.length !== 1) return undefined;
+    const row = rows.find((r) => r.id === selected[0]);
+    if (!row) return undefined;
+    const domain = row.domain ?? 'default';
+    const name = row.name ?? row.id;
+    return `/${domain}/${name}`;
+  }, [slug, selected, rows]);
+
   const tableContent = (
     <>
       {selectable ? (
@@ -398,11 +439,33 @@ export function StorageConsolePage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title={config.title} />
-        {config.createLabel && (
-          <Button variant="primary" size="md" onClick={handleCreate}>
-            <IconPlus size={12} /> {config.createLabel}
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {slug === 'buckets' && (
+            <>
+              <Button
+                appearance="outline"
+                variant="secondary"
+                size="md"
+                onClick={() => setCreateFolderOpen(true)}
+              >
+                <IconFolderPlus size={12} /> Create folder
+              </Button>
+              <Button
+                appearance="outline"
+                variant="secondary"
+                size="md"
+                onClick={() => setCreateObjectOpen(true)}
+              >
+                <IconUpload size={12} /> Upload
+              </Button>
+            </>
+          )}
+          {config.createLabel && (
+            <Button variant="primary" size="md" onClick={handleCreate}>
+              <IconPlus size={12} /> {config.createLabel}
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -422,6 +485,17 @@ export function StorageConsolePage() {
           <>
             <div className="h-4 w-px bg-border" />
             <div className="flex items-center gap-1">
+              {slug === 'buckets' && (
+                <Button
+                  appearance="outline"
+                  variant="muted"
+                  size="sm"
+                  disabled={selected.length === 0}
+                  onClick={() => setMoveFilesOpen(true)}
+                >
+                  <IconArrowsMove size={12} /> Move
+                </Button>
+              )}
               <Button
                 appearance="outline"
                 variant="muted"
@@ -475,7 +549,7 @@ export function StorageConsolePage() {
           size={rowsPerPage}
           currentAt={safePage}
           onPageChange={setCurrentPage}
-          onSettingClick={() => {}}
+          onSettingClick={() => setPrefsOpen(true)}
           totalCountLabel="items"
           selectedCount={selected.length}
         />
@@ -501,6 +575,27 @@ export function StorageConsolePage() {
           }}
         />
       )}
+
+      <CreateFolderDrawer
+        isOpen={createFolderOpen}
+        onClose={() => setCreateFolderOpen(false)}
+        currentPath={bucketContextPath}
+      />
+      <CreateObjectDrawer
+        isOpen={createObjectOpen}
+        onClose={() => setCreateObjectOpen(false)}
+        containerPath={bucketContextPath ?? '/default/container'}
+      />
+      <MoveFilesDrawer
+        isOpen={moveFilesOpen}
+        onClose={() => setMoveFilesOpen(false)}
+        selectedCount={selected.length}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={viewPreferenceColumns}
+      />
     </div>
   );
 }

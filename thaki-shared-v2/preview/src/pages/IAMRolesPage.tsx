@@ -10,6 +10,12 @@ import { Title } from '@shared/components/Title';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { EditRoleDrawer } from '../drawers/iam/EditRoleDrawer';
+import { ManagePoliciesDrawer } from '../drawers/iam/ManagePoliciesDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 interface Role {
   id: string;
@@ -139,11 +145,25 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'description', label: 'Description', visible: true },
+  { key: 'type', label: 'Type', visible: true },
+  { key: 'policies', label: 'Policies', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function IAMRolesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [editRoleOpen, setEditRoleOpen] = useState(false);
+  const [editRoleName, setEditRoleName] = useState('');
+  const [managePoliciesOpen, setManagePoliciesOpen] = useState(false);
+  const [managePoliciesRoleName, setManagePoliciesRoleName] = useState('');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRoles = useMemo(() => {
     if (appliedFilters.length === 0) return mockRoles;
@@ -258,7 +278,7 @@ export function IAMRolesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -318,7 +338,10 @@ export function IAMRolesPage() {
                 )}
               >
                 <ContextMenu.Item
-                  action={() => console.log('Manage policies', role.id)}
+                  action={() => {
+                    setManagePoliciesRoleName(role.name);
+                    setManagePoliciesOpen(true);
+                  }}
                   disabled={role.type === 'Built-in'}
                 >
                   Manage policies
@@ -327,7 +350,10 @@ export function IAMRolesPage() {
                   Duplicate
                 </ContextMenu.Item>
                 <ContextMenu.Item
-                  action={() => console.log('Edit', role.id)}
+                  action={() => {
+                    setEditRoleName(role.name);
+                    setEditRoleOpen(true);
+                  }}
                   disabled={role.type === 'Built-in'}
                 >
                   Edit
@@ -344,6 +370,21 @@ export function IAMRolesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <EditRoleDrawer
+        isOpen={editRoleOpen}
+        onClose={() => setEditRoleOpen(false)}
+        roleName={editRoleName}
+      />
+      <ManagePoliciesDrawer
+        isOpen={managePoliciesOpen}
+        onClose={() => setManagePoliciesOpen(false)}
+        roleName={managePoliciesRoleName}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

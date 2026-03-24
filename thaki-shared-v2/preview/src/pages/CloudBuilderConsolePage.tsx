@@ -25,6 +25,10 @@ import {
   type CloudBuilderSlug,
   type ListColumn,
 } from '../data/consoleListConfig';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type RowData = Record<string, string> & { id: string };
 
@@ -100,6 +104,7 @@ export function CloudBuilderConsolePage() {
     null
   );
   const [disableReason, setDisableReason] = useState('');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   useEffect(() => {
     setRows(config.rows);
@@ -187,6 +192,17 @@ export function CloudBuilderConsolePage() {
   const columns = useMemo(
     () => buildTableColumns(viewConfig.columns, { showActionColumn }),
     [viewConfig.columns, showActionColumn]
+  );
+
+  const viewPreferenceColumns = useMemo<ColumnPreference[]>(
+    () =>
+      columns.map((c) => ({
+        key: c.key,
+        label: typeof c.header === 'string' ? c.header : String(c.key),
+        visible: true,
+        locked: c.key === '__actions' || c.key === 'name',
+      })),
+    [columns]
   );
 
   const filterKeys: FilterKey[] = useMemo(
@@ -576,7 +592,7 @@ export function CloudBuilderConsolePage() {
           size={rowsPerPage}
           currentAt={safePage}
           onPageChange={setCurrentPage}
-          onSettingClick={() => {}}
+          onSettingClick={() => setPrefsOpen(true)}
           totalCountLabel="items"
           selectedCount={selected.length}
         />
@@ -642,6 +658,11 @@ export function CloudBuilderConsolePage() {
           )}
         </ActionModal>
       )}
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={viewPreferenceColumns}
+      />
     </div>
   );
 }

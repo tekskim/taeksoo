@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { EditNetworkDrawer } from '../drawers/compute/network/EditNetworkDrawer';
+import { CreateSubnetDrawer } from '../drawers/compute/network/CreateSubnetDrawer';
 import { DetailPageHeader } from '@shared/components/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader';
 import { DetailCard } from '@shared/components/DetailCard';
@@ -72,6 +75,8 @@ const statusVariant: Record<NetworkDetail['status'], StatusVariant> = {
 export function ComputeNetworkDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
+  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
   const activeTab = searchParams.get('tab') || 'details';
 
   const data =
@@ -112,7 +117,12 @@ export function ComputeNetworkDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button
+        variant="secondary"
+        appearance="outline"
+        size="sm"
+        onClick={() => setEditNetworkOpen(true)}
+      >
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <ContextMenu.Root
@@ -124,6 +134,7 @@ export function ComputeNetworkDetailPage() {
           </Button>
         )}
       >
+        <ContextMenu.Item action={() => setCreateSubnetOpen(true)}>Create subnet</ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Duplicate', id)}>Duplicate</ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Delete', id)} danger>
           <IconTrash size={12} stroke={1.5} /> Delete
@@ -202,6 +213,22 @@ export function ComputeNetworkDetailPage() {
           </div>
         </Tab>
       </Tabs>
+
+      <EditNetworkDrawer
+        isOpen={editNetworkOpen}
+        onClose={() => setEditNetworkOpen(false)}
+        networkId={id}
+        initialData={{
+          name: data.name,
+          shared: data.shared,
+          adminStateUp: data.adminState === 'UP',
+        }}
+      />
+      <CreateSubnetDrawer
+        isOpen={createSubnetOpen}
+        onClose={() => setCreateSubnetOpen(false)}
+        networkName={data.name}
+      />
     </div>
   );
 }

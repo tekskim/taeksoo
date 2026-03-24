@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -9,6 +10,7 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import { EditVolumeBackupDrawer } from '../drawers/compute/volume/EditVolumeBackupDrawer';
 
 type BackupStatus = 'available' | 'error' | 'restoring';
 
@@ -77,6 +79,7 @@ export function ComputeVolumeBackupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editOpen, setEditOpen] = useState(false);
 
   const b = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -127,7 +130,7 @@ export function ComputeVolumeBackupDetailPage() {
         </Button>
       )}
     >
-      <ContextMenu.Item action={() => {}}>
+      <ContextMenu.Item action={() => setEditOpen(true)}>
         <span className="inline-flex items-center gap-1">
           <IconEdit size={12} stroke={1.5} /> Edit
         </span>
@@ -158,6 +161,13 @@ export function ComputeVolumeBackupDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditVolumeBackupDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        backupId={b.id}
+        initialData={{ name: b.name, description: '' }}
+      />
     </div>
   );
 }

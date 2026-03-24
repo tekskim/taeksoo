@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +12,13 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { CreateVolumeBackupWithSelectionDrawer } from '../drawers/compute/volume/CreateVolumeBackupWithSelectionDrawer';
+import { CreateVolumeFromBackupDrawer } from '../drawers/compute/volume/CreateVolumeFromBackupDrawer';
+import { EditVolumeBackupDrawer } from '../drawers/compute/volume/EditVolumeBackupDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type BackupStatus = 'available' | 'error' | 'restoring';
 
@@ -121,13 +128,27 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'volume', label: 'Volume', visible: true },
+  { key: 'backupMode', label: 'Backup Mode', visible: true },
+  { key: 'size', label: 'Size', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeVolumeBackupsPage() {
-  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [drawerBackup, setDrawerBackup] = useState<VolumeBackupRow | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [createFromBackupRow, setCreateFromBackupRow] = useState<VolumeBackupRow | null>(null);
+  const [createBackupSelectionOpen, setCreateBackupSelectionOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -172,11 +193,7 @@ export function ComputeVolumeBackupsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Volume backups" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/volume-backups/create')}
-        >
+        <Button variant="primary" size="md" onClick={() => setCreateBackupSelectionOpen(true)}>
           Create backup
         </Button>
       </div>
@@ -244,7 +261,7 @@ export function ComputeVolumeBackupsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -308,8 +325,22 @@ export function ComputeVolumeBackupsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerBackup(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setCreateFromBackupRow(row);
+                  }}
+                >
+                  Create volume from backup
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => {}} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -317,6 +348,29 @@ export function ComputeVolumeBackupsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditVolumeBackupDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        backupId={drawerBackup?.id ?? ''}
+        initialData={drawerBackup ? { name: drawerBackup.name, description: '' } : undefined}
+      />
+
+      <CreateVolumeFromBackupDrawer
+        isOpen={!!createFromBackupRow}
+        onClose={() => setCreateFromBackupRow(null)}
+        backupName={createFromBackupRow?.name ?? ''}
+      />
+
+      <CreateVolumeBackupWithSelectionDrawer
+        isOpen={createBackupSelectionOpen}
+        onClose={() => setCreateBackupSelectionOpen(false)}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

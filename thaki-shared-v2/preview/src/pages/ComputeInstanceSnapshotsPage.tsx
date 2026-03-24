@@ -12,6 +12,12 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { EditInstanceSnapshotDrawer } from '../drawers/compute/image/EditInstanceSnapshotDrawer';
+import { CreateVolumeFromSnapshotDrawer } from '../drawers/compute/image/CreateVolumeFromSnapshotDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type SnapshotStatus = 'active' | 'queued' | 'saving' | 'error';
 
@@ -22,6 +28,7 @@ interface InstanceSnapshot {
   size: string;
   diskFormat: string;
   createdAt: string;
+  description?: string;
   [key: string]: unknown;
 }
 
@@ -33,6 +40,7 @@ const mockRows: InstanceSnapshot[] = [
     size: '40 GiB',
     diskFormat: 'QCOW2',
     createdAt: 'Mar 10, 2025 07:15:30',
+    description: 'Weekly backup snapshot.',
   },
   {
     id: 'isnap-002',
@@ -114,6 +122,15 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'size', label: 'Size', visible: true },
+  { key: 'diskFormat', label: 'Disk Format', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeInstanceSnapshotsPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -121,6 +138,10 @@ export function ComputeInstanceSnapshotsPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [createVolDrawerOpen, setCreateVolDrawerOpen] = useState(false);
+  const [snapshotForDrawer, setSnapshotForDrawer] = useState<InstanceSnapshot | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -240,7 +261,7 @@ export function ComputeInstanceSnapshotsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -301,7 +322,22 @@ export function ComputeInstanceSnapshotsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSnapshotForDrawer(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSnapshotForDrawer(row);
+                    setCreateVolDrawerOpen(true);
+                  }}
+                >
+                  Create volume
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -310,6 +346,36 @@ export function ComputeInstanceSnapshotsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditInstanceSnapshotDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setSnapshotForDrawer(null);
+        }}
+        snapshotId={snapshotForDrawer?.id}
+        initialData={
+          snapshotForDrawer
+            ? {
+                name: snapshotForDrawer.name,
+                description: snapshotForDrawer.description ?? '',
+              }
+            : undefined
+        }
+      />
+      <CreateVolumeFromSnapshotDrawer
+        isOpen={createVolDrawerOpen}
+        onClose={() => {
+          setCreateVolDrawerOpen(false);
+          setSnapshotForDrawer(null);
+        }}
+        snapshotName={snapshotForDrawer?.name}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }
