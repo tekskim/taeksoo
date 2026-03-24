@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { CreateRouterDrawer } from '../drawers/compute/network/CreateRouterDrawer';
+import { EditRouterDrawer } from '../drawers/compute/network/EditRouterDrawer';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +14,10 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type RouterStatus = 'active' | 'error';
 
@@ -101,13 +107,24 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'externalGateway', label: 'External Gateway', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeRoutersPage() {
-  const navigate = useNavigate();
+  const [createRouterOpen, setCreateRouterOpen] = useState(false);
+  const [editRouterOpen, setEditRouterOpen] = useState(false);
+  const [menuRouter, setMenuRouter] = useState<RouterRow | null>(null);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -150,7 +167,7 @@ export function ComputeRoutersPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Routers" />
-        <Button variant="primary" size="md" onClick={() => navigate('/compute/routers/create')}>
+        <Button variant="primary" size="md" onClick={() => setCreateRouterOpen(true)}>
           Create router
         </Button>
       </div>
@@ -218,7 +235,7 @@ export function ComputeRoutersPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -276,7 +293,14 @@ export function ComputeRoutersPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuRouter(row);
+                    setEditRouterOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -285,6 +309,30 @@ export function ComputeRoutersPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <CreateRouterDrawer isOpen={createRouterOpen} onClose={() => setCreateRouterOpen(false)} />
+      <EditRouterDrawer
+        isOpen={editRouterOpen}
+        onClose={() => {
+          setEditRouterOpen(false);
+          setMenuRouter(null);
+        }}
+        routerId={menuRouter?.id}
+        initialData={
+          menuRouter
+            ? {
+                name: menuRouter.name,
+                description: '',
+                adminStateUp: menuRouter.status === 'active',
+              }
+            : undefined
+        }
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

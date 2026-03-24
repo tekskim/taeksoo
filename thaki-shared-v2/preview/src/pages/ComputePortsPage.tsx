@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { EditPortDrawer } from '../drawers/compute/network/EditPortDrawer';
+import { EditPortSecurityGroupsDrawer } from '../drawers/compute/network/EditPortSecurityGroupsDrawer';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +14,10 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type PortStatus = 'active' | 'error' | 'down';
 
@@ -127,13 +133,27 @@ function rowMatchesFilter(row: PortRow, filter: FilterKeyWithValue): boolean {
   }
 }
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'network', label: 'Network', visible: true },
+  { key: 'fixedIps', label: 'Fixed IPs', visible: true },
+  { key: 'macAddress', label: 'MAC Address', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputePortsPage() {
   const navigate = useNavigate();
+  const [editPortOpen, setEditPortOpen] = useState(false);
+  const [editSgOpen, setEditSgOpen] = useState(false);
+  const [menuPort, setMenuPort] = useState<PortRow | null>(null);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -241,7 +261,7 @@ export function ComputePortsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -306,7 +326,22 @@ export function ComputePortsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuPort(row);
+                    setEditPortOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuPort(row);
+                    setEditSgOpen(true);
+                  }}
+                >
+                  Manage security groups
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -315,6 +350,39 @@ export function ComputePortsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditPortDrawer
+        isOpen={editPortOpen}
+        onClose={() => {
+          setEditPortOpen(false);
+          setMenuPort(null);
+        }}
+        portId={menuPort?.id}
+        initialData={
+          menuPort
+            ? {
+                name: menuPort.name,
+                description: '',
+                adminStateUp: menuPort.status === 'active',
+                bindingHost: '',
+              }
+            : undefined
+        }
+      />
+      <EditPortSecurityGroupsDrawer
+        isOpen={editSgOpen}
+        onClose={() => {
+          setEditSgOpen(false);
+          setMenuPort(null);
+        }}
+        portName={menuPort?.name}
+        initialSelectedIds={['psg-1']}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

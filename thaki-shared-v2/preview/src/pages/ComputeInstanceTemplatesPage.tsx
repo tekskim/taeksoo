@@ -12,6 +12,10 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type TemplateStatus = 'active' | 'disabled';
 
@@ -110,6 +114,16 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'vCpu', label: 'vCPU', visible: true },
+  { key: 'ram', label: 'RAM', visible: true },
+  { key: 'disk', label: 'Disk', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeInstanceTemplatesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -117,6 +131,7 @@ export function ComputeInstanceTemplatesPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -237,7 +252,7 @@ export function ComputeInstanceTemplatesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -310,6 +325,11 @@ export function ComputeInstanceTemplatesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

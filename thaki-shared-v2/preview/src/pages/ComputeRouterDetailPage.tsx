@@ -1,4 +1,10 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { EditRouterDrawer } from '../drawers/compute/network/EditRouterDrawer';
+import { ExternalGatewaySettingDrawer } from '../drawers/compute/network/ExternalGatewaySettingDrawer';
+import { ConnectSubnetDrawer } from '../drawers/compute/network/ConnectSubnetDrawer';
+import { DisconnectSubnetDrawer } from '../drawers/compute/network/DisconnectSubnetDrawer';
+import { CreateStaticRouteDrawer } from '../drawers/compute/network/CreateStaticRouteDrawer';
 import { DetailPageHeader } from '@shared/components/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader';
 import { DetailCard } from '@shared/components/DetailCard';
@@ -75,6 +81,11 @@ const statusVariant: Record<RouterDetail['status'], StatusVariant> = {
 export function ComputeRouterDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [editRouterOpen, setEditRouterOpen] = useState(false);
+  const [externalGwOpen, setExternalGwOpen] = useState(false);
+  const [connectSubnetOpen, setConnectSubnetOpen] = useState(false);
+  const [disconnectSubnetOpen, setDisconnectSubnetOpen] = useState(false);
+  const [staticRouteOpen, setStaticRouteOpen] = useState(false);
   const activeTab = searchParams.get('tab') || 'details';
 
   const data =
@@ -109,7 +120,12 @@ export function ComputeRouterDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button
+        variant="secondary"
+        appearance="outline"
+        size="sm"
+        onClick={() => setEditRouterOpen(true)}
+      >
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <ContextMenu.Root
@@ -121,6 +137,18 @@ export function ComputeRouterDetailPage() {
           </Button>
         )}
       >
+        <ContextMenu.Item action={() => setExternalGwOpen(true)}>
+          External gateway setting
+        </ContextMenu.Item>
+        <ContextMenu.Item action={() => setConnectSubnetOpen(true)}>
+          Connect subnet
+        </ContextMenu.Item>
+        <ContextMenu.Item action={() => setDisconnectSubnetOpen(true)}>
+          Disconnect subnet
+        </ContextMenu.Item>
+        <ContextMenu.Item action={() => setStaticRouteOpen(true)}>
+          Create static route
+        </ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Clear gateway', id)}>
           Clear gateway
         </ContextMenu.Item>
@@ -147,7 +175,27 @@ export function ComputeRouterDetailPage() {
         </Tab>
         <Tab id="interfaces" label="Interfaces">
           <div className="flex flex-col gap-4">
-            <h3 className="text-14 font-semibold text-text m-0">Interfaces</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h3 className="text-14 font-semibold text-text m-0">Interfaces</h3>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setConnectSubnetOpen(true)}
+                >
+                  Connect subnet
+                </Button>
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => setDisconnectSubnetOpen(true)}
+                >
+                  Disconnect subnet
+                </Button>
+              </div>
+            </div>
             <Table columns={ifColumns} rows={data.interfaces}>
               {data.interfaces.map((row) => (
                 <Table.Tr key={row.id} rowData={row}>
@@ -169,6 +217,37 @@ export function ComputeRouterDetailPage() {
           </div>
         </Tab>
       </Tabs>
+
+      <EditRouterDrawer
+        isOpen={editRouterOpen}
+        onClose={() => setEditRouterOpen(false)}
+        routerId={id}
+        initialData={{
+          name: data.name,
+          description: '',
+          adminStateUp: data.adminState === 'UP',
+        }}
+      />
+      <ExternalGatewaySettingDrawer
+        isOpen={externalGwOpen}
+        onClose={() => setExternalGwOpen(false)}
+        routerName={data.name}
+      />
+      <ConnectSubnetDrawer
+        isOpen={connectSubnetOpen}
+        onClose={() => setConnectSubnetOpen(false)}
+        routerName={data.name}
+      />
+      <DisconnectSubnetDrawer
+        isOpen={disconnectSubnetOpen}
+        onClose={() => setDisconnectSubnetOpen(false)}
+        routerName={data.name}
+      />
+      <CreateStaticRouteDrawer
+        isOpen={staticRouteOpen}
+        onClose={() => setStaticRouteOpen(false)}
+        routerName={data.name}
+      />
     </div>
   );
 }

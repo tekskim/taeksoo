@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { EditCertificateDrawer } from '../drawers/compute/certificate/EditCertificateDrawer';
 import { DetailPageHeader } from '@shared/components/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader';
 import { DetailCard } from '@shared/components/DetailCard';
@@ -45,6 +47,7 @@ export function ComputeCertificateDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const data =
     id && mockCertificates[id]
@@ -106,6 +109,13 @@ export function ComputeCertificateDetailPage() {
           <DetailCard title="Certificate" fields={detailFields} />
         </Tab>
       </Tabs>
+
+      <EditCertificateDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        certificateId={id}
+        initialData={{ name: data.name, description: '' }}
+      />
     </div>
   );
 }

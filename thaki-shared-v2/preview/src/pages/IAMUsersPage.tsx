@@ -15,6 +15,11 @@ import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSea
 import { EditUserDrawer } from '../drawers/EditUserDrawer';
 import { ManageUserGroupsDrawer } from '../drawers/ManageUserGroupsDrawer';
 import { ManageRolesDrawer } from '../drawers/ManageRolesDrawer';
+import { ResetPasswordDrawer } from '../drawers/iam/ResetPasswordDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type UserStatus = 'active' | 'disabled' | 'locked';
 
@@ -155,6 +160,17 @@ const filterKeys: FilterKey[] = [
   { key: 'roles', label: 'Roles', type: 'input', placeholder: 'Enter role name...' },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'username', label: 'Username', visible: true, locked: true },
+  { key: 'userGroups', label: 'User groups', visible: true },
+  { key: 'roles', label: 'Roles', visible: true },
+  { key: 'lastSignIn', label: 'Last sign-in', visible: true },
+  { key: 'mfa', label: 'MFA', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function IAMUsersPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -168,6 +184,9 @@ export function IAMUsersPage() {
   const [manageGroupsUser, setManageGroupsUser] = useState('');
   const [manageRolesOpen, setManageRolesOpen] = useState(false);
   const [manageRolesUser, setManageRolesUser] = useState('');
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
+  const [resetPasswordUser, setResetPasswordUser] = useState('');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredUsers = useMemo(() => {
     if (appliedFilters.length === 0) return mockUsers;
@@ -289,7 +308,7 @@ export function IAMUsersPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -376,7 +395,10 @@ export function IAMUsersPage() {
                   Manage roles
                 </ContextMenu.Item>
                 <ContextMenu.Item
-                  action={() => console.log('Reset password', user.id)}
+                  action={() => {
+                    setResetPasswordUser(user.username);
+                    setResetPasswordOpen(true);
+                  }}
                   disabled={user.status === 'disabled'}
                 >
                   Reset password
@@ -417,6 +439,16 @@ export function IAMUsersPage() {
         isOpen={manageRolesOpen}
         onClose={() => setManageRolesOpen(false)}
         userName={manageRolesUser}
+      />
+      <ResetPasswordDrawer
+        isOpen={resetPasswordOpen}
+        onClose={() => setResetPasswordOpen(false)}
+        userName={resetPasswordUser}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
       />
     </div>
   );

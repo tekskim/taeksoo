@@ -23,6 +23,25 @@ import {
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { EditInstanceDrawer } from '../drawers/compute/instance/EditInstanceDrawer';
+import { CreateInstanceSnapshotDrawer } from '../drawers/compute/instance/CreateInstanceSnapshotDrawer';
+import { LockSettingDrawer } from '../drawers/compute/instance/LockSettingDrawer';
+import { AttachVolumeDrawer } from '../drawers/compute/instance/AttachVolumeDrawer';
+import { DetachVolumeDrawer } from '../drawers/compute/instance/DetachVolumeDrawer';
+import { AttachInterfaceDrawer } from '../drawers/compute/instance/AttachInterfaceDrawer';
+import { DetachInterfaceDrawer } from '../drawers/compute/instance/DetachInterfaceDrawer';
+import { AssociateFloatingIPDrawer } from '../drawers/compute/instance/AssociateFloatingIPDrawer';
+import { DisassociateFloatingIPDrawer } from '../drawers/compute/instance/DisassociateFloatingIPDrawer';
+import { ManageSecurityGroupsDrawer } from '../drawers/compute/instance/ManageSecurityGroupsDrawer';
+import { ManageTagsDrawer } from '../drawers/compute/instance/ManageTagsDrawer';
+import { ResizeInstanceDrawer } from '../drawers/compute/instance/ResizeInstanceDrawer';
+import { RebuildInstanceDrawer } from '../drawers/compute/instance/RebuildInstanceDrawer';
+import { RescueInstanceDrawer } from '../drawers/compute/instance/RescueInstanceDrawer';
+import { LiveMigrateInstanceDrawer } from '../drawers/compute/instance/LiveMigrateInstanceDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type InstanceStatus = 'running' | 'stopped' | 'pending' | 'error' | 'building';
 
@@ -251,6 +270,22 @@ function instanceMatchesFilter(instance: Instance, filter: FilterKeyWithValue): 
   }
 }
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'locked', label: 'Locked', visible: true },
+  { key: 'fixedIp', label: 'Fixed IP', visible: true },
+  { key: 'floatingIp', label: 'Floating IP', visible: true },
+  { key: 'os', label: 'OS', visible: true },
+  { key: 'flavor', label: 'Flavor', visible: true },
+  { key: 'vcpu', label: 'vCPU', visible: true },
+  { key: 'ram', label: 'RAM', visible: true },
+  { key: 'disk', label: 'Disk', visible: true },
+  { key: 'gpu', label: 'GPU', visible: true },
+  { key: 'az', label: 'AZ', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeInstancesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -258,6 +293,23 @@ export function ComputeInstancesPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [drawerInstance, setDrawerInstance] = useState<{ id: string; name: string } | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [snapshotOpen, setSnapshotOpen] = useState(false);
+  const [lockOpen, setLockOpen] = useState(false);
+  const [attachVolOpen, setAttachVolOpen] = useState(false);
+  const [detachVolOpen, setDetachVolOpen] = useState(false);
+  const [attachIfOpen, setAttachIfOpen] = useState(false);
+  const [detachIfOpen, setDetachIfOpen] = useState(false);
+  const [assocFipOpen, setAssocFipOpen] = useState(false);
+  const [disassocFipOpen, setDisassocFipOpen] = useState(false);
+  const [manageSgOpen, setManageSgOpen] = useState(false);
+  const [manageTagsOpen, setManageTagsOpen] = useState(false);
+  const [resizeOpen, setResizeOpen] = useState(false);
+  const [rebuildOpen, setRebuildOpen] = useState(false);
+  const [rescueOpen, setRescueOpen] = useState(false);
+  const [migrateOpen, setMigrateOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const itemsPerPage = 10;
 
@@ -419,7 +471,7 @@ export function ComputeInstancesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -563,7 +615,12 @@ export function ComputeInstancesPage() {
                     <ContextMenu.Item action={() => logAction('Unshelve', instance)}>
                       Unshelve
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Rescue', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setRescueOpen(true);
+                      }}
+                    >
                       Rescue
                     </ContextMenu.Item>
                     <ContextMenu.Item action={() => logAction('Unrescue', instance)}>
@@ -571,52 +628,116 @@ export function ComputeInstancesPage() {
                     </ContextMenu.Item>
                   </ContextMenu.SubItems>
                   <ContextMenu.SubItems label="Storage & snapshot">
-                    <ContextMenu.Item action={() => logAction('Attach volume', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setAttachVolOpen(true);
+                      }}
+                    >
                       Attach volume
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Detach volume', instance)} danger>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setDetachVolOpen(true);
+                      }}
+                      danger
+                    >
                       Detach volume
                     </ContextMenu.Item>
                     <ContextMenu.Item
-                      action={() => logAction('Create instance snapshot', instance)}
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setSnapshotOpen(true);
+                      }}
                     >
                       Create instance snapshot
                     </ContextMenu.Item>
                   </ContextMenu.SubItems>
                   <ContextMenu.SubItems label="Network">
-                    <ContextMenu.Item action={() => logAction('Attach interface', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setAttachIfOpen(true);
+                      }}
+                    >
                       Attach interface
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Detach interface', instance)} danger>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setDetachIfOpen(true);
+                      }}
+                      danger
+                    >
                       Detach interface
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Associate floating IP', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setAssocFipOpen(true);
+                      }}
+                    >
                       Associate floating IP
                     </ContextMenu.Item>
                     <ContextMenu.Item
-                      action={() => logAction('Disassociate floating IP', instance)}
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setDisassocFipOpen(true);
+                      }}
                       danger
                     >
                       Disassociate floating IP
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Manage security groups', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setManageSgOpen(true);
+                      }}
+                    >
                       Manage security groups
                     </ContextMenu.Item>
                   </ContextMenu.SubItems>
                   <ContextMenu.SubItems label="Configuration">
-                    <ContextMenu.Item action={() => logAction('Lock setting', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setLockOpen(true);
+                      }}
+                    >
                       Lock setting
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Rebuild', instance)} danger>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setRebuildOpen(true);
+                      }}
+                      danger
+                    >
                       Rebuild
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Resize', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setResizeOpen(true);
+                      }}
+                    >
                       Resize
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Manage tags', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setManageTagsOpen(true);
+                      }}
+                    >
                       Manage tags
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Edit', instance)}>
+                    <ContextMenu.Item
+                      action={() => {
+                        setDrawerInstance({ id: instance.id, name: instance.name });
+                        setEditOpen(true);
+                      }}
+                    >
                       Edit
                     </ContextMenu.Item>
                   </ContextMenu.SubItems>
@@ -635,6 +756,87 @@ export function ComputeInstancesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <EditInstanceDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        instanceId={drawerInstance?.id ?? ''}
+        initialData={drawerInstance ? { name: drawerInstance.name, description: '' } : undefined}
+      />
+      <CreateInstanceSnapshotDrawer
+        isOpen={snapshotOpen}
+        onClose={() => setSnapshotOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <LockSettingDrawer
+        isOpen={lockOpen}
+        onClose={() => setLockOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <AttachVolumeDrawer
+        isOpen={attachVolOpen}
+        onClose={() => setAttachVolOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <DetachVolumeDrawer
+        isOpen={detachVolOpen}
+        onClose={() => setDetachVolOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <AttachInterfaceDrawer
+        isOpen={attachIfOpen}
+        onClose={() => setAttachIfOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <DetachInterfaceDrawer
+        isOpen={detachIfOpen}
+        onClose={() => setDetachIfOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <AssociateFloatingIPDrawer
+        isOpen={assocFipOpen}
+        onClose={() => setAssocFipOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <DisassociateFloatingIPDrawer
+        isOpen={disassocFipOpen}
+        onClose={() => setDisassocFipOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <ManageSecurityGroupsDrawer
+        isOpen={manageSgOpen}
+        onClose={() => setManageSgOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <ManageTagsDrawer
+        isOpen={manageTagsOpen}
+        onClose={() => setManageTagsOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <ResizeInstanceDrawer
+        isOpen={resizeOpen}
+        onClose={() => setResizeOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <RebuildInstanceDrawer
+        isOpen={rebuildOpen}
+        onClose={() => setRebuildOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <RescueInstanceDrawer
+        isOpen={rescueOpen}
+        onClose={() => setRescueOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <LiveMigrateInstanceDrawer
+        isOpen={migrateOpen}
+        onClose={() => setMigrateOpen(false)}
+        instanceName={drawerInstance?.name ?? ''}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

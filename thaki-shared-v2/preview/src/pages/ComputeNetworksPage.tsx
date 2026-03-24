@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { EditNetworkDrawer } from '../drawers/compute/network/EditNetworkDrawer';
+import { CreateSubnetDrawer } from '../drawers/compute/network/CreateSubnetDrawer';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +14,10 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type NetworkStatus = 'active' | 'error' | 'pending';
 
@@ -129,13 +135,27 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'subnets', label: 'Subnets', visible: true },
+  { key: 'shared', label: 'Shared', visible: true },
+  { key: 'external', label: 'External', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeNetworksPage() {
   const navigate = useNavigate();
+  const [editNetworkOpen, setEditNetworkOpen] = useState(false);
+  const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
+  const [menuNetwork, setMenuNetwork] = useState<NetworkRow | null>(null);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -248,7 +268,7 @@ export function ComputeNetworksPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -312,7 +332,22 @@ export function ComputeNetworksPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuNetwork(row);
+                    setEditNetworkOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setMenuNetwork(row);
+                    setCreateSubnetOpen(true);
+                  }}
+                >
+                  Create subnet
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -321,6 +356,37 @@ export function ComputeNetworksPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditNetworkDrawer
+        isOpen={editNetworkOpen}
+        onClose={() => {
+          setEditNetworkOpen(false);
+          setMenuNetwork(null);
+        }}
+        networkId={menuNetwork?.id}
+        initialData={
+          menuNetwork
+            ? {
+                name: menuNetwork.name,
+                shared: menuNetwork.shared === 'Yes',
+                adminStateUp: true,
+              }
+            : undefined
+        }
+      />
+      <CreateSubnetDrawer
+        isOpen={createSubnetOpen}
+        onClose={() => {
+          setCreateSubnetOpen(false);
+          setMenuNetwork(null);
+        }}
+        networkName={menuNetwork?.name}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +12,14 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { AllocateFloatingIPDrawer } from '../drawers/compute/floating-ip/AllocateFloatingIPDrawer';
+import { EditFloatingIPDrawer } from '../drawers/compute/floating-ip/EditFloatingIPDrawer';
+import { AssociateFloatingIPToPortDrawer } from '../drawers/compute/floating-ip/AssociateFloatingIPToPortDrawer';
+import { DisassociateFloatingIPDrawer } from '../drawers/compute/floating-ip/DisassociateFloatingIPDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type FipStatus = 'active' | 'down' | 'error';
 
@@ -102,13 +110,28 @@ const filterKeys: FilterKey[] = [
   { key: 'floatingIp', label: 'Floating IP', type: 'input', placeholder: 'Enter address...' },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
+  { key: 'fixedIp', label: 'Fixed IP', visible: true },
+  { key: 'port', label: 'Port', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeFloatingIPsPage() {
-  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  const [allocateOpen, setAllocateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [associateOpen, setAssociateOpen] = useState(false);
+  const [disassociateOpen, setDisassociateOpen] = useState(false);
+  const [activeFipRow, setActiveFipRow] = useState<FloatingIPRow | null>(null);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -152,11 +175,7 @@ export function ComputeFloatingIPsPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Floating IPs" />
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/compute/floating-ips/create')}
-        >
+        <Button variant="primary" size="md" onClick={() => setAllocateOpen(true)}>
           Allocate floating IP
         </Button>
       </div>
@@ -224,7 +243,7 @@ export function ComputeFloatingIPsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -285,7 +304,30 @@ export function ComputeFloatingIPsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setActiveFipRow(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setActiveFipRow(row);
+                    setAssociateOpen(true);
+                  }}
+                >
+                  Associate
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setActiveFipRow(row);
+                    setDisassociateOpen(true);
+                  }}
+                >
+                  Disassociate
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -294,6 +336,42 @@ export function ComputeFloatingIPsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <AllocateFloatingIPDrawer isOpen={allocateOpen} onClose={() => setAllocateOpen(false)} />
+      <EditFloatingIPDrawer
+        isOpen={editOpen}
+        onClose={() => {
+          setEditOpen(false);
+          setActiveFipRow(null);
+        }}
+        floatingIpAddress={activeFipRow?.floatingIp}
+      />
+      <AssociateFloatingIPToPortDrawer
+        isOpen={associateOpen}
+        onClose={() => {
+          setAssociateOpen(false);
+          setActiveFipRow(null);
+        }}
+        floatingIpAddress={activeFipRow?.floatingIp}
+      />
+      <DisassociateFloatingIPDrawer
+        isOpen={disassociateOpen}
+        onClose={() => {
+          setDisassociateOpen(false);
+          setActiveFipRow(null);
+        }}
+        floatingIpAddress={activeFipRow?.floatingIp}
+        associatedTo={
+          activeFipRow
+            ? `${activeFipRow.port} · ${activeFipRow.fixedIp !== '—' ? activeFipRow.fixedIp : '—'}`
+            : undefined
+        }
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

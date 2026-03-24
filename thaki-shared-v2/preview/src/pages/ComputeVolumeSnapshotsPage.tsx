@@ -12,6 +12,12 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { CreateVolumeFromVolumeSnapshotDrawer } from '../drawers/compute/volume/CreateVolumeFromVolumeSnapshotDrawer';
+import { EditVolumeSnapshotDrawer } from '../drawers/compute/volume/EditVolumeSnapshotDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type VolumeSnapshotStatus = 'available' | 'error';
 
@@ -110,6 +116,15 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'volume', label: 'Volume', visible: true },
+  { key: 'size', label: 'Size', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeVolumeSnapshotsPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -117,6 +132,10 @@ export function ComputeVolumeSnapshotsPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [drawerSnapshot, setDrawerSnapshot] = useState<VolumeSnapshot | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -236,7 +255,7 @@ export function ComputeVolumeSnapshotsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -297,8 +316,23 @@ export function ComputeVolumeSnapshotsPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerSnapshot(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerSnapshot(row);
+                    setCreateVolumeOpen(true);
+                  }}
+                >
+                  Create volume from snapshot
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => {}} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -306,6 +340,22 @@ export function ComputeVolumeSnapshotsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <EditVolumeSnapshotDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        snapshotId={drawerSnapshot?.id}
+        initialData={drawerSnapshot ? { name: drawerSnapshot.name, description: '' } : undefined}
+      />
+      <CreateVolumeFromVolumeSnapshotDrawer
+        isOpen={createVolumeOpen}
+        onClose={() => setCreateVolumeOpen(false)}
+        snapshotName={drawerSnapshot?.name ?? ''}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

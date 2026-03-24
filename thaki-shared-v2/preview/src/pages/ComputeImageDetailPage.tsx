@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -7,8 +8,25 @@ import { Button } from '@shared/components/Button';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
-import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconChevronDown, IconListDetails } from '@tabler/icons-react';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import {
+  EditImageDrawer,
+  type EditImageVisibility,
+} from '../drawers/compute/image/EditImageDrawer';
+import { ManageMetadataDrawer } from '../drawers/compute/misc/ManageMetadataDrawer';
+
+function parseGiBToNumber(s: string): number {
+  const m = /^([\d.]+)\s*GiB/i.exec(s.trim());
+  return m ? parseFloat(m[1]) : 20;
+}
+
+function parseRamToMiB(s: string): number {
+  const gi = /^([\d.]+)\s*GiB/i.exec(s.trim());
+  if (gi) return Math.round(parseFloat(gi[1]) * 1024);
+  const mi = /^([\d.]+)\s*MiB/i.exec(s.trim());
+  return mi ? Math.round(parseFloat(mi[1])) : 2048;
+}
 
 type ImageStatus = 'active' | 'queued' | 'error';
 type ImageType = 'image' | 'snapshot';
@@ -87,6 +105,8 @@ export function ComputeImageDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [metadataDrawerOpen, setMetadataDrawerOpen] = useState(false);
 
   const img = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -124,9 +144,14 @@ export function ComputeImageDetailPage() {
         </Button>
       )}
     >
-      <ContextMenu.Item action={() => {}}>
+      <ContextMenu.Item action={() => setEditDrawerOpen(true)}>
         <span className="inline-flex items-center gap-1">
           <IconEdit size={12} stroke={1.5} /> Edit
+        </span>
+      </ContextMenu.Item>
+      <ContextMenu.Item action={() => setMetadataDrawerOpen(true)}>
+        <span className="inline-flex items-center gap-1">
+          <IconListDetails size={12} stroke={1.5} /> Manage metadata
         </span>
       </ContextMenu.Item>
       <ContextMenu.Item action={() => {}} danger>
@@ -155,6 +180,25 @@ export function ComputeImageDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditImageDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        imageId={img.id}
+        initialData={{
+          name: img.name,
+          description: img.description,
+          minDiskGiB: parseGiBToNumber(img.minDisk),
+          minRamMiB: parseRamToMiB(img.minRam),
+          visibility: (img.visibility === 'public' ? 'Public' : 'Private') as EditImageVisibility,
+          protected: false,
+        }}
+      />
+      <ManageMetadataDrawer
+        isOpen={metadataDrawerOpen}
+        onClose={() => setMetadataDrawerOpen(false)}
+        imageName={img.name}
+      />
     </div>
   );
 }

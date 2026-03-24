@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -9,6 +10,7 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import { EditInstanceSnapshotDrawer } from '../drawers/compute/image/EditInstanceSnapshotDrawer';
 
 type SnapshotStatus = 'active' | 'queued' | 'saving' | 'error';
 
@@ -21,6 +23,7 @@ interface InstanceSnapshotDetail {
   createdAt: string;
   instanceId: string;
   instanceName: string;
+  description?: string;
 }
 
 const baseSnap: InstanceSnapshotDetail = {
@@ -32,6 +35,7 @@ const baseSnap: InstanceSnapshotDetail = {
   createdAt: 'Mar 10, 2025 07:15:30',
   instanceId: 'vm-001',
   instanceName: 'worker-node-01',
+  description: 'Production web tier snapshot.',
 };
 
 const mockMap: Record<string, InstanceSnapshotDetail> = {
@@ -58,6 +62,7 @@ const defaultDetail: InstanceSnapshotDetail = {
   createdAt: '-',
   instanceId: '-',
   instanceName: '-',
+  description: '',
 };
 
 function snapshotStatusVariant(s: SnapshotStatus): StatusVariant {
@@ -77,6 +82,7 @@ export function ComputeInstanceSnapshotDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const s = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -112,7 +118,7 @@ export function ComputeInstanceSnapshotDetailPage() {
         </Button>
       )}
     >
-      <ContextMenu.Item action={() => {}}>
+      <ContextMenu.Item action={() => setEditDrawerOpen(true)}>
         <span className="inline-flex items-center gap-1">
           <IconEdit size={12} stroke={1.5} /> Edit
         </span>
@@ -143,6 +149,13 @@ export function ComputeInstanceSnapshotDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditInstanceSnapshotDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        snapshotId={s.id}
+        initialData={{ name: s.name, description: s.description ?? '' }}
+      />
     </div>
   );
 }

@@ -15,6 +15,10 @@ import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSea
 import { EditUserGroupDrawer } from '../drawers/EditUserGroupDrawer';
 import { ManageUsersDrawer } from '../drawers/ManageUsersDrawer';
 import { ManageRolesDrawer } from '../drawers/ManageRolesDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type GroupType = 'Built-in' | 'Custom';
 type GroupStatus = 'active' | 'inactive';
@@ -162,6 +166,17 @@ const filterKeys: FilterKey[] = [
   { key: 'roles', label: 'Roles', type: 'input', placeholder: 'Enter role name...' },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'description', label: 'Description', visible: true },
+  { key: 'type', label: 'Type', visible: true },
+  { key: 'userCount', label: 'Users', visible: true },
+  { key: 'roles', label: 'Roles', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function IAMUserGroupsPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -173,6 +188,7 @@ export function IAMUserGroupsPage() {
   const [manageUsersGroup, setManageUsersGroup] = useState('');
   const [manageRolesOpen, setManageRolesOpen] = useState(false);
   const [manageRolesGroup, setManageRolesGroup] = useState('');
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredGroups = useMemo(() => {
     if (appliedFilters.length === 0) return mockUserGroups;
@@ -289,7 +305,7 @@ export function IAMUserGroupsPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -412,6 +428,11 @@ export function IAMUserGroupsPage() {
         isOpen={manageRolesOpen}
         onClose={() => setManageRolesOpen(false)}
         userName={manageRolesGroup}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
       />
     </div>
   );

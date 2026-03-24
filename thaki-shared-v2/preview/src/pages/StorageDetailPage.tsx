@@ -14,6 +14,7 @@ import { CopyButton } from '@shared/components/CopyButton';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { getStorageListConfig, type StorageSlug, STORAGE_SLUGS } from '../data/storageListConfig';
+import { EditObjectDrawer } from '../drawers/storage/EditObjectDrawer';
 
 function isStorageSlug(v: string | undefined): v is StorageSlug {
   return !!v && (STORAGE_SLUGS as readonly string[]).includes(v);
@@ -661,6 +662,8 @@ function BucketDetail({ id }: { id: string }) {
   const row = config.rows.find((r) => r.id === id);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editObjectOpen, setEditObjectOpen] = useState(false);
+  const [editObjectName, setEditObjectName] = useState('');
 
   if (!row) return <div className="text-text-muted">Bucket not found.</div>;
 
@@ -746,6 +749,7 @@ function BucketDetail({ id }: { id: string }) {
                 { key: 'key', header: 'Key', sortable: true },
                 { key: 'size', header: 'Size' },
                 { key: 'lastModified', header: 'Last modified' },
+                { key: '__actions', header: 'Actions', width: 88, align: 'center' },
               ]}
               rows={[
                 { id: 'o1', key: 'index.html', size: '4.2 KiB', lastModified: '2025-03-10' },
@@ -768,9 +772,34 @@ function BucketDetail({ id }: { id: string }) {
                   <Table.Td rowData={r} column={{ key: 'lastModified', header: 'Last modified' }}>
                     {r.lastModified}
                   </Table.Td>
+                  <Table.Td
+                    rowData={r}
+                    column={{ key: '__actions', header: 'Actions', width: 88, align: 'center' }}
+                    preventClickPropagation
+                  >
+                    <Button
+                      appearance="outline"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        setEditObjectName(r.key);
+                        setEditObjectOpen(true);
+                      }}
+                    >
+                      <IconEdit size={12} /> Edit
+                    </Button>
+                  </Table.Td>
                 </Table.Tr>
               ))}
             </Table>
+            <EditObjectDrawer
+              isOpen={editObjectOpen}
+              onClose={() => {
+                setEditObjectOpen(false);
+                setEditObjectName('');
+              }}
+              objectName={editObjectName || 'object'}
+            />
           </div>
         </Tab>
       </Tabs>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -11,6 +12,10 @@ import { Table } from '@shared/components/Table';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
+import { CreateVolumeBackupDrawer } from '../drawers/compute/volume/CreateVolumeBackupDrawer';
+import { CreateVolumeSnapshotDrawer } from '../drawers/compute/volume/CreateVolumeSnapshotDrawer';
+import { EditVolumeDrawer } from '../drawers/compute/volume/EditVolumeDrawer';
+import { ExtendVolumeDrawer } from '../drawers/compute/volume/ExtendVolumeDrawer';
 
 type VolumeStatus = 'active' | 'in-use' | 'error' | 'pending';
 type VolumeType = 'SSD' | 'NVMe' | 'HDD';
@@ -115,10 +120,22 @@ const snapColumns: TableColumn[] = [
   { key: 'createdAt', header: 'Created at' },
 ];
 
+function volumeSizeToGiB(size: string): number {
+  const g = size.match(/^([\d.]+)\s*GiB/i);
+  if (g) return Math.max(1, Math.floor(Number(g[1])));
+  const t = size.match(/^([\d.]+)\s*TiB/i);
+  if (t) return Math.max(1, Math.floor(Number(t[1]) * 1024));
+  return 10;
+}
+
 export function ComputeVolumeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editOpen, setEditOpen] = useState(false);
+  const [extendOpen, setExtendOpen] = useState(false);
+  const [snapshotOpen, setSnapshotOpen] = useState(false);
+  const [backupOpen, setBackupOpen] = useState(false);
 
   const v = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -219,6 +236,30 @@ export function ComputeVolumeDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditVolumeDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        volumeId={v.id}
+        initialData={{ name: v.name, description: '' }}
+      />
+      <ExtendVolumeDrawer
+        isOpen={extendOpen}
+        onClose={() => setExtendOpen(false)}
+        volumeName={v.name}
+        currentSizeLabel={v.size}
+        currentSizeGiB={volumeSizeToGiB(v.size)}
+      />
+      <CreateVolumeSnapshotDrawer
+        isOpen={snapshotOpen}
+        onClose={() => setSnapshotOpen(false)}
+        volumeName={v.name}
+      />
+      <CreateVolumeBackupDrawer
+        isOpen={backupOpen}
+        onClose={() => setBackupOpen(false)}
+        volumeName={v.name}
+      />
     </div>
   );
 }

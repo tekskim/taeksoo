@@ -28,6 +28,21 @@ import {
   IconLock,
   IconLockOpen,
 } from '@tabler/icons-react';
+import { EditInstanceDrawer } from '../drawers/compute/instance/EditInstanceDrawer';
+import { CreateInstanceSnapshotDrawer } from '../drawers/compute/instance/CreateInstanceSnapshotDrawer';
+import { LockSettingDrawer } from '../drawers/compute/instance/LockSettingDrawer';
+import { AttachVolumeDrawer } from '../drawers/compute/instance/AttachVolumeDrawer';
+import { DetachVolumeDrawer } from '../drawers/compute/instance/DetachVolumeDrawer';
+import { AttachInterfaceDrawer } from '../drawers/compute/instance/AttachInterfaceDrawer';
+import { DetachInterfaceDrawer } from '../drawers/compute/instance/DetachInterfaceDrawer';
+import { AssociateFloatingIPDrawer } from '../drawers/compute/instance/AssociateFloatingIPDrawer';
+import { DisassociateFloatingIPDrawer } from '../drawers/compute/instance/DisassociateFloatingIPDrawer';
+import { ManageSecurityGroupsDrawer } from '../drawers/compute/instance/ManageSecurityGroupsDrawer';
+import { ManageTagsDrawer } from '../drawers/compute/instance/ManageTagsDrawer';
+import { ResizeInstanceDrawer } from '../drawers/compute/instance/ResizeInstanceDrawer';
+import { RebuildInstanceDrawer } from '../drawers/compute/instance/RebuildInstanceDrawer';
+import { RescueInstanceDrawer } from '../drawers/compute/instance/RescueInstanceDrawer';
+import { LiveMigrateInstanceDrawer } from '../drawers/compute/instance/LiveMigrateInstanceDrawer';
 
 type InstanceStatus = 'active' | 'shutoff' | 'building' | 'error' | 'paused';
 
@@ -562,6 +577,9 @@ export function ComputeInstanceDetailPage() {
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
   const instance = id ? (mockInstancesMap[id] ?? defaultInstanceDetail) : defaultInstanceDetail;
+  const [drawerOpen, setDrawerOpen] = useState<string | null>(null);
+  const openDrawer = (name: string) => setDrawerOpen(name);
+  const closeDrawer = () => setDrawerOpen(null);
   const detailFields = useMemo(() => getDetailCardFields(instance), [instance]);
 
   const itemsPerPage = 10;
@@ -683,25 +701,32 @@ export function ComputeInstanceDetailPage() {
           <ContextMenu.Item action={() => {}} danger>
             Suspend
           </ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('rescue')}>Rescue</ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Storage & snapshot" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => {}}>Attach volume</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => openDrawer('attachVol')}>Attach volume</ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('detachVol')} danger>
             Detach volume
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Create instance snapshot</ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('snapshot')}>
+            Create instance snapshot
+          </ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Network" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => {}}>Attach interface</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => openDrawer('attachIf')}>
+            Attach interface
+          </ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('detachIf')} danger>
             Detach interface
           </ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Associate floating IP</ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('assocFip')}>
+            Associate floating IP
+          </ContextMenu.Item>
         </ContextMenu.SubItems>
         <ContextMenu.SubItems label="Configuration" subContextMenuDirection="right-top">
-          <ContextMenu.Item action={() => {}}>Lock setting</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
-          <ContextMenu.Item action={() => {}} danger>
+          <ContextMenu.Item action={() => openDrawer('lock')}>Lock setting</ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('edit')}>Edit</ContextMenu.Item>
+          <ContextMenu.Item action={() => openDrawer('rebuild')} danger>
             Rebuild
           </ContextMenu.Item>
         </ContextMenu.SubItems>
@@ -774,7 +799,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex justify-between items-center w-full">
                 <h2 className="text-14 font-semibold leading-5 text-text m-0">Volumes</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => openDrawer('attachVol')}
+                >
                   <IconSquarePlus size={12} stroke={1.5} /> Attach volume
                 </Button>
               </div>
@@ -868,7 +898,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex justify-between items-center w-full">
                 <h2 className="text-14 font-semibold leading-5 text-text m-0">Interfaces</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => openDrawer('attachIf')}
+                >
                   <IconSquarePlus size={12} stroke={1.5} /> Attach interface
                 </Button>
               </div>
@@ -956,7 +991,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex justify-between items-center w-full">
                 <h2 className="text-14 font-semibold leading-5 text-text m-0">Floating IPs</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => openDrawer('assocFip')}
+                >
                   <IconLinkPlus size={12} stroke={1.5} /> Associate floating IP
                 </Button>
               </div>
@@ -1036,7 +1076,12 @@ export function ComputeInstanceDetailPage() {
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex justify-between items-center w-full">
                 <h2 className="text-14 font-semibold leading-5 text-text m-0">Security groups</h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => openDrawer('manageSg')}
+                >
                   <IconSettings size={12} stroke={1.5} /> Manage security group
                 </Button>
               </div>
@@ -1123,7 +1168,12 @@ export function ComputeInstanceDetailPage() {
                 <h2 className="text-14 font-semibold leading-5 text-text m-0">
                   Instance snapshots
                 </h2>
-                <Button variant="secondary" appearance="outline" size="sm">
+                <Button
+                  variant="secondary"
+                  appearance="outline"
+                  size="sm"
+                  onClick={() => openDrawer('snapshot')}
+                >
                   <IconCirclePlus size={12} stroke={1.5} /> Create snapshot
                 </Button>
               </div>
@@ -1202,6 +1252,82 @@ export function ComputeInstanceDetailPage() {
           </Tab>
         </Tabs>
       </div>
+      <EditInstanceDrawer
+        isOpen={drawerOpen === 'edit'}
+        onClose={closeDrawer}
+        instanceId={instance.id}
+        initialData={{ name: instance.name, description: '' }}
+      />
+      <CreateInstanceSnapshotDrawer
+        isOpen={drawerOpen === 'snapshot'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <LockSettingDrawer
+        isOpen={drawerOpen === 'lock'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <AttachVolumeDrawer
+        isOpen={drawerOpen === 'attachVol'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <DetachVolumeDrawer
+        isOpen={drawerOpen === 'detachVol'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <AttachInterfaceDrawer
+        isOpen={drawerOpen === 'attachIf'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <DetachInterfaceDrawer
+        isOpen={drawerOpen === 'detachIf'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <AssociateFloatingIPDrawer
+        isOpen={drawerOpen === 'assocFip'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <DisassociateFloatingIPDrawer
+        isOpen={drawerOpen === 'disassocFip'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <ManageSecurityGroupsDrawer
+        isOpen={drawerOpen === 'manageSg'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <ManageTagsDrawer
+        isOpen={drawerOpen === 'manageTags'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <ResizeInstanceDrawer
+        isOpen={drawerOpen === 'resize'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <RebuildInstanceDrawer
+        isOpen={drawerOpen === 'rebuild'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <RescueInstanceDrawer
+        isOpen={drawerOpen === 'rescue'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
+      <LiveMigrateInstanceDrawer
+        isOpen={drawerOpen === 'migrate'}
+        onClose={closeDrawer}
+        instanceName={instance.name}
+      />
     </div>
   );
 }

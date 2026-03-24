@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { DetailPageHeader } from '@shared/components/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader';
@@ -9,6 +10,9 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import { EditFloatingIPDrawer } from '../drawers/compute/floating-ip/EditFloatingIPDrawer';
+import { AssociateFloatingIPToPortDrawer } from '../drawers/compute/floating-ip/AssociateFloatingIPToPortDrawer';
+import { DisassociateFloatingIPDrawer } from '../drawers/compute/floating-ip/DisassociateFloatingIPDrawer';
 
 interface FloatingIPDetail {
   floatingIp: string;
@@ -57,6 +61,9 @@ export function ComputeFloatingIPDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editOpen, setEditOpen] = useState(false);
+  const [associateOpen, setAssociateOpen] = useState(false);
+  const [disassociateOpen, setDisassociateOpen] = useState(false);
 
   const data =
     id && mockFloatingIPs[id]
@@ -91,7 +98,7 @@ export function ComputeFloatingIPDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button variant="secondary" appearance="outline" size="sm" onClick={() => setEditOpen(true)}>
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <ContextMenu.Root
@@ -103,9 +110,8 @@ export function ComputeFloatingIPDetailPage() {
           </Button>
         )}
       >
-        <ContextMenu.Item action={() => console.log('Disassociate', id)}>
-          Disassociate
-        </ContextMenu.Item>
+        <ContextMenu.Item action={() => setAssociateOpen(true)}>Associate</ContextMenu.Item>
+        <ContextMenu.Item action={() => setDisassociateOpen(true)}>Disassociate</ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Delete', id)} danger>
           <IconTrash size={12} stroke={1.5} /> Delete
         </ContextMenu.Item>
@@ -128,6 +134,23 @@ export function ComputeFloatingIPDetailPage() {
           <DetailCard title="Floating IP" fields={detailFields} />
         </Tab>
       </Tabs>
+
+      <EditFloatingIPDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        floatingIpAddress={data.floatingIp}
+      />
+      <AssociateFloatingIPToPortDrawer
+        isOpen={associateOpen}
+        onClose={() => setAssociateOpen(false)}
+        floatingIpAddress={data.floatingIp}
+      />
+      <DisassociateFloatingIPDrawer
+        isOpen={disassociateOpen}
+        onClose={() => setDisassociateOpen(false)}
+        floatingIpAddress={data.floatingIp}
+        associatedTo={`${data.port} · ${data.fixedIp}`}
+      />
     </div>
   );
 }

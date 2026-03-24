@@ -91,9 +91,7 @@ export function EntryPage() {
       {/* Main Content */}
       <main className="flex-1">
         <div className="max-w-[960px] mx-auto px-8 pt-12 pb-16">
-          <h2 className="text-[28px] leading-[36px] font-semibold text-text mb-8">
-            shared-v2 Preview
-          </h2>
+          <h2 className="text-16 leading-24 font-semibold text-text mb-8">shared-v2 Preview</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {appCards.map((card) => (
               <AppCardComponent key={card.id} card={card} />

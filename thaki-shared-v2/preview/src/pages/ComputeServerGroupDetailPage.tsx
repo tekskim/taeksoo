@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -8,6 +9,7 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Table } from '@shared/components/Table';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import { EditServerGroupDrawer } from '../drawers/compute/misc/EditServerGroupDrawer';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 
 type ServerGroupPolicy = 'affinity' | 'anti-affinity' | 'soft-affinity' | 'soft-anti-affinity';
@@ -80,6 +82,7 @@ export function ComputeServerGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const g = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -108,7 +111,7 @@ export function ComputeServerGroupDetailPage() {
         </Button>
       )}
     >
-      <ContextMenu.Item action={() => {}}>
+      <ContextMenu.Item action={() => setEditDrawerOpen(true)}>
         <span className="inline-flex items-center gap-1">
           <IconEdit size={12} stroke={1.5} /> Edit
         </span>
@@ -164,6 +167,13 @@ export function ComputeServerGroupDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditServerGroupDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        serverGroupId={g.id}
+        initialData={{ name: g.name, description: g.description }}
+      />
     </div>
   );
 }

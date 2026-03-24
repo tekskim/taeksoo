@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -7,6 +8,7 @@ import { Button } from '@shared/components/Button';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import { EditKeyPairDrawer } from '../drawers/compute/misc/EditKeyPairDrawer';
 
 interface KeyPairDetail {
   id: string;
@@ -15,6 +17,7 @@ interface KeyPairDetail {
   fingerprint: string;
   createdAt: string;
   userId: string;
+  description?: string;
 }
 
 const mockMap: Record<string, KeyPairDetail> = {
@@ -25,6 +28,7 @@ const mockMap: Record<string, KeyPairDetail> = {
     fingerprint: 'SHA256:ab12cd34ef567890abcdef1234567890abcdef12',
     createdAt: 'Mar 10, 2025 11:22:33',
     userId: 'user-88421',
+    description: 'Deployment automation key.',
   },
   'kp-002': {
     id: 'kp-002',
@@ -43,12 +47,14 @@ const defaultDetail: KeyPairDetail = {
   fingerprint: '-',
   createdAt: '-',
   userId: '-',
+  description: '',
 };
 
 export function ComputeKeyPairDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
   const kp = id ? (mockMap[id] ?? defaultDetail) : defaultDetail;
 
@@ -78,7 +84,7 @@ export function ComputeKeyPairDetailPage() {
         </Button>
       )}
     >
-      <ContextMenu.Item action={() => {}}>
+      <ContextMenu.Item action={() => setEditDrawerOpen(true)}>
         <span className="inline-flex items-center gap-1">
           <IconEdit size={12} stroke={1.5} /> Edit
         </span>
@@ -109,6 +115,13 @@ export function ComputeKeyPairDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <EditKeyPairDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => setEditDrawerOpen(false)}
+        keyPairName={kp.name}
+        initialDescription={kp.description ?? ''}
+      />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { DetailPageHeader } from '@shared/components/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader';
@@ -8,7 +9,10 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { Table } from '@shared/components/Table';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import type { TableColumn } from '@shared/components/Table/Table.types';
-import { IconEdit, IconTrash, IconChevronDown } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconChevronDown, IconPlus } from '@tabler/icons-react';
+import { EditSecurityGroupDrawer } from '../drawers/compute/security-group/EditSecurityGroupDrawer';
+import { CreateSecurityGroupRuleDrawer } from '../drawers/compute/security-group/CreateSecurityGroupRuleDrawer';
+import { CreateAllowedAddressPairDrawer } from '../drawers/compute/security-group/CreateAllowedAddressPairDrawer';
 
 interface SecurityGroupDetail {
   name: string;
@@ -62,6 +66,9 @@ export function ComputeSecurityGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
+  const [editOpen, setEditOpen] = useState(false);
+  const [createRuleOpen, setCreateRuleOpen] = useState(false);
+  const [allowedPairOpen, setAllowedPairOpen] = useState(false);
 
   const data =
     id && mockSecurityGroups[id]
@@ -88,7 +95,7 @@ export function ComputeSecurityGroupDetailPage() {
 
   const actions = (
     <div className="flex items-center gap-1">
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button variant="secondary" appearance="outline" size="sm" onClick={() => setEditOpen(true)}>
         <IconEdit size={12} stroke={1.5} /> Edit
       </Button>
       <ContextMenu.Root
@@ -100,8 +107,9 @@ export function ComputeSecurityGroupDetailPage() {
           </Button>
         )}
       >
-        <ContextMenu.Item action={() => console.log('Manage rules', id)}>
-          Manage rules
+        <ContextMenu.Item action={() => setCreateRuleOpen(true)}>Manage rules</ContextMenu.Item>
+        <ContextMenu.Item action={() => setAllowedPairOpen(true)}>
+          Add allowed address pair
         </ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Delete', id)} danger>
           <IconTrash size={12} stroke={1.5} /> Delete
@@ -126,7 +134,17 @@ export function ComputeSecurityGroupDetailPage() {
         </Tab>
         <Tab id="rules" label="Rules">
           <div className="flex flex-col gap-4">
-            <h3 className="text-14 font-semibold text-text m-0">Rules</h3>
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-14 font-semibold text-text m-0">Rules</h3>
+              <Button
+                variant="secondary"
+                appearance="outline"
+                size="sm"
+                onClick={() => setCreateRuleOpen(true)}
+              >
+                <IconPlus size={12} stroke={1.5} /> Add rule
+              </Button>
+            </div>
             <Table columns={ruleColumns} rows={data.rules}>
               {data.rules.map((row) => (
                 <Table.Tr key={row.id} rowData={row}>
@@ -148,6 +166,24 @@ export function ComputeSecurityGroupDetailPage() {
           </div>
         </Tab>
       </Tabs>
+
+      <EditSecurityGroupDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        securityGroupId={id}
+        initialName={data.name}
+        initialDescription={data.description}
+      />
+      <CreateSecurityGroupRuleDrawer
+        isOpen={createRuleOpen}
+        onClose={() => setCreateRuleOpen(false)}
+        securityGroupName={data.name}
+      />
+      <CreateAllowedAddressPairDrawer
+        isOpen={allowedPairOpen}
+        onClose={() => setAllowedPairOpen(false)}
+        portName="demo-port-01"
+      />
     </div>
   );
 }

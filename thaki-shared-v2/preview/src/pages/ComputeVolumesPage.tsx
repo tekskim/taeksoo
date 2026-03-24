@@ -12,6 +12,22 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { AcceptVolumeTransferDrawer } from '../drawers/compute/volume/AcceptVolumeTransferDrawer';
+import { BootSettingDrawer } from '../drawers/compute/volume/BootSettingDrawer';
+import { ChangeVolumeTypeDrawer } from '../drawers/compute/volume/ChangeVolumeTypeDrawer';
+import { CloneVolumeDrawer } from '../drawers/compute/volume/CloneVolumeDrawer';
+import { CreateImageFromVolumeDrawer } from '../drawers/compute/volume/CreateImageFromVolumeDrawer';
+import { CreateTransferDrawer } from '../drawers/compute/volume/CreateTransferDrawer';
+import { CreateVolumeBackupDrawer } from '../drawers/compute/volume/CreateVolumeBackupDrawer';
+import { CreateVolumeSnapshotDrawer } from '../drawers/compute/volume/CreateVolumeSnapshotDrawer';
+import { EditVolumeDrawer } from '../drawers/compute/volume/EditVolumeDrawer';
+import { ExtendVolumeDrawer } from '../drawers/compute/volume/ExtendVolumeDrawer';
+import { MigrateVolumeDrawer } from '../drawers/compute/volume/MigrateVolumeDrawer';
+import { RestoreFromSnapshotDrawer } from '../drawers/compute/volume/RestoreFromSnapshotDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type VolumeStatus = 'active' | 'in-use' | 'error' | 'pending';
 type VolumeType = 'SSD' | 'NVMe' | 'HDD';
@@ -134,6 +150,24 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+function volumeSizeToGiB(size: string): number {
+  const g = size.match(/^([\d.]+)\s*GiB/i);
+  if (g) return Math.max(1, Math.floor(Number(g[1])));
+  const t = size.match(/^([\d.]+)\s*TiB/i);
+  if (t) return Math.max(1, Math.floor(Number(t[1]) * 1024));
+  return 10;
+}
+
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'size', label: 'Size', visible: true },
+  { key: 'type', label: 'Type', visible: true },
+  { key: 'attachedTo', label: 'Attached To', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeVolumesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -141,6 +175,20 @@ export function ComputeVolumesPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [drawerVolume, setDrawerVolume] = useState<Volume | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [extendOpen, setExtendOpen] = useState(false);
+  const [changeTypeOpen, setChangeTypeOpen] = useState(false);
+  const [cloneOpen, setCloneOpen] = useState(false);
+  const [snapshotOpen, setSnapshotOpen] = useState(false);
+  const [backupOpen, setBackupOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [acceptTransferOpen, setAcceptTransferOpen] = useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
+  const [bootOpen, setBootOpen] = useState(false);
+  const [restoreOpen, setRestoreOpen] = useState(false);
+  const [migrateOpen, setMigrateOpen] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -189,9 +237,14 @@ export function ComputeVolumesPage() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
         <Title title="Volumes" />
-        <Button variant="primary" size="md" onClick={() => navigate('/compute/volumes/create')}>
-          Create volume
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" size="md" onClick={() => setAcceptTransferOpen(true)}>
+            Accept volume transfer
+          </Button>
+          <Button variant="primary" size="md" onClick={() => navigate('/compute/volumes/create')}>
+            Create volume
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -257,7 +310,7 @@ export function ComputeVolumesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -321,8 +374,96 @@ export function ComputeVolumesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setEditOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setExtendOpen(true);
+                  }}
+                >
+                  Extend
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setChangeTypeOpen(true);
+                  }}
+                >
+                  Change type
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setMigrateOpen(true);
+                  }}
+                >
+                  Migrate
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setCloneOpen(true);
+                  }}
+                >
+                  Clone
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setSnapshotOpen(true);
+                  }}
+                >
+                  Create snapshot
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setBackupOpen(true);
+                  }}
+                >
+                  Create backup
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setTransferOpen(true);
+                  }}
+                >
+                  Create transfer
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setImageOpen(true);
+                  }}
+                >
+                  Create image
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setBootOpen(true);
+                  }}
+                >
+                  Boot setting
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setDrawerVolume(row);
+                    setRestoreOpen(true);
+                  }}
+                >
+                  Restore from snapshot
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => {}}>Detach</ContextMenu.Item>
+                <ContextMenu.Item action={() => {}} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -330,6 +471,78 @@ export function ComputeVolumesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditVolumeDrawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        volumeId={drawerVolume?.id ?? ''}
+        initialData={drawerVolume ? { name: drawerVolume.name, description: '' } : undefined}
+      />
+      <ExtendVolumeDrawer
+        isOpen={extendOpen}
+        onClose={() => setExtendOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+        currentSizeLabel={drawerVolume?.size ?? '100 GiB'}
+        currentSizeGiB={drawerVolume ? volumeSizeToGiB(drawerVolume.size) : 100}
+      />
+      <ChangeVolumeTypeDrawer
+        isOpen={changeTypeOpen}
+        onClose={() => setChangeTypeOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+        initialType={drawerVolume?.type ?? 'SSD'}
+      />
+      <MigrateVolumeDrawer
+        isOpen={migrateOpen}
+        onClose={() => setMigrateOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+      />
+      <CloneVolumeDrawer
+        isOpen={cloneOpen}
+        onClose={() => setCloneOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+        volumeType={drawerVolume?.type ?? 'SSD'}
+        volumeSize={drawerVolume?.size ?? ''}
+      />
+      <CreateVolumeSnapshotDrawer
+        isOpen={snapshotOpen}
+        onClose={() => setSnapshotOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+      />
+      <CreateVolumeBackupDrawer
+        isOpen={backupOpen}
+        onClose={() => setBackupOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+      />
+      <CreateTransferDrawer
+        isOpen={transferOpen}
+        onClose={() => setTransferOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+      />
+      <CreateImageFromVolumeDrawer
+        isOpen={imageOpen}
+        onClose={() => setImageOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+      />
+      <BootSettingDrawer
+        isOpen={bootOpen}
+        onClose={() => setBootOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+        initialBootable={false}
+      />
+      <RestoreFromSnapshotDrawer
+        isOpen={restoreOpen}
+        onClose={() => setRestoreOpen(false)}
+        volumeName={drawerVolume?.name ?? ''}
+      />
+      <AcceptVolumeTransferDrawer
+        isOpen={acceptTransferOpen}
+        onClose={() => setAcceptTransferOpen(false)}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }

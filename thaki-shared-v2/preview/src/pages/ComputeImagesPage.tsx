@@ -12,6 +12,15 @@ import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import {
+  EditImageDrawer,
+  type EditImageVisibility,
+} from '../drawers/compute/image/EditImageDrawer';
+import { CreateVolumeFromImageDrawer } from '../drawers/compute/volume/CreateVolumeFromImageDrawer';
+import {
+  ViewPreferencesDrawer,
+  type ColumnPreference,
+} from '../drawers/common/ViewPreferencesDrawer';
 
 type ImageStatus = 'active' | 'queued' | 'error';
 type ImageType = 'image' | 'snapshot';
@@ -103,6 +112,16 @@ const mockRows: ComputeImage[] = [
   },
 ];
 
+function imageSizeToMinGiB(size: string): number {
+  const g = size.match(/^([\d.]+)\s*GiB/i);
+  if (g) return Math.max(1, Math.ceil(Number(g[1])));
+  const m = size.match(/^([\d.]+)\s*MiB/i);
+  if (m) return Math.max(1, Math.ceil(Number(m[1]) / 1024) || 1);
+  const t = size.match(/^([\d.]+)\s*TiB/i);
+  if (t) return Math.max(1, Math.ceil(Number(t[1]) * 1024));
+  return 1;
+}
+
 const statusMap: Record<ImageStatus, StatusVariant> = {
   active: 'active',
   queued: 'pending',
@@ -131,6 +150,16 @@ const filterKeys: FilterKey[] = [
   },
 ];
 
+const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
+  { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'type', label: 'Type', visible: true },
+  { key: 'size', label: 'Size', visible: true },
+  { key: 'visibility', label: 'Visibility', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'actions', label: 'Action', visible: true, locked: true },
+];
+
 export function ComputeImagesPage() {
   const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
@@ -138,6 +167,12 @@ export function ComputeImagesPage() {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<ComputeImage | null>(null);
+  const [createVolumeFromImageRow, setCreateVolumeFromImageRow] = useState<ComputeImage | null>(
+    null
+  );
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return mockRows;
@@ -254,7 +289,7 @@ export function ComputeImagesPage() {
         size={itemsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
-        onSettingClick={() => {}}
+        onSettingClick={() => setPrefsOpen(true)}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
       />
@@ -318,7 +353,21 @@ export function ComputeImagesPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => console.log('Edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setEditTarget(row);
+                    setEditDrawerOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setCreateVolumeFromImageRow(row);
+                  }}
+                >
+                  Create volume from image
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>
@@ -327,6 +376,41 @@ export function ComputeImagesPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+
+      <EditImageDrawer
+        isOpen={editDrawerOpen}
+        onClose={() => {
+          setEditDrawerOpen(false);
+          setEditTarget(null);
+        }}
+        imageId={editTarget?.id}
+        initialData={
+          editTarget
+            ? {
+                name: editTarget.name,
+                description: '',
+                minDiskGiB: 20,
+                minRamMiB: 2048,
+                visibility: (editTarget.visibility === 'public'
+                  ? 'Public'
+                  : 'Private') as EditImageVisibility,
+                protected: false,
+              }
+            : undefined
+        }
+      />
+
+      <CreateVolumeFromImageDrawer
+        isOpen={!!createVolumeFromImageRow}
+        onClose={() => setCreateVolumeFromImageRow(null)}
+        imageName={createVolumeFromImageRow?.name ?? ''}
+        minDiskGiB={createVolumeFromImageRow ? imageSizeToMinGiB(createVolumeFromImageRow.size) : 1}
+      />
+      <ViewPreferencesDrawer
+        isOpen={prefsOpen}
+        onClose={() => setPrefsOpen(false)}
+        columns={VIEW_PREFERENCE_COLUMNS}
+      />
     </div>
   );
 }
