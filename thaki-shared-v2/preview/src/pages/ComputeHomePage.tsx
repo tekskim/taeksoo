@@ -47,7 +47,12 @@ function ComputeQuotaBar({
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <ProgressBar value={used} max={total} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={total}
+        showValue={false}
+        variant={percentage >= 90 ? 'error' : percentage >= 70 ? 'warning' : 'success'}
+      />
     </div>
   );
 }
@@ -94,7 +99,12 @@ function InfraQuotaRow({
           <PercentageBadge percentage={percentage} />
         </div>
       </div>
-      <ProgressBar value={used} max={total} showValue={false} />
+      <ProgressBar
+        value={used}
+        max={total}
+        showValue={false}
+        variant={percentage >= 90 ? 'error' : percentage >= 70 ? 'warning' : 'success'}
+      />
     </div>
   );
 }

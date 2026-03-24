@@ -149,28 +149,9 @@ const sections: SidebarSection[] = [
       },
     ],
   },
-  {
-    id: 'operations',
-    label: 'Operations',
-    children: [
-      { id: 'dns-zones', label: 'DNS zones', path: '/compute/dns-zones', icon: WorldIconW },
-      {
-        id: 'backup-policies',
-        label: 'Backup policies',
-        path: '/compute/backup-policies',
-        icon: DatabaseExportIconW,
-      },
-      {
-        id: 'scheduled-tasks',
-        label: 'Scheduled tasks',
-        path: '/compute/scheduled-tasks',
-        icon: CalendarIconW,
-      },
-    ],
-  },
 ];
 
-const defaultOpenSections = ['compute', 'storage', 'network', 'operations'];
+const defaultOpenSections = ['compute', 'storage', 'network'];
 
 interface ComputeSidebarProps {
   isCollapsed: boolean;

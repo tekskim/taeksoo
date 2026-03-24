@@ -6,13 +6,14 @@ export const progressHeaderStyles = 'flex justify-between items-center';
 
 export const progressLabelStyles = 'text-text text-14 font-medium leading-5';
 
-export const progressPercentageStyles = 'text-text text-12 font-normal leading-4 flex items-center gap-1';
+export const progressPercentageStyles =
+  'text-text text-12 font-normal leading-4 flex items-center gap-1';
 
 export const progressInfinityStyles = 'flex items-center gap-1';
 
 export const progressDetailStyles = 'opacity-70';
 
-export const progressWrapperStyles = 'relative w-full block h-1';
+export const progressWrapperStyles = 'relative w-full block h-[3px]';
 
 export const progressTrackVariants = cva(
   'progress-track w-full h-full block rounded-lg overflow-hidden focus:outline-2 focus:outline-primary focus:outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
