@@ -31,7 +31,7 @@ export const createLayoutInnerStyles = cva('bg-surface min-h-full', {
   },
 });
 
-export const createLayoutHeaderStyles = cva('shrink-0 py-3');
+export const createLayoutHeaderStyles = cva('shrink-0 py-3 min-h-[32px]');
 
 export const createLayoutContentStyles = cva('flex gap-6 items-start w-full');
 
@@ -55,8 +55,8 @@ export const createLayoutSidebarStyles = cva(
 
 /**
  * Sidebar inner wrapper 스타일
- * Figma: bg-white, border, rounded-lg, pt-3 px-3 pb-4, gap-3
+ * TDS: bg-white, border, rounded-lg, p-4, gap-4
  */
 export const createLayoutSidebarInnerStyles = cva(
-  'flex flex-col gap-3 bg-surface border border-border rounded-base8 pt-3 px-3 pb-4'
+  'flex flex-col gap-4 bg-surface border border-border rounded-base8 p-4'
 );

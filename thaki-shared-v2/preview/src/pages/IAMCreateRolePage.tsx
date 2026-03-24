@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@shared/components/Button';
 import { Input } from '@shared/components/Input';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -8,7 +7,10 @@ import { Badge } from '@shared/components/Badge';
 import { Pagination } from '@shared/components/Pagination';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { ActionModal } from '@shared/components/ActionModal';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import { Fieldset } from '@shared/components/Fieldset';
+import Layout from '@shared/components/Layout';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
@@ -132,6 +134,7 @@ export function IAMCreateRolePage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const nameError = submitted && !roleName.trim() ? 'Role name is required.' : null;
+  const basicInfoFilled = !!roleName.trim();
 
   const filteredPolicies = useMemo(() => {
     if (appliedFilters.length === 0) return mockPolicies;
@@ -163,24 +166,37 @@ export function IAMCreateRolePage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between h-8">
-        <Title title="Create role" />
-        <Button
-          appearance="ghost"
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate('/iam/roles')}
-        >
-          Back
-        </Button>
-      </div>
-
-      {/* Basic Information */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Basic information</div>
-          <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
+    <CreateLayout
+      title="Create role"
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: [
+                { label: 'Basic information', status: basicInfoFilled ? 'success' : undefined },
+                {
+                  label: 'Attach policies',
+                  status: selectedPolicies.length > 0 ? 'success' : undefined,
+                },
+              ],
+            },
+          ]}
+          onCancel={() => navigate('/iam/roles')}
+          onAction={() => {
+            setSubmitted(true);
+            if (!roleName.trim()) return;
+            setConfirmOpen(true);
+          }}
+          actionEnabled
+          cancelLabel="Cancel"
+          actionLabel="Create"
+        />
+      }
+    >
+      <Layout.VStack gap="md">
+        <Fieldset legend="Basic information" variant="bordered" active>
+          <div className="grid grid-cols-12 gap-y-5 gap-x-6">
             <div className="col-span-4">
               <div className="text-12 font-medium text-text">
                 Role name <span className="text-error">*</span>
@@ -209,18 +225,15 @@ export function IAMCreateRolePage() {
               />
             </div>
           </div>
-        </div>
-      </div>
+        </Fieldset>
 
-      {/* Attach policies */}
-      <div className="bg-surface border border-border rounded-base8">
-        <div className="px-6 py-5">
-          <div className="text-14 font-semibold text-text">Attach policies</div>
-          <div className="mt-1 text-12 text-text-muted">
-            Select policies to attach to this role. You can skip this step.
-          </div>
-
-          <div className="mt-4 flex flex-col gap-3">
+        <Fieldset
+          legend="Attach policies"
+          description="Select policies to attach to this role. You can skip this step."
+          variant="bordered"
+          active
+        >
+          <div className="flex flex-col gap-3">
             <FilterSearchInput
               filterKeys={filterKeys}
               onFilterAdd={handleFilterAdd}
@@ -273,31 +286,8 @@ export function IAMCreateRolePage() {
               ))}
             </SelectableTable>
           </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          appearance="outline"
-          variant="secondary"
-          size="md"
-          onClick={() => navigate('/iam/roles')}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => {
-            setSubmitted(true);
-            if (!roleName.trim()) return;
-            setConfirmOpen(true);
-          }}
-        >
-          Create
-        </Button>
-      </div>
+        </Fieldset>
+      </Layout.VStack>
 
       {confirmOpen && (
         <ActionModal
@@ -315,7 +305,7 @@ export function IAMCreateRolePage() {
           }}
         />
       )}
-    </div>
+    </CreateLayout>
   );
 }
 

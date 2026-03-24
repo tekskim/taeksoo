@@ -5,7 +5,11 @@ export const fieldsetVariants = cva('border-none p-0 m-0 relative w-full', {
     variant: {
       default: 'border border-transparent rounded-md p-md bg-transparent',
       bordered: 'border border-border rounded-md p-md bg-transparent',
-      elevated: 'border border-border rounded-md p-md bg-[var(--component-layout-surface-default-bg)] shadow-sm',
+      elevated:
+        'border border-border rounded-md p-md bg-[var(--component-layout-surface-default-bg)] shadow-sm',
+    },
+    active: {
+      true: 'border-2 border-primary',
     },
     disabled: {
       true: 'opacity-60 pointer-events-none',
@@ -28,7 +32,7 @@ export const fieldsetVariants = cva('border-none p-0 m-0 relative w-full', {
 
 export const legendVariants = cva(
   [
-    'relative font-sans text-16 font-medium',
+    'relative font-sans text-16 font-semibold',
     '[color:var(--semantic-color-text)]',
     'leading-tight',
     'px-sm mb-sm',

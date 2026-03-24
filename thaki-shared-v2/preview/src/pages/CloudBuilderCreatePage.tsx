@@ -4,10 +4,11 @@ import { Button } from '@shared/components/Button';
 import { Input } from '@shared/components/Input';
 import { Textarea } from '@shared/components/Textarea';
 import { Dropdown } from '@shared/components/Dropdown';
-import { default as DetailPageHeader } from '@shared/components/DetailPageHeader/DetailPageHeader';
-import { default as DetailCard } from '@shared/components/DetailCard/DetailCard';
 import { ActionModal } from '@shared/components/ActionModal';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import { Fieldset } from '@shared/components/Fieldset';
+import Layout from '@shared/components/Layout';
 import {
   CLOUD_BUILDER_SLUGS,
   getCloudBuilderListConfig,
@@ -101,313 +102,325 @@ export function CloudBuilderCreatePage() {
     { value: 'thaki-lab', label: 'thaki-lab' },
   ];
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between h-8">
-        <Title title={pageTitle} />
-        <Button
-          appearance="ghost"
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate(`/cloudbuilder/${slug}`)}
-        >
-          Back
-        </Button>
-      </div>
+  const getSidebarSections = () => {
+    if (isDiscovery) {
+      return [
+        {
+          items: [
+            { label: 'Endpoint', status: endpoint.trim() ? ('success' as const) : undefined },
+            {
+              label: 'Basic',
+              status:
+                discoverySerial.trim() && discoveryMacPrimary.trim()
+                  ? ('success' as const)
+                  : undefined,
+            },
+          ],
+        },
+      ];
+    }
+    if (isServerLike) {
+      const filled = serial.trim() && macPrimary.trim() && location.trim() && role && domain;
+      return [
+        {
+          items: [
+            { label: 'Basic information', status: filled ? ('success' as const) : undefined },
+          ],
+        },
+      ];
+    }
+    return [{ items: [{ label: 'Configuration' }] }];
+  };
 
-      {isDiscovery && (
-        <div className="text-12 leading-18 text-text-muted">
-          Input values are not persisted. Only UI/field composition is reflected.
-        </div>
-      )}
-
-      {isDiscovery ? (
-        <>
-          <div className="bg-surface border border-border rounded-base8">
-            <div className="px-6 py-5">
-              <div className="text-14 font-semibold text-text">Endpoint</div>
-              <div className="mt-1 text-12 text-text-muted">
-                Enter an endpoint and click Fetch to populate Serial/MAC/IP/Location. (demo)
+  const renderContent = () => {
+    if (isDiscovery) {
+      return (
+        <Layout.VStack gap="md">
+          <Fieldset
+            legend="Endpoint"
+            description="Enter an endpoint and click Fetch to populate Serial/MAC/IP/Location. (demo)"
+            variant="bordered"
+            active
+          >
+            <div className="grid grid-cols-12 gap-4 items-center">
+              <div className="col-span-9">
+                <Input
+                  placeholder="e.g. http://discovery-agent.local:8080"
+                  value={endpoint}
+                  onChange={(e) => setEndpoint(e.target.value)}
+                />
               </div>
-              <div className="mt-4 grid grid-cols-12 gap-4 items-center">
-                <div className="col-span-9">
-                  <Input
-                    placeholder="e.g. http://discovery-agent.local:8080"
-                    value={endpoint}
-                    onChange={(e) => setEndpoint(e.target.value)}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    className="w-full"
-                    onClick={() => {
-                      setDiscoverySerial('SN2001');
-                      setDiscoveryMacPrimary('00:1A:2B:3C:4D:5E');
-                      setDiscoveryLocation('R1-U18');
-                      setDiscoveryMgmtIp('10.0.0.12');
-                    }}
-                  >
-                    Fetch
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="h-px bg-border-subtle" />
-
-            <div className="px-6 py-5">
-              <div className="text-14 font-semibold text-text">Basic</div>
-              <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
-                <div className="col-span-4">
-                  <div className="text-12 font-medium text-text">
-                    Serial <span className="text-error">*</span>
-                  </div>
-                  <div className="mt-1 text-11 text-text-muted">
-                    Identifier serial for on-site hardware
-                  </div>
-                </div>
-                <div className="col-span-8">
-                  <Input
-                    value={discoverySerial}
-                    onChange={(e) => setDiscoverySerial(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-4">
-                  <div className="text-12 font-medium text-text">
-                    MAC (Primary) <span className="text-error">*</span>
-                  </div>
-                  <div className="mt-1 text-11 text-text-muted">
-                    Primary MAC (asset identification key)
-                  </div>
-                </div>
-                <div className="col-span-8">
-                  <Input
-                    value={discoveryMacPrimary}
-                    onChange={(e) => setDiscoveryMacPrimary(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-4">
-                  <div className="text-12 font-medium text-text">
-                    Location <span className="text-error">*</span>
-                  </div>
-                  <div className="mt-1 text-11 text-text-muted">Rack/Unit physical location</div>
-                </div>
-                <div className="col-span-8">
-                  <Input
-                    value={discoveryLocation}
-                    onChange={(e) => setDiscoveryLocation(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-4">
-                  <div className="text-12 font-medium text-text">Mgmt IP (Optional)</div>
-                  <div className="mt-1 text-11 text-text-muted">Management IP (if available)</div>
-                </div>
-                <div className="col-span-8">
-                  <Input
-                    value={discoveryMgmtIp}
-                    onChange={(e) => setDiscoveryMgmtIp(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-4">
-                  <div className="text-12 font-medium text-text">Notes</div>
-                  <div className="mt-1 text-11 text-text-muted">Memo (optional)</div>
-                </div>
-                <div className="col-span-8">
-                  <Textarea
-                    placeholder='e.g. "Source: LLDP discovery"'
-                    value={discoveryMemo}
-                    onChange={(e) => setDiscoveryMemo(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex items-center justify-end gap-2">
+              <div className="col-span-3">
                 <Button
-                  appearance="outline"
-                  variant="secondary"
+                  variant="primary"
                   size="md"
-                  onClick={() => navigate(`/cloudbuilder/${slug}`)}
+                  className="w-full"
+                  onClick={() => {
+                    setDiscoverySerial('SN2001');
+                    setDiscoveryMacPrimary('00:1A:2B:3C:4D:5E');
+                    setDiscoveryLocation('R1-U18');
+                    setDiscoveryMgmtIp('10.0.0.12');
+                  }}
                 >
-                  Cancel
-                </Button>
-                <Button variant="primary" size="md" onClick={() => setConfirmOpen(true)}>
-                  Create
+                  Fetch
                 </Button>
               </div>
             </div>
-          </div>
-        </>
-      ) : isServerLike ? (
-        <>
-          <DetailCard
-            title="Basic information"
-            fields={[
-              {
-                label: 'Serial number',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Input
-                      placeholder="e.g. SN1234"
-                      value={serial}
-                      onChange={(e) => setSerial(e.target.value)}
-                      error={submitted && !!serverFormErrors.serial}
-                    />
-                    {submitted && serverFormErrors.serial && (
-                      <span className="text-11 text-error">{serverFormErrors.serial}</span>
-                    )}
-                  </div>
-                ),
-              },
-              {
-                label: 'MAC (Primary)',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Input
-                      placeholder="e.g. 00:1A:2B:3C:4D:5E"
-                      value={macPrimary}
-                      onChange={(e) => setMacPrimary(e.target.value)}
-                      error={submitted && !!serverFormErrors.macPrimary}
-                    />
-                    {submitted && serverFormErrors.macPrimary && (
-                      <span className="text-11 text-error">{serverFormErrors.macPrimary}</span>
-                    )}
-                  </div>
-                ),
-              },
-              {
-                label: 'NIC (primary name)',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Input
-                      placeholder="e.g. eno1"
-                      value={nicPrimaryName}
-                      onChange={(e) => setNicPrimaryName(e.target.value)}
-                      error={submitted && !!serverFormErrors.nicPrimaryName}
-                    />
-                    {submitted && serverFormErrors.nicPrimaryName && (
-                      <span className="text-11 text-error">{serverFormErrors.nicPrimaryName}</span>
-                    )}
-                  </div>
-                ),
-              },
-              {
-                label: 'Location',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Input
-                      placeholder="e.g. R1-U18"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      error={submitted && !!serverFormErrors.location}
-                    />
-                    {submitted && serverFormErrors.location && (
-                      <span className="text-11 text-error">{serverFormErrors.location}</span>
-                    )}
-                  </div>
-                ),
-              },
-              {
-                label: 'Provider network',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Input
-                      placeholder="e.g. VLAN 120 / 10.0.20.12"
-                      value={providerNetwork}
-                      onChange={(e) => setProviderNetwork(e.target.value)}
-                      error={submitted && !!serverFormErrors.providerNetwork}
-                    />
-                    {submitted && serverFormErrors.providerNetwork && (
-                      <span className="text-11 text-error">{serverFormErrors.providerNetwork}</span>
-                    )}
-                  </div>
-                ),
-              },
-              {
-                label: 'Role',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Dropdown.Select
-                      placeholder="Select role"
-                      value={role}
-                      onChange={(v) => setRole(String(v))}
-                    >
-                      {roleOptions.map((o) => (
-                        <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-                      ))}
-                    </Dropdown.Select>
-                    {submitted && serverFormErrors.role && (
-                      <span className="text-11 text-error">{serverFormErrors.role}</span>
-                    )}
-                  </div>
-                ),
-              },
-              {
-                label: 'Domain',
-                value: '',
-                type: 'component',
-                component: (
-                  <div className="flex flex-col gap-1">
-                    <Dropdown.Select
-                      placeholder="Select domain"
-                      value={domain}
-                      onChange={(v) => setDomain(String(v))}
-                    >
-                      {domainOptions.map((o) => (
-                        <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-                      ))}
-                    </Dropdown.Select>
-                    {submitted && serverFormErrors.domain && (
-                      <span className="text-11 text-error">{serverFormErrors.domain}</span>
-                    )}
-                  </div>
-                ),
-              },
-            ]}
-          />
+          </Fieldset>
 
-          <div className="flex items-center justify-end gap-2">
-            <Button
-              appearance="outline"
-              variant="secondary"
-              size="md"
-              onClick={() => navigate(`/cloudbuilder/${slug}`)}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => {
-                setSubmitted(true);
-                if (!canSubmitServerForm) return;
-                setConfirmOpen(true);
-              }}
-            >
-              Create
-            </Button>
-          </div>
-        </>
-      ) : (
-        <div className="text-text-muted">Create form for this resource is not configured yet.</div>
-      )}
+          <Fieldset legend="Basic" variant="bordered" active>
+            <div className="grid grid-cols-12 gap-y-5 gap-x-6">
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Serial <span className="text-error">*</span>
+                </div>
+                <div className="mt-1 text-11 text-text-muted">
+                  Identifier serial for on-site hardware
+                </div>
+              </div>
+              <div className="col-span-8">
+                <Input
+                  value={discoverySerial}
+                  onChange={(e) => setDiscoverySerial(e.target.value)}
+                />
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  MAC (Primary) <span className="text-error">*</span>
+                </div>
+                <div className="mt-1 text-11 text-text-muted">
+                  Primary MAC (asset identification key)
+                </div>
+              </div>
+              <div className="col-span-8">
+                <Input
+                  value={discoveryMacPrimary}
+                  onChange={(e) => setDiscoveryMacPrimary(e.target.value)}
+                />
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Location <span className="text-error">*</span>
+                </div>
+                <div className="mt-1 text-11 text-text-muted">Rack/Unit physical location</div>
+              </div>
+              <div className="col-span-8">
+                <Input
+                  value={discoveryLocation}
+                  onChange={(e) => setDiscoveryLocation(e.target.value)}
+                />
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">Mgmt IP (Optional)</div>
+                <div className="mt-1 text-11 text-text-muted">Management IP (if available)</div>
+              </div>
+              <div className="col-span-8">
+                <Input
+                  value={discoveryMgmtIp}
+                  onChange={(e) => setDiscoveryMgmtIp(e.target.value)}
+                />
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">Notes</div>
+                <div className="mt-1 text-11 text-text-muted">Memo (optional)</div>
+              </div>
+              <div className="col-span-8">
+                <Textarea
+                  placeholder='e.g. "Source: LLDP discovery"'
+                  value={discoveryMemo}
+                  onChange={(e) => setDiscoveryMemo(e.target.value)}
+                />
+              </div>
+            </div>
+          </Fieldset>
+        </Layout.VStack>
+      );
+    }
+
+    if (isServerLike) {
+      return (
+        <Layout.VStack gap="md">
+          <Fieldset legend="Basic information" variant="bordered" active>
+            <div className="grid grid-cols-12 gap-y-5 gap-x-6">
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Serial number <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Input
+                    placeholder="e.g. SN1234"
+                    value={serial}
+                    onChange={(e) => setSerial(e.target.value)}
+                    error={submitted && !!serverFormErrors.serial}
+                  />
+                  {submitted && serverFormErrors.serial && (
+                    <span className="text-11 text-error">{serverFormErrors.serial}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  MAC (Primary) <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Input
+                    placeholder="e.g. 00:1A:2B:3C:4D:5E"
+                    value={macPrimary}
+                    onChange={(e) => setMacPrimary(e.target.value)}
+                    error={submitted && !!serverFormErrors.macPrimary}
+                  />
+                  {submitted && serverFormErrors.macPrimary && (
+                    <span className="text-11 text-error">{serverFormErrors.macPrimary}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  NIC (primary name) <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Input
+                    placeholder="e.g. eno1"
+                    value={nicPrimaryName}
+                    onChange={(e) => setNicPrimaryName(e.target.value)}
+                    error={submitted && !!serverFormErrors.nicPrimaryName}
+                  />
+                  {submitted && serverFormErrors.nicPrimaryName && (
+                    <span className="text-11 text-error">{serverFormErrors.nicPrimaryName}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Location <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Input
+                    placeholder="e.g. R1-U18"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    error={submitted && !!serverFormErrors.location}
+                  />
+                  {submitted && serverFormErrors.location && (
+                    <span className="text-11 text-error">{serverFormErrors.location}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Provider network <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Input
+                    placeholder="e.g. VLAN 120 / 10.0.20.12"
+                    value={providerNetwork}
+                    onChange={(e) => setProviderNetwork(e.target.value)}
+                    error={submitted && !!serverFormErrors.providerNetwork}
+                  />
+                  {submitted && serverFormErrors.providerNetwork && (
+                    <span className="text-11 text-error">{serverFormErrors.providerNetwork}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Role <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Dropdown.Select
+                    placeholder="Select role"
+                    value={role}
+                    onChange={(v) => setRole(String(v))}
+                  >
+                    {roleOptions.map((o) => (
+                      <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                    ))}
+                  </Dropdown.Select>
+                  {submitted && serverFormErrors.role && (
+                    <span className="text-11 text-error">{serverFormErrors.role}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-4">
+                <div className="text-12 font-medium text-text">
+                  Domain <span className="text-error">*</span>
+                </div>
+              </div>
+              <div className="col-span-8">
+                <div className="flex flex-col gap-1">
+                  <Dropdown.Select
+                    placeholder="Select domain"
+                    value={domain}
+                    onChange={(v) => setDomain(String(v))}
+                  >
+                    {domainOptions.map((o) => (
+                      <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                    ))}
+                  </Dropdown.Select>
+                  {submitted && serverFormErrors.domain && (
+                    <span className="text-11 text-error">{serverFormErrors.domain}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Fieldset>
+        </Layout.VStack>
+      );
+    }
+
+    return (
+      <div className="text-text-muted">Create form for this resource is not configured yet.</div>
+    );
+  };
+
+  const handleSubmit = () => {
+    if (isDiscovery) {
+      setConfirmOpen(true);
+    } else if (isServerLike) {
+      setSubmitted(true);
+      if (!canSubmitServerForm) return;
+      setConfirmOpen(true);
+    }
+  };
+
+  return (
+    <CreateLayout
+      title={pageTitle}
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={getSidebarSections()}
+          onCancel={() => navigate(`/cloudbuilder/${slug}`)}
+          onAction={isDiscovery || isServerLike ? handleSubmit : undefined}
+          actionEnabled={isDiscovery || isServerLike}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+        />
+      }
+    >
+      {renderContent()}
 
       {confirmOpen && (
         <ActionModal
@@ -425,7 +438,7 @@ export function CloudBuilderCreatePage() {
           }}
         />
       )}
-    </div>
+    </CreateLayout>
   );
 }
 

@@ -837,9 +837,9 @@ TDS에는 없지만 ThakiUI에서 제공하는 컴포넌트로, 프론트엔드 
 | `CopyButton`          | 클립보드 복사 버튼                         | Detail 헤더, 코드 블록 등               |           O           |
 | `Sidebar`             | 접기/펼치기 사이드바                       | 앱 레이아웃 사이드바                    |           O           |
 | `SidebarMenu`         | 사이드바 메뉴 (섹션/아이템)                | `Sidebar` 내부 네비게이션               |           O           |
-| `CreateLayout`        | Create 페이지 레이아웃 (사이드바 포함)     | TDS의 Create 페이지 변환 시             |           X           |
-| `FloatingCard`        | 요약/Quota 사이드바                        | Create 위자드의 사이드바 패널           |           X           |
-| `Fieldset`            | 폼 섹션 그룹핑                             | TDS의 Open Section Card 대체            |           X           |
+| `CreateLayout`        | Create 페이지 레이아웃 (사이드바 포함)     | TDS의 Create 페이지 변환 시             |           O           |
+| `FloatingCard`        | 요약/Quota 사이드바                        | Create 위자드의 사이드바 패널           |           O           |
+| `Fieldset`            | 폼 섹션 그룹핑                             | TDS의 Open Section Card 대체            |           O           |
 | `ResourceActionModal` | 리소스 액션 모달 (InfoContainer 포함)      | ConfirmModal 변환 시                    |           X           |
 | `TabSelector`         | 세그먼트 스타일 탭                         | 작은 옵션 그룹 전환                     |           X           |
 | `ExpandableTable`     | 확장 가능 테이블                           | Detail 페이지 내 중첩 데이터            |           X           |

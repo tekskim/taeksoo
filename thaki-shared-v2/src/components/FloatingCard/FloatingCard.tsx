@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { cn } from "../../services/utils/cn";
-import { getPercentageVariant } from "../../styles/common/monitoringStyles";
-import {
-  AlertIcon,
-  CheckCircleIcon,
-  ExpandOffIcon,
-  ProgressIcon,
-} from "../Icon";
-import { Tooltip } from "../Tooltip";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { cn } from '../../services/utils/cn';
+import { getPercentageVariant } from '../../styles/common/monitoringStyles';
+import { IconCheck, IconAlertTriangle, IconProgress, IconCircleDashed } from '@tabler/icons-react';
+import { ExpandOffIcon } from '../Icon';
+import { Button } from '../Button';
+import { Tooltip } from '../Tooltip';
 import {
   floatingCardStyles,
   summaryCardStyles,
@@ -22,6 +19,9 @@ import {
   summaryItemStyles,
   summaryItemLabelStyles,
   summaryStatusIconStyles,
+  statusIconContainerStyles,
+  statusIconFilledStyles,
+  statusWritingStyles,
   quotaCardStyles,
   quotaTitleStyles,
   quotaListStyles,
@@ -40,18 +40,21 @@ import {
   quotaBarWarningLightStyles,
   quotaBarErrorStyles,
   quotaBarErrorLightStyles,
+  footerStyles,
+  footerCancelStyles,
+  footerActionStyles,
   tooltipDotSuccessStyles,
   tooltipDotSuccessLightStyles,
   tooltipDotWarningStyles,
   tooltipDotWarningLightStyles,
   tooltipDotErrorStyles,
   tooltipDotErrorLightStyles,
-} from "./FloatingCard.styles";
+} from './FloatingCard.styles';
 import type {
   FloatingCardProps,
   FloatingCardStatus,
   FloatingCardQuotaItem,
-} from "./FloatingCard.types";
+} from './FloatingCard.types';
 
 const clampPercent = (value: number): number => {
   if (!Number.isFinite(value)) {
@@ -61,7 +64,7 @@ const clampPercent = (value: number): number => {
 };
 
 const getQuotaPercents = (
-  item: FloatingCardQuotaItem,
+  item: FloatingCardQuotaItem
 ): { usedPercent: number; pendingPercent: number } => {
   if (item.limit <= 0 || !Number.isFinite(item.limit)) {
     return { usedPercent: 0, pendingPercent: 0 };
@@ -69,63 +72,54 @@ const getQuotaPercents = (
 
   const toPercent = (val: number) => clampPercent((val / item.limit) * 100);
   const usedPercent = toPercent(item.used);
-  const pendingPercent = Math.min(
-    100 - usedPercent,
-    toPercent(item.pending ?? 0),
-  );
+  const pendingPercent = Math.min(100 - usedPercent, toPercent(item.pending ?? 0));
 
   return { usedPercent, pendingPercent };
 };
 
-type QuotaColorVariant = "success" | "warning" | "error";
+type QuotaColorVariant = 'success' | 'warning' | 'error';
 
 const getQuotaColorVariant = (percent: number): QuotaColorVariant => {
   const v = getPercentageVariant(percent);
-  return v === "danger" ? "error" : v;
+  return v === 'danger' ? 'error' : v;
 };
 
-const getQuotaBarColorStyles = (
-  variant: QuotaColorVariant,
-  isPending: boolean,
-): string => {
+const getQuotaBarColorStyles = (variant: QuotaColorVariant, isPending: boolean): string => {
   if (isPending) {
     switch (variant) {
-      case "error":
+      case 'error':
         return quotaBarErrorLightStyles;
-      case "warning":
+      case 'warning':
         return quotaBarWarningLightStyles;
       default:
         return quotaBarSuccessLightStyles;
     }
   }
   switch (variant) {
-    case "error":
+    case 'error':
       return quotaBarErrorStyles;
-    case "warning":
+    case 'warning':
       return quotaBarWarningStyles;
     default:
       return quotaBarSuccessStyles;
   }
 };
 
-const getTooltipDotStyles = (
-  variant: QuotaColorVariant,
-  isPending: boolean,
-): string => {
+const getTooltipDotStyles = (variant: QuotaColorVariant, isPending: boolean): string => {
   if (isPending) {
     switch (variant) {
-      case "error":
+      case 'error':
         return tooltipDotErrorLightStyles;
-      case "warning":
+      case 'warning':
         return tooltipDotWarningLightStyles;
       default:
         return tooltipDotSuccessLightStyles;
     }
   }
   switch (variant) {
-    case "error":
+    case 'error':
       return tooltipDotErrorStyles;
-    case "warning":
+    case 'warning':
       return tooltipDotWarningStyles;
     default:
       return tooltipDotSuccessStyles;
@@ -152,25 +146,21 @@ const QuotaTooltipContent = ({
       <div className="flex items-center gap-2">
         <span
           className={cn(
-            "size-[5px] rounded-full shrink-0",
-            getTooltipDotStyles(usedVariant, false),
+            'size-[5px] rounded-full shrink-0',
+            getTooltipDotStyles(usedVariant, false)
           )}
         />
-        <span className="text-12 text-text-on-fill whitespace-nowrap">
-          Used : {used}
-        </span>
+        <span className="text-12 text-text-on-fill whitespace-nowrap">Used : {used}</span>
       </div>
       {hasPending ? (
         <div className="flex items-center gap-2">
           <span
             className={cn(
-              "size-[5px] rounded-full shrink-0",
-              getTooltipDotStyles(pendingVariant, true),
+              'size-[5px] rounded-full shrink-0',
+              getTooltipDotStyles(pendingVariant, true)
             )}
           />
-          <span className="text-12 text-text-on-fill whitespace-nowrap">
-            New : {pending}
-          </span>
+          <span className="text-12 text-text-on-fill whitespace-nowrap">New : {pending}</span>
         </div>
       ) : null}
     </div>
@@ -183,13 +173,33 @@ const StatusIcon = ({ status }: { status?: FloatingCardStatus }) => {
   }
 
   switch (status) {
-    case "success":
-      return <CheckCircleIcon size="sm" variant="success" aria-hidden />;
-    case "warning":
-      return <AlertIcon size="sm" variant="error" aria-hidden />;
-    case "processing":
+    case 'success':
+      return (
+        <div className={cn(statusIconFilledStyles, 'bg-success')}>
+          <IconCheck size={10} stroke={2} className="text-on-success" />
+        </div>
+      );
+    case 'warning':
+      return (
+        <div className={cn(statusIconFilledStyles, 'bg-error')}>
+          <IconAlertTriangle size={10} stroke={2} className="text-on-error" />
+        </div>
+      );
+    case 'processing':
+      return (
+        <div className={statusIconContainerStyles}>
+          <IconProgress size={20} stroke={1.5} className="text-text-muted" />
+        </div>
+      );
+    case 'writing':
+      return null;
+    case 'default':
     default:
-      return <ProgressIcon size="sm" aria-hidden />;
+      return (
+        <div className={statusIconContainerStyles}>
+          <IconCircleDashed size={20} stroke={1.5} className="text-border" />
+        </div>
+      );
   }
 };
 
@@ -199,16 +209,21 @@ const StatusIcon = ({ status }: { status?: FloatingCardStatus }) => {
  * Displays section status summaries with quota usage.
  */
 const FloatingCard = ({
-  summaryTitle = "Summary",
+  summaryTitle = 'Summary',
   sections,
-  quotaTitle = "Quota",
+  quotaTitle = 'Quota',
   quotas,
   className,
   collapsibleSections = false,
-  sectionOpenMode = "multiple",
+  sectionOpenMode = 'multiple',
   defaultExpandedSectionIds,
   expandedSectionIds,
   onExpandedSectionIdsChange,
+  cancelLabel = 'Cancel',
+  actionLabel = 'Create',
+  actionEnabled = false,
+  onCancel,
+  onAction,
 }: FloatingCardProps): React.ReactElement | null => {
   const summarySections = sections ?? [];
   const showSummarySection = summarySections.length > 0;
@@ -218,9 +233,9 @@ const FloatingCard = ({
     () =>
       summarySections.map((section, index) => ({
         ...section,
-        id: section.id ?? `${section.title ?? "section"}-${index}`,
+        id: section.id ?? `${section.title ?? 'section'}-${index}`,
       })),
-    [summarySections],
+    [summarySections]
   );
   const isControlled = expandedSectionIds !== undefined;
   const getDefaultExpandedSectionIds = useCallback((): string[] => {
@@ -230,19 +245,14 @@ const FloatingCard = ({
     if (defaultExpandedSectionIds?.length) {
       return defaultExpandedSectionIds;
     }
-    if (sectionOpenMode === "single") {
+    if (sectionOpenMode === 'single') {
       return resolvedSections.length ? [resolvedSections[0].id] : [];
     }
     return resolvedSections.map((section) => section.id);
-  }, [
-    collapsibleSections,
-    defaultExpandedSectionIds,
-    resolvedSections,
-    sectionOpenMode,
-  ]);
-  const [internalExpandedSectionIds, setInternalExpandedSectionIds] = useState<
-    string[]
-  >(() => getDefaultExpandedSectionIds());
+  }, [collapsibleSections, defaultExpandedSectionIds, resolvedSections, sectionOpenMode]);
+  const [internalExpandedSectionIds, setInternalExpandedSectionIds] = useState<string[]>(() =>
+    getDefaultExpandedSectionIds()
+  );
 
   useEffect(() => {
     if (!collapsibleSections || isControlled) {
@@ -256,16 +266,9 @@ const FloatingCard = ({
       }
       return getDefaultExpandedSectionIds();
     });
-  }, [
-    collapsibleSections,
-    getDefaultExpandedSectionIds,
-    isControlled,
-    resolvedSections,
-  ]);
+  }, [collapsibleSections, getDefaultExpandedSectionIds, isControlled, resolvedSections]);
 
-  const expandedIds = isControlled
-    ? (expandedSectionIds ?? [])
-    : internalExpandedSectionIds;
+  const expandedIds = isControlled ? (expandedSectionIds ?? []) : internalExpandedSectionIds;
 
   const handleSectionToggle = useCallback(
     (sectionId: string) => {
@@ -274,7 +277,7 @@ const FloatingCard = ({
       }
       const isExpanded = expandedIds.includes(sectionId);
       const nextExpandedIds =
-        sectionOpenMode === "single"
+        sectionOpenMode === 'single'
           ? isExpanded
             ? []
             : [sectionId]
@@ -287,13 +290,7 @@ const FloatingCard = ({
       }
       onExpandedSectionIdsChange?.(nextExpandedIds);
     },
-    [
-      collapsibleSections,
-      expandedIds,
-      isControlled,
-      onExpandedSectionIdsChange,
-      sectionOpenMode,
-    ],
+    [collapsibleSections, expandedIds, isControlled, onExpandedSectionIdsChange, sectionOpenMode]
   );
 
   if (!showSummarySection && !showQuotaSection) {
@@ -309,9 +306,7 @@ const FloatingCard = ({
             {resolvedSections.map((section) => {
               const hasHeader = Boolean(section.title || section.status);
               const isExpanded =
-                !collapsibleSections ||
-                !hasHeader ||
-                expandedIds.includes(section.id);
+                !collapsibleSections || !hasHeader || expandedIds.includes(section.id);
               return (
                 <div className={summaryGroupStyles} key={section.id}>
                   {hasHeader ? (
@@ -327,23 +322,19 @@ const FloatingCard = ({
                             size="xs"
                             aria-hidden
                             style={{
-                              transform: isExpanded ? "rotate(90deg)" : "none",
-                              transition: "transform 0.15s ease-in-out",
+                              transform: isExpanded ? 'rotate(90deg)' : 'none',
+                              transition: 'transform 0.15s ease-in-out',
                             }}
                           />
                           {section.title ? (
-                            <p className={summaryGroupTitleStyles}>
-                              {section.title}
-                            </p>
+                            <p className={summaryGroupTitleStyles}>{section.title}</p>
                           ) : null}
                         </button>
                       ) : (
                         <div className={summaryGroupHeaderLeftStyles}>
                           <ExpandOffIcon size="xs" aria-hidden />
                           {section.title ? (
-                            <p className={summaryGroupTitleStyles}>
-                              {section.title}
-                            </p>
+                            <p className={summaryGroupTitleStyles}>{section.title}</p>
                           ) : null}
                         </div>
                       )}
@@ -357,14 +348,15 @@ const FloatingCard = ({
                   {isExpanded ? (
                     <div className={summaryListStyles}>
                       {section.items.map((item, itemIndex) => (
-                        <div
-                          className={summaryItemStyles}
-                          key={`${item.label}-${itemIndex}`}
-                        >
+                        <div className={summaryItemStyles} key={`${item.label}-${itemIndex}`}>
                           <p className={summaryItemLabelStyles}>{item.label}</p>
-                          <span className={summaryStatusIconStyles}>
-                            <StatusIcon status={item.status} />
-                          </span>
+                          {item.status === 'writing' ? (
+                            <span className={statusWritingStyles}>Writing...</span>
+                          ) : (
+                            <span className={summaryStatusIconStyles}>
+                              <StatusIcon status={item.status} />
+                            </span>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -384,14 +376,9 @@ const FloatingCard = ({
               const { usedPercent, pendingPercent } = getQuotaPercents(item);
               const hasPending = pendingPercent > 0;
               const hasUsed = usedPercent > 0;
-              const remainingPercent = Math.max(
-                0,
-                100 - usedPercent - pendingPercent,
-              );
-              const displayValue =
-                item.displayValue ?? `${item.used}/${item.limit}`;
+              const remainingPercent = Math.max(0, 100 - usedPercent - pendingPercent);
+              const displayValue = item.displayValue ?? `${item.used}/${item.limit}`;
 
-              // Color variants based on combined percentage
               const totalPercent = usedPercent + pendingPercent;
               const usedVariant = getQuotaColorVariant(usedPercent);
               const pendingVariant = getQuotaColorVariant(totalPercent);
@@ -420,7 +407,7 @@ const FloatingCard = ({
                             quotaBarSegmentStyles,
                             quotaBarUsedStyles,
                             getQuotaBarColorStyles(usedVariant, false),
-                            hasPending && "rounded-r-none",
+                            hasPending && 'rounded-r-none'
                           )}
                           style={{ width: `${usedPercent}%` }}
                         />
@@ -431,8 +418,8 @@ const FloatingCard = ({
                             quotaBarSegmentStyles,
                             quotaBarPendingStyles,
                             getQuotaBarColorStyles(pendingVariant, true),
-                            hasUsed && "rounded-l-none",
-                            remainingPercent > 0 && "rounded-r-none",
+                            hasUsed && 'rounded-l-none',
+                            remainingPercent > 0 && 'rounded-r-none'
                           )}
                           style={{
                             left: `${usedPercent}%`,
@@ -447,6 +434,33 @@ const FloatingCard = ({
             })}
           </div>
         </section>
+      ) : null}
+
+      {onCancel || onAction ? (
+        <div className={footerStyles}>
+          {onCancel ? (
+            <Button
+              appearance="outline"
+              variant="secondary"
+              size="md"
+              onClick={onCancel}
+              className={footerCancelStyles}
+            >
+              {cancelLabel}
+            </Button>
+          ) : null}
+          {onAction ? (
+            <Button
+              variant="primary"
+              size="md"
+              onClick={onAction}
+              disabled={!actionEnabled}
+              className={footerActionStyles}
+            >
+              {actionLabel}
+            </Button>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );
