@@ -8,7 +8,7 @@ import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
 import { Tabs, Tab } from '@shared/components/Tabs';
-import { IconDownload, IconStar, IconStarFilled, IconTrash, IconX } from '@tabler/icons-react';
+import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
@@ -272,7 +272,7 @@ export function ComputeInstanceTemplatesPage() {
   };
 
   const columns: TableColumn[] = [
-    { key: 'favorite', header: '', width: 48, align: 'center' },
+    { key: 'favorite', header: '', width: 40, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Description', sortable: true },
     { key: 'flavor', header: 'Created at', sortable: true },
@@ -409,9 +409,30 @@ export function ComputeInstanceTemplatesPage() {
                 aria-label={row.favorite ? 'Remove favorite' : 'Add favorite'}
               >
                 {row.favorite ? (
-                  <IconStarFilled size={14} className="text-[var(--primitive-color-yellow400)]" />
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="#facc15"
+                    stroke="#facc15"
+                    strokeWidth="2"
+                  >
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
+                  </svg>
                 ) : (
-                  <IconStar size={14} stroke={1.5} className="text-text-muted" />
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-text-muted"
+                  >
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
+                  </svg>
                 )}
               </button>
             </Table.Td>

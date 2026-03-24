@@ -1,14 +1,12 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const badgeVariants = cva(
-  // Base styles
-  'inline-flex items-center gap-1 rounded-base6 font-sans font-medium whitespace-nowrap box-border',
+  'inline-flex items-center justify-center gap-1 rounded-[4px] font-sans font-medium whitespace-nowrap box-border min-w-[20px] text-center',
   {
     variants: {
       size: {
-        sm: 'py-0.5 px-1.5 text-11 leading-16',
-        md: 'py-1 px-2 text-12 leading-16',
-        lg: 'py-1 px-3 text-14 leading-20',
+        sm: 'h-5 px-1.5 text-[11px] leading-[16px]',
+        md: 'h-6 px-2 text-[13px] leading-[18px]',
       },
       theme: {
         red: '',
@@ -16,6 +14,7 @@ export const badgeVariants = cva(
         gry: '',
         blu: '',
         gre: '',
+        white: '',
       },
       type: {
         subtle: '',
@@ -23,60 +22,31 @@ export const badgeVariants = cva(
       },
     },
     compoundVariants: [
-      // Red theme
-      {
-        theme: 'red',
-        type: 'subtle',
-        class: 'text-primitive-red-600 bg-primitive-red-50',
-      },
-      {
-        theme: 'red',
-        type: 'solid',
-        class: 'text-primitive-red-50 bg-primitive-red-600',
-      },
-      // Yellow theme
-      {
-        theme: 'ylw',
-        type: 'subtle',
-        class: 'text-primitive-yellow-500 bg-primitive-yellow-50',
-      },
-      {
-        theme: 'ylw',
-        type: 'solid',
-        class: 'text-primitive-yellow-50 bg-primitive-yellow-500',
-      },
-      // Gray theme
-      {
-        theme: 'gry',
-        type: 'subtle',
-        class: 'text-text-muted bg-primitive-blueGray-100',
-      },
-      {
-        theme: 'gry',
-        type: 'solid',
-        class: 'text-primitive-blueGray-50 bg-text-muted',
-      },
       // Blue theme
-      {
-        theme: 'blu',
-        type: 'subtle',
-        class: 'text-primitive-blue-500 bg-primitive-blue-50',
-      },
-      {
-        theme: 'blu',
-        type: 'solid',
-        class: 'text-primitive-blue-50 bg-primitive-blue-500',
-      },
+      { theme: 'blu', type: 'subtle', class: 'bg-[#dbeafe] text-[#1e40af]' },
+      { theme: 'blu', type: 'solid', class: 'bg-[#2563eb] text-white' },
+      // Red theme
+      { theme: 'red', type: 'subtle', class: 'bg-[#fee2e2] text-[#dc2626]' },
+      { theme: 'red', type: 'solid', class: 'bg-[#ef4444] text-white' },
       // Green theme
+      { theme: 'gre', type: 'subtle', class: 'bg-[#dcfce7] text-[#16a34a]' },
+      { theme: 'gre', type: 'solid', class: 'bg-[#22c55e] text-white' },
+      // Yellow/Orange theme (TDS uses orange tones for warning)
+      { theme: 'ylw', type: 'subtle', class: 'bg-[#ffedd5] text-[#ea580c]' },
+      { theme: 'ylw', type: 'solid', class: 'bg-[#f97316] text-white' },
+      // Gray theme
+      { theme: 'gry', type: 'subtle', class: 'bg-[#f1f5f9] text-[#475569]' },
+      { theme: 'gry', type: 'solid', class: 'bg-[#64748b] text-white' },
+      // White theme (bordered)
       {
-        theme: 'gre',
+        theme: 'white',
         type: 'subtle',
-        class: 'text-primitive-green-600 bg-primitive-green-50',
+        class: 'bg-white text-[#0f172a] shadow-[inset_0_0_0_1px_#e2e8f0]',
       },
       {
-        theme: 'gre',
+        theme: 'white',
         type: 'solid',
-        class: 'text-primitive-green-50 bg-primitive-green-600',
+        class: 'bg-white text-[#0f172a] shadow-[inset_0_0_0_1px_#e2e8f0]',
       },
     ],
     defaultVariants: {
