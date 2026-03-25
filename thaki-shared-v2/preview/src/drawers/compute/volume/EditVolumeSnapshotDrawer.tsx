@@ -48,7 +48,7 @@ export function EditVolumeSnapshotDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit volume snapshot"
-      description="Edit the snapshot's basic information."
+      description="Edit the snapshot's name and description. These changes update basic information only."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

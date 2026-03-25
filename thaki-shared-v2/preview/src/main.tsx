@@ -152,6 +152,7 @@ import { DesignLayoutComponentsPage } from './pages/DesignLayoutComponentsPage';
 import { DesignFeedbackPage } from './pages/DesignFeedbackPage';
 import { DesignNavigationPage } from './pages/DesignNavigationPage';
 import { DesignOverlaysPage } from './pages/DesignOverlaysPage';
+import { ModalsPage } from './pages/ModalsPage';
 import { DesignFormControlsPage } from './pages/DesignFormControlsPage';
 import { DesignDataDisplayPage } from './pages/DesignDataDisplayPage';
 import { ComputeHomePage } from './pages/ComputeHomePage';
@@ -563,6 +564,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="layout" element={<DesignLayoutComponentsPage />} />
           <Route path="feedback" element={<DesignFeedbackPage />} />
           <Route path="overlays" element={<DesignOverlaysPage />} />
+          <Route path="modals" element={<ModalsPage />} />
           <Route path="navigation" element={<DesignNavigationPage />} />
         </Route>
         <Route path="/" element={<EntryPage />} />

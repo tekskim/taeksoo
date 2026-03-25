@@ -28,7 +28,7 @@ const MOCK_TENANTS = ['admin', 'demo-project', 'engineering', 'production'] as c
 type AccessType = 'Private' | 'Shared' | 'Public';
 type ImageStatus = 'active' | 'error' | 'pending' | 'deactivated';
 
-interface Image {
+interface Image extends Record<string, unknown> {
   id: string;
   name: string;
   tenant: string;
@@ -260,8 +260,7 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'os', label: 'OS', visible: true },
   { key: 'size', label: 'Size', visible: true },
   { key: 'diskFormat', label: 'Disk format', visible: true },
-  { key: 'protected', label: 'Protected', visible: true },
-  { key: 'visibility', label: 'Visibility', visible: true },
+  { key: 'protected', label: 'Visibility', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
@@ -340,8 +339,7 @@ export function ComputeAdminImagesPage() {
     { key: 'os', header: 'OS', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
     { key: 'diskFormat', header: 'Disk format', sortable: true },
-    { key: 'protected', header: 'Protected', sortable: true },
-    { key: 'visibility', header: 'Visibility', sortable: true },
+    { key: 'protected', header: 'Visibility', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
@@ -493,15 +491,12 @@ export function ComputeAdminImagesPage() {
               {row.diskFormat}
             </Table.Td>
             <Table.Td rowData={row} column={columns[6]}>
-              {row.protected ? 'On' : 'Off'}
+              {row.protected ? 'Private' : 'Public'}
             </Table.Td>
             <Table.Td rowData={row} column={columns[7]}>
-              {row.visibility}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[8]}>
               {stripTime(row.createdAt)}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[9]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

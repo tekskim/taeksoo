@@ -143,7 +143,7 @@ export function AssociateFloatingIPToPortDrawer({
       type="drawer-horizontal"
       size="md"
       title="Associate floating IP"
-      description="Associate this floating IP to a port."
+      description="Assign a floating IP to this instance for external network access."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

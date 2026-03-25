@@ -1047,7 +1047,6 @@ function ImageSection({
 
   const handleSelectImage = (id: string) => {
     onSelectImage(id);
-    setImageError(null);
   };
 
   const handleNextClick = () => {

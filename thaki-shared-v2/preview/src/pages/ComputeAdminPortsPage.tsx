@@ -23,11 +23,14 @@ import type { TableColumn, SortOrder } from '@shared/components/Table/Table.type
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
+const stripPortCreatedAtTime = (dateStr?: string) => (dateStr ? dateStr.split(' ')[0] : '-');
+
 type PortStatus = 'active' | 'error' | 'building' | 'down';
 
 interface Port {
   id: string;
   name: string;
+  description: string;
   tenant: string;
   attachedTo: string | null;
   attachedToId: string | null;
@@ -38,6 +41,8 @@ interface Port {
   fixedIp: string;
   floatingIp: string;
   macAddress: string;
+  adminState: 'Up' | 'Down';
+  createdAt: string;
   status: PortStatus;
 }
 
@@ -55,6 +60,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.91',
     floatingIp: '10.7.65.39',
     macAddress: 'fa:16:3e:34:85:32',
+    description: 'Web server port',
+    adminState: 'Up',
+    createdAt: '2025-09-12 10:30:00',
     status: 'active',
   },
   {
@@ -70,6 +78,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.92',
     floatingIp: '10.7.65.40',
     macAddress: 'fa:16:3e:34:85:33',
+    description: 'Application server port',
+    adminState: 'Up',
+    createdAt: '2025-09-10 14:20:00',
     status: 'active',
   },
   {
@@ -85,6 +96,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.93',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:34',
+    description: '',
+    adminState: 'Down',
+    createdAt: '2025-09-08 09:15:00',
     status: 'down',
   },
   {
@@ -100,6 +114,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.94',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:35',
+    description: 'Database port',
+    adminState: 'Up',
+    createdAt: '2025-09-05 11:45:00',
     status: 'active',
   },
   {
@@ -115,6 +132,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.1',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:36',
+    description: 'Router gateway port',
+    adminState: 'Up',
+    createdAt: '2025-08-28 08:00:00',
     status: 'active',
   },
   {
@@ -130,6 +150,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.95',
     floatingIp: '10.7.65.41',
     macAddress: 'fa:16:3e:34:85:37',
+    description: 'Load balancer VIP port',
+    adminState: 'Up',
+    createdAt: '2025-08-25 16:30:00',
     status: 'active',
   },
   {
@@ -145,6 +168,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.96',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:38',
+    description: 'Redis cache port',
+    adminState: 'Up',
+    createdAt: '2025-08-20 13:10:00',
     status: 'active',
   },
   {
@@ -160,6 +186,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.97',
     floatingIp: '10.7.65.42',
     macAddress: 'fa:16:3e:34:85:39',
+    description: 'Monitoring agent port',
+    adminState: 'Up',
+    createdAt: '2025-08-15 07:45:00',
     status: 'building',
   },
   {
@@ -175,6 +204,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.98',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:40',
+    description: '',
+    adminState: 'Down',
+    createdAt: '2025-08-10 15:00:00',
     status: 'error',
   },
   {
@@ -190,6 +222,9 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.99',
     floatingIp: '10.7.65.43',
     macAddress: 'fa:16:3e:34:85:41',
+    description: 'VPN gateway port',
+    adminState: 'Up',
+    createdAt: '2025-08-05 12:20:00',
     status: 'active',
   },
 ];
@@ -203,12 +238,22 @@ const portStatusMap: Record<PortStatus, StatusVariant> = {
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input' },
+  { key: 'description', label: 'Description', type: 'input' },
   { key: 'tenant', label: 'Tenant', type: 'input' },
   { key: 'attachedTo', label: 'Attached to', type: 'input' },
   { key: 'ownedNetwork', label: 'Network', type: 'input' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'input' },
   { key: 'floatingIp', label: 'Floating IP', type: 'input' },
   { key: 'macAddress', label: 'MAC Address', type: 'input' },
+  {
+    key: 'adminState',
+    label: 'Admin state',
+    type: 'select',
+    options: [
+      { value: 'Up', label: 'Up' },
+      { value: 'Down', label: 'Down' },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
@@ -296,16 +341,19 @@ export function ComputeAdminPortsPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'tenant', header: 'Tenant', sortable: true },
-    { key: 'attachedTo', header: 'Attached to' },
-    { key: 'ownedNetwork', header: 'Owned network', sortable: true },
-    { key: 'securityGroups', header: 'SG' },
-    { key: 'fixedIp', header: 'Fixed IP' },
-    { key: 'floatingIp', header: 'Floating IP' },
-    { key: 'macAddress', header: 'MAC Address' },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
+    { key: 'name', header: 'Name', sortable: true, width: 180 },
+    { key: 'tenant', header: 'Tenant', sortable: true, width: 120 },
+    { key: 'attachedTo', header: 'Attached to', width: 160 },
+    { key: 'ownedNetwork', header: 'Owned Network', sortable: true, width: 140 },
+    { key: 'securityGroups', header: 'SG', width: 150 },
+    { key: 'fixedIp', header: 'Fixed IP', width: 130 },
+    { key: 'floatingIp', header: 'Floating IP', width: 130 },
+    { key: 'description', header: 'Description', width: 140 },
+    { key: 'macAddress', header: 'MAC Address', width: 150 },
+    { key: 'adminState', header: 'Admin state', width: 100 },
+    { key: 'createdAt', header: 'Created at', sortable: true, width: 130 },
+    { key: 'actions', header: 'Action', width: 64, align: 'center' },
   ];
 
   const hasSelection = selectedRows.length > 0;
@@ -415,6 +463,7 @@ export function ComputeAdminPortsPage() {
         order={order}
         onSortChange={handleSortChange}
         stickyLastColumn
+        minWidth={1168}
       >
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
@@ -430,7 +479,7 @@ export function ComputeAdminPortsPage() {
                 >
                   {row.name}
                 </Link>
-                <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+                <span className="text-11 leading-16 text-text-subtle">ID : {row.id}</span>
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
@@ -455,7 +504,7 @@ export function ComputeAdminPortsPage() {
                         <span className="truncate">{row.attachedTo}</span>
                       </Link>
                     </Tooltip>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                    <span className="text-11 leading-16 text-text-subtle truncate">
                       ID : {row.attachedToId?.substring(0, 8)}
                     </span>
                   </div>
@@ -463,19 +512,11 @@ export function ComputeAdminPortsPage() {
                     content={row.attachedType === 'router' ? 'Router' : 'Instance'}
                     direction="top"
                   >
-                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
+                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-surface border border-border rounded cursor-default">
                       {row.attachedType === 'router' ? (
-                        <IconRouter
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-text-subtle)]"
-                        />
+                        <IconRouter size={12} stroke={1.5} className="text-text-subtle" />
                       ) : (
-                        <IconCube
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-text-subtle)]"
-                        />
+                        <IconCube size={12} stroke={1.5} className="text-text-subtle" />
                       )}
                     </div>
                   </Tooltip>
@@ -495,7 +536,7 @@ export function ComputeAdminPortsPage() {
                     <span className="truncate">{row.ownedNetwork}</span>
                   </Link>
                 </Tooltip>
-                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                <span className="text-11 leading-16 text-text-subtle truncate">
                   ID : {row.ownedNetworkId.substring(0, 8)}
                 </span>
               </div>
@@ -543,9 +584,25 @@ export function ComputeAdminPortsPage() {
               {row.floatingIp}
             </Table.Td>
             <Table.Td rowData={row} column={columns[8]}>
+              <span
+                className="text-12 text-text truncate block max-w-[200px]"
+                title={row.description}
+              >
+                {row.description}
+              </span>
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[9]}>
               {row.macAddress}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[9]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[10]}>
+              <Badge theme={row.adminState === 'Up' ? 'gre' : 'gry'} size="sm" type="subtle">
+                {row.adminState}
+              </Badge>
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[11]}>
+              {stripPortCreatedAtTime(row.createdAt)}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[12]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

@@ -48,7 +48,7 @@ export function EditVolumeBackupDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit volume backup"
-      description="Edit the backup's basic information."
+      description="Edit the backup's name and description. These changes update basic information only."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

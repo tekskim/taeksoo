@@ -50,7 +50,7 @@ export function EditSecurityGroupDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit security group"
-      description="Edit the security group's basic information."
+      description="Edit the basic information and network access rules of the security group."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

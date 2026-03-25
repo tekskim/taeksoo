@@ -362,7 +362,7 @@ export function ComputeFloatingIPsPage() {
                 >
                   {row.floatingIp}
                 </Link>
-                <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+                <span className="text-11 leading-16 text-text-subtle">ID : {row.id}</span>
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
@@ -379,17 +379,13 @@ export function ComputeFloatingIPsPage() {
                         <IconExternalLink size={12} className="flex-shrink-0 text-primary" />
                       </Link>
                     </Tooltip>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                    <span className="text-11 leading-16 text-text-subtle truncate">
                       ID : {row.associatedToId?.substring(0, 8)}
                     </span>
                   </div>
                   <Tooltip content="Instance" direction="top">
-                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
-                      <IconCube
-                        size={12}
-                        stroke={1.5}
-                        className="text-[var(--color-text-subtle)]"
-                      />
+                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-surface border border-border rounded cursor-default">
+                      <IconCube size={12} stroke={1.5} className="text-text-subtle" />
                     </div>
                   </Tooltip>
                 </div>
@@ -412,7 +408,7 @@ export function ComputeFloatingIPsPage() {
                     <IconExternalLink size={12} className="flex-shrink-0 text-primary" />
                   </Link>
                 </Tooltip>
-                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                <span className="text-11 leading-16 text-text-subtle truncate">
                   ID : {row.networkId.substring(0, 8)}
                 </span>
               </div>

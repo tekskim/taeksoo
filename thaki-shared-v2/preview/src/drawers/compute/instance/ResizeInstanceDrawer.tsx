@@ -190,7 +190,7 @@ export function ResizeInstanceDrawer({
       type="drawer-horizontal"
       size="md"
       title="Resize Instance"
-      description="Select a new flavor to resize this instance."
+      description="Change the flavor of this instance to adjust its vCPU, memory, or disk capacity."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

@@ -35,6 +35,7 @@ interface FloatingIP {
   id: string;
   floatingIp: string;
   tenant: string;
+  description: string;
   associatedTo: string | null;
   associatedToId: string | null;
   fixedIp: string;
@@ -51,6 +52,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-001',
     floatingIp: '172.24.4.228',
     tenant: TENANTS[0],
+    description: 'Web server external IP',
     associatedTo: 'web-01',
     associatedToId: 'inst-001',
     fixedIp: '10.7.65.39',
@@ -63,6 +65,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-002',
     floatingIp: '172.24.4.229',
     tenant: TENANTS[1],
+    description: 'Application server IP',
     associatedTo: 'app-server',
     associatedToId: 'inst-002',
     fixedIp: '10.7.65.40',
@@ -75,6 +78,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-003',
     floatingIp: '172.24.4.230',
     tenant: TENANTS[2],
+    description: 'Reserved for testing',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
@@ -87,6 +91,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-004',
     floatingIp: '172.24.4.231',
     tenant: TENANTS[3],
+    description: 'Database server IP',
     associatedTo: 'db-server',
     associatedToId: 'inst-003',
     fixedIp: '10.7.65.41',
@@ -99,6 +104,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-005',
     floatingIp: '172.24.4.232',
     tenant: TENANTS[0],
+    description: 'Load balancer public IP',
     associatedTo: 'load-balancer',
     associatedToId: 'lb-001',
     fixedIp: '10.7.65.42',
@@ -111,6 +117,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-006',
     floatingIp: '172.24.4.233',
     tenant: TENANTS[1],
+    description: 'Unused IP - pending removal',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
@@ -123,6 +130,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-007',
     floatingIp: '172.24.4.234',
     tenant: TENANTS[2],
+    description: 'Monitoring system IP',
     associatedTo: 'monitoring',
     associatedToId: 'inst-004',
     fixedIp: '10.7.65.43',
@@ -135,6 +143,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-008',
     floatingIp: '172.24.4.235',
     tenant: TENANTS[3],
+    description: 'VPN gateway external IP',
     associatedTo: 'vpn-gateway',
     associatedToId: 'vpn-001',
     fixedIp: '10.7.65.44',
@@ -147,6 +156,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-009',
     floatingIp: '172.24.4.236',
     tenant: TENANTS[0],
+    description: 'Reserved for staging',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
@@ -159,6 +169,7 @@ const mockFloatingIPs: FloatingIP[] = [
     id: 'fip-010',
     floatingIp: '172.24.4.237',
     tenant: TENANTS[1],
+    description: 'Backup server IP',
     associatedTo: 'backup-server',
     associatedToId: 'inst-005',
     fixedIp: '10.7.65.45',
@@ -178,6 +189,7 @@ const floatingIPStatusMap: Record<FloatingIPStatus, StatusVariant> = {
 const filterKeys: FilterKey[] = [
   { key: 'floatingIp', label: 'Floating IP', type: 'input' },
   { key: 'tenant', label: 'Tenant', type: 'input' },
+  { key: 'description', label: 'Description', type: 'input' },
   { key: 'associatedTo', label: 'Associated to', type: 'input' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'input' },
   { key: 'network', label: 'Network', type: 'input' },
@@ -210,8 +222,11 @@ function fipMatches(f: FloatingIP, filter: FilterKeyWithValue): boolean {
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
+  { key: 'tenant', label: 'Tenant', visible: true },
+  { key: 'description', label: 'Description', visible: true },
+  { key: 'associatedTo', label: 'Associated to', visible: true },
   { key: 'fixedIp', label: 'Fixed IP', visible: true },
-  { key: 'port', label: 'Port', visible: true },
+  { key: 'network', label: 'Network', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
@@ -262,6 +277,7 @@ export function ComputeAdminFloatingIPsPage() {
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'floatingIp', header: 'Floating IP', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
+    { key: 'description', header: 'Description', sortable: true },
     { key: 'associatedTo', header: 'Associated to' },
     { key: 'fixedIp', header: 'Fixed IP', sortable: true },
     { key: 'network', header: 'Network', sortable: true },
@@ -377,13 +393,21 @@ export function ComputeAdminFloatingIPsPage() {
                 >
                   {row.floatingIp}
                 </Link>
-                <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+                <span className="text-11 leading-16 text-text-subtle">ID : {row.id}</span>
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
               <span className="text-12 leading-18 text-text truncate">{row.tenant}</span>
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
+              <span
+                className="text-12 text-text truncate block max-w-[200px]"
+                title={row.description}
+              >
+                {row.description}
+              </span>
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[4]}>
               {row.associatedTo ? (
                 <div className="flex items-center gap-2 justify-between w-full">
                   <div className="flex flex-col gap-0.5 min-w-0 text-left">
@@ -397,17 +421,13 @@ export function ComputeAdminFloatingIPsPage() {
                         <IconExternalLink size={12} className="flex-shrink-0 text-primary" />
                       </Link>
                     </Tooltip>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                    <span className="text-11 leading-16 text-text-subtle truncate">
                       ID : {row.associatedToId?.substring(0, 8)}
                     </span>
                   </div>
                   <Tooltip content="Instance" direction="top">
-                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
-                      <IconCube
-                        size={12}
-                        stroke={1.5}
-                        className="text-[var(--color-text-subtle)]"
-                      />
+                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-surface border border-border rounded cursor-default">
+                      <IconCube size={12} stroke={1.5} className="text-text-subtle" />
                     </div>
                   </Tooltip>
                 </div>
@@ -415,10 +435,10 @@ export function ComputeAdminFloatingIPsPage() {
                 <span className="block text-left w-full">-</span>
               )}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
+            <Table.Td rowData={row} column={columns[5]}>
               {row.fixedIp}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]}>
+            <Table.Td rowData={row} column={columns[6]}>
               <div className="flex flex-col gap-0.5 min-w-0">
                 <Tooltip content={row.network} direction="top">
                   <Link
@@ -430,15 +450,15 @@ export function ComputeAdminFloatingIPsPage() {
                     <IconExternalLink size={12} className="flex-shrink-0 text-primary" />
                   </Link>
                 </Tooltip>
-                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                <span className="text-11 leading-16 text-text-subtle truncate">
                   ID : {row.networkId.substring(0, 8)}
                 </span>
               </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]}>
+            <Table.Td rowData={row} column={columns[7]}>
               {stripTime(row.createdAt)}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

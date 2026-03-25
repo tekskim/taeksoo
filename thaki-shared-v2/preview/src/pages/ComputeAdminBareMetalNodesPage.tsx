@@ -13,74 +13,164 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconDownload, IconTrash, IconX } from '@tabler/icons-react';
+import {
+  IconDotsCircleHorizontal,
+  IconDownload,
+  IconTrash,
+  IconX,
+  IconCirclePlus,
+} from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 type NodeStatus = 'active' | 'available' | 'deploying' | 'error' | 'maintenance';
+type PowerState = 'Power On' | 'Power Off';
 
 interface BareMetalNode extends Record<string, unknown> {
   id: string;
   name: string;
-  uuid: string;
   status: NodeStatus;
-  powerState: 'on' | 'off';
-  provisionState: 'active' | 'deploying' | 'available' | 'error';
-  driver: string;
-  instanceUuid: string | null;
+  tenant: { id: string; name: string } | null;
+  powerState: PowerState;
+  maintained: boolean;
+  cpu: number;
+  ram: string;
+  disk: string;
+  gpu: string | null;
+  npu: string | null;
 }
 
 const mockBareMetalNodes: BareMetalNode[] = [
   {
-    id: 'bm-001',
-    name: 'bm-compute-01',
-    uuid: '8f3c2a10-4b2d-4c8e-9a1f-2d3e4f5a6b7c',
+    id: '12345678',
+    name: 'node',
     status: 'active',
-    powerState: 'on',
-    provisionState: 'active',
-    driver: 'ipmi',
-    instanceUuid: null,
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
   },
   {
-    id: 'bm-002',
-    name: 'bm-compute-02',
-    uuid: '9a4d3b21-5c3e-5d9f-0b2g-3e4f5a6b7c8d',
+    id: '12345679',
+    name: 'node',
     status: 'active',
-    powerState: 'on',
-    provisionState: 'active',
-    driver: 'redfish',
-    instanceUuid: 'i-0a1b2c3d4e5f6789',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
   },
   {
-    id: 'bm-003',
-    name: 'bm-gpu-01',
-    uuid: '1b5e4c32-6d4f-6e0g-1c3h-4f5a6b7c8d9e',
+    id: '12345680',
+    name: 'node',
+    status: 'active',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
+  },
+  {
+    id: '12345681',
+    name: 'node',
+    status: 'active',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
+  },
+  {
+    id: '12345682',
+    name: 'node',
     status: 'available',
-    powerState: 'on',
-    provisionState: 'available',
-    driver: 'ipmi',
-    instanceUuid: null,
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
   },
   {
-    id: 'bm-004',
-    name: 'bm-storage-01',
-    uuid: '2c6f5d43-7e5g-7f1h-2d4i-5a6b7c8d9e0f',
+    id: '12345683',
+    name: 'node',
+    status: 'available',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
+  },
+  {
+    id: '12345684',
+    name: 'node',
+    status: 'available',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
+  },
+  {
+    id: '12345685',
+    name: 'node',
+    status: 'available',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
+  },
+  {
+    id: '12345686',
+    name: 'node',
+    status: 'available',
+    tenant: null,
+    powerState: 'Power On',
+    maintained: true,
+    cpu: 32,
+    ram: '128GiB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
+  },
+  {
+    id: '12345687',
+    name: 'node',
     status: 'deploying',
-    powerState: 'on',
-    provisionState: 'deploying',
-    driver: 'ilo',
-    instanceUuid: null,
-  },
-  {
-    id: 'bm-005',
-    name: 'bm-edge-01',
-    uuid: '3d7g6e54-8f6h-8g2i-3e5j-6b7c8d9e0f1a',
-    status: 'error',
-    powerState: 'off',
-    provisionState: 'error',
-    driver: 'ipmi',
-    instanceUuid: null,
+    tenant: { id: '12345678', name: 'tenant' },
+    powerState: 'Power On',
+    maintained: false,
+    cpu: 32,
+    ram: '128 GB',
+    disk: '2GiB',
+    gpu: null,
+    npu: null,
   },
 ];
 
@@ -93,7 +183,7 @@ const statusMap: Record<NodeStatus, StatusVariant> = {
 };
 
 const filterKeys: FilterKey[] = [
-  { key: 'name', label: 'Name', type: 'input', placeholder: 'Filter by name...' },
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
   {
     key: 'status',
     label: 'Status',
@@ -106,19 +196,27 @@ const filterKeys: FilterKey[] = [
       { value: 'maintenance', label: 'Maintenance' },
     ],
   },
-  { key: 'driver', label: 'Driver', type: 'input', placeholder: 'Filter by driver...' },
+  {
+    key: 'powerState',
+    label: 'Power State',
+    type: 'select',
+    options: [
+      { value: 'Power On', label: 'Power On' },
+      { value: 'Power Off', label: 'Power Off' },
+    ],
+  },
 ];
 
 function rowMatchesFilter(row: BareMetalNode, filter: FilterKeyWithValue): boolean {
-  const q = String(filter.value ?? '').toLowerCase();
-  if (!q) return true;
+  const raw = filter.value;
+  if (raw === undefined || raw === null || raw === '') return true;
   switch (filter.key) {
     case 'name':
-      return row.name.toLowerCase().includes(q);
+      return row.name.toLowerCase().includes(String(raw).toLowerCase());
     case 'status':
       return row.status === filter.value;
-    case 'driver':
-      return row.driver.toLowerCase().includes(q);
+    case 'powerState':
+      return row.powerState === filter.value;
     default:
       return true;
   }
@@ -127,11 +225,14 @@ function rowMatchesFilter(row: BareMetalNode, filter: FilterKeyWithValue): boole
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'uuid', label: 'UUID', visible: true },
-  { key: 'powerState', label: 'Power state', visible: true },
-  { key: 'provisionState', label: 'Provision state', visible: true },
-  { key: 'driver', label: 'Driver', visible: true },
-  { key: 'instanceUuid', label: 'Instance UUID', visible: true },
+  { key: 'tenant', label: 'Tenant', visible: true },
+  { key: 'powerState', label: 'Power State', visible: true },
+  { key: 'maintained', label: 'Maintained', visible: true },
+  { key: 'cpu', label: 'CPU', visible: true },
+  { key: 'ram', label: 'RAM', visible: true },
+  { key: 'disk', label: 'Disk', visible: true },
+  { key: 'gpu', label: 'GPU', visible: true },
+  { key: 'npu', label: 'NPU', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -161,12 +262,15 @@ export function ComputeAdminBareMetalNodesPage() {
     () => [
       { key: 'status', header: 'Status', width: 72, align: 'center' },
       { key: 'name', header: 'Name', sortable: true },
-      { key: 'uuid', header: 'UUID' },
-      { key: 'powerState', header: 'Power state' },
-      { key: 'provisionState', header: 'Provision state', sortable: true },
-      { key: 'driver', header: 'Driver', sortable: true },
-      { key: 'instanceUuid', header: 'Instance UUID' },
-      { key: 'actions', header: 'Action', width: 60, align: 'center', clickable: false },
+      { key: 'tenant', header: 'Tenant', sortable: true },
+      { key: 'powerState', header: 'Power State', sortable: true },
+      { key: 'maintained', header: 'Maintained', sortable: true },
+      { key: 'cpu', header: 'CPU', sortable: true },
+      { key: 'ram', header: 'RAM', sortable: true },
+      { key: 'disk', header: 'Disk', sortable: true },
+      { key: 'gpu', header: 'GPU', sortable: true },
+      { key: 'npu', header: 'NPU', sortable: true },
+      { key: 'actions', header: 'Action', width: 110, align: 'center', clickable: false },
     ],
     []
   );
@@ -278,65 +382,73 @@ export function ComputeAdminBareMetalNodesPage() {
               <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={c('name')}>
-              <Link to={`/compute-admin/bare-metal-nodes/${row.id}`} className={linkClass}>
-                {row.name}
-              </Link>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('uuid')}>
-              <span
-                className="text-11 text-text-muted font-mono truncate block max-w-[200px]"
-                title={row.uuid}
-              >
-                {row.uuid}
-              </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('powerState')}>
-              <Badge theme={row.powerState === 'on' ? 'gre' : 'gry'} size="sm" type="subtle">
-                {row.powerState === 'on' ? 'Power on' : 'Power off'}
-              </Badge>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('provisionState')}>
-              <span className="text-12 text-text capitalize">{row.provisionState}</span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('driver')}>
-              <span className="text-12 text-text">{row.driver}</span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('instanceUuid')}>
-              {row.instanceUuid ? (
-                <Link to={`/compute-admin/instances/${row.instanceUuid}`} className={linkClass}>
-                  <span
-                    className="font-mono text-11 truncate block max-w-[160px]"
-                    title={row.instanceUuid}
-                  >
-                    {row.instanceUuid}
-                  </span>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute-admin/bare-metal-nodes/${row.id}`}
+                  className={`${linkClass} truncate`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.name}
                 </Link>
+                <span className="text-11 text-text-muted">ID: {row.id}</span>
+              </div>
+            </Table.Td>
+            <Table.Td rowData={row} column={c('tenant')}>
+              {row.tenant ? (
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute-admin/tenants/${row.tenant.id}`}
+                    className={`${linkClass} truncate`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {row.tenant.name}
+                  </Link>
+                  <span className="text-11 text-text-muted">ID: {row.tenant.id}</span>
+                </div>
               ) : (
-                <span className="text-12 text-text-muted">—</span>
+                <span className="text-12 text-text-muted">-</span>
               )}
             </Table.Td>
+            <Table.Td rowData={row} column={c('powerState')}>
+              <Badge theme={row.powerState === 'Power On' ? 'gre' : 'gry'} size="sm" type="subtle">
+                {row.powerState}
+              </Badge>
+            </Table.Td>
+            <Table.Td rowData={row} column={c('maintained')}>
+              <span className="text-12 text-text">{row.maintained ? 'Yes' : 'No'}</span>
+            </Table.Td>
+            <Table.Td rowData={row} column={c('cpu')}>
+              {row.cpu}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('ram')}>
+              {row.ram}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('disk')}>
+              {row.disk}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('gpu')}>
+              {row.gpu ?? '-'}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('npu')}>
+              {row.npu ?? '-'}
+            </Table.Td>
             <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
-              <ContextMenu.Root
-                direction="bottom-end"
-                gap={4}
-                trigger={({ toggle }) => (
-                  <button
-                    type="button"
-                    onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
-                    aria-label="Row actions"
+              <div className="flex items-center justify-center w-full">
+                {row.tenant ? (
+                  <Button appearance="outline" variant="secondary" size="sm">
+                    Release
+                  </Button>
+                ) : (
+                  <Button
+                    appearance="outline"
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
                   >
-                    <IconDotsCircleHorizontal size={16} stroke={1.5} />
-                  </button>
+                    Assign
+                  </Button>
                 )}
-              >
-                <ContextMenu.Item action={() => console.log('inspect', row.id)}>
-                  Inspect
-                </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('power', row.id)}>
-                  Power
-                </ContextMenu.Item>
-              </ContextMenu.Root>
+              </div>
             </Table.Td>
           </Table.Tr>
         ))}

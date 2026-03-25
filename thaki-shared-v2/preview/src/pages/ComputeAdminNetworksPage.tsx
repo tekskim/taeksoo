@@ -483,8 +483,8 @@ export function ComputeAdminNetworksPage() {
                 {row.external ? 'Yes' : 'No'}
               </Table.Td>
             )}
-            <Table.Td rowData={row} column={c('diskTag')}>
-              {row.shared ? 'On' : 'Off'}
+            <Table.Td rowData={row} column={c('shared')}>
+              {row.shared ? 'Yes' : 'No'}
             </Table.Td>
             <Table.Td rowData={row} column={c('adminState')}>
               <Badge theme={row.adminState === 'Up' ? 'gre' : 'gry'} size="sm" type="subtle">

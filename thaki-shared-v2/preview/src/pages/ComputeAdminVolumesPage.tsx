@@ -34,6 +34,7 @@ interface Volume {
   id: string;
   name: string;
   tenant: string;
+  host: string | null;
   size: string;
   type: string;
   diskTag: string;
@@ -49,6 +50,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-001',
     name: 'db-data',
     tenant: 'admin',
+    host: 'host-01',
     size: '1500GiB',
     type: '_DEFAULT_',
     diskTag: 'Data disk',
@@ -61,6 +63,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-002',
     name: 'app-storage',
     tenant: 'demo-project',
+    host: 'host-02',
     size: '500GiB',
     type: '_DEFAULT_',
     diskTag: 'Data disk',
@@ -73,6 +76,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-003',
     name: 'backup-vol',
     tenant: 'engineering',
+    host: 'host-01',
     size: '2000GiB',
     type: 'SSD',
     diskTag: 'Backup',
@@ -85,6 +89,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-004',
     name: 'log-storage',
     tenant: 'production',
+    host: 'host-03',
     size: '100GiB',
     type: '_DEFAULT_',
     diskTag: 'Logs',
@@ -97,6 +102,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-005',
     name: 'cache-vol',
     tenant: 'admin',
+    host: 'host-02',
     size: '256GiB',
     type: 'NVMe',
     diskTag: 'Cache',
@@ -109,6 +115,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-006',
     name: 'media-storage',
     tenant: 'demo-project',
+    host: 'host-01',
     size: '5000GiB',
     type: 'HDD',
     diskTag: 'Media',
@@ -121,6 +128,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-007',
     name: 'temp-vol',
     tenant: 'engineering',
+    host: null,
     size: '50GiB',
     type: '_DEFAULT_',
     diskTag: 'Temporary',
@@ -133,6 +141,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-008',
     name: 'ml-data',
     tenant: 'production',
+    host: 'host-02',
     size: '1000GiB',
     type: 'NVMe',
     diskTag: 'ML Dataset',
@@ -145,6 +154,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-009',
     name: 'archive-vol',
     tenant: 'admin',
+    host: 'host-01',
     size: '10000GiB',
     type: 'HDD',
     diskTag: 'Archive',
@@ -157,6 +167,7 @@ const mockVolumes: Volume[] = [
     id: 'vol-010',
     name: 'boot-vol-01',
     tenant: 'engineering',
+    host: 'host-03',
     size: '100GiB',
     type: 'SSD',
     diskTag: 'Boot',
@@ -227,9 +238,11 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
   { key: 'tenant', label: 'Tenant', visible: true },
+  { key: 'host', label: 'Host', visible: true },
   { key: 'size', label: 'Size', visible: true },
   { key: 'type', label: 'Type', visible: true },
-  { key: 'attachedTo', label: 'Attached To', visible: true },
+  { key: 'diskTag', label: 'Disk tag', visible: true },
+  { key: 'attachedTo', label: 'Attached to', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
@@ -304,6 +317,7 @@ export function ComputeAdminVolumesPage() {
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
+    { key: 'host', header: 'Host', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
     { key: 'type', header: 'Type', sortable: true },
     { key: 'diskTag', header: 'Disk tag', sortable: true },
@@ -314,20 +328,8 @@ export function ComputeAdminVolumesPage() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between h-8 gap-2 flex-wrap">
+      <div className="flex items-center justify-between h-8">
         <Title title="Volumes" />
-        <div className="flex items-center gap-2">
-          <Button variant="primary" size="md" onClick={() => setAcceptTransferOpen(true)}>
-            Accept Volume Transfer
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => navigate('/compute-admin/volumes/create')}
-          >
-            Create volume
-          </Button>
-        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -470,10 +472,10 @@ export function ComputeAdminVolumesPage() {
                 <span className="text-text-muted">-</span>
               )}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[7]}>
+            <Table.Td rowData={row} column={columns[8]}>
               {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[9]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

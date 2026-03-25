@@ -10,14 +10,10 @@ import {
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
 import { Title } from '@shared/components/Title';
-import { Badge } from '@shared/components/Badge';
-import { Popover } from '@shared/components/Popover';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconDownload, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
-
-const MOCK_TENANTS = ['admin', 'demo-project', 'engineering', 'production'] as const;
 
 type FlavorType = 'CPU' | 'GPU' | 'MPU' | 'Custom';
 type AccessType = 'Public' | 'Private';
@@ -25,14 +21,12 @@ type AccessType = 'Public' | 'Private';
 interface Flavor {
   id: string;
   name: string;
-  tenant: string;
   category: string;
   vcpu: number;
   ram: string;
   ephemeralDisk: string;
   internalNetworkBandwidth: string;
   access: AccessType;
-  metadata: string;
   type: FlavorType;
   gpuType?: string;
   numaNodes?: string;
@@ -45,118 +39,100 @@ const mockFlavors: Flavor[] = [
   {
     id: 'flv-001',
     name: 'c5.large',
-    tenant: MOCK_TENANTS[0],
     category: 'Compute Optimized',
     vcpu: 2,
     ram: '16GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-002',
     name: 'c5.xlarge',
-    tenant: MOCK_TENANTS[1],
     category: 'Compute Optimized',
     vcpu: 4,
     ram: '32GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-003',
     name: 'm5.large',
-    tenant: MOCK_TENANTS[2],
     category: 'General Purpose',
     vcpu: 2,
     ram: '8GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-004',
     name: 'm5.xlarge',
-    tenant: MOCK_TENANTS[3],
     category: 'General Purpose',
     vcpu: 4,
     ram: '16GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-005',
     name: 'r5.large',
-    tenant: MOCK_TENANTS[0],
     category: 'Memory Optimized',
     vcpu: 2,
     ram: '16GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-006',
     name: 'r5.xlarge',
-    tenant: MOCK_TENANTS[1],
     category: 'Memory Optimized',
     vcpu: 4,
     ram: '32GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-007',
     name: 't3.micro',
-    tenant: MOCK_TENANTS[2],
     category: 'Burstable',
     vcpu: 2,
     ram: '1GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-008',
     name: 't3.small',
-    tenant: MOCK_TENANTS[3],
     category: 'Burstable',
     vcpu: 2,
     ram: '2GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'CPU',
   },
   {
     id: 'flv-009',
     name: 'g4dn.xlarge',
-    tenant: MOCK_TENANTS[0],
     category: 'GPU Accelerated',
     vcpu: 4,
     ram: '16GiB',
     ephemeralDisk: '125GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'GPU',
     gpuType: 'NVIDIA T4',
     numaNodes: '1',
@@ -166,14 +142,12 @@ const mockFlavors: Flavor[] = [
   {
     id: 'flv-010',
     name: 'g4dn.2xlarge',
-    tenant: MOCK_TENANTS[1],
     category: 'GPU Accelerated',
     vcpu: 8,
     ram: '32GiB',
     ephemeralDisk: '225GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'GPU',
     gpuType: 'NVIDIA T4',
     numaNodes: '2',
@@ -183,14 +157,12 @@ const mockFlavors: Flavor[] = [
   {
     id: 'flv-011',
     name: 'p3.2xlarge',
-    tenant: MOCK_TENANTS[2],
     category: 'GPU Compute',
     vcpu: 8,
     ram: '61GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'GPU',
     gpuType: 'NVIDIA V100',
     numaNodes: '2',
@@ -200,14 +172,12 @@ const mockFlavors: Flavor[] = [
   {
     id: 'flv-012',
     name: 'inf1.xlarge',
-    tenant: MOCK_TENANTS[3],
     category: 'ML Inference',
     vcpu: 4,
     ram: '8GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'MPU',
     gpuType: 'AWS Inferentia',
     numaNodes: '1',
@@ -217,14 +187,12 @@ const mockFlavors: Flavor[] = [
   {
     id: 'flv-013',
     name: 'inf1.2xlarge',
-    tenant: MOCK_TENANTS[0],
     category: 'ML Inference',
     vcpu: 8,
     ram: '16GiB',
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '25Gbps',
     access: 'Public',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'MPU',
     gpuType: 'AWS Inferentia',
     numaNodes: '2',
@@ -234,34 +202,29 @@ const mockFlavors: Flavor[] = [
   {
     id: 'flv-014',
     name: 'custom.small',
-    tenant: MOCK_TENANTS[1],
     category: 'Custom',
     vcpu: 2,
     ram: '4GiB',
     ephemeralDisk: '20GiB',
     internalNetworkBandwidth: '-',
     access: 'Private',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'Custom',
   },
   {
     id: 'flv-015',
     name: 'custom.medium',
-    tenant: MOCK_TENANTS[2],
     category: 'Custom',
     vcpu: 4,
     ram: '8GiB',
     ephemeralDisk: '50GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Private',
-    metadata: 'hw:cpu_cores=4,hw:mem_page_size=large,hw:numa_nodes=1,os:type=linux',
     type: 'Custom',
   },
 ];
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
-  { key: 'tenant', label: 'Tenant', type: 'input', placeholder: 'Enter tenant...' },
   {
     key: 'access',
     label: 'Access',
@@ -275,11 +238,10 @@ const filterKeys: FilterKey[] = [
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'tenant', label: 'Tenant', visible: true },
-  { key: 'vCpu', label: 'vCPU', visible: true },
+  { key: 'vcpu', label: 'vCPU', visible: true },
   { key: 'ram', label: 'RAM', visible: true },
-  { key: 'rootDisk', label: 'Root Disk', visible: true },
-  { key: 'isPublic', label: 'Is Public', visible: true },
+  { key: 'ephemeralDisk', label: 'Root Disk', visible: true },
+  { key: 'access', label: 'Access', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -348,16 +310,28 @@ export function ComputeAdminFlavorsPage() {
     setCurrentPage(1);
   }, []);
 
-  const columns: TableColumn[] = [
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'tenant', header: 'Tenant', sortable: true, width: 120 },
-    { key: 'vcpu', header: 'vCPU', sortable: true },
-    { key: 'ram', header: 'RAM', sortable: true },
-    { key: 'ephemeralDisk', header: 'Root disk', sortable: true },
-    { key: 'access', header: 'Public', sortable: true },
-    { key: 'metadata', header: 'Metadata' },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
-  ];
+  const columns: TableColumn[] = useMemo(() => {
+    const showGpuCols = activeTab === 'gpu' || activeTab === 'mpu';
+    const cols: TableColumn[] = [
+      { key: 'name', header: 'Name', sortable: true },
+      { key: 'vcpu', header: 'vCPU', sortable: true },
+      { key: 'ram', header: 'RAM', sortable: true },
+      { key: 'ephemeralDisk', header: 'Root Disk', sortable: true },
+    ];
+    if (showGpuCols) {
+      cols.push(
+        { key: 'gpuType', header: 'GPU Type', sortable: true },
+        { key: 'numaNodes', header: 'NUMA Nodes', sortable: true },
+        { key: 'cpuPolicy', header: 'CPU Policy', sortable: true },
+        { key: 'cpuThreadPolicy', header: 'CPU Thread Policy', sortable: true }
+      );
+    }
+    cols.push(
+      { key: 'access', header: 'Public', sortable: true },
+      { key: 'actions', header: 'Action', width: 60, align: 'center' }
+    );
+    return cols;
+  }, [activeTab]);
 
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
@@ -384,7 +358,7 @@ export function ComputeAdminFlavorsPage() {
         <Tab id="mpu" label="MPU">
           {null}
         </Tab>
-        <Tab id="custom" label="Bare metal">
+        <Tab id="custom" label="Custom">
           {null}
         </Tab>
       </Tabs>
@@ -469,11 +443,8 @@ export function ComputeAdminFlavorsPage() {
                 >
                   {row.name}
                 </Link>
-                <span className="text-11 leading-16 text-text-muted truncate">ID:{row.id}</span>
+                <span className="text-11 leading-16 text-text-muted truncate">ID : {row.id}</span>
               </div>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('tenant')}>
-              {row.tenant}
             </Table.Td>
             <Table.Td rowData={row} column={c('vcpu')}>
               {row.vcpu}
@@ -484,49 +455,24 @@ export function ComputeAdminFlavorsPage() {
             <Table.Td rowData={row} column={c('ephemeralDisk')}>
               {row.ephemeralDisk}
             </Table.Td>
+            {(activeTab === 'gpu' || activeTab === 'mpu') && (
+              <>
+                <Table.Td rowData={row} column={c('gpuType')}>
+                  {row.gpuType ?? '-'}
+                </Table.Td>
+                <Table.Td rowData={row} column={c('numaNodes')}>
+                  {row.numaNodes ?? '-'}
+                </Table.Td>
+                <Table.Td rowData={row} column={c('cpuPolicy')}>
+                  {row.cpuPolicy ?? '-'}
+                </Table.Td>
+                <Table.Td rowData={row} column={c('cpuThreadPolicy')}>
+                  {row.cpuThreadPolicy ?? '-'}
+                </Table.Td>
+              </>
+            )}
             <Table.Td rowData={row} column={c('access')}>
               {row.access === 'Public' ? 'On' : 'Off'}
-            </Table.Td>
-            <Table.Td rowData={row} column={c('metadata')} isEllipsis={false}>
-              {(() => {
-                const value = row.metadata;
-                if (!value || value === '-') return <span>-</span>;
-                const pairs = value.split(',');
-                const first = pairs[0];
-                const extra = pairs.length - 1;
-                return (
-                  <span className="flex items-center gap-1 min-w-0">
-                    <span className="truncate min-w-0">{first}</span>
-                    {extra > 0 && (
-                      <span className="ml-auto shrink-0">
-                        <Popover
-                          trigger="click"
-                          position="bottom"
-                          aria-label={`All metadata (${pairs.length})`}
-                          content={
-                            <div className="p-4 min-w-[160px] max-w-[320px]">
-                              <div className="text-[10px] font-normal leading-[14px] text-text-muted mb-2">
-                                All Metadata ({pairs.length})
-                              </div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {pairs.map((pair, i) => (
-                                  <Badge key={i} theme="gry" size="sm" type="subtle">
-                                    {pair.trim()}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          }
-                        >
-                          <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-pointer">
-                            +{extra}
-                          </span>
-                        </Popover>
-                      </span>
-                    )}
-                  </span>
-                );
-              })()}
             </Table.Td>
             <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root

@@ -102,7 +102,7 @@ export function AttachVolumeDrawer({
       type="drawer-horizontal"
       size="md"
       title="Attach Volume"
-      description="Select a volume to attach to this instance."
+      description="Attach one or more available volumes to this instance. Once attached, the volumes will appear as additional storage devices inside the instance."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

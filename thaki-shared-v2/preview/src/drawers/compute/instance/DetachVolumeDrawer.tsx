@@ -98,7 +98,7 @@ export function DetachVolumeDrawer({
       type="drawer-horizontal"
       size="md"
       title="Detach Volume"
-      description="Select a volume to detach from this instance."
+      description="Detach the selected volume from this instance. Once detached, it will no longer be accessible."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

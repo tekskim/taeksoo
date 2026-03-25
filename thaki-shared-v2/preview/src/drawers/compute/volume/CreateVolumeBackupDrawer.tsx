@@ -49,7 +49,7 @@ export function CreateVolumeBackupDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Create volume backup"
-      description="Create a backup of this volume for disaster recovery."
+      description="Create a full backup of this volume and store it in the backup service. The backup can be used to restore the volume or create new volumes in the future."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

@@ -47,7 +47,7 @@ export function RescueInstanceDrawer({
       type="drawer-horizontal"
       size="md"
       title="Rescue Instance"
-      description="Boot this instance from a rescue image for troubleshooting."
+      description="Create a temporary recovery server using your instance's root disk."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

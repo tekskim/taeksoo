@@ -1,402 +1,625 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Button } from '@shared/components/Button';
-import { Table } from '@shared/components/Table';
-import { SelectableTable } from '@shared/components/Table/SelectableTable';
-import { StatusIndicator } from '@shared/components/StatusIndicator';
-import { Pagination } from '@shared/components/Pagination';
-import { ContextMenu } from '@shared/components/ContextMenu';
-import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Title } from '@shared/components/Title';
-import {
-  ViewPreferencesDrawer,
-  type ColumnPreference,
-} from '../drawers/common/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconDownload, IconTrash, IconX } from '@tabler/icons-react';
-import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
-import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { useState } from 'react';
+import ReactECharts from 'echarts-for-react';
+import { Badge } from '@shared/components/Badge';
+import { ProgressBar } from '@shared/components/ProgressBar';
+import { MonitoringToolbar } from '@shared/components/MonitoringToolbar';
+import { Dropdown } from '@shared/components/Dropdown';
 
-type NodeHealth = 'active' | 'warning' | 'error' | 'maintenance';
+/* ----------------------------------------
+   Chart Colors (TDS palette)
+   ---------------------------------------- */
 
-interface PhysicalNode extends Record<string, unknown> {
-  id: string;
-  hostname: string;
-  status: NodeHealth;
-  ip: string;
-  vcpuUsed: number;
-  vcpuTotal: number;
-  ramUsedGiB: number;
-  ramTotalGiB: number;
-  diskUsedTiB: number;
-  diskTotalTiB: number;
-  runningVms: number;
-}
-
-const mockPhysicalNodes: PhysicalNode[] = [
-  {
-    id: 'pn-01',
-    hostname: 'compute-01.region-a',
-    status: 'active',
-    ip: '10.0.0.11',
-    vcpuUsed: 112,
-    vcpuTotal: 128,
-    ramUsedGiB: 896,
-    ramTotalGiB: 1024,
-    diskUsedTiB: 12.4,
-    diskTotalTiB: 16,
-    runningVms: 48,
-  },
-  {
-    id: 'pn-02',
-    hostname: 'compute-02.region-a',
-    status: 'active',
-    ip: '10.0.0.12',
-    vcpuUsed: 96,
-    vcpuTotal: 128,
-    ramUsedGiB: 720,
-    ramTotalGiB: 1024,
-    diskUsedTiB: 9.1,
-    diskTotalTiB: 16,
-    runningVms: 41,
-  },
-  {
-    id: 'pn-03',
-    hostname: 'compute-03.region-b',
-    status: 'warning',
-    ip: '10.0.1.13',
-    vcpuUsed: 120,
-    vcpuTotal: 128,
-    ramUsedGiB: 1008,
-    ramTotalGiB: 1024,
-    diskUsedTiB: 14.8,
-    diskTotalTiB: 16,
-    runningVms: 52,
-  },
-  {
-    id: 'pn-04',
-    hostname: 'compute-04.region-b',
-    status: 'active',
-    ip: '10.0.1.14',
-    vcpuUsed: 64,
-    vcpuTotal: 96,
-    ramUsedGiB: 384,
-    ramTotalGiB: 768,
-    diskUsedTiB: 5.2,
-    diskTotalTiB: 12,
-    runningVms: 28,
-  },
-  {
-    id: 'pn-05',
-    hostname: 'compute-gpu-01',
-    status: 'active',
-    ip: '10.0.2.21',
-    vcpuUsed: 56,
-    vcpuTotal: 64,
-    ramUsedGiB: 448,
-    ramTotalGiB: 512,
-    diskUsedTiB: 3.8,
-    diskTotalTiB: 8,
-    runningVms: 12,
-  },
-  {
-    id: 'pn-06',
-    hostname: 'compute-gpu-02',
-    status: 'maintenance',
-    ip: '10.0.2.22',
-    vcpuUsed: 0,
-    vcpuTotal: 64,
-    ramUsedGiB: 32,
-    ramTotalGiB: 512,
-    diskUsedTiB: 1.1,
-    diskTotalTiB: 8,
-    runningVms: 0,
-  },
-  {
-    id: 'pn-07',
-    hostname: 'storage-01',
-    status: 'active',
-    ip: '10.0.3.31',
-    vcpuUsed: 24,
-    vcpuTotal: 48,
-    ramUsedGiB: 192,
-    ramTotalGiB: 384,
-    diskUsedTiB: 42.0,
-    diskTotalTiB: 64,
-    runningVms: 6,
-  },
-  {
-    id: 'pn-08',
-    hostname: 'storage-02',
-    status: 'error',
-    ip: '10.0.3.32',
-    vcpuUsed: 8,
-    vcpuTotal: 48,
-    ramUsedGiB: 64,
-    ramTotalGiB: 384,
-    diskUsedTiB: 38.2,
-    diskTotalTiB: 64,
-    runningVms: 2,
-  },
-  {
-    id: 'pn-09',
-    hostname: 'edge-01',
-    status: 'active',
-    ip: '172.16.10.5',
-    vcpuUsed: 40,
-    vcpuTotal: 48,
-    ramUsedGiB: 256,
-    ramTotalGiB: 384,
-    diskUsedTiB: 2.4,
-    diskTotalTiB: 4,
-    runningVms: 19,
-  },
-];
-
-const statusMap: Record<NodeHealth, StatusVariant> = {
-  active: 'active',
-  warning: 'pending',
-  error: 'error',
-  maintenance: 'paused',
+const chartColors = {
+  cyan400: '#22d3ee',
+  emerald400: '#34d399',
+  amber400: '#fbbf24',
+  violet400: '#a78bfa',
+  orange400: '#f97316',
+  slate100: '#f1f5f9',
+  slate400: '#94a3b8',
+  slate800: '#1e293b',
 };
 
-const filterKeys: FilterKey[] = [
-  { key: 'hostname', label: 'Hostname', type: 'input', placeholder: 'Filter by hostname...' },
-  { key: 'ip', label: 'IP', type: 'input', placeholder: 'Filter by IP...' },
-  {
-    key: 'status',
-    label: 'Status',
-    type: 'select',
-    options: [
-      { value: 'active', label: 'Active' },
-      { value: 'warning', label: 'Warning' },
-      { value: 'error', label: 'Error' },
-      { value: 'maintenance', label: 'Maintenance' },
+function getAreaGradient(color: string) {
+  return {
+    type: 'linear' as const,
+    x: 0,
+    y: 0,
+    x2: 0,
+    y2: 1,
+    colorStops: [
+      { offset: 0, color: color + '40' },
+      { offset: 1, color: color + '05' },
     ],
-  },
-];
-
-function rowMatchesFilter(row: PhysicalNode, filter: FilterKeyWithValue): boolean {
-  const q = String(filter.value ?? '').toLowerCase();
-  if (!q) return true;
-  switch (filter.key) {
-    case 'hostname':
-      return row.hostname.toLowerCase().includes(q);
-    case 'ip':
-      return row.ip.toLowerCase().includes(q);
-    case 'status':
-      return row.status === filter.value;
-    default:
-      return true;
-  }
+  };
 }
 
-const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
-  { key: 'hostname', label: 'Hostname', visible: true, locked: true },
-  { key: 'status', label: 'Status', visible: true },
-  { key: 'ip', label: 'IP Address', visible: true },
-  { key: 'vcpu', label: 'vCPU', visible: true },
-  { key: 'ram', label: 'RAM', visible: true },
-  { key: 'disk', label: 'Disk', visible: true },
-  { key: 'runningVms', label: 'Running VMs', visible: true },
-  { key: 'actions', label: 'Action', visible: true, locked: true },
+function getNiceScale(dataMax: number) {
+  if (dataMax <= 0) return { max: 10, interval: 2 };
+  const raw = Math.ceil(dataMax * 1.1);
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const norm = raw / mag;
+  let niceMax: number;
+  if (norm <= 1.5) niceMax = 1.5 * mag;
+  else if (norm <= 2) niceMax = 2 * mag;
+  else if (norm <= 3) niceMax = 3 * mag;
+  else if (norm <= 5) niceMax = 5 * mag;
+  else if (norm <= 7.5) niceMax = 7.5 * mag;
+  else niceMax = 10 * mag;
+  const interval = niceMax / 4;
+  return { max: niceMax, interval };
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const timeLabels = ['16:00', '16:10', '16:20', '16:30', '16:40', '16:50'];
+
+const cpuUsageData = {
+  idle: [20, 25, 30, 25, 20, 25],
+  iowait: [5, 8, 10, 8, 5, 8],
+  system: [15, 18, 20, 18, 15, 18],
+  user: [30, 35, 40, 35, 30, 35],
+};
+
+const ramUsageData = {
+  used: [1500, 1600, 1700, 1650, 1550, 1600],
+  free: [500, 400, 300, 350, 450, 400],
+};
+
+const diskIOPSData = {
+  read: [300, 350, 400, 380, 320, 350],
+  write: [200, 250, 300, 280, 220, 250],
+};
+
+const diskUsageData = {
+  usage: [40, 42, 45, 44, 41, 43],
+};
+
+const systemLoadData = {
+  node4: [0.5, 0.6, 0.7, 0.8, 0.7, 0.6],
+  node5: [0.4, 0.5, 0.6, 0.7, 0.6, 0.5],
+  node6: [0.3, 0.4, 0.5, 0.6, 0.5, 0.4],
+};
+
+const networkTrafficData = {
+  receive: [400, 450, 500, 480, 420, 450],
+  transmit: [300, 350, 400, 380, 320, 350],
+};
+
+const tcpConnectionsData = {
+  connections: [100, 120, 150, 140, 110, 130],
+};
+
+const networkErrorsData = {
+  errors: [0, 1, 2, 1, 0, 1],
+};
+
+const networkDroppedData = {
+  receive: [0, 1, 2, 3, 2, 1],
+  transmit: [1, 2, 3, 2, 1, 2],
+};
+
+/* ----------------------------------------
+   Card Components
+   ---------------------------------------- */
+
+function StatCard({
+  title,
+  value,
+  unit,
+}: {
+  title: string;
+  value: string | number;
+  unit?: string;
+}) {
+  return (
+    <div className="bg-surface border border-border rounded-lg p-5 flex-1 min-w-0">
+      <div className="mb-4">
+        <span className="text-14 font-semibold leading-20 text-text">{title}</span>
+      </div>
+      <div className="flex items-baseline justify-center gap-1 font-medium">
+        <span className="text-[40px] font-semibold leading-[48px] text-text">{value}</span>
+        {unit && <span className="text-14 leading-20 text-text-muted">{unit}</span>}
+      </div>
+    </div>
+  );
+}
+
+function FileSystemCard() {
+  const filesystems = [
+    { name: '/dev/sda1', used: 4.9, total: 8, percent: 61 },
+    { name: '/dev/sda3/boot', used: 22.12, total: 25, percent: 88 },
+  ];
+
+  const getBadgeTheme = (percent: number): 'red' | 'ylw' | 'gre' => {
+    if (percent >= 100) return 'red';
+    if (percent >= 70) return 'ylw';
+    return 'gre';
+  };
+
+  return (
+    <div className="bg-surface border border-border rounded-2xl p-4 flex-1 min-w-0">
+      <div className="text-14 font-semibold leading-20 text-text mb-4">File System Used Space</div>
+      <div className="flex flex-col gap-[22px]">
+        {filesystems.map((fs) => {
+          const variant =
+            fs.percent >= 90
+              ? ('danger' as const)
+              : fs.percent >= 70
+                ? ('warning' as const)
+                : ('success' as const);
+          return (
+            <div key={fs.name} className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-11 font-medium leading-16 text-text">{fs.name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-11 leading-16 text-text-muted">
+                    {fs.used}/{fs.total} GiB
+                  </span>
+                  <Badge size="sm" type="subtle" theme={getBadgeTheme(fs.percent)}>
+                    {fs.percent}%
+                  </Badge>
+                </div>
+              </div>
+              <ProgressBar value={fs.used} max={fs.total} variant={variant} showValue={false} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function AreaChartCard({
+  title,
+  labels,
+  series,
+  colors,
+  legendLabels,
+  yAxisUnit,
+  stacked = false,
+  dropdown,
+  onDropdownChange,
+  dropdownOptions,
+}: {
+  title: string;
+  labels: string[];
+  series: number[][];
+  colors: string[];
+  legendLabels: string[];
+  yAxisUnit?: string;
+  stacked?: boolean;
+  dropdown?: string;
+  onDropdownChange?: (value: string) => void;
+  dropdownOptions?: { value: string; label: string }[];
+}) {
+  const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
+    Object.fromEntries(legendLabels.map((l) => [l, true]))
+  );
+
+  const allVisible = Object.values(visibleSeries).every((v) => v);
+  const toggleAll = () => {
+    const newState = !allVisible;
+    setVisibleSeries(Object.fromEntries(legendLabels.map((l) => [l, newState])));
+  };
+
+  const visibleIndices = legendLabels
+    .map((l, i) => ({ label: l, index: i }))
+    .filter(({ label }) => visibleSeries[label]);
+
+  let dataMax: number;
+  if (stacked && visibleIndices.length > 0) {
+    const numPoints = series[0]?.length || 0;
+    let maxSum = 0;
+    for (let x = 0; x < numPoints; x++) {
+      let sum = 0;
+      for (const { index } of visibleIndices) sum += series[index][x] || 0;
+      maxSum = Math.max(maxSum, sum);
+    }
+    dataMax = maxSum;
+  } else {
+    const allData = visibleIndices.flatMap(({ index }) => series[index]);
+    dataMax = allData.length > 0 ? Math.max(...allData) : 100;
+  }
+  const { max: niceMax, interval: yInterval } = getNiceScale(dataMax);
+
+  const getOption = () => ({
+    animation: false,
+    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: labels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      min: 0,
+      max: niceMax,
+      interval: yInterval,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: yAxisUnit ? (v: number) => `${v}${yAxisUnit}` : undefined,
+      },
+    },
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: 'white',
+      borderColor: '#e2e8f0',
+      textStyle: { color: chartColors.slate800, fontSize: 11 },
+    },
+    series: legendLabels
+      .filter((l) => visibleSeries[l])
+      .map((label) => {
+        const idx = legendLabels.indexOf(label);
+        return {
+          name: label,
+          type: 'line',
+          data: series[idx],
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          showSymbol: false,
+          stack: stacked ? 'total' : undefined,
+          lineStyle: { color: colors[idx], width: 1 },
+          itemStyle: { color: colors[idx] },
+          areaStyle: getAreaGradient(colors[idx]),
+        };
+      }),
+  });
+
+  return (
+    <div className="bg-surface border border-border rounded-lg p-5 flex-1 flex flex-col gap-1 min-w-0">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-14 font-semibold leading-20 text-text">{title}</span>
+          {dropdown && dropdownOptions && onDropdownChange && (
+            <Dropdown.Select
+              value={dropdown}
+              onChange={(v) => onDropdownChange(String(v))}
+              size="sm"
+            >
+              {dropdownOptions.map((opt) => (
+                <Dropdown.Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Dropdown.Option>
+              ))}
+            </Dropdown.Select>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {legendLabels.length > 1 && (
+            <button
+              className="flex items-center gap-1.5 text-11 text-text-muted cursor-pointer hover:text-text border-none bg-transparent px-0"
+              onClick={toggleAll}
+            >
+              <span
+                className={`inline-block w-[28px] h-[14px] rounded-full transition-colors ${allVisible ? 'bg-action-primary' : 'bg-surface-muted'}`}
+                style={{ position: 'relative' }}
+              >
+                <span
+                  className="absolute top-[2px] w-[10px] h-[10px] rounded-full bg-white transition-transform"
+                  style={{ left: allVisible ? '16px' : '2px' }}
+                />
+              </span>
+              <span>{allVisible ? 'Hide All' : 'View All'}</span>
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="flex gap-3" style={{ height: '200px' }}>
+        <div className="flex-1 min-w-0">
+          <ReactECharts
+            option={getOption()}
+            style={{ height: '100%', width: '100%' }}
+            notMerge={true}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        </div>
+        <div className="flex flex-col items-start gap-1 mt-5 shrink-0">
+          {legendLabels.map((label, i) => (
+            <div
+              key={label}
+              className={`flex items-center gap-1.5 text-11 text-text-muted cursor-pointer transition-opacity hover:text-text whitespace-nowrap ${!visibleSeries[label] ? 'opacity-40' : ''}`}
+              onClick={() => setVisibleSeries((prev) => ({ ...prev, [label]: !prev[label] }))}
+            >
+              <div
+                className="w-2 h-2 rounded-full shrink-0"
+                style={{ backgroundColor: colors[i] }}
+              />
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SystemLoadCard() {
+  const nodeColors = {
+    node4: chartColors.cyan400,
+    node5: chartColors.emerald400,
+    node6: chartColors.orange400,
+  };
+
+  const [selectedNodes, setSelectedNodes] = useState<Record<string, boolean>>({
+    node4: true,
+    node5: true,
+    node6: true,
+  });
+
+  const allVisible = Object.values(selectedNodes).every((v) => v);
+  const toggleAll = () => {
+    const newState = !allVisible;
+    setSelectedNodes(Object.fromEntries(Object.keys(selectedNodes).map((n) => [n, newState])));
+  };
+
+  const visibleData = Object.entries(selectedNodes)
+    .filter(([, active]) => active)
+    .flatMap(([node]) => systemLoadData[node as keyof typeof systemLoadData]);
+  const sysDataMax = visibleData.length > 0 ? Math.max(...visibleData) : 1;
+  const { max: sysNiceMax, interval: sysYInterval } = getNiceScale(sysDataMax);
+
+  const getOption = () => ({
+    animation: false,
+    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: timeLabels,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      min: 0,
+      max: sysNiceMax,
+      interval: sysYInterval,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+    },
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: 'white',
+      borderColor: '#e2e8f0',
+      textStyle: { color: chartColors.slate800, fontSize: 11 },
+    },
+    series: Object.entries(selectedNodes)
+      .filter(([, active]) => active)
+      .map(([node]) => ({
+        name: node,
+        type: 'line',
+        data: systemLoadData[node as keyof typeof systemLoadData],
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { color: nodeColors[node as keyof typeof nodeColors], width: 1 },
+        itemStyle: { color: nodeColors[node as keyof typeof nodeColors] },
+        areaStyle: getAreaGradient(nodeColors[node as keyof typeof nodeColors]),
+      })),
+  });
+
+  return (
+    <div className="bg-surface border border-border rounded-lg p-5 flex flex-col gap-1">
+      <div className="flex items-center justify-between">
+        <span className="text-14 font-semibold leading-20 text-text">System Load</span>
+        <button
+          className="flex items-center gap-1.5 text-11 text-text-muted cursor-pointer hover:text-text border-none bg-transparent px-0"
+          onClick={toggleAll}
+        >
+          <span
+            className={`inline-block w-[28px] h-[14px] rounded-full transition-colors ${allVisible ? 'bg-action-primary' : 'bg-surface-muted'}`}
+            style={{ position: 'relative' }}
+          >
+            <span
+              className="absolute top-[2px] w-[10px] h-[10px] rounded-full bg-white transition-transform"
+              style={{ left: allVisible ? '16px' : '2px' }}
+            />
+          </span>
+          <span>{allVisible ? 'Hide All' : 'View All'}</span>
+        </button>
+      </div>
+      <div className="flex gap-3" style={{ height: '200px' }}>
+        <div className="flex-1 min-w-0">
+          <ReactECharts
+            option={getOption()}
+            style={{ height: '100%', width: '100%' }}
+            notMerge={true}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        </div>
+        <div className="flex flex-col items-start gap-1 mt-5 shrink-0">
+          {Object.entries(nodeColors).map(([node, color]) => (
+            <div
+              key={node}
+              className={`flex items-center gap-1.5 text-11 text-text-muted cursor-pointer transition-opacity hover:text-text ${!selectedNodes[node] ? 'opacity-40' : ''}`}
+              onClick={() => setSelectedNodes((prev) => ({ ...prev, [node]: !prev[node] }))}
+            >
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: color }} />
+              <span>{node}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Main Component
+   ---------------------------------------- */
+
+const nodeOptions = [
+  { value: 'node1', label: 'node1' },
+  { value: 'node2', label: 'node2' },
+  { value: 'node3', label: 'node3' },
+];
+
+const diskDeviceOptions = [
+  { value: 'dev/sda', label: 'dev/sda' },
+  { value: 'dev/sdb', label: 'dev/sdb' },
+];
+
+const networkInterfaceOptions = [
+  { value: 'br-ex', label: 'br-ex' },
+  { value: 'eth0', label: 'eth0' },
 ];
 
 export function ComputeAdminPhysicalNodesPage() {
-  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [sort, setSort] = useState('');
-  const [order, setOrder] = useState<SortOrder>('asc');
-  const [prefsOpen, setPrefsOpen] = useState(false);
-
-  const itemsPerPage = 10;
-
-  const filtered = useMemo(() => {
-    if (appliedFilters.length === 0) return mockPhysicalNodes;
-    return mockPhysicalNodes.filter((row) => appliedFilters.every((f) => rowMatchesFilter(row, f)));
-  }, [appliedFilters]);
-
-  const pageRows = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const hasSelection = selectedRows.length > 0;
-
-  const columns: TableColumn[] = useMemo(
-    () => [
-      { key: 'hostname', header: 'Hostname', sortable: true },
-      { key: 'status', header: 'Status', width: 72, align: 'center' },
-      { key: 'ip', header: 'IP Address', sortable: true },
-      { key: 'vcpu', header: 'vCPU (used/total)', align: 'right' },
-      { key: 'ram', header: 'RAM (used/total)', align: 'right' },
-      { key: 'disk', header: 'Disk (used/total)', align: 'right' },
-      { key: 'runningVms', header: 'Running VMs', align: 'right', sortable: true },
-      { key: 'actions', header: 'Action', width: 60, align: 'center', clickable: false },
-    ],
-    []
-  );
-
-  const c = (key: string) => columns.find((col) => col.key === key)!;
-
-  const handleSortChange = useCallback((nextSort: string | null, nextOrder: SortOrder) => {
-    setSort(nextSort ?? '');
-    setOrder(nextOrder);
-  }, []);
-
-  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
-    setAppliedFilters((prev) => [...prev, filter]);
-    setCurrentPage(1);
-  }, []);
-
-  const handleFilterRemove = useCallback((filterId: string) => {
-    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
-    setCurrentPage(1);
-  }, []);
+  const [timeRange, setTimeRange] = useState('1h');
+  const [selectedNode, setSelectedNode] = useState('node1');
+  const [diskDevice, setDiskDevice] = useState('node1');
+  const [diskUsageDevice, setDiskUsageDevice] = useState('dev/sda');
+  const [networkInterface, setNetworkInterface] = useState('br-ex');
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between h-8">
-        <Title title="Physical nodes" />
-      </div>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-[20px] font-semibold leading-7 text-text">Physical nodes</h1>
 
+      {/* Node Selector + Monitoring Toolbar */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          <FilterSearchInput
-            filterKeys={filterKeys}
-            onFilterAdd={handleFilterAdd}
-            selectedFilters={appliedFilters}
-            placeholder="Search physical nodes by attributes"
-            defaultFilterKey="hostname"
-          />
-          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-            <IconDownload size={12} />
-          </Button>
+        <div className="w-[160px]">
+          <Dropdown.Select
+            value={selectedNode}
+            onChange={(v) => setSelectedNode(String(v))}
+            size="sm"
+          >
+            {nodeOptions.map((opt) => (
+              <Dropdown.Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Dropdown.Option>
+            ))}
+          </Dropdown.Select>
         </div>
-        <div className="h-4 w-px bg-border" />
-        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-          <IconTrash size={12} /> Drain
-        </Button>
+        <MonitoringToolbar
+          timeRange={timeRange}
+          onTimeRangeChange={setTimeRange}
+          customPeriod={null}
+          onCustomPeriodChange={() => {}}
+          onRefresh={() => console.log('Refresh')}
+        />
       </div>
 
-      {appliedFilters.length > 0 && (
-        <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-surface-subtle rounded-md">
-          <div className="flex items-center gap-1 flex-wrap">
-            {appliedFilters.map((filter) => (
-              <span
-                key={filter.id}
-                className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
-              >
-                <span className="flex items-center gap-1">
-                  <span className="text-text">{filter.label}</span>
-                  <span className="text-border">|</span>
-                  <span className="text-text">{filter.displayValue ?? filter.value}</span>
-                </span>
-                <button
-                  type="button"
-                  className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
-                  onClick={() => handleFilterRemove(filter.id!)}
-                  aria-label={`Remove ${filter.label}`}
-                >
-                  <IconX size={12} strokeWidth={2} />
-                </button>
-              </span>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4"
-            onClick={() => {
-              setAppliedFilters([]);
-              setCurrentPage(1);
-            }}
-          >
-            Clear Filters
-          </button>
+      {/* Row 1: Stat Cards */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex gap-4">
+          <StatCard title="CPU Cores" value={0} />
+          <StatCard title="Total RAM" value="2.56" unit="GiB" />
         </div>
-      )}
+        <div className="flex gap-4">
+          <StatCard title="System running time" value="2.56" unit="weeks" />
+          <FileSystemCard />
+        </div>
+      </div>
 
-      <Pagination
-        totalCount={filtered.length}
-        size={itemsPerPage}
-        currentAt={currentPage}
-        onPageChange={setCurrentPage}
-        onSettingClick={() => setPrefsOpen(true)}
-        totalCountLabel="items"
-        selectedCount={selectedRows.length}
-      />
+      {/* Row 2: CPU Usage & RAM Usage */}
+      <div className="flex gap-4">
+        <AreaChartCard
+          title="CPU Usage"
+          labels={timeLabels}
+          series={[cpuUsageData.idle, cpuUsageData.iowait, cpuUsageData.system, cpuUsageData.user]}
+          colors={[
+            chartColors.cyan400,
+            chartColors.emerald400,
+            chartColors.amber400,
+            chartColors.violet400,
+          ]}
+          legendLabels={['idle', 'iowait', 'system', 'user']}
+          yAxisUnit="%"
+          stacked={true}
+        />
+        <AreaChartCard
+          title="RAM Usage"
+          labels={timeLabels}
+          series={[ramUsageData.used, ramUsageData.free]}
+          colors={[chartColors.cyan400, chartColors.emerald400]}
+          legendLabels={['Used', 'Free']}
+          stacked={true}
+        />
+      </div>
 
-      <SelectableTable<PhysicalNode>
-        columns={columns}
-        rows={pageRows}
-        selectionType="checkbox"
-        selectedRows={selectedRows}
-        onRowSelectionChange={setSelectedRows}
-        getRowId={(row) => row.id}
-        sort={sort}
-        order={order}
-        onSortChange={handleSortChange}
-        stickyLastColumn
-      >
-        {pageRows.map((row) => (
-          <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={c('hostname')}>
-              <span className="text-12 font-medium text-text">{row.hostname}</span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('status')}>
-              <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
-            </Table.Td>
-            <Table.Td rowData={row} column={c('ip')}>
-              <span className="text-12 text-text font-mono">{row.ip}</span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('vcpu')}>
-              <span className="text-12 text-text text-right block tabular-nums">
-                {row.vcpuUsed} / {row.vcpuTotal}
-              </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('ram')}>
-              <span className="text-12 text-text text-right block tabular-nums">
-                {row.ramUsedGiB} / {row.ramTotalGiB} GiB
-              </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('disk')}>
-              <span className="text-12 text-text text-right block tabular-nums">
-                {row.diskUsedTiB} / {row.diskTotalTiB} TiB
-              </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('runningVms')}>
-              <span className="text-12 text-text text-right block tabular-nums">
-                {row.runningVms}
-              </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
-              <ContextMenu.Root
-                direction="bottom-end"
-                gap={4}
-                trigger={({ toggle }) => (
-                  <button
-                    type="button"
-                    onClick={toggle}
-                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
-                    aria-label="Row actions"
-                  >
-                    <IconDotsCircleHorizontal size={16} stroke={1.5} />
-                  </button>
-                )}
-              >
-                <ContextMenu.Item action={() => console.log('console', row.id)}>
-                  Console
-                </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('maintenance', row.id)}>
-                  Maintenance
-                </ContextMenu.Item>
-              </ContextMenu.Root>
-            </Table.Td>
-          </Table.Tr>
-        ))}
-      </SelectableTable>
+      {/* Row 3: Disk IOPS & Disk Usage */}
+      <div className="flex gap-4">
+        <AreaChartCard
+          title="Disk IOPS"
+          labels={timeLabels}
+          series={[diskIOPSData.read, diskIOPSData.write]}
+          colors={[chartColors.cyan400, chartColors.emerald400]}
+          legendLabels={['Read', 'Write']}
+          dropdown={diskDevice}
+          onDropdownChange={setDiskDevice}
+          dropdownOptions={nodeOptions}
+        />
+        <AreaChartCard
+          title="Disk usage"
+          labels={timeLabels}
+          series={[diskUsageData.usage]}
+          colors={[chartColors.emerald400]}
+          legendLabels={['Usage']}
+          yAxisUnit="%"
+          dropdown={diskUsageDevice}
+          onDropdownChange={setDiskUsageDevice}
+          dropdownOptions={diskDeviceOptions}
+        />
+      </div>
 
-      <ViewPreferencesDrawer
-        isOpen={prefsOpen}
-        onClose={() => setPrefsOpen(false)}
-        columns={VIEW_PREFERENCE_COLUMNS}
-      />
+      {/* Row 4: System Load */}
+      <SystemLoadCard />
+
+      {/* Row 5: Network Traffic & TCP Connections */}
+      <div className="flex gap-4">
+        <AreaChartCard
+          title="Network traffic"
+          labels={timeLabels}
+          series={[networkTrafficData.receive, networkTrafficData.transmit]}
+          colors={[chartColors.cyan400, chartColors.emerald400]}
+          legendLabels={['Receive', 'Transmit']}
+        />
+        <AreaChartCard
+          title="TCP Connections"
+          labels={['0', '4', '8', '12', '16', '20', '24', '28', '32']}
+          series={[tcpConnectionsData.connections]}
+          colors={[chartColors.cyan400]}
+          legendLabels={['Connections']}
+        />
+      </div>
+
+      {/* Row 6: Network Errors & Dropped Packets */}
+      <div className="flex gap-4">
+        <AreaChartCard
+          title="Network errors"
+          labels={timeLabels}
+          series={[networkErrorsData.errors]}
+          colors={[chartColors.cyan400]}
+          legendLabels={['Errors']}
+          dropdown={networkInterface}
+          onDropdownChange={setNetworkInterface}
+          dropdownOptions={networkInterfaceOptions}
+        />
+        <AreaChartCard
+          title="Network dropped packets"
+          labels={timeLabels}
+          series={[networkDroppedData.receive, networkDroppedData.transmit]}
+          colors={[chartColors.cyan400, chartColors.emerald400]}
+          legendLabels={['Receive', 'Transmit']}
+          dropdown={networkInterface}
+          onDropdownChange={setNetworkInterface}
+          dropdownOptions={networkInterfaceOptions}
+        />
+      </div>
     </div>
   );
 }

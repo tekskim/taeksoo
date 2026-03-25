@@ -283,15 +283,15 @@ export function ComputePortsPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
-    { key: 'name', header: 'Name', sortable: true },
-    { key: 'attachedTo', header: 'Attached to' },
-    { key: 'ownedNetwork', header: 'Owned network', sortable: true },
-    { key: 'securityGroups', header: 'SG' },
-    { key: 'fixedIp', header: 'Fixed IP' },
-    { key: 'floatingIp', header: 'Floating IP' },
-    { key: 'macAddress', header: 'MAC Address' },
-    { key: 'actions', header: 'Action', width: 60, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
+    { key: 'name', header: 'Name', sortable: true, width: 180 },
+    { key: 'attachedTo', header: 'Attached to', width: 160 },
+    { key: 'ownedNetwork', header: 'Owned network', sortable: true, width: 140 },
+    { key: 'securityGroups', header: 'SG', width: 150 },
+    { key: 'fixedIp', header: 'Fixed IP', width: 130 },
+    { key: 'floatingIp', header: 'Floating IP', width: 130 },
+    { key: 'macAddress', header: 'MAC Address', width: 150 },
+    { key: 'actions', header: 'Action', width: 64, align: 'center' },
   ];
 
   const hasSelection = selectedRows.length > 0;
@@ -401,6 +401,7 @@ export function ComputePortsPage() {
         order={order}
         onSortChange={handleSortChange}
         stickyLastColumn
+        minWidth={1168}
       >
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
@@ -416,7 +417,7 @@ export function ComputePortsPage() {
                 >
                   {row.name}
                 </Link>
-                <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+                <span className="text-11 leading-16 text-text-subtle">ID : {row.id}</span>
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
@@ -436,7 +437,7 @@ export function ComputePortsPage() {
                         <span className="truncate">{row.attachedTo}</span>
                       </Link>
                     </Tooltip>
-                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                    <span className="text-11 leading-16 text-text-subtle truncate">
                       ID : {row.attachedToId?.substring(0, 8)}
                     </span>
                   </div>
@@ -444,19 +445,11 @@ export function ComputePortsPage() {
                     content={row.attachedType === 'router' ? 'Router' : 'Instance'}
                     direction="top"
                   >
-                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] cursor-default">
+                    <div className="flex-shrink-0 inline-flex items-center justify-center size-[22px] bg-surface border border-border rounded cursor-default">
                       {row.attachedType === 'router' ? (
-                        <IconRouter
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-text-subtle)]"
-                        />
+                        <IconRouter size={12} stroke={1.5} className="text-text-subtle" />
                       ) : (
-                        <IconCube
-                          size={12}
-                          stroke={1.5}
-                          className="text-[var(--color-text-subtle)]"
-                        />
+                        <IconCube size={12} stroke={1.5} className="text-text-subtle" />
                       )}
                     </div>
                   </Tooltip>
@@ -476,7 +469,7 @@ export function ComputePortsPage() {
                     <span className="truncate">{row.ownedNetwork}</span>
                   </Link>
                 </Tooltip>
-                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                <span className="text-11 leading-16 text-text-subtle truncate">
                   ID : {row.ownedNetworkId.substring(0, 8)}
                 </span>
               </div>

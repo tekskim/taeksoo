@@ -434,16 +434,18 @@ export function ComputeCertificatesPage() {
               {row.listener === '-' ? (
                 '-'
               ) : (
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <div className="flex w-full items-center gap-1">
+                <div className="flex items-center gap-1 min-w-0">
+                  <div className="flex flex-col gap-0.5 min-w-0">
                     <span className="text-12 leading-18 text-text">{row.listener}</span>
-                    {row.listenerCount > 0 && (
-                      <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-10 leading-14 font-medium text-text-muted bg-surface-subtle h-5">
-                        +{row.listenerCount}
-                      </span>
-                    )}
+                    <span className="text-11 leading-16 text-text-muted">
+                      ID : {row.listenerId}
+                    </span>
                   </div>
-                  <span className="text-11 leading-16 text-text-muted">ID : {row.listenerId}</span>
+                  {row.listenerCount > 0 && (
+                    <span className="ml-auto inline-flex shrink-0 items-center justify-center w-5 h-5 rounded border border-transparent text-[10px] font-normal leading-[14px] text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors cursor-default">
+                      +{row.listenerCount}
+                    </span>
+                  )}
                 </div>
               )}
             </Table.Td>

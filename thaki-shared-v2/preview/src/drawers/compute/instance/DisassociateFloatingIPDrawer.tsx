@@ -109,7 +109,7 @@ export function DisassociateFloatingIPDrawer({
       type="drawer-horizontal"
       size="md"
       title="Disassociate floating IP"
-      description="Remove the floating IP association from this instance."
+      description="Remove the association between this floating IP and the instance. Once disassociated, the instance will lose external network access through this IP."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

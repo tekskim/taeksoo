@@ -326,7 +326,7 @@ export function ComputeAdminFirewallsPage() {
     { key: 'name', header: 'Name', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
     { key: 'rules', header: 'Rules', sortable: true },
-    { key: 'firewalls', header: 'NACLs', sortable: true },
+    { key: 'firewalls', header: 'Firewalls', sortable: true },
     { key: 'shared', header: 'Shared' },
     { key: 'audited', header: 'Audited' },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
@@ -452,9 +452,7 @@ export function ComputeAdminFirewallsPage() {
                       >
                         {row.name}
                       </Link>
-                      <span className="text-body-sm text-[var(--color-text-muted)]">
-                        ID: {row.id}
-                      </span>
+                      <span className="text-11 leading-16 text-text-muted">ID: {row.id}</span>
                     </div>
                   </Table.Td>
                   <Table.Td rowData={row} column={fwColumns[2]}>
@@ -470,12 +468,12 @@ export function ComputeAdminFirewallsPage() {
                         >
                           {row.ingressPolicy}
                         </Link>
-                        <span className="text-body-sm text-[var(--color-text-muted)]">
+                        <span className="text-11 leading-16 text-text-muted">
                           ID: {row.ingressPolicyId}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-[var(--color-text-muted)]">-</span>
+                      <span className="text-text-muted">-</span>
                     )}
                   </Table.Td>
                   <Table.Td rowData={row} column={fwColumns[4]}>
@@ -488,22 +486,22 @@ export function ComputeAdminFirewallsPage() {
                         >
                           {row.egressPolicy}
                         </Link>
-                        <span className="text-body-sm text-[var(--color-text-muted)]">
+                        <span className="text-11 leading-16 text-text-muted">
                           ID: {row.egressPolicyId}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-[var(--color-text-muted)]">-</span>
+                      <span className="text-text-muted">-</span>
                     )}
                   </Table.Td>
                   <Table.Td rowData={row} column={fwColumns[5]}>
                     {row.associatedPorts.length > 0 ? (
                       <div className="flex items-center gap-1 min-w-0">
                         <div className="flex flex-col gap-0.5 min-w-0">
-                          <span className="text-[var(--color-text-default)]">
+                          <span className="text-12 leading-18 text-text truncate">
                             {row.associatedPorts[0].name}
                           </span>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          <span className="text-11 leading-16 text-text-subtle truncate">
                             ID: {row.associatedPorts[0].id}
                           </span>
                         </div>
@@ -513,7 +511,7 @@ export function ComputeAdminFirewallsPage() {
                               direction="bottom"
                               content={
                                 <div className="p-3 min-w-[120px] max-w-[320px]">
-                                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                                  <div className="text-10 leading-14 font-medium text-text-muted mb-2">
                                     All Ports ({row.associatedPorts.length})
                                   </div>
                                   <div className="flex flex-wrap gap-1">
@@ -526,7 +524,7 @@ export function ComputeAdminFirewallsPage() {
                                 </div>
                               }
                             >
-                              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-11 leading-16 font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
                                 +{row.associatedPorts.length - 1}
                               </span>
                             </Tooltip>
@@ -534,7 +532,7 @@ export function ComputeAdminFirewallsPage() {
                         )}
                       </div>
                     ) : (
-                      <span className="text-[var(--color-text-muted)]">-</span>
+                      <span className="text-text-muted">-</span>
                     )}
                   </Table.Td>
                   <Table.Td rowData={row} column={fwColumns[6]}>
@@ -661,9 +659,7 @@ export function ComputeAdminFirewallsPage() {
                       >
                         {row.name}
                       </Link>
-                      <span className="text-body-sm text-[var(--color-text-muted)]">
-                        ID: {row.id}
-                      </span>
+                      <span className="text-11 leading-16 text-text-muted">ID: {row.id}</span>
                     </div>
                   </Table.Td>
                   <Table.Td rowData={row} column={polColumns[1]}>
@@ -672,13 +668,15 @@ export function ComputeAdminFirewallsPage() {
                   <Table.Td rowData={row} column={polColumns[2]}>
                     <div className="flex items-center gap-1 min-w-0">
                       <div className="flex flex-col gap-0.5 min-w-0">
-                        <span className="text-[var(--color-text-default)]">{row.firstRule}</span>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          ID:{row.firstRuleId}
+                        <span className="text-12 leading-18 text-text truncate">
+                          {row.firstRule}
+                        </span>
+                        <span className="text-11 leading-16 text-text-subtle truncate">
+                          ID: {row.firstRuleId}
                         </span>
                       </div>
                       {row.rulesCount > 1 && (
-                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5 ml-auto">
+                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-11 leading-16 font-medium text-text-muted bg-surface-subtle h-5 ml-auto">
                           +{row.rulesCount - 1}
                         </span>
                       )}
@@ -687,15 +685,15 @@ export function ComputeAdminFirewallsPage() {
                   <Table.Td rowData={row} column={polColumns[3]}>
                     <div className="flex items-center gap-1 min-w-0">
                       <div className="flex flex-col gap-0.5 min-w-0">
-                        <span className="text-[var(--color-text-default)]">
+                        <span className="text-12 leading-18 text-text truncate">
                           {row.firstFirewall}
                         </span>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          ID:{row.firstFirewallId}
+                        <span className="text-11 leading-16 text-text-subtle truncate">
+                          ID: {row.firstFirewallId}
                         </span>
                       </div>
                       {row.firewallsCount > 1 && (
-                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5 ml-auto">
+                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-11 leading-16 font-medium text-text-muted bg-surface-subtle h-5 ml-auto">
                           +{row.firewallsCount - 1}
                         </span>
                       )}
@@ -820,9 +818,7 @@ export function ComputeAdminFirewallsPage() {
                       >
                         {row.name}
                       </Link>
-                      <span className="text-body-sm text-[var(--color-text-muted)]">
-                        ID: {row.id}
-                      </span>
+                      <span className="text-11 leading-16 text-text-muted">ID: {row.id}</span>
                     </div>
                   </Table.Td>
                   <Table.Td rowData={row} column={ruleColumns[1]}>

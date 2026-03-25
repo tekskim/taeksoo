@@ -3,6 +3,7 @@ import { Overlay } from '@shared/components/Overlay';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
 import { Toggle } from '@shared/components/Toggle';
+import { Textarea } from '@shared/components/Textarea';
 import InfoContainer from '@shared/components/InfoContainer/InfoContainer';
 import { useDrawerAnimation } from '../../../hooks/useDrawerAnimation';
 
@@ -10,7 +11,13 @@ export interface EditNetworkDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   networkId?: string;
-  initialData?: { name: string; adminStateUp?: boolean; shared?: boolean };
+  initialData?: {
+    name: string;
+    description?: string;
+    adminStateUp?: boolean;
+    portSecurityEnabled?: boolean;
+    shared?: boolean;
+  };
 }
 
 export function EditNetworkDrawer({
@@ -21,18 +28,31 @@ export function EditNetworkDrawer({
 }: EditNetworkDrawerProps) {
   const { mounted, appeared } = useDrawerAnimation(isOpen);
   const [name, setName] = useState(initialData?.name ?? '');
+  const [description, setDescription] = useState(initialData?.description ?? '');
   const [adminStateUp, setAdminStateUp] = useState(initialData?.adminStateUp ?? true);
+  const [portSecurityEnabled, setPortSecurityEnabled] = useState(
+    initialData?.portSecurityEnabled ?? true
+  );
   const [shared, setShared] = useState(initialData?.shared ?? false);
   const [nameError, setNameError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setName(initialData?.name ?? '');
+      setDescription(initialData?.description ?? '');
       setAdminStateUp(initialData?.adminStateUp ?? true);
+      setPortSecurityEnabled(initialData?.portSecurityEnabled ?? true);
       setShared(initialData?.shared ?? false);
       setNameError(null);
     }
-  }, [isOpen, initialData?.name, initialData?.adminStateUp, initialData?.shared]);
+  }, [
+    isOpen,
+    initialData?.name,
+    initialData?.description,
+    initialData?.adminStateUp,
+    initialData?.portSecurityEnabled,
+    initialData?.shared,
+  ]);
 
   const handleSubmit = () => {
     if (!name.trim()) {
@@ -50,7 +70,7 @@ export function EditNetworkDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit network"
-      description="Edit the network's basic information."
+      description="Modifies the properties of the network."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}
@@ -63,15 +83,25 @@ export function EditNetworkDrawer({
           <InfoContainer label="Network ID" values={[networkId]} />
         </div>
 
-        <FormField label="Name" required error={nameError || undefined}>
+        <FormField label="Network name" required error={nameError || undefined}>
           <Input
             value={name}
             onChange={(e) => {
               setName(e.target.value);
               if (nameError) setNameError(null);
             }}
-            placeholder="Enter network name"
+            placeholder="e.g. my-network"
             error={!!nameError}
+          />
+        </FormField>
+
+        <FormField label="Description">
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
+            rows={3}
+            size="sm"
           />
         </FormField>
 
@@ -90,9 +120,26 @@ export function EditNetworkDrawer({
 
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
+            <span className="text-12 font-medium text-text">Port security</span>
+            <span className="text-12 text-text-muted">
+              Enhances security by allowing only permitted devices to access this network. It is
+              recommended to keep this enabled in most cases.
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Toggle
+              checked={portSecurityEnabled}
+              onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+            />
+            <span className="text-12 text-text">{portSecurityEnabled ? 'On' : 'Off'}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
             <span className="text-12 font-medium text-text">Shared</span>
             <span className="text-12 text-text-muted">
-              Allow other projects to use this network.
+              Indicates whether the network is available to other projects.
             </span>
           </div>
           <div className="flex items-center gap-2">

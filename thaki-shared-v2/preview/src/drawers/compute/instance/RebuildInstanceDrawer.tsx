@@ -198,7 +198,7 @@ export function RebuildInstanceDrawer({
       type="drawer-horizontal"
       size="md"
       title="Rebuild Instance"
-      description="Rebuild this instance from a new image. All data on the instance will be lost."
+      description="Rebuild the instance using a selected image. The root disk will be reinstalled during this process."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

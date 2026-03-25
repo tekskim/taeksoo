@@ -457,10 +457,38 @@ export function ComputeAdminRoutersPage() {
                   </button>
                 )}
               >
-                <ContextMenu.Item action={() => {}}>Connect subnet</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}}>Disconnect subnet</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}}>External gateway Setting</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedRouter(row);
+                    setConnectSubnetOpen(true);
+                  }}
+                >
+                  Connect subnet
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedRouter(row);
+                    setDisconnectSubnetOpen(true);
+                  }}
+                >
+                  Disconnect subnet
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedRouter(row);
+                    setExternalGwOpen(true);
+                  }}
+                >
+                  External gateway Setting
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  action={() => {
+                    setSelectedRouter(row);
+                    setEditRouterOpen(true);
+                  }}
+                >
+                  Edit
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => {}} danger>
                   Delete
                 </ContextMenu.Item>
@@ -469,6 +497,44 @@ export function ComputeAdminRoutersPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <CreateRouterDrawer isOpen={createRouterOpen} onClose={() => setCreateRouterOpen(false)} />
+      <EditRouterDrawer
+        isOpen={editRouterOpen}
+        onClose={() => {
+          setEditRouterOpen(false);
+          setSelectedRouter(null);
+        }}
+        routerId={selectedRouter?.id}
+        initialData={
+          selectedRouter
+            ? { name: selectedRouter.name, adminStateUp: selectedRouter.adminState }
+            : undefined
+        }
+      />
+      <ConnectSubnetDrawer
+        isOpen={connectSubnetOpen}
+        onClose={() => {
+          setConnectSubnetOpen(false);
+          setSelectedRouter(null);
+        }}
+        routerName={selectedRouter?.name}
+      />
+      <DisconnectSubnetDrawer
+        isOpen={disconnectSubnetOpen}
+        onClose={() => {
+          setDisconnectSubnetOpen(false);
+          setSelectedRouter(null);
+        }}
+        routerName={selectedRouter?.name}
+      />
+      <ExternalGatewaySettingDrawer
+        isOpen={externalGwOpen}
+        onClose={() => {
+          setExternalGwOpen(false);
+          setSelectedRouter(null);
+        }}
+        routerName={selectedRouter?.name}
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
