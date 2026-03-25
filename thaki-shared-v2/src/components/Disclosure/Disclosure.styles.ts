@@ -39,10 +39,8 @@ export const disclosureIconWrapperStyles = cva(
   }
 );
 
-export const disclosureLabelStyles =
-  'font-sans text-14 font-medium leading-20 text-text whitespace-nowrap';
+export const disclosureLabelStyles = 'font-sans text-label-lg text-text whitespace-nowrap';
 
-export const disclosureOptionalTextStyles =
-  'text-12 font-normal leading-16 text-text-subtle';
+export const disclosureOptionalTextStyles = 'text-12 font-normal leading-16 text-text-subtle';
 
 export const disclosureContentStyles = 'w-full';

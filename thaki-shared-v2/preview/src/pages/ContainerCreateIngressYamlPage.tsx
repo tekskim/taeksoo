@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,19 +7,55 @@ const DEFAULT_YAML = `apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ''
-  namespace: default
+  annotations:
+    {}
+    #  key: string
+  labels:
+    {}
+    #  key: string
+  namespace: local
 spec:
+  ingressClassName: traefik
   rules:
-    - host: ''
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ''
-                port:
-                  number: 80`;
+    - vKey: 2406568955
+#    - host: string
+#      http:
+#        paths:
+#          - backend:
+#              resource:
+#                apiGroup: string
+#                kind: string
+#                name: string
+#              service:
+#                name: string
+#                port:
+#                  name: string
+#                  number: int
+#            path: string
+#            pathType: string
+  tls:
+    - hosts:
+        - ''
+        - bar
+#    - hosts:
+#        - string
+#      secretName: string
+  backend:
+    {}
+#  defaultBackend:
+#    resource:
+#      apiGroup: string
+#      kind: string
+#      name: string
+#    service:
+#      name: string
+#      port:
+#        name: string
+#        number: int
+__clone: true
+cacheObject:
+  useNestedBackendField: true
+  showPathType: true`;
 
 function YamlEditor({
   value,
@@ -111,9 +146,11 @@ export function ContainerCreateIngressYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create ingress" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create ingress</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define an ingress using YAML configuration.
+          Ingresses route incoming traffic from the internet to Services within the cluster based on
+          the hostname and path specified in the request. You can expose multiple Services on the
+          same external IP address and port.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

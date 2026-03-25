@@ -373,7 +373,7 @@ export function ContainerNodesPage() {
                     e.stopPropagation();
                     void navigator.clipboard.writeText(row.internalIp);
                   }}
-                  className="shrink-0 p-0.5 text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)]"
+                  className="shrink-0 p-0.5 text-primary hover:text-[var(--color-action-primary-hover)]"
                   aria-label="Copy internal IP"
                 >
                   <IconCopy size={12} stroke={1.5} />

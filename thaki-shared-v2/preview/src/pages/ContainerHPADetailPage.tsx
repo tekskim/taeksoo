@@ -10,6 +10,7 @@ import { Tabs, Tab } from '@shared/components/Tabs';
 import { Table } from '@shared/components/Table';
 import { Pagination } from '@shared/components/Pagination';
 import { Popover } from '@shared/components/Popover';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { IconChevronDown } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 
@@ -146,63 +147,37 @@ const mockConditionsData: ConditionRow[] = [
   },
 ];
 
-const cardClass = 'flex-1 min-w-0 border border-border rounded-lg bg-surface-default flex flex-col';
-const cardHeaderClass = 'text-16 font-semibold leading-6 text-text px-4 pt-4 pb-0';
-const dataRowClass =
-  'flex flex-col gap-1.5 px-4 py-3 border-t border-border-subtle first:border-t-0';
-
 /* ----------------------------------------
    Metrics Tab
    ---------------------------------------- */
 
 function MetricsTab() {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex gap-3 w-full items-stretch flex-col sm:flex-row">
-        <div className={cardClass}>
-          <div className={cardHeaderClass}>Metric</div>
-          <div className="flex flex-col pb-3">
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Source</span>
-              <span className="text-12 leading-18 text-text">{mockMetricData.source}</span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Name</span>
-              <span className="text-12 leading-18 text-text">{mockMetricData.name}</span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Target name</span>
-              <span className="text-12 leading-18 text-text">{mockMetricData.targetType}</span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Value</span>
-              <span className="text-12 leading-18 text-text">{mockMetricData.value}</span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">
-                Referent API version
-              </span>
-              <span className="text-12 leading-18 text-text">
-                {mockMetricData.referentApiVersion}
-              </span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Referent kind</span>
-              <span className="text-12 leading-18 text-text">{mockMetricData.referentKind}</span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Referent name</span>
-              <span className="text-12 leading-18 text-text">{mockMetricData.referentName}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className={cardClass}>
-          <div className={cardHeaderClass}>Current metrics</div>
-          <div className="px-4 pb-4 pt-3">
-            <span className="text-12 font-normal leading-4 text-text">No current metrics</span>
-          </div>
-        </div>
+    <div className="flex gap-3 w-full items-stretch flex-col sm:flex-row">
+      <div className="flex-1 min-w-0">
+        <SectionCard>
+          <SectionCard.Header title="Metric" />
+          <SectionCard.Content>
+            <SectionCard.DataRow label="Source" value={mockMetricData.source} />
+            <SectionCard.DataRow label="Name" value={mockMetricData.name} />
+            <SectionCard.DataRow label="Target name" value={mockMetricData.targetType} />
+            <SectionCard.DataRow label="Value" value={mockMetricData.value} />
+            <SectionCard.DataRow
+              label="Referent API version"
+              value={mockMetricData.referentApiVersion}
+            />
+            <SectionCard.DataRow label="Referent kind" value={mockMetricData.referentKind} />
+            <SectionCard.DataRow label="Referent name" value={mockMetricData.referentName} />
+          </SectionCard.Content>
+        </SectionCard>
+      </div>
+      <div className="flex-1 min-w-0">
+        <SectionCard>
+          <SectionCard.Header title="Current metrics" />
+          <SectionCard.Content>
+            <SectionCard.DataRow label="" value="No current metrics" />
+          </SectionCard.Content>
+        </SectionCard>
       </div>
     </div>
   );
@@ -214,63 +189,48 @@ function MetricsTab() {
 
 function BehaviorTab() {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-4 w-full items-start flex-col md:flex-row">
-        <div className={cardClass}>
-          <div className={cardHeaderClass}>Scale down behavior</div>
-          <div className="flex flex-col pb-3">
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Policies</span>
-              <div className="text-12 leading-18 text-text flex flex-col gap-0.5">
+    <div className="flex gap-4 w-full items-start flex-col md:flex-row">
+      <div className="flex-1 min-w-0">
+        <SectionCard>
+          <SectionCard.Header title="Scale down behavior" />
+          <SectionCard.Content>
+            <SectionCard.DataRow label="Policies">
+              <div className="flex flex-col gap-0.5">
                 {mockScaleDownBehavior.policies.map((p, i) => (
-                  <div key={i}>{p}</div>
+                  <span key={i} className="text-12 leading-18 text-text">
+                    {p}
+                  </span>
                 ))}
               </div>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Select policy</span>
-              <span className="text-12 leading-18 text-text">
-                {mockScaleDownBehavior.selectPolicy}
-              </span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">
-                Stabilization window seconds
-              </span>
-              <span className="text-12 leading-18 text-text">
-                {mockScaleDownBehavior.stabilizationWindowSeconds}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className={cardClass}>
-          <div className={cardHeaderClass}>Scale up behavior</div>
-          <div className="flex flex-col pb-3">
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Policies</span>
-              <div className="text-12 leading-18 text-text flex flex-col gap-0.5">
+            </SectionCard.DataRow>
+            <SectionCard.DataRow label="Select policy" value={mockScaleDownBehavior.selectPolicy} />
+            <SectionCard.DataRow
+              label="Stabilization window seconds"
+              value={mockScaleDownBehavior.stabilizationWindowSeconds}
+            />
+          </SectionCard.Content>
+        </SectionCard>
+      </div>
+      <div className="flex-1 min-w-0">
+        <SectionCard>
+          <SectionCard.Header title="Scale up behavior" />
+          <SectionCard.Content>
+            <SectionCard.DataRow label="Policies">
+              <div className="flex flex-col gap-0.5">
                 {mockScaleUpBehavior.policies.map((p, i) => (
-                  <div key={i}>{p}</div>
+                  <span key={i} className="text-12 leading-18 text-text">
+                    {p}
+                  </span>
                 ))}
               </div>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">Select policy</span>
-              <span className="text-12 leading-18 text-text">
-                {mockScaleUpBehavior.selectPolicy}
-              </span>
-            </div>
-            <div className={dataRowClass}>
-              <span className="text-11 font-medium leading-4 text-text-muted">
-                Stabilization window seconds
-              </span>
-              <span className="text-12 leading-18 text-text">
-                {mockScaleUpBehavior.stabilizationWindowSeconds}
-              </span>
-            </div>
-          </div>
-        </div>
+            </SectionCard.DataRow>
+            <SectionCard.DataRow label="Select policy" value={mockScaleUpBehavior.selectPolicy} />
+            <SectionCard.DataRow
+              label="Stabilization window seconds"
+              value={mockScaleUpBehavior.stabilizationWindowSeconds}
+            />
+          </SectionCard.Content>
+        </SectionCard>
       </div>
     </div>
   );

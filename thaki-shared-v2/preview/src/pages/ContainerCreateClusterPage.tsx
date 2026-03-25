@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconX, IconCirclePlus, IconHelpCircle } from '@tabler/icons-react';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { Input, NumberInput } from '@shared/components/Input';
 import { FormField } from '@shared/components/FormField';
 import { Disclosure } from '@shared/components/Disclosure';
 import { Range } from '@shared/components/Range';
-import { Title } from '@shared/components/Title';
 import { Tooltip } from '@shared/components/Tooltip';
 import { Select } from '../components/TdsSelectCompat';
 import { RadioGroup, Radio } from '../components/TdsRadioCompat';
@@ -158,6 +161,44 @@ const KEY_PAIR_OPTIONS = mockKeyPairs.map((kp) => ({
   label: `${kp.name} (${kp.id})`,
 }));
 
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+type ClusterSectionStep =
+  | 'basic-info'
+  | 'networking'
+  | 'node-configuration'
+  | 'worker-nodes'
+  | 'labels-annotations';
+
+const CLUSTER_SECTION_LABELS: Record<ClusterSectionStep, string> = {
+  'basic-info': 'Basic information',
+  networking: 'Networking',
+  'node-configuration': 'Node configuration',
+  'worker-nodes': 'Worker nodes',
+  'labels-annotations': 'Labels & annotations',
+};
+
+const CLUSTER_SECTION_ORDER: ClusterSectionStep[] = [
+  'basic-info',
+  'networking',
+  'node-configuration',
+  'worker-nodes',
+  'labels-annotations',
+];
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
+
 /* ----------------------------------------
    Component
    ---------------------------------------- */
@@ -275,32 +316,60 @@ export function ContainerCreateClusterPage() {
   };
 
   const handleCancel = () => {
-    navigate('/container/cluster-management');
+    navigate('/container');
   };
 
-  return (
-    <div className="flex flex-col pt-4 px-8 pb-20">
-      {/* Header */}
-      <div className="flex flex-col gap-2 mb-6">
-        <Title title="Create cluster" size="large" />
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Cluster is a group of machines that work together to run containerized applications with
-          automated scaling, scheduling, and management.
-        </p>
-      </div>
+  const clusterSectionStates: Record<ClusterSectionStep, WizardSectionState> = (() => {
+    const basicDone = Boolean(clusterName.trim());
+    return {
+      'basic-info': basicDone ? 'done' : 'active',
+      networking: basicDone ? 'done' : 'pre',
+      'node-configuration': basicDone ? 'done' : 'pre',
+      'worker-nodes': basicDone ? 'done' : 'pre',
+      'labels-annotations':
+        labels.some((l) => l.key.trim() || l.value.trim()) ||
+        annotations.some((a) => a.key.trim() || a.value.trim())
+          ? 'done'
+          : 'pre',
+    };
+  })();
 
-      {/* Main Content Grid */}
-      <div className="flex gap-6">
-        {/* Left Column - Form */}
-        <div className="flex-1 flex flex-col gap-[16px]">
+  return (
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create cluster</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Cluster is a group of machines that work together to run containerized applications with
+            automated scaling, scheduling, and management.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: CLUSTER_SECTION_ORDER.map((key) => ({
+                label: CLUSTER_SECTION_LABELS[key],
+                status: mapStatus(clusterSectionStates[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={false}
+          onCancel={handleCancel}
+          onAction={() => {}}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {/* Basic Information */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                Basic information
-              </h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Basic information" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Name */}
                 <FormField label="Name" required>
@@ -365,15 +434,13 @@ export function ContainerCreateClusterPage() {
                   </div>
                 </Disclosure>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Networking */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">Networking</h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Networking" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* External network */}
                 <FormField
@@ -417,17 +484,13 @@ export function ContainerCreateClusterPage() {
                   />
                 </FormField>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Node Configuration */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                Node configuration
-              </h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Node configuration" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Node Type */}
                 <FormField
@@ -643,15 +706,13 @@ export function ContainerCreateClusterPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Worker Nodes */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">Worker nodes</h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Worker nodes" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Image */}
                 <FormField
@@ -752,17 +813,13 @@ export function ContainerCreateClusterPage() {
                   </div>
                 </FormField>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Labels & Annotations */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                Labels & annotations
-              </h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Labels & annotations" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Labels */}
                 <div className="flex flex-col gap-3">
@@ -818,8 +875,12 @@ export function ContainerCreateClusterPage() {
                       ))}
 
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addLabel}>
-                          <IconCirclePlus size={12} stroke={1.5} className="inline mr-1" />
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={addLabel}
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                        >
                           Add label
                         </Button>
                       </div>
@@ -885,8 +946,12 @@ export function ContainerCreateClusterPage() {
                       ))}
 
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addAnnotation}>
-                          <IconCirclePlus size={12} stroke={1.5} className="inline mr-1" />
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={addAnnotation}
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                        >
                           Add annotation
                         </Button>
                       </div>
@@ -894,38 +959,11 @@ export function ContainerCreateClusterPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column - Summary (Floating Card Style) */}
-        <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-            <ul className="flex flex-col gap-2 text-body-md text-[var(--color-text-muted)] list-none p-0 m-0">
-              <li>Basic information</li>
-              <li>Networking</li>
-              <li>Node configuration</li>
-              <li>Worker nodes</li>
-              <li>Labels & annotations</li>
-            </ul>
-
-            <div className="flex flex-row gap-2 w-full justify-end">
-              <Button variant="secondary" onClick={handleCancel}>
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleCreate}
-                className="flex-1 min-w-[80px]"
-                disabled
-              >
-                Create
-              </Button>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
         </div>
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 
