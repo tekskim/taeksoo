@@ -23,7 +23,7 @@ const MOCK_TENANTS = ['admin', 'demo-project', 'engineering', 'production'] as c
 
 type SnapshotStatus = 'active' | 'creating' | 'error' | 'deleting';
 
-interface InstanceSnapshot {
+interface InstanceSnapshot extends Record<string, unknown> {
   id: string;
   name: string;
   tenant: string;
@@ -240,7 +240,8 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
   { key: 'tenant', label: 'Tenant', visible: true },
   { key: 'size', label: 'Size', visible: true },
-  { key: 'diskFormat', label: 'Disk Format', visible: true },
+  { key: 'diskFormat', label: 'Disk format', visible: true },
+  { key: 'sourceInstance', label: 'Source instance', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
@@ -301,7 +302,6 @@ export function ComputeAdminInstanceSnapshotsPage() {
     { key: 'size', header: 'Size', sortable: true },
     { key: 'diskFormat', header: 'Disk format', sortable: true },
     { key: 'sourceInstance', header: 'Source instance', sortable: true },
-    { key: 'description', header: 'Description', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
@@ -431,12 +431,9 @@ export function ComputeAdminInstanceSnapshotsPage() {
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[6]}>
-              {row.description}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[7]}>
               {stripTime(row.createdAt)}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[8]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

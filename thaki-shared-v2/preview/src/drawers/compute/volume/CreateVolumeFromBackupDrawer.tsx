@@ -69,7 +69,7 @@ export function CreateVolumeFromBackupDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Create volume from backup"
-      description="Create a new volume from this backup."
+      description="Creates a new volume based on the selected backup."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

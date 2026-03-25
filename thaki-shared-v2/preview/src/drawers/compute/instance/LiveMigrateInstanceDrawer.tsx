@@ -105,7 +105,7 @@ export function LiveMigrateInstanceDrawer({
       type="drawer-horizontal"
       size="md"
       title="Live migrate instance"
-      description="Migrate this instance to another host without downtime."
+      description="Live migrate the instance to a different host without shutting it down."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

@@ -70,7 +70,7 @@ export function ManageTagsDrawer({
       type="drawer-horizontal"
       size="md"
       title="Manage Tags"
-      description="Add, edit, or remove tags on this instance."
+      description="Tags are used to categorize and manage resources."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

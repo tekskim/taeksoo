@@ -3,6 +3,7 @@ import { Overlay } from '@shared/components/Overlay';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
 import { Textarea } from '@shared/components/Textarea';
+import { InlineMessage } from '@shared/components/InlineMessage';
 import InfoContainer from '@shared/components/InfoContainer/InfoContainer';
 import { useDrawerAnimation } from '../../../hooks/useDrawerAnimation';
 
@@ -56,7 +57,11 @@ export function CreateInstanceSnapshotDrawer({
     >
       <div className="flex flex-col gap-6 pb-6">
         <div className="flex flex-col gap-3">
-          <InfoContainer label="Instance name" values={[instanceName]} />
+          <InfoContainer label="Instance" values={[instanceName]} />
+          <InlineMessage
+            type="error"
+            message="For data consistency, stop all write operations on the instance before creating a snapshot."
+          />
         </div>
 
         <FormField label="Snapshot name" required error={nameError || undefined}>

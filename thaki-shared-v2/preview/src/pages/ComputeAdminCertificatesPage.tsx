@@ -25,10 +25,9 @@ import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSea
 type CertificateStatus = 'active' | 'error' | 'pending';
 type CertificateType = 'server' | 'ca';
 
-interface Certificate {
+interface Certificate extends Record<string, unknown> {
   id: string;
   name: string;
-  tenant: string;
   /** SAN / subject alternative names; empty for CA or N/A */
   sanDomains: string[];
   listener: string;
@@ -40,13 +39,10 @@ interface Certificate {
   status: CertificateStatus;
 }
 
-const TENANTS = ['admin', 'demo-project', 'engineering', 'production'] as const;
-
 const mockCertificates: Certificate[] = [
   {
     id: 'cert-001',
     name: 'server-cert-1',
-    tenant: TENANTS[0],
     sanDomains: ['www.domain.com', 'api.domain.com', 'cdn.domain.com', 'static.domain.com'],
     listener: 'listener-1',
     listenerId: '294u92s2',
@@ -59,7 +55,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-002',
     name: 'api-cert',
-    tenant: TENANTS[1],
     sanDomains: ['api.example.com', 'api-staging.example.com', 'api-internal.example.com'],
     listener: 'listener-api',
     listenerId: '38fj29dk',
@@ -72,7 +67,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-003',
     name: 'wildcard-cert',
-    tenant: TENANTS[2],
     sanDomains: [
       'www.example.org',
       'api.example.org',
@@ -92,7 +86,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-004',
     name: 'staging-cert',
-    tenant: TENANTS[3],
     sanDomains: ['staging.domain.com', 'staging-api.domain.com'],
     listener: 'listener-staging',
     listenerId: 'k29dk38f',
@@ -105,7 +98,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-005',
     name: 'internal-cert',
-    tenant: TENANTS[0],
     sanDomains: [
       'internal.company.com',
       'svc.internal.company.com',
@@ -124,7 +116,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-006',
     name: 'root-ca',
-    tenant: TENANTS[1],
     sanDomains: [],
     listener: '-',
     listenerId: '',
@@ -137,7 +128,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-007',
     name: 'intermediate-ca',
-    tenant: TENANTS[2],
     sanDomains: [],
     listener: '-',
     listenerId: '',
@@ -150,7 +140,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-008',
     name: 'expired-cert',
-    tenant: TENANTS[3],
     sanDomains: ['old.domain.com', 'legacy.old.domain.com', 'redirect.old.domain.com'],
     listener: '-',
     listenerId: '',
@@ -163,7 +152,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-009',
     name: 'dev-ca',
-    tenant: TENANTS[0],
     sanDomains: [],
     listener: '-',
     listenerId: '',
@@ -176,7 +164,6 @@ const mockCertificates: Certificate[] = [
   {
     id: 'cert-010',
     name: 'client-auth-cert',
-    tenant: TENANTS[1],
     sanDomains: ['auth.domain.com', 'auth-admin.domain.com'],
     listener: 'listener-auth',
     listenerId: '29dk38fj',
@@ -196,7 +183,6 @@ const certStatusMap: Record<CertificateStatus, StatusVariant> = {
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
-  { key: 'tenant', label: 'Tenant', type: 'input', placeholder: 'Enter tenant...' },
   { key: 'domain', label: 'Domain', type: 'input', placeholder: 'Enter domain...' },
   {
     key: 'status',
@@ -228,10 +214,11 @@ function stripTime(s: string): string {
 }
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'type', label: 'Type', visible: true },
-  { key: 'domain', label: 'Domain', visible: true },
-  { key: 'expiration', label: 'Expiration', visible: true },
+  { key: 'domain', label: 'SAN', visible: true },
+  { key: 'listener', label: 'Listener', visible: true },
+  { key: 'expiresAt', label: 'Expires at', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
@@ -283,7 +270,6 @@ export function ComputeAdminCertificatesPage() {
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'tenant', header: 'Tenant', sortable: true },
     { key: 'domain', header: 'SAN', sortable: true },
     { key: 'listener', header: 'Listener', sortable: true },
     { key: 'expiresAt', header: 'Expires at', sortable: true },
@@ -410,9 +396,6 @@ export function ComputeAdminCertificatesPage() {
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              <span className="text-12 leading-18 text-text truncate">{row.tenant}</span>
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
               {row.sanDomains.length === 0 ? (
                 '-'
               ) : (
@@ -448,7 +431,7 @@ export function ComputeAdminCertificatesPage() {
                 </span>
               )}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
+            <Table.Td rowData={row} column={columns[3]}>
               {row.listener === '-' ? (
                 '-'
               ) : (
@@ -465,7 +448,7 @@ export function ComputeAdminCertificatesPage() {
                 </div>
               )}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]}>
+            <Table.Td rowData={row} column={columns[4]}>
               <span
                 className={
                   new Date(row.expiresAt) < new Date()
@@ -476,10 +459,10 @@ export function ComputeAdminCertificatesPage() {
                 {row.expiresAt}
               </span>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]}>
+            <Table.Td rowData={row} column={columns[5]}>
               {stripTime(row.createdAt)}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

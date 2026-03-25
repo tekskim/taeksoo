@@ -25,6 +25,8 @@ interface VolumeSnapshot {
   id: string;
   name: string;
   tenant: string;
+  tenantId: string;
+  host: string;
   size: string;
   sourceVolume: string;
   sourceVolumeId: string;
@@ -37,6 +39,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-001',
     name: 'db-data-snap',
     tenant: 'production',
+    tenantId: 'tenant-001',
+    host: 'host-01',
     size: '1500GiB',
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
@@ -47,6 +51,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-002',
     name: 'app-storage-snap',
     tenant: 'admin',
+    tenantId: 'tenant-002',
+    host: 'host-02',
     size: '500GiB',
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
@@ -57,6 +63,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-003',
     name: 'backup-vol-snap',
     tenant: 'demo-project',
+    tenantId: 'tenant-001',
+    host: 'host-01',
     size: '2000GiB',
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
@@ -67,6 +75,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-004',
     name: 'log-storage-snap',
     tenant: 'engineering',
+    tenantId: 'tenant-003',
+    host: 'host-03',
     size: '100GiB',
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
@@ -77,6 +87,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-005',
     name: 'cache-vol-snap',
     tenant: 'production',
+    tenantId: 'tenant-002',
+    host: 'host-02',
     size: '256GiB',
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
@@ -87,6 +99,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-006',
     name: 'media-storage-snap',
     tenant: 'admin',
+    tenantId: 'tenant-001',
+    host: 'host-01',
     size: '5000GiB',
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
@@ -97,6 +111,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-007',
     name: 'temp-vol-snap',
     tenant: 'demo-project',
+    tenantId: 'tenant-003',
+    host: 'host-03',
     size: '50GiB',
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
@@ -117,6 +133,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-009',
     name: 'archive-vol-snap',
     tenant: 'production',
+    tenantId: 'tenant-001',
+    host: 'host-01',
     size: '10000GiB',
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
@@ -127,6 +145,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     id: 'vsnap-010',
     name: 'boot-vol-snap',
     tenant: 'admin',
+    tenantId: 'tenant-003',
+    host: 'host-03',
     size: '100GiB',
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
@@ -243,6 +263,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
+    { key: 'host', header: 'Host', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
     { key: 'sourceVolume', header: 'Source volume' },
     { key: 'createdAt', header: 'Created at', sortable: true },
@@ -355,14 +376,26 @@ export function ComputeAdminVolumeSnapshotsPage() {
               </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              <span className="text-12 text-text truncate" title={row.tenant}>
-                {row.tenant}
-              </span>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute-admin/tenants/${row.tenantId}`}
+                  className={linkClass}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.tenant}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID: {row.tenantId}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.size}
+              <span className="text-12 text-text truncate" title={row.host}>
+                {row.host}
+              </span>
             </Table.Td>
             <Table.Td rowData={row} column={columns[4]}>
+              {row.size}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[5]}>
               <div className="flex flex-col gap-0.5 min-w-0">
                 <Link to={`/compute-admin/volumes/${row.sourceVolumeId}`} className={linkClass}>
                   {row.sourceVolume}
@@ -372,10 +405,10 @@ export function ComputeAdminVolumeSnapshotsPage() {
                 </span>
               </div>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]}>
+            <Table.Td rowData={row} column={columns[6]}>
               {stripTime(row.createdAt)}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[6]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[7]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

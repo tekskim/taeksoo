@@ -7,6 +7,8 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
+import { Badge } from '@shared/components/Badge';
+import { Popover } from '@shared/components/Popover';
 import {
   ViewPreferencesDrawer,
   type ColumnPreference,
@@ -18,60 +20,43 @@ import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSea
 interface MetadataDefinition extends Record<string, unknown> {
   id: string;
   name: string;
-  namespace: string;
-  resourceType: string;
   description: string;
+  resourceTypes: string[];
+  isPublic: boolean;
+  isProtected: boolean;
 }
 
-const mockMetadataDefinitions: MetadataDefinition[] = [
-  {
-    id: 'md-001',
-    name: 'hw_cpu_threads',
-    namespace: 'OS::Nova::Aggregate',
-    resourceType: 'Aggregate',
-    description: 'CPU threading policy for host aggregates',
-  },
-  {
-    id: 'md-002',
-    name: 'os_distro',
-    namespace: 'OS::Glance::Image',
-    resourceType: 'Image',
-    description: 'Operating system distribution label',
-  },
-  {
-    id: 'md-003',
-    name: 'volume_backend',
-    namespace: 'OS::Cinder::Volume',
-    resourceType: 'Volume',
-    description: 'Preferred Cinder backend name',
-  },
-  {
-    id: 'md-004',
-    name: 'pci_passthrough',
-    namespace: 'OS::Nova::Flavor',
-    resourceType: 'Flavor',
-    description: 'PCI passthrough device alias',
-  },
-  {
-    id: 'md-005',
-    name: 'snapshot_min_age',
-    namespace: 'OS::Cinder::Snapshot',
-    resourceType: 'Snapshot',
-    description: 'Minimum age before snapshot delete',
-  },
-  {
-    id: 'md-006',
-    name: 'trusted_image',
-    namespace: 'OS::Glance::Image',
-    resourceType: 'Image',
-    description: 'Marks vendor-trusted golden images',
-  },
-];
+const mockMetadataDefinitions: MetadataDefinition[] = Array.from({ length: 24 }, (_, i) => ({
+  id: `metadata-${String(i + 1).padStart(4, '0')}`,
+  name: i > 0 ? `metadata${i}` : 'metadata',
+  description:
+    i % 3 === 0
+      ? 'These properties allow modifying the shutdown behavior of the compute service.'
+      : i % 5 === 0
+        ? 'Resource metadata for image properties'
+        : 'Custom metadata definition for resources',
+  resourceTypes:
+    i % 2 === 0
+      ? ['OS::Glance::Image', 'OS::Nova::Instance', 'OS::Cinder::Volume']
+      : ['OS::Glance::Image'],
+  isPublic: i % 3 !== 1,
+  isProtected: i % 4 === 0,
+}));
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Filter by name...' },
-  { key: 'namespace', label: 'Namespace', type: 'input', placeholder: 'Filter by namespace...' },
-  { key: 'resourceType', label: 'Resource type', type: 'input', placeholder: 'Filter by type...' },
+  {
+    key: 'description',
+    label: 'Description',
+    type: 'input',
+    placeholder: 'Filter by description...',
+  },
+  {
+    key: 'resourceTypes',
+    label: 'Resource type',
+    type: 'input',
+    placeholder: 'Filter by resource type...',
+  },
 ];
 
 function rowMatchesFilter(row: MetadataDefinition, filter: FilterKeyWithValue): boolean {
@@ -80,10 +65,10 @@ function rowMatchesFilter(row: MetadataDefinition, filter: FilterKeyWithValue): 
   switch (filter.key) {
     case 'name':
       return row.name.toLowerCase().includes(q);
-    case 'namespace':
-      return row.namespace.toLowerCase().includes(q);
-    case 'resourceType':
-      return row.resourceType.toLowerCase().includes(q);
+    case 'description':
+      return row.description.toLowerCase().includes(q);
+    case 'resourceTypes':
+      return row.resourceTypes.some((t) => t.toLowerCase().includes(q));
     default:
       return true;
   }
@@ -91,9 +76,10 @@ function rowMatchesFilter(row: MetadataDefinition, filter: FilterKeyWithValue): 
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'namespace', label: 'Namespace', visible: true },
-  { key: 'resourceType', label: 'Resource type', visible: true },
   { key: 'description', label: 'Description', visible: true },
+  { key: 'resourceTypes', label: 'Resource Types', visible: true },
+  { key: 'isPublic', label: 'Public', visible: true },
+  { key: 'isProtected', label: 'Protected', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -122,9 +108,10 @@ export function ComputeAdminMetadataDefinitionsPage() {
   const columns: TableColumn[] = useMemo(
     () => [
       { key: 'name', header: 'Name', sortable: true },
-      { key: 'namespace', header: 'Namespace', sortable: true },
-      { key: 'resourceType', header: 'Resource type', sortable: true },
       { key: 'description', header: 'Description', sortable: true },
+      { key: 'resourceTypes', header: 'Resource Types' },
+      { key: 'isPublic', header: 'Public', width: 100 },
+      { key: 'isProtected', header: 'Protected', width: 100 },
       { key: 'actions', header: 'Action', width: 60, align: 'center', clickable: false },
     ],
     []
@@ -152,7 +139,7 @@ export function ComputeAdminMetadataDefinitionsPage() {
       <div className="flex items-center justify-between h-8">
         <Title title="Metadata definitions" />
         <Button variant="primary" size="md">
-          Create definition
+          Import metadata
         </Button>
       </div>
 
@@ -162,7 +149,7 @@ export function ComputeAdminMetadataDefinitionsPage() {
             filterKeys={filterKeys}
             onFilterAdd={handleFilterAdd}
             selectedFilters={appliedFilters}
-            placeholder="Search metadata definitions by attributes"
+            placeholder="Search metadata by attributes"
             defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
@@ -237,28 +224,64 @@ export function ComputeAdminMetadataDefinitionsPage() {
         {pageRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('name')}>
-              <Link to={`/compute-admin/metadata-definition/${row.id}`} className={linkClass}>
+              <Link
+                to={`/compute-admin/metadata-definition/${row.id}`}
+                className={linkClass}
+                onClick={(e) => e.stopPropagation()}
+              >
                 {row.name}
               </Link>
             </Table.Td>
-            <Table.Td rowData={row} column={c('namespace')}>
-              <span
-                className="text-11 text-text-muted truncate block max-w-[220px]"
-                title={row.namespace}
-              >
-                {row.namespace}
-              </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('resourceType')}>
-              <span className="text-12 text-text">{row.resourceType}</span>
-            </Table.Td>
             <Table.Td rowData={row} column={c('description')}>
               <span
-                className="text-12 text-text truncate block max-w-[280px]"
+                className="text-12 text-text truncate block max-w-[320px]"
                 title={row.description}
               >
                 {row.description}
               </span>
+            </Table.Td>
+            <Table.Td rowData={row} column={c('resourceTypes')} isEllipsis={false}>
+              {(() => {
+                const types = row.resourceTypes;
+                if (types.length === 0) return <span>-</span>;
+                if (types.length === 1)
+                  return <span className="text-12 text-text">{types[0]}</span>;
+                return (
+                  <span className="inline-flex items-center gap-1 min-w-0">
+                    <span className="text-12 text-text truncate min-w-0">{types[0]}</span>
+                    <Popover
+                      trigger="hover"
+                      position="bottom"
+                      delay={100}
+                      hideDelay={100}
+                      content={
+                        <div className="p-3 min-w-[120px] max-w-[320px]">
+                          <div className="text-10 leading-14 font-medium text-text-muted mb-2">
+                            All Resource Types ({types.length})
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {types.map((t, i) => (
+                              <Badge key={i} theme="white" size="sm" type="subtle">
+                                {t}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    >
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-11 leading-16 font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                        +{types.length - 1}
+                      </span>
+                    </Popover>
+                  </span>
+                );
+              })()}
+            </Table.Td>
+            <Table.Td rowData={row} column={c('isPublic')}>
+              <span className="text-12 text-text">{row.isPublic ? 'On' : 'Off'}</span>
+            </Table.Td>
+            <Table.Td rowData={row} column={c('isProtected')}>
+              <span className="text-12 text-text">{row.isProtected ? 'Yes' : 'No'}</span>
             </Table.Td>
             <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root
@@ -276,6 +299,9 @@ export function ComputeAdminMetadataDefinitionsPage() {
                 )}
               >
                 <ContextMenu.Item action={() => console.log('edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('manage contents', row.id)}>
+                  Manage contents
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>

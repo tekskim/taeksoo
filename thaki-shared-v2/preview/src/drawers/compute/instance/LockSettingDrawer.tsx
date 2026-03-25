@@ -51,9 +51,9 @@ export function LockSettingDrawer({
 
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <span className="text-12 font-medium text-text">Lock instance</span>
+            <span className="text-12 font-medium text-text">Lock status</span>
             <span className="text-12 text-text-muted">
-              Locked instances cannot be deleted or resized until unlocked.
+              When locked, the instance cannot be modified or deleted.
             </span>
           </div>
           <div className="flex items-center gap-2">

@@ -102,7 +102,7 @@ function instanceMatchesFilter(
     case 'status':
       return instance.status?.toLowerCase() === filterValue;
     case 'os':
-      return instance.os?.toLowerCase().includes(filterValue) ?? false;
+      return instance.image?.toLowerCase().includes(filterValue) ?? false;
     case 'flavor':
       return instance.flavor?.toLowerCase().includes(filterValue) ?? false;
     default:
@@ -118,7 +118,7 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'locked', label: 'Locked', visible: true },
   { key: 'fixedIp', label: 'Fixed IP', visible: true },
   { key: 'floatingIp', label: 'Floating IP', visible: true },
-  { key: 'os', label: 'OS', visible: true },
+  { key: 'image', label: 'OS', visible: true },
   { key: 'flavor', label: 'Flavor', visible: true },
   { key: 'vcpu', label: 'vCPU', visible: true },
   { key: 'ram', label: 'RAM', visible: true },
@@ -225,7 +225,7 @@ export function ComputeInstancesPage() {
     { key: 'locked', header: 'Locked', width: 72, align: 'center' },
     { key: 'fixedIp', header: 'Fixed IP', sortable: true },
     { key: 'floatingIp', header: 'Floating IP', sortable: true },
-    { key: 'os', header: 'OS', sortable: true },
+    { key: 'image', header: 'OS', sortable: true },
     { key: 'flavor', header: 'Flavor', sortable: true },
     { key: 'vcpu', header: 'vCPU', sortable: true },
     { key: 'ram', header: 'RAM', sortable: true },
@@ -238,8 +238,8 @@ export function ComputeInstancesPage() {
   const bmColumns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'locked', header: 'Locked', width: 72, align: 'center' },
-    { key: 'os', header: 'OS', sortable: true },
+    { key: 'ip', header: 'Fixed IP', sortable: true },
+    { key: 'image', header: 'Image', sortable: true },
     { key: 'flavor', header: 'Flavor', sortable: true },
     { key: 'cpu', header: 'CPU', sortable: true },
     { key: 'ram', header: 'RAM', sortable: true },
@@ -461,7 +461,7 @@ export function ComputeInstancesPage() {
                 {instance.floatingIp}
               </Table.Td>
               <Table.Td rowData={instance} column={vmColumns[5]}>
-                {instance.os}
+                {instance.image}
               </Table.Td>
               <Table.Td rowData={instance} column={vmColumns[6]}>
                 <div className="flex flex-col gap-0.5 min-w-0">
@@ -738,16 +738,22 @@ export function ComputeInstancesPage() {
                 </div>
               </Table.Td>
               <Table.Td rowData={instance} column={bmColumns[2]}>
-                <div className="flex items-center justify-center w-full">
-                  {instance.locked ? (
-                    <IconLock size={16} stroke={1.5} className="text-text" />
-                  ) : (
-                    <IconLockOpen size={16} stroke={1.5} className="text-text-muted" />
-                  )}
-                </div>
+                {instance.ip}
               </Table.Td>
               <Table.Td rowData={instance} column={bmColumns[3]}>
-                {instance.os}
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute/images/${instance.id}`}
+                    className={`${linkClass} truncate`}
+                    title={instance.image}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {instance.image}
+                  </Link>
+                  <span className="text-11 text-text-muted truncate" title={instance.id}>
+                    ID : {instance.id.substring(0, 8)}
+                  </span>
+                </div>
               </Table.Td>
               <Table.Td rowData={instance} column={bmColumns[4]}>
                 <div className="flex flex-col gap-0.5 min-w-0">

@@ -272,7 +272,7 @@ export function ComputeInstanceTemplatesPage() {
   };
 
   const columns: TableColumn[] = [
-    { key: 'favorite', header: '', width: 40, align: 'center' },
+    { key: 'favorite', header: '', width: 40, align: 'center', isEllipsis: false },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Description', sortable: true },
     { key: 'flavor', header: 'Created at', sortable: true },
@@ -398,7 +398,7 @@ export function ComputeInstanceTemplatesPage() {
       >
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={columns[0]}>
+            <Table.Td rowData={row} column={columns[0]} className="!px-0">
               <button
                 type="button"
                 onClick={(e) => {

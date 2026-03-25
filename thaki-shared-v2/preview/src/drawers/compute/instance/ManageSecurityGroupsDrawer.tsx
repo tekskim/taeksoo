@@ -110,7 +110,7 @@ export function ManageSecurityGroupsDrawer({
       type="drawer-horizontal"
       size="md"
       title="Manage security groups"
-      description="Add or remove security groups from this instance."
+      description="When disabled, no security groups will be applied, and anti-spoofing checks are turned off."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

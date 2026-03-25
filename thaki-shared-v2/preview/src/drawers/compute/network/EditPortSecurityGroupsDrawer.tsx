@@ -104,8 +104,8 @@ export function EditPortSecurityGroupsDrawer({
     <Overlay.Template
       type="drawer-horizontal"
       size="md"
-      title="Edit port security groups"
-      description="Manage security groups assigned to this port."
+      title="Manage security groups"
+      description="When disabled, no security groups will be applied, and anti-spoofing checks are turned off."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

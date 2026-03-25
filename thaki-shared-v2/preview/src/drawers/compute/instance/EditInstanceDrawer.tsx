@@ -48,7 +48,7 @@ export function EditInstanceDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit instance"
-      description="Edit the instance's basic information."
+      description="Edit the instance's name and description. These changes update basic information only."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

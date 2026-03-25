@@ -52,7 +52,7 @@ export function CreateRouterDrawer({ isOpen, onClose }: CreateRouterDrawerProps)
       type="drawer-horizontal"
       size="sm"
       title="Create router"
-      description="Create a new virtual router."
+      description="Create a virtual router to route traffic between different networks or subnets."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

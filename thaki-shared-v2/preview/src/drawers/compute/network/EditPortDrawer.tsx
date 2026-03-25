@@ -57,7 +57,7 @@ export function EditPortDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit port"
-      description="Edit the port's basic information."
+      description="Edit the port's name and description. These changes update basic information only."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

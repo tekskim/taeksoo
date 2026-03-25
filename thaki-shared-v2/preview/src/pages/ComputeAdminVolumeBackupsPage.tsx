@@ -20,120 +20,184 @@ import {
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
 
-type BackupStatus = 'available' | 'error' | 'restoring';
+type BackupStatus = 'active' | 'creating' | 'error' | 'restoring' | 'deleting';
+type BackupMode = 'Full Backup' | 'Incremental';
+
+const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
 interface VolumeBackupRow {
   id: string;
   name: string;
   tenant: string;
-  status: BackupStatus;
-  volume: string;
-  backupMode: string;
+  tenantId: string;
   size: string;
+  sourceVolume: string;
+  sourceVolumeId: string;
+  backupMode: BackupMode;
   createdAt: string;
+  status: BackupStatus;
   [key: string]: unknown;
 }
 
 const mockRows: VolumeBackupRow[] = [
   {
-    id: 'vb-001',
-    name: 'vol-backup-daily',
-    tenant: 'engineering',
-    status: 'available',
-    volume: 'boot-vol-prod-01',
-    backupMode: 'Full',
-    size: '80 GiB',
-    createdAt: 'Sep 12, 2025 09:23:41',
+    id: 'vbak-001',
+    name: 'db-data-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    size: '1500GiB',
+    sourceVolume: 'vol-1',
+    sourceVolumeId: 'vol-001',
+    backupMode: 'Full Backup',
+    createdAt: 'Sep 12, 2025 10:15:33',
+    status: 'active',
   },
   {
-    id: 'vb-002',
-    name: 'db-snapshot-weekly',
-    tenant: 'production',
-    status: 'available',
-    volume: 'postgres-data-1',
+    id: 'vbak-002',
+    name: 'app-storage-backup',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    size: '500GiB',
+    sourceVolume: 'vol-2',
+    sourceVolumeId: 'vol-002',
     backupMode: 'Incremental',
-    size: '512 GiB',
-    createdAt: 'Sep 11, 2025 14:07:22',
+    createdAt: 'Sep 10, 2025 14:28:47',
+    status: 'active',
   },
   {
-    id: 'vb-003',
-    name: 'restore-test',
-    tenant: 'admin',
+    id: 'vbak-003',
+    name: 'backup-vol-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    size: '2000GiB',
+    sourceVolume: 'vol-3',
+    sourceVolumeId: 'vol-003',
+    backupMode: 'Full Backup',
+    createdAt: 'Sep 8, 2025 08:52:19',
+    status: 'active',
+  },
+  {
+    id: 'vbak-004',
+    name: 'log-storage-backup',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    size: '100GiB',
+    sourceVolume: 'vol-4',
+    sourceVolumeId: 'vol-004',
+    backupMode: 'Incremental',
+    createdAt: 'Sep 5, 2025 16:41:04',
+    status: 'creating',
+  },
+  {
+    id: 'vbak-005',
+    name: 'cache-vol-backup',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    size: '256GiB',
+    sourceVolume: 'vol-5',
+    sourceVolumeId: 'vol-005',
+    backupMode: 'Full Backup',
+    createdAt: 'Aug 30, 2025 11:33:26',
+    status: 'active',
+  },
+  {
+    id: 'vbak-006',
+    name: 'media-storage-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    size: '5000GiB',
+    sourceVolume: 'vol-6',
+    sourceVolumeId: 'vol-006',
+    backupMode: 'Full Backup',
+    createdAt: 'Aug 25, 2025 09:17:52',
     status: 'restoring',
-    volume: 'cache-vol-02',
-    backupMode: 'Full',
-    size: '40 GiB',
-    createdAt: 'Sep 10, 2025 11:45:33',
   },
   {
-    id: 'vb-004',
-    name: 'legacy-backup',
-    tenant: 'demo-project',
-    status: 'error',
-    volume: 'orphan-vol',
-    backupMode: 'Full',
-    size: '20 GiB',
-    createdAt: 'Aug 1, 2025 16:52:08',
-  },
-  {
-    id: 'vb-005',
-    name: 'app-tier-backup',
-    tenant: 'engineering',
-    status: 'available',
-    volume: 'app-shared-01',
+    id: 'vbak-007',
+    name: 'temp-vol-backup',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    size: '50GiB',
+    sourceVolume: 'vol-7',
+    sourceVolumeId: 'vol-007',
     backupMode: 'Incremental',
-    size: '120 GiB',
-    createdAt: 'Jan 5, 2025 08:30:15',
-  },
-  {
-    id: 'vb-006',
-    name: 'qa-volume-backup',
-    tenant: 'production',
-    status: 'available',
-    volume: 'qa-data-vol',
-    backupMode: 'Full',
-    size: '64 GiB',
-    createdAt: 'Apr 18, 2025 13:19:44',
-  },
-  {
-    id: 'vb-007',
-    name: 'analytics-cold',
-    tenant: 'admin',
-    status: 'available',
-    volume: 'analytics-warehouse',
-    backupMode: 'Incremental',
-    size: '2 TiB',
-    createdAt: 'Mar 22, 2025 10:41:27',
-  },
-  {
-    id: 'vb-008',
-    name: 'failed-copy',
-    tenant: 'demo-project',
+    createdAt: 'Aug 20, 2025 13:45:38',
     status: 'error',
-    volume: 'temp-scratch',
-    backupMode: 'Full',
-    size: '8 GiB',
-    createdAt: 'Feb 14, 2025 17:03:56',
+  },
+  {
+    id: 'vbak-008',
+    name: 'ml-data-backup',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    size: '1000GiB',
+    sourceVolume: 'vol-8',
+    sourceVolumeId: 'vol-008',
+    backupMode: 'Full Backup',
+    createdAt: 'Aug 15, 2025 07:29:14',
+    status: 'active',
+  },
+  {
+    id: 'vbak-009',
+    name: 'archive-vol-backup',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    size: '10000GiB',
+    sourceVolume: 'vol-9',
+    sourceVolumeId: 'vol-009',
+    backupMode: 'Full Backup',
+    createdAt: 'Aug 10, 2025 15:56:41',
+    status: 'active',
+  },
+  {
+    id: 'vbak-010',
+    name: 'boot-vol-backup',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    size: '100GiB',
+    sourceVolume: 'vol-10',
+    sourceVolumeId: 'vol-010',
+    backupMode: 'Incremental',
+    createdAt: 'Aug 5, 2025 17:22:09',
+    status: 'deleting',
   },
 ];
 
 const statusMap: Record<BackupStatus, StatusVariant> = {
-  available: 'active',
-  error: 'error',
+  active: 'active',
+  creating: 'building',
   restoring: 'building',
+  error: 'error',
+  deleting: 'deleting',
 };
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
   { key: 'tenant', label: 'Tenant', type: 'input', placeholder: 'Enter tenant...' },
   {
+    key: 'sourceVolume',
+    label: 'Source volume',
+    type: 'input',
+    placeholder: 'Enter source volume...',
+  },
+  {
+    key: 'backupMode',
+    label: 'Backup mode',
+    type: 'select',
+    options: [
+      { value: 'Full Backup', label: 'Full backup' },
+      { value: 'Incremental', label: 'Incremental' },
+    ],
+  },
+  {
     key: 'status',
     label: 'Status',
     type: 'select',
     options: [
-      { value: 'available', label: 'Available' },
+      { value: 'active', label: 'Active' },
+      { value: 'creating', label: 'Creating' },
       { value: 'error', label: 'Error' },
       { value: 'restoring', label: 'Restoring' },
+      { value: 'deleting', label: 'Deleting' },
     ],
   },
 ];
@@ -142,9 +206,9 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
   { key: 'tenant', label: 'Tenant', visible: true },
-  { key: 'volume', label: 'Volume', visible: true },
-  { key: 'backupMode', label: 'Backup Mode', visible: true },
+  { key: 'backupMode', label: 'Backup mode', visible: true },
   { key: 'size', label: 'Size', visible: true },
+  { key: 'sourceVolume', label: 'Source volume', visible: true },
   { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
@@ -204,9 +268,9 @@ export function ComputeAdminVolumeBackupsPage() {
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
-    { key: 'volume', header: 'Volume' },
-    { key: 'backupMode', header: 'Backup Mode' },
+    { key: 'backupMode', header: 'Backup mode' },
     { key: 'size', header: 'Size' },
+    { key: 'sourceVolume', header: 'Source volume' },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
@@ -306,26 +370,46 @@ export function ComputeAdminVolumeBackupsPage() {
               <StatusIndicator variant={statusMap[row.status]} layout="iconOnly" />
             </Table.Td>
             <Table.Td rowData={row} column={columns[1]}>
-              <Link
-                to={`/compute-admin/volume-backups/${row.id}`}
-                className="text-12 leading-18 font-medium text-primary hover:underline no-underline"
-              >
-                {row.name}
-              </Link>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute-admin/volume-backups/${row.id}`}
+                  className={`${linkClass} truncate`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.name}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID: {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[2]}>
-              <span className="text-12 text-text truncate" title={row.tenant}>
-                {row.tenant}
-              </span>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute-admin/tenants/${row.tenantId}`}
+                  className={linkClass}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.tenant}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID: {row.tenantId}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[3]}>
-              {row.volume}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
               {row.backupMode}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]}>
+            <Table.Td rowData={row} column={columns[4]}>
               {row.size}
+            </Table.Td>
+            <Table.Td rowData={row} column={columns[5]}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute-admin/volumes/${row.sourceVolumeId}`}
+                  className={linkClass}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.sourceVolume}
+                </Link>
+                <span className="text-11 leading-16 text-text-muted">ID: {row.sourceVolumeId}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={columns[6]}>
               {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}

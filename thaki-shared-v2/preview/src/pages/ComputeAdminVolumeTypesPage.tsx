@@ -84,9 +84,27 @@ const filterKeys: FilterKey[] = [
     placeholder: 'Filter by description...',
   },
   { key: 'encryption', label: 'Encryption', type: 'input', placeholder: 'Filter by encryption...' },
+  {
+    key: 'qosSpec',
+    label: 'Associated QoS Spec',
+    type: 'input',
+    placeholder: 'Filter by QoS spec...',
+  },
+  {
+    key: 'isPublic',
+    label: 'Public',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'On' },
+      { value: 'false', label: 'Off' },
+    ],
+  },
 ];
 
 function rowMatchesFilter(row: VolumeType, filter: FilterKeyWithValue): boolean {
+  if (filter.key === 'isPublic') {
+    return String(row.isPublic) === String(filter.value);
+  }
   const q = String(filter.value ?? '').toLowerCase();
   if (!q) return true;
   switch (filter.key) {
@@ -96,6 +114,8 @@ function rowMatchesFilter(row: VolumeType, filter: FilterKeyWithValue): boolean 
       return row.description.toLowerCase().includes(q);
     case 'encryption':
       return row.encryption.toLowerCase().includes(q);
+    case 'qosSpec':
+      return (row.qosSpec ?? '').toLowerCase().includes(q);
     default:
       return true;
   }
@@ -104,8 +124,9 @@ function rowMatchesFilter(row: VolumeType, filter: FilterKeyWithValue): boolean 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
   { key: 'description', label: 'Description', visible: true },
+  { key: 'qosSpec', label: 'Associated QoS Spec', visible: true },
   { key: 'encryption', label: 'Encryption', visible: true },
-  { key: 'qosSpec', label: 'QoS Spec', visible: true },
+  { key: 'isPublic', label: 'Public', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -133,8 +154,9 @@ export function ComputeAdminVolumeTypesPage() {
     () => [
       { key: 'name', header: 'Name', sortable: true },
       { key: 'description', header: 'Description', sortable: true },
+      { key: 'qosSpec', header: 'Associated QoS Spec' },
       { key: 'encryption', header: 'Encryption', sortable: true },
-      { key: 'qosSpec', header: 'QoS Spec' },
+      { key: 'isPublic', header: 'Public' },
       { key: 'actions', header: 'Action', width: 60, align: 'center', clickable: false },
     ],
     []
@@ -259,17 +281,23 @@ export function ComputeAdminVolumeTypesPage() {
                 {row.description}
               </span>
             </Table.Td>
+            <Table.Td rowData={row} column={c('qosSpec')}>
+              {row.qosSpecId && row.qosSpec ? (
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link to={`/compute-admin/qos-specs/${row.qosSpecId}`} className={linkClass}>
+                    {row.qosSpec}
+                  </Link>
+                  <span className="text-11 leading-16 text-text-muted">ID: {row.qosSpecId}</span>
+                </div>
+              ) : (
+                <span className="text-12 text-text-muted">-</span>
+              )}
+            </Table.Td>
             <Table.Td rowData={row} column={c('encryption')}>
               <span className="text-12 text-text">{row.encryption}</span>
             </Table.Td>
-            <Table.Td rowData={row} column={c('qosSpec')}>
-              {row.qosSpecId && row.qosSpecName ? (
-                <Link to={`/compute-admin/qos-specs/${row.qosSpecId}`} className={linkClass}>
-                  {row.qosSpecName}
-                </Link>
-              ) : (
-                <span className="text-12 text-text-muted">—</span>
-              )}
+            <Table.Td rowData={row} column={c('isPublic')}>
+              <span className="text-12 text-text">{row.isPublic ? 'On' : 'Off'}</span>
             </Table.Td>
             <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root

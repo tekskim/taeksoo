@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
+import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { Badge } from '@shared/components/Badge';
 import { Title } from '@shared/components/Title';
 import {
   ViewPreferencesDrawer,
@@ -14,64 +14,76 @@ import {
 } from '../drawers/common/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+
+type TenantStatus = 'active' | 'deactivated' | 'building' | 'error';
 
 interface Tenant extends Record<string, unknown> {
   id: string;
   name: string;
+  status: TenantStatus;
   description: string;
-  enabled: boolean;
 }
 
 const mockTenants: Tenant[] = [
   {
     id: '00000001',
     name: 'admin',
+    status: 'active',
     description: 'System administration tenant',
-    enabled: true,
   },
   {
     id: '00000002',
     name: 'demo-project',
+    status: 'active',
     description: 'Demo workloads',
-    enabled: true,
   },
   {
     id: '00000003',
     name: 'engineering',
+    status: 'active',
     description: 'Engineering team resources',
-    enabled: true,
   },
   {
     id: '00000004',
     name: 'production',
+    status: 'active',
     description: 'Production workloads',
-    enabled: true,
   },
   {
     id: '00000005',
     name: 'suspended-vendor',
+    status: 'deactivated',
     description: 'Deactivated vendor sandbox',
-    enabled: false,
   },
   {
     id: '00000006',
     name: 'qa-lab',
+    status: 'building',
     description: 'QA automation environment',
-    enabled: true,
   },
 ];
+
+const tenantStatusMap: Record<TenantStatus, StatusVariant> = {
+  active: 'active',
+  deactivated: 'shutoff',
+  building: 'building',
+  error: 'error',
+};
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Filter by name...' },
   { key: 'id', label: 'ID', type: 'input', placeholder: 'Filter by ID...' },
   {
-    key: 'enabled',
-    label: 'Enabled',
+    key: 'status',
+    label: 'Status',
     type: 'select',
     options: [
-      { value: 'true', label: 'Yes' },
-      { value: 'false', label: 'No' },
+      { value: 'active', label: 'Active' },
+      { value: 'deactivated', label: 'Deactivated' },
+      { value: 'building', label: 'Building' },
+      { value: 'error', label: 'Error' },
     ],
   },
 ];
@@ -85,18 +97,17 @@ function rowMatchesFilter(row: Tenant, filter: FilterKeyWithValue): boolean {
       return row.name.toLowerCase().includes(q);
     case 'id':
       return row.id.toLowerCase().includes(q);
-    case 'enabled':
-      return String(row.enabled) === String(filter.value);
+    case 'status':
+      return row.status === filter.value;
     default:
       return true;
   }
 }
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
+  { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'id', label: 'ID', visible: true },
   { key: 'description', label: 'Description', visible: true },
-  { key: 'enabled', label: 'Enabled', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -122,10 +133,9 @@ export function ComputeAdminTenantsPage() {
 
   const columns: TableColumn[] = useMemo(
     () => [
+      { key: 'status', header: 'Status', width: 72, align: 'center' },
       { key: 'name', header: 'Name', sortable: true },
-      { key: 'id', header: 'ID', sortable: true },
       { key: 'description', header: 'Description', sortable: true },
-      { key: 'enabled', header: 'Enabled', width: 100, align: 'center' },
       { key: 'actions', header: 'Action', width: 60, align: 'center', clickable: false },
     ],
     []
@@ -237,13 +247,20 @@ export function ComputeAdminTenantsPage() {
       >
         {pageRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
-            <Table.Td rowData={row} column={c('name')}>
-              <Link to={`/compute-admin/tenants/${row.id}`} className={linkClass}>
-                {row.name}
-              </Link>
+            <Table.Td rowData={row} column={c('status')}>
+              <StatusIndicator variant={tenantStatusMap[row.status]} layout="iconOnly" />
             </Table.Td>
-            <Table.Td rowData={row} column={c('id')}>
-              <span className="text-11 text-text-muted font-mono">{row.id}</span>
+            <Table.Td rowData={row} column={c('name')}>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <Link
+                  to={`/compute-admin/tenants/${row.id}`}
+                  className={`${linkClass} truncate`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {row.name}
+                </Link>
+                <span className="text-11 text-text-muted">ID: {row.id}</span>
+              </div>
             </Table.Td>
             <Table.Td rowData={row} column={c('description')}>
               <span
@@ -252,11 +269,6 @@ export function ComputeAdminTenantsPage() {
               >
                 {row.description}
               </span>
-            </Table.Td>
-            <Table.Td rowData={row} column={c('enabled')}>
-              <Badge theme={row.enabled ? 'gre' : 'gry'} size="sm" type="subtle">
-                {row.enabled ? 'Yes' : 'No'}
-              </Badge>
             </Table.Td>
             <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
               <ContextMenu.Root
@@ -274,6 +286,12 @@ export function ComputeAdminTenantsPage() {
                 )}
               >
                 <ContextMenu.Item action={() => console.log('edit', row.id)}>Edit</ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('manage quotas', row.id)}>
+                  Manage quotas
+                </ContextMenu.Item>
+                <ContextMenu.Item action={() => console.log('manage members', row.id)}>
+                  Manage members
+                </ContextMenu.Item>
                 <ContextMenu.Item action={() => console.log('delete', row.id)} danger>
                   Delete
                 </ContextMenu.Item>

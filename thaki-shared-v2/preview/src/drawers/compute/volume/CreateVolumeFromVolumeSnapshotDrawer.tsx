@@ -55,7 +55,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Create volume from snapshot"
-      description="Create a new volume from this snapshot."
+      description="Creates a new volume based on the selected snapshot."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

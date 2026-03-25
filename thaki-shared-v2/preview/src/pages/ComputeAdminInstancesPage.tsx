@@ -28,7 +28,6 @@ import {
 } from '../drawers/common/ViewPreferencesDrawer';
 import { Title } from '@shared/components/Title';
 import { Tabs, Tab } from '@shared/components/Tabs';
-import { Tooltip } from '@shared/components/Tooltip';
 import {
   IconDotsCircleHorizontal,
   IconDownload,
@@ -55,16 +54,21 @@ import {
 
 const MOCK_TENANTS = ['admin', 'demo-project', 'engineering', 'production'] as const;
 
-function adminTenantHostForIndex(index: number): { tenant: string; host: string } {
+function adminTenantHostForIndex(index: number): {
+  tenant: string;
+  tenantId: string;
+  host: string;
+} {
+  const ti = index % MOCK_TENANTS.length;
   return {
-    tenant: MOCK_TENANTS[index % MOCK_TENANTS.length],
+    tenant: MOCK_TENANTS[ti],
+    tenantId: `tenant-${String(ti + 1).padStart(3, '0')}`,
     host: `compute-${String((index % 12) + 1).padStart(2, '0')}`,
   };
 }
 
-type AdminInstanceRow = Instance & { tenant: string; host: string };
-type AdminBareMetalRow = BareMetalInstance & { tenant: string; host: string };
-type AdminInstanceUnion = AdminInstanceRow | AdminBareMetalRow;
+type AdminInstanceRow = Instance & { tenant: string; tenantId: string; host: string };
+type AdminInstanceUnion = AdminInstanceRow | BareMetalInstance;
 
 const statusMap: Record<InstanceStatus, StatusVariant> = {
   running: 'active',
@@ -112,13 +116,17 @@ function instanceMatchesFilter(instance: AdminInstanceUnion, filter: FilterKeyWi
     case 'name':
       return instance.name?.toLowerCase().includes(filterValue) ?? false;
     case 'tenant':
-      return instance.tenant.toLowerCase().includes(filterValue);
+      return 'tenant' in instance && typeof instance.tenant === 'string'
+        ? instance.tenant.toLowerCase().includes(filterValue)
+        : false;
     case 'host':
-      return instance.host.toLowerCase().includes(filterValue);
+      return 'host' in instance && typeof instance.host === 'string'
+        ? instance.host.toLowerCase().includes(filterValue)
+        : false;
     case 'status':
       return instance.status?.toLowerCase() === filterValue;
     case 'os':
-      return instance.os?.toLowerCase().includes(filterValue) ?? false;
+      return instance.image?.toLowerCase().includes(filterValue) ?? false;
     case 'flavor':
       return instance.flavor?.toLowerCase().includes(filterValue) ?? false;
     default:
@@ -131,12 +139,12 @@ const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline n
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
+  { key: 'locked', label: 'Locked', visible: true },
   { key: 'tenant', label: 'Tenant', visible: true },
   { key: 'host', label: 'Host', visible: true },
-  { key: 'locked', label: 'Locked', visible: true },
   { key: 'fixedIp', label: 'Fixed IP', visible: true },
   { key: 'floatingIp', label: 'Floating IP', visible: true },
-  { key: 'os', label: 'OS', visible: true },
+  { key: 'image', label: 'OS', visible: true },
   { key: 'flavor', label: 'Flavor', visible: true },
   { key: 'vcpu', label: 'vCPU', visible: true },
   { key: 'ram', label: 'RAM', visible: true },
@@ -183,10 +191,7 @@ export function ComputeAdminInstancesPage() {
     () => mockInstances.map((row, i) => ({ ...row, ...adminTenantHostForIndex(i) })),
     []
   );
-  const adminMockBareMetalInstances = useMemo(
-    () => mockBareMetalInstances.map((row, i) => ({ ...row, ...adminTenantHostForIndex(i + 11) })),
-    []
-  );
+  const adminMockBareMetalInstances = useMemo(() => mockBareMetalInstances, []);
 
   const filteredInstances = useMemo(() => {
     if (appliedFilters.length === 0) return adminMockInstances;
@@ -247,12 +252,12 @@ export function ComputeAdminInstancesPage() {
   const vmColumns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
+    { key: 'locked', header: 'Locked', width: 72, align: 'center' },
     { key: 'tenant', header: 'Tenant', sortable: true, width: 120 },
     { key: 'host', header: 'Host', sortable: true, width: 120 },
-    { key: 'locked', header: 'Locked', width: 72, align: 'center' },
     { key: 'fixedIp', header: 'Fixed IP', sortable: true },
     { key: 'floatingIp', header: 'Floating IP', sortable: true },
-    { key: 'os', header: 'OS', sortable: true },
+    { key: 'image', header: 'OS', sortable: true },
     { key: 'flavor', header: 'Flavor', sortable: true },
     { key: 'vcpu', header: 'vCPU', sortable: true },
     { key: 'ram', header: 'RAM', sortable: true },
@@ -265,10 +270,8 @@ export function ComputeAdminInstancesPage() {
   const bmColumns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 80, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'tenant', header: 'Tenant', sortable: true, width: 120 },
-    { key: 'host', header: 'Host', sortable: true, width: 120 },
-    { key: 'locked', header: 'Locked', width: 72, align: 'center' },
-    { key: 'os', header: 'OS', sortable: true },
+    { key: 'ip', header: 'Fixed IP', sortable: true },
+    { key: 'image', header: 'Image', sortable: true },
     { key: 'flavor', header: 'Flavor', sortable: true },
     { key: 'cpu', header: 'CPU', sortable: true },
     { key: 'ram', header: 'RAM', sortable: true },
@@ -467,25 +470,24 @@ export function ComputeAdminInstancesPage() {
                 <StatusIndicator variant={statusMap[instance.status]} layout="iconOnly" />
               </Table.Td>
               <Table.Td rowData={instance} column={vmC('name')}>
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <Link
-                    to={`/compute-admin/instances/${instance.id}`}
-                    className={`${linkClass} truncate`}
-                    title={instance.name}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {instance.name}
-                  </Link>
-                  <span className="text-11 text-text-muted truncate" title={instance.id}>
-                    ID : {instance.id}
-                  </span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[4px] border border-border bg-surface">
+                    <img src={containerIcon} alt="" className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <Link
+                      to={`/compute-admin/instances/${instance.id}`}
+                      className={`${linkClass} truncate`}
+                      title={instance.name}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {instance.name}
+                    </Link>
+                    <span className="text-11 text-text-muted truncate" title={instance.id}>
+                      ID : {instance.id}
+                    </span>
+                  </div>
                 </div>
-              </Table.Td>
-              <Table.Td rowData={instance} column={vmC('tenant')}>
-                {instance.tenant}
-              </Table.Td>
-              <Table.Td rowData={instance} column={vmC('host')}>
-                {instance.host}
               </Table.Td>
               <Table.Td rowData={instance} column={vmC('locked')}>
                 <div className="flex items-center justify-center w-full">
@@ -496,14 +498,32 @@ export function ComputeAdminInstancesPage() {
                   )}
                 </div>
               </Table.Td>
+              <Table.Td rowData={instance} column={vmC('tenant')}>
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <Link
+                    to={`/compute-admin/tenants/${instance.tenantId}`}
+                    className={`${linkClass} truncate`}
+                    title={instance.tenant}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {instance.tenant}
+                  </Link>
+                  <span className="text-11 text-text-muted truncate">ID: {instance.tenantId}</span>
+                </div>
+              </Table.Td>
+              <Table.Td rowData={instance} column={vmC('host')}>
+                {instance.host}
+              </Table.Td>
               <Table.Td rowData={instance} column={vmC('fixedIp')}>
                 {instance.fixedIp}
               </Table.Td>
               <Table.Td rowData={instance} column={vmC('floatingIp')}>
                 {instance.floatingIp}
               </Table.Td>
-              <Table.Td rowData={instance} column={vmC('os')}>
-                {instance.os}
+              <Table.Td rowData={instance} column={vmC('image')}>
+                <span className="truncate block w-full" title={instance.image}>
+                  {instance.image}
+                </span>
               </Table.Td>
               <Table.Td rowData={instance} column={vmC('flavor')}>
                 <div className="flex flex-col gap-0.5 min-w-0">

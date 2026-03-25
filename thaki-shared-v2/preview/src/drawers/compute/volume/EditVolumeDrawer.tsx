@@ -48,7 +48,7 @@ export function EditVolumeDrawer({
       type="drawer-horizontal"
       size="sm"
       title="Edit volume"
-      description="Edit the volume's basic information."
+      description="Edit the volume's name and description. These changes update basic information only."
       isGlobal
       appeared={appeared}
       onConfirm={handleSubmit}

@@ -18,12 +18,9 @@ import {
 
 type AccessType = 'Personal' | 'Project' | 'Public';
 
-const MOCK_TENANTS = ['admin', 'demo-project', 'engineering', 'production'] as const;
-
-interface InstanceTemplate {
+interface InstanceTemplate extends Record<string, unknown> {
   id: string;
   name: string;
-  tenant: string;
   image: string;
   flavor: string;
   vcpu: number;
@@ -48,7 +45,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'None',
     access: 'Personal',
     favorite: true,
-    tenant: MOCK_TENANTS[0],
   },
   {
     id: 'tpl-002',
@@ -75,7 +71,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'None',
     access: 'Personal',
     favorite: false,
-    tenant: MOCK_TENANTS[2],
   },
   {
     id: 'tpl-004',
@@ -89,7 +84,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'Auto',
     access: 'Public',
     favorite: true,
-    tenant: MOCK_TENANTS[3],
   },
   {
     id: 'tpl-005',
@@ -103,7 +97,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'None',
     access: 'Personal',
     favorite: false,
-    tenant: MOCK_TENANTS[0],
   },
   {
     id: 'tpl-006',
@@ -117,7 +110,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'None',
     access: 'Project',
     favorite: true,
-    tenant: MOCK_TENANTS[1],
   },
   {
     id: 'tpl-007',
@@ -131,7 +123,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'Auto',
     access: 'Project',
     favorite: true,
-    tenant: MOCK_TENANTS[2],
   },
   {
     id: 'tpl-008',
@@ -145,7 +136,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'Auto',
     access: 'Personal',
     favorite: false,
-    tenant: MOCK_TENANTS[3],
   },
   {
     id: 'tpl-009',
@@ -159,7 +149,6 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'Auto',
     access: 'Public',
     favorite: true,
-    tenant: MOCK_TENANTS[0],
   },
   {
     id: 'tpl-010',
@@ -173,13 +162,11 @@ const mockTemplates: InstanceTemplate[] = [
     floatingIp: 'None',
     access: 'Project',
     favorite: false,
-    tenant: MOCK_TENANTS[1],
   },
 ];
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
-  { key: 'tenant', label: 'Tenant', type: 'input', placeholder: 'Enter tenant...' },
   { key: 'network', label: 'Network', type: 'input', placeholder: 'Enter network...' },
   {
     key: 'access',
@@ -194,13 +181,9 @@ const filterKeys: FilterKey[] = [
 ];
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
-  { key: 'status', label: 'Status', visible: true },
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'tenant', label: 'Tenant', visible: true },
-  { key: 'vCpu', label: 'vCPU', visible: true },
-  { key: 'ram', label: 'RAM', visible: true },
-  { key: 'disk', label: 'Disk', visible: true },
-  { key: 'createdAt', label: 'Created at', visible: true },
+  { key: 'image', label: 'Description', visible: true },
+  { key: 'flavor', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -272,10 +255,6 @@ export function ComputeAdminInstanceTemplatesPage() {
     setCurrentPage(1);
   }, []);
 
-  const toggleFavorite = (id: string) => {
-    setTemplates((prev) => prev.map((t) => (t.id === id ? { ...t, favorite: !t.favorite } : t)));
-  };
-
   const handleBulkDelete = () => {
     setTemplates((prev) => prev.filter((t) => !selectedRows.includes(t.id)));
     setSelectedRows([]);
@@ -286,9 +265,7 @@ export function ComputeAdminInstanceTemplatesPage() {
   };
 
   const columns: TableColumn[] = [
-    { key: 'favorite', header: '', width: 40, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
-    { key: 'tenant', header: 'Tenant', sortable: true, width: 120 },
     { key: 'image', header: 'Description', sortable: true },
     { key: 'flavor', header: 'Created at', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
@@ -414,58 +391,17 @@ export function ComputeAdminInstanceTemplatesPage() {
         {paginatedRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleFavorite(row.id);
-                }}
-                className="p-1 rounded hover:bg-surface-muted transition-colors border-none bg-transparent cursor-pointer"
-                aria-label={row.favorite ? 'Remove favorite' : 'Add favorite'}
-              >
-                {row.favorite ? (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="#facc15"
-                    stroke="#facc15"
-                    strokeWidth="2"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-text-muted"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
-                  </svg>
-                )}
-              </button>
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[1]}>
               <Link to={`/compute-admin/instance-templates/${row.id}`} className={linkClass}>
                 {row.name}
               </Link>
             </Table.Td>
-            <Table.Td rowData={row} column={columns[2]}>
-              {row.tenant}
-            </Table.Td>
-            <Table.Td rowData={row} column={columns[3]}>
+            <Table.Td rowData={row} column={columns[1]}>
               {row.image}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[4]}>
+            <Table.Td rowData={row} column={columns[2]}>
               {row.flavor}
             </Table.Td>
-            <Table.Td rowData={row} column={columns[5]} preventClickPropagation>
+            <Table.Td rowData={row} column={columns[3]} preventClickPropagation>
               <ContextMenu.Root
                 direction="bottom-end"
                 gap={4}

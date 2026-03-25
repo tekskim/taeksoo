@@ -22,6 +22,7 @@ interface HostAggregate extends Record<string, unknown> {
   availabilityZone: string;
   hosts: string[];
   metadata: { key: string; value: string }[];
+  createdAt: string;
 }
 
 const mockHostAggregates: HostAggregate[] = [
@@ -34,6 +35,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'ssd', value: 'true' },
       { key: 'cpu_allocation_ratio', value: '16.0' },
     ],
+    createdAt: 'Dec 25, 2025 09:15:33',
   },
   {
     id: 'ha-002',
@@ -44,6 +46,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'gpu', value: 'nvidia-a100' },
       { key: 'gpu_count', value: '8' },
     ],
+    createdAt: 'Dec 25, 2025 10:42:18',
   },
   {
     id: 'ha-003',
@@ -51,6 +54,7 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-b',
     hosts: ['mem-host-1', 'mem-host-2', 'mem-host-3'],
     metadata: [{ key: 'memory', value: 'high' }],
+    createdAt: 'Dec 25, 2025 14:08:52',
   },
   {
     id: 'ha-004',
@@ -58,6 +62,7 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-b',
     hosts: ['storage-1', 'storage-2'],
     metadata: [{ key: 'storage', value: 'nvme' }],
+    createdAt: 'Dec 25, 2025 16:25:41',
   },
   {
     id: 'ha-005',
@@ -65,6 +70,7 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-c',
     hosts: ['bm-host-1'],
     metadata: [{ key: 'bare-metal', value: 'true' }],
+    createdAt: 'Dec 25, 2025 17:53:27',
   },
   {
     id: 'ha-006',
@@ -72,12 +78,18 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-d',
     hosts: ['edge-01', 'edge-02', 'edge-03'],
     metadata: [{ key: 'region', value: 'edge' }],
+    createdAt: 'Dec 26, 2025 08:00:00',
   },
 ];
 
 const filterKeys: FilterKey[] = [
   { key: 'name', label: 'Name', type: 'input', placeholder: 'Filter by name...' },
-  { key: 'availabilityZone', label: 'AZ', type: 'input', placeholder: 'Filter by AZ...' },
+  {
+    key: 'availabilityZone',
+    label: 'Availability Zone',
+    type: 'input',
+    placeholder: 'Filter by availability zone...',
+  },
 ];
 
 function rowMatchesFilter(row: HostAggregate, filter: FilterKeyWithValue): boolean {
@@ -95,9 +107,9 @@ function rowMatchesFilter(row: HostAggregate, filter: FilterKeyWithValue): boole
 
 const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
   { key: 'name', label: 'Name', visible: true, locked: true },
-  { key: 'availabilityZone', label: 'AZ', visible: true },
+  { key: 'availabilityZone', label: 'Availability Zone', visible: true },
   { key: 'hosts', label: 'Hosts', visible: true },
-  { key: 'metadata', label: 'Metadata', visible: true },
+  { key: 'createdAt', label: 'Created at', visible: true },
   { key: 'actions', label: 'Action', visible: true, locked: true },
 ];
 
@@ -124,9 +136,9 @@ export function ComputeAdminHostAggregatesPage() {
   const columns: TableColumn[] = useMemo(
     () => [
       { key: 'name', header: 'Name', sortable: true },
-      { key: 'availabilityZone', header: 'AZ', sortable: true },
+      { key: 'availabilityZone', header: 'Availability Zone', sortable: true },
       { key: 'hosts', header: 'Hosts' },
-      { key: 'metadata', header: 'Metadata' },
+      { key: 'createdAt', header: 'Created at', sortable: true },
       { key: 'actions', header: 'Action', width: 60, align: 'center', clickable: false },
     ],
     []
@@ -280,35 +292,9 @@ export function ComputeAdminHostAggregatesPage() {
                 )}
               </span>
             </Table.Td>
-            <Table.Td rowData={row} column={c('metadata')}>
-              <span className="flex items-center gap-1 min-w-0 flex-wrap">
-                {row.metadata.slice(0, 2).map((m) => (
-                  <Badge key={m.key} theme="gry" size="sm" type="subtle">
-                    {m.key}={m.value}
-                  </Badge>
-                ))}
-                {row.metadata.length > 2 && (
-                  <Popover
-                    trigger="click"
-                    position="bottom"
-                    content={
-                      <div className="p-4 min-w-[180px] max-w-[320px]">
-                        <div className="text-[10px] text-text-muted mb-2">All metadata</div>
-                        <div className="flex flex-col gap-1">
-                          {row.metadata.map((m) => (
-                            <span key={m.key} className="text-12 text-text">
-                              {m.key}: {m.value}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    }
-                  >
-                    <span className="inline-flex shrink-0 items-center justify-center w-5 h-5 rounded text-[10px] text-text-muted bg-surface-subtle hover:bg-surface-muted cursor-pointer">
-                      +{row.metadata.length - 2}
-                    </span>
-                  </Popover>
-                )}
+            <Table.Td rowData={row} column={c('createdAt')}>
+              <span className="text-12 text-text">
+                {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
               </span>
             </Table.Td>
             <Table.Td rowData={row} column={c('actions')} preventClickPropagation>
