@@ -82,17 +82,6 @@ const mockRulesData: RuleRow[] = [
 
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
-function TabSectionCard({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-default)]">
-        <h6 className="text-heading-h6 m-0">{title}</h6>
-      </div>
-      <div className="p-4 flex flex-col gap-3 min-w-0">{children}</div>
-    </div>
-  );
-}
-
 function RulesTab({ rules }: { rules: RuleRow[] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState('');
@@ -108,7 +97,8 @@ function RulesTab({ rules }: { rules: RuleRow[] }) {
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
-    <TabSectionCard title="Rules">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Rules</h3>
       <Pagination
         totalCount={rules.length}
         size={10}
@@ -152,8 +142,60 @@ function RulesTab({ rules }: { rules: RuleRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
+}
+
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
+        <div className="flex items-center gap-1 min-w-0 w-full">
+          {entries.slice(0, 1).map(([key, val]) => (
+            <Badge
+              key={key}
+              theme="white"
+              size="sm"
+              className="min-w-0 truncate justify-start text-left"
+            >
+              {`${key}: ${val}`}
+            </Badge>
+          ))}
+          {entries.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
+                    All {title.toLowerCase()} ({entries.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {entries.map(([k, v]) => (
+                      <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">{`${k}: ${v}`}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                +{entries.length - 1}
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+  };
 }
 
 export function ContainerIngressDetailPage() {
@@ -174,7 +216,11 @@ export function ContainerIngressDetailPage() {
         label: 'Status',
         value: (
           <Tooltip content={ingress.status} direction="top">
-            <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+            <Badge
+              theme="white"
+              size="sm"
+              className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+            >
               <span className="truncate">{ingress.status}</span>
             </Badge>
           </Tooltip>
@@ -188,6 +234,8 @@ export function ContainerIngressDetailPage() {
       },
       { label: 'Ingress class', value: ingress.ingressClass },
       { label: 'Created at', value: ingress.createdAt },
+      makeLabelAnnotationInfoField('Labels', Object.entries(ingress.labels)),
+      makeLabelAnnotationInfoField('Annotations', Object.entries(ingress.annotations)),
     ],
     [ingress]
   );
@@ -214,9 +262,6 @@ export function ContainerIngressDetailPage() {
     </ContextMenu.Root>
   );
 
-  const labelKeys = Object.keys(ingress.labels);
-  const annKeys = Object.keys(ingress.annotations);
-
   return (
     <div className="flex flex-col gap-6 min-w-0">
       <DetailPageHeader
@@ -225,108 +270,9 @@ export function ContainerIngressDetailPage() {
         infoFields={infoFields}
       />
 
-      <div className="flex flex-wrap gap-3 w-full">
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Labels ({labelKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(ingress.labels)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {labelKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All labels ({labelKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(ingress.labels).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{labelKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Annotations ({annKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(ingress.annotations)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {annKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All annotations ({annKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(ingress.annotations).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{annKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="rules" label="Rules">
-          <div className="pt-6">
-            <RulesTab rules={mockRulesData} />
-          </div>
+          <RulesTab rules={mockRulesData} />
         </Tab>
       </Tabs>
     </div>

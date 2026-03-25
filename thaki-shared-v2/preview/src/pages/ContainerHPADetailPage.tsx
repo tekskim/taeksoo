@@ -347,6 +347,58 @@ function ConditionsTab() {
   );
 }
 
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
+        <div className="flex items-center gap-1 min-w-0 w-full">
+          {entries.slice(0, 1).map(([key, val]) => (
+            <Badge
+              key={key}
+              theme="white"
+              size="sm"
+              className="min-w-0 truncate justify-start text-left"
+            >
+              {`${key}: ${val}`}
+            </Badge>
+          ))}
+          {entries.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
+                    All {title.toLowerCase()} ({entries.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {entries.map(([k, v]) => (
+                      <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">{`${k}: ${v}`}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                +{entries.length - 1}
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+  };
+}
+
 /* ----------------------------------------
    Main Component
    ---------------------------------------- */
@@ -382,6 +434,8 @@ export function ContainerHPADetailPage() {
       },
       { label: 'Target reference', value: hpa.targetReference },
       { label: 'Created at', value: hpa.createdAt },
+      makeLabelAnnotationInfoField('Labels', Object.entries(hpa.labels)),
+      makeLabelAnnotationInfoField('Annotations', Object.entries(hpa.annotations)),
     ],
     [hpa]
   );
@@ -423,103 +477,6 @@ export function ContainerHPADetailPage() {
         }
         infoFields={infoFields}
       />
-
-      <div className="flex gap-3 w-full flex-col sm:flex-row">
-        <div className="flex-1 min-w-0 bg-surface-muted rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-11 font-medium text-text-muted leading-4">
-              Labels ({Object.keys(hpa.labels).length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(hpa.labels)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {Object.keys(hpa.labels).length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-10 font-medium text-text-muted mb-2">
-                        All labels ({Object.keys(hpa.labels).length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(hpa.labels).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-10 font-medium text-text-muted bg-surface-subtle hover:bg-surface-hover transition-colors h-5 cursor-pointer">
-                    +{Object.keys(hpa.labels).length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 min-w-0 bg-surface-muted rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-11 font-medium text-text-muted leading-4">
-              Annotations ({Object.keys(hpa.annotations).length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(hpa.annotations)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {Object.keys(hpa.annotations).length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-10 font-medium text-text-muted mb-2">
-                        All annotations ({Object.keys(hpa.annotations).length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(hpa.annotations).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-10 font-medium text-text-muted bg-surface-subtle hover:bg-surface-hover transition-colors h-5 cursor-pointer">
-                    +{Object.keys(hpa.annotations).length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
 
       <Tabs activeTabId={activeTabId} onChange={setActiveTabId} variant="line" size="sm">
         <Tab id="metrics" label="Metrics">

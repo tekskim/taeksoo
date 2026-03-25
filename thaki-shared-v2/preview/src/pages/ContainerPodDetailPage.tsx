@@ -1,7 +1,8 @@
 import { useMemo, useState, useCallback, type ReactNode } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
-import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
+import DetailPageHeader, {
+  type DetailPageHeaderInfoField,
+} from '@shared/components/DetailPageHeader/DetailPageHeader';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -30,6 +31,8 @@ interface PodData {
   workload: string;
   workloadType: string;
   node: string;
+  controlledBy?: string;
+  nodeName?: string;
   labels: Record<string, string>;
   annotations: Record<string, string>;
   containers: string[];
@@ -201,23 +204,12 @@ const mockEventsData: EventRow[] = [
   },
 ];
 
-const STATUS_COL_WIDTH = 88;
+const STATUS_COL_WIDTH = 120;
 const ACTION_COL_WIDTH = 72;
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
 function stripTableDate(value: string): string {
   return value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
-}
-
-function TabSectionCard({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-default)]">
-        <h6 className="text-heading-h6 m-0">{title}</h6>
-      </div>
-      <div className="p-4 flex flex-col gap-3 min-w-0">{children}</div>
-    </div>
-  );
 }
 
 function ContainersTab({
@@ -235,7 +227,7 @@ function ContainersTab({
   const [order, setOrder] = useState<SortOrder>('asc');
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH },
     { key: 'ready', header: 'Ready', sortable: true },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
@@ -247,7 +239,8 @@ function ContainersTab({
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
-    <TabSectionCard title="Containers">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Containers</h3>
       <Pagination
         totalCount={containers.length}
         size={10}
@@ -275,7 +268,11 @@ function ContainersTab({
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -284,7 +281,7 @@ function ContainersTab({
               {row.ready ? (
                 <IconCheck size={16} className="text-[var(--color-state-success)]" stroke={2} />
               ) : (
-                <span className="text-[var(--color-text-subtle)]">-</span>
+                <span className="text-text-subtle">-</span>
               )}
             </Table.Td>
             <Table.Td rowData={row} column={c('name')}>
@@ -295,9 +292,9 @@ function ContainersTab({
             </Table.Td>
             <Table.Td rowData={row} column={c('initContainer')}>
               {row.initContainer ? (
-                <span className="text-[var(--color-text-default)]">Completed</span>
+                <span className="text-12 leading-18 text-text">Completed</span>
               ) : (
-                <span className="text-[var(--color-text-subtle)]">-</span>
+                <span className="text-text-subtle">-</span>
               )}
             </Table.Td>
             <Table.Td rowData={row} column={c('restarts')}>
@@ -334,7 +331,7 @@ function ContainersTab({
           </Table.Tr>
         ))}
       </SelectableTable>
-    </TabSectionCard>
+    </div>
   );
 }
 
@@ -352,7 +349,8 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
-    <TabSectionCard title="Conditions">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Conditions</h3>
       <Pagination
         totalCount={conditions.length}
         size={10}
@@ -389,7 +387,7 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
 }
 
@@ -415,7 +413,8 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
-    <TabSectionCard title="Recent events">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Recent events</h3>
       <div className="flex flex-wrap items-center gap-2">
         <input
           type="search"
@@ -528,8 +527,60 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
           </Table.Tr>
         ))}
       </SelectableTable>
-    </TabSectionCard>
+    </div>
   );
+}
+
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
+        <div className="flex items-center gap-1 min-w-0 w-full">
+          {entries.slice(0, 1).map(([key, val]) => (
+            <Badge
+              key={key}
+              theme="white"
+              size="sm"
+              className="min-w-0 truncate justify-start text-left"
+            >
+              {`${key}: ${val}`}
+            </Badge>
+          ))}
+          {entries.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
+                    All {title.toLowerCase()} ({entries.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {entries.map(([k, v]) => (
+                      <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">{`${k}: ${v}`}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                +{entries.length - 1}
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+  };
 }
 
 export function ContainerPodDetailPage() {
@@ -555,7 +606,11 @@ export function ContainerPodDetailPage() {
         label: 'Status',
         value: (
           <Tooltip content={pod.status === 'Running' ? 'Active' : pod.status} direction="top">
-            <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+            <Badge
+              theme="white"
+              size="sm"
+              className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+            >
               <span className="truncate">{pod.status === 'Running' ? 'Active' : pod.status}</span>
             </Badge>
           </Tooltip>
@@ -578,6 +633,10 @@ export function ContainerPodDetailPage() {
         copyText: pod.podIP,
       },
       { label: 'Created at', value: pod.createdAt },
+      { label: 'Workload', value: pod.workload || pod.controlledBy || 'N/A' },
+      { label: 'Node', value: pod.node || pod.nodeName || 'N/A' },
+      makeLabelAnnotationInfoField('Labels', Object.entries(pod.labels)),
+      makeLabelAnnotationInfoField('Annotations', Object.entries(pod.annotations)),
     ],
     [pod]
   );
@@ -614,151 +673,23 @@ export function ContainerPodDetailPage() {
     </ContextMenu.Root>
   );
 
-  const labelKeys = Object.keys(pod.labels);
-  const annKeys = Object.keys(pod.annotations);
-
   return (
     <div className="flex flex-col gap-6 min-w-0">
       <DetailPageHeader title={`Pod: ${pod.name}`} actions={moreActions} infoFields={infoFields} />
 
-      <div className="flex flex-wrap gap-3 w-full">
-        <div className="flex-1 min-w-[180px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Workload</span>
-            <Link
-              to={`/container/deployments/${pod.workload}`}
-              className={`text-body-md font-medium ${linkClass}`}
-            >
-              {pod.workload}
-            </Link>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[180px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Node</span>
-            <Link
-              to={`/container/nodes/${pod.node}`}
-              className={`text-body-md font-medium ${linkClass}`}
-            >
-              {pod.node}
-            </Link>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[180px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">
-              Labels ({labelKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(pod.labels)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {labelKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All labels ({labelKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(pod.labels).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{labelKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[180px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">
-              Annotations ({annKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(pod.annotations)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {annKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All annotations ({annKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(pod.annotations).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{annKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="containers" label="Containers">
-          <div className="pt-6">
-            <ContainersTab
-              containers={mockContainersData}
-              onExecuteShell={handleExecuteShell}
-              onViewLogs={handleViewLogs}
-            />
-          </div>
+          <ContainersTab
+            containers={mockContainersData}
+            onExecuteShell={handleExecuteShell}
+            onViewLogs={handleViewLogs}
+          />
         </Tab>
         <Tab id="conditions" label="Conditions">
-          <div className="pt-6">
-            <ConditionsTab conditions={mockConditionsData} />
-          </div>
+          <ConditionsTab conditions={mockConditionsData} />
         </Tab>
         <Tab id="events" label="Recent events">
-          <div className="pt-6">
-            <RecentEventsTab events={mockEventsData} />
-          </div>
+          <RecentEventsTab events={mockEventsData} />
         </Tab>
       </Tabs>
     </div>
