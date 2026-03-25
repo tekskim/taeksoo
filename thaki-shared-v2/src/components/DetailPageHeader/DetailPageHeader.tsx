@@ -9,9 +9,9 @@ const styles = {
   container: 'flex flex-col gap-3 pt-3 px-4 pb-4 bg-surface border border-border rounded-base8',
   header: 'flex flex-col gap-4',
   actions: 'flex gap-[var(--component-layout-gap-xs)] items-center',
-  infoGrid: 'flex gap-2 items-center w-full',
+  infoGrid: 'flex flex-wrap gap-2 items-stretch w-full',
   infoCard:
-    'flex-1 min-w-0 min-h-[1px] flex items-center justify-between py-3 px-4 bg-surface-muted rounded-base8',
+    'flex-1 min-w-0 min-h-[1px] flex items-center justify-between py-3 px-4 bg-surface-muted rounded-base8 basis-[calc(25%-6px)]',
   infoCardFixed: 'flex-none',
   infoCardContent: 'flex flex-col gap-1.5 min-w-0',
   infoHeader: 'flex items-center justify-between w-full gap-1.5',

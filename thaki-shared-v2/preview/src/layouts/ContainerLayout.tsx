@@ -349,19 +349,19 @@ function getTabTitle(pathname: string): string {
 }
 
 export function ContainerLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(true);
   const location = useLocation();
 
   const breadcrumbItems = useMemo(() => getBreadcrumbItems(location.pathname), [location.pathname]);
   const tabTitle = useMemo(() => getTabTitle(location.pathname), [location.pathname]);
   const tabs = useMemo(() => [{ id: 'main', title: tabTitle, fixed: true }], [tabTitle]);
 
+  const isHomePage = location.pathname === '/container';
+  const showMenuPanel = menuOpen && !isHomePage;
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-surface">
-      <ContainerSidebar
-        isCollapsed={!sidebarOpen}
-        onToggle={() => setSidebarOpen((prev) => !prev)}
-      />
+      <ContainerSidebar isOpen={menuOpen} onToggle={() => setMenuOpen((prev) => !prev)} />
 
       <div className="flex flex-col flex-1 min-w-0 h-full">
         <TabBar
@@ -380,12 +380,12 @@ export function ContainerLayout() {
             onGoBack: () => window.history.back(),
             onGoForward: () => window.history.forward(),
           }}
-          isSidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+          isSidebarOpen={showMenuPanel}
+          onToggleSidebar={() => setMenuOpen((prev) => !prev)}
           langButton={null}
         />
 
-        <main className="flex-1 overflow-auto py-6 px-8 content-scroll">
+        <main className="flex-1 overflow-auto pt-4 px-8 pb-20 content-scroll">
           <Outlet />
         </main>
       </div>

@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
@@ -12,11 +12,14 @@ import { Tooltip } from '@shared/components/Tooltip';
 import { Badge } from '@shared/components/Badge';
 import { Popover } from '@shared/components/Popover';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   IconChevronDown,
   IconDotsCircleHorizontal,
   IconDownload,
   IconTrash,
+  IconX,
 } from '@tabler/icons-react';
 
 interface CronJobData {
@@ -125,7 +128,7 @@ const mockEventsData: EventRow[] = [
   },
 ];
 
-const STATUS_COL_WIDTH = 88;
+const STATUS_COL_WIDTH = 120;
 const ACTION_COL_WIDTH = 72;
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
@@ -133,27 +136,46 @@ function stripTableDate(value: string): string {
   return value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
 }
 
-function TabSectionCard({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-default)]">
-        <h6 className="text-heading-h6 m-0">{title}</h6>
-      </div>
-      <div className="p-4 flex flex-col gap-3 min-w-0">{children}</div>
-    </div>
-  );
-}
-
 function JobsTab({ jobs }: { jobs: JobRow[] }) {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
+  const filterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+    { key: 'namespace', label: 'Namespace', type: 'input', placeholder: 'Enter namespace...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredRows = useMemo(
+    () =>
+      jobs.filter((r) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof JobRow;
+          return String(r[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [jobs, appliedFilters]
+  );
+
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
     { key: 'completions', header: 'Completions', sortable: true },
@@ -166,14 +188,15 @@ function JobsTab({ jobs }: { jobs: JobRow[] }) {
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
-    <TabSectionCard title="Jobs">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Jobs</h3>
       <div className="flex flex-wrap items-center gap-2">
-        <input
-          type="search"
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search jobs by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+          defaultFilterKey="name"
         />
         <div className="h-4 w-px bg-border shrink-0" />
         <div className="flex items-center gap-1">
@@ -197,8 +220,28 @@ function JobsTab({ jobs }: { jobs: JobRow[] }) {
           </Button>
         </div>
       </div>
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
-        totalCount={jobs.length}
+        totalCount={filteredRows.length}
         size={10}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -207,7 +250,7 @@ function JobsTab({ jobs }: { jobs: JobRow[] }) {
       />
       <SelectableTable<JobRow>
         columns={columns}
-        rows={jobs}
+        rows={filteredRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -220,11 +263,15 @@ function JobsTab({ jobs }: { jobs: JobRow[] }) {
         }}
         stickyLastColumn
       >
-        {jobs.map((row) => (
+        {filteredRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -295,16 +342,47 @@ function JobsTab({ jobs }: { jobs: JobRow[] }) {
           </Table.Tr>
         ))}
       </SelectableTable>
-    </TabSectionCard>
+    </div>
   );
 }
 
 function RecentEventsTab({ events }: { events: EventRow[] }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  const filterKeys: FilterKey[] = [
+    { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+    { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'source', label: 'Source', type: 'input', placeholder: 'Enter source...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredRows = useMemo(
+    () =>
+      events.filter((r) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof EventRow;
+          return String(r[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [events, appliedFilters]
+  );
 
   const columns: TableColumn[] = [
     { key: 'lastSeen', header: 'Last seen', sortable: true },
@@ -321,14 +399,15 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
   const c = (key: string) => columns.find((col) => col.key === key)!;
 
   return (
-    <TabSectionCard title="Recent events">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Recent events</h3>
       <div className="flex flex-wrap items-center gap-2">
-        <input
-          type="search"
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search events by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+          defaultFilterKey="name"
         />
         <div className="h-4 w-px bg-border shrink-0" />
         <div className="flex items-center gap-1">
@@ -352,8 +431,28 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
           </Button>
         </div>
       </div>
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
-        totalCount={events.length}
+        totalCount={filteredRows.length}
         size={10}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -362,7 +461,7 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
       />
       <SelectableTable<EventRow>
         columns={columns}
-        rows={events}
+        rows={filteredRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -375,7 +474,7 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
         }}
         stickyLastColumn
       >
-        {events.map((row) => (
+        {filteredRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('lastSeen')}>
               {row.lastSeen}
@@ -434,8 +533,60 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
           </Table.Tr>
         ))}
       </SelectableTable>
-    </TabSectionCard>
+    </div>
   );
+}
+
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
+        <div className="flex items-center gap-1 min-w-0 w-full">
+          {entries.slice(0, 1).map(([key, val]) => (
+            <Badge
+              key={key}
+              theme="white"
+              size="sm"
+              className="min-w-0 truncate justify-start text-left"
+            >
+              {`${key}: ${val}`}
+            </Badge>
+          ))}
+          {entries.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
+                    All {title.toLowerCase()} ({entries.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {entries.map(([k, v]) => (
+                      <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">{`${k}: ${v}`}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                +{entries.length - 1}
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+  };
 }
 
 export function ContainerCronJobDetailPage() {
@@ -453,7 +604,11 @@ export function ContainerCronJobDetailPage() {
         label: 'Status',
         value: (
           <Tooltip content={cronjob.status} direction="top">
-            <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+            <Badge
+              theme="white"
+              size="sm"
+              className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+            >
               <span className="truncate">{cronjob.status}</span>
             </Badge>
           </Tooltip>
@@ -472,6 +627,8 @@ export function ContainerCronJobDetailPage() {
         copyText: cronjob.image,
       },
       { label: 'Created at', value: cronjob.createdAt },
+      makeLabelAnnotationInfoField('Labels', Object.entries(cronjob.labels)),
+      makeLabelAnnotationInfoField('Annotations', Object.entries(cronjob.annotations)),
     ],
     [cronjob]
   );
@@ -504,9 +661,6 @@ export function ContainerCronJobDetailPage() {
     </ContextMenu.Root>
   );
 
-  const labelKeys = Object.keys(cronjob.labels);
-  const annKeys = Object.keys(cronjob.annotations);
-
   return (
     <div className="flex flex-col gap-6 min-w-0">
       <DetailPageHeader
@@ -515,113 +669,12 @@ export function ContainerCronJobDetailPage() {
         infoFields={infoFields}
       />
 
-      <div className="flex flex-wrap gap-3 w-full">
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Labels ({labelKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(cronjob.labels)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {labelKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All labels ({labelKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(cronjob.labels).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{labelKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Annotations ({annKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(cronjob.annotations)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >
-                    {`${key}: ${val}`}
-                  </Badge>
-                ))}
-              {annKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All annotations ({annKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(cronjob.annotations).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="break-all">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{annKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="jobs" label="Jobs">
-          <div className="pt-6">
-            <JobsTab jobs={mockJobsData} />
-          </div>
+          <JobsTab jobs={mockJobsData} />
         </Tab>
         <Tab id="events" label="Recent events">
-          <div className="pt-6">
-            <RecentEventsTab events={mockEventsData} />
-          </div>
+          <RecentEventsTab events={mockEventsData} />
         </Tab>
       </Tabs>
     </div>

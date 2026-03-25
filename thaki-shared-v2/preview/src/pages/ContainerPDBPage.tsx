@@ -192,7 +192,7 @@ export function ContainerPDBPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'minAvailable', header: 'Min available', sortable: true },
@@ -307,6 +307,8 @@ export function ContainerPDBPage() {
         onPageChange={setCurrentPage}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
+        onSettingClick={() => {}}
+        settingAriaLabel="Pagination settings"
       />
 
       <SelectableTable<PodDisruptionBudgetRow>
@@ -325,7 +327,11 @@ export function ContainerPDBPage() {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>

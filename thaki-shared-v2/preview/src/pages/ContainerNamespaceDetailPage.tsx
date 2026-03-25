@@ -275,17 +275,19 @@ function StatCard({
   color: 'green' | 'blue' | 'red' | 'black';
 }) {
   const colorStyles = {
-    green: { text: 'text-[var(--color-state-success)]' },
-    blue: { text: 'text-[var(--color-state-info)]' },
-    red: { text: 'text-[var(--color-state-danger)]' },
-    black: { text: 'text-[var(--color-text-default)]' },
+    green: { text: 'text-success' },
+    blue: { text: 'text-info' },
+    red: { text: 'text-error' },
+    black: { text: 'text-text' },
   };
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+    <div className="flex-1 bg-surface-subtle rounded-lg px-4 py-3">
       <div className="flex flex-col gap-1.5">
-        <span className={`text-label-sm ${colorStyles[color].text}`}>{label}</span>
-        <span className={`text-heading-h3 ${colorStyles[color].text}`}>{value}</span>
+        <span className={`text-11 font-medium leading-4 ${colorStyles[color].text}`}>{label}</span>
+        <span className={`text-24 font-semibold leading-8 ${colorStyles[color].text}`}>
+          {value}
+        </span>
       </div>
     </div>
   );
@@ -389,18 +391,14 @@ function WorkloadRowMenu({ row }: { row: WorkloadRow }) {
       trigger={({ toggle }) => (
         <button
           type="button"
-          className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+          className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
           onClick={(e) => {
             e.stopPropagation();
             toggle();
           }}
           aria-label="Row actions"
         >
-          <IconDotsCircleHorizontal
-            size={16}
-            stroke={1.5}
-            className="text-[var(--color-text-subtle)]"
-          />
+          <IconDotsCircleHorizontal size={16} stroke={1.5} />
         </button>
       )}
     >
@@ -415,17 +413,17 @@ function ResourcesTabContent({ resources }: { resources: ResourceRow[] }) {
   const pageSize = 10;
   const columns: TableColumn[] = [
     { key: 'type', header: 'Type', sortable: true },
-    { key: 'active', header: 'Active', align: 'right', sortable: true },
-    { key: 'processing', header: 'Processing', align: 'right', sortable: true },
-    { key: 'error', header: 'Error', align: 'right', sortable: true },
-    { key: 'total', header: 'Total', align: 'right', sortable: true },
+    { key: 'active', header: 'Active', sortable: true },
+    { key: 'processing', header: 'Processing', sortable: true },
+    { key: 'error', header: 'Error', sortable: true },
+    { key: 'total', header: 'Total', sortable: true },
   ];
   const c = (key: string) => columns.find((col) => col.key === key)!;
   const pageRows = resources.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Resources</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Resources</h3>
       <Pagination
         totalCount={resources.length}
         size={pageSize}
@@ -438,7 +436,7 @@ function ResourcesTabContent({ resources }: { resources: ResourceRow[] }) {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('type')}>
               <span
-                className="block min-w-0 truncate text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                className="block min-w-0 truncate text-12 font-medium leading-18 text-primary cursor-pointer hover:underline"
                 title={row.type}
               >
                 {row.type}
@@ -463,12 +461,12 @@ function WorkloadsTabContent({ workloads }: { workloads: WorkloadRow[] }) {
   const paginatedWorkloads = workloads.slice(startIndex, startIndex + itemsPerPage);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'type', header: 'Type', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
-    { key: 'restarts', header: 'Restarts', align: 'right', sortable: true },
+    { key: 'restarts', header: 'Restarts', sortable: true },
     { key: 'health', header: 'Health', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'action', header: 'Action', width: 60, align: 'center' },
@@ -477,7 +475,7 @@ function WorkloadsTabContent({ workloads }: { workloads: WorkloadRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Workloads</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Workloads</h3>
       <Pagination
         totalCount={workloads.length}
         size={itemsPerPage}
@@ -499,14 +497,18 @@ function WorkloadsTabContent({ workloads }: { workloads: WorkloadRow[] }) {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
             </Table.Td>
             <Table.Td rowData={row} column={c('name')}>
               <span
-                className="block min-w-0 truncate text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium"
+                className="block min-w-0 truncate text-primary cursor-pointer hover:underline font-medium"
                 title={row.name}
               >
                 {row.name}
@@ -555,7 +557,7 @@ function ConditionsTabContent({ conditions }: { conditions: ConditionRow[] }) {
   const pageSize = 10;
   const columns: TableColumn[] = [
     { key: 'condition', header: 'Condition', sortable: true },
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'message', header: 'Message', sortable: true },
     { key: 'updated', header: 'Updated', sortable: true },
   ];
@@ -564,9 +566,7 @@ function ConditionsTabContent({ conditions }: { conditions: ConditionRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Conditions</h3>
       <Pagination
         totalCount={conditions.length}
         size={pageSize}
@@ -584,7 +584,11 @@ function ConditionsTabContent({ conditions }: { conditions: ConditionRow[] }) {
             </Table.Td>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px]">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -661,7 +665,7 @@ export function ContainerNamespaceDetailPage() {
                 hideDelay={100}
                 content={
                   <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
                       All Labels ({labelEntries.length})
                     </div>
                     <div className="flex flex-wrap gap-1">
@@ -674,7 +678,7 @@ export function ContainerNamespaceDetailPage() {
                   </div>
                 }
               >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
                   +{labelEntries.length - 1}
                 </span>
               </Popover>
@@ -727,11 +731,9 @@ export function ContainerNamespaceDetailPage() {
         }
       />
 
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+      <div className="bg-surface border border-border rounded-lg px-4 pt-3 pb-4 w-full">
         <div className="flex flex-col gap-3">
-          <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-            Workload
-          </h2>
+          <h2 className="text-16 font-semibold leading-6 text-text">Workload</h2>
           <div className="flex gap-3 w-full">
             <StatCard label="Active" value={namespace.resources.active} color="green" />
             <StatCard label="Processing" value={namespace.resources.processing} color="blue" />

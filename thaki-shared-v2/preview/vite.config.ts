@@ -1,10 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
 export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : '/tds_ssot/shared-v2/',
-  plugins: [react()],
+  plugins: [
+    react(),
+    svgr({
+      svgrOptions: {
+        exportType: 'default',
+        plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+        svgoConfig: { plugins: [{ name: 'removeDimensions' }] },
+      },
+      include: '**/*.svg?component',
+    }),
+  ],
   resolve: {
     alias: {
       '@shared': path.resolve(__dirname, '../src'),
