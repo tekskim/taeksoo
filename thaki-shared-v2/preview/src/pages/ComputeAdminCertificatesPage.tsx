@@ -268,7 +268,7 @@ export function ComputeAdminCertificatesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'domain', header: 'SAN', sortable: true },
     { key: 'listener', header: 'Listener', sortable: true },

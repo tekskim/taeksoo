@@ -171,7 +171,7 @@ const OverlayTemplate = ({
   const hasDefaultButtons = !footer;
 
   const overlayContent = (
-    <div className={cn(overlayStyles({ global: isGlobal }))}>
+    <div className={cn(overlayStyles({ global: isGlobal, appeared }))}>
       {showDim && <Dim appeared={appeared} onClick={handleDimClick} />}
       <div
         className={cn(
@@ -201,10 +201,7 @@ const OverlayTemplate = ({
               title
             )}
             {typeof description === 'string' ? (
-              <p
-                className={cn(overlayDescriptionStyles)}
-                id="overlay-description"
-              >
+              <p className={cn(overlayDescriptionStyles)} id="overlay-description">
                 {description}
               </p>
             ) : (
@@ -212,9 +209,7 @@ const OverlayTemplate = ({
             )}
           </header>
         )}
-        <section className={cn(overlayBodyStyles({ type }))}>
-          {children}
-        </section>
+        <section className={cn(overlayBodyStyles({ type }))}>{children}</section>
         <footer
           className={cn(
             overlayFooterStyles({ type }),
@@ -260,13 +255,9 @@ const OverlayTemplate = ({
 
   return isGlobal
     ? createPortal(
-      portalScope ? (
-        <div data-portal-scope={portalScope}>{overlayContent}</div>
-      ) : (
-        overlayContent
-      ),
-      document.body
-    )
+        portalScope ? <div data-portal-scope={portalScope}>{overlayContent}</div> : overlayContent,
+        document.body
+      )
     : overlayContent;
 };
 

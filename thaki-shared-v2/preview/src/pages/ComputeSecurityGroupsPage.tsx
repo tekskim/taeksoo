@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
@@ -12,6 +12,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Tooltip } from '@shared/components/Tooltip';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
@@ -142,10 +143,13 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 ];
 
 export function ComputeSecurityGroupsPage() {
+  const [createSgOpen, setCreateSgOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [selectedSg, setSelectedSg] = useState<SecurityGroup | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<SecurityGroup | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
-  const navigate = useNavigate();
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -216,7 +220,13 @@ export function ComputeSecurityGroupsPage() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <Button
+            appearance="outline"
+            variant="muted"
+            size="sm"
+            disabled={!hasSelection}
+            onClick={() => setBulkDeleteOpen(true)}
+          >
             <IconTrash size={12} /> Delete
           </Button>
         </div>
@@ -352,7 +362,7 @@ export function ComputeSecurityGroupsPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -360,10 +370,50 @@ export function ComputeSecurityGroupsPage() {
           </Table.Tr>
         ))}
       </SelectableTable>
+      <CreateSecurityGroupDrawer isOpen={createSgOpen} onClose={() => setCreateSgOpen(false)} />
+      <EditSecurityGroupDrawer
+        isOpen={editOpen}
+        onClose={() => {
+          setEditOpen(false);
+          setSelectedSg(null);
+        }}
+        securityGroupId={selectedSg?.id}
+        initialName={selectedSg?.name}
+        initialDescription={selectedSg?.description}
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete security group',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Security group] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete security groups',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} security groups? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Security group] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

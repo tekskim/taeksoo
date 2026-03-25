@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, type MouseEvent } from 'react';
+import { IconCopy, IconCheck } from '@tabler/icons-react';
 import { cn } from '../../services/utils/cn';
 import { Title } from '../Title';
 import { titleWrapperVariants } from '../Title/Title.styles';
@@ -22,7 +23,8 @@ const styles = {
     'm-0 font-sans text-12 font-regular leading-16 text-text whitespace-nowrap overflow-hidden text-ellipsis',
   infoAccessory: 'flex-shrink-0',
   copyButton:
-    'flex items-center justify-center w-3 h-3 text-text-subtle hover:text-text cursor-pointer border-none bg-transparent p-0 transition-colors duration-200 flex-shrink-0',
+    'inline-flex items-center justify-center h-5 w-5 p-0 bg-transparent border-none rounded-sm text-text-muted cursor-pointer transition-[color,background] duration-control ease-control outline-none hover:text-text hover:bg-surface-hover focus-visible:outline focus-visible:outline-[2px] focus-visible:outline-border-focus focus-visible:outline-offset-[2px] active:text-text-strong flex-shrink-0',
+  copyButtonSuccess: 'text-state-success',
   titleSkeleton: 'w-[200px] h-6',
   skeletonLabel: 'w-[80px] h-4',
   skeletonValue: 'w-[120px] h-4',
@@ -65,65 +67,41 @@ export interface DetailPageHeaderProps {
   isLoading?: boolean;
 }
 
-const CopyButton: React.FC<{ text: string }> = ({ text }): React.ReactElement => {
+const HeaderCopyButton: React.FC<{ text: string }> = ({ text }): React.ReactElement => {
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleCopy = useCallback(async (): Promise<void> => {
-    if (!navigator.clipboard || !window.isSecureContext) {
-      console.warn('Clipboard API is not available. Requires HTTPS (secure context).');
-      return;
-    }
+  const handleCopy = useCallback(
+    async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
+      e.stopPropagation();
+      if (!navigator.clipboard || !window.isSecureContext) {
+        console.warn('Clipboard API is not available. Requires HTTPS (secure context).');
+        return;
+      }
 
-    try {
-      await navigator.clipboard.writeText(text);
-      setIsCopied(true);
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 2000);
-    } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
-    }
-  }, [text]);
+      try {
+        await navigator.clipboard.writeText(text);
+        setIsCopied(true);
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 2000);
+      } catch (error) {
+        console.error('Failed to copy to clipboard:', error);
+      }
+    },
+    [text]
+  );
 
   return (
     <button
       type="button"
       onClick={handleCopy}
-      className={styles.copyButton}
+      className={cn(styles.copyButton, isCopied && styles.copyButtonSuccess)}
       aria-label={isCopied ? 'Copied' : 'Copy to clipboard'}
     >
       {isCopied ? (
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10 3L4.5 8.5L2 6"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <IconCheck size={12} stroke={2} className="shrink-0" />
       ) : (
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M8 1.5H2.5C1.94772 1.5 1.5 1.94772 1.5 2.5V8M4 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V4C10.5 3.44772 10.0523 3 9.5 3H4C3.44772 3 3 3.44772 3 4V9.5C3 10.0523 3.44772 10.5 4 10.5Z"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <IconCopy size={12} stroke={1.5} className="shrink-0" />
       )}
     </button>
   );
@@ -182,7 +160,7 @@ const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({
                           <div className={cn(styles.infoValue, 'flex-1 min-w-0')}>
                             {field.value}
                           </div>
-                          {field.copyText && <CopyButton text={field.copyText} />}
+                          {field.copyText && <HeaderCopyButton text={field.copyText} />}
                         </div>
                       </>
                     ) : (

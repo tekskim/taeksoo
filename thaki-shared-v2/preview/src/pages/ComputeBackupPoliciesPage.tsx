@@ -6,6 +6,7 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { IconDownload, IconPlayerPlay, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
@@ -133,6 +134,8 @@ export function ComputeBackupPoliciesPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<BackupPolicy | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -165,7 +168,7 @@ export function ComputeBackupPoliciesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Policy Name', sortable: true },
     { key: 'schedule', header: 'Schedule' },
     { key: 'retention', header: 'Retention' },
@@ -204,7 +207,13 @@ export function ComputeBackupPoliciesPage() {
         <Button appearance="outline" variant="secondary" size="sm" disabled={!hasSelection}>
           <IconPlayerPlay size={12} stroke={1.5} /> Run Now
         </Button>
-        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={() => setBulkDeleteOpen(true)}
+        >
           <IconTrash size={12} stroke={1.5} /> Delete
         </Button>
       </div>
@@ -332,7 +341,7 @@ export function ComputeBackupPoliciesPage() {
                 <ContextMenu.Item action={() => console.log('History:', row.id)}>
                   View history
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -344,6 +353,35 @@ export function ComputeBackupPoliciesPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete backup policy',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Backup policy] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete backup policies',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} backup policies? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Backup policy] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

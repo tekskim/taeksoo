@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -11,6 +11,7 @@ import { Tabs, Tab } from '@shared/components/Tabs';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import { IconEdit, IconLinkOff, IconUnlink } from '@tabler/icons-react';
+import { ActionModal } from '@shared/components/ActionModal';
 
 type FloatingIPStatus = 'active' | 'down' | 'error';
 
@@ -188,8 +189,10 @@ export function ComputeFloatingIPDetailPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [associateOpen, setAssociateOpen] = useState(false);
   const [disassociateOpen, setDisassociateOpen] = useState(false);
+  const [releaseModalOpen, setReleaseModalOpen] = useState(false);
 
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -233,7 +236,12 @@ export function ComputeFloatingIPDetailPage() {
             >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setReleaseModalOpen(true)}
+            >
               <IconUnlink size={12} stroke={1.5} /> Release
             </Button>
           </div>
@@ -320,6 +328,22 @@ export function ComputeFloatingIPDetailPage() {
         onClose={() => setDisassociateOpen(false)}
         floatingIpAddress={floatingIP.floatingIp}
         associatedTo={`${floatingIP.resource?.name ?? '-'} · ${floatingIP.fixedIp ?? '-'}`}
+      />
+
+      <ActionModal
+        appeared={releaseModalOpen}
+        actionConfig={{
+          title: 'Release floating IP',
+          subtitle: `Are you sure you want to release "${floatingIP.floatingIp}"? The address will be returned to the pool and this action cannot be undone.`,
+          actionButtonText: 'Release',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Floating IP] Release confirmed');
+          setReleaseModalOpen(false);
+          navigate('/compute/floating-ips');
+        }}
+        onCancel={() => setReleaseModalOpen(false)}
       />
     </div>
   );

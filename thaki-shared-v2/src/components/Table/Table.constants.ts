@@ -5,7 +5,7 @@ export const TABLE_COLUMN_MIN_WIDTH = 50;
 export const TABLE_SELECTION_COLUMN_WIDTH = 40;
 
 /** 상태 컬럼 기본 너비 (px) */
-export const TABLE_STATUS_COLUMN_WIDTH = 120;
+export const TABLE_STATUS_COLUMN_WIDTH = 64;
 
 /** 잠금 컬럼 기본 너비 (px) */
 export const TABLE_LOCKED_COLUMN_WIDTH = 62;

@@ -7,6 +7,7 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
@@ -150,6 +151,8 @@ export function ComputeVolumeBackupsPage() {
   const [createFromBackupRow, setCreateFromBackupRow] = useState<VolumeBackupRow | null>(null);
   const [createBackupSelectionOpen, setCreateBackupSelectionOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<VolumeBackupRow | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const filteredRows = useMemo(() => {
     if (appliedFilters.length === 0) return rows;
@@ -180,17 +183,8 @@ export function ComputeVolumeBackupsPage() {
     setCurrentPage(1);
   }, []);
 
-  const handleBulkDelete = useCallback(() => {
-    setRows((prev) => prev.filter((r) => !selectedRows.includes(r.id)));
-    setSelectedRows([]);
-  }, [selectedRows]);
-
-  const handleRowDelete = useCallback((row: VolumeBackupRow) => {
-    setRows((prev) => prev.filter((r) => r.id !== row.id));
-  }, []);
-
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'volume', header: 'Volume' },
     { key: 'backupMode', header: 'Backup Mode' },
@@ -223,7 +217,13 @@ export function ComputeVolumeBackupsPage() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <Button
+            appearance="outline"
+            variant="muted"
+            size="sm"
+            disabled={!hasSelection}
+            onClick={() => setBulkDeleteOpen(true)}
+          >
             <IconTrash size={12} /> Delete
           </Button>
         </div>
@@ -350,7 +350,7 @@ export function ComputeVolumeBackupsPage() {
                 >
                   Create volume from backup
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -380,6 +380,35 @@ export function ComputeVolumeBackupsPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete volume backup',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volume backups] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete volume backups',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} volume backups? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volume backups] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

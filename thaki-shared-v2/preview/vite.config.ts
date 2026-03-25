@@ -5,17 +5,7 @@ import path from 'path';
 
 export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : '/tds_ssot/shared-v2/',
-  plugins: [
-    react(),
-    svgr({
-      svgrOptions: {
-        exportType: 'default',
-        plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
-        svgoConfig: { plugins: [{ name: 'removeDimensions' }] },
-      },
-      include: '**/*.svg?component',
-    }),
-  ],
+  plugins: [react(), svgr({ svgrOptions: { icon: true }, include: '**/*.svg?component' })],
   resolve: {
     alias: {
       '@shared': path.resolve(__dirname, '../src'),

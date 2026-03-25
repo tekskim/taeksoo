@@ -1,7 +1,5 @@
 import { useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
-import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
@@ -9,7 +7,16 @@ import { Input } from '@shared/components/Input';
 import { Textarea } from '@shared/components/Textarea';
 import { Toggle } from '@shared/components/Toggle';
 import { Dropdown } from '@shared/components/Dropdown';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { ActionModal } from '@shared/components/ActionModal';
+import { Title } from '@shared/components/Title';
+import {
+  IconCheck,
+  IconCircle,
+  IconEdit,
+  IconMinus,
+  IconProgress,
+  IconTrash,
+} from '@tabler/icons-react';
 import { cn } from '@shared/services/utils/cn';
 
 type AccessType = 'Personal' | 'Project' | 'Public';
@@ -265,12 +272,29 @@ function ActiveSection({
   );
 }
 
-function statusLabel(s: WizardSectionState): string {
-  if (s === 'done') return 'Done';
-  if (s === 'active') return 'Active';
-  if (s === 'writing') return 'Writing';
-  if (s === 'skipped') return 'Skipped';
-  return 'Pre';
+function SectionStatusIcon({ status }: { status: WizardSectionState }) {
+  if (status === 'done') {
+    return (
+      <div className="w-4 h-4 shrink-0 rounded-full bg-success flex items-center justify-center">
+        <IconCheck size={10} stroke={2.5} className="text-white" />
+      </div>
+    );
+  }
+  if (status === 'active' || status === 'writing') {
+    return (
+      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+        <IconProgress size={20} stroke={1.5} className="text-text-muted" />
+      </div>
+    );
+  }
+  if (status === 'skipped') {
+    return (
+      <div className="w-4 h-4 shrink-0 rounded-full bg-text-subtle flex items-center justify-center">
+        <IconMinus size={10} stroke={2.5} className="text-white" />
+      </div>
+    );
+  }
+  return <div className="w-4 h-4 shrink-0 rounded-full border-2 border-border-strong" />;
 }
 
 function SummarySidebar({
@@ -287,20 +311,23 @@ function SummarySidebar({
   const isAllDone = SECTION_ORDER.every((key) => sectionStatus[key] === 'done');
 
   return (
-    <div className="w-[280px] shrink-0 self-start">
-      <div className="flex flex-col gap-4 p-4 bg-surface border border-border rounded-base8">
-        <h3 className="text-14 font-semibold leading-5 text-text m-0">Summary</h3>
-        <ul className="list-none m-0 p-0 flex flex-col gap-2">
+    <div className="w-[280px] shrink-0 sticky top-4 self-start">
+      <div className="flex flex-col gap-3 p-4 bg-surface-subtle border border-border rounded-lg">
+        <span className="text-16 font-semibold leading-6 text-text">Summary</span>
+        <div className="flex flex-col">
           {SECTION_ORDER.map((key) => (
-            <li
-              key={key}
-              className="flex items-center justify-between gap-2 text-12 leading-18 text-text"
-            >
-              <span className="text-text-muted">{SECTION_LABELS[key]}</span>
-              <span className="font-medium text-text">{statusLabel(sectionStatus[key])}</span>
-            </li>
+            <div key={key} className="flex items-center justify-between py-1.5 text-12 leading-18">
+              <span className="text-text">{SECTION_LABELS[key]}</span>
+              <div className="w-16 flex justify-end items-center">
+                {sectionStatus[key] === 'writing' ? (
+                  <span className="text-11 leading-4 text-text-subtle">Writing...</span>
+                ) : (
+                  <SectionStatusIcon status={sectionStatus[key]} />
+                )}
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
         <div className="flex gap-2">
           <Button variant="secondary" appearance="outline" onClick={onCancel} className="w-20">
             Cancel
@@ -348,10 +375,9 @@ export function ComputeInstanceTemplateDetailPage() {
   const handleSave = () => {
     navigate('/compute/instance-templates');
   };
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const handleDelete = () => {
-    if (window.confirm('Removing the selected instances is permanent and cannot be undone.')) {
-      navigate('/compute/instance-templates');
-    }
+    setDeleteModalOpen(true);
   };
 
   const handleEdit = (section: SectionStep) => {
@@ -401,25 +427,16 @@ export function ComputeInstanceTemplateDetailPage() {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  const headerTitle = (
-    <span className="inline-flex items-center gap-1 flex-wrap">
-      <span>Edit template</span>
-      <span className="text-11 font-medium leading-4 text-text-muted">(ID: {formData.id})</span>
-    </span>
-  );
-
-  const infoFields: DetailPageHeaderInfoField[] = [
-    { label: 'Created at', value: formData.createdAt },
-    { label: 'Created by', value: formData.createdBy },
-    { label: 'Access', value: formData.access },
-    { label: 'Key pair', value: formData.keyPair },
-  ];
-
   const fieldStack = 'flex flex-col gap-4 w-full';
 
   return (
     <div className="flex flex-col gap-6 min-w-0">
-      <DetailPageHeader title={headerTitle} infoFields={infoFields} />
+      <div className="flex items-center h-8">
+        <div className="flex items-center gap-1">
+          <Title title="Edit template" />
+          <span className="text-11 font-medium leading-4 text-text-muted">(ID: {formData.id})</span>
+        </div>
+      </div>
 
       <div className={cn('flex gap-6 items-start w-full')}>
         <div className="flex flex-col gap-4 flex-1 min-w-0">
@@ -684,6 +701,22 @@ export function ComputeInstanceTemplateDetailPage() {
           onDelete={handleDelete}
         />
       </div>
+
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete template',
+          subtitle: `Are you sure you want to delete "${formData.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Instance Template] Delete confirmed', formData.id);
+          setDeleteModalOpen(false);
+          navigate('/compute/instance-templates');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
+      />
     </div>
   );
 }

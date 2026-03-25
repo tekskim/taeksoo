@@ -13,6 +13,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Badge } from '@shared/components/Badge';
@@ -248,6 +249,8 @@ export function ComputePortsPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<Port | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
@@ -338,7 +341,13 @@ export function ComputePortsPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={() => setBulkDeleteOpen(true)}
+        >
           <IconTrash size={12} stroke={1.5} /> Delete
         </Button>
       </div>
@@ -584,7 +593,7 @@ export function ComputePortsPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -621,6 +630,35 @@ export function ComputePortsPage() {
           setSelectedPort(null);
         }}
         portName={selectedPort?.name}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete port',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Port] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete ports',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} ports? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Port] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

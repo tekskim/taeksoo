@@ -18,6 +18,7 @@ import {
 } from '../drawers/common/ViewPreferencesDrawer';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
+import { ActionModal } from '@shared/components/ActionModal';
 import { IconDownload, IconExternalLink, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
@@ -241,6 +242,8 @@ export function ComputeRoutersPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<Router | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
@@ -272,7 +275,7 @@ export function ComputeRoutersPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'externalGateway', header: 'External gateway' },
     { key: 'externalFixedIp', header: 'External fixed IP', sortable: true },
@@ -307,7 +310,13 @@ export function ComputeRoutersPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={() => setBulkDeleteOpen(true)}
+        >
           <IconTrash size={12} /> Delete
         </Button>
       </div>
@@ -442,7 +451,7 @@ export function ComputeRoutersPage() {
                 <ContextMenu.Item action={() => {}}>Disconnect subnet</ContextMenu.Item>
                 <ContextMenu.Item action={() => {}}>External gateway Setting</ContextMenu.Item>
                 <ContextMenu.Item action={() => {}}>Edit</ContextMenu.Item>
-                <ContextMenu.Item action={() => {}} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -454,6 +463,35 @@ export function ComputeRoutersPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete router',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Router] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete routers',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} routers? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Router] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

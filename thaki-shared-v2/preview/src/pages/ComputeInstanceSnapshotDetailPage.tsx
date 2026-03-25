@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ActionModal } from '@shared/components/ActionModal';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -150,6 +151,8 @@ function snapshotStatusVariant(s: SnapshotDetail['status']): StatusVariant {
 
 export function ComputeInstanceSnapshotDetailPage() {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -301,6 +304,21 @@ export function ComputeInstanceSnapshotDetailPage() {
         onClose={() => setEditDrawerOpen(false)}
         snapshotId={snapshot.id}
         initialData={{ name: snapshot.name, description: snapshot.description ?? '' }}
+      />
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete instance snapshot',
+          subtitle: `Are you sure you want to delete "${snapshot.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Instance snapshot] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/instance-snapshots');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

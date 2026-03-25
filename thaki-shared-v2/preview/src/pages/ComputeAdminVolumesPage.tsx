@@ -314,7 +314,7 @@ export function ComputeAdminVolumesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
     { key: 'host', header: 'Host', sortable: true },

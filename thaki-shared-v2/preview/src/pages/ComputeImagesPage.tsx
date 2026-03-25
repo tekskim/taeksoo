@@ -7,6 +7,7 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
@@ -257,7 +258,7 @@ export function ComputeImagesPage() {
   const activeTab = searchParams.get('tab') || 'current';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
-  const [images, setImages] = useState(mockImages);
+  const [images] = useState(mockImages);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -267,6 +268,8 @@ export function ComputeImagesPage() {
   const [editTarget, setEditTarget] = useState<Image | null>(null);
   const [createVolumeFromImageRow, setCreateVolumeFromImageRow] = useState<Image | null>(null);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Image | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const itemsPerPage = 10;
 
@@ -309,17 +312,8 @@ export function ComputeImagesPage() {
     setCurrentPage(1);
   }, []);
 
-  const handleBulkDelete = () => {
-    setImages((prev) => prev.filter((img) => !selectedRows.includes(img.id)));
-    setSelectedRows([]);
-  };
-
-  const handleRowDelete = (row: Image) => {
-    setImages((prev) => prev.filter((img) => img.id !== row.id));
-  };
-
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'os', header: 'OS', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
@@ -519,7 +513,7 @@ export function ComputeImagesPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -562,6 +556,35 @@ export function ComputeImagesPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete image',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Images] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete images',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} images? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Images] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

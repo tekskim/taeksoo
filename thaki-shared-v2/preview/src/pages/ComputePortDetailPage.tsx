@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -249,6 +249,7 @@ const RowMenuTrigger = ({ toggle }: { toggle: () => void }) => (
 
 export function ComputePortDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -280,6 +281,7 @@ export function ComputePortDetailPage() {
 
   const [editPortOpen, setEditPortOpen] = useState(false);
   const [manageSgOpen, setManageSgOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [fSort, setFSort] = useState('');
   const [fOrder, setFOrder] = useState<SortOrder>('asc');
@@ -410,7 +412,12 @@ export function ComputePortDetailPage() {
             >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setDeleteModalOpen(true)}
+            >
               <IconTrash size={12} stroke={1.5} /> Delete
             </Button>
             <ContextMenu.Root
@@ -742,6 +749,22 @@ export function ComputePortDetailPage() {
           )}
         </Tabs>
       </div>
+
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete port',
+          subtitle: `Are you sure you want to delete "${port.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Port] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/ports');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
+      />
 
       {detachModalOpen && (
         <ActionModal

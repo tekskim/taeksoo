@@ -22,6 +22,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { IconDotsCircleHorizontal, IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
@@ -223,6 +224,8 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 
 export function ComputeVolumesPage() {
   const [selectedVolume, setSelectedVolume] = useState<Volume | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Volume | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [extendOpen, setExtendOpen] = useState(false);
   const [snapshotOpen, setSnapshotOpen] = useState(false);
@@ -288,7 +291,7 @@ export function ComputeVolumesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
     { key: 'type', header: 'Type', sortable: true },
@@ -332,7 +335,7 @@ export function ComputeVolumesPage() {
             variant="muted"
             size="sm"
             disabled={!hasSelection}
-            onClick={() => console.log('[Volumes] Bulk Delete', selectedRows)}
+            onClick={() => setBulkDeleteOpen(true)}
           >
             <IconTrash size={12} /> Delete
           </Button>
@@ -569,7 +572,7 @@ export function ComputeVolumesPage() {
                 <ContextMenu.Item action={() => console.log('[Volumes] Cancel transfer', row.id)}>
                   Cancel transfer
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('[Volumes] Delete', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -676,6 +679,35 @@ export function ComputeVolumesPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete volume',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volumes] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete volumes',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} volumes? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volumes] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

@@ -6,6 +6,7 @@ import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { FilterSearchInput } from '@shared/components/FilterSearch';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { IconPlayerPlay, IconPlayerStop, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
@@ -171,6 +172,8 @@ export function ComputeScheduledTasksPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<ScheduledTask | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -203,7 +206,7 @@ export function ComputeScheduledTasksPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Task Name', sortable: true },
     { key: 'type', header: 'Type' },
     { key: 'target', header: 'Target' },
@@ -243,7 +246,13 @@ export function ComputeScheduledTasksPage() {
         <Button appearance="outline" variant="secondary" size="sm" disabled={!hasSelection}>
           <IconPlayerStop size={12} stroke={1.5} /> Pause
         </Button>
-        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={() => setBulkDeleteOpen(true)}
+        >
           <IconTrash size={12} stroke={1.5} /> Delete
         </Button>
       </div>
@@ -369,7 +378,7 @@ export function ComputeScheduledTasksPage() {
                 <ContextMenu.Item action={() => console.log('Logs:', row.id)}>
                   View execution logs
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete:', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -381,6 +390,35 @@ export function ComputeScheduledTasksPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete scheduled task',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Scheduled task] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete scheduled tasks',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} scheduled tasks? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Scheduled task] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

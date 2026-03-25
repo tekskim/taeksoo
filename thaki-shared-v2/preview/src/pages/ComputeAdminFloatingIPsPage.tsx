@@ -274,7 +274,7 @@ export function ComputeAdminFloatingIPsPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'floatingIp', header: 'Floating IP', sortable: true },
     { key: 'tenant', header: 'Tenant', sortable: true },
     { key: 'description', header: 'Description', sortable: true },

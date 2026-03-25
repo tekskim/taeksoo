@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactElement } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ActionModal } from '@shared/components/ActionModal';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
@@ -139,7 +140,9 @@ const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
 
 export function ComputeInstanceDetailPage() {
   const [drawerOpen, setDrawerOpen] = useState<string | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const closeDrawer = () => setDrawerOpen(null);
+  const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -436,7 +439,12 @@ export function ComputeInstanceDetailPage() {
       <Button variant="secondary" appearance="outline" size="sm">
         <IconPower size={12} stroke={1.5} /> Reboot
       </Button>
-      <Button variant="secondary" appearance="outline" size="sm">
+      <Button
+        variant="secondary"
+        appearance="outline"
+        size="sm"
+        onClick={() => setDeleteModalOpen(true)}
+      >
         <IconTrash size={12} stroke={1.5} /> Delete
       </Button>
       <ContextMenu.Root
@@ -1295,6 +1303,21 @@ export function ComputeInstanceDetailPage() {
         isOpen={drawerOpen === 'migrate'}
         onClose={closeDrawer}
         instanceName={instance.name}
+      />
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete instance',
+          subtitle: `Are you sure you want to delete "${instance.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Instance] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/instances');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

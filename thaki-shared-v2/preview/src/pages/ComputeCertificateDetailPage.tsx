@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -13,6 +13,7 @@ import { Tabs, Tab } from '@shared/components/Tabs';
 import { Badge } from '@shared/components/Badge';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import { IconTrash, IconDownload, IconEdit } from '@tabler/icons-react';
+import { ActionModal } from '@shared/components/ActionModal';
 
 type CertificateStatus = 'valid' | 'expired' | 'revoked' | 'pending';
 
@@ -140,8 +141,10 @@ function isServerCertificate(cert: CertificateDetail): cert is ServerCertificate
 
 export function ComputeCertificateDetailPage() {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -224,7 +227,12 @@ export function ComputeCertificateDetailPage() {
             >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setDeleteModalOpen(true)}
+            >
               <IconTrash size={12} stroke={1.5} /> Delete
             </Button>
           </div>
@@ -371,6 +379,22 @@ export function ComputeCertificateDetailPage() {
         onClose={() => setEditDrawerOpen(false)}
         certificateId={certificate.id}
         initialData={{ name: certificate.name, description: certificate.description }}
+      />
+
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete certificate',
+          subtitle: `Are you sure you want to delete "${certificate.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Certificate] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/certificates');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );
