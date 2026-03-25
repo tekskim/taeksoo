@@ -9,6 +9,7 @@ import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { Tooltip } from '@shared/components/Tooltip';
+import { ProgressBar } from '@shared/components/ProgressBar';
 import {
   IconCopy,
   IconDotsCircleHorizontal,
@@ -152,26 +153,9 @@ function stripTime(s: string): string {
   return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
 }
 
-function ProgressCell({ value }: { value: number }) {
-  const color =
-    value >= 90
-      ? 'var(--color-state-danger)'
-      : value >= 70
-        ? 'var(--color-state-warning)'
-        : 'var(--color-state-success)';
-  return (
-    <div className="flex items-center gap-2 min-w-0">
-      <div className="flex-1 h-1.5 bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${Math.min(value, 100)}%`, backgroundColor: color }}
-        />
-      </div>
-      <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0 w-8 text-right">
-        {value}%
-      </span>
-    </div>
-  );
+function ProgressCell({ value, max = 100 }: { value: number; max?: number }) {
+  const variant = value >= 90 ? 'danger' : value >= 70 ? 'warning' : 'success';
+  return <ProgressBar value={value} max={max} showValue="absolute" variant={variant} />;
 }
 
 function rowMatches(row: NodeRow, filter: FilterKeyWithValue): boolean {
@@ -331,6 +315,8 @@ export function ContainerNodesPage() {
         onPageChange={setCurrentPage}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
+        onSettingClick={() => {}}
+        settingAriaLabel="Pagination settings"
       />
 
       <SelectableTable<NodeRow>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Table } from '@shared/components/Table';
 import { Button } from '@shared/components/Button';
@@ -6,8 +6,10 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Badge } from '@shared/components/Badge';
 import { Tooltip } from '@shared/components/Tooltip';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import type { TableColumn } from '@shared/components/Table/Table.types';
-import { IconDotsCircleHorizontal, IconSettings } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconSettings, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -57,8 +59,13 @@ const clustersData: ClusterRow[] = [
   },
 ];
 
-const searchInputClass =
-  'h-8 px-2.5 rounded-md border border-border-strong bg-surface text-12 leading-18 outline-none shrink-0 w-[320px]';
+const clusterFilterKeys: FilterKey[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'status', label: 'Status' },
+  { key: 'kubernetesVersion', label: 'Kubernetes Version' },
+  { key: 'cpu', label: 'CPU' },
+  { key: 'memory', label: 'Memory' },
+];
 
 /* ----------------------------------------
    Container Home Page
@@ -66,7 +73,28 @@ const searchInputClass =
 
 export function ContainerHomePage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const navigate = useNavigate();
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((index: number) => {
+    setAppliedFilters((prev) => prev.filter((_, i) => i !== index));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredClusters = useMemo(() => {
+    if (appliedFilters.length === 0) return clustersData;
+    return clustersData.filter((row) =>
+      appliedFilters.every((f) => {
+        const val = String(row[f.key] ?? '').toLowerCase();
+        return val.includes(f.value.toLowerCase());
+      })
+    );
+  }, [appliedFilters]);
 
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: '120px' },
@@ -76,7 +104,7 @@ export function ContainerHomePage() {
     { key: 'memory', header: 'Memory', sortable: true },
     { key: 'pods', header: 'Pods', sortable: true },
     { key: 'createdAt', header: 'Created At', sortable: true },
-    { key: 'manage', header: 'Manage', width: '120px', align: 'center' },
+    { key: 'manage', header: 'Manage', width: '120px' },
     { key: 'actions', header: 'Action', width: '72px', align: 'center' },
   ];
 
@@ -100,24 +128,56 @@ export function ContainerHomePage() {
             <h6 className="text-14 font-semibold leading-20 m-0">Clusters</h6>
           </div>
           <div className="flex flex-col gap-4">
-            <input
-              type="search"
-              placeholder="Search clusters by attributes"
-              className={searchInputClass}
-              aria-label="Search clusters by attributes"
-            />
+            <div className="flex items-center gap-1">
+              <FilterSearchInput
+                filterKeys={clusterFilterKeys}
+                onFilterAdd={handleFilterAdd}
+                placeholder="Search clusters by attributes"
+                size="sm"
+              />
+            </div>
+            {appliedFilters.length > 0 && (
+              <div className="flex items-center gap-1 flex-wrap">
+                {appliedFilters.map((f, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 h-6 px-2 rounded bg-surface-muted text-11 leading-4 text-text"
+                  >
+                    <span className="text-text-subtle">{f.label}:</span>
+                    <span>{f.value}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleFilterRemove(i)}
+                      className="inline-flex items-center justify-center p-0 border-none bg-transparent cursor-pointer text-text-subtle hover:text-text"
+                    >
+                      <IconX size={12} />
+                    </button>
+                  </span>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAppliedFilters([]);
+                    setCurrentPage(1);
+                  }}
+                  className="text-11 leading-4 text-primary hover:underline cursor-pointer border-none bg-transparent px-1"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
             <Pagination
-              totalCount={clustersData.length}
+              totalCount={filteredClusters.length}
               size={10}
               currentAt={currentPage}
               onPageChange={setCurrentPage}
               totalCountLabel="items"
             />
-            <Table columns={columns} rows={clustersData}>
-              {clustersData.map((row) => (
+            <Table columns={columns} rows={filteredClusters}>
+              {filteredClusters.map((row) => (
                 <Table.Tr key={row.id} rowData={row}>
                   <Table.Td rowData={row} column={col('status')} preventClickPropagation>
-                    <div className="min-w-0 flex justify-center">
+                    <div className="min-w-0 flex">
                       <Tooltip content={row.status}>
                         <Badge theme="white" size="sm" className="max-w-[80px]">
                           <span className="truncate">{row.status}</span>
@@ -154,14 +214,13 @@ export function ContainerHomePage() {
                   <Table.Td rowData={row} column={col('manage')} preventClickPropagation>
                     <div className="flex justify-center">
                       <Button
-                        variant="secondary"
+                        appearance="outline"
+                        variant="muted"
                         size="sm"
                         onClick={() => navigate(`/container/clusters/${row.id}`)}
                       >
-                        <span className="inline-flex items-center gap-1">
-                          <IconSettings size={12} />
-                          Manage
-                        </span>
+                        <IconSettings size={12} />
+                        Manage
                       </Button>
                     </div>
                   </Table.Td>

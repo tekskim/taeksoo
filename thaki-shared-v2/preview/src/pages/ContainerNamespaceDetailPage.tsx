@@ -391,14 +391,14 @@ function WorkloadRowMenu({ row }: { row: WorkloadRow }) {
       trigger={({ toggle }) => (
         <button
           type="button"
-          className="p-1.5 rounded-md hover:bg-surface-muted transition-colors group"
+          className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
           onClick={(e) => {
             e.stopPropagation();
             toggle();
           }}
           aria-label="Row actions"
         >
-          <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-text-subtle" />
+          <IconDotsCircleHorizontal size={16} stroke={1.5} />
         </button>
       )}
     >
@@ -413,10 +413,10 @@ function ResourcesTabContent({ resources }: { resources: ResourceRow[] }) {
   const pageSize = 10;
   const columns: TableColumn[] = [
     { key: 'type', header: 'Type', sortable: true },
-    { key: 'active', header: 'Active', align: 'right', sortable: true },
-    { key: 'processing', header: 'Processing', align: 'right', sortable: true },
-    { key: 'error', header: 'Error', align: 'right', sortable: true },
-    { key: 'total', header: 'Total', align: 'right', sortable: true },
+    { key: 'active', header: 'Active', sortable: true },
+    { key: 'processing', header: 'Processing', sortable: true },
+    { key: 'error', header: 'Error', sortable: true },
+    { key: 'total', header: 'Total', sortable: true },
   ];
   const c = (key: string) => columns.find((col) => col.key === key)!;
   const pageRows = resources.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -466,7 +466,7 @@ function WorkloadsTabContent({ workloads }: { workloads: WorkloadRow[] }) {
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'type', header: 'Type', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
-    { key: 'restarts', header: 'Restarts', align: 'right', sortable: true },
+    { key: 'restarts', header: 'Restarts', sortable: true },
     { key: 'health', header: 'Health', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
     { key: 'action', header: 'Action', width: 60, align: 'center' },

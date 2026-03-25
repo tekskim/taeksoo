@@ -13,16 +13,16 @@ import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Dropdown } from '@shared/components/Dropdown';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import {
   IconChevronDown,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
+  IconX,
 } from '@tabler/icons-react';
-
-const searchInputClass =
-  'h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 outline-none shrink-0 w-[280px]';
 
 const ACTION_COL_WIDTH = 72;
 const linkClass =
@@ -168,6 +168,7 @@ export function ContainerPDBDetailPage() {
   const setActiveTabId = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [matchingPodsPage, setMatchingPodsPage] = useState(1);
   const [selectedEvents, setSelectedEvents] = useState<(string | number)[]>([]);
+  const [appliedEventFilters, setAppliedEventFilters] = useState<FilterKeyWithValue[]>([]);
   const [eventsPage, setEventsPage] = useState(1);
   const [conditionsPage, setConditionsPage] = useState(1);
 
@@ -204,6 +205,40 @@ export function ContainerPDBDetailPage() {
     setSortEvents(nextSort ?? '');
     setOrderEvents(nextOrder);
   }, []);
+
+  const eventFilterKeys: FilterKey[] = useMemo(
+    () => [
+      { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+      { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+      { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    ],
+    []
+  );
+
+  const handleEventFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedEventFilters((prev) => [...prev, filter]);
+    setEventsPage(1);
+  }, []);
+
+  const handleEventFilterRemove = useCallback((filterId: string) => {
+    setAppliedEventFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setEventsPage(1);
+  }, []);
+
+  const filteredRecentEvents = useMemo(
+    () =>
+      pdbData.recentEvents.filter((r) =>
+        appliedEventFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof RecentEvent;
+          return String(r[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [pdbData.recentEvents, appliedEventFilters]
+  );
 
   const matchingPodsColumns: TableColumn[] = useMemo(
     () => [
@@ -642,12 +677,12 @@ export function ContainerPDBDetailPage() {
               <h3 className="text-16 font-semibold leading-6 text-text m-0">Recent events</h3>
 
               <div className="flex gap-2 items-center w-full flex-wrap">
-                <input
-                  type="search"
+                <FilterSearchInput
+                  filterKeys={eventFilterKeys}
+                  onFilterAdd={handleEventFilterAdd}
+                  selectedFilters={appliedEventFilters}
                   placeholder="Search events by attributes"
-                  className={searchInputClass}
-                  readOnly
-                  aria-label="Search events by attributes"
+                  defaultFilterKey="name"
                 />
                 <div className="w-px h-5 bg-border shrink-0" />
                 <div className="flex gap-1">
@@ -670,8 +705,29 @@ export function ContainerPDBDetailPage() {
                 </div>
               </div>
 
+              {appliedEventFilters.length > 0 && (
+                <div className="flex items-center gap-1 flex-wrap">
+                  {appliedEventFilters.map((filter) => (
+                    <span
+                      key={filter.id}
+                      className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+                    >
+                      {filter.label}: {filter.displayValue ?? filter.value}
+                      <button
+                        type="button"
+                        className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                        onClick={() => handleEventFilterRemove(filter.id!)}
+                        aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                      >
+                        <IconX size={12} strokeWidth={2} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <Pagination
-                totalCount={pdbData.recentEvents.length}
+                totalCount={filteredRecentEvents.length}
                 size={10}
                 currentAt={eventsPage}
                 onPageChange={setEventsPage}
@@ -679,10 +735,10 @@ export function ContainerPDBDetailPage() {
                 selectedCount={selectedEvents.length}
               />
 
-              {pdbData.recentEvents.length > 0 ? (
+              {filteredRecentEvents.length > 0 ? (
                 <SelectableTable<RecentEventRow>
                   columns={recentEventsColumns}
-                  rows={pdbData.recentEvents as RecentEventRow[]}
+                  rows={filteredRecentEvents as RecentEventRow[]}
                   selectionType="checkbox"
                   selectedRows={selectedEvents}
                   onRowSelectionChange={setSelectedEvents}
@@ -692,7 +748,7 @@ export function ContainerPDBDetailPage() {
                   onSortChange={handleSortEvents}
                   stickyLastColumn
                 >
-                  {pdbData.recentEvents.map((row) => (
+                  {filteredRecentEvents.map((row) => (
                     <Table.Tr key={row.id} rowData={row as RecentEventRow}>
                       <Table.Td rowData={row as RecentEventRow} column={recentEventsColumns[0]}>
                         {row.lastSeen}
@@ -744,7 +800,7 @@ export function ContainerPDBDetailPage() {
                                   e.stopPropagation();
                                   toggle();
                                 }}
-                                className="p-1.5 rounded-md bg-transparent hover:bg-surface-muted transition-colors cursor-pointer border-none inline-flex"
+                                className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
                                 aria-label="Row actions"
                               >
                                 <IconDotsCircleHorizontal

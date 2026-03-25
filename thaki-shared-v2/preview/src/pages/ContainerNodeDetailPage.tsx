@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -13,7 +13,8 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Popover } from '@shared/components/Popover';
 import { ProgressBar } from '@shared/components/ProgressBar';
-import { Input } from '@shared/components/Input';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import type { TableColumn } from '@shared/components/Table/Table.types';
 import {
   IconChevronDown,
@@ -21,6 +22,7 @@ import {
   IconDownload,
   IconTrash,
   IconHelpCircle,
+  IconX,
 } from '@tabler/icons-react';
 
 interface NodeData {
@@ -288,7 +290,7 @@ function ConditionCard({
         <Tooltip content={tooltip} direction="top">
           <button
             type="button"
-            className="p-1 hover:bg-surface-muted rounded transition-colors border-none bg-transparent cursor-pointer"
+            className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
           >
             <IconHelpCircle size={14} className="text-text-subtle" />
           </button>
@@ -635,37 +637,86 @@ export function ContainerNodeDetailPage() {
 
 function PodsTabContent({ pods }: { pods: PodRow[] }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const pageSize = 10;
+
+  const podFilterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'namespace', label: 'Namespace', type: 'input', placeholder: 'Enter namespace...' },
+    { key: 'image', label: 'Image', type: 'input', placeholder: 'Enter image...' },
+    { key: 'ip', label: 'IP', type: 'input', placeholder: 'Enter IP...' },
+    { key: 'node', label: 'Node', type: 'input', placeholder: 'Enter node...' },
+    { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
     { key: 'ready', header: 'Ready', sortable: true },
-    { key: 'restarts', header: 'Restarts', align: 'right', sortable: true },
+    { key: 'restarts', header: 'Restarts', sortable: true },
     { key: 'ip', header: 'IP', sortable: true },
     { key: 'node', header: 'Node', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
-  const filtered = pods.filter((p) =>
-    [p.name, p.namespace, p.image, p.status].some((x) =>
-      x.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+  const filtered = useMemo(
+    () =>
+      pods.filter((p) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof PodRow;
+          return String(p[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [pods, appliedFilters]
   );
   const pageRows = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text">Pods</h3>
-      <Input
+      <FilterSearchInput
+        filterKeys={podFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search pods by attributes"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        size="sm"
-        className="w-full max-w-[280px]"
+        defaultFilterKey="name"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filtered.length}
         size={pageSize}
@@ -720,26 +771,75 @@ function PodsTabContent({ pods }: { pods: PodRow[] }) {
 
 function ImagesTabContent({ images }: { images: ImageRow[] }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const pageSize = 10;
+
+  const imageFilterKeys: FilterKey[] = [
+    { key: 'name', label: 'Image name', type: 'input', placeholder: 'Enter image name...' },
+    { key: 'size', label: 'Size', type: 'input', placeholder: 'Enter size...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
   const columns: TableColumn[] = [
     { key: 'name', header: 'Image name', sortable: true },
-    { key: 'size', header: 'Size', align: 'right', sortable: true },
+    { key: 'size', header: 'Size', sortable: true },
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
-  const filtered = images.filter((i) => i.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filtered = useMemo(
+    () =>
+      images.filter((i) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof ImageRow;
+          return String(i[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [images, appliedFilters]
+  );
   const pageRows = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text">Images</h3>
-      <Input
+      <FilterSearchInput
+        filterKeys={imageFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search images by attributes"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        size="sm"
-        className="w-full max-w-[280px]"
+        defaultFilterKey="name"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filtered.length}
         size={pageSize}
@@ -800,7 +900,7 @@ function NodeConditionsTabContent({ conditions }: { conditions: ConditionRow[] }
   const pageSize = 10;
   const columns: TableColumn[] = [
     { key: 'type', header: 'Condition', sortable: true },
-    { key: 'size', header: 'Size', align: 'right', sortable: true },
+    { key: 'size', header: 'Size', sortable: true },
     { key: 'message', header: 'Message', sortable: true },
     { key: 'lastHeartbeat', header: 'Updated', sortable: true },
   ];
@@ -833,9 +933,27 @@ function NodeConditionsTabContent({ conditions }: { conditions: ConditionRow[] }
 
 function RecentEventsTabContent({ events }: { events: EventRow[] }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const pageSize = 10;
+
+  const eventFilterKeys: FilterKey[] = [
+    { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+    { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'source', label: 'Source', type: 'input', placeholder: 'Enter source...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
   const columns: TableColumn[] = [
     { key: 'lastSeen', header: 'Last seen', sortable: true },
     { key: 'type', header: 'Type', sortable: true },
@@ -844,15 +962,24 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
     { key: 'source', header: 'Source', sortable: true },
     { key: 'message', header: 'Message', sortable: true },
     { key: 'firstSeen', header: 'First seen', sortable: true },
-    { key: 'count', header: 'Count', align: 'right', sortable: true },
+    { key: 'count', header: 'Count', sortable: true },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'action', header: 'Action', width: 60, align: 'center' },
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
-  const filtered = events.filter(
-    (e) =>
-      e.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.reason.toLowerCase().includes(searchQuery.toLowerCase())
+  const filtered = useMemo(
+    () =>
+      events.filter((e) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof EventRow;
+          return String(e[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [events, appliedFilters]
   );
   const pageRows = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -860,12 +987,12 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text">Recent events</h3>
       <div className="flex items-center gap-2 flex-wrap">
-        <Input
+        <FilterSearchInput
+          filterKeys={eventFilterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search events by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          size="sm"
-          className="w-full max-w-[280px]"
+          defaultFilterKey="reason"
         />
         <div className="w-px h-5 bg-border" />
         <div className="flex items-center gap-1">
@@ -889,6 +1016,26 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
           </Button>
         </div>
       </div>
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filtered.length}
         size={pageSize}
@@ -922,9 +1069,9 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
             <Table.Td rowData={row} column={c('action')} preventClickPropagation>
               <button
                 type="button"
-                className="p-1 hover:bg-surface-muted rounded transition-colors border-none bg-transparent cursor-pointer"
+                className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent text-text-subtle hover:bg-surface-muted transition-colors cursor-pointer border-none"
               >
-                <IconDotsCircleHorizontal size={16} className="text-text-subtle" stroke={1.5} />
+                <IconDotsCircleHorizontal size={16} stroke={1.5} />
               </button>
             </Table.Td>
           </Table.Tr>
