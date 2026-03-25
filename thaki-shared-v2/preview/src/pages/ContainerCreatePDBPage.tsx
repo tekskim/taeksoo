@@ -1,6 +1,9 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
@@ -8,8 +11,23 @@ import { Dropdown } from '@shared/components/Dropdown';
 import { NumberInput } from '@shared/components/Input';
 import { Disclosure } from '@shared/components/Disclosure';
 import { Table } from '@shared/components/Table';
-import { IconCirclePlus, IconX, IconCheck } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 const isV2 = true;
 
@@ -40,98 +58,6 @@ interface Annotation {
   value: string;
 }
 
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 shrink-0 flex items-center justify-center rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)]">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 shrink-0 animate-spin rounded-full border border-[var(--color-text-muted)]"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-interface SummarySidebarProps {
-  podDisruptionBudgetName: string;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  podDisruptionBudgetName,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
-    switch (section) {
-      case 'basic-info':
-        return podDisruptionBudgetName.trim() ? 'done' : 'active';
-      case 'data':
-        return 'pending';
-      case 'selector':
-        return 'pending';
-      case 'labels-annotations':
-        return 'pending';
-      default:
-        return 'pending';
-    }
-  };
-
-  return (
-    <div className="sticky top-4 w-[var(--wizard-summary-width)] shrink-0 self-start">
-      <div className="flex flex-col gap-6 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-        <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {SECTION_ORDER.map((step) => {
-                const status = getSectionStatus(step);
-                return (
-                  <div key={step} className="flex items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SECTION_LABELS[step]}
-                    </span>
-                    <SummaryStatusIcon status={status} />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="outline" size="md" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="min-w-0 flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 interface BasicInfoSectionProps {
   podDisruptionBudgetName: string;
   onPodDisruptionBudgetNameChange: (value: string) => void;
@@ -155,51 +81,51 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   const [descriptionOpen, setDescriptionOpen] = useState(true);
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">Basic information</span>
-      </div>
-      <div className="flex flex-col gap-6 px-4 pt-4">
-        <FormField label="Namespace" required>
-          <Dropdown.Select
-            value={namespace}
-            onChange={(v) => onNamespaceChange(String(v))}
-            className="w-full"
-            placeholder="Select namespace"
-          >
-            {NAMESPACE_OPTIONS.map((opt) => (
-              <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
-            ))}
-          </Dropdown.Select>
-        </FormField>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Basic information" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Namespace" required>
+            <Dropdown.Select
+              value={namespace}
+              onChange={(v) => onNamespaceChange(String(v))}
+              className="w-full"
+              placeholder="Select namespace"
+            >
+              {NAMESPACE_OPTIONS.map((opt) => (
+                <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
+              ))}
+            </Dropdown.Select>
+          </FormField>
 
-        <FormField label="Name" required error={podDisruptionBudgetNameError ?? undefined}>
-          <Input
-            placeholder="Enter a unique name"
-            value={podDisruptionBudgetName}
-            error={!!podDisruptionBudgetNameError}
-            onChange={(_e, v) => {
-              onPodDisruptionBudgetNameChange(v);
-              if (podDisruptionBudgetNameError) onPodDisruptionBudgetNameErrorChange(null);
-            }}
-          />
-        </FormField>
-
-        <Disclosure
-          label="Description"
-          expanded={descriptionOpen}
-          onExpandChange={setDescriptionOpen}
-        >
-          <div className="flex flex-col gap-2 pt-3 pl-0">
+          <FormField label="Name" required error={podDisruptionBudgetNameError ?? undefined}>
             <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(_e, v) => onDescriptionChange(v)}
+              placeholder="Enter a unique name"
+              value={podDisruptionBudgetName}
+              error={!!podDisruptionBudgetNameError}
+              onChange={(_e, v) => {
+                onPodDisruptionBudgetNameChange(v);
+                if (podDisruptionBudgetNameError) onPodDisruptionBudgetNameErrorChange(null);
+              }}
             />
-          </div>
-        </Disclosure>
-      </div>
-    </div>
+          </FormField>
+
+          <Disclosure
+            label="Description"
+            expanded={descriptionOpen}
+            onExpandChange={setDescriptionOpen}
+          >
+            <div className="flex flex-col gap-2 pt-3 pl-0">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(_e, v) => onDescriptionChange(v)}
+              />
+            </div>
+          </Disclosure>
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -256,11 +182,9 @@ function BudgetSection({
   onMaxUnavailableUnitChange,
 }: BudgetSectionProps) {
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">Budget</span>
-      </div>
-      <div className="px-4 pt-4">
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Budget" />
+      <SectionCard.Content showDividers={false}>
         <div className="flex gap-3">
           <FormField label="Min. available Pods" className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
@@ -302,8 +226,8 @@ function BudgetSection({
             </div>
           </FormField>
         </div>
-      </div>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -349,115 +273,123 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
   );
 
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">Selector</span>
-        <p className="mt-1 text-body-md text-[var(--color-text-subtle)]">
-          Selector keys and values are intended to match labels and values on existing pods.
-        </p>
-      </div>
-      <div className="flex flex-col gap-6 px-4 pt-4">
-        <div className="flex flex-col gap-2">
-          <span className="text-label-lg text-[var(--color-text-default)]">Rule</span>
-          <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-            <div className="flex flex-col gap-1.5">
-              {selectorRules.length > 0 && (
-                <div className="grid w-full grid-cols-[1fr_1fr_1fr_20px] gap-1">
-                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Operator
-                  </span>
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Value
-                  </span>
-                  <div />
-                </div>
-              )}
-              {selectorRules.map((rule) => (
-                <div
-                  key={rule.id}
-                  className="grid w-full grid-cols-[1fr_1fr_1fr_20px] items-center gap-1"
-                >
-                  <Input
-                    placeholder="input key"
-                    value={rule.key}
-                    onChange={(_e, v) => updateRule(rule.id, 'key', v)}
-                  />
-                  <Dropdown.Select
-                    value={rule.operator}
-                    onChange={(v) => updateRule(rule.id, 'operator', String(v))}
-                    className="w-full"
+    <SectionCard className="pb-4">
+      <SectionCard.Header
+        title="Selector"
+        description="Selector keys and values are intended to match labels and values on existing pods."
+      />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <span className="text-label-lg text-[var(--color-text-default)]">Rule</span>
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {selectorRules.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Operator
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div />
+                  </div>
+                )}
+                {selectorRules.map((rule) => (
+                  <div
+                    key={rule.id}
+                    className="grid w-full grid-cols-[1fr_1fr_1fr_20px] items-center gap-1"
                   >
-                    {OPERATOR_OPTIONS.map((opt) => (
-                      <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
-                    ))}
-                  </Dropdown.Select>
-                  <Input
-                    placeholder="input value"
-                    value={rule.value}
-                    onChange={(_e, v) => updateRule(rule.id, 'value', v)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeRule(rule.id)}
-                    className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    <Input
+                      placeholder="input key"
+                      value={rule.key}
+                      onChange={(_e, v) => updateRule(rule.id, 'key', v)}
+                    />
+                    <Dropdown.Select
+                      value={rule.operator}
+                      onChange={(v) => updateRule(rule.id, 'operator', String(v))}
+                      className="w-full"
+                    >
+                      {OPERATOR_OPTIONS.map((opt) => (
+                        <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
+                      ))}
+                    </Dropdown.Select>
+                    <Input
+                      placeholder="input value"
+                      value={rule.value}
+                      onChange={(_e, v) => updateRule(rule.id, 'value', v)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeRule(rule.id)}
+                      className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    appearance="solid"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={addRule}
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </button>
+                    Add Rule
+                  </Button>
                 </div>
-              ))}
-              <div className="w-fit">
-                <Button variant="secondary" appearance="solid" size="sm" onClick={addRule}>
-                  <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Rule
-                </Button>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex w-full flex-col gap-2">
-          <span className="text-label-lg text-[var(--color-text-default)]">Matching Pods</span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="flex h-6 w-6 items-center justify-center disabled:opacity-30"
-            >
-              <span className="text-[var(--color-text-default)]">‹</span>
-            </button>
-            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--color-action-primary)] text-label-sm text-white">
-              {currentPage}
-            </span>
-            <button
-              type="button"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="flex h-6 w-6 items-center justify-center disabled:opacity-30"
-            >
-              <span className="text-[var(--color-text-default)]">›</span>
-            </button>
-            <div className="h-4 w-px bg-[var(--color-border-default)]" />
-            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
+          <div className="flex w-full flex-col gap-2">
+            <span className="text-label-lg text-[var(--color-text-default)]">Matching Pods</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex h-6 w-6 items-center justify-center disabled:opacity-30"
+              >
+                <span className="text-[var(--color-text-default)]">‹</span>
+              </button>
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--color-action-primary)] text-label-sm text-white">
+                {currentPage}
+              </span>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="flex h-6 w-6 items-center justify-center disabled:opacity-30"
+              >
+                <span className="text-[var(--color-text-default)]">›</span>
+              </button>
+              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                {totalItems} items
+              </span>
+            </div>
+
+            <Table columns={matchingPodsColumns} rows={paginatedPods}>
+              {paginatedPods.map((row) => (
+                <Table.Tr key={row.id} rowData={row}>
+                  <Table.Td rowData={row} column={matchingPodsColumns[0]}>
+                    <span className="text-label-md text-primary">{row.name}</span>
+                  </Table.Td>
+                  <Table.Td rowData={row} column={matchingPodsColumns[1]}>
+                    {row.createdAt?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table>
           </div>
-
-          <Table columns={matchingPodsColumns} rows={paginatedPods}>
-            {paginatedPods.map((row) => (
-              <Table.Tr key={row.id} rowData={row}>
-                <Table.Td rowData={row} column={matchingPodsColumns[0]}>
-                  <span className="text-label-md text-[var(--color-action-primary)]">
-                    {row.name}
-                  </span>
-                </Table.Td>
-                <Table.Td rowData={row} column={matchingPodsColumns[1]}>
-                  {row.createdAt?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
-                </Table.Td>
-              </Table.Tr>
-            ))}
-          </Table>
         </div>
-      </div>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -483,116 +415,125 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">
-          Labels & Annotations
-        </span>
-      </div>
-      <div className="flex flex-col gap-6 px-4 pt-4">
-        <FormField
-          label="Labels"
-          description="Specify the labels used to identify and categorize the resource."
-        >
-          <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-            <div className="flex flex-col gap-1.5">
-              {labels.length > 0 && (
-                <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Value
-                  </span>
-                  <div className="w-5" />
-                </div>
-              )}
-              {labels.map((label, index) => (
-                <div
-                  key={index}
-                  className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
-                >
-                  <Input
-                    placeholder="Key"
-                    value={label.key}
-                    onChange={(_e, v) => onUpdateLabel(index, 'key', v)}
-                  />
-                  <Input
-                    placeholder="Value"
-                    value={label.value}
-                    onChange={(_e, v) => onUpdateLabel(index, 'value', v)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => onRemoveLabel(index)}
-                    className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField
+            label="Labels"
+            description="Specify the labels used to identify and categorize the resource."
+          >
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {labels.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </button>
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(_e, v) => onUpdateLabel(index, 'key', v)}
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(_e, v) => onUpdateLabel(index, 'value', v)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveLabel(index)}
+                      className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    appearance="outline"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddLabel}
+                    className="bg-[var(--color-surface-default)]"
+                  >
+                    Add Label
+                  </Button>
                 </div>
-              ))}
-              <div className="w-fit">
-                <Button
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  onClick={onAddLabel}
-                  className="bg-[var(--color-surface-default)]"
-                >
-                  <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Label
-                </Button>
               </div>
             </div>
-          </div>
-        </FormField>
+          </FormField>
 
-        <FormField
-          label="Annotations"
-          description="Specify the annotations used to provide additional metadata for the resource."
-        >
-          <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-            <div className="flex flex-col gap-1.5">
-              {annotations.length > 0 && (
-                <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Value
-                  </span>
-                  <div className="w-5" />
-                </div>
-              )}
-              {annotations.map((annotation, index) => (
-                <div
-                  key={index}
-                  className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
-                >
-                  <Input
-                    placeholder="Key"
-                    value={annotation.key}
-                    onChange={(_e, v) => onUpdateAnnotation(index, 'key', v)}
-                  />
-                  <Input
-                    placeholder="Value"
-                    value={annotation.value}
-                    onChange={(_e, v) => onUpdateAnnotation(index, 'value', v)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => onRemoveAnnotation(index)}
-                    className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+          <FormField
+            label="Annotations"
+            description="Specify the annotations used to provide additional metadata for the resource."
+          >
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {annotations.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </button>
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(_e, v) => onUpdateAnnotation(index, 'key', v)}
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(_e, v) => onUpdateAnnotation(index, 'value', v)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    appearance="solid"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
                 </div>
-              ))}
-              <div className="w-fit">
-                <Button variant="secondary" appearance="solid" size="sm" onClick={onAddAnnotation}>
-                  <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Annotation
-                </Button>
               </div>
             </div>
-          </div>
-        </FormField>
-      </div>
-    </div>
+          </FormField>
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -688,18 +629,49 @@ export function ContainerCreatePDBPage() {
 
   const isCreateDisabled = !podDisruptionBudgetName.trim();
 
-  return (
-    <div className="flex flex-col gap-6 pb-20 pt-4">
-      <div className="flex flex-col gap-2">
-        <Title title="Create pod disruption budget" size="medium" />
-        <p className="text-body-md text-[var(--color-text-muted)]">
-          Pod Disruption Budget defines the minimum number of pods that must remain available during
-          voluntary disruptions to ensure application stability.
-        </p>
-      </div>
+  const getSectionStates = useCallback((): Record<SectionStep, WizardSectionState> => {
+    return {
+      'basic-info': podDisruptionBudgetName.trim() ? 'done' : 'active',
+      data: 'pre',
+      selector: 'pre',
+      'labels-annotations': 'pre',
+    };
+  }, [podDisruptionBudgetName]);
 
-      <div className="flex w-full items-start gap-6">
-        <div className="flex min-w-0 flex-1 flex-col gap-4">
+  const states = getSectionStates();
+
+  return (
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create pod disruption budget</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Pod Disruption Budget defines the minimum number of pods that must remain available
+            during voluntary disruptions to ensure application stability.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SECTION_ORDER.map((key) => ({
+                label: SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <BasicInfoSection
             podDisruptionBudgetName={podDisruptionBudgetName}
             onPodDisruptionBudgetNameChange={setPodDisruptionBudgetName}
@@ -732,14 +704,8 @@ export function ContainerCreatePDBPage() {
             onUpdateAnnotation={updateAnnotation}
           />
         </div>
-        <SummarySidebar
-          podDisruptionBudgetName={podDisruptionBudgetName}
-          onCancel={handleCancel}
-          onCreate={handleCreate}
-          isCreateDisabled={isCreateDisabled}
-        />
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

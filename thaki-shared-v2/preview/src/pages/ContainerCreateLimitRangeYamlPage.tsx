@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,16 +7,16 @@ const DEFAULT_YAML = `apiVersion: v1
 kind: LimitRange
 metadata:
   name: ''
-  namespace: default
+  annotations:
+    field.cattle.io/containerDefaultResourceLimit: '{}'
+    #  key: string
+  labels:
+    {}
+    #  key: string
 spec:
-  limits:
-    - type: Container
-      default:
-        cpu: 500m
-        memory: 512Mi
-      defaultRequest:
-        cpu: 100m
-        memory: 128Mi`;
+#  finalizers:
+#    - string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -103,9 +102,11 @@ export function ContainerCreateLimitRangeYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create limit range" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create limit range</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a limit range using YAML configuration.
+          LimitRanges define default resource requests and limits for Pods and containers within a
+          Namespace, helping enforce fair resource usage and prevent workloads from consuming
+          excessive CPU or memory.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

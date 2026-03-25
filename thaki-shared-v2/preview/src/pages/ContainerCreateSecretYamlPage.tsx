@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,10 +7,16 @@ const DEFAULT_YAML = `apiVersion: v1
 kind: Secret
 metadata:
   name: ''
-  namespace: default
-type: Opaque
-stringData:
-  key: value`;
+  annotations:
+    field.cattle.io/containerDefaultResourceLimit: '{}'
+    #  key: string
+  labels:
+    {}
+    #  key: string
+spec:
+#  finalizers:
+#    - string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -97,9 +102,10 @@ export function ContainerCreateSecretYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create secret" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create secret</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a secret using YAML configuration.
+          Secret is a Kubernetes resource used to securely store sensitive information such as
+          passwords, tokens, and certificates for use by Pods.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

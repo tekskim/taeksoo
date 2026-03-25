@@ -1,12 +1,14 @@
 import { useState, useCallback, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
 import { Dropdown } from '@shared/components/Dropdown';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import {
-  IconCheck,
   IconCirclePlus,
   IconFile,
   IconX,
@@ -23,6 +25,21 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'labels-annotations'];
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 const SECRET_TYPE_OPTIONS = [
   { value: 'custom', label: 'Custom Type' },
@@ -52,117 +69,6 @@ interface Annotation {
 interface DataEntry {
   key: string;
   value: string;
-}
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 shrink-0 flex items-center justify-center rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)]">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 shrink-0 animate-spin rounded-full border border-[var(--color-text-muted)]"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-interface SummarySidebarProps {
-  secretName: string;
-  secretType: string;
-  customType: string;
-  dataEntries: DataEntry[];
-  hasLabelsOrAnnotations: boolean;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  secretName,
-  secretType,
-  customType,
-  dataEntries,
-  hasLabelsOrAnnotations,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
-    if (section === 'basic-info') {
-      const hasValidBasicInfo = secretName.trim() && (secretType !== 'custom' || customType.trim());
-      return hasValidBasicInfo ? 'done' : 'active';
-    }
-    if (section === 'data') {
-      return dataEntries.length > 0 && dataEntries.some((e) => e.key.trim() || e.value.trim())
-        ? 'done'
-        : 'pending';
-    }
-    if (section === 'labels-annotations') {
-      return hasLabelsOrAnnotations ? 'done' : 'pending';
-    }
-    return 'pending';
-  };
-
-  return (
-    <div className="sticky top-4 w-[280px] shrink-0 self-start">
-      <div className="flex flex-col gap-6 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-        <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {SECTION_ORDER.map((step) => (
-                <div key={step} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={getSectionStatus(step)} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="solid" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            appearance="solid"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SectionShell({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="px-4 pt-4">
-        <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
-      </div>
-      <div className="mx-4 my-4 h-px bg-[var(--color-border-subtle)]" />
-      <div className="flex flex-col gap-6 px-4">{children}</div>
-    </div>
-  );
 }
 
 interface BasicInfoSectionProps {
@@ -203,74 +109,79 @@ function BasicInfoSection({
   const [descriptionExpanded, setDescriptionExpanded] = useState(true);
 
   return (
-    <SectionShell title="Basic information">
-      <FormField label="Secret Type" required hint="Create a Secret with a custom type">
-        <Dropdown.Select value={secretType} onChange={(v) => onSecretTypeChange(String(v))}>
-          {SECRET_TYPE_OPTIONS.map((o) => (
-            <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-          ))}
-        </Dropdown.Select>
-      </FormField>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Basic information" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Secret Type" required hint="Create a Secret with a custom type">
+            <Dropdown.Select value={secretType} onChange={(v) => onSecretTypeChange(String(v))}>
+              {SECRET_TYPE_OPTIONS.map((o) => (
+                <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+              ))}
+            </Dropdown.Select>
+          </FormField>
 
-      {(isV2 || secretType === 'custom') && (
-        <FormField label="Custom Type" required error={customTypeError ?? undefined}>
-          <Input
-            placeholder="Custom Type"
-            value={customType}
-            onChange={(e) => {
-              onCustomTypeChange(e.target.value);
-              if (customTypeError) onCustomTypeErrorChange(null);
-            }}
-            error={Boolean(customTypeError)}
-            className="w-full"
-          />
-        </FormField>
-      )}
-
-      <FormField label="Namespace" required>
-        <Dropdown.Select value={namespace} onChange={(v) => onNamespaceChange(String(v))}>
-          {NAMESPACE_OPTIONS.map((o) => (
-            <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-          ))}
-        </Dropdown.Select>
-      </FormField>
-
-      <FormField label="Name" required error={secretNameError ?? undefined}>
-        <Input
-          placeholder="Enter a unique name"
-          value={secretName}
-          onChange={(e) => {
-            onSecretNameChange(e.target.value);
-            if (secretNameError) onSecretNameErrorChange(null);
-          }}
-          error={Boolean(secretNameError)}
-          className="w-full"
-        />
-      </FormField>
-
-      <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)]"
-          onClick={() => setDescriptionExpanded(!descriptionExpanded)}
-        >
-          {descriptionExpanded ? (
-            <IconChevronDown size={16} stroke={1.5} />
-          ) : (
-            <IconChevronRight size={16} stroke={1.5} />
+          {(isV2 || secretType === 'custom') && (
+            <FormField label="Custom Type" required error={customTypeError ?? undefined}>
+              <Input
+                placeholder="Custom Type"
+                value={customType}
+                onChange={(e) => {
+                  onCustomTypeChange(e.target.value);
+                  if (customTypeError) onCustomTypeErrorChange(null);
+                }}
+                error={Boolean(customTypeError)}
+                className="w-full"
+              />
+            </FormField>
           )}
-          Description
-        </button>
-        {descriptionExpanded && (
-          <Input
-            placeholder="Description"
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            className="w-full"
-          />
-        )}
-      </div>
-    </SectionShell>
+
+          <FormField label="Namespace" required>
+            <Dropdown.Select value={namespace} onChange={(v) => onNamespaceChange(String(v))}>
+              {NAMESPACE_OPTIONS.map((o) => (
+                <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+              ))}
+            </Dropdown.Select>
+          </FormField>
+
+          <FormField label="Name" required error={secretNameError ?? undefined}>
+            <Input
+              placeholder="Enter a unique name"
+              value={secretName}
+              onChange={(e) => {
+                onSecretNameChange(e.target.value);
+                if (secretNameError) onSecretNameErrorChange(null);
+              }}
+              error={Boolean(secretNameError)}
+              className="w-full"
+            />
+          </FormField>
+
+          <div className="flex flex-col gap-3">
+            <button
+              type="button"
+              className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)]"
+              onClick={() => setDescriptionExpanded(!descriptionExpanded)}
+            >
+              {descriptionExpanded ? (
+                <IconChevronDown size={16} stroke={1.5} />
+              ) : (
+                <IconChevronRight size={16} stroke={1.5} />
+              )}
+              Description
+            </button>
+            {descriptionExpanded && (
+              <Input
+                placeholder="Description"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                className="w-full"
+              />
+            )}
+          </div>
+        </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -338,300 +249,314 @@ function DataSection({
   };
 
   return (
-    <SectionShell title="Data">
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <span className="text-body-md italic text-[var(--color-text-subtle)]">
-            Custom type, Opaque
-          </span>
-          <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {dataEntries.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
-              </div>
-            )}
-            {dataEntries.map((entry, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Enter key"
-                  value={entry.key}
-                  onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Enter value"
-                  value={entry.value}
-                  onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeDataEntry(index)}
-                  className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" />
-                </button>
-              </div>
-            ))}
-
-            <div className="flex gap-1">
-              <Button variant="secondary" size="sm" onClick={addDataEntry}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Data Entry
-                </span>
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  console.log('Read from file clicked');
-                }}
-              >
-                <span className="inline-flex items-center gap-1">
-                  <IconFile size={12} />
-                  Read from File
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <span className="text-body-md italic text-[var(--color-text-subtle)]">SSH Key</span>
-          <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {stringDataEntries.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">
-                  Public key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">
-                  Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-              </div>
-            )}
-            {stringDataEntries.map((entry, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
-                <Input
-                  placeholder="Enter key"
-                  value={entry.key}
-                  onChange={(e) => updateStringDataEntry(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Enter value"
-                  value={entry.value}
-                  onChange={(e) => updateStringDataEntry(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-              </div>
-            ))}
-
-            <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
-              <div className="w-fit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    console.log('Read from file clicked');
-                  }}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    <IconFile size={12} />
-                    Read from File
-                  </span>
-                </Button>
-              </div>
-              <div className="w-fit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    console.log('Read from file clicked');
-                  }}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    <IconFile size={12} />
-                    Read from File
-                  </span>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <span className="text-body-md italic text-[var(--color-text-subtle)]">
-            TLS Certificate
-          </span>
-          <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {tlsDataEntries.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">
-                  Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">
-                  Certificate<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-              </div>
-            )}
-            {tlsDataEntries.map((entry, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
-                <Input
-                  placeholder="Enter key"
-                  value={entry.key}
-                  onChange={(e) => updateTlsDataEntry(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Enter value"
-                  value={entry.value}
-                  onChange={(e) => updateTlsDataEntry(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-              </div>
-            ))}
-
-            <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
-              <div className="w-fit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    console.log('Read from file clicked');
-                  }}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    <IconFile size={12} />
-                    Read from File
-                  </span>
-                </Button>
-              </div>
-              <div className="w-fit">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    console.log('Read from file clicked');
-                  }}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    <IconFile size={12} />
-                    Read from File
-                  </span>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <span className="text-body-md italic text-[var(--color-text-subtle)]">
-            HTTP Basic Auth
-          </span>
-          <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {httpBasicAuthDataEntries.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">
-                  Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">
-                  Password<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                </span>
-              </div>
-            )}
-            {httpBasicAuthDataEntries.map((entry, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
-                <Input
-                  placeholder="Enter key"
-                  value={entry.key}
-                  onChange={(e) => updateHttpBasicAuthDataEntry(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Enter value"
-                  value={entry.value}
-                  onChange={(e) => updateHttpBasicAuthDataEntry(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <span className="text-body-md italic text-[var(--color-text-subtle)]">Registry</span>
-          <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Data" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-2">
-              <span className="block text-label-sm text-[var(--color-text-default)]">
-                Registry domain name
-                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            <div className="flex flex-col gap-1">
+              <span className="text-body-md italic text-[var(--color-text-subtle)]">
+                Custom type, Opaque
               </span>
-              <Input placeholder="Enter registry domain name" className="w-full" />
+              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
             </div>
 
-            <div className="flex flex-col gap-2">
-              {registryDataEntries.length > 0 && (
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {dataEntries.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {dataEntries.map((entry, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Enter key"
+                      value={entry.key}
+                      onChange={(e) => updateDataEntry(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Enter value"
+                      value={entry.value}
+                      onChange={(e) => updateDataEntry(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeDataEntry(index)}
+                      className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+
+                <div className="flex gap-1">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={addDataEntry}
+                    leftIcon={<IconCirclePlus size={12} />}
+                  >
+                    Add Data Entry
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      console.log('Read from file clicked');
+                    }}
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      <IconFile size={12} />
+                      Read from File
+                    </span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <span className="text-body-md italic text-[var(--color-text-subtle)]">SSH Key</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
+            </div>
+
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {stringDataEntries.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Public key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                  </div>
+                )}
+                {stringDataEntries.map((entry, index) => (
+                  <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
+                    <Input
+                      placeholder="Enter key"
+                      value={entry.key}
+                      onChange={(e) => updateStringDataEntry(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Enter value"
+                      value={entry.value}
+                      onChange={(e) => updateStringDataEntry(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                ))}
+
                 <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                  </span>
-                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                    Password<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-                  </span>
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        console.log('Read from file clicked');
+                      }}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        <IconFile size={12} />
+                        Read from File
+                      </span>
+                    </Button>
+                  </div>
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        console.log('Read from file clicked');
+                      }}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        <IconFile size={12} />
+                        Read from File
+                      </span>
+                    </Button>
+                  </div>
                 </div>
-              )}
-              {registryDataEntries.map((entry, index) => (
-                <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
-                  <Input
-                    placeholder="Enter key"
-                    value={entry.key}
-                    onChange={(e) => updateRegistryDataEntry(index, 'key', e.target.value)}
-                    className="w-full"
-                  />
-                  <Input
-                    placeholder="Enter value"
-                    value={entry.value}
-                    onChange={(e) => updateRegistryDataEntry(index, 'value', e.target.value)}
-                    className="w-full"
-                  />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <span className="text-body-md italic text-[var(--color-text-subtle)]">
+                TLS Certificate
+              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
+            </div>
+
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {tlsDataEntries.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Private key<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Certificate<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                  </div>
+                )}
+                {tlsDataEntries.map((entry, index) => (
+                  <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
+                    <Input
+                      placeholder="Enter key"
+                      value={entry.key}
+                      onChange={(e) => updateTlsDataEntry(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Enter value"
+                      value={entry.value}
+                      onChange={(e) => updateTlsDataEntry(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                ))}
+
+                <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        console.log('Read from file clicked');
+                      }}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        <IconFile size={12} />
+                        Read from File
+                      </span>
+                    </Button>
+                  </div>
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        console.log('Read from file clicked');
+                      }}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        <IconFile size={12} />
+                        Read from File
+                      </span>
+                    </Button>
+                  </div>
                 </div>
-              ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <span className="text-body-md italic text-[var(--color-text-subtle)]">
+                HTTP Basic Auth
+              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
+            </div>
+
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {httpBasicAuthDataEntries.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Password<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                    </span>
+                  </div>
+                )}
+                {httpBasicAuthDataEntries.map((entry, index) => (
+                  <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
+                    <Input
+                      placeholder="Enter key"
+                      value={entry.key}
+                      onChange={(e) => updateHttpBasicAuthDataEntry(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Enter value"
+                      value={entry.value}
+                      onChange={(e) => updateHttpBasicAuthDataEntry(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <span className="text-body-md italic text-[var(--color-text-subtle)]">Registry</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
+            </div>
+
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Registry domain name
+                    <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                  </span>
+                  <Input placeholder="Enter registry domain name" className="w-full" />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  {registryDataEntries.length > 0 && (
+                    <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Username<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Password<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                      </span>
+                    </div>
+                  )}
+                  {registryDataEntries.map((entry, index) => (
+                    <div key={index} className="grid w-full grid-cols-[1fr_1fr] items-center gap-1">
+                      <Input
+                        placeholder="Enter key"
+                        value={entry.key}
+                        onChange={(e) => updateRegistryDataEntry(index, 'key', e.target.value)}
+                        className="w-full"
+                      />
+                      <Input
+                        placeholder="Enter value"
+                        value={entry.value}
+                        onChange={(e) => updateRegistryDataEntry(index, 'value', e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -657,123 +582,138 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionShell title="Labels & Annotations">
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-1">
-          <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Specify the labels used to identify and categorize the resource.
-          </p>
-        </div>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
+              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the labels used to identify and categorize the resource.
+              </p>
+            </div>
 
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {labels.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {labels.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveLabel(index)}
+                      className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    appearance="outline"
+                    size="sm"
+                    onClick={onAddLabel}
+                    className="bg-[var(--color-surface-default)]"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  >
+                    Add Label
+                  </Button>
+                </div>
               </div>
-            )}
-            {labels.map((label, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => onRemoveLabel(index)}
-                  className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
+              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the annotations used to provide additional metadata for the resource.
+              </p>
+            </div>
+
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {annotations.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    appearance="outline"
+                    size="sm"
+                    onClick={onAddAnnotation}
+                    className="bg-[var(--color-surface-default)]"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
               </div>
-            ))}
-            <div className="w-fit">
-              <Button
-                variant="secondary"
-                appearance="outline"
-                size="sm"
-                onClick={onAddLabel}
-                className="bg-[var(--color-surface-default)]"
-              >
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} stroke={1.5} />
-                  Add Label
-                </span>
-              </Button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-1">
-          <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Specify the annotations used to provide additional metadata for the resource.
-          </p>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {annotations.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
-              </div>
-            )}
-            {annotations.map((annotation, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </div>
-            ))}
-            <div className="w-fit">
-              <Button
-                variant="secondary"
-                appearance="outline"
-                size="sm"
-                onClick={onAddAnnotation}
-                className="bg-[var(--color-surface-default)]"
-              >
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} stroke={1.5} />
-                  Add Annotation
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -890,18 +830,52 @@ export function ContainerCreateSecretPage() {
     labels.some((l) => l.key.trim() || l.value.trim()) ||
     annotations.some((a) => a.key.trim() || a.value.trim());
 
-  return (
-    <div className="flex flex-col gap-6 px-8 pb-6 pt-4">
-      <div className="flex flex-col gap-2">
-        <Title title="Create secret" size="medium" />
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Secret is a Kubernetes resource used to securely store sensitive information such as
-          passwords, tokens, and certificates for use by Pods.
-        </p>
-      </div>
+  const getSectionStates = useCallback((): Record<SectionStep, WizardSectionState> => {
+    const basicDone = Boolean(secretName.trim() && (secretType !== 'custom' || customType.trim()));
+    return {
+      'basic-info': basicDone ? 'done' : 'active',
+      data:
+        dataEntries.length > 0 && dataEntries.some((e) => e.key.trim() || e.value.trim())
+          ? 'done'
+          : 'pre',
+      'labels-annotations': hasLabelsOrAnnotations ? 'done' : 'pre',
+    };
+  }, [secretName, secretType, customType, dataEntries, hasLabelsOrAnnotations]);
 
-      <div className="flex w-full items-start gap-6">
-        <div className="flex flex-1 flex-col gap-4">
+  const states = getSectionStates();
+
+  return (
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create secret</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Secret is a Kubernetes resource used to securely store sensitive information such as
+            passwords, tokens, and certificates for use by Pods.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SECTION_ORDER.map((key) => ({
+                label: SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <BasicInfoSection
             isV2={isV2}
             secretType={secretType}
@@ -944,19 +918,8 @@ export function ContainerCreateSecretPage() {
             onUpdateAnnotation={updateAnnotation}
           />
         </div>
-
-        <SummarySidebar
-          secretName={secretName}
-          secretType={secretType}
-          customType={customType}
-          dataEntries={dataEntries}
-          hasLabelsOrAnnotations={hasLabelsOrAnnotations}
-          onCancel={handleCancel}
-          onCreate={handleCreate}
-          isCreateDisabled={isCreateDisabled}
-        />
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

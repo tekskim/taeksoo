@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,14 +7,16 @@ const DEFAULT_YAML = `apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: ''
-  namespace: default
+  annotations:
+    field.cattle.io/containerDefaultResourceLimit: '{}'
+    #  key: string
+  labels:
+    {}
+    #  key: string
 spec:
-  hard:
-    pods: '10'
-    requests.cpu: '4'
-    requests.memory: 8Gi
-    limits.cpu: '8'
-    limits.memory: 16Gi`;
+#  finalizers:
+#    - string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -101,9 +102,10 @@ export function ContainerCreateResourceQuotaYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create resource quota" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create resource quota</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a resource quota using YAML configuration.
+          Resource Quotas cap the overall resource usage of a Namespace to maintain fair and
+          controlled consumption across the cluster.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

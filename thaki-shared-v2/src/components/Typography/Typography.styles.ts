@@ -3,10 +3,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 export const titleVariants = cva('m-0 text-text cursor-inherit', {
   variants: {
     level: {
-      1: 'text-xxl font-bold',
-      2: 'text-xl font-bold',
-      3: 'text-lg font-semibold',
-      4: 'text-md font-medium',
+      1: 'text-40 font-bold',
+      2: 'text-32 font-bold',
+      3: 'text-24 font-semibold',
+      4: 'text-18 font-semibold',
     },
     color: {
       primary: 'text-primary',
