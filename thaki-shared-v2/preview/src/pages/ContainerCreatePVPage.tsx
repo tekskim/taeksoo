@@ -1,6 +1,9 @@
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
@@ -18,6 +21,21 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'storage-config', 'labels-annotations'];
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 const STORAGE_CLASS_OPTIONS = [
   { value: '', label: 'None' },
@@ -45,81 +63,6 @@ interface Annotation {
   value: string;
 }
 
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 shrink-0 flex items-center justify-center rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)]">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 shrink-0 animate-spin rounded-full border border-[var(--color-text-muted)]"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-interface SummarySidebarProps {
-  sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'>;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  sectionStatus,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  return (
-    <div className="sticky top-4 w-[280px] shrink-0 self-start">
-      <div className="flex flex-col gap-6 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-        <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {SECTION_ORDER.map((step) => (
-                <div key={step} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStatus[step]} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="solid" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            appearance="solid"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 interface MountOption {
   key: string;
 }
@@ -132,18 +75,6 @@ interface NodeSelectorRule {
 
 interface NodeSelector {
   rules: NodeSelectorRule[];
-}
-
-function SectionShell({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="px-4 pt-4">
-        <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
-      </div>
-      <div className="mx-4 my-4 h-px bg-[var(--color-border-subtle)]" />
-      <div className="flex flex-col gap-6 px-4">{children}</div>
-    </div>
-  );
 }
 
 interface BasicInfoSectionProps {
@@ -170,57 +101,62 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionShell title="Basic information">
-      <FormField label="Name" required error={pvNameError ?? undefined}>
-        <Input
-          placeholder="Enter a unique name"
-          value={pvName}
-          onChange={(e) => {
-            onNamespaceNameChange(e.target.value);
-            if (pvNameError) onNamespaceNameErrorChange(null);
-          }}
-          error={Boolean(pvNameError)}
-          className="w-full"
-        />
-      </FormField>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Basic information" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Name" required error={pvNameError ?? undefined}>
+            <Input
+              placeholder="Enter a unique name"
+              value={pvName}
+              onChange={(e) => {
+                onNamespaceNameChange(e.target.value);
+                if (pvNameError) onNamespaceNameErrorChange(null);
+              }}
+              error={Boolean(pvNameError)}
+              className="w-full"
+            />
+          </FormField>
 
-      <FormField label="Capacity" required>
-        <div className="flex min-w-0 flex-1 items-center gap-3">
-          <input
-            type="range"
-            min={1}
-            max={1000}
-            step={10}
-            value={capacity}
-            onChange={(e) => onCapacityChange(Number(e.target.value))}
-            className="h-1.5 w-full max-w-[220px] flex-1 cursor-pointer rounded-full bg-[var(--color-surface-muted)] accent-[var(--color-action-primary)]"
-            aria-label="Capacity"
-          />
-          <NumberInput
-            value={capacity}
-            onChange={onCapacityChange}
-            min={1}
-            max={1000}
-            step={1}
-            suffix="GiB"
-          />
-        </div>
-      </FormField>
+          <FormField label="Capacity" required>
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <input
+                type="range"
+                min={1}
+                max={1000}
+                step={10}
+                value={capacity}
+                onChange={(e) => onCapacityChange(Number(e.target.value))}
+                className="h-1.5 w-full max-w-[220px] flex-1 cursor-pointer rounded-full bg-[var(--color-surface-muted)] accent-[var(--color-action-primary)]"
+                aria-label="Capacity"
+              />
+              <NumberInput
+                value={capacity}
+                onChange={onCapacityChange}
+                min={1}
+                max={1000}
+                step={1}
+                suffix="GiB"
+              />
+            </div>
+          </FormField>
 
-      <details open={isV2} className="group">
-        <summary className="cursor-pointer list-none text-label-lg text-[var(--color-text-default)] [&::-webkit-details-marker]:hidden">
-          Description
-        </summary>
-        <div className="pt-2">
-          <Input
-            placeholder="Enter a description (optional)"
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            className="w-full"
-          />
+          <details open={isV2} className="group">
+            <summary className="cursor-pointer list-none text-label-lg text-[var(--color-text-default)] [&::-webkit-details-marker]:hidden">
+              Description
+            </summary>
+            <div className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </details>
         </div>
-      </details>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -305,175 +241,199 @@ function StorageConfigSection({
   };
 
   return (
-    <SectionShell title="Customize">
-      <FormField label="Access Modes">
-        <div className="flex flex-col gap-2">
-          <Checkbox
-            checked={accessModes.singleNodeReadWrite}
-            onChange={(checked) =>
-              onAccessModesChange({ ...accessModes, singleNodeReadWrite: checked })
-            }
-            label="Single node read-write"
-          />
-          <Checkbox
-            checked={accessModes.manyNodesReadOnly}
-            onChange={(checked) =>
-              onAccessModesChange({ ...accessModes, manyNodesReadOnly: checked })
-            }
-            label="Many nodes read-only"
-          />
-          <Checkbox
-            checked={accessModes.manyNodesReadWrite}
-            onChange={(checked) =>
-              onAccessModesChange({ ...accessModes, manyNodesReadWrite: checked })
-            }
-            label="Many nodes read-write"
-          />
-        </div>
-      </FormField>
-
-      <FormField label="Assign to Storage Class">
-        <Dropdown.Select
-          value={storageClassName}
-          onChange={(v) => onStorageClassNameChange(String(v))}
-          placeholder="Select storage class"
-        >
-          {STORAGE_CLASS_OPTIONS.map((o) => (
-            <Dropdown.Option
-              key={o.value === '' ? '__none' : o.value}
-              value={o.value}
-              label={o.label}
-            />
-          ))}
-        </Dropdown.Select>
-      </FormField>
-
-      <FormField label="Mount Options">
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {mountOptions.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Option</span>
-                <div className="w-5" />
-              </div>
-            )}
-            {mountOptions.map((option, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="input key"
-                  value={option.key}
-                  onChange={(e) => updateMountOption(index, e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeMountOption(index)}
-                  className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
-                >
-                  <IconX size={14} />
-                </button>
-              </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={addMountOption}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Option
-                </span>
-              </Button>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Customize" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Access Modes">
+            <div className="flex flex-col gap-2">
+              <Checkbox
+                checked={accessModes.singleNodeReadWrite}
+                onChange={(checked) =>
+                  onAccessModesChange({ ...accessModes, singleNodeReadWrite: checked })
+                }
+                label="Single node read-write"
+              />
+              <Checkbox
+                checked={accessModes.manyNodesReadOnly}
+                onChange={(checked) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadOnly: checked })
+                }
+                label="Many nodes read-only"
+              />
+              <Checkbox
+                checked={accessModes.manyNodesReadWrite}
+                onChange={(checked) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadWrite: checked })
+                }
+                label="Many nodes read-write"
+              />
             </div>
-          </div>
-        </div>
-      </FormField>
+          </FormField>
 
-      <FormField label="Node Selectors">
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex w-full flex-col gap-1.5">
-            {nodeSelectors.map((selector, selectorIndex) => (
-              <div
-                key={selectorIndex}
-                className="w-full rounded-[6px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3"
-              >
-                <div className="flex flex-col gap-1.5">
-                  <div className="grid w-full grid-cols-[1fr_1fr_1fr_20px] gap-1">
+          <FormField label="Assign to Storage Class">
+            <Dropdown.Select
+              value={storageClassName}
+              onChange={(v) => onStorageClassNameChange(String(v))}
+              placeholder="Select storage class"
+            >
+              {STORAGE_CLASS_OPTIONS.map((o) => (
+                <Dropdown.Option
+                  key={o.value === '' ? '__none' : o.value}
+                  value={o.value}
+                  label={o.label}
+                />
+              ))}
+            </Dropdown.Select>
+          </FormField>
+
+          <FormField label="Mount Options">
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {mountOptions.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_20px] gap-1">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Operator
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Value
+                      Option
                     </span>
                     <div className="w-5" />
                   </div>
-                  {selector.rules.map((rule, ruleIndex) => (
-                    <div
-                      key={ruleIndex}
-                      className="grid w-full grid-cols-[1fr_1fr_1fr_20px] items-center gap-1"
+                )}
+                {mountOptions.map((option, index) => (
+                  <div key={index} className="grid w-full grid-cols-[1fr_20px] items-center gap-1">
+                    <Input
+                      placeholder="input key"
+                      value={option.key}
+                      onChange={(e) => updateMountOption(index, e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeMountOption(index)}
+                      className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
                     >
-                      <Input
-                        placeholder="input key"
-                        value={rule.key}
-                        onChange={(e) =>
-                          updateNodeSelectorRule(selectorIndex, ruleIndex, 'key', e.target.value)
-                        }
-                        className="w-full"
-                      />
-                      <Dropdown.Select
-                        value={rule.operator}
-                        onChange={(v) =>
-                          updateNodeSelectorRule(selectorIndex, ruleIndex, 'operator', String(v))
-                        }
-                      >
-                        {OPERATOR_OPTIONS.map((o) => (
-                          <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-                        ))}
-                      </Dropdown.Select>
-                      <Input
-                        placeholder="input value"
-                        value={rule.value}
-                        onChange={(e) =>
-                          updateNodeSelectorRule(selectorIndex, ruleIndex, 'value', e.target.value)
-                        }
-                        className="w-full"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
-                        className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
-                      >
-                        <IconX size={14} />
-                      </button>
-                    </div>
-                  ))}
-                  <div className="w-fit">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => addNodeSelectorRule(selectorIndex)}
-                    >
-                      <span className="inline-flex items-center gap-1">
-                        <IconCirclePlus size={12} />
-                        Add Rule
-                      </span>
-                    </Button>
+                      <IconX size={14} />
+                    </button>
                   </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={addMountOption}
+                    leftIcon={<IconCirclePlus size={12} />}
+                  >
+                    Add Option
+                  </Button>
                 </div>
               </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={addNodeSelector}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Node Selector
-                </span>
-              </Button>
             </div>
-          </div>
+          </FormField>
+
+          <FormField label="Node Selectors">
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex w-full flex-col gap-1.5">
+                {nodeSelectors.map((selector, selectorIndex) => (
+                  <div
+                    key={selectorIndex}
+                    className="w-full rounded-[6px] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3"
+                  >
+                    <div className="flex flex-col gap-1.5">
+                      <div className="grid w-full grid-cols-[1fr_1fr_1fr_20px] gap-1">
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Key
+                        </span>
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Operator
+                        </span>
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Value
+                        </span>
+                        <div className="w-5" />
+                      </div>
+                      {selector.rules.map((rule, ruleIndex) => (
+                        <div
+                          key={ruleIndex}
+                          className="grid w-full grid-cols-[1fr_1fr_1fr_20px] items-center gap-1"
+                        >
+                          <Input
+                            placeholder="input key"
+                            value={rule.key}
+                            onChange={(e) =>
+                              updateNodeSelectorRule(
+                                selectorIndex,
+                                ruleIndex,
+                                'key',
+                                e.target.value
+                              )
+                            }
+                            className="w-full"
+                          />
+                          <Dropdown.Select
+                            value={rule.operator}
+                            onChange={(v) =>
+                              updateNodeSelectorRule(
+                                selectorIndex,
+                                ruleIndex,
+                                'operator',
+                                String(v)
+                              )
+                            }
+                          >
+                            {OPERATOR_OPTIONS.map((o) => (
+                              <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                            ))}
+                          </Dropdown.Select>
+                          <Input
+                            placeholder="input value"
+                            value={rule.value}
+                            onChange={(e) =>
+                              updateNodeSelectorRule(
+                                selectorIndex,
+                                ruleIndex,
+                                'value',
+                                e.target.value
+                              )
+                            }
+                            className="w-full"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
+                            className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
+                          >
+                            <IconX size={14} />
+                          </button>
+                        </div>
+                      ))}
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => addNodeSelectorRule(selectorIndex)}
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
+                          Add Rule
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={addNodeSelector}
+                    leftIcon={<IconCirclePlus size={12} />}
+                  >
+                    Add Node Selector
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </FormField>
         </div>
-      </FormField>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -499,103 +459,126 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionShell title="Labels & Annotations">
-      <FormField
-        label="Labels"
-        description="Specify the labels used to identify and categorize the resource."
-      >
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {labels.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField
+            label="Labels"
+            description="Specify the labels used to identify and categorize the resource."
+          >
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {labels.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveLabel(index)}
+                      className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
+                    >
+                      <IconX size={14} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={onAddLabel}
+                    leftIcon={<IconCirclePlus size={12} />}
+                  >
+                    Add Label
+                  </Button>
+                </div>
               </div>
-            )}
-            {labels.map((label, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => onRemoveLabel(index)}
-                  className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
-                >
-                  <IconX size={14} />
-                </button>
-              </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={onAddLabel}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Label
-                </span>
-              </Button>
             </div>
-          </div>
-        </div>
-      </FormField>
+          </FormField>
 
-      <FormField
-        label="Annotations"
-        description="Specify the annotations used to provide additional metadata for the resource."
-      >
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {annotations.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
+          <FormField
+            label="Annotations"
+            description="Specify the annotations used to provide additional metadata for the resource."
+          >
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {annotations.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
+                    >
+                      <IconX size={14} />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={onAddAnnotation}
+                    leftIcon={<IconCirclePlus size={12} />}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
               </div>
-            )}
-            {annotations.map((annotation, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="flex h-5 w-5 items-center justify-center text-[var(--color-text-subtle)] transition-colors hover:text-[var(--color-text-default)]"
-                >
-                  <IconX size={14} />
-                </button>
-              </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={onAddAnnotation}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Annotation
-                </span>
-              </Button>
             </div>
-          </div>
+          </FormField>
         </div>
-      </FormField>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -626,19 +609,19 @@ export function ContainerCreatePVPage() {
   const [pvNameError, setNamespaceNameError] = useState<string | null>(null);
 
   const getSectionStatus = useCallback(
-    (section: SectionStep): 'done' | 'active' | 'pending' => {
+    (section: SectionStep): WizardSectionState => {
       if (section === 'basic-info') {
         return pvName.trim() ? 'done' : 'active';
       }
       if (section === 'storage-config') {
         return storageClassName || mountOptions.length > 0 || nodeSelectors.length > 0
           ? 'done'
-          : 'pending';
+          : 'pre';
       }
       if (section === 'labels-annotations') {
-        return labels.length > 0 || annotations.length > 0 ? 'done' : 'pending';
+        return labels.length > 0 || annotations.length > 0 ? 'done' : 'pre';
       }
-      return 'pending';
+      return 'pre';
     },
     [
       pvName,
@@ -650,7 +633,7 @@ export function ContainerCreatePVPage() {
     ]
   );
 
-  const sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'> = {
+  const states: Record<SectionStep, WizardSectionState> = {
     'basic-info': getSectionStatus('basic-info'),
     'storage-config': getSectionStatus('storage-config'),
     'labels-annotations': getSectionStatus('labels-annotations'),
@@ -728,17 +711,37 @@ export function ContainerCreatePVPage() {
   const isCreateDisabled = !pvName.trim();
 
   return (
-    <div className="flex flex-col gap-3 px-8 pb-20 pt-4">
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create persistent volume</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Persistent Volume is a pre-provisioned and cluster-wide storage resource that provides
+            reliable and reusable data space for applications or Persistent Volume Claims.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SECTION_ORDER.map((key) => ({
+                label: SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
       <div className="flex flex-col gap-6">
-        <Title title="Create persistent volume" size="medium" />
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Persistent Volume is a pre-provisioned and cluster-wide storage resource that provides
-          reliable and reusable data space for applications or Persistent Volume Claims.
-        </p>
-      </div>
-
-      <div className="flex w-full items-start gap-6">
-        <div className="flex flex-1 flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <BasicInfoSection
             pvName={pvName}
             onNamespaceNameChange={setNamespaceName}
@@ -771,15 +774,8 @@ export function ContainerCreatePVPage() {
             onUpdateAnnotation={updateAnnotation}
           />
         </div>
-
-        <SummarySidebar
-          sectionStatus={sectionStatus}
-          onCancel={handleCancel}
-          onCreate={handleCreate}
-          isCreateDisabled={isCreateDisabled}
-        />
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

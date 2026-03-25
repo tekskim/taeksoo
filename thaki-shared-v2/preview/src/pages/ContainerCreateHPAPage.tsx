@@ -6,11 +6,27 @@ import { FormField } from '@shared/components/FormField';
 import { Disclosure } from '@shared/components/Disclosure';
 import { Checkbox } from '@shared/components/Checkbox';
 import { InlineMessage } from '@shared/components/InlineMessage';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Select } from '../components/TdsSelectCompat';
-import { IconX, IconCheck, IconCirclePlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 /* ----------------------------------------
    Types
@@ -135,99 +151,6 @@ interface Metric {
   referentKind: string;
   referentName: string;
   selectors: MetricSelector[];
-}
-
-/* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-interface SummarySidebarProps {
-  sections: HPASectionStep[];
-  sectionLabels: Record<HPASectionStep, string>;
-  sectionStates: Record<HPASectionStep, WizardSectionState>;
-  onCancel: () => void;
-  onSubmit: () => void;
-}
-
-function SummarySidebar({
-  sections,
-  sectionLabels,
-  sectionStates,
-  onCancel,
-  onSubmit,
-}: SummarySidebarProps) {
-  return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <div className="flex flex-col gap-3">
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-
-            <div className="flex flex-col gap-0">
-              {sections.map((section) => {
-                const status = sectionStates[section];
-                return (
-                  <div key={section} className="flex flex-row justify-between items-center py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {sectionLabels[section]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-row gap-2 items-center">
-          <Button variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={onSubmit} className="flex-1">
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 /* ----------------------------------------
@@ -493,29 +416,44 @@ export function ContainerCreateHPAPage() {
     navigate('/container/hpa');
   };
 
-  return (
-    <div className="flex flex-col gap-6 pt-4 px-8 pb-20">
-      {/* Page Header */}
-      <div className="flex flex-col gap-2">
-        <Title title="Create horizontal pod autoscaler" size="large" />
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
-          real-time resource usage to maintain stable application performance.
-        </p>
-      </div>
+  const states = getSectionStates();
 
-      {/* Form Content with Summary */}
-      <div className="flex flex-row gap-6 w-full items-start">
-        {/* Form Sections */}
-        <div className="flex flex-col gap-4 flex-1">
+  return (
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create horizontal pod autoscaler</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
+            real-time resource usage to maintain stable application performance.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: HPA_SECTION_ORDER.map((key) => ({
+                label: HPA_SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled
+          onCancel={handleCancel}
+          onAction={handleSubmit}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {/* Basic Information Section */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                Basic information
-              </h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Basic information" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Namespace */}
                 <FormField label="Namespace" required>
@@ -555,15 +493,13 @@ export function ContainerCreateHPAPage() {
                   </Disclosure>
                 </div>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Target Section */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">Target</h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Target" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Target reference */}
                 <FormField label="Target reference" required>
@@ -585,15 +521,13 @@ export function ContainerCreateHPAPage() {
                   </FormField>
                 </div>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Behavior Section */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">Behavior</h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Behavior" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-row gap-6 w-full items-start">
                 {/* Scale down behavior */}
                 <div className="flex flex-col gap-3 flex-1">
@@ -662,8 +596,10 @@ export function ContainerCreateHPAPage() {
                           ))}
                           <div className="w-fit">
                             <Button variant="secondary" size="sm" onClick={addScaleDownPolicy}>
-                              <IconCirclePlus size={12} className="inline mr-1" />
-                              Add policy
+                              <span className="inline-flex items-center gap-1">
+                                <IconCirclePlus size={12} />
+                                Add policy
+                              </span>
                             </Button>
                           </div>
                         </div>
@@ -756,8 +692,10 @@ export function ContainerCreateHPAPage() {
                           ))}
                           <div className="w-fit">
                             <Button variant="secondary" size="sm" onClick={addScaleUpPolicy}>
-                              <IconCirclePlus size={12} className="inline mr-1" />
-                              Add policy
+                              <span className="inline-flex items-center gap-1">
+                                <IconCirclePlus size={12} />
+                                Add policy
+                              </span>
                             </Button>
                           </div>
                         </div>
@@ -783,15 +721,13 @@ export function ContainerCreateHPAPage() {
                   )}
                 </div>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Metrics Section */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">Metrics</h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Metrics" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-2">
                 {/* Metric rows */}
                 {metrics.map((metric) => (
@@ -1032,8 +968,10 @@ export function ContainerCreateHPAPage() {
                                     size="sm"
                                     onClick={() => addMetricSelector(metric.id)}
                                   >
-                                    <IconCirclePlus size={12} className="inline mr-1" />
-                                    Add rule
+                                    <span className="inline-flex items-center gap-1">
+                                      <IconCirclePlus size={12} />
+                                      Add rule
+                                    </span>
                                   </Button>
                                 </div>
                               </div>
@@ -1048,22 +986,20 @@ export function ContainerCreateHPAPage() {
                 {/* Add a new row button */}
                 <div className="w-fit">
                   <Button variant="secondary" size="sm" onClick={addMetric}>
-                    <IconCirclePlus size={12} className="inline mr-1" />
-                    Add a new row
+                    <span className="inline-flex items-center gap-1">
+                      <IconCirclePlus size={12} />
+                      Add a new row
+                    </span>
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
 
           {/* Labels & Annotations Section */}
-          <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-            <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-              <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                Labels & annotations
-              </h2>
-            </div>
-            <div className="px-4 py-4 flex flex-col gap-4">
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Labels & annotations" />
+            <SectionCard.Content showDividers={false}>
               <div className="flex flex-col gap-6">
                 {/* Labels */}
                 <FormField
@@ -1117,8 +1053,10 @@ export function ContainerCreateHPAPage() {
                       )}
                       <div className="w-fit">
                         <Button variant="secondary" size="sm" onClick={addLabel}>
-                          <IconCirclePlus size={12} className="inline mr-1" />
-                          Add label
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add label
+                          </span>
                         </Button>
                       </div>
                     </div>
@@ -1181,27 +1119,20 @@ export function ContainerCreateHPAPage() {
                       )}
                       <div className="w-fit">
                         <Button variant="secondary" size="sm" onClick={addAnnotation}>
-                          <IconCirclePlus size={12} className="inline mr-1" />
-                          Add annotation
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add annotation
+                          </span>
                         </Button>
                       </div>
                     </div>
                   </div>
                 </FormField>
               </div>
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
         </div>
-
-        {/* Summary Sidebar */}
-        <SummarySidebar
-          sections={HPA_SECTION_ORDER}
-          sectionLabels={HPA_SECTION_LABELS}
-          sectionStates={getSectionStates()}
-          onCancel={handleCancel}
-          onSubmit={handleSubmit}
-        />
       </div>
-    </div>
+    </CreateLayout>
   );
 }

@@ -1,11 +1,14 @@
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
 import { RadioButton } from '@shared/components/RadioButton';
-import { IconCheck, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 type SectionStep = 'basic-info' | 'storage-config' | 'customize';
 
@@ -16,6 +19,21 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'storage-config', 'customize'];
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 type ReclaimPolicy = 'delete' | 'retain';
 type VolumeExpansion = 'enabled' | 'disabled';
@@ -28,112 +46,6 @@ interface MountOption {
 interface Parameter {
   key: string;
   value: string;
-}
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 shrink-0 flex items-center justify-center rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)]">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 shrink-0 animate-spin rounded-full border border-[var(--color-text-muted)]"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-interface SummarySidebarProps {
-  storageClassName: string;
-  parameters: Parameter[];
-  hasCustomizeData: boolean;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  storageClassName,
-  parameters,
-  hasCustomizeData,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
-    if (section === 'basic-info') {
-      return storageClassName.trim() ? 'done' : 'active';
-    }
-    if (section === 'storage-config') {
-      return parameters.length > 0 && parameters.some((p) => p.key.trim() || p.value.trim())
-        ? 'done'
-        : 'pending';
-    }
-    if (section === 'customize') {
-      return hasCustomizeData ? 'done' : 'pending';
-    }
-    return 'pending';
-  };
-
-  return (
-    <div className="sticky top-4 w-[280px] shrink-0 self-start">
-      <div className="flex flex-col gap-6 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-        <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {SECTION_ORDER.map((step) => (
-                <div key={step} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={getSectionStatus(step)} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="solid" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            appearance="solid"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SectionShell({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="px-4 pt-4">
-        <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
-      </div>
-      <div className="mx-4 my-4 h-px bg-[var(--color-border-subtle)]" />
-      <div className="flex flex-col gap-6 px-4">{children}</div>
-    </div>
-  );
 }
 
 interface BasicInfoSectionProps {
@@ -156,34 +68,39 @@ function BasicInfoSection({
   isV2,
 }: BasicInfoSectionProps) {
   return (
-    <SectionShell title="Basic information">
-      <FormField label="Name" required error={storageClassNameError ?? undefined}>
-        <Input
-          placeholder="Enter a unique name"
-          value={storageClassName}
-          onChange={(e) => {
-            onStorageClassNameChange(e.target.value);
-            if (storageClassNameError) onStorageClassNameErrorChange(null);
-          }}
-          error={Boolean(storageClassNameError)}
-          className="w-full"
-        />
-      </FormField>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Basic information" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Name" required error={storageClassNameError ?? undefined}>
+            <Input
+              placeholder="Enter a unique name"
+              value={storageClassName}
+              onChange={(e) => {
+                onStorageClassNameChange(e.target.value);
+                if (storageClassNameError) onStorageClassNameErrorChange(null);
+              }}
+              error={Boolean(storageClassNameError)}
+              fullWidth
+            />
+          </FormField>
 
-      <details open={isV2} className="group">
-        <summary className="cursor-pointer list-none text-label-lg text-[var(--color-text-default)] [&::-webkit-details-marker]:hidden">
-          Description
-        </summary>
-        <div className="pt-2">
-          <Input
-            placeholder="Enter a description (optional)"
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            className="w-full"
-          />
+          <details open={isV2} className="group">
+            <summary className="cursor-pointer list-none text-label-lg text-[var(--color-text-default)] [&::-webkit-details-marker]:hidden">
+              Description
+            </summary>
+            <div className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                fullWidth
+              />
+            </div>
+          </details>
         </div>
-      </details>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -208,56 +125,64 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
   };
 
   return (
-    <SectionShell title="Parameters">
-      <div className="flex flex-col gap-2">
-        <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Parameters" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-2">
+          <span className="text-label-lg text-[var(--color-text-default)]">Parameter</span>
 
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {parameters.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
-              </div>
-            )}
+          <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+            <div className="flex flex-col gap-1.5">
+              {parameters.length > 0 && (
+                <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Value
+                  </span>
+                  <div className="w-5" />
+                </div>
+              )}
 
-            {parameters.map((param, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="e.g. foo"
-                  value={param.key}
-                  onChange={(e) => updateParameter(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="e.g. bar"
-                  value={param.value}
-                  onChange={(e) => updateParameter(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeParameter(index)}
-                  className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+              {parameters.map((param, index) => (
+                <div
+                  key={index}
+                  className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" />
-                </button>
-              </div>
-            ))}
+                  <Input
+                    placeholder="e.g. foo"
+                    value={param.key}
+                    onChange={(e) => updateParameter(index, 'key', e.target.value)}
+                    className="w-full"
+                  />
+                  <Input
+                    placeholder="e.g. bar"
+                    value={param.value}
+                    onChange={(e) => updateParameter(index, 'value', e.target.value)}
+                    className="w-full"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeParameter(index)}
+                    className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                  >
+                    <IconX size={14} className="text-[var(--color-text-muted)]" />
+                  </button>
+                </div>
+              ))}
 
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={addParameter}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Parameter
-                </span>
-              </Button>
+              <div className="w-fit">
+                <Button variant="secondary" size="sm" onClick={addParameter}>
+                  <span className="inline-flex items-center gap-1">
+                    <IconCirclePlus size={12} />
+                    Add Parameter
+                  </span>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -297,110 +222,119 @@ function CustomizeSection({
   };
 
   return (
-    <SectionShell title="Customize">
-      <div className="flex flex-col gap-2">
-        <span className="text-label-lg text-[var(--color-text-default)]">Reclaim Policy</span>
-        <div className="flex flex-col gap-2">
-          <RadioButton
-            name="sc-reclaim-policy"
-            value="delete"
-            checked={reclaimPolicy === 'delete'}
-            onChange={() => onReclaimPolicyChange('delete')}
-            label="Delete volumes and underlying device when volume claim is deleted"
-          />
-          <RadioButton
-            name="sc-reclaim-policy"
-            value="retain"
-            checked={reclaimPolicy === 'retain'}
-            onChange={() => onReclaimPolicyChange('retain')}
-            label="Retain the volume for manual cleanup"
-          />
-        </div>
-      </div>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Customize" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <span className="text-label-lg text-[var(--color-text-default)]">Reclaim Policy</span>
+            <div className="flex flex-col gap-2">
+              <RadioButton
+                name="sc-reclaim-policy"
+                value="delete"
+                checked={reclaimPolicy === 'delete'}
+                onChange={() => onReclaimPolicyChange('delete')}
+                label="Delete volumes and underlying device when volume claim is deleted"
+              />
+              <RadioButton
+                name="sc-reclaim-policy"
+                value="retain"
+                checked={reclaimPolicy === 'retain'}
+                onChange={() => onReclaimPolicyChange('retain')}
+                label="Retain the volume for manual cleanup"
+              />
+            </div>
+          </div>
 
-      <div className="flex flex-col gap-2">
-        <span className="text-label-lg text-[var(--color-text-default)]">
-          Allow Volume Expansion
-        </span>
-        <div className="flex flex-col gap-2">
-          <RadioButton
-            name="sc-volume-expansion"
-            value="enabled"
-            checked={volumeExpansion === 'enabled'}
-            onChange={() => onVolumeExpansionChange('enabled')}
-            label="Enabled"
-          />
-          <RadioButton
-            name="sc-volume-expansion"
-            value="disabled"
-            checked={volumeExpansion === 'disabled'}
-            onChange={() => onVolumeExpansionChange('disabled')}
-            label="Disabled"
-          />
-        </div>
-      </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Allow Volume Expansion
+            </span>
+            <div className="flex flex-col gap-2">
+              <RadioButton
+                name="sc-volume-expansion"
+                value="enabled"
+                checked={volumeExpansion === 'enabled'}
+                onChange={() => onVolumeExpansionChange('enabled')}
+                label="Enabled"
+              />
+              <RadioButton
+                name="sc-volume-expansion"
+                value="disabled"
+                checked={volumeExpansion === 'disabled'}
+                onChange={() => onVolumeExpansionChange('disabled')}
+                label="Disabled"
+              />
+            </div>
+          </div>
 
-      <div className="flex flex-col gap-2">
-        <span className="text-label-lg text-[var(--color-text-default)]">Volume Binding Mode</span>
-        <div className="flex flex-col gap-2">
-          <RadioButton
-            name="sc-volume-binding"
-            value="immediate"
-            checked={volumeBindingMode === 'immediate'}
-            onChange={() => onVolumeBindingModeChange('immediate')}
-            label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
-          />
-          <RadioButton
-            name="sc-volume-binding"
-            value="waitForFirstConsumer"
-            checked={volumeBindingMode === 'waitForFirstConsumer'}
-            onChange={() => onVolumeBindingModeChange('waitForFirstConsumer')}
-            label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
-          />
-        </div>
-      </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Volume Binding Mode
+            </span>
+            <div className="flex flex-col gap-2">
+              <RadioButton
+                name="sc-volume-binding"
+                value="immediate"
+                checked={volumeBindingMode === 'immediate'}
+                onChange={() => onVolumeBindingModeChange('immediate')}
+                label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
+              />
+              <RadioButton
+                name="sc-volume-binding"
+                value="waitForFirstConsumer"
+                checked={volumeBindingMode === 'waitForFirstConsumer'}
+                onChange={() => onVolumeBindingModeChange('waitForFirstConsumer')}
+                label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
+              />
+            </div>
+          </div>
 
-      <div className="flex flex-col gap-2">
-        <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
+          <div className="flex flex-col gap-2">
+            <span className="text-label-lg text-[var(--color-text-default)]">Mount Options</span>
 
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {mountOptions.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {mountOptions.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+
+                {mountOptions.map((option, index) => (
+                  <div key={index} className="grid w-full grid-cols-[1fr_20px] items-center gap-1">
+                    <Input
+                      placeholder="e.g. bar"
+                      value={option.value}
+                      onChange={(e) => updateMountOption(index, e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeMountOption(index)}
+                      className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button variant="secondary" size="sm" onClick={addMountOption}>
+                    <span className="inline-flex items-center gap-1">
+                      <IconCirclePlus size={12} />
+                      Add Option
+                    </span>
+                  </Button>
+                </div>
               </div>
-            )}
-
-            {mountOptions.map((option, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="e.g. bar"
-                  value={option.value}
-                  onChange={(e) => updateMountOption(index, e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeMountOption(index)}
-                  className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" />
-                </button>
-              </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={addMountOption}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Option
-                </span>
-              </Button>
             </div>
           </div>
         </div>
-      </div>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -461,19 +395,50 @@ export function ContainerCreateStorageClassPage() {
     volumeBindingMode !== 'immediate' ||
     mountOptions.length > 0;
 
-  return (
-    <div className="flex flex-col gap-6 px-8 pb-20 pt-4">
-      <div className="flex flex-col gap-2">
-        <Title title="Create storage class" size="medium" />
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Storage Class provides a way to describe different classes of storage, allowing
-          administrators to define storage profiles with specific provisioner, parameters, and
-          reclaim policies for dynamic volume provisioning.
-        </p>
-      </div>
+  const getSectionStates = (): Record<SectionStep, WizardSectionState> => ({
+    'basic-info': storageClassName.trim() ? 'done' : 'active',
+    'storage-config':
+      parameters.length > 0 && parameters.some((p) => p.key.trim() || p.value.trim())
+        ? 'done'
+        : 'pre',
+    customize: hasCustomizeData ? 'done' : 'pre',
+  });
 
-      <div className="flex w-full items-start gap-6">
-        <div className="flex flex-1 flex-col gap-4">
+  const states = getSectionStates();
+
+  return (
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create storage class</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Storage Class provides a way to describe different classes of storage, allowing
+            administrators to define storage profiles with specific provisioner, parameters, and
+            reclaim policies for dynamic volume provisioning.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SECTION_ORDER.map((key) => ({
+                label: SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <BasicInfoSection
             storageClassName={storageClassName}
             onStorageClassNameChange={setStorageClassName}
@@ -497,17 +462,8 @@ export function ContainerCreateStorageClassPage() {
             onMountOptionsChange={setMountOptions}
           />
         </div>
-
-        <SummarySidebar
-          storageClassName={storageClassName}
-          parameters={parameters}
-          hasCustomizeData={hasCustomizeData}
-          onCancel={handleCancel}
-          onCreate={handleCreate}
-          isCreateDisabled={isCreateDisabled}
-        />
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

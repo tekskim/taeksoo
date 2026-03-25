@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,15 +7,50 @@ const DEFAULT_YAML = `apiVersion: v1
 kind: Service
 metadata:
   name: ''
+  annotations:
+    {}
+    #  key: string
+  labels:
+    {}
+    #  key: string
   namespace: default
 spec:
   selector:
-    app: ''
+    #  key: string
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: ClusterIP`;
+    - name: ''
+      protocol: TCP
+#    - appProtocol: string
+#      name: string
+#      nodePort: int
+#      port: int
+#      protocol: string
+#      targetPort: string
+  sessionAffinity: None
+  type: ClusterIP
+#  allocateLoadBalancerNodePorts: boolean
+#  clusterIP: string
+#  clusterIPs:
+#    - string
+#  externalIPs:
+#    - string
+#  externalName: string
+#  externalTrafficPolicy: string
+#  healthCheckNodePort: int
+#  internalTrafficPolicy: string
+#  ipFamilies:
+#    - string
+#  ipFamilyPolicy: string
+#  loadBalancerClass: string
+#  loadBalancerIP: string
+#  loadBalancerSourceRanges:
+#    - string
+#  publishNotReadyAddresses: boolean
+#  sessionAffinityConfig:
+#    clientIP:
+#      timeoutSeconds: int
+#  trafficDistribution: string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -107,9 +141,10 @@ export function ContainerCreateServiceYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create service" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create service</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a service using YAML configuration.
+          Services allow you to define a logical set of Pods that can be accessed with a single IP
+          address and port.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

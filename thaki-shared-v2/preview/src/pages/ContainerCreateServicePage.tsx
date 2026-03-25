@@ -6,12 +6,28 @@ import { FormField } from '@shared/components/FormField';
 import { Dropdown } from '@shared/components/Dropdown';
 import { Disclosure } from '@shared/components/Disclosure';
 import { InlineMessage } from '@shared/components/InlineMessage';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Range } from '@shared/components/Range';
 import { RadioGroup, Radio } from '../components/TdsRadioCompat';
-import { IconX, IconCheck, IconCirclePlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
-type WizardSectionState = 'pre' | 'active' | 'done' | 'writing';
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 /* ----------------------------------------
    Types
@@ -25,8 +41,6 @@ type ServiceSectionStep =
   | 'selectors'
   | 'session-affinity'
   | 'labels-annotations';
-
-type SectionState = 'pre' | 'active' | 'done' | 'writing';
 
 // Section labels for display
 const SERVICE_SECTION_LABELS: Record<ServiceSectionStep, string> = {
@@ -131,112 +145,6 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
 ];
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-
-interface SummarySidebarProps {
-  sectionStatus: Record<ServiceSectionStep, SectionState>;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  sectionStatus,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  // Map SectionState to WizardSectionState
-  const mapState = (state: SectionState): WizardSectionState => {
-    if (state === 'pre') return 'pre';
-    if (state === 'active') return 'active';
-    if (state === 'writing') return 'writing';
-    return 'done';
-  };
-
-  return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <div className="flex flex-col gap-3">
-            {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-
-            <div className="flex flex-col gap-0">
-              {SERVICE_SECTION_ORDER.map((key) => {
-                const status = mapState(sectionStatus[key]);
-                return (
-                  <div key={key} className="flex flex-row items-center justify-between py-1">
-                    <span className="text-body-md text-[var(--color-text-default)]">
-                      {SERVICE_SECTION_LABELS[key]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-row gap-2">
-          <Button variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Main Page Component
    ---------------------------------------- */
 
@@ -281,7 +189,9 @@ export function ContainerCreateServicePage() {
   );
 
   // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<ServiceSectionStep, SectionState>>({
+  const [sectionStatus, setSectionStatus] = useState<
+    Record<ServiceSectionStep, WizardSectionState>
+  >({
     'basic-info': 'active',
     'external-name': 'done',
     'service-ports': 'done',
@@ -455,891 +365,891 @@ export function ContainerCreateServicePage() {
   );
 
   return (
-    <div className="flex flex-col gap-6 pt-4 px-8 pb-20">
-      <div className="flex flex-col gap-6">
-        {/* Page Header */}
+    <CreateLayout
+      header={
         <div className="flex flex-col gap-2">
-          <Title title="Create service" size="large" />
+          <h1 className="text-heading-h4 text-text">Create service</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Services allow you to define a logical set of Pods that can be accessed with a single IP
             address and port.
           </p>
         </div>
-
-        {/* Main Content with Sidebar */}
-        <div className="flex flex-row gap-6 items-start w-full">
-          {/* Form Content */}
-          <div className="flex flex-col gap-4 flex-1">
-            {/* Basic Information Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Basic information
-                </h2>
-              </div>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  {/* Service Type */}
-                  <FormField
-                    label="Service type"
-                    required
-                    hint={SERVICE_TYPE_DESCRIPTIONS[serviceType]}
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SERVICE_SECTION_ORDER.map((key) => ({
+                label: SERVICE_SECTION_LABELS[key],
+                status: mapStatus(sectionStatus[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
+          {/* Basic Information Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Basic information" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* Service Type */}
+                <FormField
+                  label="Service type"
+                  required
+                  hint={SERVICE_TYPE_DESCRIPTIONS[serviceType]}
+                >
+                  <Dropdown.Select
+                    className="w-full"
+                    value={serviceType}
+                    onChange={(value) => setServiceType(String(value))}
+                    placeholder=""
                   >
-                    <Dropdown.Select
-                      className="w-full"
-                      value={serviceType}
-                      onChange={(value) => setServiceType(String(value))}
-                      placeholder=""
-                    >
-                      {SERVICE_TYPE_OPTIONS.map((opt) => (
-                        <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
-                      ))}
-                    </Dropdown.Select>
-                  </FormField>
+                    {SERVICE_TYPE_OPTIONS.map((opt) => (
+                      <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
+                    ))}
+                  </Dropdown.Select>
+                </FormField>
 
-                  {/* Namespace */}
-                  <FormField label="Namespace" required>
-                    <Dropdown.Select
-                      className="w-full"
-                      value={namespace}
-                      onChange={(value) => setNamespace(String(value))}
-                      placeholder=""
-                    >
-                      {NAMESPACE_OPTIONS.map((opt) => (
-                        <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
-                      ))}
-                    </Dropdown.Select>
-                  </FormField>
+                {/* Namespace */}
+                <FormField label="Namespace" required>
+                  <Dropdown.Select
+                    className="w-full"
+                    value={namespace}
+                    onChange={(value) => setNamespace(String(value))}
+                    placeholder=""
+                  >
+                    {NAMESPACE_OPTIONS.map((opt) => (
+                      <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
+                    ))}
+                  </Dropdown.Select>
+                </FormField>
 
-                  {/* Name */}
-                  <FormField label="Name" required error={nameError ?? undefined}>
+                {/* Name */}
+                <FormField label="Name" required error={nameError ?? undefined}>
+                  <Input
+                    placeholder="Enter a unique name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (nameError) setNameError(null);
+                    }}
+                    error={!!nameError}
+                    className="w-full"
+                  />
+                </FormField>
+
+                {/* Description (Collapsible) */}
+                <Disclosure label="Description" expanded={isV2}>
+                  <div className="pt-2">
                     <Input
-                      placeholder="Enter a unique name"
-                      value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        if (nameError) setNameError(null);
-                      }}
-                      error={!!nameError}
+                      placeholder="Description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                       className="w-full"
                     />
-                  </FormField>
+                  </div>
+                </Disclosure>
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
 
-                  {/* Description (Collapsible) */}
-                  <Disclosure label="Description" expanded={isV2}>
-                    <div className="pt-2">
-                      <Input
-                        placeholder="Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full"
-                      />
-                    </div>
-                  </Disclosure>
-                </div>
+          {/* External Name Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="External name" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* DNS Name */}
+                <FormField label="DNS name" required error={nameError ?? undefined}>
+                  <Input
+                    placeholder="e.g. my.database.example.com"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (nameError) setNameError(null);
+                    }}
+                    error={!!nameError}
+                    className="w-full"
+                  />
+                </FormField>
               </div>
-            </div>
+            </SectionCard.Content>
+          </SectionCard>
 
-            {/* External Name Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">External name</h2>
-              </div>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  {/* DNS Name */}
-                  <FormField label="DNS name" required error={nameError ?? undefined}>
-                    <Input
-                      placeholder="e.g. my.database.example.com"
-                      value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        if (nameError) setNameError(null);
-                      }}
-                      error={!!nameError}
-                      className="w-full"
-                    />
-                  </FormField>
-                </div>
-              </div>
-            </div>
+          {/* Service Ports Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Service ports" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <span className="text-label-lg text-[var(--color-text-default)] italic">
+                    Cluster IP, Headless
+                  </span>
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="flex flex-col gap-1.5">
+                      {/* Header row */}
+                      {ports.length > 0 && (
+                        <div
+                          className={`grid gap-1 w-full ${
+                            showNodePort
+                              ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                              : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                          }`}
+                        >
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Port name <span className="text-[#ea580c]">*</span>
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Listening port <span className="text-[#ea580c]">*</span>
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Protocol
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Target port <span className="text-[#ea580c]">*</span>
+                          </span>
+                          {showNodePort && (
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                              Node port
+                            </span>
+                          )}
+                          <div className="w-5" />
+                        </div>
+                      )}
 
-            {/* Service Ports Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Service ports</h2>
-              </div>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Cluster IP, Headless
-                    </span>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <div className="flex flex-col gap-1.5">
-                        {/* Header row */}
-                        {ports.length > 0 && (
-                          <div
-                            className={`grid gap-1 w-full ${
-                              showNodePort
-                                ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                            }`}
+                      {/* Port rows */}
+                      {ports.map((port) => (
+                        <div
+                          key={port.id}
+                          className={`grid gap-1 w-full items-center ${
+                            showNodePort
+                              ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                              : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                          }`}
+                        >
+                          <Input
+                            placeholder="e.g. myport"
+                            value={port.name}
+                            onChange={(e) => updatePort(port.id, 'name', e.target.value)}
+                            className="w-full"
+                          />
+                          <Input
+                            placeholder="e.g. 8080"
+                            value={port.listeningPort}
+                            onChange={(e) => updatePort(port.id, 'listeningPort', e.target.value)}
+                            className="w-full"
+                          />
+                          <Dropdown.Select
+                            className="w-full"
+                            value={port.protocol}
+                            onChange={(value) => updatePort(port.id, 'protocol', String(value))}
+                            placeholder=""
                           >
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Port name <span className="text-[#ea580c]">*</span>
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Listening port <span className="text-[#ea580c]">*</span>
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Protocol
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Target port <span className="text-[#ea580c]">*</span>
-                            </span>
-                            {showNodePort && (
-                              <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Node port
-                              </span>
-                            )}
-                            <div className="w-5" />
-                          </div>
-                        )}
-
-                        {/* Port rows */}
-                        {ports.map((port) => (
-                          <div
-                            key={port.id}
-                            className={`grid gap-1 w-full items-center ${
-                              showNodePort
-                                ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                            }`}
+                            {PROTOCOL_OPTIONS.map((opt) => (
+                              <Dropdown.Option
+                                key={opt.value}
+                                value={opt.value}
+                                label={opt.label}
+                              />
+                            ))}
+                          </Dropdown.Select>
+                          <Input
+                            placeholder="e.g. 80 or http"
+                            value={port.targetPort}
+                            onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
+                            className="w-full"
+                          />
+                          {showNodePort && (
+                            <Input
+                              placeholder="e.g. 30000"
+                              value={port.nodePort || ''}
+                              onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
+                              className="w-full"
+                            />
+                          )}
+                          <button
+                            onClick={() => removePort(port.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            disabled={ports.length <= 1}
                           >
-                            <Input
-                              placeholder="e.g. myport"
-                              value={port.name}
-                              onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                              className="w-full"
+                            <IconX
+                              size={16}
+                              className={
+                                ports.length <= 1
+                                  ? 'text-[var(--color-text-disabled)]'
+                                  : 'text-[var(--color-text-muted)]'
+                              }
+                              stroke={1.5}
                             />
-                            <Input
-                              placeholder="e.g. 8080"
-                              value={port.listeningPort}
-                              onChange={(e) => updatePort(port.id, 'listeningPort', e.target.value)}
-                              className="w-full"
-                            />
-                            <Dropdown.Select
-                              className="w-full"
-                              value={port.protocol}
-                              onChange={(value) => updatePort(port.id, 'protocol', String(value))}
-                              placeholder=""
-                            >
-                              {PROTOCOL_OPTIONS.map((opt) => (
-                                <Dropdown.Option
-                                  key={opt.value}
-                                  value={opt.value}
-                                  label={opt.label}
-                                />
-                              ))}
-                            </Dropdown.Select>
-                            <Input
-                              placeholder="e.g. 80 or http"
-                              value={port.targetPort}
-                              onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
-                              className="w-full"
-                            />
-                            {showNodePort && (
-                              <Input
-                                placeholder="e.g. 30000"
-                                value={port.nodePort || ''}
-                                onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
-                                className="w-full"
-                              />
-                            )}
-                            <button
-                              onClick={() => removePort(port.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              disabled={ports.length <= 1}
-                            >
-                              <IconX
-                                size={16}
-                                className={
-                                  ports.length <= 1
-                                    ? 'text-[var(--color-text-disabled)]'
-                                    : 'text-[var(--color-text-muted)]'
-                                }
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
+                          </button>
+                        </div>
+                      ))}
 
-                        {/* Add port Button */}
-                        <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addPort}>
+                      {/* Add port Button */}
+                      <div className="w-fit">
+                        <Button variant="secondary" size="sm" onClick={addPort}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
                             Add port
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Load Balancer
-                    </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <div className="flex flex-col gap-6">
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <div className="flex flex-col gap-1.5">
-                            {/* Header row */}
-                            {ports.length > 0 && (
-                              <div
-                                className={`grid gap-1 w-full ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port name <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Protocol
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                {showNodePort && (
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node port
-                                  </span>
-                                )}
-                                <div className="w-5" />
-                              </div>
-                            )}
-
-                            {/* Port rows */}
-                            {ports.map((port) => (
-                              <div
-                                key={port.id}
-                                className={`grid gap-1 w-full items-center ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <Input
-                                  placeholder="e.g. myport"
-                                  value={port.name}
-                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                  className="w-full"
-                                />
-                                <Input
-                                  placeholder="e.g. 8080"
-                                  value={port.listeningPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'listeningPort', e.target.value)
-                                  }
-                                  className="w-full"
-                                />
-                                <Dropdown.Select
-                                  className="w-full"
-                                  value={port.protocol}
-                                  onChange={(value) =>
-                                    updatePort(port.id, 'protocol', String(value))
-                                  }
-                                  placeholder=""
-                                >
-                                  {PROTOCOL_OPTIONS.map((opt) => (
-                                    <Dropdown.Option
-                                      key={opt.value}
-                                      value={opt.value}
-                                      label={opt.label}
-                                    />
-                                  ))}
-                                </Dropdown.Select>
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={port.targetPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'targetPort', e.target.value)
-                                  }
-                                  className="w-full"
-                                />
-                                {showNodePort && (
-                                  <Input
-                                    placeholder="e.g. 30000"
-                                    value={port.nodePort || ''}
-                                    onChange={(e) =>
-                                      updatePort(port.id, 'nodePort', e.target.value)
-                                    }
-                                    className="w-full"
-                                  />
-                                )}
-                                <button
-                                  onClick={() => removePort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  disabled={ports.length <= 1}
-                                >
-                                  <IconX
-                                    size={16}
-                                    className={
-                                      ports.length <= 1
-                                        ? 'text-[var(--color-text-disabled)]'
-                                        : 'text-[var(--color-text-muted)]'
-                                    }
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add port Button */}
-                            <div className="w-fit">
-                              <Button variant="secondary" size="sm" onClick={addPort}>
-                                Add port
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* External traffic policy */}
-                        <div className="flex flex-col gap-2">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            External traffic policy{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
                           </span>
-                          <RadioGroup
-                            value={externalTrafficPolicy}
-                            onChange={setExternalTrafficPolicy}
-                          >
-                            <div className="flex flex-col gap-2">
-                              <Radio value="Cluster" label="Cluster" />
-                              <Radio value="Local" label="Local" />
-                            </div>
-                          </RadioGroup>
-                          <InlineMessage variant="warning">
-                            In Cluster mode, health checks may not accurately reflect pod
-                            availability on individual nodes.
-                          </InlineMessage>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <span className="text-label-lg text-[var(--color-text-default)] italic">
-                      Node port
-                    </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
-                      <div className="flex flex-col gap-6">
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                          <div className="flex flex-col gap-1.5">
-                            {/* Header row */}
-                            {ports.length > 0 && (
-                              <div
-                                className={`grid gap-1 w-full ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Port name <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Listening port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                <span className="block text-label-sm text-[var(--color-text-default)]">
-                                  Target port <span className="text-[#ea580c]">*</span>
-                                </span>
-                                {showNodePort && (
-                                  <span className="block text-label-sm text-[var(--color-text-default)]">
-                                    Node port
-                                  </span>
-                                )}
-                                <div className="w-5" />
-                              </div>
-                            )}
-
-                            {/* Port rows */}
-                            {ports.map((port) => (
-                              <div
-                                key={port.id}
-                                className={`grid gap-1 w-full items-center ${
-                                  showNodePort
-                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
-                                    : 'grid-cols-[1fr_1fr_1fr_20px]'
-                                }`}
-                              >
-                                <Input
-                                  placeholder="e.g. myport"
-                                  value={port.name}
-                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                  className="w-full"
-                                />
-                                <Input
-                                  placeholder="e.g. 8080"
-                                  value={port.listeningPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'listeningPort', e.target.value)
-                                  }
-                                  className="w-full"
-                                />
-                                <Input
-                                  placeholder="e.g. 80 or http"
-                                  value={port.targetPort}
-                                  onChange={(e) =>
-                                    updatePort(port.id, 'targetPort', e.target.value)
-                                  }
-                                  className="w-full"
-                                />
-                                {showNodePort && (
-                                  <Input
-                                    placeholder="e.g. 30000"
-                                    value={port.nodePort || ''}
-                                    onChange={(e) =>
-                                      updatePort(port.id, 'nodePort', e.target.value)
-                                    }
-                                    className="w-full"
-                                  />
-                                )}
-                                <button
-                                  onClick={() => removePort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  disabled={ports.length <= 1}
-                                >
-                                  <IconX
-                                    size={16}
-                                    className={
-                                      ports.length <= 1
-                                        ? 'text-[var(--color-text-disabled)]'
-                                        : 'text-[var(--color-text-muted)]'
-                                    }
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-
-                            {/* Add port Button */}
-                            <div className="w-fit">
-                              <Button variant="secondary" size="sm" onClick={addPort}>
-                                Add port
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* External traffic policy */}
-                        <div className="flex flex-col gap-2">
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            External traffic policy{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </span>
-                          <RadioGroup
-                            value={externalTrafficPolicy}
-                            onChange={setExternalTrafficPolicy}
-                          >
-                            <div className="flex flex-col gap-2">
-                              <Radio value="Cluster" label="Cluster" />
-                              <Radio value="Local" label="Local" />
-                            </div>
-                          </RadioGroup>
-                          <InlineMessage variant="warning">
-                            In Cluster mode, health checks may not accurately reflect pod
-                            availability on individual nodes.
-                          </InlineMessage>
-                        </div>
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* IP Addresses Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">IP addresses</h2>
-              </div>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  {/* Cluster IP */}
-                  <FormField label="Cluster IP">
-                    <Input
-                      placeholder="e.g. 1.1.1.1"
-                      value={clusterIP}
-                      onChange={(e) => setClusterIP(e.target.value)}
-                      className="w-full"
-                    />
-                  </FormField>
-
-                  {/* Load Balancer IP */}
-                  <FormField label="Load balancer IP">
-                    <Input
-                      placeholder="e.g. 1.1.1.1"
-                      value={loadBalancerIP}
-                      onChange={(e) => setLoadBalancerIP(e.target.value)}
-                      className="w-full"
-                    />
-                  </FormField>
-
-                  {/* External IPs */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-label-lg text-[var(--color-text-default)]">
-                      External IPs
-                    </label>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <div className="flex flex-col gap-1.5">
-                        {externalIPs.length > 0 && (
-                          <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              External IP
-                            </span>
-                            <div className="w-5" />
-                          </div>
-                        )}
-                        {externalIPs.map((ip) => (
-                          <div
-                            key={ip.id}
-                            className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="e.g. 1.1.1.1"
-                              value={ip.value}
-                              onChange={(e) => updateExternalIP(ip.id, e.target.value)}
-                              className="w-full"
-                            />
-                            <button
-                              onClick={() => removeExternalIP(ip.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
-                        <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addExternalIP}>
-                            Add IP
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Selectors Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Selectors</h2>
-              </div>
-              <p className="text-body-md text-[var(--color-text-subtle)] px-4 -mt-2 mb-2">
-                Selector keys and values are intended to match labels and values on existing pods.
-              </p>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Keys and values
-                    </span>
-                    {selectors.length === 0 ? (
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                        <div className="flex flex-row gap-2">
-                          <Button variant="secondary" size="sm" onClick={addSelector}>
-                            Add rule
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Read from File
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
+                <div className="flex flex-col gap-2">
+                  <span className="text-label-lg text-[var(--color-text-default)] italic">
+                    Load Balancer
+                  </span>
+                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <div className="flex flex-col gap-6">
                       <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                         <div className="flex flex-col gap-1.5">
-                          {selectors.length > 0 && (
-                            <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          {/* Header row */}
+                          {ports.length > 0 && (
+                            <div
+                              className={`grid gap-1 w-full ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                              }`}
+                            >
                               <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Key
+                                Port name <span className="text-[#ea580c]">*</span>
                               </span>
                               <span className="block text-label-sm text-[var(--color-text-default)]">
-                                Value
+                                Listening port <span className="text-[#ea580c]">*</span>
                               </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Protocol
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Target port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              {showNodePort && (
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Node port
+                                </span>
+                              )}
                               <div className="w-5" />
                             </div>
                           )}
-                          {selectors.map((selector, index) => (
+
+                          {/* Port rows */}
+                          {ports.map((port) => (
                             <div
-                              key={index}
-                              className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                              key={port.id}
+                              className={`grid gap-1 w-full items-center ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                              }`}
                             >
                               <Input
-                                placeholder="e.g. key"
-                                value={selector.key}
-                                onChange={(e) => updateSelector(index, 'key', e.target.value)}
+                                placeholder="e.g. myport"
+                                value={port.name}
+                                onChange={(e) => updatePort(port.id, 'name', e.target.value)}
                                 className="w-full"
                               />
                               <Input
-                                placeholder="e.g. value"
-                                value={selector.value}
-                                onChange={(e) => updateSelector(index, 'value', e.target.value)}
+                                placeholder="e.g. 8080"
+                                value={port.listeningPort}
+                                onChange={(e) =>
+                                  updatePort(port.id, 'listeningPort', e.target.value)
+                                }
                                 className="w-full"
                               />
+                              <Dropdown.Select
+                                className="w-full"
+                                value={port.protocol}
+                                onChange={(value) => updatePort(port.id, 'protocol', String(value))}
+                                placeholder=""
+                              >
+                                {PROTOCOL_OPTIONS.map((opt) => (
+                                  <Dropdown.Option
+                                    key={opt.value}
+                                    value={opt.value}
+                                    label={opt.label}
+                                  />
+                                ))}
+                              </Dropdown.Select>
+                              <Input
+                                placeholder="e.g. 80 or http"
+                                value={port.targetPort}
+                                onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
+                                className="w-full"
+                              />
+                              {showNodePort && (
+                                <Input
+                                  placeholder="e.g. 30000"
+                                  value={port.nodePort || ''}
+                                  onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
+                                  className="w-full"
+                                />
+                              )}
                               <button
-                                onClick={() => removeSelector(index)}
+                                onClick={() => removePort(port.id)}
                                 className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                disabled={ports.length <= 1}
                               >
                                 <IconX
                                   size={16}
-                                  className="text-[var(--color-text-muted)]"
+                                  className={
+                                    ports.length <= 1
+                                      ? 'text-[var(--color-text-disabled)]'
+                                      : 'text-[var(--color-text-muted)]'
+                                  }
                                   stroke={1.5}
                                 />
                               </button>
                             </div>
                           ))}
 
-                          <div className="flex flex-row gap-2">
-                            <Button variant="secondary" size="sm" onClick={addSelector}>
-                              Add rule
-                            </Button>
-                            <Button variant="secondary" size="sm">
-                              Read from File
+                          {/* Add port Button */}
+                          <div className="w-fit">
+                            <Button variant="secondary" size="sm" onClick={addPort}>
+                              <span className="inline-flex items-center gap-1">
+                                <IconCirclePlus size={12} />
+                                Add port
+                              </span>
                             </Button>
                           </div>
                         </div>
                       </div>
-                    )}
-                  </div>
 
-                  <FormField label="Matching pod (preview)">
-                    <Dropdown.Select
-                      className="w-full"
-                      value={matchingPodPreview}
-                      onChange={(v) => setMatchingPodPreview(String(v))}
-                      placeholder="Select pod"
-                    >
-                      {MOCK_MATCHING_PODS.map((pod) => (
-                        <Dropdown.Option
-                          key={pod.id}
-                          value={pod.id}
-                          label={`${pod.name} — ${pod.createdAt}`}
-                        />
-                      ))}
-                    </Dropdown.Select>
-                  </FormField>
+                      {/* External traffic policy */}
+                      <div className="flex flex-col gap-2">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          External traffic policy{' '}
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </span>
+                        <RadioGroup
+                          value={externalTrafficPolicy}
+                          onChange={setExternalTrafficPolicy}
+                        >
+                          <div className="flex flex-col gap-2">
+                            <Radio value="Cluster" label="Cluster" />
+                            <Radio value="Local" label="Local" />
+                          </div>
+                        </RadioGroup>
+                        <InlineMessage variant="warning">
+                          In Cluster mode, health checks may not accurately reflect pod availability
+                          on individual nodes.
+                        </InlineMessage>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <span className="text-label-lg text-[var(--color-text-default)] italic">
+                    Node port
+                  </span>
+                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <div className="flex flex-col gap-6">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="flex flex-col gap-1.5">
+                          {/* Header row */}
+                          {ports.length > 0 && (
+                            <div
+                              className={`grid gap-1 w-full ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_20px]'
+                              }`}
+                            >
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Port name <span className="text-[#ea580c]">*</span>
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Listening port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              <span className="block text-label-sm text-[var(--color-text-default)]">
+                                Target port <span className="text-[#ea580c]">*</span>
+                              </span>
+                              {showNodePort && (
+                                <span className="block text-label-sm text-[var(--color-text-default)]">
+                                  Node port
+                                </span>
+                              )}
+                              <div className="w-5" />
+                            </div>
+                          )}
+
+                          {/* Port rows */}
+                          {ports.map((port) => (
+                            <div
+                              key={port.id}
+                              className={`grid gap-1 w-full items-center ${
+                                showNodePort
+                                  ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                  : 'grid-cols-[1fr_1fr_1fr_20px]'
+                              }`}
+                            >
+                              <Input
+                                placeholder="e.g. myport"
+                                value={port.name}
+                                onChange={(e) => updatePort(port.id, 'name', e.target.value)}
+                                className="w-full"
+                              />
+                              <Input
+                                placeholder="e.g. 8080"
+                                value={port.listeningPort}
+                                onChange={(e) =>
+                                  updatePort(port.id, 'listeningPort', e.target.value)
+                                }
+                                className="w-full"
+                              />
+                              <Input
+                                placeholder="e.g. 80 or http"
+                                value={port.targetPort}
+                                onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
+                                className="w-full"
+                              />
+                              {showNodePort && (
+                                <Input
+                                  placeholder="e.g. 30000"
+                                  value={port.nodePort || ''}
+                                  onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
+                                  className="w-full"
+                                />
+                              )}
+                              <button
+                                onClick={() => removePort(port.id)}
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                disabled={ports.length <= 1}
+                              >
+                                <IconX
+                                  size={16}
+                                  className={
+                                    ports.length <= 1
+                                      ? 'text-[var(--color-text-disabled)]'
+                                      : 'text-[var(--color-text-muted)]'
+                                  }
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </div>
+                          ))}
+
+                          {/* Add port Button */}
+                          <div className="w-fit">
+                            <Button variant="secondary" size="sm" onClick={addPort}>
+                              <span className="inline-flex items-center gap-1">
+                                <IconCirclePlus size={12} />
+                                Add port
+                              </span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* External traffic policy */}
+                      <div className="flex flex-col gap-2">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          External traffic policy{' '}
+                          <span className="text-[var(--color-state-danger)]">*</span>
+                        </span>
+                        <RadioGroup
+                          value={externalTrafficPolicy}
+                          onChange={setExternalTrafficPolicy}
+                        >
+                          <div className="flex flex-col gap-2">
+                            <Radio value="Cluster" label="Cluster" />
+                            <Radio value="Local" label="Local" />
+                          </div>
+                        </RadioGroup>
+                        <InlineMessage variant="warning">
+                          In Cluster mode, health checks may not accurately reflect pod availability
+                          on individual nodes.
+                        </InlineMessage>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </SectionCard.Content>
+          </SectionCard>
 
-            {/* Session Affinity Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Session affinity
-                </h2>
-              </div>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-3">
-                    <RadioGroup
-                      value={sessionAffinity}
-                      onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
-                    >
-                      <Radio value="None" label="There is no session affinity configured" />
-                      <Radio value="ClientIP" label="Client IP" />
-                    </RadioGroup>
-                  </div>
+          {/* IP Addresses Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="IP addresses" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* Cluster IP */}
+                <FormField label="Cluster IP">
+                  <Input
+                    placeholder="e.g. 1.1.1.1"
+                    value={clusterIP}
+                    onChange={(e) => setClusterIP(e.target.value)}
+                    className="w-full"
+                  />
+                </FormField>
 
-                  {(isV2 || sessionAffinity === 'ClientIP') && (
-                    <div className="flex flex-col gap-3">
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Session sticky time
-                      </label>
-                      <div className="flex flex-row gap-3 items-center">
-                        <Range
-                          min={1}
-                          max={86400}
-                          step={100}
-                          value={sessionAffinityTimeout}
-                          onChange={setSessionAffinityTimeout}
-                        />
-                        <NumberInput
-                          value={sessionAffinityTimeout}
-                          onChange={setSessionAffinityTimeout}
-                          min={1}
-                          max={86400}
-                          step={1}
-                          width="sm"
-                          suffix="Seconds"
-                        />
+                {/* Load Balancer IP */}
+                <FormField label="Load balancer IP">
+                  <Input
+                    placeholder="e.g. 1.1.1.1"
+                    value={loadBalancerIP}
+                    onChange={(e) => setLoadBalancerIP(e.target.value)}
+                    className="w-full"
+                  />
+                </FormField>
+
+                {/* External IPs */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    External IPs
+                  </label>
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="flex flex-col gap-1.5">
+                      {externalIPs.length > 0 && (
+                        <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            External IP
+                          </span>
+                          <div className="w-5" />
+                        </div>
+                      )}
+                      {externalIPs.map((ip) => (
+                        <div
+                          key={ip.id}
+                          className="grid grid-cols-[1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="e.g. 1.1.1.1"
+                            value={ip.value}
+                            onChange={(e) => updateExternalIP(ip.id, e.target.value)}
+                            className="w-full"
+                          />
+                          <button
+                            onClick={() => removeExternalIP(ip.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+                      <div className="w-fit">
+                        <Button variant="secondary" size="sm" onClick={addExternalIP}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add IP
+                          </span>
+                        </Button>
                       </div>
-                      <span className="text-body-sm text-[var(--color-text-subtle)]">1–86400</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Selectors Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header
+              title="Selectors"
+              description="Selector keys and values are intended to match labels and values on existing pods."
+            />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
+                    Keys and values
+                  </span>
+                  {selectors.length === 0 ? (
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="flex flex-row gap-2">
+                        <Button variant="secondary" size="sm" onClick={addSelector}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add rule
+                          </span>
+                        </Button>
+                        <Button variant="secondary" size="sm">
+                          Read from File
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="flex flex-col gap-1.5">
+                        {selectors.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-sm text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div className="w-5" />
+                          </div>
+                        )}
+                        {selectors.map((selector, index) => (
+                          <div
+                            key={index}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                          >
+                            <Input
+                              placeholder="e.g. key"
+                              value={selector.key}
+                              onChange={(e) => updateSelector(index, 'key', e.target.value)}
+                              className="w-full"
+                            />
+                            <Input
+                              placeholder="e.g. value"
+                              value={selector.value}
+                              onChange={(e) => updateSelector(index, 'value', e.target.value)}
+                              className="w-full"
+                            />
+                            <button
+                              onClick={() => removeSelector(index)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+
+                        <div className="flex flex-row gap-2">
+                          <Button variant="secondary" size="sm" onClick={addSelector}>
+                            <span className="inline-flex items-center gap-1">
+                              <IconCirclePlus size={12} />
+                              Add rule
+                            </span>
+                          </Button>
+                          <Button variant="secondary" size="sm">
+                            Read from File
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
-              </div>
-            </div>
 
-            {/* Labels & Annotations Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden pb-4">
-              <div className="px-4 pt-4 pb-3 border-b border-[var(--color-border-subtle)]">
-                <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Labels & annotations
-                </h2>
+                <FormField label="Matching pod (preview)">
+                  <Dropdown.Select
+                    className="w-full"
+                    value={matchingPodPreview}
+                    onChange={(v) => setMatchingPodPreview(String(v))}
+                    placeholder="Select pod"
+                  >
+                    {MOCK_MATCHING_PODS.map((pod) => (
+                      <Dropdown.Option
+                        key={pod.id}
+                        value={pod.id}
+                        label={`${pod.name} — ${pod.createdAt}`}
+                      />
+                    ))}
+                  </Dropdown.Select>
+                </FormField>
               </div>
-              <div className="px-4 py-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-6">
-                  {/* Labels */}
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Session Affinity Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Session affinity" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3">
+                  <RadioGroup
+                    value={sessionAffinity}
+                    onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
+                  >
+                    <Radio value="None" label="There is no session affinity configured" />
+                    <Radio value="ClientIP" label="Client IP" />
+                  </RadioGroup>
+                </div>
+
+                {(isV2 || sessionAffinity === 'ClientIP') && (
                   <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the labels used to identify and categorize the resource.
-                      </p>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Session sticky time
+                    </label>
+                    <div className="flex flex-row gap-3 items-center">
+                      <Range
+                        min={1}
+                        max={86400}
+                        step={100}
+                        value={sessionAffinityTimeout}
+                        onChange={setSessionAffinityTimeout}
+                      />
+                      <NumberInput
+                        value={sessionAffinityTimeout}
+                        onChange={setSessionAffinityTimeout}
+                        min={1}
+                        max={86400}
+                        step={1}
+                        width="sm"
+                        suffix="Seconds"
+                      />
                     </div>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">1–86400</span>
+                  </div>
+                )}
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
 
-                    {/* Bordered container for labels */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <div className="flex flex-col gap-1.5">
-                        {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Key
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Value
-                            </span>
-                            <div className="w-5" />
-                          </div>
-                        )}
-                        {labels.map((label, index) => (
-                          <div
-                            key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="label key"
-                              value={label.key}
-                              onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                              className="w-full"
-                            />
-                            <Input
-                              placeholder="label value"
-                              value={label.value}
-                              onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                              className="w-full"
-                            />
-                            <button
-                              onClick={() => removeLabel(index)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
+          {/* Labels & Annotations Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Labels & annotations" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* Labels */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
+                      Specify the labels used to identify and categorize the resource.
+                    </p>
+                  </div>
 
-                        <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addLabel}>
-                            Add label
-                          </Button>
+                  {/* Bordered container for labels */}
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="flex flex-col gap-1.5">
+                      {labels.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div className="w-5" />
                         </div>
+                      )}
+                      {labels.map((label, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="label key"
+                            value={label.key}
+                            onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                            className="w-full"
+                          />
+                          <Input
+                            placeholder="label value"
+                            value={label.value}
+                            onChange={(e) => updateLabel(index, 'value', e.target.value)}
+                            className="w-full"
+                          />
+                          <button
+                            onClick={() => removeLabel(index)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="w-fit">
+                        <Button variant="secondary" size="sm" onClick={addLabel}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add label
+                          </span>
+                        </Button>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Annotations */}
-                  <div className="flex flex-col gap-3">
+                {/* Annotations */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
+                      Annotations
+                    </span>
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
+                      Specify the annotations used to provide additional metadata for the resource.
+                    </p>
+                  </div>
+
+                  {/* Bordered container for annotations */}
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <div className="flex flex-col gap-1.5">
-                      <span className="text-label-lg text-[var(--color-text-default)]">
-                        Annotations
-                      </span>
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the annotations used to provide additional metadata for the
-                        resource.
-                      </p>
-                    </div>
-
-                    {/* Bordered container for annotations */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <div className="flex flex-col gap-1.5">
-                        {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Key
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Value
-                            </span>
-                            <div className="w-5" />
-                          </div>
-                        )}
-                        {annotations.map((annotation, index) => (
-                          <div
-                            key={index}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="annotation key"
-                              value={annotation.key}
-                              onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
-                              className="w-full"
-                            />
-                            <Input
-                              placeholder="annotation value"
-                              value={annotation.value}
-                              onChange={(e) => updateAnnotation(index, 'value', e.target.value)}
-                              className="w-full"
-                            />
-                            <button
-                              onClick={() => removeAnnotation(index)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
-
-                        <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addAnnotation}>
-                            Add annotation
-                          </Button>
+                      {annotations.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div className="w-5" />
                         </div>
+                      )}
+                      {annotations.map((annotation, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="annotation key"
+                            value={annotation.key}
+                            onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
+                            className="w-full"
+                          />
+                          <Input
+                            placeholder="annotation value"
+                            value={annotation.value}
+                            onChange={(e) => updateAnnotation(index, 'value', e.target.value)}
+                            className="w-full"
+                          />
+                          <button
+                            onClick={() => removeAnnotation(index)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="w-fit">
+                        <Button variant="secondary" size="sm" onClick={addAnnotation}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add annotation
+                          </span>
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Summary Sidebar */}
-          <SummarySidebar
-            sectionStatus={sectionStatus}
-            onCancel={handleCancel}
-            onCreate={handleCreate}
-            isCreateDisabled={isCreateDisabled}
-          />
+            </SectionCard.Content>
+          </SectionCard>
         </div>
       </div>
-    </div>
+    </CreateLayout>
   );
 }

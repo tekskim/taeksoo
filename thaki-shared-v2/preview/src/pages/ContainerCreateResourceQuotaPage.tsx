@@ -1,12 +1,30 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input, NumberInput } from '@shared/components/Input';
 import { Dropdown } from '@shared/components/Dropdown';
 import { Disclosure } from '@shared/components/Disclosure';
-import { IconCirclePlus, IconX, IconCheck } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 const isV2 = true;
 
@@ -44,94 +62,6 @@ interface Annotation {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-
-interface SummarySidebarProps {
-  sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'>;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  sectionStatus,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {SECTION_ORDER.map((step) => (
-                <div key={step} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStatus[step]} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Button row */}
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="outline" size="md" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="min-w-0 flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    BasicInfoSection Component
    ---------------------------------------- */
 
@@ -161,11 +91,9 @@ function BasicInfoSection({
   onDescOpenChange,
 }: BasicInfoSectionProps) {
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">Basic information</span>
-      </div>
-      <div className="px-4 pt-4">
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Basic information" />
+      <SectionCard.Content showDividers={false}>
         <div className="flex flex-col gap-6">
           <FormField label="Namespace" required>
             <Dropdown.Select
@@ -207,8 +135,8 @@ function BasicInfoSection({
             </div>
           </Disclosure>
         </div>
-      </div>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -317,11 +245,9 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
   };
 
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">Resource quotas</span>
-      </div>
-      <div className="px-4 pt-4">
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Resource quotas" />
+      <SectionCard.Content showDividers={false}>
         <div className="flex flex-col gap-2">
           <span className="text-label-lg text-[var(--color-text-default)]">Resource</span>
 
@@ -394,15 +320,20 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
               })}
 
               <div className="w-fit">
-                <Button variant="secondary" size="sm" onClick={addQuotaItem}>
-                  <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Resource
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={addQuotaItem}
+                >
+                  Add Resource
                 </Button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -432,13 +363,9 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">
-          Labels & Annotations
-        </span>
-      </div>
-      <div className="px-4 pt-4">
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Content showDividers={false}>
         <div className="flex flex-col gap-6">
           <FormField
             label="Labels"
@@ -488,10 +415,11 @@ function LabelsAnnotationsSection({
                     variant="secondary"
                     appearance="outline"
                     size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddLabel}
                     className="bg-[var(--color-surface-default)]"
                   >
-                    <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Label
+                    Add Label
                   </Button>
                 </div>
               </div>
@@ -546,18 +474,19 @@ function LabelsAnnotationsSection({
                     variant="secondary"
                     appearance="outline"
                     size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddAnnotation}
                     className="bg-[var(--color-surface-default)]"
                   >
-                    <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Annotation
+                    Add Annotation
                   </Button>
                 </div>
               </div>
             </div>
           </FormField>
         </div>
-      </div>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -593,28 +522,24 @@ export function ContainerCreateResourceQuotaPage() {
   const [resourceQuotaNameError, setResourceQuotaNameError] = useState<string | null>(null);
 
   // Calculate section status based on data
-  const getSectionStatus = (): Record<SectionStep, 'done' | 'active' | 'pending'> => {
+  const getSectionStates = useCallback((): Record<SectionStep, WizardSectionState> => {
     const basicInfoDone = resourceQuotaName.trim().length > 0;
     const dataDone =
       quotaItems.length > 0 && quotaItems.some((item) => item.resourceType && item.limit);
     const labelsAnnotationsDone = labels.length > 0 || annotations.length > 0;
 
     return {
-      'basic-info': basicInfoDone
-        ? 'done'
-        : resourceQuotaName.trim().length > 0
-          ? 'active'
-          : 'pending',
-      data: dataDone ? 'done' : quotaItems.length > 0 ? 'active' : 'pending',
+      'basic-info': basicInfoDone ? 'done' : resourceQuotaName.trim().length > 0 ? 'active' : 'pre',
+      data: dataDone ? 'done' : quotaItems.length > 0 ? 'active' : 'pre',
       'labels-annotations': labelsAnnotationsDone
         ? 'done'
         : labels.length > 0 || annotations.length > 0
           ? 'active'
-          : 'pending',
+          : 'pre',
     };
-  };
+  }, [resourceQuotaName, quotaItems, labels.length, annotations.length]);
 
-  const sectionStatus = getSectionStatus();
+  const states = getSectionStates();
 
   const handleCancel = useCallback(() => {
     navigate('/container/resource-quotas');
@@ -684,61 +609,65 @@ export function ContainerCreateResourceQuotaPage() {
   const isCreateDisabled = !resourceQuotaName.trim();
 
   return (
-    <div className="flex flex-col gap-6 pb-20 pt-4">
-      <div className="flex flex-col gap-6">
-        {/* Page Header */}
+    <CreateLayout
+      header={
         <div className="flex flex-col gap-2">
-          <Title title="Create resource quota" size="medium" />
+          <h1 className="text-heading-h4 text-text">Create resource quota</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Resource Quotas cap the overall resource usage of a Namespace to maintain fair and
             controlled consumption across the cluster.
           </p>
         </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SECTION_ORDER.map((key) => ({
+                label: SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
+          <BasicInfoSection
+            resourceQuotaName={resourceQuotaName}
+            onResourceQuotaNameChange={setResourceQuotaName}
+            resourceQuotaNameError={resourceQuotaNameError}
+            onResourceQuotaNameErrorChange={setResourceQuotaNameError}
+            namespace={namespace}
+            onNamespaceChange={setNamespace}
+            description={description}
+            onDescriptionChange={setDescription}
+            descOpen={descOpen}
+            onDescOpenChange={setDescOpen}
+          />
 
-        {/* Main Content with Sidebar */}
-        <div className="flex w-full items-start gap-6">
-          {/* Form Content */}
-          <div className="flex min-w-0 flex-1 flex-col gap-4">
-            {/* Basic Information Section */}
-            <BasicInfoSection
-              resourceQuotaName={resourceQuotaName}
-              onResourceQuotaNameChange={setResourceQuotaName}
-              resourceQuotaNameError={resourceQuotaNameError}
-              onResourceQuotaNameErrorChange={setResourceQuotaNameError}
-              namespace={namespace}
-              onNamespaceChange={setNamespace}
-              description={description}
-              onDescriptionChange={setDescription}
-              descOpen={descOpen}
-              onDescOpenChange={setDescOpen}
-            />
+          <ResourceQuotasSection quotaItems={quotaItems} onQuotaItemsChange={setQuotaItems} />
 
-            {/* Resource Quotas Section */}
-            <ResourceQuotasSection quotaItems={quotaItems} onQuotaItemsChange={setQuotaItems} />
-
-            {/* Labels & Annotations Section */}
-            <LabelsAnnotationsSection
-              labels={labels}
-              onAddLabel={addLabel}
-              onRemoveLabel={removeLabel}
-              onUpdateLabel={updateLabel}
-              annotations={annotations}
-              onAddAnnotation={addAnnotation}
-              onRemoveAnnotation={removeAnnotation}
-              onUpdateAnnotation={updateAnnotation}
-            />
-          </div>
-
-          {/* Summary Sidebar */}
-          <SummarySidebar
-            sectionStatus={sectionStatus}
-            onCancel={handleCancel}
-            onCreate={handleCreate}
-            isCreateDisabled={isCreateDisabled}
+          <LabelsAnnotationsSection
+            labels={labels}
+            onAddLabel={addLabel}
+            onRemoveLabel={removeLabel}
+            onUpdateLabel={updateLabel}
+            annotations={annotations}
+            onAddAnnotation={addAnnotation}
+            onRemoveAnnotation={removeAnnotation}
+            onUpdateAnnotation={updateAnnotation}
           />
         </div>
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 
