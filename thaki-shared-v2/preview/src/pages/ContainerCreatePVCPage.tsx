@@ -1,6 +1,9 @@
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
@@ -8,7 +11,22 @@ import { NumberInput } from '@shared/components/Input';
 import { Dropdown } from '@shared/components/Dropdown';
 import { Checkbox } from '@shared/components/Checkbox';
 import { RadioButton } from '@shared/components/RadioButton';
-import { IconCheck, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 type SectionStep = 'basic-info' | 'volume-claim' | 'storage-config' | 'labels-annotations';
 
@@ -57,93 +75,6 @@ interface Annotation {
   value: string;
 }
 
-function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 shrink-0 flex items-center justify-center rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)]">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 shrink-0 animate-spin rounded-full border border-[var(--color-text-muted)]"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-interface SummarySidebarProps {
-  sectionStatuses: Record<SectionStep, 'done' | 'active' | 'pending'>;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  sectionStatuses,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  return (
-    <div className="sticky top-4 w-[280px] shrink-0 self-start">
-      <div className="flex flex-col gap-6 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-        <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {SECTION_ORDER.map((step) => (
-                <div key={step} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStatuses[step]} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="solid" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            appearance="solid"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SectionShell({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="px-4 pt-4">
-        <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
-      </div>
-      <div className="mx-4 my-4 h-px bg-[var(--color-border-subtle)]" />
-      <div className="flex flex-col gap-6 px-4">{children}</div>
-    </div>
-  );
-}
-
 interface BasicInfoSectionProps {
   namespace: string;
   onNamespaceChange: (value: string) => void;
@@ -166,42 +97,47 @@ function BasicInfoSection({
   onDescriptionChange,
 }: BasicInfoSectionProps) {
   return (
-    <SectionShell title="Basic information">
-      <FormField label="Namespace" required>
-        <Dropdown.Select value={namespace} onChange={(v) => onNamespaceChange(String(v))}>
-          {NAMESPACE_OPTIONS.map((o) => (
-            <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-          ))}
-        </Dropdown.Select>
-      </FormField>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Basic information" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Namespace" required>
+            <Dropdown.Select value={namespace} onChange={(v) => onNamespaceChange(String(v))}>
+              {NAMESPACE_OPTIONS.map((o) => (
+                <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+              ))}
+            </Dropdown.Select>
+          </FormField>
 
-      <FormField label="Name" required error={pvcNameError ?? undefined}>
-        <Input
-          placeholder="Enter a unique name"
-          value={pvcName}
-          onChange={(e) => {
-            onNamespaceNameChange(e.target.value);
-            if (pvcNameError) onNamespaceNameErrorChange(null);
-          }}
-          error={Boolean(pvcNameError)}
-          className="w-full"
-        />
-      </FormField>
+          <FormField label="Name" required error={pvcNameError ?? undefined}>
+            <Input
+              placeholder="Enter a unique name"
+              value={pvcName}
+              onChange={(e) => {
+                onNamespaceNameChange(e.target.value);
+                if (pvcNameError) onNamespaceNameErrorChange(null);
+              }}
+              error={Boolean(pvcNameError)}
+              className="w-full"
+            />
+          </FormField>
 
-      <details open className="group">
-        <summary className="cursor-pointer list-none text-label-lg text-[var(--color-text-default)] [&::-webkit-details-marker]:hidden">
-          Description
-        </summary>
-        <div className="pt-2">
-          <Input
-            placeholder="Enter a description (optional)"
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            className="w-full"
-          />
+          <details open className="group">
+            <summary className="cursor-pointer list-none text-label-lg text-[var(--color-text-default)] [&::-webkit-details-marker]:hidden">
+              Description
+            </summary>
+            <div className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </details>
         </div>
-      </details>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -231,69 +167,77 @@ function VolumeClaimSection({
   const requestNum = Number(requestStorage) || 1;
 
   return (
-    <SectionShell title="Volume claim">
-      <FormField label="Source">
-        <div className="flex flex-col gap-2">
-          <RadioButton
-            name="pvc-volume-source"
-            value="storage-class"
-            checked={sourceType === 'storage-class'}
-            onChange={() => onSourceTypeChange('storage-class')}
-            label="Use a Storage Class to provision a new Persistent Volume"
-          />
-          <RadioButton
-            name="pvc-volume-source"
-            value="existing-pv"
-            checked={sourceType === 'existing-pv'}
-            onChange={() => onSourceTypeChange('existing-pv')}
-            label="Use an existing Persistent Volume"
-          />
-        </div>
-      </FormField>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Volume claim" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Source">
+            <div className="flex flex-col gap-2">
+              <RadioButton
+                name="pvc-volume-source"
+                value="storage-class"
+                checked={sourceType === 'storage-class'}
+                onChange={() => onSourceTypeChange('storage-class')}
+                label="Use a Storage Class to provision a new Persistent Volume"
+              />
+              <RadioButton
+                name="pvc-volume-source"
+                value="existing-pv"
+                checked={sourceType === 'existing-pv'}
+                onChange={() => onSourceTypeChange('existing-pv')}
+                label="Use an existing Persistent Volume"
+              />
+            </div>
+          </FormField>
 
-      {sourceType === 'storage-class' && (
-        <FormField label="Storage Class">
-          <Dropdown.Select value={storageClass} onChange={(v) => onStorageClassChange(String(v))}>
-            {STORAGE_CLASS_OPTIONS.map((o) => (
-              <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-            ))}
-          </Dropdown.Select>
-        </FormField>
-      )}
+          {sourceType === 'storage-class' && (
+            <FormField label="Storage Class">
+              <Dropdown.Select
+                value={storageClass}
+                onChange={(v) => onStorageClassChange(String(v))}
+              >
+                {STORAGE_CLASS_OPTIONS.map((o) => (
+                  <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                ))}
+              </Dropdown.Select>
+            </FormField>
+          )}
 
-      <FormField label="Request Storage" required>
-        <div className="flex flex-wrap items-center gap-3">
-          <input
-            type="range"
-            min={1}
-            max={1000}
-            step={10}
-            value={requestNum}
-            onChange={(e) => onRequestStorageChange(String(Number(e.target.value)))}
-            className="h-1.5 w-full max-w-[220px] cursor-pointer rounded-full bg-[var(--color-surface-muted)] accent-[var(--color-action-primary)]"
-            aria-label="Request storage"
-          />
-          <div className="flex items-center gap-1">
-            <NumberInput
-              value={requestNum}
-              onChange={(v) => onRequestStorageChange(String(v))}
-              min={1}
-              max={1000}
-              step={1}
-            />
-            <Dropdown.Select
-              value={storageUnit}
-              onChange={(v) => onStorageUnitChange(String(v))}
-              className="w-[88px]"
-            >
-              {STORAGE_UNIT_OPTIONS.map((o) => (
-                <Dropdown.Option key={o.value} value={o.value} label={o.label} />
-              ))}
-            </Dropdown.Select>
-          </div>
+          <FormField label="Request Storage" required>
+            <div className="flex flex-wrap items-center gap-3">
+              <input
+                type="range"
+                min={1}
+                max={1000}
+                step={10}
+                value={requestNum}
+                onChange={(e) => onRequestStorageChange(String(Number(e.target.value)))}
+                className="h-1.5 w-full max-w-[220px] cursor-pointer rounded-full bg-[var(--color-surface-muted)] accent-[var(--color-action-primary)]"
+                aria-label="Request storage"
+              />
+              <div className="flex items-center gap-1">
+                <NumberInput
+                  value={requestNum}
+                  onChange={(v) => onRequestStorageChange(String(v))}
+                  min={1}
+                  max={1000}
+                  step={1}
+                />
+                <Dropdown.Select
+                  value={storageUnit}
+                  onChange={(v) => onStorageUnitChange(String(v))}
+                  className="w-[88px]"
+                >
+                  {STORAGE_UNIT_OPTIONS.map((o) => (
+                    <Dropdown.Option key={o.value} value={o.value} label={o.label} />
+                  ))}
+                </Dropdown.Select>
+              </div>
+            </div>
+          </FormField>
         </div>
-      </FormField>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -312,33 +256,38 @@ interface StorageConfigSectionProps {
 
 function StorageConfigSection({ accessModes, onAccessModesChange }: StorageConfigSectionProps) {
   return (
-    <SectionShell title="Customize">
-      <FormField label="Access Modes">
-        <div className="flex flex-col gap-2">
-          <Checkbox
-            checked={accessModes.singleNodeReadWrite}
-            onChange={(checked) =>
-              onAccessModesChange({ ...accessModes, singleNodeReadWrite: checked })
-            }
-            label="Single node read-write"
-          />
-          <Checkbox
-            checked={accessModes.manyNodesReadOnly}
-            onChange={(checked) =>
-              onAccessModesChange({ ...accessModes, manyNodesReadOnly: checked })
-            }
-            label="Many nodes read-only"
-          />
-          <Checkbox
-            checked={accessModes.manyNodesReadWrite}
-            onChange={(checked) =>
-              onAccessModesChange({ ...accessModes, manyNodesReadWrite: checked })
-            }
-            label="Many nodes read-write"
-          />
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Customize" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <FormField label="Access Modes">
+            <div className="flex flex-col gap-2">
+              <Checkbox
+                checked={accessModes.singleNodeReadWrite}
+                onChange={(checked) =>
+                  onAccessModesChange({ ...accessModes, singleNodeReadWrite: checked })
+                }
+                label="Single node read-write"
+              />
+              <Checkbox
+                checked={accessModes.manyNodesReadOnly}
+                onChange={(checked) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadOnly: checked })
+                }
+                label="Many nodes read-only"
+              />
+              <Checkbox
+                checked={accessModes.manyNodesReadWrite}
+                onChange={(checked) =>
+                  onAccessModesChange({ ...accessModes, manyNodesReadWrite: checked })
+                }
+                label="Many nodes read-write"
+              />
+            </div>
+          </FormField>
         </div>
-      </FormField>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -364,111 +313,134 @@ function LabelsAnnotationsSection({
   onUpdateAnnotation,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionShell title="Labels & Annotations">
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-1">
-          <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Specify the labels used to identify and categorize the resource.
-          </p>
-        </div>
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Content showDividers={false}>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
+              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the labels used to identify and categorize the resource.
+              </p>
+            </div>
 
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {labels.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {labels.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveLabel(index)}
+                      className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={onAddLabel}
+                  >
+                    Add Label
+                  </Button>
+                </div>
               </div>
-            )}
-            {labels.map((label, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => onRemoveLabel(index)}
-                  className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" />
-                </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
+              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">
+                Specify the annotations used to provide additional metadata for the resource.
+              </p>
+            </div>
+
+            <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                {annotations.length > 0 && (
+                  <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <span className="block text-label-sm text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <div className="w-5" />
+                  </div>
+                )}
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1"
+                  >
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      className="w-full"
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      className="w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
               </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={onAddLabel}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Label
-                </span>
-              </Button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-1">
-          <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Specify the annotations used to provide additional metadata for the resource.
-          </p>
-        </div>
-
-        <div className="w-full rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            {annotations.length > 0 && (
-              <div className="grid w-full grid-cols-[1fr_1fr_20px] gap-1">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
-              </div>
-            )}
-            {annotations.map((annotation, index) => (
-              <div key={index} className="grid w-full grid-cols-[1fr_1fr_20px] items-center gap-1">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  className="w-full"
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  className="w-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="flex size-5 shrink-0 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)]"
-                >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" />
-                </button>
-              </div>
-            ))}
-            <div className="w-fit">
-              <Button variant="secondary" size="sm" onClick={onAddAnnotation}>
-                <span className="inline-flex items-center gap-1">
-                  <IconCirclePlus size={12} />
-                  Add Annotation
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </SectionShell>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -498,12 +470,12 @@ export function ContainerCreatePVCPage() {
 
   const [pvcNameError, setNamespaceNameError] = useState<string | null>(null);
 
-  const getSectionStatuses = useCallback((): Record<SectionStep, 'done' | 'active' | 'pending'> => {
+  const getSectionStates = useCallback((): Record<SectionStep, WizardSectionState> => {
     return {
       'basic-info': pvcName.trim() ? 'done' : 'active',
-      'volume-claim': requestStorage.trim() ? 'done' : 'pending',
+      'volume-claim': requestStorage.trim() ? 'done' : 'pre',
       'storage-config': 'done',
-      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
+      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pre',
     };
   }, [pvcName, requestStorage, labels.length, annotations.length]);
 
@@ -578,20 +550,41 @@ export function ContainerCreatePVCPage() {
   }, []);
 
   const isCreateDisabled = !pvcName.trim();
+  const states = getSectionStates();
 
   return (
-    <div className="flex flex-col gap-6 px-8 pb-20 pt-4">
-      <div className="flex flex-col gap-2">
-        <Title title="Create persistent volume claim" size="medium" />
-        <p className="text-body-md text-[var(--color-text-subtle)]">
-          Persistent Volume Claim is a user request for persistent storage that defines the required
-          capacity and access properties, allowing Kubernetes to bind or dynamically provision a
-          suitable PersistentVolume.
-        </p>
-      </div>
-
-      <div className="flex w-full items-start gap-6">
-        <div className="flex flex-1 flex-col gap-4">
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Create persistent volume claim</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Persistent Volume Claim is a user request for persistent storage that defines the
+            required capacity and access properties, allowing Kubernetes to bind or dynamically
+            provision a suitable PersistentVolume.
+          </p>
+        </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: SECTION_ORDER.map((key) => ({
+                label: SECTION_LABELS[key],
+                status: mapStatus(states[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled={!isCreateDisabled}
+          onCancel={handleCancel}
+          onAction={handleCreate}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <BasicInfoSection
             namespace={namespace}
             onNamespaceChange={setNamespace}
@@ -624,15 +617,8 @@ export function ContainerCreatePVCPage() {
             onUpdateAnnotation={updateAnnotation}
           />
         </div>
-
-        <SummarySidebar
-          sectionStatuses={getSectionStatuses()}
-          onCancel={handleCancel}
-          onCreate={handleCreate}
-          isCreateDisabled={isCreateDisabled}
-        />
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

@@ -1,28 +1,22 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
-const DEFAULT_YAML = `apiVersion: apps/v1
+const DEFAULT_YAML = `apiVersion: v1
 kind: StatefulSet
 metadata:
   name: ''
-  namespace: default
+  annotations:
+    field.cattle.io/containerDefaultResourceLimit: '{}'
+    #  key: string
+  labels:
+    {}
+    #  key: string
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: ''
-  serviceName: ''
-  template:
-    metadata:
-      labels:
-        app: ''
-    spec:
-      containers:
-        - name: ''
-          image: ''`;
+#  finalizers:
+#    - string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -113,9 +107,10 @@ export function ContainerCreateStatefulSetYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create statefulset" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create statefulset</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a statefulset using YAML configuration.
+          Create a StatefulSet to deploy and manage stateful applications with stable network
+          identities and persistent storage.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

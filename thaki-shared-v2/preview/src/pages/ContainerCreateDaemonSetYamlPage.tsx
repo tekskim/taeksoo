@@ -1,26 +1,22 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
-const DEFAULT_YAML = `apiVersion: apps/v1
+const DEFAULT_YAML = `apiVersion: v1
 kind: DaemonSet
 metadata:
   name: ''
-  namespace: default
+  annotations:
+    field.cattle.io/containerDefaultResourceLimit: '{}'
+    #  key: string
+  labels:
+    {}
+    #  key: string
 spec:
-  selector:
-    matchLabels:
-      app: ''
-  template:
-    metadata:
-      labels:
-        app: ''
-    spec:
-      containers:
-        - name: ''
-          image: ''`;
+#  finalizers:
+#    - string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -111,9 +107,10 @@ export function ContainerCreateDaemonSetYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create daemonset" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create daemonset</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a daemonset using YAML configuration.
+          Create a DaemonSet to run a copy of a pod on every selected node, ensuring consistent
+          background services or node-level agents across the cluster.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

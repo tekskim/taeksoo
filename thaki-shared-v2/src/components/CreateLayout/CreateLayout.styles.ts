@@ -31,7 +31,7 @@ export const createLayoutInnerStyles = cva('bg-surface min-h-full', {
   },
 });
 
-export const createLayoutHeaderStyles = cva('shrink-0 py-3 min-h-[32px]');
+export const createLayoutHeaderStyles = cva('shrink-0 pb-6 min-h-[32px]');
 
 export const createLayoutContentStyles = cva('flex gap-6 items-start w-full');
 

@@ -1,6 +1,9 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import { Button } from '@shared/components/Button';
 import { FormField } from '@shared/components/FormField';
 import { Input } from '@shared/components/Input';
@@ -9,11 +12,24 @@ import { Checkbox } from '@shared/components/Checkbox';
 import { Table } from '@shared/components/Table';
 import { Disclosure } from '@shared/components/Disclosure';
 import type { TableColumn } from '@shared/components/Table/Table.types';
-import { IconX, IconCheck, IconCirclePlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 const isV2 = true;
 
-type NpSectionState = 'done' | 'active' | 'pre' | 'pending' | 'skipped' | 'writing';
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 /* ----------------------------------------
    Types
@@ -136,80 +152,6 @@ const NP_MATCH_TABLE_COLS: TableColumn[] = [
   { key: 'name', header: 'Name', sortable: true },
   { key: 'createdAt', header: 'Created At', sortable: true },
 ];
-
-/* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-function SummaryStatusIcon({ status }: { status: NpSectionState }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-function SummarySidebar({
-  sectionStates,
-}: {
-  sectionStates: Record<NetworkPolicySectionStep, NpSectionState>;
-}) {
-  const navigate = useNavigate();
-
-  return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5">Summary</span>
-            <div className="flex flex-col gap-0">
-              {NETWORK_POLICY_SECTION_ORDER.map((step) => (
-                <div key={step} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {NETWORK_POLICY_SECTION_LABELS[step]}
-                  </span>
-                  <SummaryStatusIcon status={sectionStates[step]} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            appearance="outline"
-            size="md"
-            onClick={() => navigate('/container/network-policies')}
-          >
-            Cancel
-          </Button>
-          <Button variant="primary" size="md" className="min-w-0 flex-1">
-            Create
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Traffic Rules Section Component (for Ingress/Egress)
@@ -439,11 +381,9 @@ function TrafficRulesSection({
   const activeRule = rules[activeRuleIndex];
 
   return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-        <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
-      </div>
-      <div className="px-4 pt-4">
+    <SectionCard className="pb-4">
+      <SectionCard.Header title={title} />
+      <SectionCard.Content showDividers={false}>
         <div className="flex flex-col gap-6">
           {/* Enable checkbox */}
           <Checkbox checked={enabled} onChange={onEnabledChange} label={checkboxLabel} />
@@ -463,7 +403,7 @@ function TrafficRulesSection({
                         onClick={() => setActiveRuleIndex(index)}
                         className={`flex items-center justify-between px-3 py-2 text-left border-b border-[var(--color-border-default)] last:border-b-0 ${
                           activeRuleIndex === index
-                            ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
+                            ? 'bg-[var(--color-surface-default)] text-primary'
                             : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)]'
                         }`}
                       >
@@ -665,12 +605,10 @@ function TrafficRulesSection({
                                                   addLabelSelector(target.id, 'namespaceSelectors')
                                                 }
                                               >
-                                                <IconCirclePlus
-                                                  size={12}
-                                                  stroke={1.5}
-                                                  className="inline"
-                                                />{' '}
-                                                Add rule
+                                                <span className="inline-flex items-center gap-1">
+                                                  <IconCirclePlus size={12} />
+                                                  Add rule
+                                                </span>
                                               </Button>
                                             </div>
                                           </div>
@@ -716,7 +654,7 @@ function TrafficRulesSection({
                                                   rowData={row}
                                                   column={NP_MATCH_TABLE_COLS[0]}
                                                 >
-                                                  <span className="text-label-md text-[var(--color-action-primary)]">
+                                                  <span className="text-label-md text-primary">
                                                     {row.name}
                                                   </span>
                                                 </Table.Td>
@@ -940,7 +878,7 @@ function TrafficRulesSection({
                                                   rowData={row}
                                                   column={NP_MATCH_TABLE_COLS[0]}
                                                 >
-                                                  <span className="text-label-md text-[var(--color-action-primary)]">
+                                                  <span className="text-label-md text-primary">
                                                     {row.name}
                                                   </span>
                                                 </Table.Td>
@@ -1056,12 +994,10 @@ function TrafficRulesSection({
                                                   addLabelSelector(target.id, 'podSelectors')
                                                 }
                                               >
-                                                <IconCirclePlus
-                                                  size={12}
-                                                  stroke={1.5}
-                                                  className="inline"
-                                                />{' '}
-                                                Add pod selector
+                                                <span className="inline-flex items-center gap-1">
+                                                  <IconCirclePlus size={12} />
+                                                  Add pod selector
+                                                </span>
                                               </Button>
                                             </div>
                                           </div>
@@ -1107,7 +1043,7 @@ function TrafficRulesSection({
                                                     rowData={row}
                                                     column={NP_MATCH_TABLE_COLS[0]}
                                                   >
-                                                    <span className="text-label-md text-[var(--color-action-primary)]">
+                                                    <span className="text-label-md text-primary">
                                                       {row.name}
                                                     </span>
                                                   </Table.Td>
@@ -1168,12 +1104,10 @@ function TrafficRulesSection({
                                               size="sm"
                                               onClick={() => addException(target.id)}
                                             >
-                                              <IconCirclePlus
-                                                size={12}
-                                                stroke={1.5}
-                                                className="inline"
-                                              />{' '}
-                                              Add exception
+                                              <span className="inline-flex items-center gap-1">
+                                                <IconCirclePlus size={12} />
+                                                Add exception
+                                              </span>
                                             </Button>
                                           </div>
                                         </div>
@@ -1184,8 +1118,10 @@ function TrafficRulesSection({
                               ))}
                               <div className="w-fit">
                                 <Button variant="secondary" size="sm" onClick={addTarget}>
-                                  <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add
-                                  allowed traffic source
+                                  <span className="inline-flex items-center gap-1">
+                                    <IconCirclePlus size={12} />
+                                    Add allowed traffic source
+                                  </span>
                                 </Button>
                               </div>
                             </div>
@@ -1253,8 +1189,10 @@ function TrafficRulesSection({
                               ))}
                               <div className="w-fit">
                                 <Button variant="secondary" size="sm" onClick={addAllowedPort}>
-                                  <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add
-                                  allowed port
+                                  <span className="inline-flex items-center gap-1">
+                                    <IconCirclePlus size={12} />
+                                    Add allowed port
+                                  </span>
                                 </Button>
                               </div>
                             </div>
@@ -1268,8 +1206,8 @@ function TrafficRulesSection({
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </SectionCard.Content>
+    </SectionCard>
   );
 }
 
@@ -1277,6 +1215,7 @@ function TrafficRulesSection({
    Main Page Component
    ---------------------------------------- */
 export function ContainerCreateNetworkPolicyPage() {
+  const navigate = useNavigate();
   const [descOpen, setDescOpen] = useState(isV2);
 
   // Basic Information state
@@ -1384,13 +1323,13 @@ export function ContainerCreateNetworkPolicyPage() {
   );
 
   // Section states for summary
-  const getSectionStates = (): Record<NetworkPolicySectionStep, NpSectionState> => {
+  const getSectionStates = (): Record<NetworkPolicySectionStep, WizardSectionState> => {
     return {
       'basic-info': policyName ? 'done' : 'active',
-      'ingress-rules': ingressEnabled && ingressRules.length > 0 ? 'done' : 'pending',
-      'egress-rules': egressEnabled && egressRules.length > 0 ? 'done' : 'pending',
-      selector: selectorRules.length > 0 ? 'done' : 'pending',
-      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
+      'ingress-rules': ingressEnabled && ingressRules.length > 0 ? 'done' : 'pre',
+      'egress-rules': egressEnabled && egressRules.length > 0 ? 'done' : 'pre',
+      selector: selectorRules.length > 0 ? 'done' : 'pre',
+      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pre',
     };
   };
 
@@ -1436,109 +1375,221 @@ export function ContainerCreateNetworkPolicyPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
+  const sectionStates = getSectionStates();
+
   return (
-    <div className="flex flex-col gap-6 pb-20 pt-4">
-      <div className="flex flex-col gap-6">
-        {/* Page Header */}
+    <CreateLayout
+      header={
         <div className="flex flex-col gap-2">
-          <Title title="Create network policy" size="medium" />
+          <h1 className="text-heading-h4 text-text">Create network policy</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Network policies are used to control the traffic flow between pods within the cluster
             based on defined rules for ingress and egress.
           </p>
         </div>
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: NETWORK_POLICY_SECTION_ORDER.map((key) => ({
+                label: NETWORK_POLICY_SECTION_LABELS[key],
+                status: mapStatus(sectionStates[key]),
+              })),
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Create"
+          actionEnabled
+          onCancel={() => navigate('/container/network-policies')}
+          onAction={() => {}}
+        />
+      }
+    >
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
+          {/* Basic Information Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Basic information" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* Namespace */}
+                <FormField label="Namespace" required>
+                  <Dropdown.Select
+                    value={namespace}
+                    onChange={(v) => setNamespace(String(v))}
+                    className="w-full"
+                  >
+                    {NAMESPACE_OPTIONS.map((opt) => (
+                      <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
+                    ))}
+                  </Dropdown.Select>
+                </FormField>
 
-        {/* Main Content with Summary Sidebar */}
-        <div className="flex w-full items-start gap-6">
-          {/* Form Sections */}
-          <div className="flex min-w-0 flex-1 flex-col gap-4">
-            {/* Basic Information Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-              <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-                <span className="text-heading-h5 text-[var(--color-text-default)]">
-                  Basic information
-                </span>
-              </div>
-              <div className="px-4 pt-4">
-                <div className="flex flex-col gap-6">
-                  {/* Namespace */}
-                  <FormField label="Namespace" required>
-                    <Dropdown.Select
-                      value={namespace}
-                      onChange={(v) => setNamespace(String(v))}
-                      className="w-full"
-                    >
-                      {NAMESPACE_OPTIONS.map((opt) => (
-                        <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
-                      ))}
-                    </Dropdown.Select>
-                  </FormField>
+                {/* Name */}
+                <FormField label="Name" required>
+                  <Input
+                    placeholder="Enter a unique name"
+                    value={policyName}
+                    onChange={(_e, v) => setPolicyName(v)}
+                    className="w-full"
+                  />
+                </FormField>
 
-                  {/* Name */}
-                  <FormField label="Name" required>
+                {/* Description (collapsible) */}
+                <Disclosure label="Description" expanded={descOpen} onExpandChange={setDescOpen}>
+                  <div className="pt-2">
                     <Input
-                      placeholder="Enter a unique name"
-                      value={policyName}
-                      onChange={(_e, v) => setPolicyName(v)}
+                      placeholder="Description"
+                      value={description}
+                      onChange={(_e, v) => setDescription(v)}
                       className="w-full"
                     />
-                  </FormField>
+                  </div>
+                </Disclosure>
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
 
-                  {/* Description (collapsible) */}
-                  <Disclosure label="Description" expanded={descOpen} onExpandChange={setDescOpen}>
-                    <div className="pt-2">
-                      <Input
-                        placeholder="Description"
-                        value={description}
-                        onChange={(_e, v) => setDescription(v)}
-                        className="w-full"
-                      />
+          {/* Ingress Rules Section */}
+          <TrafficRulesSection
+            title="Ingress rules"
+            checkboxLabel="Configure ingress rules to restrict incoming traffic"
+            enabled={ingressEnabled}
+            onEnabledChange={setIngressEnabled}
+            rules={ingressRules}
+            onRulesChange={setIngressRules}
+          />
+
+          {/* Egress Rules Section */}
+          <TrafficRulesSection
+            title="Egress rules"
+            checkboxLabel="Configure egress rules to restrict outgoing traffic"
+            enabled={egressEnabled}
+            onEnabledChange={setEgressEnabled}
+            rules={egressRules}
+            onRulesChange={setEgressRules}
+          />
+
+          {/* Selector Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header
+              title="Selector"
+              description="Selector keys and values are intended to match labels and values on existing pods."
+            />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* Selector Rules */}
+                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="flex flex-col gap-1.5">
+                    {selectorRules.length > 0 && (
+                      <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Key
+                        </span>
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Operator
+                        </span>
+                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                          Value
+                        </span>
+                        <div className="w-5" />
+                      </div>
+                    )}
+
+                    {selectorRules.map((rule) => (
+                      <div
+                        key={rule.id}
+                        className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                      >
+                        <Input
+                          placeholder="input key"
+                          value={rule.key}
+                          onChange={(_e, v) => updateSelectorRule(rule.id, 'key', v)}
+                          className="w-full"
+                        />
+                        <Dropdown.Select
+                          value={rule.operator}
+                          onChange={(v) => updateSelectorRule(rule.id, 'operator', String(v))}
+                          className="w-full"
+                        >
+                          {OPERATOR_OPTIONS.map((opt) => (
+                            <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
+                          ))}
+                        </Dropdown.Select>
+                        <Input
+                          placeholder="input value"
+                          value={rule.value}
+                          onChange={(_e, v) => updateSelectorRule(rule.id, 'value', v)}
+                          className="w-full"
+                        />
+                        <button
+                          onClick={() => removeSelectorRule(rule.id)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        >
+                          <IconX
+                            size={16}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </div>
+                    ))}
+
+                    <div className="w-fit">
+                      <Button variant="secondary" size="sm" onClick={addSelectorRule}>
+                        <span className="inline-flex items-center gap-1">
+                          <IconCirclePlus size={12} />
+                          Add Rule
+                        </span>
+                      </Button>
                     </div>
-                  </Disclosure>
+                  </div>
+                </div>
+
+                {/* Matching Pods */}
+                <div className="flex flex-col gap-3">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Matching Pods
+                  </label>
+                  <Table columns={NP_MATCH_TABLE_COLS} rows={MOCK_MATCHING_PODS}>
+                    {MOCK_MATCHING_PODS.map((row) => (
+                      <Table.Tr key={row.id} rowData={row}>
+                        <Table.Td rowData={row} column={NP_MATCH_TABLE_COLS[0]}>
+                          <span className="text-label-md text-primary">{row.name}</span>
+                        </Table.Td>
+                        <Table.Td rowData={row} column={NP_MATCH_TABLE_COLS[1]}>
+                          {String(row.createdAt).replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+                        </Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Table>
                 </div>
               </div>
-            </div>
+            </SectionCard.Content>
+          </SectionCard>
 
-            {/* Ingress Rules Section */}
-            <TrafficRulesSection
-              title="Ingress rules"
-              checkboxLabel="Configure ingress rules to restrict incoming traffic"
-              enabled={ingressEnabled}
-              onEnabledChange={setIngressEnabled}
-              rules={ingressRules}
-              onRulesChange={setIngressRules}
-            />
+          {/* Labels & Annotations Section */}
+          <SectionCard className="pb-4">
+            <SectionCard.Header title="Labels & Annotations" />
+            <SectionCard.Content showDividers={false}>
+              <div className="flex flex-col gap-6">
+                {/* Labels */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-label-lg text-[var(--color-text-default)]">Labels</label>
+                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                      Specify the labels used to identify and categorize the resource.
+                    </span>
+                  </div>
 
-            {/* Egress Rules Section */}
-            <TrafficRulesSection
-              title="Egress rules"
-              checkboxLabel="Configure egress rules to restrict outgoing traffic"
-              enabled={egressEnabled}
-              onEnabledChange={setEgressEnabled}
-              rules={egressRules}
-              onRulesChange={setEgressRules}
-            />
-
-            {/* Selector Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-              <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-                <span className="text-heading-h5 text-[var(--color-text-default)]">Selector</span>
-                <p className="mt-1 text-body-md text-[var(--color-text-subtle)]">
-                  Selector keys and values are intended to match labels and values on existing pods.
-                </p>
-              </div>
-              <div className="px-4 pt-4">
-                <div className="flex flex-col gap-6">
-                  {/* Selector Rules */}
                   <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                     <div className="flex flex-col gap-1.5">
-                      {selectorRules.length > 0 && (
-                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                      {labels.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Key
-                          </span>
-                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                            Operator
                           </span>
                           <span className="block text-label-sm text-[var(--color-text-default)]">
                             Value
@@ -1546,39 +1597,25 @@ export function ContainerCreateNetworkPolicyPage() {
                           <div className="w-5" />
                         </div>
                       )}
-
-                      {selectorRules.map((rule) => (
+                      {labels.map((label) => (
                         <div
-                          key={rule.id}
-                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                          key={label.id}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                         >
                           <Input
-                            placeholder="input key"
-                            value={rule.key}
-                            onChange={(_e, v) => updateSelectorRule(rule.id, 'key', v)}
+                            placeholder="label key"
+                            value={label.key}
+                            onChange={(_e, v) => updateLabel(label.id, 'key', v)}
                             className="w-full"
                           />
-                          <Dropdown.Select
-                            value={rule.operator}
-                            onChange={(v) => updateSelectorRule(rule.id, 'operator', String(v))}
-                            className="w-full"
-                          >
-                            {OPERATOR_OPTIONS.map((opt) => (
-                              <Dropdown.Option
-                                key={opt.value}
-                                value={opt.value}
-                                label={opt.label}
-                              />
-                            ))}
-                          </Dropdown.Select>
                           <Input
-                            placeholder="input value"
-                            value={rule.value}
-                            onChange={(_e, v) => updateSelectorRule(rule.id, 'value', v)}
+                            placeholder="label value"
+                            value={label.value}
+                            onChange={(_e, v) => updateLabel(label.id, 'value', v)}
                             className="w-full"
                           />
                           <button
-                            onClick={() => removeSelectorRule(rule.id)}
+                            onClick={() => removeLabel(label.id)}
                             className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                           >
                             <IconX
@@ -1589,183 +1626,88 @@ export function ContainerCreateNetworkPolicyPage() {
                           </button>
                         </div>
                       ))}
-
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addSelectorRule}>
-                          <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Rule
+                        <Button variant="secondary" size="sm" onClick={addLabel}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add Label
+                          </span>
                         </Button>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Matching Pods */}
-                  <div className="flex flex-col gap-3">
+                {/* Annotations */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
                     <label className="text-label-lg text-[var(--color-text-default)]">
-                      Matching Pods
+                      Annotations
                     </label>
-                    <Table columns={NP_MATCH_TABLE_COLS} rows={MOCK_MATCHING_PODS}>
-                      {MOCK_MATCHING_PODS.map((row) => (
-                        <Table.Tr key={row.id} rowData={row}>
-                          <Table.Td rowData={row} column={NP_MATCH_TABLE_COLS[0]}>
-                            <span className="text-label-md text-[var(--color-action-primary)]">
-                              {row.name}
-                            </span>
-                          </Table.Td>
-                          <Table.Td rowData={row} column={NP_MATCH_TABLE_COLS[1]}>
-                            {String(row.createdAt).replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
-                          </Table.Td>
-                        </Table.Tr>
+                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                      Specify the annotations used to provide additional metadata for the resource.
+                    </span>
+                  </div>
+
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="flex flex-col gap-1.5">
+                      {annotations.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-sm text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div className="w-5" />
+                        </div>
+                      )}
+                      {annotations.map((annotation) => (
+                        <div
+                          key={annotation.id}
+                          className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                        >
+                          <Input
+                            placeholder="annotation key"
+                            value={annotation.key}
+                            onChange={(_e, v) => updateAnnotation(annotation.id, 'key', v)}
+                            className="w-full"
+                          />
+                          <Input
+                            placeholder="annotation value"
+                            value={annotation.value}
+                            onChange={(_e, v) => updateAnnotation(annotation.id, 'value', v)}
+                            className="w-full"
+                          />
+                          <button
+                            onClick={() => removeAnnotation(annotation.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
                       ))}
-                    </Table>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Labels & Annotations Section */}
-            <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-              <div className="border-b border-[var(--color-border-subtle)] px-4 pb-3 pt-4">
-                <span className="text-heading-h5 text-[var(--color-text-default)]">
-                  Labels & Annotations
-                </span>
-              </div>
-              <div className="px-4 pt-4">
-                <div className="flex flex-col gap-6">
-                  {/* Labels */}
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Labels
-                      </label>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the labels used to identify and categorize the resource.
-                      </span>
-                    </div>
-
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <div className="flex flex-col gap-1.5">
-                        {labels.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Key
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Value
-                            </span>
-                            <div className="w-5" />
-                          </div>
-                        )}
-                        {labels.map((label) => (
-                          <div
-                            key={label.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="label key"
-                              value={label.key}
-                              onChange={(_e, v) => updateLabel(label.id, 'key', v)}
-                              className="w-full"
-                            />
-                            <Input
-                              placeholder="label value"
-                              value={label.value}
-                              onChange={(_e, v) => updateLabel(label.id, 'value', v)}
-                              className="w-full"
-                            />
-                            <button
-                              onClick={() => removeLabel(label.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
-                        <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addLabel}>
-                            <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add Label
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Annotations */}
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-label-lg text-[var(--color-text-default)]">
-                        Annotations
-                      </label>
-                      <span className="text-body-md text-[var(--color-text-subtle)]">
-                        Specify the annotations used to provide additional metadata for the
-                        resource.
-                      </span>
-                    </div>
-
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                      <div className="flex flex-col gap-1.5">
-                        {annotations.length > 0 && (
-                          <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Key
-                            </span>
-                            <span className="block text-label-sm text-[var(--color-text-default)]">
-                              Value
-                            </span>
-                            <div className="w-5" />
-                          </div>
-                        )}
-                        {annotations.map((annotation) => (
-                          <div
-                            key={annotation.id}
-                            className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                          >
-                            <Input
-                              placeholder="annotation key"
-                              value={annotation.key}
-                              onChange={(_e, v) => updateAnnotation(annotation.id, 'key', v)}
-                              className="w-full"
-                            />
-                            <Input
-                              placeholder="annotation value"
-                              value={annotation.value}
-                              onChange={(_e, v) => updateAnnotation(annotation.id, 'value', v)}
-                              className="w-full"
-                            />
-                            <button
-                              onClick={() => removeAnnotation(annotation.id)}
-                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                            >
-                              <IconX
-                                size={16}
-                                className="text-[var(--color-text-muted)]"
-                                stroke={1.5}
-                              />
-                            </button>
-                          </div>
-                        ))}
-                        <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addAnnotation}>
-                            <IconCirclePlus size={12} stroke={1.5} className="inline" /> Add
-                            Annotation
-                          </Button>
-                        </div>
+                      <div className="w-fit">
+                        <Button variant="secondary" size="sm" onClick={addAnnotation}>
+                          <span className="inline-flex items-center gap-1">
+                            <IconCirclePlus size={12} />
+                            Add Annotation
+                          </span>
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Summary Sidebar */}
-          <SummarySidebar sectionStates={getSectionStates()} />
+            </SectionCard.Content>
+          </SectionCard>
         </div>
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

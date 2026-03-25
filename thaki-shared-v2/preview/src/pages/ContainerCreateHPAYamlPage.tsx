@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,6 +7,12 @@ const DEFAULT_YAML = `apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: ''
+  annotations:
+    {}
+    #  key: string
+  labels:
+    {}
+    #  key: string
   namespace: default
 spec:
   scaleTargetRef:
@@ -22,7 +27,30 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 50`;
+          averageUtilization: 50
+#    - type: Resource
+#      resource:
+#        name: memory
+#        target:
+#          type: Utilization
+#          averageUtilization: 50
+#  behavior:
+#    scaleDown:
+#      stabilizationWindowSeconds: 300
+#      policies:
+#        - type: Percent
+#          value: 100
+#          periodSeconds: 15
+#    scaleUp:
+#      stabilizationWindowSeconds: 0
+#      policies:
+#        - type: Percent
+#          value: 100
+#          periodSeconds: 15
+#        - type: Pods
+#          value: 4
+#          periodSeconds: 15
+#      selectPolicy: Max`;
 
 function YamlEditor({
   value,
@@ -113,9 +141,11 @@ export function ContainerCreateHPAYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create HPA" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create HPA</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a horizontal pod autoscaler using YAML configuration.
+          Horizontal Pod Autoscalers automatically scale the number of pods in a deployment, replica
+          set, or stateful set based on observed CPU utilization or other application-provided
+          metrics.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

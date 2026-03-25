@@ -395,3 +395,78 @@
 .progress-track.progress-custom::-moz-progress-bar {
   background-color: var(--progress-color);
 }
+
+/* ----------------------------------------
+   TDS Typography Utility Classes
+   ---------------------------------------- */
+
+/* Headings - All semibold (600) */
+.text-heading-h1 {
+  font-size: var(--semantic-font-size40);
+  line-height: var(--semantic-font-lineHeight48);
+  font-weight: var(--semantic-font-weightSemibold);
+}
+.text-heading-h2 {
+  font-size: var(--semantic-font-size32);
+  line-height: var(--semantic-font-lineHeight32);
+  font-weight: var(--semantic-font-weightSemibold);
+}
+.text-heading-h3 {
+  font-size: var(--semantic-font-size24);
+  line-height: var(--semantic-font-lineHeight32);
+  font-weight: var(--semantic-font-weightSemibold);
+}
+.text-heading-h4 {
+  font-size: var(--semantic-font-size18);
+  line-height: var(--semantic-font-lineHeight28);
+  font-weight: var(--semantic-font-weightSemibold);
+}
+.text-heading-h5 {
+  font-size: var(--semantic-font-size16);
+  line-height: var(--semantic-font-lineHeight24);
+  font-weight: var(--semantic-font-weightSemibold);
+}
+.text-heading-h6 {
+  font-size: var(--semantic-font-size14);
+  line-height: var(--semantic-font-lineHeight20);
+  font-weight: var(--semantic-font-weightSemibold);
+}
+
+/* Body - All regular (400) */
+.text-body-lg {
+  font-size: var(--semantic-font-size14);
+  line-height: var(--semantic-font-lineHeight20);
+  font-weight: var(--semantic-font-weightRegular);
+}
+.text-body-md {
+  font-size: var(--semantic-font-size12);
+  line-height: var(--semantic-font-lineHeight18);
+  font-weight: var(--semantic-font-weightRegular);
+}
+.text-body-sm {
+  font-size: var(--semantic-font-size11);
+  line-height: var(--semantic-font-lineHeight16);
+  font-weight: var(--semantic-font-weightRegular);
+}
+.text-body-xs {
+  font-size: 0.625rem;
+  line-height: 0.875rem;
+  font-weight: var(--semantic-font-weightRegular);
+}
+
+/* Label - All medium (500) */
+.text-label-lg {
+  font-size: var(--semantic-font-size13);
+  line-height: var(--semantic-font-lineHeight18);
+  font-weight: var(--semantic-font-weightMedium);
+}
+.text-label-md {
+  font-size: var(--semantic-font-size12);
+  line-height: var(--semantic-font-lineHeight16);
+  font-weight: var(--semantic-font-weightMedium);
+}
+.text-label-sm {
+  font-size: var(--semantic-font-size11);
+  line-height: var(--semantic-font-lineHeight16);
+  font-weight: var(--semantic-font-weightMedium);
+}

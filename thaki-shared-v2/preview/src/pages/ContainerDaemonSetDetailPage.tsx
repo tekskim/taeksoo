@@ -506,7 +506,7 @@ function PodsTab({
             </Table.Td>
             <Table.Td rowData={row} column={c('name')}>
               <span
-                className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+                className="text-primary font-medium cursor-pointer hover:underline truncate block min-w-0"
                 title={row.name}
               >
                 {row.name}
@@ -518,7 +518,7 @@ function PodsTab({
             <Table.Td rowData={row} column={c('ip')} />
             <Table.Td rowData={row} column={c('node')}>
               <span
-                className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+                className="text-primary font-medium cursor-pointer hover:underline truncate block min-w-0"
                 title={row.node}
               >
                 {row.node}
@@ -623,7 +623,7 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
             <Table.Td rowData={row} column={c('name')}>
               <button
                 type="button"
-                className="text-left w-full text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0 border-none bg-transparent p-0"
+                className="text-left w-full text-primary font-medium cursor-pointer hover:underline truncate block min-w-0 border-none bg-transparent p-0"
                 title={row.name}
                 onClick={() => navigate(`/container/services/${row.id}`)}
               >
@@ -855,7 +855,7 @@ function EventsTab({ events }: { events: EventRow[] }) {
             <Table.Td rowData={row} column={c('count')} />
             <Table.Td rowData={row} column={c('name')}>
               <span
-                className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+                className="text-primary font-medium cursor-pointer hover:underline truncate block min-w-0"
                 title={row.name}
               >
                 {row.name}

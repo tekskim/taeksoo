@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@shared/components/Title';
 import { Button } from '@shared/components/Button';
 import { IconCopy } from '@tabler/icons-react';
 
@@ -8,11 +7,16 @@ const DEFAULT_YAML = `apiVersion: v1
 kind: Pod
 metadata:
   name: ''
-  namespace: default
+  annotations:
+    field.cattle.io/containerDefaultResourceLimit: '{}'
+    #  key: string
+  labels:
+    {}
+    #  key: string
 spec:
-  containers:
-    - name: ''
-      image: ''`;
+#  finalizers:
+#    - string
+__clone: true`;
 
 function YamlEditor({
   value,
@@ -103,9 +107,10 @@ export function ContainerCreatePodYamlPage() {
   return (
     <div className="flex flex-col gap-6 flex-1 min-h-0">
       <div className="flex flex-col gap-2 flex-shrink-0">
-        <Title title="Create pod" size="large" />
+        <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create pod</h1>
         <p className="text-body-md text-[var(--color-text-subtle)]">
-          Define a pod using YAML configuration.
+          Create a Kubernetes Pod by defining its containers, configuration to run workloads within
+          your cluster.
         </p>
       </div>
       <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
