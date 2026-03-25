@@ -6,6 +6,7 @@ import IAMIcon from '../assets/appIcon/iam.png';
 import CloudBuilderIcon from '../assets/appIcon/cloudbuilder.png';
 import StorageIcon from '../assets/appIcon/storage.png';
 import ContainerIcon from '../assets/appIcon/container.png';
+import ComputeAdminIcon from '../assets/appIcon/compute-admin.png';
 
 interface AppCard {
   id: string;
@@ -50,6 +51,13 @@ const appCards: AppCard[] = [
     icon: StorageIcon,
     href: '/storage',
     gradient: 'from-violet-500 to-purple-500',
+  },
+  {
+    id: 'compute-admin',
+    title: 'Compute Admin',
+    icon: ComputeAdminIcon,
+    href: '/compute-admin',
+    gradient: 'from-rose-500 to-pink-500',
   },
 ];
 
@@ -100,7 +108,7 @@ export function EntryPage() {
       <main className="flex-1">
         <div className="max-w-[960px] mx-auto px-8 pt-12 pb-16">
           <h2 className="text-16 leading-24 font-semibold text-text mb-8">shared-v2 Preview</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {appCards.map((card) => (
               <AppCardComponent key={card.id} card={card} />
             ))}
