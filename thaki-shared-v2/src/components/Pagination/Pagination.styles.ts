@@ -16,7 +16,7 @@ export const navButtonStyles = cva(
     'transition-colors duration-150 ease',
     'hover:enabled:bg-surface-hover',
     'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-1',
-    'disabled:opacity-100 disabled:[color:var(--semantic-color-textSubtle)] disabled:cursor-not-allowed disabled:hover:bg-transparent',
+    'disabled:opacity-100 disabled:[color:#94a3b8] disabled:cursor-not-allowed disabled:hover:bg-transparent',
   ],
   {
     variants: {

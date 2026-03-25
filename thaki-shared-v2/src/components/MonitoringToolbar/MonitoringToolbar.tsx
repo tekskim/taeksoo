@@ -56,21 +56,21 @@ const tw = {
   root: 'flex items-center gap-1',
 
   segments:
-    'flex items-center gap-0 bg-surface ring-1 ring-inset ring-border rounded-lg h-7 relative',
+    'flex items-center gap-0 bg-surface ring-1 ring-inset ring-border rounded-[6px] h-7 relative',
 
   segment:
-    'px-3 py-1 text-11 font-medium text-text-muted bg-transparent border-none cursor-pointer transition-all duration-fast rounded-md relative z-[1] m-0 h-7 leading-16 w-12 hover:text-text',
+    'px-3 py-1 text-11 font-medium text-text-muted bg-transparent border-none cursor-pointer transition-all duration-fast rounded-[6px] relative z-[1] m-0 h-7 leading-16 w-12 hover:text-text',
   segmentActive:
-    'text-primary bg-transparent font-medium ring-1 ring-inset ring-primary rounded-md z-[2]',
+    'text-primary bg-transparent font-medium ring-1 ring-inset ring-primary rounded-[6px] z-[2]',
 
   period: 'relative',
 
   periodBtn:
-    'flex items-center justify-center gap-1.5 px-3 py-1 h-7 text-11 font-medium text-text-muted bg-surface ring-1 ring-inset ring-border border-none rounded-lg cursor-pointer transition-all duration-fast hover:ring-border-strong hover:text-text',
+    'flex items-center justify-center gap-1.5 px-3 py-1 h-7 text-11 font-medium text-text-muted bg-surface ring-1 ring-inset ring-border border-none rounded-[6px] cursor-pointer transition-all duration-fast hover:ring-border-strong hover:text-text',
   periodBtnActive: 'ring-primary text-primary',
 
   periodTag:
-    'flex items-center gap-2 pl-3 pr-2 py-1 h-7 bg-primary text-white border-none rounded-lg text-11 font-medium',
+    'flex items-center gap-2 pl-3 pr-2 py-1 h-7 bg-primary text-white border-none rounded-[6px] text-11 font-medium',
   periodTagText: 'cursor-pointer hover:underline',
   periodTagDivider: 'mx-1 opacity-60',
   periodTagClose:
@@ -80,7 +80,7 @@ const tw = {
     'absolute top-full right-0 mt-2 bg-surface border border-border rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-3 z-[100] flex flex-col gap-3',
 
   refresh:
-    'flex items-center justify-center w-7 h-7 bg-surface ring-1 ring-inset ring-border border-none rounded-lg cursor-pointer text-text transition-all duration-fast hover:ring-border-strong hover:text-text active:bg-surface-subtle',
+    'flex items-center justify-center w-7 h-7 bg-surface ring-1 ring-inset ring-border border-none rounded-[6px] cursor-pointer text-text transition-all duration-fast hover:ring-border-strong hover:text-text active:bg-surface-subtle',
 } as const;
 
 // ========== Component ==========
@@ -99,14 +99,13 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   periodLabel = 'Period',
 }): React.ReactElement => {
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [pendingStart, setPendingStart] = useState<Date | null>(null);
+  const [pendingEnd, setPendingEnd] = useState<Date | null>(null);
   const datePickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
-      if (
-        datePickerRef.current &&
-        !datePickerRef.current.contains(event.target as Node)
-      ) {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
         setShowDatePicker(false);
       }
     };
@@ -122,6 +121,8 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   };
 
   const handleCustomPeriodClick = (): void => {
+    setPendingStart(customPeriod?.start || null);
+    setPendingEnd(customPeriod?.end || null);
     setShowDatePicker(true);
   };
 
@@ -141,6 +142,8 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
 
   const handleDatePickerCancel = (): void => {
     setShowDatePicker(false);
+    setPendingStart(null);
+    setPendingEnd(null);
   };
 
   const hasCustomPeriod = customPeriod !== null;
@@ -149,14 +152,12 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
     <div className={tw.root}>
       {/* Time Range Buttons */}
       <div className={tw.segments}>
-        {timeOptions.map(option => (
+        {timeOptions.map((option) => (
           <button
             key={option.value}
             type="button"
             className={`${tw.segment} ${
-              timeRange === option.value && !hasCustomPeriod
-                ? tw.segmentActive
-                : ''
+              timeRange === option.value && !hasCustomPeriod ? tw.segmentActive : ''
             }`}
             onClick={() => handleTimeRangeSelect(option.value)}
           >
@@ -169,10 +170,7 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       <div className={tw.period} ref={datePickerRef}>
         {hasCustomPeriod ? (
           <div className={tw.periodTag}>
-            <span
-              className={tw.periodTagText}
-              onClick={handleCustomPeriodClick}
-            >
+            <span className={tw.periodTagText} onClick={handleCustomPeriodClick}>
               {formatAbsoluteDate(customPeriod.start)}
               <span className={tw.periodTagDivider}>—</span>
               {formatAbsoluteDate(customPeriod.end)}
@@ -183,7 +181,7 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
               onClick={handleClearCustomPeriod}
               aria-label="Clear custom period"
             >
-              <CloseSmallIcon size="xs" variant="inverse" />
+              <CloseSmallIcon size="xs" variant="inverse" weight="bold" />
             </button>
           </div>
         ) : (
@@ -192,7 +190,7 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
             className={`${tw.periodBtn} ${showDatePicker ? tw.periodBtnActive : ''}`}
             onClick={handleCustomPeriodClick}
           >
-            <CalendarIcon size="xs" />
+            <CalendarIcon size="xs" weight="bold" />
             <span>{periodLabel}</span>
           </button>
         )}
@@ -200,17 +198,49 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
         {/* DatePicker Dropdown */}
         {showDatePicker && (
           <div className={tw.dropdown}>
+            {/* START / END date range header */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 flex flex-col gap-1 rounded-[6px] border border-primary bg-[color:var(--semantic-color-primaryLight,#eff6ff)] px-3 py-2">
+                <span className="text-[10px] font-semibold leading-[14px] text-primary uppercase tracking-wide">
+                  Start
+                </span>
+                <span className="text-14 font-medium leading-5 text-text">
+                  {pendingStart
+                    ? formatAbsoluteDate(pendingStart)
+                    : customPeriod
+                      ? formatAbsoluteDate(customPeriod.start)
+                      : 'Select date'}
+                </span>
+              </div>
+              <span className="text-text-muted text-12">~</span>
+              <div className="flex-1 flex flex-col gap-1 rounded-[6px] border border-border bg-surface-subtle px-3 py-2">
+                <span className="text-[10px] font-semibold leading-[14px] text-text-muted uppercase tracking-wide">
+                  End
+                </span>
+                <span className="text-14 font-medium leading-5 text-text">
+                  {pendingEnd
+                    ? formatAbsoluteDate(pendingEnd)
+                    : customPeriod
+                      ? formatAbsoluteDate(customPeriod.end)
+                      : 'Select date'}
+                </span>
+              </div>
+            </div>
             <DatePicker
               mode="range"
-              value={
-                customPeriod
-                  ? { from: customPeriod.start, to: customPeriod.end }
-                  : undefined
-              }
+              value={customPeriod ? { from: customPeriod.start, to: customPeriod.end } : undefined}
+              onChange={(val) => {
+                if (val && typeof val === 'object' && 'from' in val) {
+                  const range = val as { from?: Date; to?: Date };
+                  setPendingStart(range.from || null);
+                  setPendingEnd(range.to || null);
+                }
+              }}
               onApply={handleDatePickerApply}
               onCancel={handleDatePickerCancel}
               minDate={minDate}
               maxDate={maxDate}
+              className="!border-none !shadow-none !p-0"
             />
           </div>
         )}
@@ -218,12 +248,7 @@ const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
 
       {/* Refresh Button */}
       {showRefreshButton && (
-        <button
-          type="button"
-          className={tw.refresh}
-          onClick={onRefresh}
-          aria-label="Refresh"
-        >
+        <button type="button" className={tw.refresh} onClick={onRefresh} aria-label="Refresh">
           <RefreshIcon size="xs" />
         </button>
       )}

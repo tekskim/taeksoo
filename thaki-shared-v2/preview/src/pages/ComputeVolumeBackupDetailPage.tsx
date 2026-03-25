@@ -286,8 +286,8 @@ export function ComputeVolumeBackupDetailPage() {
       <EditVolumeBackupDrawer
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
-        backupId={b.id}
-        initialData={{ name: b.name, description: '' }}
+        backupId={backup.id}
+        initialData={{ name: backup.name, description: '' }}
       />
     </div>
   );
