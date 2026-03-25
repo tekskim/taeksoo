@@ -145,6 +145,7 @@ import { ContainerCreateHPAYamlPage } from './pages/ContainerCreateHPAYamlPage';
 import { ContainerCreateServicePage } from './pages/ContainerCreateServicePage';
 import { ContainerCreateIngressPage } from './pages/ContainerCreateIngressPage';
 import { ComputeLayout } from './layouts/ComputeLayout';
+import { ComputeAdminLayout } from './layouts/ComputeAdminLayout';
 import { DesignLayout } from './layouts/DesignLayout';
 import { DesignOverviewPage } from './pages/DesignOverviewPage';
 import { DesignLayoutComponentsPage } from './pages/DesignLayoutComponentsPage';
@@ -198,6 +199,67 @@ import { ComputeCertificateDetailPage } from './pages/ComputeCertificateDetailPa
 import { ComputeDNSZonesPage } from './pages/ComputeDNSZonesPage';
 import { ComputeBackupPoliciesPage } from './pages/ComputeBackupPoliciesPage';
 import { ComputeScheduledTasksPage } from './pages/ComputeScheduledTasksPage';
+import { ComputeAdminHomePage } from './pages/ComputeAdminHomePage';
+import { ComputeAdminMonitorOverviewPage } from './pages/ComputeAdminMonitorOverviewPage';
+import { ComputeAdminTopologyPage } from './pages/ComputeAdminTopologyPage';
+import { ComputeAdminConsolePage } from './pages/ComputeAdminConsolePage';
+import { ComputeAdminInstancesPage } from './pages/ComputeAdminInstancesPage';
+import { ComputeAdminInstanceDetailPage } from './pages/ComputeAdminInstanceDetailPage';
+import { ComputeAdminCreateInstancePage } from './pages/ComputeAdminCreateInstancePage';
+import { ComputeAdminInstanceTemplatesPage } from './pages/ComputeAdminInstanceTemplatesPage';
+import { ComputeAdminInstanceTemplateDetailPage } from './pages/ComputeAdminInstanceTemplateDetailPage';
+import { ComputeAdminCreateTemplatePage } from './pages/ComputeAdminCreateTemplatePage';
+import { ComputeAdminInstanceSnapshotsPage } from './pages/ComputeAdminInstanceSnapshotsPage';
+import { ComputeAdminInstanceSnapshotDetailPage } from './pages/ComputeAdminInstanceSnapshotDetailPage';
+import { ComputeAdminImagesPage } from './pages/ComputeAdminImagesPage';
+import { ComputeAdminImageDetailPage } from './pages/ComputeAdminImageDetailPage';
+import { ComputeAdminCreateImagePage } from './pages/ComputeAdminCreateImagePage';
+import { ComputeAdminFlavorsPage } from './pages/ComputeAdminFlavorsPage';
+import { ComputeAdminFlavorDetailPage } from './pages/ComputeAdminFlavorDetailPage';
+import { ComputeAdminCreateFlavorPage } from './pages/ComputeAdminCreateFlavorPage';
+import { ComputeAdminServerGroupsPage } from './pages/ComputeAdminServerGroupsPage';
+import { ComputeAdminServerGroupDetailPage } from './pages/ComputeAdminServerGroupDetailPage';
+import { ComputeAdminVolumesPage } from './pages/ComputeAdminVolumesPage';
+import { ComputeAdminVolumeDetailPage } from './pages/ComputeAdminVolumeDetailPage';
+import { ComputeAdminVolumeSnapshotsPage } from './pages/ComputeAdminVolumeSnapshotsPage';
+import { ComputeAdminVolumeSnapshotDetailPage } from './pages/ComputeAdminVolumeSnapshotDetailPage';
+import { ComputeAdminVolumeBackupsPage } from './pages/ComputeAdminVolumeBackupsPage';
+import { ComputeAdminVolumeBackupDetailPage } from './pages/ComputeAdminVolumeBackupDetailPage';
+import { ComputeAdminNetworksPage } from './pages/ComputeAdminNetworksPage';
+import { ComputeAdminNetworkDetailPage } from './pages/ComputeAdminNetworkDetailPage';
+import { ComputeAdminSubnetDetailPage } from './pages/ComputeAdminSubnetDetailPage';
+import { ComputeAdminCreateNetworkPage } from './pages/ComputeAdminCreateNetworkPage';
+import { ComputeAdminRoutersPage } from './pages/ComputeAdminRoutersPage';
+import { ComputeAdminRouterDetailPage } from './pages/ComputeAdminRouterDetailPage';
+import { ComputeAdminPortsPage } from './pages/ComputeAdminPortsPage';
+import { ComputeAdminPortDetailPage } from './pages/ComputeAdminPortDetailPage';
+import { ComputeAdminFloatingIPsPage } from './pages/ComputeAdminFloatingIPsPage';
+import { ComputeAdminFloatingIPDetailPage } from './pages/ComputeAdminFloatingIPDetailPage';
+import { ComputeAdminSecurityGroupDetailPage } from './pages/ComputeAdminSecurityGroupDetailPage';
+import { ComputeAdminLoadBalancersPage } from './pages/ComputeAdminLoadBalancersPage';
+import { ComputeAdminLoadBalancerDetailPage } from './pages/ComputeAdminLoadBalancerDetailPage';
+import { ComputeAdminListenerDetailPage } from './pages/ComputeAdminListenerDetailPage';
+import { ComputeAdminPoolDetailPage } from './pages/ComputeAdminPoolDetailPage';
+import { ComputeAdminFirewallsPage } from './pages/ComputeAdminFirewallsPage';
+import { ComputeAdminFirewallDetailPage } from './pages/ComputeAdminFirewallDetailPage';
+import { ComputeAdminCreateFirewallRulePage } from './pages/ComputeAdminCreateFirewallRulePage';
+import { ComputeAdminCertificatesPage } from './pages/ComputeAdminCertificatesPage';
+import { ComputeAdminCertificateDetailPage } from './pages/ComputeAdminCertificateDetailPage';
+import { ComputeAdminHostAggregatesPage } from './pages/ComputeAdminHostAggregatesPage';
+import { ComputeAdminBareMetalNodesPage } from './pages/ComputeAdminBareMetalNodesPage';
+import { ComputeAdminBareMetalDetailPage } from './pages/ComputeAdminBareMetalDetailPage';
+import { ComputeAdminVolumeTypesPage } from './pages/ComputeAdminVolumeTypesPage';
+import { ComputeAdminTenantsPage } from './pages/ComputeAdminTenantsPage';
+import { ComputeAdminTenantDetailPage } from './pages/ComputeAdminTenantDetailPage';
+import { ComputeAdminMetadataDefinitionsPage } from './pages/ComputeAdminMetadataDefinitionsPage';
+import { ComputeAdminMetadataDefinitionDetailPage } from './pages/ComputeAdminMetadataDefinitionDetailPage';
+import { ComputeAdminPhysicalNodesPage } from './pages/ComputeAdminPhysicalNodesPage';
+import { ComputeAdminL7PolicyDetailPage } from './pages/ComputeAdminL7PolicyDetailPage';
+import { ComputeAdminSecurityGroupsPage } from './pages/ComputeAdminSecurityGroupsPage';
+import { ComputeAdminVolumeTypeDetailPage } from './pages/ComputeAdminVolumeTypeDetailPage';
+import { ComputeAdminQoSSpecDetailPage } from './pages/ComputeAdminQoSSpecDetailPage';
+import { ComputeAdminFirewallPolicyDetailPage } from './pages/ComputeAdminFirewallPolicyDetailPage';
+import { ComputeAdminFirewallRuleDetailPage } from './pages/ComputeAdminFirewallRuleDetailPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -421,6 +483,78 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="dns-zones" element={<ComputeDNSZonesPage />} />
           <Route path="backup-policies" element={<ComputeBackupPoliciesPage />} />
           <Route path="scheduled-tasks" element={<ComputeScheduledTasksPage />} />
+        </Route>
+        <Route path="/compute-admin" element={<ComputeAdminLayout />}>
+          <Route index element={<ComputeAdminHomePage />} />
+          <Route path="instances" element={<ComputeAdminInstancesPage />} />
+          <Route path="instances/create" element={<ComputeAdminCreateInstancePage />} />
+          <Route path="instances/:id" element={<ComputeAdminInstanceDetailPage />} />
+          <Route path="console/:instanceId" element={<ComputeAdminConsolePage />} />
+          <Route path="instance-templates" element={<ComputeAdminInstanceTemplatesPage />} />
+          <Route path="instance-templates/create" element={<ComputeAdminCreateTemplatePage />} />
+          <Route
+            path="instance-templates/:id"
+            element={<ComputeAdminInstanceTemplateDetailPage />}
+          />
+          <Route path="instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
+          <Route
+            path="instance-snapshots/:id"
+            element={<ComputeAdminInstanceSnapshotDetailPage />}
+          />
+          <Route path="images" element={<ComputeAdminImagesPage />} />
+          <Route path="images/create" element={<ComputeAdminCreateImagePage />} />
+          <Route path="images/:id" element={<ComputeAdminImageDetailPage />} />
+          <Route path="flavors" element={<ComputeAdminFlavorsPage />} />
+          <Route path="flavors/create" element={<ComputeAdminCreateFlavorPage />} />
+          <Route path="flavors/:id" element={<ComputeAdminFlavorDetailPage />} />
+          <Route path="server-groups" element={<ComputeAdminServerGroupsPage />} />
+          <Route path="server-groups/:id" element={<ComputeAdminServerGroupDetailPage />} />
+          <Route path="host-aggregates" element={<ComputeAdminHostAggregatesPage />} />
+          <Route path="bare-metal-nodes" element={<ComputeAdminBareMetalNodesPage />} />
+          <Route path="bare-metal-nodes/:id" element={<ComputeAdminBareMetalDetailPage />} />
+          <Route path="volumes" element={<ComputeAdminVolumesPage />} />
+          <Route path="volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
+          <Route path="volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />
+          <Route path="volume-snapshots/:id" element={<ComputeAdminVolumeSnapshotDetailPage />} />
+          <Route path="volume-backups" element={<ComputeAdminVolumeBackupsPage />} />
+          <Route path="volume-backups/:id" element={<ComputeAdminVolumeBackupDetailPage />} />
+          <Route path="volume-types" element={<ComputeAdminVolumeTypesPage />} />
+          <Route path="volume-types/:id" element={<ComputeAdminVolumeTypeDetailPage />} />
+          <Route path="qos-specs/:id" element={<ComputeAdminQoSSpecDetailPage />} />
+          <Route path="networks" element={<ComputeAdminNetworksPage />} />
+          <Route path="networks/create" element={<ComputeAdminCreateNetworkPage />} />
+          <Route path="networks/:id" element={<ComputeAdminNetworkDetailPage />} />
+          <Route path="subnets/:id" element={<ComputeAdminSubnetDetailPage />} />
+          <Route path="routers" element={<ComputeAdminRoutersPage />} />
+          <Route path="routers/:id" element={<ComputeAdminRouterDetailPage />} />
+          <Route path="ports" element={<ComputeAdminPortsPage />} />
+          <Route path="ports/:id" element={<ComputeAdminPortDetailPage />} />
+          <Route path="floating-ips" element={<ComputeAdminFloatingIPsPage />} />
+          <Route path="floating-ips/:id" element={<ComputeAdminFloatingIPDetailPage />} />
+          <Route path="security-groups" element={<ComputeAdminSecurityGroupsPage />} />
+          <Route path="security-groups/:id" element={<ComputeAdminSecurityGroupDetailPage />} />
+          <Route path="load-balancers" element={<ComputeAdminLoadBalancersPage />} />
+          <Route path="load-balancers/:id" element={<ComputeAdminLoadBalancerDetailPage />} />
+          <Route path="listeners/:id" element={<ComputeAdminListenerDetailPage />} />
+          <Route path="pools/:id" element={<ComputeAdminPoolDetailPage />} />
+          <Route path="l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />
+          <Route path="firewall" element={<ComputeAdminFirewallsPage />} />
+          <Route path="firewall/create-rule" element={<ComputeAdminCreateFirewallRulePage />} />
+          <Route path="firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
+          <Route path="firewall-policies/:id" element={<ComputeAdminFirewallPolicyDetailPage />} />
+          <Route path="firewall-rules/:id" element={<ComputeAdminFirewallRuleDetailPage />} />
+          <Route path="certificates" element={<ComputeAdminCertificatesPage />} />
+          <Route path="certificates/:id" element={<ComputeAdminCertificateDetailPage />} />
+          <Route path="tenants" element={<ComputeAdminTenantsPage />} />
+          <Route path="tenants/:id" element={<ComputeAdminTenantDetailPage />} />
+          <Route path="metadata-definition" element={<ComputeAdminMetadataDefinitionsPage />} />
+          <Route
+            path="metadata-definition/:id"
+            element={<ComputeAdminMetadataDefinitionDetailPage />}
+          />
+          <Route path="physical-nodes" element={<ComputeAdminPhysicalNodesPage />} />
+          <Route path="monitor-overview" element={<ComputeAdminMonitorOverviewPage />} />
+          <Route path="topology" element={<ComputeAdminTopologyPage />} />
         </Route>
         <Route path="/design" element={<DesignLayout />}>
           <Route index element={<DesignOverviewPage />} />
