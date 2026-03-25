@@ -187,7 +187,7 @@ export function ContainerNamespacesPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'description', header: 'Description', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
@@ -219,7 +219,7 @@ export function ContainerNamespacesPage() {
         </ContextMenu.Root>
       </div>
 
-      <div className="flex items-center gap-2 min-h-[28px]">
+      <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <FilterSearchInput
             filterKeys={filterKeys}
@@ -228,17 +228,11 @@ export function ContainerNamespacesPage() {
             placeholder="Search namespaces by attributes"
             defaultFilterKey="name"
           />
-          <Button
-            appearance="outline"
-            variant="secondary"
-            size="sm"
-            aria-label="Download"
-            className="!p-0 !w-7 !h-7 !min-w-7"
-          >
-            <IconDownload size={12} stroke={1.5} />
+          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
+            <IconDownload size={12} />
           </Button>
         </div>
-        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+        <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
           <Button
             appearance="outline"
@@ -247,7 +241,7 @@ export function ContainerNamespacesPage() {
             disabled={!hasSelection}
             onClick={() => console.log('[Namespaces] Bulk Download YAML', selectedRows)}
           >
-            <IconDownload size={12} stroke={1.5} /> Download YAML
+            <IconDownload size={12} /> Download YAML
           </Button>
           <Button
             appearance="outline"
@@ -256,7 +250,7 @@ export function ContainerNamespacesPage() {
             disabled={!hasSelection}
             onClick={() => console.log('[Namespaces] Bulk Delete', selectedRows)}
           >
-            <IconTrash size={12} stroke={1.5} /> Delete
+            <IconTrash size={12} /> Delete
           </Button>
         </div>
       </div>
@@ -305,6 +299,8 @@ export function ContainerNamespacesPage() {
         onPageChange={setCurrentPage}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
+        onSettingClick={() => {}}
+        settingAriaLabel="Pagination settings"
       />
 
       <SelectableTable<NamespaceRow>
@@ -323,14 +319,18 @@ export function ContainerNamespacesPage() {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
             </Table.Td>
             <Table.Td rowData={row} column={c('name')}>
               <span
-                className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+                className="text-12 leading-18 font-medium text-primary cursor-pointer hover:underline truncate block min-w-0"
                 title={row.name}
                 onClick={(e) => {
                   e.stopPropagation();

@@ -11,8 +11,10 @@ import { Tabs, Tab } from '@shared/components/Tabs';
 import { Tooltip } from '@shared/components/Tooltip';
 import { Badge } from '@shared/components/Badge';
 import { Popover } from '@shared/components/Popover';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import { IconChevronDown, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconChevronDown, IconDotsCircleHorizontal, IconX } from '@tabler/icons-react';
 
 interface ServiceData {
   id: string;
@@ -206,23 +208,12 @@ const mockConditionsData: ConditionRow[] = [
   },
 ];
 
-const STATUS_COL_WIDTH = 88;
+const STATUS_COL_WIDTH = 120;
 const ACTION_COL_WIDTH = 72;
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
 function stripTableDate(value: string): string {
   return value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
-}
-
-function TabSectionCard({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-default)]">
-        <h6 className="text-heading-h6 m-0">{title}</h6>
-      </div>
-      <div className="p-4 flex flex-col gap-3 min-w-0">{children}</div>
-    </div>
-  );
 }
 
 function PodsTab({
@@ -235,19 +226,45 @@ function PodsTab({
   onExecuteShell: (n: string) => void;
 }) {
   const navigate = useNavigate();
+  const podFilterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'image', label: 'Image', type: 'input', placeholder: 'Enter image...' },
+    { key: 'ip', label: 'IP', type: 'input', placeholder: 'Enter IP...' },
+    { key: 'node', label: 'Node', type: 'input', placeholder: 'Enter node...' },
+    { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [podSearch, setPodSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredPods = pods.filter(
-    (p) =>
-      p.name.toLowerCase().includes(podSearch.toLowerCase()) ||
-      p.image.toLowerCase().includes(podSearch.toLowerCase()) ||
-      p.node.toLowerCase().includes(podSearch.toLowerCase())
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredPods = useMemo(
+    () =>
+      pods.filter((p) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof PodRow;
+          return String(p[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [pods, appliedFilters]
   );
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
     { key: 'ready', header: 'Ready', sortable: true },
@@ -259,14 +276,35 @@ function PodsTab({
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Pods">
-      <input
-        type="search"
-        value={podSearch}
-        onChange={(e) => setPodSearch(e.target.value)}
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Pods</h3>
+      <FilterSearchInput
+        filterKeys={podFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search pods by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="name"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredPods.length}
         size={10}
@@ -296,7 +334,11 @@ function PodsTab({
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -373,20 +415,45 @@ function PodsTab({
           </Table.Tr>
         ))}
       </SelectableTable>
-    </TabSectionCard>
+    </div>
   );
 }
 
 function PortsTab({ ports }: { ports: PortRow[] }) {
+  const portFilterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'port', label: 'Port', type: 'input', placeholder: 'Enter port...' },
+    { key: 'protocol', label: 'Protocol', type: 'input', placeholder: 'Enter protocol...' },
+    { key: 'target', label: 'Target', type: 'input', placeholder: 'Enter target...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [portSearch, setPortSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredPorts = ports.filter(
-    (port) =>
-      port.name.toLowerCase().includes(portSearch.toLowerCase()) ||
-      port.protocol.toLowerCase().includes(portSearch.toLowerCase()) ||
-      String(port.port).includes(portSearch)
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredPorts = useMemo(
+    () =>
+      ports.filter((port) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof PortRow;
+          return String(port[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [ports, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name', sortable: true },
@@ -398,14 +465,35 @@ function PortsTab({ ports }: { ports: PortRow[] }) {
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Ports">
-      <input
-        type="search"
-        value={portSearch}
-        onChange={(e) => setPortSearch(e.target.value)}
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Ports</h3>
+      <FilterSearchInput
+        filterKeys={portFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search ports by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="name"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredPorts.length}
         size={10}
@@ -454,19 +542,43 @@ function PortsTab({ ports }: { ports: PortRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
 }
 
 function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
+  const selectorFilterKeys: FilterKey[] = [
+    { key: 'key', label: 'Key', type: 'input', placeholder: 'Enter key...' },
+    { key: 'value', label: 'Value', type: 'input', placeholder: 'Enter value...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectorSearch, setSelectorSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredSelectors = selectors.filter(
-    (sel) =>
-      sel.key.toLowerCase().includes(selectorSearch.toLowerCase()) ||
-      sel.value.toLowerCase().includes(selectorSearch.toLowerCase())
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredSelectors = useMemo(
+    () =>
+      selectors.filter((sel) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof SelectorRow;
+          return String(sel[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [selectors, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'key', header: 'Key', sortable: true },
@@ -474,14 +586,35 @@ function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Selectors">
-      <input
-        type="search"
-        value={selectorSearch}
-        onChange={(e) => setSelectorSearch(e.target.value)}
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Selectors</h3>
+      <FilterSearchInput
+        filterKeys={selectorFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search selectors by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="key"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredSelectors.length}
         size={10}
@@ -512,21 +645,45 @@ function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
 }
 
 function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
+  const conditionFilterKeys: FilterKey[] = [
+    { key: 'type', label: 'Condition', type: 'input', placeholder: 'Enter condition...' },
+    { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+    { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+    { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [conditionSearch, setConditionSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredConditions = conditions.filter(
-    (cond) =>
-      cond.type.toLowerCase().includes(conditionSearch.toLowerCase()) ||
-      cond.status.toLowerCase().includes(conditionSearch.toLowerCase()) ||
-      cond.message.toLowerCase().includes(conditionSearch.toLowerCase()) ||
-      cond.reason.toLowerCase().includes(conditionSearch.toLowerCase())
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredConditions = useMemo(
+    () =>
+      conditions.filter((cond) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof ConditionRow;
+          return String(cond[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [conditions, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'type', header: 'Condition', sortable: true },
@@ -536,14 +693,35 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Conditions">
-      <input
-        type="search"
-        value={conditionSearch}
-        onChange={(e) => setConditionSearch(e.target.value)}
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Conditions</h3>
+      <FilterSearchInput
+        filterKeys={conditionFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search conditions by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="type"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredConditions.length}
         size={10}
@@ -582,8 +760,60 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
+}
+
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
+        <div className="flex items-center gap-1 min-w-0 w-full">
+          {entries.slice(0, 1).map(([key, val]) => (
+            <Badge
+              key={key}
+              theme="white"
+              size="sm"
+              className="min-w-0 truncate justify-start text-left"
+            >
+              {`${key}: ${val}`}
+            </Badge>
+          ))}
+          {entries.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
+                    All {title.toLowerCase()} ({entries.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {entries.map(([k, v]) => (
+                      <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">{`${k}: ${v}`}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                +{entries.length - 1}
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+  };
 }
 
 export function ContainerServiceDetailPage() {
@@ -609,7 +839,11 @@ export function ContainerServiceDetailPage() {
             content={service.status === 'Running' ? 'Active' : service.status}
             direction="top"
           >
-            <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+            <Badge
+              theme="white"
+              size="sm"
+              className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+            >
               <span className="truncate">
                 {service.status === 'Running' ? 'Active' : service.status}
               </span>
@@ -644,6 +878,8 @@ export function ContainerServiceDetailPage() {
         showCopyButton: true,
         copyText: service.externalIP,
       },
+      makeLabelAnnotationInfoField('Labels', Object.entries(service.labels)),
+      makeLabelAnnotationInfoField('Annotations', Object.entries(service.annotations)),
     ],
     [service]
   );
@@ -672,9 +908,6 @@ export function ContainerServiceDetailPage() {
     </ContextMenu.Root>
   );
 
-  const labelKeys = Object.keys(service.labels);
-  const annKeys = Object.keys(service.annotations);
-
   return (
     <div className="flex flex-col gap-6 min-w-0">
       <DetailPageHeader
@@ -682,122 +915,22 @@ export function ContainerServiceDetailPage() {
         actions={moreActions}
         infoFields={infoFields}
       />
-      <div className="flex flex-wrap gap-3 w-full">
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Labels ({labelKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(service.labels)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >{`${key}: ${val}`}</Badge>
-                ))}
-              {labelKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[480px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All labels ({labelKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(service.labels).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{labelKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Annotations ({annKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(service.annotations)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >{`${key}: ${val}`}</Badge>
-                ))}
-              {annKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[480px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All annotations ({annKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(service.annotations).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{annKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="pods" label="Pods">
-          <div className="pt-6">
-            <PodsTab
-              pods={mockPodsData}
-              onViewLogs={handleViewLogs}
-              onExecuteShell={handleExecuteShell}
-            />
-          </div>
+          <PodsTab
+            pods={mockPodsData}
+            onViewLogs={handleViewLogs}
+            onExecuteShell={handleExecuteShell}
+          />
         </Tab>
         <Tab id="ports" label="Ports">
-          <div className="pt-6">
-            <PortsTab ports={mockPortsData} />
-          </div>
+          <PortsTab ports={mockPortsData} />
         </Tab>
         <Tab id="selectors" label="Selectors">
-          <div className="pt-6">
-            <SelectorsTab selectors={mockSelectorsData} />
-          </div>
+          <SelectorsTab selectors={mockSelectorsData} />
         </Tab>
         <Tab id="conditions" label="Conditions">
-          <div className="pt-6">
-            <ConditionsTab conditions={mockConditionsData} />
-          </div>
+          <ConditionsTab conditions={mockConditionsData} />
         </Tab>
       </Tabs>
     </div>

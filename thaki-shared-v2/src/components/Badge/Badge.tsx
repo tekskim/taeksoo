@@ -54,7 +54,7 @@ const Badge = ({
   return (
     <span className={cn(badgeVariants({ size, theme, type }), className)} {...props}>
       {leftIcon && renderIcon(leftIcon)}
-      <span className="flex items-center">{children}</span>
+      <span className="flex items-center min-w-0">{children}</span>
       {rightIcon && renderIcon(rightIcon)}
     </span>
   );
