@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -13,6 +13,7 @@ import { Tooltip } from '@shared/components/Tooltip';
 import { Badge } from '@shared/components/Badge';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import { IconTrash, IconDownload, IconRouter, IconCube, IconServer } from '@tabler/icons-react';
+import { ActionModal } from '@shared/components/ActionModal';
 
 interface FirewallDetail {
   id: string;
@@ -122,6 +123,7 @@ const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline n
 
 export function ComputeFirewallDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -136,6 +138,7 @@ export function ComputeFirewallDetailPage() {
   const portsPerPage = 10;
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const filteredPorts = useMemo(() => {
     if (!portSearchTerm) return mockPorts;
@@ -183,7 +186,12 @@ export function ComputeFirewallDetailPage() {
       <DetailPageHeader
         title={firewall.name}
         actions={
-          <Button variant="secondary" appearance="outline" size="sm">
+          <Button
+            variant="secondary"
+            appearance="outline"
+            size="sm"
+            onClick={() => setDeleteModalOpen(true)}
+          >
             <IconTrash size={12} stroke={1.5} /> Delete
           </Button>
         }
@@ -351,6 +359,22 @@ export function ComputeFirewallDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete firewall',
+          subtitle: `Are you sure you want to delete "${firewall.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Firewall] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/firewalls');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
+      />
     </div>
   );
 }

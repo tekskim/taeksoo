@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import { Button } from '@shared/components/Button';
@@ -138,6 +138,7 @@ const RuleMenuTrigger = ({ toggle }: { toggle: () => void }) => (
 );
 
 export function ComputeSecurityGroupDetailPage() {
+  const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
   const [createRuleOpen, setCreateRuleOpen] = useState(false);
   const [allowedPairOpen, setAllowedPairOpen] = useState(false);
@@ -158,6 +159,7 @@ export function ComputeSecurityGroupDetailPage() {
   const [ruleCurrentPage, setRuleCurrentPage] = useState(1);
   const rulesPerPage = 10;
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [headerDeleteModalOpen, setHeaderDeleteModalOpen] = useState(false);
   const [ruleToDelete, setRuleToDelete] = useState<SecurityGroupRule | null>(null);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
@@ -234,7 +236,12 @@ export function ComputeSecurityGroupDetailPage() {
             >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setHeaderDeleteModalOpen(true)}
+            >
               <IconTrash size={12} stroke={1.5} /> Delete
             </Button>
           </div>
@@ -336,6 +343,22 @@ export function ComputeSecurityGroupDetailPage() {
           </Tab>
         </Tabs>
       </div>
+
+      <ActionModal
+        appeared={headerDeleteModalOpen}
+        actionConfig={{
+          title: 'Delete security group',
+          subtitle: `Are you sure you want to delete "${securityGroup.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Security group] Delete confirmed');
+          setHeaderDeleteModalOpen(false);
+          navigate('/compute/security-groups');
+        }}
+        onCancel={() => setHeaderDeleteModalOpen(false)}
+      />
 
       {deleteModalOpen && (
         <ActionModal

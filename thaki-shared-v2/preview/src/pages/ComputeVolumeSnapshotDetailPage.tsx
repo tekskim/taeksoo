@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ActionModal } from '@shared/components/ActionModal';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -83,6 +84,8 @@ function snapStatusVariant(s: SnapshotStatus): StatusVariant {
 
 export function ComputeVolumeSnapshotDetailPage() {
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -186,6 +189,21 @@ export function ComputeVolumeSnapshotDetailPage() {
         onClose={() => setEditOpen(false)}
         snapshotId={snapshot.id}
         initialData={{ name: snapshot.name, description: snapshot.description }}
+      />
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete volume snapshot',
+          subtitle: `Are you sure you want to delete "${snapshot.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volume snapshot] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/volume-snapshots');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

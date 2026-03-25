@@ -13,6 +13,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
@@ -233,8 +234,10 @@ export function ComputeInstanceSnapshotsPage() {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [createVolDrawerOpen, setCreateVolDrawerOpen] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<InstanceSnapshot | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
-  const [snapshots, setSnapshots] = useState(mockSnapshots);
+  const [snapshots] = useState(mockSnapshots);
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
@@ -268,17 +271,8 @@ export function ComputeInstanceSnapshotsPage() {
     setCurrentPage(1);
   }, []);
 
-  const handleBulkDelete = () => {
-    setSnapshots((prev) => prev.filter((s) => !selectedRows.includes(s.id)));
-    setSelectedRows([]);
-  };
-
-  const handleRowDelete = (row: InstanceSnapshot) => {
-    setSnapshots((prev) => prev.filter((s) => s.id !== row.id));
-  };
-
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'size', header: 'Size', sortable: true },
     { key: 'diskFormat', header: 'Disk format', sortable: true },
@@ -315,7 +309,7 @@ export function ComputeInstanceSnapshotsPage() {
           variant="muted"
           size="sm"
           disabled={!hasSelection}
-          onClick={handleBulkDelete}
+          onClick={() => setBulkDeleteOpen(true)}
         >
           <IconTrash size={12} /> Delete
         </Button>
@@ -458,7 +452,7 @@ export function ComputeInstanceSnapshotsPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => handleRowDelete(row)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -493,6 +487,35 @@ export function ComputeInstanceSnapshotsPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete instance snapshot',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Instance snapshots] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete instance snapshots',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} instance snapshots? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Instance snapshots] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -24,6 +24,7 @@ import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Badge } from '@shared/components/Badge';
+import { ActionModal } from '@shared/components/ActionModal';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import {
   IconUnlink,
@@ -161,6 +162,7 @@ const ListenerMenuTrigger = ({ toggle }: { toggle: () => void }) => (
 
 export function ComputeLoadBalancerDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -189,6 +191,8 @@ export function ComputeLoadBalancerDetailPage() {
     algorithm: string;
     protocol: string;
   } | null>(null);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [listenerSearchTerm, setListenerSearchTerm] = useState('');
   const [listenerCurrentPage, setListenerCurrentPage] = useState(1);
@@ -274,7 +278,12 @@ export function ComputeLoadBalancerDetailPage() {
             >
               <IconEdit size={12} stroke={1.5} /> Edit
             </Button>
-            <Button variant="secondary" appearance="outline" size="sm">
+            <Button
+              variant="secondary"
+              appearance="outline"
+              size="sm"
+              onClick={() => setDeleteModalOpen(true)}
+            >
               <IconTrash size={12} stroke={1.5} /> Delete
             </Button>
           </div>
@@ -559,6 +568,22 @@ export function ComputeLoadBalancerDetailPage() {
         isOpen={!!sniListener}
         onClose={() => setSniListener(null)}
         listenerName={sniListener?.name ?? ''}
+      />
+
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete load balancer',
+          subtitle: `Are you sure you want to delete "${loadBalancer.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Load balancer] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/load-balancers');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

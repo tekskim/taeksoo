@@ -2,11 +2,11 @@ import { cva } from 'class-variance-authority';
 
 export const tabContainerStyles = 'flex flex-col';
 
-export const tabContentStyles = 'flex-1 pt-6';
+export const tabContentStyles = 'flex-1';
 
 export const tabNoneStyles = 'hidden';
 
-export const tabChildrenStyles = 'pt-6';
+export const tabChildrenStyles = '';
 
 export const tabHeaderWrapperStyles = 'flex items-center relative w-full overflow-hidden';
 

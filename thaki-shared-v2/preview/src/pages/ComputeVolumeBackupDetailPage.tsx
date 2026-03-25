@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ActionModal } from '@shared/components/ActionModal';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -191,6 +192,8 @@ function backupStatusVariant(s: BackupStatus): StatusVariant {
 
 export function ComputeVolumeBackupDetailPage() {
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -288,6 +291,21 @@ export function ComputeVolumeBackupDetailPage() {
         onClose={() => setEditOpen(false)}
         backupId={backup.id}
         initialData={{ name: backup.name, description: '' }}
+      />
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete volume backup',
+          subtitle: `Are you sure you want to delete "${backup.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volume backup] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/volume-backups');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

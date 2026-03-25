@@ -15,6 +15,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Tooltip } from '@shared/components/Tooltip';
 import {
@@ -214,6 +215,8 @@ export function ComputeFloatingIPsPage() {
   const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [deleteTarget, setDeleteTarget] = useState<FloatingIP | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [sort, setSort] = useState<string>('');
   const [order, setOrder] = useState<SortOrder>('asc');
 
@@ -245,7 +248,7 @@ export function ComputeFloatingIPsPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'floatingIp', header: 'Floating IP', sortable: true },
     { key: 'associatedTo', header: 'Associated to' },
     { key: 'fixedIp', header: 'Fixed IP', sortable: true },
@@ -284,7 +287,13 @@ export function ComputeFloatingIPsPage() {
           </Button>
         </div>
         <div className="h-4 w-px bg-border" />
-        <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+        <Button
+          appearance="outline"
+          variant="muted"
+          size="sm"
+          disabled={!hasSelection}
+          onClick={() => setBulkDeleteOpen(true)}
+        >
           <IconUnlink size={12} stroke={1.5} /> Release
         </Button>
       </div>
@@ -464,7 +473,7 @@ export function ComputeFloatingIPsPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Release:', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Release
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -506,6 +515,35 @@ export function ComputeFloatingIPsPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Release floating IP',
+          subtitle: `Are you sure you want to release "${deleteTarget?.floatingIp}"? This action cannot be undone.`,
+          actionButtonText: 'Release',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Floating IP] Release confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Release floating IPs',
+          subtitle: `Are you sure you want to release ${selectedRows.length} floating IPs? This action cannot be undone.`,
+          actionButtonText: 'Release',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Floating IP] Bulk release confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

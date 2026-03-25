@@ -280,7 +280,7 @@ export function ComputeAdminNetworksPage() {
 
   const columns: TableColumn[] = useMemo(() => {
     const base: TableColumn[] = [
-      { key: 'status', header: 'Status', width: 80, align: 'center' },
+      { key: 'status', header: 'Status', width: 64, align: 'center' },
       { key: 'name', header: 'Name', sortable: true },
       { key: 'tenant', header: 'Tenant', sortable: true },
       { key: 'subnetCidr', header: 'Subnet CIDR' },

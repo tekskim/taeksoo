@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import { Button } from '@shared/components/Button';
@@ -11,6 +11,7 @@ import { FilterSearchInput } from '@shared/components/FilterSearch';
 import type { FilterKeyWithValue } from '@shared/components/FilterSearch';
 import { StatusIndicator } from '@shared/components/StatusIndicator';
 import { ContextMenu } from '@shared/components/ContextMenu';
+import { ActionModal } from '@shared/components/ActionModal';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
 import type { StatusVariant } from '@shared/components/StatusIndicator/StatusIndicator';
 import {
@@ -231,8 +232,10 @@ const ActionTrigger = ({ toggle }: { toggle: () => void }) => (
 
 export function ComputeServerGroupDetailPage() {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'instances';
 
@@ -450,6 +453,22 @@ export function ComputeServerGroupDetailPage() {
         onClose={() => setEditDrawerOpen(false)}
         serverGroupId={serverGroup.id}
         initialData={{ name: serverGroup.name, description: '' }}
+      />
+
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete server group',
+          subtitle: `Are you sure you want to delete "${serverGroup.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Server group] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/server-groups');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );

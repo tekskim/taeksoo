@@ -11,6 +11,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { Tooltip } from '@shared/components/Tooltip';
@@ -71,6 +72,11 @@ interface FirewallRule {
   enabled: boolean;
   createdAt: string;
 }
+
+type FirewallPageDeleteTarget =
+  | { kind: 'firewall'; item: Firewall }
+  | { kind: 'policy'; item: FirewallPolicy }
+  | { kind: 'rule'; item: FirewallRule };
 
 const { mockFirewalls, mockFirewallPolicies, mockFirewallRules } = (() => {
   const mockFirewalls: Firewall[] = Array.from({ length: 25 }, (_, i) => ({
@@ -234,6 +240,8 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 
 export function ComputeFirewallsPage() {
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<FirewallPageDeleteTarget | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -303,7 +311,7 @@ export function ComputeFirewallsPage() {
   };
 
   const fwColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'ingressPolicy', header: 'Ingress Policy', sortable: true },
     { key: 'egressPolicy', header: 'Egress Policy', sortable: true },
@@ -347,6 +355,36 @@ export function ComputeFirewallsPage() {
     setRulePage(1);
   }, []);
 
+  const bulkSelectedCount =
+    activeTab === 'firewalls'
+      ? selectedFirewalls.length
+      : activeTab === 'policies'
+        ? selectedPolicies.length
+        : selectedRules.length;
+
+  const deleteTitle =
+    deleteTarget?.kind === 'firewall'
+      ? 'Delete firewall'
+      : deleteTarget?.kind === 'policy'
+        ? 'Delete NACL policy'
+        : deleteTarget?.kind === 'rule'
+          ? 'Delete NACL rule'
+          : 'Delete';
+
+  const bulkDeleteTitle =
+    activeTab === 'firewalls'
+      ? 'Delete firewalls'
+      : activeTab === 'policies'
+        ? 'Delete NACL policies'
+        : 'Delete NACL rules';
+
+  const bulkDeleteResourcePhrase =
+    activeTab === 'firewalls'
+      ? 'firewalls'
+      : activeTab === 'policies'
+        ? 'NACL policies'
+        : 'NACL rules';
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between h-8">
@@ -388,6 +426,7 @@ export function ComputeFirewallsPage() {
                 variant="muted"
                 size="sm"
                 disabled={selectedFirewalls.length === 0}
+                onClick={() => setBulkDeleteOpen(true)}
               >
                 <IconTrash size={12} stroke={1.5} /> Delete
               </Button>
@@ -560,7 +599,7 @@ export function ComputeFirewallsPage() {
                         Manage ports
                       </ContextMenu.Item>
                       <ContextMenu.Item
-                        action={() => console.log('Delete firewall', row.id)}
+                        action={() => setDeleteTarget({ kind: 'firewall', item: row })}
                         danger
                       >
                         Delete
@@ -597,6 +636,7 @@ export function ComputeFirewallsPage() {
                 variant="muted"
                 size="sm"
                 disabled={selectedPolicies.length === 0}
+                onClick={() => setBulkDeleteOpen(true)}
               >
                 <IconTrash size={12} stroke={1.5} /> Delete
               </Button>
@@ -718,7 +758,10 @@ export function ComputeFirewallsPage() {
                       <ContextMenu.Item action={() => console.log('Manage rules', row.id)}>
                         Manage rules
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => console.log('Delete policy', row.id)} danger>
+                      <ContextMenu.Item
+                        action={() => setDeleteTarget({ kind: 'policy', item: row })}
+                        danger
+                      >
                         Delete
                       </ContextMenu.Item>
                     </ContextMenu.Root>
@@ -753,6 +796,7 @@ export function ComputeFirewallsPage() {
                 variant="muted"
                 size="sm"
                 disabled={selectedRules.length === 0}
+                onClick={() => setBulkDeleteOpen(true)}
               >
                 <IconTrash size={12} stroke={1.5} /> Delete
               </Button>
@@ -854,7 +898,10 @@ export function ComputeFirewallsPage() {
                       <ContextMenu.Item action={() => console.log('Edit rule', row.id)}>
                         Edit
                       </ContextMenu.Item>
-                      <ContextMenu.Item action={() => console.log('Delete rule', row.id)} danger>
+                      <ContextMenu.Item
+                        action={() => setDeleteTarget({ kind: 'rule', item: row })}
+                        danger
+                      >
                         Delete
                       </ContextMenu.Item>
                     </ContextMenu.Root>
@@ -869,6 +916,51 @@ export function ComputeFirewallsPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: deleteTitle,
+          subtitle: deleteTarget
+            ? `Are you sure you want to delete "${deleteTarget.item.name}"? This action cannot be undone.`
+            : '',
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          if (deleteTarget?.kind === 'firewall') {
+            console.log('[Firewall] Delete confirmed', deleteTarget.item.id);
+          } else if (deleteTarget?.kind === 'policy') {
+            console.log('[NACL policy] Delete confirmed', deleteTarget.item.id);
+          } else if (deleteTarget?.kind === 'rule') {
+            console.log('[NACL rule] Delete confirmed', deleteTarget.item.id);
+          }
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: bulkDeleteTitle,
+          subtitle: `Are you sure you want to delete ${bulkSelectedCount} ${bulkDeleteResourcePhrase}? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          if (activeTab === 'firewalls') {
+            console.log('[Firewall] Bulk delete confirmed', selectedFirewalls);
+            setSelectedFirewalls([]);
+          } else if (activeTab === 'policies') {
+            console.log('[NACL policy] Bulk delete confirmed', selectedPolicies);
+            setSelectedPolicies([]);
+          } else {
+            console.log('[NACL rule] Bulk delete confirmed', selectedRules);
+            setSelectedRules([]);
+          }
+          setBulkDeleteOpen(false);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

@@ -7,6 +7,10 @@ export const overlayStyles = cva(
       global: {
         true: 'fixed z-[var(--semantic-z-overlay-global,2002)]',
       },
+      appeared: {
+        true: 'pointer-events-auto',
+        false: 'pointer-events-none',
+      },
     },
   }
 );
@@ -75,18 +79,15 @@ export const overlayContentStyles = cva('absolute bg-surface shadow-lg', {
   },
 });
 
-export const overlayHeaderStyles = cva(
-  'flex flex-col items-stretch gap-2 p-4 pb-0',
-  {
-    variants: {
-      type: {
-        'drawer-horizontal': 'px-6 pt-4 pb-0 [&>:first-child]:self-start',
-        'drawer-vertical': '[&>:first-child]:self-end',
-        modal: 'mb-3',
-      },
+export const overlayHeaderStyles = cva('flex flex-col items-stretch gap-2 p-4 pb-0', {
+  variants: {
+    type: {
+      'drawer-horizontal': 'px-6 pt-4 pb-0 [&>:first-child]:self-start',
+      'drawer-vertical': '[&>:first-child]:self-end',
+      modal: 'mb-3',
     },
-  }
-);
+  },
+});
 
 // Title: 16px SemiBold, line-height 24px, text color
 export const overlayTitleStyles =
@@ -123,7 +124,6 @@ export const overlayModalButtonStyles = 'w-full py-3 px-6 text-14';
 export const overlayButtonBaseStyles =
   'min-w-[80px] w-[152px] py-2 px-3 rounded-[var(--primitive-radius-base6)] text-12 font-medium leading-16 transition-colors duration-200';
 
-export const overlayFooterWithButtonsStyles =
-  'flex items-center justify-center gap-2 py-4 px-6';
+export const overlayFooterWithButtonsStyles = 'flex items-center justify-center gap-2 py-4 px-6';
 
 export const overlayDrawerFooterBorderStyles = 'border-t border-border-subtle';

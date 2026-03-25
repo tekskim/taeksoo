@@ -38,6 +38,7 @@ import {
   WizardSectionStatusIcon,
   FormField,
   Popover,
+  Badge,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';

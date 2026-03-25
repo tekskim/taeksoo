@@ -250,7 +250,7 @@ export function ComputeAdminInstancesPage() {
   }, []);
 
   const vmColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'locked', header: 'Locked', width: 72, align: 'center' },
     { key: 'tenant', header: 'Tenant', sortable: true, width: 120 },
@@ -268,7 +268,7 @@ export function ComputeAdminInstancesPage() {
   ];
 
   const bmColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'ip', header: 'Fixed IP', sortable: true },
     { key: 'image', header: 'Image', sortable: true },

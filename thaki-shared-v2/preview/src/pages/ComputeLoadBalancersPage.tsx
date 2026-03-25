@@ -13,6 +13,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { Tooltip } from '@shared/components/Tooltip';
@@ -224,6 +225,8 @@ const VIEW_PREFERENCE_COLUMNS: ColumnPreference[] = [
 export function ComputeLoadBalancersPage() {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [associateFipDrawerOpen, setAssociateFipDrawerOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<LoadBalancer | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [menuTargetLb, setMenuTargetLb] = useState<LoadBalancer | null>(null);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
@@ -267,7 +270,7 @@ export function ComputeLoadBalancersPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'vipAddress', header: 'VIP Address', sortable: true },
     { key: 'ownedNetwork', header: 'Owned network', sortable: true },
@@ -307,7 +310,13 @@ export function ComputeLoadBalancersPage() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <Button
+            appearance="outline"
+            variant="muted"
+            size="sm"
+            disabled={!hasSelection}
+            onClick={() => setBulkDeleteOpen(true)}
+          >
             <IconTrash size={12} /> Delete
           </Button>
         </div>
@@ -523,7 +532,7 @@ export function ComputeLoadBalancersPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -555,6 +564,35 @@ export function ComputeLoadBalancersPage() {
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}
         columns={VIEW_PREFERENCE_COLUMNS}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete load balancer',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Load balancer] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete load balancers',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} load balancers? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Load balancer] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

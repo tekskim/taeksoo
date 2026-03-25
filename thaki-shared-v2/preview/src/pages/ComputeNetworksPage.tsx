@@ -13,6 +13,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { Popover } from '@shared/components/Popover';
@@ -221,6 +222,8 @@ export function ComputeNetworksPage() {
   const [editNetworkOpen, setEditNetworkOpen] = useState(false);
   const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Network | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -267,7 +270,7 @@ export function ComputeNetworksPage() {
 
   const columns: TableColumn[] = useMemo(() => {
     const base: TableColumn[] = [
-      { key: 'status', header: 'Status', width: 80, align: 'center' },
+      { key: 'status', header: 'Status', width: 64, align: 'center' },
       { key: 'name', header: 'Name', sortable: true },
       { key: 'subnetCidr', header: 'Subnet CIDR' },
       { key: 'external', header: 'External' },
@@ -342,7 +345,13 @@ export function ComputeNetworksPage() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+          <Button
+            appearance="outline"
+            variant="muted"
+            size="sm"
+            disabled={!hasSelection}
+            onClick={() => setBulkDeleteOpen(true)}
+          >
             <IconTrash size={12} /> Delete
           </Button>
         </div>
@@ -509,7 +518,7 @@ export function ComputeNetworksPage() {
                 >
                   Edit
                 </ContextMenu.Item>
-                <ContextMenu.Item action={() => console.log('Delete', row.id)} danger>
+                <ContextMenu.Item action={() => setDeleteTarget(row)} danger>
                   Delete
                 </ContextMenu.Item>
               </ContextMenu.Root>
@@ -546,6 +555,35 @@ export function ComputeNetworksPage() {
           setSelectedNetwork(null);
         }}
         networkName={selectedNetwork?.name}
+      />
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete network',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Networks] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete networks',
+          subtitle: `Are you sure you want to delete ${selectedRows.length} networks? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Networks] Bulk delete confirmed', selectedRows);
+          setBulkDeleteOpen(false);
+          setSelectedRows([]);
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
       />
     </div>
   );

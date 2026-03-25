@@ -26,6 +26,7 @@ import {
   ViewPreferencesDrawer,
   type ColumnPreference,
 } from '../drawers/common/ViewPreferencesDrawer';
+import { ActionModal } from '@shared/components/ActionModal';
 import { Title } from '@shared/components/Title';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { Tooltip } from '@shared/components/Tooltip';
@@ -148,6 +149,8 @@ export function ComputeInstancesPage() {
   const [rebuildOpen, setRebuildOpen] = useState(false);
   const [rescueOpen, setRescueOpen] = useState(false);
   const [liveMigrateOpen, setLiveMigrateOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<InstanceRow | null>(null);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
 
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'vm' | 'bare-metal'>('vm');
@@ -220,7 +223,7 @@ export function ComputeInstancesPage() {
   }, []);
 
   const vmColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'locked', header: 'Locked', width: 72, align: 'center' },
     { key: 'fixedIp', header: 'Fixed IP', sortable: true },
@@ -236,7 +239,7 @@ export function ComputeInstancesPage() {
   ];
 
   const bmColumns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 64, align: 'center' },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'ip', header: 'Fixed IP', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
@@ -338,12 +341,7 @@ export function ComputeInstancesPage() {
             variant="muted"
             size="sm"
             disabled={!hasSelection}
-            onClick={() =>
-              console.log(
-                '[Instances] Bulk Delete',
-                activeTab === 'vm' ? selectedVmRows : selectedBmRows
-              )
-            }
+            onClick={() => setBulkDeleteOpen(true)}
           >
             <IconTrash size={12} /> Delete
           </Button>
@@ -682,7 +680,7 @@ export function ComputeInstancesPage() {
                     <ContextMenu.Item action={() => logAction('Revert resize', instance)}>
                       Revert resize
                     </ContextMenu.Item>
-                    <ContextMenu.Item action={() => logAction('Delete', instance)} danger>
+                    <ContextMenu.Item action={() => setDeleteTarget(instance)} danger>
                       Delete
                     </ContextMenu.Item>
                   </ContextMenu.Root>
@@ -842,7 +840,7 @@ export function ComputeInstancesPage() {
                         Edit
                       </ContextMenu.Item>
                     </ContextMenu.SubItems>
-                    <ContextMenu.Item action={() => logAction('Delete', instance)} danger>
+                    <ContextMenu.Item action={() => setDeleteTarget(instance)} danger>
                       Delete
                     </ContextMenu.Item>
                   </ContextMenu.Root>
@@ -852,6 +850,42 @@ export function ComputeInstancesPage() {
           ))}
         </SelectableTable>
       )}
+      <ActionModal
+        appeared={!!deleteTarget}
+        actionConfig={{
+          title: 'Delete instance',
+          subtitle: `Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Instances] Delete confirmed', deleteTarget?.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
+      <ActionModal
+        appeared={bulkDeleteOpen}
+        actionConfig={{
+          title: 'Delete instances',
+          subtitle: `Are you sure you want to delete ${
+            activeTab === 'vm' ? selectedVmRows.length : selectedBmRows.length
+          } instances? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          const selected = activeTab === 'vm' ? selectedVmRows : selectedBmRows;
+          console.log('[Instances] Bulk delete confirmed', selected);
+          setBulkDeleteOpen(false);
+          if (activeTab === 'vm') {
+            setSelectedVmRows([]);
+          } else {
+            setSelectedBmRows([]);
+          }
+        }}
+        onCancel={() => setBulkDeleteOpen(false)}
+      />
       <ViewPreferencesDrawer
         isOpen={prefsOpen}
         onClose={() => setPrefsOpen(false)}

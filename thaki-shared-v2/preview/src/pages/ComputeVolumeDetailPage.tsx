@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ActionModal } from '@shared/components/ActionModal';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import SectionCard from '@shared/components/SectionCard/SectionCard';
@@ -314,6 +315,8 @@ export function ComputeVolumeDetailPage() {
   const [extendOpen, setExtendOpen] = useState(false);
   const [snapshotOpen, setSnapshotOpen] = useState(false);
   const [backupOpen, setBackupOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { id } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -441,7 +444,7 @@ export function ComputeVolumeDetailPage() {
           Update status
         </ContextMenu.Item>
         <ContextMenu.Item action={() => console.log('Edit')}>Edit</ContextMenu.Item>
-        <ContextMenu.Item action={() => console.log('Delete')} danger>
+        <ContextMenu.Item action={() => setDeleteModalOpen(true)} danger>
           Delete
         </ContextMenu.Item>
       </ContextMenu.Root>
@@ -767,6 +770,21 @@ export function ComputeVolumeDetailPage() {
         isOpen={backupOpen}
         onClose={() => setBackupOpen(false)}
         volumeName={volume.name}
+      />
+      <ActionModal
+        appeared={deleteModalOpen}
+        actionConfig={{
+          title: 'Delete volume',
+          subtitle: `Are you sure you want to delete "${volume.name}"? This action cannot be undone.`,
+          actionButtonText: 'Delete',
+          actionButtonVariant: 'error',
+        }}
+        onConfirm={() => {
+          console.log('[Volume] Delete confirmed');
+          setDeleteModalOpen(false);
+          navigate('/compute/volumes');
+        }}
+        onCancel={() => setDeleteModalOpen(false)}
       />
     </div>
   );
