@@ -235,7 +235,7 @@ const eventsColumns: TableColumn[] = [
   { key: 'name', header: 'Name', sortable: true },
   { key: 'firstSeen', header: 'First seen', sortable: true },
   { key: 'lastSeen', header: 'Last seen', sortable: true },
-  { key: 'count', header: 'Count', sortable: true, align: 'right' },
+  { key: 'count', header: 'Count', sortable: true },
 ];
 
 /* ----------------------------------------

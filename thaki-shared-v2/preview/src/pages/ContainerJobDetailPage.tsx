@@ -12,11 +12,14 @@ import { Tooltip } from '@shared/components/Tooltip';
 import { Badge } from '@shared/components/Badge';
 import { Popover } from '@shared/components/Popover';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import {
   IconChevronDown,
   IconDotsCircleHorizontal,
   IconDownload,
   IconTrash,
+  IconX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -204,10 +207,41 @@ function stripTableDate(value: string): string {
 function PodsTab({ pods, onViewLogs }: { pods: PodRow[]; onViewLogs: (podName: string) => void }) {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  const filterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'image', label: 'Image', type: 'input', placeholder: 'Enter image...' },
+    { key: 'ip', label: 'IP', type: 'input', placeholder: 'Enter IP...' },
+    { key: 'node', label: 'Node', type: 'input', placeholder: 'Enter node...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredRows = useMemo(
+    () =>
+      pods.filter((r) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof PodRow;
+          return String(r[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [pods, appliedFilters]
+  );
 
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: STATUS_COL_WIDTH },
@@ -231,12 +265,12 @@ function PodsTab({ pods, onViewLogs }: { pods: PodRow[]; onViewLogs: (podName: s
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text m-0">Pods</h3>
       <div className="flex flex-wrap items-center gap-2">
-        <input
-          type="search"
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search pods by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+          defaultFilterKey="name"
         />
         <div className="h-4 w-px bg-border shrink-0" />
         <div className="flex items-center gap-1">
@@ -260,8 +294,28 @@ function PodsTab({ pods, onViewLogs }: { pods: PodRow[]; onViewLogs: (podName: s
           </Button>
         </div>
       </div>
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
-        totalCount={pods.length}
+        totalCount={filteredRows.length}
         size={10}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -270,7 +324,7 @@ function PodsTab({ pods, onViewLogs }: { pods: PodRow[]; onViewLogs: (podName: s
       />
       <SelectableTable<PodRow>
         columns={columns}
-        rows={pods}
+        rows={filteredRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -280,7 +334,7 @@ function PodsTab({ pods, onViewLogs }: { pods: PodRow[]; onViewLogs: (podName: s
         onSortChange={handleSortChange}
         stickyLastColumn
       >
-        {pods.map((row) => (
+        {filteredRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
@@ -429,10 +483,41 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
 
 function RecentEventsTab({ events }: { events: EventRow[] }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  const filterKeys: FilterKey[] = [
+    { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+    { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'source', label: 'Source', type: 'input', placeholder: 'Enter source...' },
+  ];
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredRows = useMemo(
+    () =>
+      events.filter((r) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof EventRow;
+          return String(r[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [events, appliedFilters]
+  );
 
   const columns: TableColumn[] = [
     { key: 'lastSeen', header: 'Last seen', sortable: true },
@@ -452,12 +537,12 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text m-0">Recent events</h3>
       <div className="flex flex-wrap items-center gap-2">
-        <input
-          type="search"
+        <FilterSearchInput
+          filterKeys={filterKeys}
+          onFilterAdd={handleFilterAdd}
+          selectedFilters={appliedFilters}
           placeholder="Search events by attributes"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+          defaultFilterKey="name"
         />
         <div className="h-4 w-px bg-border shrink-0" />
         <div className="flex items-center gap-1">
@@ -481,8 +566,28 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
           </Button>
         </div>
       </div>
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
-        totalCount={events.length}
+        totalCount={filteredRows.length}
         size={10}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -491,7 +596,7 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
       />
       <SelectableTable<EventRow>
         columns={columns}
-        rows={events}
+        rows={filteredRows}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -504,7 +609,7 @@ function RecentEventsTab({ events }: { events: EventRow[] }) {
         }}
         stickyLastColumn
       >
-        {events.map((row) => (
+        {filteredRows.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('lastSeen')}>
               {row.lastSeen}

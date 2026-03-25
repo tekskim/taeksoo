@@ -239,7 +239,7 @@ export function ContainerEventsPage() {
     { key: 'source', header: 'Source', sortable: true },
     { key: 'message', header: 'Message', sortable: true },
     { key: 'firstSeen', header: 'First seen', sortable: true },
-    { key: 'count', header: 'Count', sortable: true, align: 'right' },
+    { key: 'count', header: 'Count', sortable: true },
     { key: 'actions', header: 'Action', width: 60, align: 'center' },
   ];
 
@@ -322,6 +322,8 @@ export function ContainerEventsPage() {
         onPageChange={setCurrentPage}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
+        onSettingClick={() => {}}
+        settingAriaLabel="Pagination settings"
       />
 
       <SelectableTable<EventRow>

@@ -16,11 +16,10 @@ import { Tabs, Tab } from '@shared/components/Tabs';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Pagination } from '@shared/components/Pagination';
-import { IconChevronDown, IconDownload, IconTrash } from '@tabler/icons-react';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
+import { IconChevronDown, IconDownload, IconTrash, IconX } from '@tabler/icons-react';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-
-const searchInputClass =
-  'h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 outline-none shrink-0 w-[min(100%,320px)]';
 
 /* ----------------------------------------
    Types
@@ -338,6 +337,8 @@ export function ContainerPVCDetailPage() {
   const activeTabId = searchParams.get('tab') || 'volume-claim';
   const setActiveTabId = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedEventKeys, setSelectedEventKeys] = useState<(string | number)[]>([]);
+  const [appliedEventFilters, setAppliedEventFilters] = useState<FilterKeyWithValue[]>([]);
+  const [eventsPage, setEventsPage] = useState(1);
   const [conditionsSort, setConditionsSort] = useState('');
   const [conditionsOrder, setConditionsOrder] = useState<SortOrder>('asc');
 
@@ -522,6 +523,39 @@ export function ContainerPVCDetailPage() {
     setConditionsSort(s ?? '');
     setConditionsOrder(o);
   }, []);
+
+  const eventFilterKeys: FilterKey[] = useMemo(
+    () => [
+      { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+      { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+      { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    ],
+    []
+  );
+
+  const handleEventFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedEventFilters((prev) => [...prev, filter]);
+    setEventsPage(1);
+  }, []);
+
+  const handleEventFilterRemove = useCallback((filterId: string) => {
+    setAppliedEventFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setEventsPage(1);
+  }, []);
+
+  const filteredEvents = useMemo(() => {
+    if (!pvcData) return [];
+    return pvcData.events.filter((r) =>
+      appliedEventFilters.every((f) => {
+        const fv = String(f.value ?? '').toLowerCase();
+        if (!fv) return true;
+        const key = f.key as keyof PVCEvent;
+        return String(r[key] ?? '')
+          .toLowerCase()
+          .includes(fv);
+      })
+    );
+  }, [pvcData, appliedEventFilters]);
 
   if (!pvcData) {
     return <div className="text-12 text-text-muted p-4">Loading...</div>;
@@ -770,11 +804,12 @@ export function ContainerPVCDetailPage() {
           <div className="flex flex-col gap-3">
             <h3 className="text-16 font-semibold leading-6 text-text">Recent events</h3>
             <div className="flex flex-wrap gap-2 items-center">
-              <input
-                type="search"
+              <FilterSearchInput
+                filterKeys={eventFilterKeys}
+                onFilterAdd={handleEventFilterAdd}
+                selectedFilters={appliedEventFilters}
                 placeholder="Search events by attributes"
-                className={searchInputClass}
-                aria-label="Search events by attributes"
+                defaultFilterKey="name"
               />
               <div className="w-px h-5 bg-border shrink-0" />
               <div className="flex items-center gap-1">
@@ -796,26 +831,46 @@ export function ContainerPVCDetailPage() {
                 </Button>
               </div>
             </div>
+            {appliedEventFilters.length > 0 && (
+              <div className="flex items-center gap-1 flex-wrap">
+                {appliedEventFilters.map((filter) => (
+                  <span
+                    key={filter.id}
+                    className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+                  >
+                    {filter.label}: {filter.displayValue ?? filter.value}
+                    <button
+                      type="button"
+                      className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                      onClick={() => handleEventFilterRemove(filter.id!)}
+                      aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                    >
+                      <IconX size={12} strokeWidth={2} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
             <Pagination
-              currentAt={1}
-              totalCount={pvcData.events.length}
+              currentAt={eventsPage}
+              totalCount={filteredEvents.length}
               size={10}
-              onPageChange={() => {}}
+              onPageChange={setEventsPage}
               totalCountLabel="items"
               selectedCount={selectedEventKeys.length}
               onSettingClick={() => {}}
               settingAriaLabel="Pagination settings"
             />
-            {pvcData.events.length > 0 ? (
+            {filteredEvents.length > 0 ? (
               <SelectableTable<PVCEvent>
                 columns={eventsColumns}
-                rows={pvcData.events}
+                rows={filteredEvents}
                 selectionType="checkbox"
                 selectedRows={selectedEventKeys}
                 onRowSelectionChange={setSelectedEventKeys}
                 getRowId={(row) => row.id}
               >
-                {pvcData.events.map((row) => (
+                {filteredEvents.map((row) => (
                   <Table.Tr key={row.id} rowData={row}>
                     <Table.Td rowData={row} column={cc(eventsColumns, 'lastSeen')}>
                       {row.lastSeen}

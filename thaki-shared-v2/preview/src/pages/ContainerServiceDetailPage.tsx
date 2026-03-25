@@ -11,8 +11,10 @@ import { Tabs, Tab } from '@shared/components/Tabs';
 import { Tooltip } from '@shared/components/Tooltip';
 import { Badge } from '@shared/components/Badge';
 import { Popover } from '@shared/components/Popover';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 import type { TableColumn, SortOrder } from '@shared/components/Table/Table.types';
-import { IconChevronDown, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconChevronDown, IconDotsCircleHorizontal, IconX } from '@tabler/icons-react';
 
 interface ServiceData {
   id: string;
@@ -224,16 +226,42 @@ function PodsTab({
   onExecuteShell: (n: string) => void;
 }) {
   const navigate = useNavigate();
+  const podFilterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'image', label: 'Image', type: 'input', placeholder: 'Enter image...' },
+    { key: 'ip', label: 'IP', type: 'input', placeholder: 'Enter IP...' },
+    { key: 'node', label: 'Node', type: 'input', placeholder: 'Enter node...' },
+    { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [podSearch, setPodSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredPods = pods.filter(
-    (p) =>
-      p.name.toLowerCase().includes(podSearch.toLowerCase()) ||
-      p.image.toLowerCase().includes(podSearch.toLowerCase()) ||
-      p.node.toLowerCase().includes(podSearch.toLowerCase())
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredPods = useMemo(
+    () =>
+      pods.filter((p) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof PodRow;
+          return String(p[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [pods, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'status', header: 'Status', width: STATUS_COL_WIDTH },
@@ -250,13 +278,33 @@ function PodsTab({
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text m-0">Pods</h3>
-      <input
-        type="search"
-        value={podSearch}
-        onChange={(e) => setPodSearch(e.target.value)}
+      <FilterSearchInput
+        filterKeys={podFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search pods by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="name"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredPods.length}
         size={10}
@@ -372,15 +420,40 @@ function PodsTab({
 }
 
 function PortsTab({ ports }: { ports: PortRow[] }) {
+  const portFilterKeys: FilterKey[] = [
+    { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+    { key: 'port', label: 'Port', type: 'input', placeholder: 'Enter port...' },
+    { key: 'protocol', label: 'Protocol', type: 'input', placeholder: 'Enter protocol...' },
+    { key: 'target', label: 'Target', type: 'input', placeholder: 'Enter target...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [portSearch, setPortSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredPorts = ports.filter(
-    (port) =>
-      port.name.toLowerCase().includes(portSearch.toLowerCase()) ||
-      port.protocol.toLowerCase().includes(portSearch.toLowerCase()) ||
-      String(port.port).includes(portSearch)
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredPorts = useMemo(
+    () =>
+      ports.filter((port) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof PortRow;
+          return String(port[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [ports, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name', sortable: true },
@@ -394,13 +467,33 @@ function PortsTab({ ports }: { ports: PortRow[] }) {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text m-0">Ports</h3>
-      <input
-        type="search"
-        value={portSearch}
-        onChange={(e) => setPortSearch(e.target.value)}
+      <FilterSearchInput
+        filterKeys={portFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search ports by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="name"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredPorts.length}
         size={10}
@@ -454,14 +547,38 @@ function PortsTab({ ports }: { ports: PortRow[] }) {
 }
 
 function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
+  const selectorFilterKeys: FilterKey[] = [
+    { key: 'key', label: 'Key', type: 'input', placeholder: 'Enter key...' },
+    { key: 'value', label: 'Value', type: 'input', placeholder: 'Enter value...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectorSearch, setSelectorSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredSelectors = selectors.filter(
-    (sel) =>
-      sel.key.toLowerCase().includes(selectorSearch.toLowerCase()) ||
-      sel.value.toLowerCase().includes(selectorSearch.toLowerCase())
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredSelectors = useMemo(
+    () =>
+      selectors.filter((sel) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof SelectorRow;
+          return String(sel[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [selectors, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'key', header: 'Key', sortable: true },
@@ -471,13 +588,33 @@ function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text m-0">Selectors</h3>
-      <input
-        type="search"
-        value={selectorSearch}
-        onChange={(e) => setSelectorSearch(e.target.value)}
+      <FilterSearchInput
+        filterKeys={selectorFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search selectors by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="key"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredSelectors.length}
         size={10}
@@ -513,16 +650,40 @@ function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
 }
 
 function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
+  const conditionFilterKeys: FilterKey[] = [
+    { key: 'type', label: 'Condition', type: 'input', placeholder: 'Enter condition...' },
+    { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+    { key: 'message', label: 'Message', type: 'input', placeholder: 'Enter message...' },
+    { key: 'reason', label: 'Reason', type: 'input', placeholder: 'Enter reason...' },
+  ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [conditionSearch, setConditionSearch] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
   const [sort, setSort] = useState('');
   const [order, setOrder] = useState<SortOrder>('asc');
-  const filteredConditions = conditions.filter(
-    (cond) =>
-      cond.type.toLowerCase().includes(conditionSearch.toLowerCase()) ||
-      cond.status.toLowerCase().includes(conditionSearch.toLowerCase()) ||
-      cond.message.toLowerCase().includes(conditionSearch.toLowerCase()) ||
-      cond.reason.toLowerCase().includes(conditionSearch.toLowerCase())
+
+  const handleFilterAdd = useCallback((filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  }, []);
+
+  const handleFilterRemove = useCallback((filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  }, []);
+
+  const filteredConditions = useMemo(
+    () =>
+      conditions.filter((cond) =>
+        appliedFilters.every((f) => {
+          const fv = String(f.value ?? '').toLowerCase();
+          if (!fv) return true;
+          const key = f.key as keyof ConditionRow;
+          return String(cond[key] ?? '')
+            .toLowerCase()
+            .includes(fv);
+        })
+      ),
+    [conditions, appliedFilters]
   );
   const columns: TableColumn[] = [
     { key: 'type', header: 'Condition', sortable: true },
@@ -534,13 +695,33 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-16 font-semibold leading-6 text-text m-0">Conditions</h3>
-      <input
-        type="search"
-        value={conditionSearch}
-        onChange={(e) => setConditionSearch(e.target.value)}
+      <FilterSearchInput
+        filterKeys={conditionFilterKeys}
+        onFilterAdd={handleFilterAdd}
+        selectedFilters={appliedFilters}
         placeholder="Search conditions by attributes"
-        className="h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 w-full max-w-[320px] outline-none"
+        defaultFilterKey="type"
       />
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
+          {appliedFilters.map((filter) => (
+            <span
+              key={filter.id}
+              className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+            >
+              {filter.label}: {filter.displayValue ?? filter.value}
+              <button
+                type="button"
+                className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                onClick={() => handleFilterRemove(filter.id!)}
+                aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+              >
+                <IconX size={12} strokeWidth={2} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
       <Pagination
         totalCount={filteredConditions.length}
         size={10}

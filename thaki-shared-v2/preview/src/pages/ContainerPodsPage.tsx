@@ -318,6 +318,8 @@ export function ContainerPodsPage() {
         onPageChange={setCurrentPage}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
+        onSettingClick={() => {}}
+        settingAriaLabel="Pagination settings"
       />
 
       <SelectableTable<PodRow>

@@ -274,6 +274,8 @@ export function ContainerClusterManagementPage() {
         onPageChange={setCurrentPage}
         totalCountLabel="items"
         selectedCount={selectedRows.length}
+        onSettingClick={() => {}}
+        settingAriaLabel="Pagination settings"
       />
 
       <SelectableTable<Cluster>

@@ -4,7 +4,7 @@ export const progressContainerStyles = 'flex flex-col gap-xs w-full m-0';
 
 export const progressHeaderStyles = 'flex justify-between items-center';
 
-export const progressLabelStyles = 'text-text text-14 font-medium leading-5';
+export const progressLabelStyles = 'text-text text-11 font-medium leading-16';
 
 export const progressPercentageStyles =
   'text-text text-12 font-normal leading-4 flex items-center gap-1';
