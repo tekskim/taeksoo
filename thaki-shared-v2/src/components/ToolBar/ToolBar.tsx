@@ -96,7 +96,7 @@ const ToolBar: React.FC<ToolBarProps> = memo(
               aria-label="Toggle sidebar"
               title="Toggle sidebar"
             >
-              <SidebarIcon size={16} variant="secondary" />
+              <SidebarIcon size={14} variant="secondary" />
             </button>
           )}
 

@@ -36,7 +36,14 @@ export const tabHeaderStyles = cva(['inline-flex items-stretch min-w-0', 'relati
   variants: {
     variant: {
       line: ['border-b border-border', 'gap-2'],
-      button: ['bg-surface-subtle', 'border border-border rounded-base6', 'p-1 gap-2', 'w-full'],
+      button: [
+        'bg-surface-subtle',
+        'shadow-[inset_0_0_0_1px_var(--semantic-color-borderSubtle)]',
+        'rounded-lg',
+        'p-1 gap-1',
+        'h-10',
+        '!w-fit',
+      ],
     },
     scrollable: {
       true: [
@@ -82,13 +89,7 @@ export const tabButtonStyles = cva(
           'text-text-subtle',
           'after:content-[""] after:relative after:w-full after:h-[2px] after:bg-transparent after:z-20',
         ],
-        button: [
-          'grow',
-          'rounded-base6',
-          'border border-transparent',
-          'bg-surface-subtle text-text',
-          'flex items-center justify-center gap-1',
-        ],
+        button: ['flex items-center justify-center', 'border-none', 'text-text'],
       },
       active: {
         true: '',
@@ -106,27 +107,26 @@ export const tabButtonStyles = cva(
         active: false,
         className: 'hover:text-text',
       },
-      // button sm: 1(border) + 3(py) + 16(leading) + 3(py) + 1(border) = 24px
       {
         variant: 'button',
         size: 'sm',
-        className: 'text-12 leading-4 py-[3px] px-2',
+        className: 'text-12 leading-4 h-8 px-3 min-w-[80px] rounded-md',
       },
-      // button md: 1(border) + 5(py) + 20(leading) + 5(py) + 1(border) = 32px
       {
         variant: 'button',
         size: 'md',
-        className: 'py-[5px] px-2.5 min-w-[100px]',
+        className: 'h-8 px-3 min-w-[80px] rounded-md',
       },
       {
         variant: 'button',
         active: true,
-        className: 'bg-surface text-primary border-border',
+        className:
+          'bg-surface shadow-[inset_0_0_0_1px_var(--semantic-color-border),0_1px_2px_0_rgba(0,0,0,0.05)] text-primary',
       },
       {
         variant: 'button',
         active: false,
-        className: 'hover:bg-border-subtle',
+        className: 'bg-transparent text-text hover:bg-surface',
       },
     ],
     defaultVariants: {

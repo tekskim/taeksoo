@@ -258,6 +258,8 @@ export function ComputePortDetailPage() {
     [id]
   );
 
+  const [allowedPairOpen, setAllowedPairOpen] = useState(false);
+
   const [fixedIpSearchTerm, setFixedIpSearchTerm] = useState('');
   const [fixedIpCurrentPage, setFixedIpCurrentPage] = useState(1);
   const [selectedFixedIPs] = useState<(string | number)[]>([]);
@@ -278,7 +280,6 @@ export function ComputePortDetailPage() {
 
   const [editPortOpen, setEditPortOpen] = useState(false);
   const [manageSgOpen, setManageSgOpen] = useState(false);
-  const [allowedPairOpen, setAllowedPairOpen] = useState(false);
 
   const [fSort, setFSort] = useState('');
   const [fOrder, setFOrder] = useState<SortOrder>('asc');
