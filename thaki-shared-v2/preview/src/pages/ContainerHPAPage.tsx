@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { Tooltip } from '@shared/components/Tooltip';
@@ -12,14 +13,13 @@ import {
   IconDotsCircleHorizontal,
   IconDownload,
   IconTrash,
+  IconX,
   IconChevronDown,
 } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
-
-const searchInputClass =
-  'h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 outline-none shrink-0 w-[min(100%,320px)]';
 
 interface HPARow {
   id: string;
@@ -81,13 +81,52 @@ const hpaData: HPARow[] = [
   },
 ];
 
+const filterKeys: FilterKey[] = [
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'namespace', label: 'Namespace', type: 'input', placeholder: 'Enter namespace...' },
+  { key: 'workload', label: 'Workload', type: 'input', placeholder: 'Enter workload...' },
+  { key: 'status', label: 'Status', type: 'input', placeholder: 'Enter status...' },
+];
+
 export function ContainerHPAPage() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
+
+  const rowsPerPage = 10;
+
+  const filteredRows = useMemo(
+    () =>
+      hpaData.filter((r) =>
+        appliedFilters.every((f) => {
+          const val = String(f.value ?? '').toLowerCase();
+          if (!val) return true;
+          return String(r[f.key as keyof HPARow] ?? '')
+            .toLowerCase()
+            .includes(val);
+        })
+      ),
+    [appliedFilters]
+  );
+
+  const paginatedData = useMemo(
+    () => filteredRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage),
+    [filteredRows, currentPage, rowsPerPage]
+  );
+
+  const handleFilterAdd = (filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  };
+
+  const handleFilterRemove = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'workload', header: 'Workload', sortable: true },
@@ -123,19 +162,20 @@ export function ContainerHPAPage() {
         </ContextMenu.Root>
       </div>
 
-      <div className="flex items-center gap-2 min-h-7 w-full flex-wrap">
+      <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
-          <input
-            type="search"
-            placeholder="Search horizontal pod autoscaler by attributes"
-            className={searchInputClass}
-            aria-label="Search horizontal pod autoscaler by attributes"
+          <FilterSearchInput
+            filterKeys={filterKeys}
+            onFilterAdd={handleFilterAdd}
+            selectedFilters={appliedFilters}
+            placeholder="Search horizontal pod autoscalers by attributes"
+            defaultFilterKey="name"
           />
           <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
             <IconDownload size={12} />
           </Button>
         </div>
-        <div className="h-4 w-px bg-border shrink-0" />
+        <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
           <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
             <IconDownload size={12} /> Download YAML
@@ -146,9 +186,46 @@ export function ContainerHPAPage() {
         </div>
       </div>
 
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-surface-subtle rounded-md">
+          <div className="flex items-center gap-1 flex-wrap">
+            {appliedFilters.map((filter) => (
+              <span
+                key={filter.id}
+                className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+              >
+                <span className="flex items-center gap-1">
+                  <span className="text-text">{filter.label}</span>
+                  <span className="text-border">|</span>
+                  <span className="text-text">{filter.displayValue ?? filter.value}</span>
+                </span>
+                <button
+                  type="button"
+                  className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                  onClick={() => handleFilterRemove(filter.id!)}
+                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                >
+                  <IconX size={12} strokeWidth={2} />
+                </button>
+              </span>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4"
+            onClick={() => {
+              setAppliedFilters([]);
+              setCurrentPage(1);
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
+
       <Pagination
-        totalCount={hpaData.length}
-        size={10}
+        totalCount={filteredRows.length}
+        size={rowsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
         onSettingClick={() => {}}
@@ -158,7 +235,7 @@ export function ContainerHPAPage() {
 
       <SelectableTable<HPARow>
         columns={columns}
-        rows={hpaData}
+        rows={paginatedData}
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
@@ -166,11 +243,15 @@ export function ContainerHPAPage() {
         stickyLastColumn
         onClickRow={(row) => navigate(`/container/hpa/${row.id}`)}
       >
-        {hpaData.map((row) => (
+        {paginatedData.map((row) => (
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>

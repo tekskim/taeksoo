@@ -18,7 +18,6 @@ import {
   IconDotsCircleHorizontal,
   IconDownload,
   IconTrash,
-  IconHelpCircle,
 } from '@tabler/icons-react';
 
 interface DeploymentData {
@@ -245,45 +244,16 @@ function stripTime(s: string): string {
   return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
 }
 
-function MetricCard({
-  label,
-  tooltip,
-  value,
-}: {
-  label: string;
-  tooltip: string;
-  value: ReactNode;
-}) {
-  return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-1.5">
-          <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
-          <Tooltip content={tooltip} direction="top">
-            <span className="inline-flex">
-              <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
-            </span>
-          </Tooltip>
-        </div>
-        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
-      </div>
-    </div>
-  );
-}
-
-function LabelsAnnotationsRow({
-  labels,
-  annotations,
-}: {
-  labels: Record<string, string>;
-  annotations: Record<string, string>;
-}) {
-  const renderKV = (entries: [string, string][], title: string) => (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <div className="flex flex-col gap-2">
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-          {title} ({entries.length})
-        </span>
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
         <div className="flex items-center gap-1 min-w-0 w-full">
           {entries.slice(0, 1).map(([key, val]) => (
             <Badge
@@ -303,7 +273,7 @@ function LabelsAnnotationsRow({
               hideDelay={100}
               content={
                 <div className="p-3 min-w-[120px] max-w-[320px]">
-                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
                     All {title.toLowerCase()} ({entries.length})
                   </div>
                   <div className="flex flex-col gap-1">
@@ -316,22 +286,14 @@ function LabelsAnnotationsRow({
                 </div>
               }
             >
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
                 +{entries.length - 1}
               </span>
             </Popover>
           )}
         </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="flex gap-3 w-full">
-      {renderKV(Object.entries(labels), 'Labels')}
-      {renderKV(Object.entries(annotations), 'Annotations')}
-    </div>
-  );
+      ),
+  };
 }
 
 export function ContainerDeploymentDetailPage() {
@@ -375,6 +337,12 @@ export function ContainerDeploymentDetailPage() {
       copyText: deployment.image,
     },
     { label: 'Created at', value: deployment.createdAt },
+    { label: 'Pod restarts', value: String(deployment.podRestarts) },
+    { label: 'Ready', value: `${deployment.ready.current}/${deployment.ready.desired}` },
+    { label: 'Up-to-date', value: String(deployment.upToDate) },
+    { label: 'Available', value: String(deployment.available) },
+    makeLabelAnnotationInfoField('Labels', Object.entries(deployment.labels)),
+    makeLabelAnnotationInfoField('Annotations', Object.entries(deployment.annotations)),
   ];
 
   return (
@@ -433,32 +401,6 @@ export function ContainerDeploymentDetailPage() {
         }
       />
 
-      <div className="flex flex-col gap-3">
-        <div className="flex gap-3 w-full">
-          <MetricCard
-            label="Pod restarts"
-            tooltip="Pod restarts indicates how many times a container within the pod has been restarted by Kubernetes."
-            value={deployment.podRestarts}
-          />
-          <MetricCard
-            label="Ready"
-            tooltip="'Ready' indicates how many Deployment pods are currently running and passing readiness checks."
-            value={`${deployment.ready.current}/${deployment.ready.desired}`}
-          />
-          <MetricCard
-            label="Up-to-date"
-            tooltip="Up-to-date shows how many pods have been updated to the Deployment's latest specification."
-            value={deployment.upToDate}
-          />
-          <MetricCard
-            label="Available"
-            tooltip="'Available' represents how many pods are fully ready and available to serve user requests."
-            value={deployment.available}
-          />
-        </div>
-        <LabelsAnnotationsRow labels={deployment.labels} annotations={deployment.annotations} />
-      </div>
-
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="pods" label="Pods">
           <PodsTab
@@ -496,7 +438,7 @@ function PodsTab({
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const pageSize = 10;
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
     { key: 'ready', header: 'Ready', sortable: true },
@@ -516,7 +458,7 @@ function PodsTab({
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Pods</h3>
       <div className="flex items-center gap-2 flex-wrap">
         <Input
           placeholder="Search pods by attributes"
@@ -568,7 +510,11 @@ function PodsTab({
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px]">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -649,7 +595,7 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const pageSize = 10;
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'target', header: 'Target', sortable: true },
     { key: 'selector', header: 'Selector', width: 160, sortable: true },
@@ -662,7 +608,7 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Services</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Services</h3>
       <Pagination
         totalCount={services.length}
         size={pageSize}
@@ -684,7 +630,11 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px]">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -764,9 +714,7 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Conditions</h3>
       <Pagination
         totalCount={conditions.length}
         size={pageSize}
@@ -819,9 +767,7 @@ function EventsTab({ events }: { events: EventRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent events
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Recent events</h3>
       <div className="flex items-center gap-2 flex-wrap">
         <Input
           placeholder="Search events by attributes"

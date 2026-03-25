@@ -228,7 +228,7 @@ export function ContainerEventsPage() {
   }, []);
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'lastSeen', header: 'Last seen', sortable: true },
@@ -251,7 +251,7 @@ export function ContainerEventsPage() {
         <Title title="Events" size="large" />
       </div>
 
-      <div className="flex items-center gap-2 min-h-[28px]">
+      <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <FilterSearchInput
             filterKeys={filterKeys}
@@ -260,17 +260,11 @@ export function ContainerEventsPage() {
             placeholder="Search events by attributes"
             defaultFilterKey="name"
           />
-          <Button
-            appearance="outline"
-            variant="secondary"
-            size="sm"
-            aria-label="Download"
-            className="!p-0 !w-7 !h-7 !min-w-7"
-          >
-            <IconDownload size={12} stroke={1.5} />
+          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
+            <IconDownload size={12} />
           </Button>
         </div>
-        <div className="w-px h-4 bg-[var(--color-border-default)]" />
+        <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
           <Button
             appearance="outline"
@@ -279,7 +273,7 @@ export function ContainerEventsPage() {
             disabled={!hasSelection}
             onClick={() => console.log('[Events] Bulk Download YAML', selectedRows)}
           >
-            <IconDownload size={12} stroke={1.5} /> Download YAML
+            <IconDownload size={12} /> Download YAML
           </Button>
         </div>
       </div>
@@ -346,7 +340,11 @@ export function ContainerEventsPage() {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>

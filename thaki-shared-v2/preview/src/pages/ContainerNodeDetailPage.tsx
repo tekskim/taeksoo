@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
@@ -276,12 +277,10 @@ function ConditionCard({
   tooltip: string;
 }) {
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 min-w-0">
+    <div className="flex-1 bg-surface-subtle rounded-lg px-4 py-3 min-w-0">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-0.5">
-          <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
-            {title}
-          </span>
+          <span className="text-11 font-medium leading-16 text-text">{title}</span>
           <Badge theme="white" size="sm" className="w-fit">
             {status}
           </Badge>
@@ -289,9 +288,9 @@ function ConditionCard({
         <Tooltip content={tooltip} direction="top">
           <button
             type="button"
-            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors border-none bg-transparent cursor-pointer"
+            className="p-1 hover:bg-surface-muted rounded transition-colors border-none bg-transparent cursor-pointer"
           >
-            <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+            <IconHelpCircle size={14} className="text-text-subtle" />
           </button>
         </Tooltip>
       </div>
@@ -312,7 +311,7 @@ function ResourceUsage({
 }) {
   const suffix = unit ? ` ${unit}` : '';
   return (
-    <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3 min-w-0">
+    <div className="flex-1 border border-border rounded-lg px-4 py-3 min-w-0">
       <ProgressBar
         label={`${label}${suffix}`}
         value={used}
@@ -331,7 +330,7 @@ function LabelWithTooltip({ label, tooltip }: { label: string; tooltip: string }
       {label}
       <Tooltip content={tooltip} direction="top">
         <button type="button" className="p-0 bg-transparent border-none cursor-pointer">
-          <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+          <IconHelpCircle size={14} className="text-text-subtle" />
         </button>
       </Tooltip>
     </span>
@@ -402,7 +401,7 @@ export function ContainerNodeDetailPage() {
                 hideDelay={100}
                 content={
                   <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
                       All Labels ({labelKeys.length})
                     </div>
                     <div className="flex flex-col gap-1">
@@ -415,7 +414,7 @@ export function ContainerNodeDetailPage() {
                   </div>
                 }
               >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
                   +{labelKeys.length - 1}
                 </span>
               </Popover>
@@ -450,7 +449,7 @@ export function ContainerNodeDetailPage() {
                 hideDelay={100}
                 content={
                   <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
                       All annotations ({annKeys.length})
                     </div>
                     <div className="flex flex-col gap-1">
@@ -463,7 +462,7 @@ export function ContainerNodeDetailPage() {
                   </div>
                 }
               >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
                   +{annKeys.length - 1}
                 </span>
               </Popover>
@@ -604,23 +603,18 @@ export function ContainerNodeDetailPage() {
           <PodsTabContent pods={mockPodsData} />
         </Tab>
         <Tab id="details" label="Details">
-          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-            <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
-              <h6 className="text-heading-h6 m-0">Basic information</h6>
-            </div>
-            <div className="divide-y divide-[var(--color-border-subtle)]">
+          <SectionCard>
+            <SectionCard.Header title="Basic information" />
+            <SectionCard.Content>
               {basicInfoFields.map((field) => (
-                <div key={field.label} className="flex px-4 py-3">
-                  <span className="w-[200px] shrink-0 text-label-sm text-[var(--color-text-subtle)]">
-                    <LabelWithTooltip label={field.label} tooltip={field.tooltip} />
-                  </span>
-                  <span className="text-body-md text-[var(--color-text-default)] min-w-0 break-all">
-                    {field.value}
-                  </span>
-                </div>
+                <SectionCard.DataRow
+                  key={field.label}
+                  label={<LabelWithTooltip label={field.label} tooltip={field.tooltip} />}
+                  value={field.value}
+                />
               ))}
-            </div>
-          </div>
+            </SectionCard.Content>
+          </SectionCard>
         </Tab>
         <Tab id="images" label="Images">
           <ImagesTabContent images={mockImagesData} />
@@ -644,7 +638,7 @@ function PodsTabContent({ pods }: { pods: PodRow[] }) {
   const [searchQuery, setSearchQuery] = useState('');
   const pageSize = 10;
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'namespace', header: 'Namespace', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
@@ -664,7 +658,7 @@ function PodsTabContent({ pods }: { pods: PodRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Pods</h3>
       <Input
         placeholder="Search pods by attributes"
         value={searchQuery}
@@ -684,14 +678,18 @@ function PodsTabContent({ pods }: { pods: PodRow[] }) {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px]">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
             </Table.Td>
             <Table.Td rowData={row} column={c('name')}>
               <span
-                className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+                className="text-primary font-medium cursor-pointer hover:underline truncate block min-w-0"
                 title={row.name}
               >
                 {row.name}
@@ -704,7 +702,7 @@ function PodsTabContent({ pods }: { pods: PodRow[] }) {
             <Table.Td rowData={row} column={c('ip')} />
             <Table.Td rowData={row} column={c('node')}>
               <span
-                className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+                className="text-primary font-medium cursor-pointer hover:underline truncate block min-w-0"
                 title={row.node}
               >
                 {row.node}
@@ -734,7 +732,7 @@ function ImagesTabContent({ images }: { images: ImageRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Images</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Images</h3>
       <Input
         placeholder="Search images by attributes"
         value={searchQuery}
@@ -774,7 +772,7 @@ function TaintsTabContent({ taints }: { taints: TaintRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Taints</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Taints</h3>
       <Pagination
         totalCount={taints.length}
         size={pageSize}
@@ -811,9 +809,7 @@ function NodeConditionsTabContent({ conditions }: { conditions: ConditionRow[] }
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Conditions</h3>
       <Pagination
         totalCount={conditions.length}
         size={pageSize}
@@ -862,9 +858,7 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent events
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Recent events</h3>
       <div className="flex items-center gap-2 flex-wrap">
         <Input
           placeholder="Search events by attributes"
@@ -873,7 +867,7 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
           size="sm"
           className="w-full max-w-[280px]"
         />
-        <div className="w-px h-5 bg-[var(--color-border-default)]" />
+        <div className="w-px h-5 bg-border" />
         <div className="flex items-center gap-1">
           <Button
             variant="muted"
@@ -923,18 +917,14 @@ function RecentEventsTabContent({ events }: { events: EventRow[] }) {
             <Table.Td rowData={row} column={c('firstSeen')} />
             <Table.Td rowData={row} column={c('count')} />
             <Table.Td rowData={row} column={c('name')}>
-              <span className="text-[var(--color-action-primary)]">{row.name}</span>
+              <span className="text-primary">{row.name}</span>
             </Table.Td>
             <Table.Td rowData={row} column={c('action')} preventClickPropagation>
               <button
                 type="button"
-                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors border-none bg-transparent cursor-pointer"
+                className="p-1 hover:bg-surface-muted rounded transition-colors border-none bg-transparent cursor-pointer"
               >
-                <IconDotsCircleHorizontal
-                  size={16}
-                  className="text-[var(--color-text-subtle)]"
-                  stroke={1.5}
-                />
+                <IconDotsCircleHorizontal size={16} className="text-text-subtle" stroke={1.5} />
               </button>
             </Table.Td>
           </Table.Tr>

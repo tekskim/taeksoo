@@ -1,10 +1,11 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Table } from '@shared/components/Table';
 import { SelectableTable } from '@shared/components/Table/SelectableTable';
 import { Pagination } from '@shared/components/Pagination';
 import { ContextMenu } from '@shared/components/ContextMenu';
+import { FilterSearchInput } from '@shared/components/FilterSearch';
 import { Title } from '@shared/components/Title';
 import { Badge } from '@shared/components/Badge';
 import { Tooltip } from '@shared/components/Tooltip';
@@ -17,19 +18,26 @@ import {
   IconCheck,
 } from '@tabler/icons-react';
 import type { TableColumn } from '@shared/components/Table/Table.types';
+import type { FilterKey, FilterKeyWithValue } from '@shared/components/FilterSearch';
 
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
-
-const searchInputClass =
-  'h-8 px-2.5 rounded-md border border-border-strong bg-surface-default text-12 outline-none shrink-0 w-[min(100%,320px)]';
 
 interface StorageClassRow {
   id: string;
   status: string;
   name: string;
   isDefault: boolean;
+  provisioner: string;
+  reclaimPolicy: string;
+  volumeBindingMode: string;
   createdAt: string;
   [key: string]: unknown;
+}
+
+function getRowFilterText(row: StorageClassRow, key: string): string {
+  const v = row[key as keyof StorageClassRow];
+  if (Array.isArray(v)) return v.join(' ');
+  return String(v ?? '');
 }
 
 const storageClassesData: StorageClassRow[] = [
@@ -38,6 +46,9 @@ const storageClassesData: StorageClassRow[] = [
     status: 'OK',
     name: 'ceph-rbd-high-performance-ssd-storage-class',
     isDefault: true,
+    provisioner: 'rbd.csi.ceph.com',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'Immediate',
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -45,6 +56,9 @@ const storageClassesData: StorageClassRow[] = [
     status: 'True',
     name: 'nfs-shared-persistent-general-purpose-storage',
     isDefault: false,
+    provisioner: 'kubernetes.io/nfs',
+    reclaimPolicy: 'Retain',
+    volumeBindingMode: 'WaitForFirstConsumer',
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
@@ -52,6 +66,9 @@ const storageClassesData: StorageClassRow[] = [
     status: 'None',
     name: 'ceph-rbd-block-storage-replicated-storage-class',
     isDefault: false,
+    provisioner: 'rbd.csi.ceph.com',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'WaitForFirstConsumer',
     createdAt: 'Nov 9, 2025 18:04:44',
   },
   {
@@ -59,6 +76,9 @@ const storageClassesData: StorageClassRow[] = [
     status: 'CreateContainerConfigError',
     name: 'nfs-client-provisioner-shared-storage-class',
     isDefault: false,
+    provisioner: 'cluster.local/nfs-client-nfs-client-provisioner',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'Immediate',
     createdAt: 'Nov 8, 2025 11:51:27',
   },
   {
@@ -66,7 +86,27 @@ const storageClassesData: StorageClassRow[] = [
     status: 'ImagePullBackOff',
     name: 'local-path-provisioner-single-node-storage',
     isDefault: false,
+    provisioner: 'rancher.io/local-path',
+    reclaimPolicy: 'Delete',
+    volumeBindingMode: 'WaitForFirstConsumer',
     createdAt: 'Nov 7, 2025 04:38:10',
+  },
+];
+
+const filterKeys: FilterKey[] = [
+  { key: 'name', label: 'Name', type: 'input', placeholder: 'Enter name...' },
+  { key: 'provisioner', label: 'Provisioner', type: 'input', placeholder: 'Enter provisioner...' },
+  {
+    key: 'reclaimPolicy',
+    label: 'Reclaim policy',
+    type: 'input',
+    placeholder: 'Enter reclaim policy...',
+  },
+  {
+    key: 'volumeBindingMode',
+    label: 'Volume binding mode',
+    type: 'input',
+    placeholder: 'Enter volume binding mode...',
   },
 ];
 
@@ -74,24 +114,39 @@ export function ContainerStorageClassesPage() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [appliedFilters, setAppliedFilters] = useState<FilterKeyWithValue[]>([]);
 
   const rowsPerPage = 10;
-  const paginatedData = useMemo(
-    () => storageClassesData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage),
-    [currentPage, rowsPerPage]
+
+  const filteredRows = useMemo(
+    () =>
+      storageClassesData.filter((r) =>
+        appliedFilters.every((f) => {
+          const val = String(f.value ?? '').toLowerCase();
+          if (!val) return true;
+          return getRowFilterText(r, f.key).toLowerCase().includes(val);
+        })
+      ),
+    [appliedFilters]
   );
 
-  const handleRemoveFilter = useCallback((index: number) => {
-    setFilters((prev) => prev.filter((_, i) => i !== index));
-  }, []);
+  const paginatedData = useMemo(
+    () => filteredRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage),
+    [filteredRows, currentPage, rowsPerPage]
+  );
 
-  const handleClearFilters = useCallback(() => setFilters([]), []);
+  const handleFilterAdd = (filter: FilterKeyWithValue) => {
+    setAppliedFilters((prev) => [...prev, filter]);
+    setCurrentPage(1);
+  };
+
+  const handleFilterRemove = (filterId: string) => {
+    setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
+    setCurrentPage(1);
+  };
 
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 80, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'isDefault', header: 'Default', sortable: true },
     { key: 'createdAt', header: 'Created at', sortable: true },
@@ -123,67 +178,69 @@ export function ContainerStorageClassesPage() {
         </ContextMenu.Root>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 min-h-7 w-full flex-wrap">
-          <div className="flex items-center gap-1">
-            <input
-              type="search"
-              placeholder="Search storage classes by attributes"
-              className={searchInputClass}
-              aria-label="Search storage classes by attributes"
-            />
-            <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
-              <IconDownload size={12} />
-            </Button>
-          </div>
-          <div className="h-4 w-px bg-border shrink-0" />
-          <div className="flex items-center gap-1">
-            <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-              <IconDownload size={12} /> Download YAML
-            </Button>
-            <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
-              <IconTrash size={12} /> Delete
-            </Button>
-          </div>
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <FilterSearchInput
+            filterKeys={filterKeys}
+            onFilterAdd={handleFilterAdd}
+            selectedFilters={appliedFilters}
+            placeholder="Search storage classes by attributes"
+            defaultFilterKey="name"
+          />
+          <Button appearance="outline" variant="secondary" size="sm" aria-label="Download">
+            <IconDownload size={12} />
+          </Button>
         </div>
-
-        {filters.length > 0 && (
-          <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-surface-subtle rounded-md">
-            <div className="flex items-center gap-1 flex-wrap">
-              {filters.map((filter, index) => (
-                <span
-                  key={`${filter.key}-${index}`}
-                  className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
-                >
-                  <span className="flex items-center gap-1">
-                    <span className="text-text">{filter.key}</span>
-                    <span className="text-border">|</span>
-                    <span className="text-text">{filter.value}</span>
-                  </span>
-                  <button
-                    type="button"
-                    className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
-                    onClick={() => handleRemoveFilter(index)}
-                    aria-label={`Remove ${filter.key}: ${filter.value}`}
-                  >
-                    <IconX size={12} strokeWidth={2} />
-                  </button>
-                </span>
-              ))}
-            </div>
-            <button
-              type="button"
-              className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4"
-              onClick={handleClearFilters}
-            >
-              Clear filters
-            </button>
-          </div>
-        )}
+        <div className="h-4 w-px bg-border" />
+        <div className="flex items-center gap-1">
+          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+            <IconDownload size={12} /> Download YAML
+          </Button>
+          <Button appearance="outline" variant="muted" size="sm" disabled={!hasSelection}>
+            <IconTrash size={12} /> Delete
+          </Button>
+        </div>
       </div>
 
+      {appliedFilters.length > 0 && (
+        <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-surface-subtle rounded-md">
+          <div className="flex items-center gap-1 flex-wrap">
+            {appliedFilters.map((filter) => (
+              <span
+                key={filter.id}
+                className="inline-flex items-center gap-1.5 pl-2 pr-1.5 py-1 rounded-md bg-surface text-text text-11 leading-16 font-medium shadow-[inset_0_0_0_1px] shadow-border"
+              >
+                <span className="flex items-center gap-1">
+                  <span className="text-text">{filter.label}</span>
+                  <span className="text-border">|</span>
+                  <span className="text-text">{filter.displayValue ?? filter.value}</span>
+                </span>
+                <button
+                  type="button"
+                  className="shrink-0 p-0.5 -mr-0.5 text-text hover:text-text-muted rounded-sm transition-colors duration-150 cursor-pointer bg-transparent border-none"
+                  onClick={() => handleFilterRemove(filter.id!)}
+                  aria-label={`Remove ${filter.label}: ${filter.displayValue ?? filter.value}`}
+                >
+                  <IconX size={12} strokeWidth={2} />
+                </button>
+              </span>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="text-11 leading-16 font-medium text-primary hover:text-primary-hover transition-colors cursor-pointer bg-transparent border-none whitespace-nowrap ml-4"
+            onClick={() => {
+              setAppliedFilters([]);
+              setCurrentPage(1);
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
+
       <Pagination
-        totalCount={storageClassesData.length}
+        totalCount={filteredRows.length}
         size={rowsPerPage}
         currentAt={currentPage}
         onPageChange={setCurrentPage}
@@ -206,7 +263,11 @@ export function ContainerStorageClassesPage() {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={columns[0]}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>

@@ -184,13 +184,16 @@ function stripTime(s: string): string {
   return s.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
 }
 
-function LabelAnnotationCard({ title, entries }: { title: string; entries: [string, string][] }) {
-  return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-      <div className="flex flex-col gap-2">
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-          {title} ({entries.length})
-        </span>
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
         <div className="flex items-center gap-1 min-w-0 w-full">
           {entries.slice(0, 1).map(([key, val]) => (
             <Badge
@@ -210,7 +213,7 @@ function LabelAnnotationCard({ title, entries }: { title: string; entries: [stri
               hideDelay={100}
               content={
                 <div className="p-3 min-w-[120px] max-w-[320px]">
-                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
                     All {title.toLowerCase()} ({entries.length})
                   </div>
                   <div className="flex flex-col gap-1">
@@ -223,15 +226,14 @@ function LabelAnnotationCard({ title, entries }: { title: string; entries: [stri
                 </div>
               }
             >
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
                 +{entries.length - 1}
               </span>
             </Popover>
           )}
         </div>
-      </div>
-    </div>
-  );
+      ),
+  };
 }
 
 export function ContainerDaemonSetDetailPage() {
@@ -245,6 +247,9 @@ export function ContainerDaemonSetDetailPage() {
   const daemonset = mockDaemonSetData[id] ?? mockDaemonSetData['1'];
 
   const logShell = (pod: string, kind: string) => console.log(`${kind}: ${pod}`);
+
+  const labelEntries = Object.entries(daemonset.labels);
+  const annEntries = Object.entries(daemonset.annotations);
 
   const infoFields: DetailPageHeaderInfoField[] = [
     {
@@ -275,10 +280,11 @@ export function ContainerDaemonSetDetailPage() {
       copyText: daemonset.image,
     },
     { label: 'Created at', value: daemonset.createdAt },
+    { label: 'Pod restarts', value: String(daemonset.podRestarts) },
+    { label: 'Ready', value: `${daemonset.ready.current}/${daemonset.ready.desired}` },
+    makeLabelAnnotationInfoField('Labels', labelEntries),
+    makeLabelAnnotationInfoField('Annotations', annEntries),
   ];
-
-  const labelEntries = Object.entries(daemonset.labels);
-  const annEntries = Object.entries(daemonset.annotations);
 
   return (
     <div className="flex flex-col gap-6">
@@ -330,27 +336,6 @@ export function ContainerDaemonSetDetailPage() {
         }
       />
 
-      <div className="flex gap-3 w-full">
-        <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Pod restarts</span>
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {daemonset.podRestarts}
-            </span>
-          </div>
-        </div>
-        <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">Ready</span>
-            <span className="text-body-md text-[var(--color-text-default)]">
-              {daemonset.ready.current}/{daemonset.ready.desired}
-            </span>
-          </div>
-        </div>
-        <LabelAnnotationCard title="Labels" entries={labelEntries} />
-        <LabelAnnotationCard title="Annotations" entries={annEntries} />
-      </div>
-
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="pods" label="Pods">
           <PodsTab
@@ -388,7 +373,7 @@ function PodsTab({
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const pageSize = 10;
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
     { key: 'ready', header: 'Ready', sortable: true },
@@ -408,7 +393,7 @@ function PodsTab({
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Pods</h3>
       <div className="flex items-center gap-2 flex-wrap">
         <Input
           placeholder="Search pods by attributes"
@@ -460,7 +445,11 @@ function PodsTab({
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px]">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -541,7 +530,7 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const pageSize = 10;
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: 88, align: 'center' },
+    { key: 'status', header: 'Status', width: 120 },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'target', header: 'Target', sortable: true },
     { key: 'selector', header: 'Selector', width: 160, sortable: true },
@@ -554,7 +543,7 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Services</h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Services</h3>
       <Pagination
         totalCount={services.length}
         size={pageSize}
@@ -576,7 +565,11 @@ function ServicesTab({ services }: { services: ServiceRow[] }) {
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px]">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -656,9 +649,7 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Conditions</h3>
       <Pagination
         totalCount={conditions.length}
         size={pageSize}
@@ -711,9 +702,7 @@ function EventsTab({ events }: { events: EventRow[] }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Recent events
-      </h3>
+      <h3 className="text-16 font-semibold leading-6 text-text">Recent events</h3>
       <div className="flex items-center gap-2 flex-wrap">
         <Input
           placeholder="Search events by attributes"

@@ -83,7 +83,7 @@ const POD_AFFINITY_NS_FILTER_KEYS: FilterKey[] = [
 ];
 
 const POD_AFFINITY_NS_COLUMNS: TableColumn[] = [
-  { key: 'status', header: 'Status', width: 72 },
+  { key: 'status', header: 'Status', width: 120 },
   { key: 'name', header: 'Name' },
   { key: 'description', header: 'Description' },
   { key: 'createdAt', header: 'Created at' },

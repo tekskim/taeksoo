@@ -206,23 +206,12 @@ const mockConditionsData: ConditionRow[] = [
   },
 ];
 
-const STATUS_COL_WIDTH = 88;
+const STATUS_COL_WIDTH = 120;
 const ACTION_COL_WIDTH = 72;
 const linkClass = 'text-12 leading-18 font-medium text-primary hover:underline no-underline';
 
 function stripTableDate(value: string): string {
   return value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
-}
-
-function TabSectionCard({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border-default)]">
-        <h6 className="text-heading-h6 m-0">{title}</h6>
-      </div>
-      <div className="p-4 flex flex-col gap-3 min-w-0">{children}</div>
-    </div>
-  );
 }
 
 function PodsTab({
@@ -247,7 +236,7 @@ function PodsTab({
       p.node.toLowerCase().includes(podSearch.toLowerCase())
   );
   const columns: TableColumn[] = [
-    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH, align: 'center' },
+    { key: 'status', header: 'Status', width: STATUS_COL_WIDTH },
     { key: 'name', header: 'Name', sortable: true },
     { key: 'image', header: 'Image', sortable: true },
     { key: 'ready', header: 'Ready', sortable: true },
@@ -259,7 +248,8 @@ function PodsTab({
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Pods">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Pods</h3>
       <input
         type="search"
         value={podSearch}
@@ -296,7 +286,11 @@ function PodsTab({
           <Table.Tr key={row.id} rowData={row}>
             <Table.Td rowData={row} column={c('status')}>
               <Tooltip content={row.status} direction="top">
-                <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+                <Badge
+                  theme="white"
+                  size="sm"
+                  className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+                >
                   <span className="truncate">{row.status}</span>
                 </Badge>
               </Tooltip>
@@ -373,7 +367,7 @@ function PodsTab({
           </Table.Tr>
         ))}
       </SelectableTable>
-    </TabSectionCard>
+    </div>
   );
 }
 
@@ -398,7 +392,8 @@ function PortsTab({ ports }: { ports: PortRow[] }) {
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Ports">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Ports</h3>
       <input
         type="search"
         value={portSearch}
@@ -454,7 +449,7 @@ function PortsTab({ ports }: { ports: PortRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
 }
 
@@ -474,7 +469,8 @@ function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Selectors">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Selectors</h3>
       <input
         type="search"
         value={selectorSearch}
@@ -512,7 +508,7 @@ function SelectorsTab({ selectors }: { selectors: SelectorRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
 }
 
@@ -536,7 +532,8 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
   ];
   const c = (k: string) => columns.find((col) => col.key === k)!;
   return (
-    <TabSectionCard title="Conditions">
+    <div className="flex flex-col gap-3">
+      <h3 className="text-16 font-semibold leading-6 text-text m-0">Conditions</h3>
       <input
         type="search"
         value={conditionSearch}
@@ -582,8 +579,60 @@ function ConditionsTab({ conditions }: { conditions: ConditionRow[] }) {
           </Table.Tr>
         ))}
       </Table>
-    </TabSectionCard>
+    </div>
   );
+}
+
+function makeLabelAnnotationInfoField(
+  title: string,
+  entries: [string, string][]
+): DetailPageHeaderInfoField {
+  return {
+    label: `${title} (${entries.length})`,
+    value:
+      entries.length === 0 ? (
+        '-'
+      ) : (
+        <div className="flex items-center gap-1 min-w-0 w-full">
+          {entries.slice(0, 1).map(([key, val]) => (
+            <Badge
+              key={key}
+              theme="white"
+              size="sm"
+              className="min-w-0 truncate justify-start text-left"
+            >
+              {`${key}: ${val}`}
+            </Badge>
+          ))}
+          {entries.length > 1 && (
+            <Popover
+              trigger="hover"
+              position="bottom"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[320px]">
+                  <div className="text-[10px] leading-[14px] font-medium text-text-muted mb-2">
+                    All {title.toLowerCase()} ({entries.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {entries.map(([k, v]) => (
+                      <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">{`${k}: ${v}`}</span>
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-[10px] leading-[14px] font-medium text-text-muted bg-surface-subtle hover:bg-surface-muted transition-colors h-5 cursor-pointer">
+                +{entries.length - 1}
+              </span>
+            </Popover>
+          )}
+        </div>
+      ),
+  };
 }
 
 export function ContainerServiceDetailPage() {
@@ -609,7 +658,11 @@ export function ContainerServiceDetailPage() {
             content={service.status === 'Running' ? 'Active' : service.status}
             direction="top"
           >
-            <Badge theme="white" size="sm" className="max-w-[80px] inline-flex min-w-0">
+            <Badge
+              theme="white"
+              size="sm"
+              className="max-w-[80px] inline-flex overflow-hidden min-w-0 !justify-start !text-left"
+            >
               <span className="truncate">
                 {service.status === 'Running' ? 'Active' : service.status}
               </span>
@@ -644,6 +697,8 @@ export function ContainerServiceDetailPage() {
         showCopyButton: true,
         copyText: service.externalIP,
       },
+      makeLabelAnnotationInfoField('Labels', Object.entries(service.labels)),
+      makeLabelAnnotationInfoField('Annotations', Object.entries(service.annotations)),
     ],
     [service]
   );
@@ -672,9 +727,6 @@ export function ContainerServiceDetailPage() {
     </ContextMenu.Root>
   );
 
-  const labelKeys = Object.keys(service.labels);
-  const annKeys = Object.keys(service.annotations);
-
   return (
     <div className="flex flex-col gap-6 min-w-0">
       <DetailPageHeader
@@ -682,122 +734,22 @@ export function ContainerServiceDetailPage() {
         actions={moreActions}
         infoFields={infoFields}
       />
-      <div className="flex flex-wrap gap-3 w-full">
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Labels ({labelKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(service.labels)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >{`${key}: ${val}`}</Badge>
-                ))}
-              {labelKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[480px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All labels ({labelKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(service.labels).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{labelKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 min-w-[200px] bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <div className="flex flex-col gap-2">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Annotations ({annKeys.length})
-            </span>
-            <div className="flex items-center gap-1 min-w-0 w-full">
-              {Object.entries(service.annotations)
-                .slice(0, 1)
-                .map(([key, val]) => (
-                  <Badge
-                    key={key}
-                    theme="white"
-                    size="sm"
-                    className="min-w-0 truncate justify-start text-left"
-                  >{`${key}: ${val}`}</Badge>
-                ))}
-              {annKeys.length > 1 && (
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[480px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All annotations ({annKeys.length})
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        {Object.entries(service.annotations).map(([k, v]) => (
-                          <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                            <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{annKeys.length - 1}
-                  </span>
-                </Popover>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
       <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
         <Tab id="pods" label="Pods">
-          <div className="pt-6">
-            <PodsTab
-              pods={mockPodsData}
-              onViewLogs={handleViewLogs}
-              onExecuteShell={handleExecuteShell}
-            />
-          </div>
+          <PodsTab
+            pods={mockPodsData}
+            onViewLogs={handleViewLogs}
+            onExecuteShell={handleExecuteShell}
+          />
         </Tab>
         <Tab id="ports" label="Ports">
-          <div className="pt-6">
-            <PortsTab ports={mockPortsData} />
-          </div>
+          <PortsTab ports={mockPortsData} />
         </Tab>
         <Tab id="selectors" label="Selectors">
-          <div className="pt-6">
-            <SelectorsTab selectors={mockSelectorsData} />
-          </div>
+          <SelectorsTab selectors={mockSelectorsData} />
         </Tab>
         <Tab id="conditions" label="Conditions">
-          <div className="pt-6">
-            <ConditionsTab conditions={mockConditionsData} />
-          </div>
+          <ConditionsTab conditions={mockConditionsData} />
         </Tab>
       </Tabs>
     </div>
