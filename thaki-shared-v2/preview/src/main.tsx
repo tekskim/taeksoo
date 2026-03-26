@@ -146,15 +146,7 @@ import { ContainerCreateServicePage } from './pages/ContainerCreateServicePage';
 import { ContainerCreateIngressPage } from './pages/ContainerCreateIngressPage';
 import { ComputeLayout } from './layouts/ComputeLayout';
 import { ComputeAdminLayout } from './layouts/ComputeAdminLayout';
-import { DesignLayout } from './layouts/DesignLayout';
-import { DesignOverviewPage } from './pages/DesignOverviewPage';
-import { DesignLayoutComponentsPage } from './pages/DesignLayoutComponentsPage';
-import { DesignFeedbackPage } from './pages/DesignFeedbackPage';
-import { DesignNavigationPage } from './pages/DesignNavigationPage';
-import { DesignOverlaysPage } from './pages/DesignOverlaysPage';
-import { ModalsPage } from './pages/ModalsPage';
-import { DesignFormControlsPage } from './pages/DesignFormControlsPage';
-import { DesignDataDisplayPage } from './pages/DesignDataDisplayPage';
+
 import { ComputeHomePage } from './pages/ComputeHomePage';
 import { ComputeInstancesPage } from './pages/ComputeInstancesPage';
 import { ComputeInstanceDetailPage } from './pages/ComputeInstanceDetailPage';
@@ -557,16 +549,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="monitor-overview" element={<ComputeAdminMonitorOverviewPage />} />
           <Route path="topology" element={<ComputeAdminTopologyPage />} />
         </Route>
-        <Route path="/design" element={<DesignLayout />}>
-          <Route index element={<DesignOverviewPage />} />
-          <Route path="form-controls" element={<DesignFormControlsPage />} />
-          <Route path="data-display" element={<DesignDataDisplayPage />} />
-          <Route path="layout" element={<DesignLayoutComponentsPage />} />
-          <Route path="feedback" element={<DesignFeedbackPage />} />
-          <Route path="overlays" element={<DesignOverlaysPage />} />
-          <Route path="modals" element={<ModalsPage />} />
-          <Route path="navigation" element={<DesignNavigationPage />} />
-        </Route>
+
         <Route path="/" element={<EntryPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
