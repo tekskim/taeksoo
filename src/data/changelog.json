@@ -1,5 +1,73 @@
 [
   {
+    "id": "00a",
+    "date": "2026-03-26",
+    "app": "feat",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Add Compute, Compute Admin, Container, Storage apps to shared-v2 preview (200+ pages)",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Implement 87 drawers across all domains in shared-v2 preview",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Wire context menu items to drawers across all Compute pages",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "00b",
+    "date": "2026-03-26",
+    "app": "enhance",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Refine Container create pages — typography, layout, tab alignment, DaemonSet fix",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Standardize Container shared-v2 — pagination settings, FilterSearchInput, column alignment",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Shared-v2 component refinements — Badge, ProgressBar, Sidebar, Tabs, Checkbox",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Refine Container detail pages — merge info cards, remove borders, fix gaps",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Major shared-v2 update — SectionCard, Popover, design system alignment",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
+    "id": "00c",
+    "date": "2026-03-26",
+    "app": "fix",
+    "appColor": "from-gray-500 to-slate-500",
+    "changes": [
+      {
+        "text": "Fix shared-v2 Compute app UI issues",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Use TDS-styled EntryPage instead of inline version",
+        "author": "mjhan-tk"
+      },
+      {
+        "text": "Restore Stepper wizard designs for 6 Create pages lost during merge",
+        "author": "mjhan-tk"
+      }
+    ]
+  },
+  {
     "id": "0a",
     "date": "2026-03-23",
     "app": "feat",
