@@ -595,7 +595,7 @@ export function ContainerCreateServicePage() {
 
                       {/* Add port Button */}
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addPort}>
+                        <Button variant="muted" appearance="outline" size="sm" onClick={addPort}>
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add port
@@ -716,7 +716,12 @@ export function ContainerCreateServicePage() {
 
                           {/* Add port Button */}
                           <div className="w-fit">
-                            <Button variant="secondary" size="sm" onClick={addPort}>
+                            <Button
+                              variant="muted"
+                              appearance="outline"
+                              size="sm"
+                              onClick={addPort}
+                            >
                               <span className="inline-flex items-center gap-1">
                                 <IconCirclePlus size={12} />
                                 Add port
@@ -843,7 +848,12 @@ export function ContainerCreateServicePage() {
 
                           {/* Add port Button */}
                           <div className="w-fit">
-                            <Button variant="secondary" size="sm" onClick={addPort}>
+                            <Button
+                              variant="muted"
+                              appearance="outline"
+                              size="sm"
+                              onClick={addPort}
+                            >
                               <span className="inline-flex items-center gap-1">
                                 <IconCirclePlus size={12} />
                                 Add port
@@ -944,7 +954,12 @@ export function ContainerCreateServicePage() {
                         </div>
                       ))}
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addExternalIP}>
+                        <Button
+                          variant="muted"
+                          appearance="outline"
+                          size="sm"
+                          onClick={addExternalIP}
+                        >
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add IP
@@ -973,13 +988,18 @@ export function ContainerCreateServicePage() {
                   {selectors.length === 0 ? (
                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                       <div className="flex flex-row gap-2">
-                        <Button variant="secondary" size="sm" onClick={addSelector}>
+                        <Button
+                          variant="muted"
+                          appearance="outline"
+                          size="sm"
+                          onClick={addSelector}
+                        >
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add rule
                           </span>
                         </Button>
-                        <Button variant="secondary" size="sm">
+                        <Button variant="muted" appearance="outline" size="sm">
                           Read from File
                         </Button>
                       </div>
@@ -1029,13 +1049,18 @@ export function ContainerCreateServicePage() {
                         ))}
 
                         <div className="flex flex-row gap-2">
-                          <Button variant="secondary" size="sm" onClick={addSelector}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addSelector}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add rule
                             </span>
                           </Button>
-                          <Button variant="secondary" size="sm">
+                          <Button variant="muted" appearance="outline" size="sm">
                             Read from File
                           </Button>
                         </div>
@@ -1168,7 +1193,7 @@ export function ContainerCreateServicePage() {
                       ))}
 
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addLabel}>
+                        <Button variant="muted" appearance="outline" size="sm" onClick={addLabel}>
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add label
@@ -1235,7 +1260,12 @@ export function ContainerCreateServicePage() {
                       ))}
 
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addAnnotation}>
+                        <Button
+                          variant="muted"
+                          appearance="outline"
+                          size="sm"
+                          onClick={addAnnotation}
+                        >
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add annotation

@@ -876,7 +876,8 @@ export function ContainerCreateClusterPage() {
 
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           onClick={addLabel}
                           leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
@@ -947,7 +948,8 @@ export function ContainerCreateClusterPage() {
 
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           onClick={addAnnotation}
                           leftIcon={<IconCirclePlus size={12} stroke={1.5} />}

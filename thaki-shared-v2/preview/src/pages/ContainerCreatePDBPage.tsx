@@ -333,8 +333,8 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
-                    appearance="solid"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={addRule}
@@ -462,7 +462,7 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
@@ -519,8 +519,8 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
-                    appearance="solid"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddAnnotation}

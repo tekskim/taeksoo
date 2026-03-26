@@ -368,7 +368,7 @@ export function ContainerCreateNamespacePage() {
                       </div>
                     ))}
                     <div className="w-fit">
-                      <Button variant="secondary" size="sm" onClick={addLabel}>
+                      <Button variant="muted" appearance="outline" size="sm" onClick={addLabel}>
                         <span className="inline-flex items-center gap-1">
                           <IconCirclePlus size={12} />
                           Add Label
@@ -433,7 +433,12 @@ export function ContainerCreateNamespacePage() {
                       </div>
                     ))}
                     <div className="w-fit">
-                      <Button variant="secondary" size="sm" onClick={addAnnotation}>
+                      <Button
+                        variant="muted"
+                        appearance="outline"
+                        size="sm"
+                        onClick={addAnnotation}
+                      >
                         <span className="inline-flex items-center gap-1">
                           <IconCirclePlus size={12} />
                           Add annotation

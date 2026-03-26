@@ -530,7 +530,7 @@ function LabelsAnnotationsSection({
                 ))}
 
                 <div className="w-fit">
-                  <Button variant="secondary" size="sm" onClick={onAddLabel}>
+                  <Button variant="muted" appearance="outline" size="sm" onClick={onAddLabel}>
                     <span className="inline-flex items-center gap-1">
                       <IconCirclePlus size={12} />
                       Add Label
@@ -591,7 +591,7 @@ function LabelsAnnotationsSection({
                 ))}
 
                 <div className="w-fit">
-                  <Button variant="secondary" size="sm" onClick={onAddAnnotation}>
+                  <Button variant="muted" appearance="outline" size="sm" onClick={onAddAnnotation}>
                     <span className="inline-flex items-center gap-1">
                       <IconCirclePlus size={12} />
                       Add Annotation
@@ -1728,7 +1728,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addPodLabel}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addPodLabel}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Label
@@ -1796,7 +1801,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addPodAnnotation}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addPodAnnotation}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Annotation
@@ -1969,7 +1979,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addNameserver}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addNameserver}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Nameserver
@@ -2026,7 +2041,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addSearchDomain}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addSearchDomain}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Search Domain
@@ -2097,7 +2117,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addResolverOption}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addResolverOption}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Option
@@ -2168,7 +2193,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addHostAlias}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addHostAlias}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Alias
@@ -2388,7 +2418,8 @@ export function ContainerCreateJobPage() {
                                     ))}
                                     <div className="w-fit">
                                       <Button
-                                        variant="secondary"
+                                        variant="muted"
+                                        appearance="outline"
                                         size="sm"
                                         onClick={() => {
                                           const newTerms = [...nodeAffinityTerms];
@@ -2409,7 +2440,7 @@ export function ContainerCreateJobPage() {
                                   </div>
                                 </div>
                                 <div className="w-fit">
-                                  <Button variant="secondary" size="sm">
+                                  <Button variant="muted" appearance="outline" size="sm">
                                     <span className="inline-flex items-center gap-1">
                                       <IconCirclePlus size={12} />
                                       Add Node Selector
@@ -2621,7 +2652,8 @@ export function ContainerCreateJobPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newTerms = [...nodeAffinityTerms];
@@ -2646,7 +2678,8 @@ export function ContainerCreateJobPage() {
 
                           <div className="w-fit">
                             <Button
-                              variant="secondary"
+                              variant="muted"
+                              appearance="outline"
                               size="sm"
                               onClick={() => {
                                 setNodeAffinityTerms([
@@ -2669,7 +2702,7 @@ export function ContainerCreateJobPage() {
                       </div>
 
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm">
+                        <Button variant="muted" appearance="outline" size="sm">
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add Node Selector
@@ -2998,7 +3031,8 @@ export function ContainerCreateJobPage() {
                             ))}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 onClick={() => {
                                   const newTerms = [...podAffinityTerms];
@@ -3090,7 +3124,8 @@ export function ContainerCreateJobPage() {
 
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       onClick={() => {
                         setPodAffinityTerms([
@@ -3211,7 +3246,12 @@ export function ContainerCreateJobPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addToleration}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addToleration}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Toleration
@@ -4161,7 +4201,8 @@ export function ContainerCreateJobPage() {
                             )}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 onClick={() => {
                                   const newHeaders = [
@@ -4636,7 +4677,8 @@ export function ContainerCreateJobPage() {
                         })}
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             onClick={() => {
                               const newEnvVars = [
@@ -4910,7 +4952,8 @@ export function ContainerCreateJobPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newHeaders = [
@@ -5159,7 +5202,8 @@ export function ContainerCreateJobPage() {
                                   )}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newHeaders = [
@@ -5657,7 +5701,8 @@ export function ContainerCreateJobPage() {
                                       )}
                                       <div className="w-fit">
                                         <Button
-                                          variant="secondary"
+                                          variant="muted"
+                                          appearance="outline"
                                           size="sm"
                                           onClick={() => {
                                             const newHeaders = [
@@ -6755,7 +6800,8 @@ export function ContainerCreateJobPage() {
                                   {/* Add Mount button inside volume container */}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newVolumes = [...(config.selectedVolumes || [])];
