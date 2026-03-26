@@ -7,6 +7,10 @@ import {
   IconListNumbers,
   IconPackages,
   IconBoxMultiple,
+  IconLayoutSidebar,
+  IconTopologyRing3,
+  IconForms,
+  IconTemplate,
 } from '@tabler/icons-react';
 import type { NavItem, NavGroup } from '../design/_shared/navigationData';
 
@@ -73,12 +77,40 @@ const testItems: NavItem[] = [
   },
 ];
 
+const archiveItems: NavItem[] = [
+  {
+    id: 'sidebar-icons',
+    label: 'Sidebar Icons',
+    icon: IconLayoutSidebar,
+    path: '/lab/sidebar-icons',
+  },
+  {
+    id: 'topology-popovers',
+    label: 'Topology Popovers',
+    icon: IconTopologyRing3,
+    path: '/lab/topology-popovers',
+  },
+  {
+    id: 'create-pages',
+    label: 'Create Pages',
+    icon: IconTemplate,
+    path: '/lab/create-pages',
+  },
+  {
+    id: 'form-patterns',
+    label: 'Form Patterns',
+    icon: IconForms,
+    path: '/lab/form-patterns',
+  },
+];
+
 export const labNavGroups: NavGroup[] = [
   { title: 'Figma Migration', items: figmaItems },
   { title: 'Audit', items: auditItems },
   { title: 'Prototype', items: prototypeItems },
   { title: 'Shared', items: sharedItems },
   { title: 'Test', items: testItems },
+  { title: 'Archive', items: archiveItems },
 ];
 
 export const allLabNavItems: NavItem[] = labNavGroups.flatMap((g) => g.items);

@@ -3,7 +3,7 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import { IconMoon, IconSun, IconBook } from '@tabler/icons-react';
-import { Button, Disclosure, DisclosureTrigger, DisclosurePanel } from '@/design-system';
+import { Button } from '@/design-system';
 
 // App icons
 import ComputeIcon from '@/assets/appIcon/compute.png';
@@ -299,43 +299,6 @@ export function EntryPage() {
                 </Button>
               </div>
             </div>
-          </div>
-
-          {/* Archive */}
-          <div className="mt-6">
-            <Disclosure defaultOpen={false}>
-              <DisclosureTrigger>Archive</DisclosureTrigger>
-              <DisclosurePanel>
-                <div className="flex items-center gap-2 flex-wrap pt-3">
-                  <Button variant="muted" size="md" onClick={() => navigate('/sidebar-icons')}>
-                    Sidebar Icons
-                  </Button>
-                  <Button
-                    variant="muted"
-                    size="md"
-                    onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
-                  >
-                    404 page
-                  </Button>
-                  <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
-                    Topology Popovers
-                  </Button>
-                  <Button variant="muted" size="md" onClick={() => navigate('/create-pages')}>
-                    Create Pages
-                  </Button>
-                  <Button variant="muted" size="md" onClick={() => navigate('/form-patterns')}>
-                    Form Patterns
-                  </Button>
-                  <Button
-                    variant="muted"
-                    size="md"
-                    onClick={() => navigate('/design/prototype/ai-workspace')}
-                  >
-                    AI Workspace Setup
-                  </Button>
-                </div>
-              </DisclosurePanel>
-            </Disclosure>
           </div>
         </div>
       </main>

@@ -1143,6 +1143,10 @@ function AppRoutes() {
         <Route path="todo" element={<DesignTodoPage />} />
         <Route path="shared-components" element={<SharedComponentsPage />} />
         <Route path="test/nested-box" element={<NestedBoxTestPage />} />
+        <Route path="sidebar-icons" element={<SidebarIconsPage />} />
+        <Route path="topology-popovers" element={<TopologyPopoversPage />} />
+        <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
+        <Route path="form-patterns" element={<FormPatternsPage />} />
       </Route>
       <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
 
@@ -1150,12 +1154,8 @@ function AppRoutes() {
       <Route path="/desktop" element={<DesktopPage />} />
 
       {/* Developer Resources */}
-      <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
-      <Route path="/topology-popovers" element={<TopologyPopoversPage />} />
-      <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
       <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
-      <Route path="/form-patterns" element={<FormPatternsPage />} />
       <Route path="/system-errors" element={<SystemErrorPagesPage />} />
       <Route path="/system-errors/:variant" element={<SystemErrorPagesPage />} />
 
