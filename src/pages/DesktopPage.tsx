@@ -327,8 +327,8 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
           <div
             className={`
               w-7 h-7 rounded-lg overflow-hidden
-              ${isRunning ? 'p-0.5 border-2 border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]' : ''}
-              ${isActive ? 'border-[var(--color-action-primary)]' : ''}
+              ${isRunning ? 'p-0.5 border border-white/20 bg-white/10' : ''}
+              ${isActive ? 'border-white/40 bg-white/15' : ''}
             `}
           >
             <img
@@ -432,46 +432,50 @@ function DockIcons({
     return items;
   };
 
+  const hasRunningApps = localApps.some((a) => a.hasWindows);
+
   return (
-    <Reorder.Group
-      as="div"
-      axis="x"
-      values={localApps}
-      onReorder={handleReorder}
-      className="flex items-center gap-2"
-    >
-      {localApps.map((app) => (
-        <Reorder.Item
-          key={app.id}
-          value={app}
-          as="div"
-          onDragStart={() => setIsDragging(true)}
-          onDragEnd={() => setIsDragging(false)}
-          dragListener={true}
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={0.1}
-          layout
-          transition={{
-            type: 'spring',
-            stiffness: 400,
-            damping: 25,
-          }}
-          whileDrag={{
-            scale: 1.15,
-            zIndex: 50,
-            cursor: 'grabbing',
-          }}
-          className="cursor-grab active:cursor-grabbing"
-        >
-          <DockIconItem
-            app={app}
-            isDragging={isDragging}
-            onAppClick={onAppClick}
-            getContextMenuItems={getContextMenuItems}
-          />
-        </Reorder.Item>
-      ))}
-    </Reorder.Group>
+    <div className="rounded-xl px-1.5 py-1">
+      <Reorder.Group
+        as="div"
+        axis="x"
+        values={localApps}
+        onReorder={handleReorder}
+        className="flex items-center gap-2"
+      >
+        {localApps.map((app) => (
+          <Reorder.Item
+            key={app.id}
+            value={app}
+            as="div"
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={() => setIsDragging(false)}
+            dragListener={true}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.1}
+            layout
+            transition={{
+              type: 'spring',
+              stiffness: 400,
+              damping: 25,
+            }}
+            whileDrag={{
+              scale: 1.15,
+              zIndex: 50,
+              cursor: 'grabbing',
+            }}
+            className="cursor-grab active:cursor-grabbing"
+          >
+            <DockIconItem
+              app={app}
+              isDragging={isDragging}
+              onAppClick={onAppClick}
+              getContextMenuItems={getContextMenuItems}
+            />
+          </Reorder.Item>
+        ))}
+      </Reorder.Group>
+    </div>
   );
 }
 
