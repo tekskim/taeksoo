@@ -1,15 +1,17 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack, Chip } from '@/design-system';
+import { VStack, Badge } from '@/design-system';
 import {
   IconCircleCheck,
   IconAlertTriangle,
   IconAlertCircle,
   IconInfoCircle,
+  IconX,
   IconChevronUp,
   IconChevronDown,
 } from '@tabler/icons-react';
+import AppIconIAM from '@/assets/appIcon/iam.png';
 
 /* ----------------------------------------
    Static Card Component
@@ -20,7 +22,7 @@ function StaticNotificationCard({
   message,
   time,
   project,
-  isRead,
+  showAppIcon = false,
   detail,
   isExpanded,
 }: {
@@ -28,7 +30,7 @@ function StaticNotificationCard({
   message: string;
   time: string;
   project?: string;
-  isRead: boolean;
+  showAppIcon?: boolean;
   detail?: { code?: string | number; message?: string };
   isExpanded?: boolean;
 }) {
@@ -47,44 +49,68 @@ function StaticNotificationCard({
   const hasDetail = detail && (detail.code || detail.message);
 
   return (
-    <div
-      className={`relative rounded-lg border transition-all border-[var(--color-border-default)] ${
-        !isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'
-      }`}
-    >
-      <div className="flex gap-3 p-3">
-        <div className="shrink-0 pt-0.5">{iconMap[type]}</div>
+    <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden">
+      <div className="flex gap-2 p-3">
+        <div className="shrink-0">{iconMap[type]}</div>
         <div className="flex-1 min-w-0">
-          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">{message}</p>
-          {project && <Chip value={project} variant="default" />}
-        </div>
-        <div className="shrink-0 flex flex-col items-end gap-1">
-          <div className="size-6 flex items-center justify-center">
-            {!isRead && <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />}
+          <div className="flex gap-2 items-start">
+            <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
+              <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
+              {project && (
+                <Badge theme="white" size="sm">
+                  {project}
+                </Badge>
+              )}
+            </div>
+            <div className="shrink-0 flex flex-col items-end gap-1">
+              <div className="flex flex-col items-end">
+                <button
+                  type="button"
+                  className="size-5 flex items-center justify-center text-[var(--color-text-muted)]"
+                >
+                  <IconX size={16} stroke={1.5} />
+                </button>
+                <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+                  {time}
+                </span>
+              </div>
+              {showAppIcon && (
+                <img
+                  src={AppIconIAM}
+                  alt="App icon"
+                  className="size-5 object-cover pointer-events-none"
+                />
+              )}
+            </div>
           </div>
-          <span className="text-body-md text-[var(--color-text-muted)]">{time}</span>
         </div>
       </div>
 
       {hasDetail && (
         <>
-          <button
-            type="button"
-            className="flex items-center justify-end gap-1 w-full px-3 py-2 text-body-sm text-[var(--color-text-muted)] border-t border-[var(--color-border-subtle)] transition-colors"
-          >
-            <span>View detail</span>
-            {isExpanded ? (
-              <IconChevronUp size={14} stroke={1.5} />
-            ) : (
-              <IconChevronDown size={14} stroke={1.5} />
-            )}
-          </button>
+          <div className="border-t border-[var(--color-border-subtle)]">
+            <button
+              type="button"
+              className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
+            >
+              <span className="text-label-sm text-[var(--color-text-muted)]">View detail</span>
+              {isExpanded ? (
+                <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              ) : (
+                <IconChevronDown
+                  size={12}
+                  stroke={1.5}
+                  className="text-[var(--color-text-muted)]"
+                />
+              )}
+            </button>
+          </div>
 
           {isExpanded && (
             <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-md">
+              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
                 {detail.code && (
-                  <p className="text-label-md text-[var(--color-text-default)] mb-1">
+                  <p className="text-label-md text-[var(--color-text-default)]">
                     code: {detail.code}
                   </p>
                 )}
@@ -105,11 +131,6 @@ function StaticNotificationCard({
    ---------------------------------------- */
 
 function NotificationCardStates() {
-  const detail = {
-    code: 200,
-    message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-  };
-
   return (
     <VStack gap={3}>
       <span className="text-label-md text-[var(--color-text-default)]">
@@ -119,25 +140,27 @@ function NotificationCardStates() {
         All six visual states of a notification card: read/unread, with/without detail disclosure,
         and disclosure open.
       </p>
-      <div className="grid grid-cols-2 gap-6">
+      <VStack gap={6} className="max-w-[463px]">
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Read</span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Read (app icon)</span>
           <StaticNotificationCard
-            type="info"
-            message="System maintenance scheduled for tomorrow."
-            time="Yesterday"
-            isRead
+            type="success"
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
+            showAppIcon
           />
         </VStack>
 
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread</span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Read (without app icon)
+          </span>
           <StaticNotificationCard
             type="success"
-            message='Volume "data-vol-01" attached to instance.'
-            time="10:15"
-            project="Proj1"
-            isRead={false}
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
           />
         </VStack>
 
@@ -146,25 +169,11 @@ function NotificationCardStates() {
             Read + Detail (collapsed)
           </span>
           <StaticNotificationCard
-            type="warning"
-            message='Instance "db-server" is running low on disk space.'
-            time="09:15"
-            project="Proj1"
-            isRead
-            detail={{ code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' }}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (collapsed)
-          </span>
-          <StaticNotificationCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj2"
-            isRead={false}
+            type="success"
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
+            showAppIcon
             detail={{
               code: 400,
               message:
@@ -180,24 +189,9 @@ function NotificationCardStates() {
           <StaticNotificationCard
             type="success"
             message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj1"
-            isRead
-            detail={detail}
-            isExpanded
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (expanded)
-          </span>
-          <StaticNotificationCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj2"
-            isRead={false}
+            time="hh:mm"
+            project="Proj-1"
+            showAppIcon
             detail={{
               code: 400,
               message:
@@ -206,7 +200,7 @@ function NotificationCardStates() {
             isExpanded
           />
         </VStack>
-      </div>
+      </VStack>
     </VStack>
   );
 }

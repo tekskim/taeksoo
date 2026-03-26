@@ -50,31 +50,28 @@ function Prose({ children }: { children: React.ReactNode }) {
 function ProgressBarGuidelines() {
   return (
     <VStack gap={10}>
-      {/* Variants */}
+      {/* Overview */}
       <VStack gap={4}>
-        <SectionTitle>Variants</SectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[140px]">Variant</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Default</strong>
-              </Td>
-              <Td>진행률(%)만 Fill로 표현. 레이블·수치 없이 Bar만 단독으로 표시</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Labeled</strong>
-              </Td>
-              <Td>Bar 상단 또는 좌측에 작업명(Label)과 진행률 수치(Value)를 함께 표시</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
+        <SectionTitle>Overview</SectionTitle>
+        <Prose>
+          <p>
+            Progress Bar는 <strong>작업의 진행률을 시각적으로 표시하는 컴포넌트</strong>이다.
+          </p>
+          <p>
+            사용자는 Progress Bar를 통해 작업이{' '}
+            <strong>얼마나 진행되었는지, 언제 완료될지 예측</strong>할 수 있다.
+          </p>
+          <p>Progress Bar는 다음 상황에서 사용된다.</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>파일 업로드 또는 다운로드</li>
+            <li>데이터 처리 작업</li>
+            <li>시스템 작업 진행 상태</li>
+            <li>배치 작업 실행</li>
+          </ul>
+          <p>
+            Progress Bar는 <strong>진행률이 측정 가능한 작업</strong>에만 사용한다.
+          </p>
+        </Prose>
       </VStack>
 
       <div className="w-full h-px bg-[var(--color-border-default)]" />
@@ -82,70 +79,37 @@ function ProgressBarGuidelines() {
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
-          <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[Label]                              [Value]
-[████████████████░░░░░░░░░░░░░░░░░░]`}</pre>
-        </div>
         <TableWrapper>
           <thead>
             <tr>
-              <Th className="w-[120px]">요소</Th>
+              <Th className="w-[180px]">요소</Th>
               <Th>설명</Th>
-              <Th className="w-[160px]">제공 조건</Th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <Td>
-                <strong>a. Track</strong>
+                <strong>Progress Track</strong>
               </Td>
-              <Td>전체 너비의 배경 Bar. 미완료 영역을 나타냄</Td>
-              <Td>항상</Td>
+              <Td>전체 작업 범위를 나타내는 배경 바</Td>
             </tr>
             <tr>
               <Td>
-                <strong>b. Fill</strong>
+                <strong>Progress Indicator</strong>
               </Td>
-              <Td>현재 진행률에 비례한 채워진 Bar. Primary 색상 사용</Td>
-              <Td>항상</Td>
+              <Td>현재 진행률을 나타내는 채워진 영역</Td>
             </tr>
             <tr>
               <Td>
-                <strong>c. Label</strong>
+                <strong>Progress Value</strong>
               </Td>
-              <Td>진행 중인 작업의 이름 또는 설명 텍스트</Td>
-              <Td>Labeled variant</Td>
+              <Td>진행률 수치 (선택)</Td>
             </tr>
             <tr>
               <Td>
-                <strong>d. Value</strong>
+                <strong>Progress Label</strong>
               </Td>
-              <Td>진행률 수치 표시. 퍼센트(%) 또는 현재값/전체값 형식</Td>
-              <Td>Labeled variant</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-
-        <SubSectionTitle>Design Tokens</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[160px]">속성</Th>
-              <Th>값</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>height</Td>
-              <Td>4px</Td>
-            </tr>
-            <tr>
-              <Td>border-radius</Td>
-              <Td>pill (full round)</Td>
-            </tr>
-            <tr>
-              <Td>Fill 색상</Td>
-              <Td>action-primary (#2563eb)</Td>
+              <Td>작업 설명 텍스트 (선택)</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -177,7 +141,7 @@ function ProgressBarGuidelines() {
                 값 범위: <strong>0–100%</strong>
               </li>
               <li>
-                진행률은 <strong>단조 증가(monotonic)</strong>해야 한다.
+                진행률은 <strong>단조 증가(monotonic)</strong> 해야 한다.
               </li>
             </ul>
           </Prose>
@@ -254,17 +218,67 @@ function ProgressBarGuidelines() {
             '진행률을 정확하게 반영한다.',
             '작업 설명 텍스트를 제공한다.',
             '완료 상태를 명확히 표시한다.',
-            '진행률을 알 수 없을 때는 Indeterminate 모드를 사용한다.',
           ]}
           dontItems={[
             '진행률을 임의로 조작하지 않는다.',
             'Spinner 대신 Progress Bar를 사용하지 않는다.',
             '너무 많은 Progress Bar를 동시에 표시하지 않는다.',
             '진행률이 감소하는 동작을 만들지 않는다.',
-            '위험도(Safe / Warning / Danger) 맥락에서 사용하지 않는다. → Usage Chart 사용',
-            '리소스 할당량(Quota) 표시 목적으로 사용하지 않는다. → Usage Chart 사용',
           ]}
         />
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
+      {/* Related */}
+      <VStack gap={4}>
+        <SectionTitle>Related</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[140px]">이름</Th>
+              <Th className="w-[120px]">유형</Th>
+              <Th>이유</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>
+                <strong>Loading</strong>
+              </Td>
+              <Td>Pattern</Td>
+              <Td>상위 로딩 패턴</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Spinner</strong>
+              </Td>
+              <Td>Component</Td>
+              <Td>진행률 미확인 로딩</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Skeleton</strong>
+              </Td>
+              <Td>Component</Td>
+              <Td>콘텐츠 로딩</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Toast</strong>
+              </Td>
+              <Td>Component</Td>
+              <Td>작업 완료 알림</Td>
+            </tr>
+            <tr>
+              <Td>
+                <strong>Snackbar</strong>
+              </Td>
+              <Td>Component</Td>
+              <Td>작업 결과 알림</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
       </VStack>
     </VStack>
   );
@@ -274,17 +288,13 @@ export function ProgressBarComponentPage() {
   return (
     <ComponentPageTemplate
       title="Progress Bar"
-      description="작업의 진행 상태를 수평형 막대로 시각화하는 컴포넌트다. 전체 작업량 대비 현재까지 완료된 진행률을 표현한다."
+      description="작업의 진행률을 시각적으로 표시하는 컴포넌트이다. 사용자는 Progress Bar를 통해 작업이 얼마나 진행되었는지, 언제 완료될지 예측할 수 있다."
       whenToUse={[
-        '파일 업로드, 데이터 로딩, 설치 등 작업의 완료율을 표시할 때',
-        '전체 단계 중 현재 진행 위치를 사용자에게 인지시켜야 할 때',
-        '완료까지 남은 시간이나 진행 정도를 지속적으로 피드백해야 할 때',
+        '작업 진행률을 계산할 수 있는 경우',
+        '작업 완료까지 시간이 걸리는 경우',
+        '작업 진행 상황을 사용자에게 알려야 하는 경우',
       ]}
-      whenNotToUse={[
-        '진행률을 계산할 수 없는 작업 (→ Spinner)',
-        '콘텐츠 로딩 (→ Skeleton)',
-        '리소스 할당량 대비 사용량(Quota)을 표현할 때 (→ Usage Chart)',
-      ]}
+      whenNotToUse={['진행률을 계산할 수 없는 작업 (→ Spinner)', '콘텐츠 로딩 (→ Skeleton)']}
       preview={
         <div className="w-[320px] flex flex-col gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
           <VStack gap={2}>
@@ -301,7 +311,7 @@ export function ProgressBarComponentPage() {
         <VStack gap={8}>
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Default Variant</Label>
+              <Label>Default</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 진행률(%)만 Fill로 표현. 레이블·수치 없이 Bar만 단독으로 표시.
               </span>
@@ -317,7 +327,7 @@ export function ProgressBarComponentPage() {
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Labeled Variant</Label>
+              <Label>Labeled</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 Bar 상단에 작업명(Label)과 진행률 수치(Value)를 함께 표시.
               </span>
@@ -356,10 +366,11 @@ export function ProgressBarComponentPage() {
       relatedLinks={[
         { label: 'Loading', path: '/design/components/loading', description: '상위 로딩 패턴' },
         {
-          label: 'Usage Chart',
-          path: '/design/charts/usage-chart',
-          description: 'Gauge Bar Chart / Donut Chart',
+          label: 'Spinner',
+          path: '/design/components/spinner',
+          description: '진행률 미확인 로딩',
         },
+        { label: 'Skeleton', path: '/design/components/skeleton', description: '콘텐츠 로딩' },
         { label: 'Toast', path: '/design/components/toast', description: '작업 완료 알림' },
         { label: 'Snackbar', path: '/design/components/snackbar', description: '작업 결과 알림' },
       ]}
