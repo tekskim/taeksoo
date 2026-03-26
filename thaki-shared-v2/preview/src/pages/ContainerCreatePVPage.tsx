@@ -317,7 +317,8 @@ function StorageConfigSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={addMountOption}
                     leftIcon={<IconCirclePlus size={12} />}
@@ -407,7 +408,8 @@ function StorageConfigSection({
                       ))}
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           onClick={() => addNodeSelectorRule(selectorIndex)}
                           leftIcon={<IconCirclePlus size={12} />}
@@ -420,7 +422,8 @@ function StorageConfigSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={addNodeSelector}
                     leftIcon={<IconCirclePlus size={12} />}
@@ -508,7 +511,8 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={onAddLabel}
                     leftIcon={<IconCirclePlus size={12} />}
@@ -565,7 +569,8 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={onAddAnnotation}
                     leftIcon={<IconCirclePlus size={12} />}

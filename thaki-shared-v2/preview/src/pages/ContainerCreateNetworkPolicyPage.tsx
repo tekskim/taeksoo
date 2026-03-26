@@ -599,7 +599,8 @@ function TrafficRulesSection({
                                             ))}
                                             <div className="w-fit">
                                               <Button
-                                                variant="secondary"
+                                                variant="muted"
+                                                appearance="outline"
                                                 size="sm"
                                                 onClick={() =>
                                                   addLabelSelector(target.id, 'namespaceSelectors')
@@ -988,7 +989,8 @@ function TrafficRulesSection({
                                             ))}
                                             <div className="w-fit">
                                               <Button
-                                                variant="secondary"
+                                                variant="muted"
+                                                appearance="outline"
                                                 size="sm"
                                                 onClick={() =>
                                                   addLabelSelector(target.id, 'podSelectors')
@@ -1100,7 +1102,8 @@ function TrafficRulesSection({
                                           ))}
                                           <div className="w-fit">
                                             <Button
-                                              variant="secondary"
+                                              variant="muted"
+                                              appearance="outline"
                                               size="sm"
                                               onClick={() => addException(target.id)}
                                             >
@@ -1117,7 +1120,12 @@ function TrafficRulesSection({
                                 </div>
                               ))}
                               <div className="w-fit">
-                                <Button variant="secondary" size="sm" onClick={addTarget}>
+                                <Button
+                                  variant="muted"
+                                  appearance="outline"
+                                  size="sm"
+                                  onClick={addTarget}
+                                >
                                   <span className="inline-flex items-center gap-1">
                                     <IconCirclePlus size={12} />
                                     Add allowed traffic source
@@ -1188,7 +1196,12 @@ function TrafficRulesSection({
                                 </div>
                               ))}
                               <div className="w-fit">
-                                <Button variant="secondary" size="sm" onClick={addAllowedPort}>
+                                <Button
+                                  variant="muted"
+                                  appearance="outline"
+                                  size="sm"
+                                  onClick={addAllowedPort}
+                                >
                                   <span className="inline-flex items-center gap-1">
                                     <IconCirclePlus size={12} />
                                     Add allowed port
@@ -1538,7 +1551,12 @@ export function ContainerCreateNetworkPolicyPage() {
                     ))}
 
                     <div className="w-fit">
-                      <Button variant="secondary" size="sm" onClick={addSelectorRule}>
+                      <Button
+                        variant="muted"
+                        appearance="outline"
+                        size="sm"
+                        onClick={addSelectorRule}
+                      >
                         <span className="inline-flex items-center gap-1">
                           <IconCirclePlus size={12} />
                           Add Rule
@@ -1627,7 +1645,7 @@ export function ContainerCreateNetworkPolicyPage() {
                         </div>
                       ))}
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addLabel}>
+                        <Button variant="muted" appearance="outline" size="sm" onClick={addLabel}>
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add Label
@@ -1692,7 +1710,12 @@ export function ContainerCreateNetworkPolicyPage() {
                         </div>
                       ))}
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addAnnotation}>
+                        <Button
+                          variant="muted"
+                          appearance="outline"
+                          size="sm"
+                          onClick={addAnnotation}
+                        >
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add Annotation

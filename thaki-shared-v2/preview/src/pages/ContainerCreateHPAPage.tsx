@@ -595,7 +595,12 @@ export function ContainerCreateHPAPage() {
                             </div>
                           ))}
                           <div className="w-fit">
-                            <Button variant="secondary" size="sm" onClick={addScaleDownPolicy}>
+                            <Button
+                              variant="muted"
+                              appearance="outline"
+                              size="sm"
+                              onClick={addScaleDownPolicy}
+                            >
                               <span className="inline-flex items-center gap-1">
                                 <IconCirclePlus size={12} />
                                 Add policy
@@ -691,7 +696,12 @@ export function ContainerCreateHPAPage() {
                             </div>
                           ))}
                           <div className="w-fit">
-                            <Button variant="secondary" size="sm" onClick={addScaleUpPolicy}>
+                            <Button
+                              variant="muted"
+                              appearance="outline"
+                              size="sm"
+                              onClick={addScaleUpPolicy}
+                            >
                               <span className="inline-flex items-center gap-1">
                                 <IconCirclePlus size={12} />
                                 Add policy
@@ -964,7 +974,8 @@ export function ContainerCreateHPAPage() {
                                 ))}
                                 <div className="w-fit">
                                   <Button
-                                    variant="secondary"
+                                    variant="muted"
+                                    appearance="outline"
                                     size="sm"
                                     onClick={() => addMetricSelector(metric.id)}
                                   >
@@ -985,7 +996,7 @@ export function ContainerCreateHPAPage() {
 
                 {/* Add a new row button */}
                 <div className="w-fit">
-                  <Button variant="secondary" size="sm" onClick={addMetric}>
+                  <Button variant="muted" appearance="outline" size="sm" onClick={addMetric}>
                     <span className="inline-flex items-center gap-1">
                       <IconCirclePlus size={12} />
                       Add a new row
@@ -1052,7 +1063,7 @@ export function ContainerCreateHPAPage() {
                         </div>
                       )}
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addLabel}>
+                        <Button variant="muted" appearance="outline" size="sm" onClick={addLabel}>
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add label
@@ -1118,7 +1129,12 @@ export function ContainerCreateHPAPage() {
                         </div>
                       )}
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm" onClick={addAnnotation}>
+                        <Button
+                          variant="muted"
+                          appearance="outline"
+                          size="sm"
+                          onClick={addAnnotation}
+                        >
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add annotation

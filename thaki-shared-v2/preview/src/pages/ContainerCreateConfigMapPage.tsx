@@ -196,7 +196,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
 
                 <div className="flex gap-1">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
@@ -206,7 +206,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
                     Add Data Entry
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     onClick={() => {
@@ -304,7 +304,7 @@ function BinaryDataSection({
 
                 <div className="flex gap-1">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
@@ -314,7 +314,7 @@ function BinaryDataSection({
                     Add Data Entry
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     onClick={() => {
@@ -413,7 +413,8 @@ function LabelsAnnotationsSection({
 
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddLabel}
@@ -474,7 +475,8 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddAnnotation}

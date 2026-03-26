@@ -519,7 +519,7 @@ function EnvVarTypeSection({
             </div>
           ))}
           <div className="w-fit">
-            <Button variant="secondary" size="sm" onClick={addRow}>
+            <Button variant="muted" appearance="outline" size="sm" onClick={addRow}>
               <span className="inline-flex items-center gap-1">
                 <IconCirclePlus size={12} />
                 Add Variable
@@ -1445,7 +1445,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addPodLabel}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addPodLabel}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Label
@@ -1513,7 +1518,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addPodAnnotation}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addPodAnnotation}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Annotation
@@ -1694,7 +1704,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addNameserver}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addNameserver}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Nameserver
@@ -1751,7 +1766,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addSearchDomain}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addSearchDomain}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Search Domain
@@ -1822,7 +1842,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addResolverOption}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addResolverOption}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Option
@@ -1893,7 +1918,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addHostAlias}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addHostAlias}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Alias
@@ -2113,7 +2143,8 @@ export function ContainerCreatePodPage() {
                                     ))}
                                     <div className="w-fit">
                                       <Button
-                                        variant="secondary"
+                                        variant="muted"
+                                        appearance="outline"
                                         size="sm"
                                         onClick={() => {
                                           const newTerms = [...nodeAffinityTerms];
@@ -2137,7 +2168,7 @@ export function ContainerCreatePodPage() {
                             </div>
                           ))}
                           <div className="w-fit">
-                            <Button variant="secondary" size="sm">
+                            <Button variant="muted" appearance="outline" size="sm">
                               <span className="inline-flex items-center gap-1">
                                 <IconCirclePlus size={12} />
                                 Add Node Selector
@@ -2330,7 +2361,8 @@ export function ContainerCreatePodPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newTerms = [...nodeAffinityTerms];
@@ -2355,7 +2387,8 @@ export function ContainerCreatePodPage() {
 
                           <div className="w-fit">
                             <Button
-                              variant="secondary"
+                              variant="muted"
+                              appearance="outline"
                               size="sm"
                               onClick={() => {
                                 setNodeAffinityTerms([
@@ -2378,7 +2411,7 @@ export function ContainerCreatePodPage() {
                       </div>
 
                       <div className="w-fit">
-                        <Button variant="secondary" size="sm">
+                        <Button variant="muted" appearance="outline" size="sm">
                           <span className="inline-flex items-center gap-1">
                             <IconCirclePlus size={12} />
                             Add Node Selector
@@ -2707,7 +2740,8 @@ export function ContainerCreatePodPage() {
                             ))}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 onClick={() => {
                                   const newTerms = [...podAffinityTerms];
@@ -2799,7 +2833,8 @@ export function ContainerCreatePodPage() {
 
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       onClick={() => {
                         setPodAffinityTerms([
@@ -2920,7 +2955,12 @@ export function ContainerCreatePodPage() {
                         ))}
 
                         <div className="w-fit">
-                          <Button variant="secondary" size="sm" onClick={addToleration}>
+                          <Button
+                            variant="muted"
+                            appearance="outline"
+                            size="sm"
+                            onClick={addToleration}
+                          >
                             <span className="inline-flex items-center gap-1">
                               <IconCirclePlus size={12} />
                               Add Toleration
@@ -3872,7 +3912,8 @@ export function ContainerCreatePodPage() {
                             )}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 onClick={() => {
                                   const newHeaders = [
@@ -4347,7 +4388,8 @@ export function ContainerCreatePodPage() {
                         })}
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             onClick={() => {
                               const newEnvVars = [
@@ -4621,7 +4663,8 @@ export function ContainerCreatePodPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newHeaders = [
@@ -4870,7 +4913,8 @@ export function ContainerCreatePodPage() {
                                   )}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newHeaders = [
@@ -5374,7 +5418,8 @@ export function ContainerCreatePodPage() {
                                       )}
                                       <div className="w-fit">
                                         <Button
-                                          variant="secondary"
+                                          variant="muted"
+                                          appearance="outline"
                                           size="sm"
                                           onClick={() => {
                                             const newHeaders = [
@@ -6472,7 +6517,8 @@ export function ContainerCreatePodPage() {
                                   {/* Add Mount button inside volume container */}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       onClick={() => {
                                         const newVolumes = [...(config.selectedVolumes || [])];
