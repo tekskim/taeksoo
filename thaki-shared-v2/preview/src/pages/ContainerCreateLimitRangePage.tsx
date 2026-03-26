@@ -331,7 +331,7 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     onClick={onAddLabel}
@@ -390,7 +390,7 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     onClick={onAddAnnotation}

@@ -171,7 +171,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
               ))}
 
               <div className="w-fit">
-                <Button variant="secondary" size="sm" onClick={addParameter}>
+                <Button variant="muted" appearance="outline" size="sm" onClick={addParameter}>
                   <span className="inline-flex items-center gap-1">
                     <IconCirclePlus size={12} />
                     Add Parameter
@@ -322,7 +322,7 @@ function CustomizeSection({
                   </div>
                 ))}
                 <div className="w-fit">
-                  <Button variant="secondary" size="sm" onClick={addMountOption}>
+                  <Button variant="muted" appearance="outline" size="sm" onClick={addMountOption}>
                     <span className="inline-flex items-center gap-1">
                       <IconCirclePlus size={12} />
                       Add Option

@@ -535,7 +535,8 @@ function LabelsAnnotationsSection({
 
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={onAddLabel}
                     leftIcon={<IconCirclePlus size={12} />}
@@ -598,7 +599,8 @@ function LabelsAnnotationsSection({
 
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={onAddAnnotation}
                     leftIcon={<IconCirclePlus size={12} />}
@@ -1791,7 +1793,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addPodLabel}
@@ -1858,7 +1861,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addPodAnnotation}
@@ -2041,7 +2045,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addNameserver}
@@ -2100,7 +2105,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addSearchDomain}
@@ -2173,7 +2179,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addResolverOption}
@@ -2246,7 +2253,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addHostAlias}
@@ -2467,7 +2475,8 @@ export function ContainerCreateDaemonSetPage() {
                                     ))}
                                     <div className="w-fit">
                                       <Button
-                                        variant="secondary"
+                                        variant="muted"
+                                        appearance="outline"
                                         size="sm"
                                         leftIcon={<IconCirclePlus size={12} />}
                                         onClick={() => {
@@ -2487,7 +2496,8 @@ export function ContainerCreateDaemonSetPage() {
                                 </div>
                                 <div className="w-fit">
                                   <Button
-                                    variant="secondary"
+                                    variant="muted"
+                                    appearance="outline"
                                     size="sm"
                                     leftIcon={<IconCirclePlus size={12} />}
                                   >
@@ -2683,7 +2693,8 @@ export function ContainerCreateDaemonSetPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
@@ -2706,7 +2717,8 @@ export function ContainerCreateDaemonSetPage() {
 
                           <div className="w-fit">
                             <Button
-                              variant="secondary"
+                              variant="muted"
+                              appearance="outline"
                               size="sm"
                               leftIcon={<IconCirclePlus size={12} />}
                               onClick={() => {
@@ -2728,7 +2740,8 @@ export function ContainerCreateDaemonSetPage() {
 
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           leftIcon={<IconCirclePlus size={12} />}
                         >
@@ -3057,7 +3070,8 @@ export function ContainerCreateDaemonSetPage() {
                             ))}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 leftIcon={<IconCirclePlus size={12} />}
                                 onClick={() => {
@@ -3147,7 +3161,8 @@ export function ContainerCreateDaemonSetPage() {
 
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       leftIcon={<IconCirclePlus size={12} />}
                       onClick={() => {
@@ -3267,7 +3282,8 @@ export function ContainerCreateDaemonSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addToleration}
@@ -4216,7 +4232,8 @@ export function ContainerCreateDaemonSetPage() {
                             )}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 leftIcon={<IconCirclePlus size={12} />}
                                 onClick={() => {
@@ -4689,7 +4706,8 @@ export function ContainerCreateDaemonSetPage() {
                         })}
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={() => {
@@ -4961,7 +4979,8 @@ export function ContainerCreateDaemonSetPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
@@ -5208,7 +5227,8 @@ export function ContainerCreateDaemonSetPage() {
                                   )}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
@@ -5704,7 +5724,8 @@ export function ContainerCreateDaemonSetPage() {
                                       )}
                                       <div className="w-fit">
                                         <Button
-                                          variant="secondary"
+                                          variant="muted"
+                                          appearance="outline"
                                           size="sm"
                                           leftIcon={<IconCirclePlus size={12} />}
                                           onClick={() => {
@@ -6800,7 +6821,8 @@ export function ContainerCreateDaemonSetPage() {
                                   {/* Add Mount button inside volume container */}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
