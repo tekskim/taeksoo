@@ -517,7 +517,8 @@ function LabelsAnnotationsSection({
 
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} />}
                     onClick={onAddLabel}
@@ -580,7 +581,8 @@ function LabelsAnnotationsSection({
 
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} />}
                     onClick={onAddAnnotation}
@@ -1761,7 +1763,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addPodLabel}
@@ -1831,7 +1834,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addPodAnnotation}
@@ -2014,7 +2018,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addNameserver}
@@ -2073,7 +2078,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addSearchDomain}
@@ -2146,7 +2152,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addResolverOption}
@@ -2219,7 +2226,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addHostAlias}
@@ -2440,7 +2448,8 @@ export function ContainerCreateStatefulSetPage() {
                                     ))}
                                     <div className="w-fit">
                                       <Button
-                                        variant="secondary"
+                                        variant="muted"
+                                        appearance="outline"
                                         size="sm"
                                         leftIcon={<IconCirclePlus size={12} />}
                                         onClick={() => {
@@ -2464,7 +2473,8 @@ export function ContainerCreateStatefulSetPage() {
                         </div>
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                           >
@@ -2656,7 +2666,8 @@ export function ContainerCreateStatefulSetPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
@@ -2679,7 +2690,8 @@ export function ContainerCreateStatefulSetPage() {
 
                           <div className="w-fit">
                             <Button
-                              variant="secondary"
+                              variant="muted"
+                              appearance="outline"
                               size="sm"
                               leftIcon={<IconCirclePlus size={12} />}
                               onClick={() => {
@@ -2701,7 +2713,8 @@ export function ContainerCreateStatefulSetPage() {
 
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           leftIcon={<IconCirclePlus size={12} />}
                         >
@@ -3030,7 +3043,8 @@ export function ContainerCreateStatefulSetPage() {
                             ))}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 leftIcon={<IconCirclePlus size={12} />}
                                 onClick={() => {
@@ -3120,7 +3134,8 @@ export function ContainerCreateStatefulSetPage() {
 
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       leftIcon={<IconCirclePlus size={12} />}
                       onClick={() => {
@@ -3240,7 +3255,8 @@ export function ContainerCreateStatefulSetPage() {
 
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={addToleration}
@@ -3882,7 +3898,8 @@ export function ContainerCreateStatefulSetPage() {
 
                     <div className="w-fit">
                       <Button
-                        variant="secondary"
+                        variant="muted"
+                        appearance="outline"
                         size="sm"
                         leftIcon={<IconCirclePlus size={12} />}
                         onClick={addVolumeClaimTemplate}
@@ -4372,7 +4389,8 @@ export function ContainerCreateStatefulSetPage() {
                             )}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 leftIcon={<IconCirclePlus size={12} />}
                                 onClick={() => {
@@ -4845,7 +4863,8 @@ export function ContainerCreateStatefulSetPage() {
                         })}
                         <div className="w-fit">
                           <Button
-                            variant="secondary"
+                            variant="muted"
+                            appearance="outline"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} />}
                             onClick={() => {
@@ -5117,7 +5136,8 @@ export function ContainerCreateStatefulSetPage() {
                                   ))}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
@@ -5364,7 +5384,8 @@ export function ContainerCreateStatefulSetPage() {
                                   )}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {
@@ -5860,7 +5881,8 @@ export function ContainerCreateStatefulSetPage() {
                                       )}
                                       <div className="w-fit">
                                         <Button
-                                          variant="secondary"
+                                          variant="muted"
+                                          appearance="outline"
                                           size="sm"
                                           leftIcon={<IconCirclePlus size={12} />}
                                           onClick={() => {
@@ -6956,7 +6978,8 @@ export function ContainerCreateStatefulSetPage() {
                                   {/* Add Mount button inside volume container */}
                                   <div className="w-fit">
                                     <Button
-                                      variant="secondary"
+                                      variant="muted"
+                                      appearance="outline"
                                       size="sm"
                                       leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => {

@@ -303,7 +303,8 @@ function DataSection({
 
                 <div className="flex gap-1">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={addDataEntry}
                     leftIcon={<IconCirclePlus size={12} />}
@@ -311,7 +312,8 @@ function DataSection({
                     Add Data Entry
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     onClick={() => {
                       console.log('Read from file clicked');
@@ -365,7 +367,8 @@ function DataSection({
                 <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       onClick={() => {
                         console.log('Read from file clicked');
@@ -379,7 +382,8 @@ function DataSection({
                   </div>
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       onClick={() => {
                         console.log('Read from file clicked');
@@ -436,7 +440,8 @@ function DataSection({
                 <div className="grid w-full grid-cols-[1fr_1fr] gap-1">
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       onClick={() => {
                         console.log('Read from file clicked');
@@ -450,7 +455,8 @@ function DataSection({
                   </div>
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       onClick={() => {
                         console.log('Read from file clicked');
@@ -635,7 +641,7 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     onClick={onAddLabel}
@@ -698,7 +704,7 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
                     appearance="outline"
                     size="sm"
                     onClick={onAddAnnotation}

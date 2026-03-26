@@ -366,7 +366,8 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} />}
                     onClick={onAddLabel}
@@ -427,7 +428,8 @@ function LabelsAnnotationsSection({
                 ))}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} />}
                     onClick={onAddAnnotation}

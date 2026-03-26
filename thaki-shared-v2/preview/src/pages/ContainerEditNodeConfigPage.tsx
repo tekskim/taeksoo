@@ -1,24 +1,34 @@
-import { useState, useCallback, type ReactNode } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@shared/components/Button';
 import { Input } from '@shared/components/Input';
 import { FormField } from '@shared/components/FormField';
 import { Dropdown } from '@shared/components/Dropdown';
 import { Disclosure } from '@shared/components/Disclosure';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconCirclePlus,
-  IconX,
-  IconCheck,
-} from '@tabler/icons-react';
+import { CreateLayout } from '@shared/components/CreateLayout';
+import { FloatingCard } from '@shared/components/FloatingCard';
+import type { FloatingCardStatus } from '@shared/components/FloatingCard/FloatingCard.types';
+import SectionCard from '@shared/components/SectionCard/SectionCard';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
+
+type WizardSectionState = 'pre' | 'active' | 'done' | 'writing' | 'skipped';
+
+const mapStatus = (state: WizardSectionState): FloatingCardStatus => {
+  switch (state) {
+    case 'done':
+      return 'success';
+    case 'active':
+      return 'processing';
+    case 'writing':
+      return 'writing';
+    default:
+      return 'default';
+  }
+};
 
 const TAINT_EFFECT_OPTIONS = [
   { value: 'NoSchedule', label: 'NoSchedule' },
@@ -43,114 +53,6 @@ interface Annotation {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
-   ---------------------------------------- */
-
-type SummaryStatus = 'done' | 'active' | 'pending';
-
-function SummaryStatusIcon({ status }: { status: SummaryStatus }) {
-  if (status === 'done') {
-    return (
-      <div className="flex size-4 shrink-0 items-center justify-center rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)]">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 shrink-0 animate-spin rounded-full border border-[var(--color-text-muted)]"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-
-interface SummarySidebarProps {
-  nodeName: string;
-  description: string;
-  taints: Taint[];
-  labels: Label[];
-  annotations: Annotation[];
-  onCancel: () => void;
-  onSave: () => void;
-}
-
-function SummarySidebar({
-  nodeName,
-  description,
-  taints,
-  labels,
-  annotations,
-  onCancel,
-  onSave,
-}: SummarySidebarProps) {
-  const basicInfoStatus: SummaryStatus = nodeName ? 'done' : 'active';
-  const taintsStatus: SummaryStatus = taints.some((t) => t.key.trim()) ? 'done' : 'active';
-  const labelsAnnotationsStatus: SummaryStatus =
-    labels.some((l) => l.key.trim()) || annotations.some((a) => a.key.trim()) ? 'done' : 'active';
-
-  const sections = [
-    { label: 'Basic Information', status: basicInfoStatus },
-    { label: 'Taints', status: taintsStatus },
-    { label: 'Labels & Annotations', status: labelsAnnotationsStatus },
-  ];
-
-  return (
-    <div className="sticky top-4 w-[var(--wizard-summary-width)] shrink-0 self-start">
-      <div className="flex flex-col gap-6 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] p-4">
-        <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-4">
-          <div className="flex flex-col gap-4">
-            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
-            <div className="flex flex-col gap-0">
-              {sections.map((section) => (
-                <div key={section.label} className="flex items-center justify-between py-1">
-                  <span className="text-body-md text-[var(--color-text-default)]">
-                    {section.label}
-                  </span>
-                  <SummaryStatusIcon status={section.status} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="secondary" appearance="outline" onClick={onCancel} className="w-[80px]">
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={onSave} className="flex-1">
-            Save
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SectionShell({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] pb-4">
-      <div className="px-4 pt-4">
-        <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
-      </div>
-      <div className="mx-4 my-4 h-px bg-[var(--color-border-subtle)]" />
-      <div className="flex flex-col gap-6 px-4">{children}</div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Main Page Component
    ---------------------------------------- */
 
@@ -163,10 +65,6 @@ export function ContainerEditNodeConfigPage() {
   const [taints, setTaints] = useState<Taint[]>([{ key: '', value: '', effect: 'NoSchedule' }]);
   const [labels, setLabels] = useState<Label[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<Annotation[]>([{ key: '', value: '' }]);
-
-  const handleCancel = useCallback(() => {
-    navigate('/container/nodes');
-  }, [navigate]);
 
   const handleSave = useCallback(() => {
     console.log('Saving node config:', {
@@ -230,69 +128,73 @@ export function ContainerEditNodeConfigPage() {
     });
   }, []);
 
+  const basicInfoState: WizardSectionState = nodeName ? 'done' : 'active';
+  const taintsState: WizardSectionState = taints.some((t) => t.key.trim()) ? 'done' : 'active';
+  const labelsAnnotationsState: WizardSectionState =
+    labels.some((l) => l.key.trim()) || annotations.some((a) => a.key.trim()) ? 'done' : 'active';
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex min-h-8 items-center justify-between">
-        <h1 className="text-heading-h5 text-[var(--color-text-default)]">Node: {nodeName}</h1>
-        <div className="flex items-center gap-0.5">
-          <button
-            type="button"
-            className="rounded p-1.5 transition-colors hover:bg-[var(--color-surface-muted)]"
-            aria-label="Terminal"
-          >
-            <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-          </button>
-          <button
-            type="button"
-            className="rounded p-1.5 transition-colors hover:bg-[var(--color-surface-muted)]"
-            aria-label="File"
-          >
-            <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-          </button>
-          <button
-            type="button"
-            className="rounded p-1.5 transition-colors hover:bg-[var(--color-surface-muted)]"
-            aria-label="Copy"
-          >
-            <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-          </button>
-          <button
-            type="button"
-            className="rounded p-1.5 transition-colors hover:bg-[var(--color-surface-muted)]"
-            aria-label="Search"
-          >
-            <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-          </button>
-          <button
-            type="button"
-            className="rounded p-1.5 transition-colors hover:bg-[var(--color-surface-muted)]"
-            aria-label="Notifications"
-          >
-            <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-          </button>
+    <CreateLayout
+      header={
+        <div className="flex flex-col gap-2">
+          <h1 className="text-heading-h4 text-text">Node: {nodeName}</h1>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Edit node configuration including taints, labels, and annotations.
+          </p>
         </div>
-      </div>
-
-      <div className="flex w-full items-start gap-6">
-        <div className="flex flex-1 flex-col gap-4">
-          <SectionShell title="Basic information">
-            <FormField label="Node Name" required>
-              <Input value={nodeName} disabled className="w-full bg-[var(--color-surface-muted)]" />
-            </FormField>
-
-            <Disclosure label="Description" expanded={false}>
-              <div className="pt-2">
+      }
+      sidebar={
+        <FloatingCard
+          summaryTitle="Summary"
+          sections={[
+            {
+              items: [
+                { label: 'Basic Information', status: mapStatus(basicInfoState) },
+                { label: 'Taints', status: mapStatus(taintsState) },
+                { label: 'Labels & Annotations', status: mapStatus(labelsAnnotationsState) },
+              ],
+            },
+          ]}
+          cancelLabel="Cancel"
+          actionLabel="Save"
+          actionEnabled
+          onCancel={() => navigate('/container/nodes')}
+          onAction={handleSave}
+        />
+      }
+    >
+      <div className="flex flex-col gap-4">
+        {/* Basic Information Section */}
+        <SectionCard className="pb-4">
+          <SectionCard.Header title="Basic information" />
+          <SectionCard.Content showDividers={false}>
+            <div className="flex flex-col gap-6">
+              <FormField label="Node Name" required>
                 <Input
-                  placeholder="Enter description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full"
+                  value={nodeName}
+                  disabled
+                  className="w-full bg-[var(--color-surface-muted)]"
                 />
-              </div>
-            </Disclosure>
-          </SectionShell>
+              </FormField>
 
-          <SectionShell title="Taints">
+              <Disclosure label="Description" expanded={false}>
+                <div className="pt-2">
+                  <Input
+                    placeholder="Enter description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+              </Disclosure>
+            </div>
+          </SectionCard.Content>
+        </SectionCard>
+
+        {/* Taints Section */}
+        <SectionCard className="pb-4">
+          <SectionCard.Header title="Taints" />
+          <SectionCard.Content showDividers={false}>
             <div className="rounded-[6px] bg-[var(--color-surface-subtle)] px-4 py-3">
               <div className="flex flex-col gap-1.5">
                 {taints.length > 0 && (
@@ -346,7 +248,7 @@ export function ContainerEditNodeConfigPage() {
                   </div>
                 ))}
                 <div className="w-fit">
-                  <Button variant="secondary" appearance="outline" size="sm" onClick={addTaint}>
+                  <Button variant="muted" appearance="outline" size="sm" onClick={addTaint}>
                     <span className="inline-flex items-center gap-1">
                       <IconCirclePlus size={12} stroke={1.5} />
                       Add Taint
@@ -355,10 +257,15 @@ export function ContainerEditNodeConfigPage() {
                 </div>
               </div>
             </div>
-          </SectionShell>
+          </SectionCard.Content>
+        </SectionCard>
 
-          <SectionShell title="Labels & Annotations">
+        {/* Labels & Annotations Section */}
+        <SectionCard className="pb-4">
+          <SectionCard.Header title="Labels & Annotations" />
+          <SectionCard.Content showDividers={false}>
             <div className="flex flex-col gap-6">
+              {/* Labels */}
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
@@ -412,7 +319,7 @@ export function ContainerEditNodeConfigPage() {
                       </div>
                     ))}
                     <div className="w-fit">
-                      <Button variant="secondary" appearance="outline" size="sm" onClick={addLabel}>
+                      <Button variant="muted" appearance="outline" size="sm" onClick={addLabel}>
                         <span className="inline-flex items-center gap-1">
                           <IconCirclePlus size={12} stroke={1.5} />
                           Add Label
@@ -423,6 +330,7 @@ export function ContainerEditNodeConfigPage() {
                 </div>
               </div>
 
+              {/* Annotations */}
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1.5">
                   <span className="text-label-lg text-[var(--color-text-default)]">
@@ -479,7 +387,7 @@ export function ContainerEditNodeConfigPage() {
                     ))}
                     <div className="w-fit">
                       <Button
-                        variant="secondary"
+                        variant="muted"
                         appearance="outline"
                         size="sm"
                         onClick={addAnnotation}
@@ -494,20 +402,10 @@ export function ContainerEditNodeConfigPage() {
                 </div>
               </div>
             </div>
-          </SectionShell>
-        </div>
-
-        <SummarySidebar
-          nodeName={nodeName}
-          description={description}
-          taints={taints}
-          labels={labels}
-          annotations={annotations}
-          onCancel={handleCancel}
-          onSave={handleSave}
-        />
+          </SectionCard.Content>
+        </SectionCard>
       </div>
-    </div>
+    </CreateLayout>
   );
 }
 

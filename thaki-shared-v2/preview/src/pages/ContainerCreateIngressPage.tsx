@@ -534,7 +534,8 @@ export function ContainerCreateIngressPage() {
                             ))}
                             <div className="w-fit">
                               <Button
-                                variant="secondary"
+                                variant="muted"
+                                appearance="outline"
                                 size="sm"
                                 leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                 onClick={() => addPath(rule.id)}
@@ -552,7 +553,8 @@ export function ContainerCreateIngressPage() {
                 {/* Add Rule button */}
                 <div className="w-fit">
                   <Button
-                    variant="secondary"
+                    variant="muted"
+                    appearance="outline"
                     size="sm"
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={addRule}
@@ -695,7 +697,8 @@ export function ContainerCreateIngressPage() {
                           ))}
                           <div className="w-fit">
                             <Button
-                              variant="secondary"
+                              variant="muted"
+                              appearance="outline"
                               size="sm"
                               leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                               onClick={() =>
@@ -711,7 +714,8 @@ export function ContainerCreateIngressPage() {
                   ))}
                   <div className="w-fit">
                     <Button
-                      variant="secondary"
+                      variant="muted"
+                      appearance="outline"
                       size="sm"
                       leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                       onClick={addCertificate}
@@ -802,7 +806,8 @@ export function ContainerCreateIngressPage() {
                       ))}
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                           onClick={addLabel}
@@ -871,7 +876,8 @@ export function ContainerCreateIngressPage() {
                       ))}
                       <div className="w-fit">
                         <Button
-                          variant="secondary"
+                          variant="muted"
+                          appearance="outline"
                           size="sm"
                           leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                           onClick={addAnnotation}
