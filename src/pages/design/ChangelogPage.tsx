@@ -59,6 +59,77 @@ const TYPE_CONFIG: Record<
 
 const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '1.3.0',
+    date: '2026-03-26',
+    summary:
+      'Shared-v2 프리뷰 대규모 확장 — Compute, Container, Storage 앱 200+ 페이지, 87개 Drawer 구현',
+    entries: [
+      // New
+      {
+        type: 'new',
+        date: '2026-03-26',
+        description: 'Shared-v2에 Compute, Compute Admin, Container, Storage 앱 추가 (200+ 페이지)',
+        link: '/design/shared-components',
+      },
+      {
+        type: 'new',
+        date: '2026-03-25',
+        description: 'Shared-v2 전체 도메인 87개 Drawer 구현',
+      },
+      {
+        type: 'new',
+        date: '2026-03-25',
+        description: 'Compute 전 페이지 ContextMenu → Drawer 연결',
+      },
+
+      // Updated
+      {
+        type: 'updated',
+        date: '2026-03-26',
+        description:
+          'Container create pages 정제 — 타이포그래피, 레이아웃, 탭 정렬, DaemonSet 수정',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-26',
+        description:
+          'Container shared-v2 표준화 — pagination settings, FilterSearchInput, 컬럼 정렬',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-26',
+        description: 'Shared-v2 컴포넌트 정제 — Badge, ProgressBar, Sidebar, Tabs, Checkbox',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-26',
+        description: 'Container detail pages 정제 — InfoCard 병합, 테두리 제거, 간격 수정',
+      },
+      {
+        type: 'updated',
+        date: '2026-03-25',
+        description: 'Shared-v2 SectionCard, Popover 디자인 시스템 정렬',
+      },
+
+      // Fixed
+      {
+        type: 'fixed',
+        date: '2026-03-26',
+        description: 'Shared-v2 Compute 앱 UI 일괄 수정',
+      },
+      {
+        type: 'fixed',
+        date: '2026-03-25',
+        description: 'EntryPage를 TDS 스타일로 교체 (인라인 버전 제거)',
+      },
+      {
+        type: 'fixed',
+        date: '2026-03-25',
+        description: '머지 중 손실된 6개 Create 페이지 Stepper wizard 디자인 복원',
+      },
+    ],
+  },
+  {
     version: '1.2.0',
     date: '2026-03-23',
     summary: '다크모드 Zinc 팔레트 전환, Table 리사이즈, Figma 캡처 모드, 컴포넌트 문서 대폭 정비',
