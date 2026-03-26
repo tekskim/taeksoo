@@ -307,6 +307,10 @@ export function ComputeImagesPage() {
     setCurrentPage(1);
   }, []);
 
+  const handleBulkDelete = useCallback(() => {
+    setBulkDeleteOpen(true);
+  }, []);
+
   const handleFilterRemove = useCallback((filterId: string) => {
     setAppliedFilters((prev) => prev.filter((f) => f.id !== filterId));
     setCurrentPage(1);
