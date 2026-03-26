@@ -10,7 +10,7 @@
 **shared 라이브러리 컴포넌트만으로 TDS 전체 디자인을 구현할 수 있습니다.**
 
 252개 페이지 (7개 앱)를 shared 컴포넌트로 구현한 프리뷰가 그 증거입니다.
-다만 일부 컴포넌트는 API가 다르고, TDS에만 존재하는 컴포넌트가 있어 보완이 필요합니다.
+일부 컴포넌트는 API가 다르고 TDS에만 존재하는 컴포넌트가 있으므로, 아래 차이점을 참고하여 함께 맞춰가면 됩니다.
 
 ---
 
@@ -52,47 +52,47 @@
 | `WindowControl`        | `FrameControls`                             | 동일 역할, 이름만 다름                                        |
 | `Chip`                 | `Tag`                                       | TDS: Chip 별도 / shared: Tag로 통합                           |
 
-### 2.2 TDS에만 있는 컴포넌트 (shared 보완 필요)
+### 2.2 TDS에만 있는 컴포넌트
 
-| 컴포넌트                   | 설명                                             | 보완 우선순위                         |
-| -------------------------- | ------------------------------------------------ | ------------------------------------- |
-| **ListToolbar**            | 검색 + 필터 + 벌크 액션 통합 툴바                | 🔴 높음 — 모든 리스트 페이지에서 사용 |
-| **Wizard**                 | 멀티스텝 폼 (섹션 상태 관리)                     | 🟡 중간 — Create 페이지 패턴에서 사용 |
-| **Card**                   | 범용 카드 컨테이너                               | 🟡 중간 — 대시보드 페이지에서 사용    |
-| **Menu**                   | 드롭다운 메뉴 (섹션 구분 지원)                   | 🟡 중간                               |
-| **MetricCard**             | 메트릭 표시 카드 (title + value + tooltip)       | 🟡 중간 — 대시보드/모니터링에서 사용  |
-| **BadgeList**              | 테이블 내 배열 데이터 뱃지 오버플로 처리         | 🟡 중간                               |
-| **NotificationCenter**     | 알림 센터                                        | 🟢 낮음                               |
-| **ExpandableChecklist**    | 접기/펼치기 체크리스트                           | 🟢 낮음                               |
-| **FileListCard**           | 파일 목록 카드                                   | 🟢 낮음                               |
-| **CardTitle**              | 카드 타이틀                                      | 🟢 낮음                               |
-| **SelectionIndicator**     | 선택 인디케이터                                  | 🟢 낮음                               |
-| **NumberInput** (TDS 독립) | TDS에서는 별도 컴포넌트, shared에서는 Input 내장 | 🟢 낮음                               |
-| **SearchInput**            | TDS에서는 별도 컴포넌트                          | 🟢 낮음                               |
-| **Textarea** (TDS 독립)    | TDS에서는 Input 파생, shared에서는 별도 존재     | ✅ 이미 있음                          |
+| 컴포넌트                | 설명                                       | shared 대응                            |
+| ----------------------- | ------------------------------------------ | -------------------------------------- |
+| **ListToolbar**         | 검색 + 필터 + 벌크 액션 통합 툴바          | 없음 (수동 조합)                       |
+| **Wizard**              | 멀티스텝 폼 (섹션 상태 관리)               | `CreateLayout` + `Stepper`로 유사 구현 |
+| **Card**                | 범용 카드 컨테이너                         | 없음 (div 직접 구현)                   |
+| **Menu**                | 드롭다운 메뉴 (섹션 구분 지원)             | 없음                                   |
+| **MetricCard**          | 메트릭 표시 카드 (title + value + tooltip) | 없음                                   |
+| **BadgeList**           | 테이블 내 배열 데이터 뱃지 오버플로 처리   | `MultiItemDisplay`로 유사 구현         |
+| **NotificationCenter**  | 알림 센터                                  | 없음                                   |
+| **ExpandableChecklist** | 접기/펼치기 체크리스트                     | 없음                                   |
+| **FileListCard**        | 파일 목록 카드                             | 없음                                   |
+| **CardTitle**           | 카드 타이틀                                | 없음                                   |
+| **SelectionIndicator**  | 선택 인디케이터                            | 없음                                   |
+| **NumberInput** (별도)  | TDS에서는 별도 컴포넌트                    | shared `Input`에 내장                  |
+| **SearchInput**         | TDS에서는 별도 컴포넌트                    | shared `FilterSearchInput` 사용        |
+| **Textarea** (별도)     | TDS에서는 Input 파생                       | shared에 별도 `Textarea` 존재          |
 
 ### 2.3 shared에만 있는 컴포넌트
 
-| 컴포넌트                                                      | 설명                 | TDS 반영 필요 여부                  |
-| ------------------------------------------------------------- | -------------------- | ----------------------------------- |
-| `Terminal`                                                    | xterm 기반 웹 터미널 | Container 전용, TDS 불필요          |
-| `Editor` / `PromptEditor`                                     | Monaco 에디터        | 기능 컴포넌트, TDS 불필요           |
-| `CreateLayout` + `Stepper`                                    | 위자드 레이아웃      | TDS `Wizard`로 대체                 |
-| `ActionModal` / `DeleteResourceModal` / `ResourceActionModal` | 특화 모달            | TDS `Modal` + `ConfirmModal`로 대체 |
-| `FilterSearchInput` / `FilterSearchResults`                   | 필터 검색            | TDS `FilterSearchInput`에 해당      |
-| `ChartToggle` / `ChartTooltip`                                | 차트 보조            | 페이지 레벨, TDS 불필요             |
-| `AppIcon` (앱별 아이콘)                                       | 앱 전용 아이콘       | TDS 불필요                          |
-| `ErrorBoundary`                                               | 에러 바운더리        | 유틸리티, TDS 불필요                |
-| `Sidebar` / `SidebarMenu`                                     | 사이드바             | 앱 레벨, 각 앱별 구현               |
-| `Typography`                                                  | Title, Text, Label   | TDS는 Tailwind 유틸리티 클래스 사용 |
-| `TagInput`                                                    | 태그 입력            | 검토 필요                           |
-| `MultiItemDisplay`                                            | 다중 아이템 표시     | TDS `BadgeList`에 해당              |
+| 컴포넌트                                                      | 설명                 | TDS 대응                      |
+| ------------------------------------------------------------- | -------------------- | ----------------------------- |
+| `Terminal`                                                    | xterm 기반 웹 터미널 | 없음 (Container 전용)         |
+| `Editor` / `PromptEditor`                                     | Monaco 에디터        | 없음 (기능 컴포넌트)          |
+| `CreateLayout` + `Stepper`                                    | 위자드 레이아웃      | TDS `Wizard`                  |
+| `ActionModal` / `DeleteResourceModal` / `ResourceActionModal` | 특화 모달            | TDS `Modal` + `ConfirmModal`  |
+| `FilterSearchInput` / `FilterSearchResults`                   | 필터 검색            | TDS `FilterSearchInput`       |
+| `ChartToggle` / `ChartTooltip`                                | 차트 보조            | 없음 (페이지 레벨)            |
+| `AppIcon` (앱별 아이콘)                                       | 앱 전용 아이콘       | 없음                          |
+| `ErrorBoundary`                                               | 에러 바운더리        | 없음 (유틸리티)               |
+| `Sidebar` / `SidebarMenu`                                     | 사이드바             | 없음 (앱 레벨)                |
+| `Typography`                                                  | Title, Text, Label   | Tailwind 유틸리티 클래스 사용 |
+| `TagInput`                                                    | 태그 입력            | 없음                          |
+| `MultiItemDisplay`                                            | 다중 아이템 표시     | TDS `BadgeList`               |
 
 ---
 
 ## 3. API 차이 상세 (Breaking Changes)
 
-### 🔴 구조가 완전히 다른 컴포넌트 (마이그레이션 필수)
+### 🔴 구조가 완전히 다른 컴포넌트
 
 #### Select ↔ Dropdown
 
@@ -167,7 +167,7 @@
 | **Toggle**          | `checkedLabel` / `uncheckedLabel`      | `label` / `description`      | 라벨링 방식 변경            |
 | **DatePicker**      | `onApply` / `onCancel`                 | 즉시 `onChange`              | 동작 방식 변경              |
 
-### 🟢 호환 가능한 컴포넌트 (이름만 변경)
+### 🟢 호환 가능한 컴포넌트
 
 | shared              | TDS                 | 비고                        |
 | ------------------- | ------------------- | --------------------------- |
@@ -189,35 +189,21 @@
 
 ---
 
-## 4. shared 보완 권장 로드맵
+## 4. 논의 포인트
 
-### Phase 1: 필수 보완 (리스트/상세 페이지 구현에 필요)
+TDS와 shared 간 API를 맞춰가기 위해 함께 논의가 필요한 항목들입니다.
 
-| 항목                          | 설명                                                                                 | 난이도 |
-| ----------------------------- | ------------------------------------------------------------------------------------ | ------ |
-| **ListToolbar 추가**          | 검색 + 필터 + 벌크 액션 통합 툴바. 현재 shared에서는 수동으로 조합해야 함            | 중     |
-| **ConfirmModal 추가**         | 삭제 확인 전용 모달. 현재 `DeleteResourceModal`이 있지만 TDS ConfirmModal과 API 다름 | 하     |
-| **Select options 방식 지원**  | `Dropdown.Select`에 `options` 배열 shorthand 추가 (기존 children 패턴 유지)          | 하     |
-| **Badge variant 네이밍 통일** | `gre/blu/ylw/gry` → `success/info/warning/danger` 별칭 추가                          | 하     |
-
-### Phase 2: 개선 (Create/Dashboard 페이지 구현에 필요)
-
-| 항목                   | 설명                                                 | 난이도 |
-| ---------------------- | ---------------------------------------------------- | ------ |
-| **Wizard 패턴 추가**   | 섹션 상태 관리 (pre/active/done/writing) 포함 위자드 | 상     |
-| **MetricCard 추가**    | 대시보드용 메트릭 카드 (title + value + tooltip)     | 하     |
-| **Card 범용 컨테이너** | 대시보드 카드 래퍼                                   | 하     |
-| **BadgeList 추가**     | 테이블 내 배열 데이터 뱃지 오버플로 처리             | 중     |
-| **EmptyState 개선**    | icon/title/description/action 패턴으로 확장          | 하     |
-
-### Phase 3: 정리 (코드 품질 향상)
-
-| 항목                           | 설명                                                | 난이도 |
-| ------------------------------ | --------------------------------------------------- | ------ |
-| **FormField Compound 지원**    | 기존 simple + compound 두 API 모두 지원             | 중     |
-| **Button variant 단순화**      | `variant` + `appearance` → 단일 `variant` 옵션 추가 | 하     |
-| **Input fullWidth 기본 지원**  | `fullWidth` prop 명시적 추가                        | 하     |
-| **Pagination totalPages 지원** | `totalPages` prop 추가 (기존 `totalCount` 유지)     | 하     |
+| 영역             | 현재 상태                                              | 논의 사항                             |
+| ---------------- | ------------------------------------------------------ | ------------------------------------- |
+| **Select API**   | shared: Compound / TDS: 배열 props                     | 어떤 방식으로 통일할지                |
+| **Modal/Drawer** | shared: Overlay 통합 / TDS: 별도 컴포넌트              | 어떤 구조를 기준으로 할지             |
+| **Badge 네이밍** | shared: `gre/blu/ylw` / TDS: `success/info/warning`    | 네이밍 체계 통일                      |
+| **Button API**   | shared: `variant` + `appearance` / TDS: `variant` 통합 | 분리 vs 통합                          |
+| **FormField**    | shared: 단일 / TDS: Compound                           | API 통일 방향                         |
+| **ListToolbar**  | TDS에만 존재                                           | shared에 추가할지, 각 앱에서 조합할지 |
+| **Wizard**       | shared: `CreateLayout`+`Stepper` / TDS: `Wizard`       | 위자드 패턴 통일                      |
+| **Pagination**   | shared: `totalCount` 기반 / TDS: `totalPages` 기반     | 계산 방식 통일                        |
+| **Typography**   | shared: 컴포넌트 / TDS: Tailwind 유틸리티 클래스       | 접근 방식 결정                        |
 
 ---
 
