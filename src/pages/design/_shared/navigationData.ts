@@ -38,13 +38,10 @@ import {
   IconLayoutList,
   IconAccessible,
   IconChecklist,
-  IconBook,
-  IconComponents,
   IconDeviceDesktop,
   IconAlertTriangle,
   IconStack2,
   IconSettings,
-  IconPackages,
   IconHistory,
   IconFolder,
 } from '@tabler/icons-react';
@@ -469,69 +466,6 @@ const etcItems: NavItem[] = [
   },
 ];
 
-const figmaItems: NavItem[] = [
-  {
-    id: 'figma-guide',
-    label: 'Migration Guide',
-    icon: IconBook,
-    path: '/design/figma/guide',
-  },
-  {
-    id: 'figma-foundation',
-    label: 'Foundation Capture',
-    icon: IconPalette,
-    path: '/design/figma/foundation',
-  },
-  {
-    id: 'figma-components',
-    label: 'Components Capture',
-    icon: IconComponents,
-    path: '/design/figma/components',
-  },
-];
-
-const prototypeItems: NavItem[] = [
-  {
-    id: 'ai-workspace',
-    label: 'AI Workspace Setup',
-    icon: IconStack2,
-    path: '/design/prototype/ai-workspace',
-  },
-];
-
-const auditItems: NavItem[] = [
-  {
-    id: 'audit-checklist',
-    label: 'Audit Checklist',
-    icon: IconChecklist,
-    path: '/design/audit',
-  },
-  {
-    id: 'project-todo',
-    label: 'Project TODO',
-    icon: IconListNumbers,
-    path: '/design/todo',
-  },
-];
-
-const sharedItems: NavItem[] = [
-  {
-    id: 'shared-components',
-    label: 'Shared Components',
-    icon: IconPackages,
-    path: '/design/shared-components',
-  },
-];
-
-const testItems: NavItem[] = [
-  {
-    id: 'nested-box-test',
-    label: 'Nested Box',
-    icon: IconBoxMultiple,
-    path: '/design/test/nested-box',
-  },
-];
-
 const changelogItems: NavItem[] = [
   {
     id: 'changelog',
@@ -553,11 +487,6 @@ export const navGroups: NavGroup[] = [
   { title: 'Patterns', items: patternItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Etc', items: etcItems },
-  { title: 'Figma Migration', items: figmaItems },
-  { title: 'Audit', items: auditItems },
-  { title: 'Prototype', items: prototypeItems },
-  { title: 'Shared', items: sharedItems },
-  { title: 'Test', items: testItems },
 ];
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => g.items);
@@ -673,17 +602,4 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/charts/area-chart': '2026-03-09',
   '/design/charts/pie-chart': '2026-03-09',
   '/design/charts/tooltip': '2026-03-01 10:30:00',
-  // Figma Migration
-  '/design/figma/guide': '2026-03-01 10:30:00',
-  '/design/figma/foundation': '2026-03-01 10:30:00',
-  '/design/figma/components': '2026-03-01 10:30:00',
-  // Prototype
-  '/design/prototype/ai-workspace': '2026-03-05 14:00:00',
-  // Audit
-  '/design/audit': '2026-03-11 10:00:00',
-  '/design/todo': '2026-03-11 12:00:00',
-  // Shared
-  '/design/shared-components': '2026-03-18 12:00:00',
-  // Test
-  '/design/test/nested-box': '2026-03-05 01:30:00',
 };
