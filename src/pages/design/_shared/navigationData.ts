@@ -229,6 +229,12 @@ const feedbackItems: NavItem[] = [
     icon: IconBell,
     path: '/design/components/notification-center',
   },
+  {
+    id: 'global-notification-panel',
+    label: 'Global Notification Panel',
+    icon: IconBell,
+    path: '/design/components/global-notification-panel',
+  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -336,12 +342,6 @@ const patternItems: NavItem[] = [
     label: 'Form Field',
     icon: IconForms,
     path: '/design/patterns/form-field-pattern',
-  },
-  {
-    id: 'global-notification-panel',
-    label: 'Global Notification Panel',
-    icon: IconBell,
-    path: '/design/components/global-notification-panel',
   },
   {
     id: 'csv-download',
@@ -476,7 +476,6 @@ const changelogItems: NavItem[] = [
 ];
 
 export const navGroups: NavGroup[] = [
-  { title: 'Changelog', items: changelogItems },
   { title: 'Foundation', items: foundationItems },
   { title: 'Policies', items: policyItems },
   { title: 'Form Controls', items: formControlItems },

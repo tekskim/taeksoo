@@ -75,13 +75,6 @@ export function TypographyPage() {
                     weight: '600',
                     desc: 'Label heading',
                   },
-                  {
-                    token: 'h7',
-                    size: '12px',
-                    lh: '18px',
-                    weight: '600',
-                    desc: 'Card section title',
-                  },
                 ].map(({ token, size, lh, weight, desc, extra }) => (
                   <tr key={token} className="border-b border-[var(--color-border-subtle)]">
                     <td className="py-2 pr-4 w-[120px]">
