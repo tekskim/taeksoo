@@ -317,6 +317,7 @@ import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
 import { DesignSystemLayout } from '@/pages/design/DesignSystemLayout';
+import { LabLayout } from '@/pages/lab/LabLayout';
 import { DesignOverviewPage } from '@/pages/design/DesignOverviewPage';
 import { AllComponentsPage } from '@/pages/design/AllComponentsPage';
 import { TokenArchitecturePage } from '@/pages/design/foundation/TokenArchitecturePage';
@@ -1100,11 +1101,6 @@ function AppRoutes() {
         <Route path="patterns/form-field-pattern" element={<FormFieldPatternPage />} />
         <Route path="patterns/shell" element={<ShellPatternPage />} />
         <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
-        {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
-        <Route path="test/nested-box" element={<NestedBoxTestPage />} />
-        <Route path="audit" element={<DesignAuditPage />} />
-        <Route path="todo" element={<DesignTodoPage />} />
-        <Route path="shared-components" element={<SharedComponentsPage />} />
         <Route path="changelog" element={<ChangelogPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
@@ -1126,12 +1122,8 @@ function AppRoutes() {
         <Route path="charts/pie-chart" element={<PieChartPage />} />
         <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
-        <Route path="figma/guide" element={<FigmaGuidePage />} />
-        <Route path="figma/foundation" element={<FigmaFoundationPage />} />
-        <Route path="figma/components" element={<FigmaComponentsPage />} />
       </Route>
       {/* Standalone design showcase pages (outside DesignSystemLayout) */}
-      <Route path="/design/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
       <Route path="/design/drawers" element={<DrawersPage />} />
       <Route path="/design/modals" element={<ModalsPage />} />
       <Route path="/design/cloudbuilder-modals" element={<CloudBuilderModalsPage />} />
@@ -1141,6 +1133,18 @@ function AppRoutes() {
       <Route path="/design/comparison" element={<ProductionComparisonPage />} />
       {/* Legacy route */}
       <Route path="/design-system" element={<DesignSystemPage />} />
+
+      {/* Lab Routes */}
+      <Route path="/lab" element={<LabLayout />}>
+        <Route path="figma/guide" element={<FigmaGuidePage />} />
+        <Route path="figma/foundation" element={<FigmaFoundationPage />} />
+        <Route path="figma/components" element={<FigmaComponentsPage />} />
+        <Route path="audit" element={<DesignAuditPage />} />
+        <Route path="todo" element={<DesignTodoPage />} />
+        <Route path="shared-components" element={<SharedComponentsPage />} />
+        <Route path="test/nested-box" element={<NestedBoxTestPage />} />
+      </Route>
+      <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
 
       {/* Desktop Routes */}
       <Route path="/desktop" element={<DesktopPage />} />

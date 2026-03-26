@@ -217,6 +217,9 @@ export function EntryPage() {
             <Button variant="secondary" size="sm" onClick={() => navigate('/design')}>
               Design system{' '}
             </Button>
+            <Button variant="secondary" size="sm" onClick={() => navigate('/lab')}>
+              Lab{' '}
+            </Button>
             <Button
               variant="secondary"
               size="sm"
