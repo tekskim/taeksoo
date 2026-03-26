@@ -622,12 +622,12 @@ export const pageLastUpdated: Record<string, string> = {
   // Feedback
   '/design/components/inline-message': '2026-03-18 11:00:00',
   '/design/components/loading': '2026-03-09',
-  '/design/components/progress-bar': '2026-03-09',
+  '/design/components/progress-bar': '2026-03-26 09:00:00',
   '/design/components/skeleton': '2026-03-09',
   '/design/components/spinner': '2026-03-09',
   '/design/components/toast': '2026-03-18 11:00:00',
-  '/design/components/snackbar': '2026-03-23 12:00:00',
-  '/design/components/notification-center': '2026-03-23 12:00:00',
+  '/design/components/snackbar': '2026-03-26 10:00:00',
+  '/design/components/notification-center': '2026-03-26 10:00:00',
   '/design/components/global-notification-panel': '2026-03-18 11:00:00',
   // Navigation
   '/design/components/topbar': '2026-03-09',
