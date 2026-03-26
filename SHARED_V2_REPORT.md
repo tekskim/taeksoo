@@ -1,751 +1,253 @@
-# shared-v2 프리뷰 앱 리포트
+# shared-v2 프리뷰 리포트
 
-> **작성일**: 2026-03-26
 > **프리뷰 사이트**: https://thakicloud.github.io/tds_ssot/shared-v2/
-> **소스 경로**: `thaki-shared-v2/preview/`
-> **shared 라이브러리 버전**: `@ThakiCloud/shared` v1.9.3
+> **작성일**: 2026-03-26
 
 ---
 
-## Part 1: 전체 개요
+## 결론
 
-### 1.1 목적
+**shared 라이브러리 컴포넌트만으로 TDS 전체 디자인을 구현할 수 있습니다.**
 
-이 프리뷰 앱은 `@ThakiCloud/shared` 라이브러리의 컴포넌트만으로 **모든 앱의 모든 페이지를 구현**한 레퍼런스입니다. TDS SSoT(디자인 시스템 원본)의 디자인을 shared 라이브러리 기반으로 재현하여, 개발팀이 실제 구현 시 참고할 수 있는 코드 레벨의 가이드 역할을 합니다.
-
-### 1.2 앱별 페이지 현황
-
-| 앱                | 경로 접두사        | 페이지 수 | 설명                                   |
-| ----------------- | ------------------ | --------: | -------------------------------------- |
-| **Container**     | `/container/*`     |       104 | Kubernetes 리소스 (Pod, Deployment 등) |
-| **Compute Admin** | `/compute-admin/*` |        61 | 관리자용 Compute + Network + Storage   |
-| **Compute**       | `/compute/*`       |        47 | 테넌트용 Compute + Network + Storage   |
-| **IAM**           | `/iam/*`           |        23 | 사용자/역할/정책 관리                  |
-| **Design**        | `/design/*`        |         8 | 컴포넌트 쇼케이스                      |
-| **Storage**       | `/storage/*`       |         5 | Object/Block Storage                   |
-| **CloudBuilder**  | `/cloudbuilder/*`  |         3 | 클라우드 빌더                          |
-| **Entry**         | `/`                |         1 | 앱 허브 (진입점)                       |
-| **합계**          |                    |   **252** |                                        |
-
-### 1.3 페이지 패턴별 분류
-
-| 패턴              | 수량 | 예시                                                         |
-| ----------------- | ---: | ------------------------------------------------------------ |
-| **List** (리스트) | ~100 | `ComputeInstancesPage`, `IAMUsersPage`                       |
-| **Detail** (상세) |   72 | `ComputeInstanceDetailPage`, `ContainerPodDetailPage`        |
-| **Create** (생성) |   59 | `ComputeCreateInstancePage`, `ContainerCreateDeploymentPage` |
-| **Edit YAML**     |   21 | `ContainerEditDeploymentYamlPage` (Container 전용)           |
-
-### 1.4 공유 컴포넌트 (64개)
-
-라이브러리 경로: `thaki-shared-v2/src/components/`
-
-**핵심 UI**
-
-| 컴포넌트                     | 설명                                     |
-| ---------------------------- | ---------------------------------------- |
-| `Button`                     | variant/appearance/size 기반 버튼        |
-| `Input` / `NumberInput`      | 텍스트/숫자 입력                         |
-| `Textarea`                   | 여러 줄 입력                             |
-| `Dropdown`                   | Compound 패턴 (Select, ComboBox, Option) |
-| `Checkbox`                   | 체크박스                                 |
-| `RadioButton` / `RadioGroup` | 라디오 버튼                              |
-| `Toggle`                     | on/off 스위치                            |
-| `Range`                      | 범위 슬라이더                            |
-| `DatePicker`                 | 날짜 선택                                |
-| `Password`                   | 비밀번호 입력                            |
-| `TagInput`                   | 태그 입력                                |
-
-**데이터 표시**
-
-| 컴포넌트                    | 설명                                   |
-| --------------------------- | -------------------------------------- |
-| `Table` / `SelectableTable` | 데이터 테이블 (정렬, 선택)             |
-| `Pagination`                | 페이지네이션 (totalCount 기반)         |
-| `Badge`                     | 상태 뱃지 (theme: gre/blu/ylw/red/gry) |
-| `Tag`                       | 태그/라벨                              |
-| `StatusIndicator`           | 상태 표시 (16개 variant)               |
-| `ProgressBar`               | 진행률 바                              |
-| `Tooltip`                   | 툴팁                                   |
-| `CopyButton`                | 클립보드 복사                          |
-| `Skeleton`                  | 로딩 스켈레톤                          |
-
-**레이아웃**
-
-| 컴포넌트           | 설명                                 |
-| ------------------ | ------------------------------------ |
-| `AppLayout`        | 전체 앱 레이아웃 셸                  |
-| `Layout`           | VStack, HStack, Block, Container     |
-| `SectionCard`      | 섹션 카드 (Header, Content, DataRow) |
-| `DetailPageHeader` | 상세 페이지 헤더                     |
-| `CreateLayout`     | Create 페이지 위자드 레이아웃        |
-| `FloatingCard`     | 접기/펼치기 카드                     |
-| `Stepper`          | 위자드 스텝 표시                     |
-| `Typography`       | Title, Text, Label                   |
-
-**네비게이션**
-
-| 컴포넌트                       | 설명                                |
-| ------------------------------ | ----------------------------------- |
-| `Tabs` / `Tab`                 | 탭 네비게이션 (line/button variant) |
-| `TabBar`                       | 브라우저 스타일 탭바                |
-| `TabSelector` / `TabContainer` | 탭 선택                             |
-| `Breadcrumb`                   | 경로 표시                           |
-| `Sidebar`                      | 사이드바                            |
-| `ContextMenu`                  | 컨텍스트 메뉴 (Compound 패턴)       |
-| `NavigationControls`           | 앞/뒤 이동                          |
-
-**오버레이**
-
-| 컴포넌트              | 설명                         |
-| --------------------- | ---------------------------- |
-| `Overlay`             | Modal/Drawer 통합 (Template) |
-| `ActionModal`         | 액션 확인 모달               |
-| `DeleteResourceModal` | 삭제 확인 모달               |
-| `TableSettingDrawer`  | 테이블 설정 드로어           |
-
-**기타**
-
-| 컴포넌트                       | 설명                    |
-| ------------------------------ | ----------------------- |
-| `FilterSearchInput`            | 필터 검색 입력          |
-| `MonitoringToolbar`            | 모니터링 시간 범위 선택 |
-| `ChartToggle` / `ChartTooltip` | 차트 보조               |
-| `Terminal`                     | 웹 터미널 (xterm)       |
-| `Editor`                       | 코드 에디터 (Monaco)    |
-| `Toast`                        | 알림 (sonner 연동)      |
-| `InlineMessage`                | 인라인 알림             |
-| `Disclosure` / `Accordion`     | 접기/펼치기             |
-| `Popover`                      | 팝오버                  |
-| `Icon`                         | SVG 아이콘              |
-| `LoadingSpinner`               | 로딩 스피너             |
-| `EmptyUI`                      | 빈 상태                 |
-| `Error` / `ErrorBoundary`      | 에러 상태               |
+252개 페이지 (7개 앱)를 shared 컴포넌트로 구현한 프리뷰가 그 증거입니다.
+다만 일부 컴포넌트는 API가 다르고, TDS에만 존재하는 컴포넌트가 있어 보완이 필요합니다.
 
 ---
 
-## Part 2: 컴포넌트 API 참조
+## 1. 앱별 커버리지
 
-### 2.1 Import 방식
+| 앱            | 페이지 수 | 경로               |
+| ------------- | --------: | ------------------ |
+| Container     |       104 | `/container/*`     |
+| Compute Admin |        61 | `/compute-admin/*` |
+| Compute       |        47 | `/compute/*`       |
+| IAM           |        23 | `/iam/*`           |
+| Design        |         8 | `/design/*`        |
+| Storage       |         5 | `/storage/*`       |
+| CloudBuilder  |         3 | `/cloudbuilder/*`  |
+| **합계**      |   **252** |                    |
 
-프리뷰 앱에서는 모노레포 내부 alias를 사용합니다. 실제 앱에서의 import와 대응:
+---
+
+## 2. TDS ↔ shared 컴포넌트 매핑
+
+### 2.1 동일 역할, 다른 이름/API
+
+| TDS 컴포넌트           | shared 컴포넌트                             | 차이 요약                                                     |
+| ---------------------- | ------------------------------------------- | ------------------------------------------------------------- |
+| `Select`               | `Dropdown.Select` + `Dropdown.Option`       | TDS: `options` 배열 props / shared: Compound children 패턴    |
+| `Modal`                | `Overlay.Template type="modal"`             | TDS: 별도 컴포넌트 / shared: Overlay 통합                     |
+| `Drawer`               | `Overlay.Template type="drawer-horizontal"` | TDS: 별도 컴포넌트 / shared: Overlay 통합                     |
+| `Radio` + `RadioGroup` | `RadioButton` + `RadioGroup`                | TDS: Context 기반 / shared: options 배열 패턴                 |
+| `DetailHeader`         | `DetailPageHeader`                          | TDS: Compound (Title, Actions, InfoGrid) / shared: props 기반 |
+| `PageHeader`           | `Title`                                     | TDS: title + actions / shared: title만                        |
+| `PageShell`            | `AppLayout`                                 | TDS: sidebar/tabBar/topBar 통합 / shared: Content 기반        |
+| `EmptyState`           | `EmptyUI`                                   | TDS: icon/title/description/action / shared: 간단한 빈 상태   |
+| `ErrorState`           | `Error403` / `Error404` / `Error500`        | TDS: 범용 / shared: HTTP 에러 코드별 분리                     |
+| `Loading`              | `LoadingSpinner`                            | 동일 역할, 이름만 다름                                        |
+| `Slider`               | `Range`                                     | 동일 역할, 이름만 다름                                        |
+| `InfoBox`              | `InfoContainer`                             | TDS: label+value / shared: 다른 구조                          |
+| `SNBMenuItem`          | `SidebarMenuItem`                           | 동일 역할                                                     |
+| `TopBar`               | `NavigationControls` + `FrameControls`      | TDS: 통합 / shared: 분리                                      |
+| `WindowControl`        | `FrameControls`                             | 동일 역할, 이름만 다름                                        |
+| `Chip`                 | `Tag`                                       | TDS: Chip 별도 / shared: Tag로 통합                           |
+
+### 2.2 TDS에만 있는 컴포넌트 (shared 보완 필요)
+
+| 컴포넌트                   | 설명                                             | 보완 우선순위                         |
+| -------------------------- | ------------------------------------------------ | ------------------------------------- |
+| **ListToolbar**            | 검색 + 필터 + 벌크 액션 통합 툴바                | 🔴 높음 — 모든 리스트 페이지에서 사용 |
+| **Wizard**                 | 멀티스텝 폼 (섹션 상태 관리)                     | 🟡 중간 — Create 페이지 패턴에서 사용 |
+| **Card**                   | 범용 카드 컨테이너                               | 🟡 중간 — 대시보드 페이지에서 사용    |
+| **Menu**                   | 드롭다운 메뉴 (섹션 구분 지원)                   | 🟡 중간                               |
+| **MetricCard**             | 메트릭 표시 카드 (title + value + tooltip)       | 🟡 중간 — 대시보드/모니터링에서 사용  |
+| **BadgeList**              | 테이블 내 배열 데이터 뱃지 오버플로 처리         | 🟡 중간                               |
+| **NotificationCenter**     | 알림 센터                                        | 🟢 낮음                               |
+| **ExpandableChecklist**    | 접기/펼치기 체크리스트                           | 🟢 낮음                               |
+| **FileListCard**           | 파일 목록 카드                                   | 🟢 낮음                               |
+| **CardTitle**              | 카드 타이틀                                      | 🟢 낮음                               |
+| **SelectionIndicator**     | 선택 인디케이터                                  | 🟢 낮음                               |
+| **NumberInput** (TDS 독립) | TDS에서는 별도 컴포넌트, shared에서는 Input 내장 | 🟢 낮음                               |
+| **SearchInput**            | TDS에서는 별도 컴포넌트                          | 🟢 낮음                               |
+| **Textarea** (TDS 독립)    | TDS에서는 Input 파생, shared에서는 별도 존재     | ✅ 이미 있음                          |
+
+### 2.3 shared에만 있는 컴포넌트
+
+| 컴포넌트                                                      | 설명                 | TDS 반영 필요 여부                  |
+| ------------------------------------------------------------- | -------------------- | ----------------------------------- |
+| `Terminal`                                                    | xterm 기반 웹 터미널 | Container 전용, TDS 불필요          |
+| `Editor` / `PromptEditor`                                     | Monaco 에디터        | 기능 컴포넌트, TDS 불필요           |
+| `CreateLayout` + `Stepper`                                    | 위자드 레이아웃      | TDS `Wizard`로 대체                 |
+| `ActionModal` / `DeleteResourceModal` / `ResourceActionModal` | 특화 모달            | TDS `Modal` + `ConfirmModal`로 대체 |
+| `FilterSearchInput` / `FilterSearchResults`                   | 필터 검색            | TDS `FilterSearchInput`에 해당      |
+| `ChartToggle` / `ChartTooltip`                                | 차트 보조            | 페이지 레벨, TDS 불필요             |
+| `AppIcon` (앱별 아이콘)                                       | 앱 전용 아이콘       | TDS 불필요                          |
+| `ErrorBoundary`                                               | 에러 바운더리        | 유틸리티, TDS 불필요                |
+| `Sidebar` / `SidebarMenu`                                     | 사이드바             | 앱 레벨, 각 앱별 구현               |
+| `Typography`                                                  | Title, Text, Label   | TDS는 Tailwind 유틸리티 클래스 사용 |
+| `TagInput`                                                    | 태그 입력            | 검토 필요                           |
+| `MultiItemDisplay`                                            | 다중 아이템 표시     | TDS `BadgeList`에 해당              |
+
+---
+
+## 3. API 차이 상세 (Breaking Changes)
+
+### 🔴 구조가 완전히 다른 컴포넌트 (마이그레이션 필수)
+
+#### Select ↔ Dropdown
 
 ```tsx
-// 프리뷰 (모노레포 내부)
-import { Button } from '@shared/components/Button';
-import { Table } from '@shared/components/Table';
-
-// 실제 앱 (npm 패키지)
-import { Button, Table } from '@thaki/shared';
-```
-
-앱 엔트리에서 CSS를 한 번 import:
-
-```tsx
-import '@thaki/shared/index.css';
-```
-
-### 2.2 핵심 컴포넌트 Props
-
-#### Button
-
-```tsx
-<Button
-  variant="primary" // primary | secondary | tertiary | success | error | warning | muted
-  appearance="solid" // solid | outline | ghost
-  size="md" // xs | sm | md | lg
-  disabled={false}
-  onClick={handleClick}
->
-  Save
-</Button>
-```
-
-#### Table
-
-```tsx
-import type { TableColumn, SortOrder } from '@thaki/shared';
-
-const columns: TableColumn[] = [
-  { key: 'name', header: 'Name', sortable: true, minWidth: 160 },
-  { key: 'status', header: 'Status', width: 64, align: 'center',
-    render: (row) => <StatusIndicator variant={row.status} /> },
-  { key: 'createdAt', header: 'Created at', sortable: true, align: 'right' },
-  { key: 'actions', header: '', width: 48, align: 'center',
-    render: (row) => <ContextMenu.Root items={getMenuItems(row)} /> },
-];
-
-<Table columns={columns} rows={data} sort={sortKey} order={sortOrder} onSortChange={handleSort} />
-
-// 선택 가능 테이블
-<SelectableTable
-  columns={columns}
-  rows={data}
-  selectedRowKeys={selected}
-  onSelectedRowKeysChange={setSelected}
-  getRowId={(row) => row.id}
-/>
-```
-
-#### Dropdown (Select)
-
-```tsx
-// children 패턴 (Compound Component)
-<Dropdown.Select
-  value={selectedValue}
-  onChange={(value) => setSelectedValue(String(value))}
-  placeholder="Select region"
->
+// shared (Compound 패턴)
+<Dropdown.Select value={val} onChange={setVal}>
   <Dropdown.Option value="kr" label="Korea" />
-  <Dropdown.Option value="us" label="United States" />
 </Dropdown.Select>
 
-// ComboBox (검색 가능)
-<Dropdown.ComboBox
-  value={searchValue}
-  onChange={handleChange}
-  placeholder="Search..."
->
-  {filteredOptions.map(opt => (
-    <Dropdown.Option key={opt.value} value={opt.value} label={opt.label} />
-  ))}
-</Dropdown.ComboBox>
+// TDS (배열 props)
+<Select options={[{ value: 'kr', label: 'Korea' }]} value={val} onChange={setVal} />
+```
+
+#### Modal / Drawer ↔ Overlay
+
+```tsx
+// shared (통합)
+<Overlay.Template type="modal" title="Delete" appeared={isOpen} onConfirm={fn} onCancel={fn} />
+<Overlay.Template type="drawer-horizontal" title="Edit" appeared={isOpen} ... />
+
+// TDS (분리)
+<Modal isOpen={isOpen} title="Delete" onClose={fn}>...</Modal>
+<Drawer isOpen={isOpen} title="Edit" onClose={fn} footer={...}>...</Drawer>
 ```
 
 #### FormField
 
 ```tsx
-// children에 자동으로 error 등 props를 주입
-<FormField label="Instance Name" required error={nameError}>
-  <Input value={name} onChange={(e) => setName(e.target.value)} />
+// shared (단일, children props 자동 주입)
+<FormField label="Name" required error={nameError}>
+  <Input value={name} onChange={...} />
 </FormField>
 
-<FormField label="Region" hint="Select your preferred region">
-  <Dropdown.Select value={region} onChange={setRegion} placeholder="Select">
-    <Dropdown.Option value="kr" label="Korea" />
-  </Dropdown.Select>
+// TDS (Compound)
+<FormField label="Name" required error={!!nameError}>
+  <Input fullWidth />
+  <FormField.ErrorMessage>{nameError}</FormField.ErrorMessage>
 </FormField>
-```
-
-#### Tabs
-
-```tsx
-// Uncontrolled
-<Tabs defaultActiveTabId="details" variant="line" size="sm">
-  <Tab id="details" label="Details">Details content</Tab>
-  <Tab id="volumes" label="Volumes">Volumes content</Tab>
-</Tabs>
-
-// Controlled
-<Tabs activeTabId={activeTab} onChange={setActiveTab} variant="button" size="sm">
-  <Tab id="all" label="All">All items</Tab>
-  <Tab id="active" label="Active">Active items</Tab>
-</Tabs>
-```
-
-#### Overlay (Modal / Drawer)
-
-```tsx
-// Modal
-<Overlay.Template
-  type="modal"
-  title="Delete Instance"
-  description="This action cannot be undone."
-  appeared={isModalOpen}
-  onConfirm={handleDelete}
-  onCancel={() => setIsModalOpen(false)}
-  confirmUI="Delete"
-  cancelUI="Cancel"
-/>
-
-// Drawer
-<Overlay.Template
-  type="drawer-horizontal"
-  title="Edit Instance"
-  appeared={isDrawerOpen}
-  onConfirm={handleSave}
-  onCancel={() => setIsDrawerOpen(false)}
-  confirmUI="Save"
-  cancelUI="Cancel"
->
-  <FormField label="Name" required>
-    <Input value={name} onChange={(e) => setName(e.target.value)} />
-  </FormField>
-</Overlay.Template>
-```
-
-#### SectionCard
-
-```tsx
-<SectionCard>
-  <SectionCard.Header title="Basic Information" />
-  <SectionCard.Content>
-    <SectionCard.DataRow label="Name" value={instance.name} />
-    <SectionCard.DataRow label="Status">
-      <StatusIndicator variant="active" label="Active" />
-    </SectionCard.DataRow>
-    <SectionCard.DataRow label="Network" value={instance.network} isLink />
-  </SectionCard.Content>
-</SectionCard>
-```
-
-#### DetailPageHeader
-
-```tsx
-<DetailPageHeader
-  title={instance.name}
-  infoFields={[
-    { label: 'Status', value: <StatusIndicator variant="active" /> },
-    { label: 'ID', value: instance.id, copyText: instance.id },
-    { label: 'Host', value: instance.host },
-    { label: 'Created at', value: instance.createdAt },
-  ]}
-  actionButtons={[
-    { label: 'Console', icon: <IconTerminal2 size={12} />, onClick: handleConsole },
-    { label: 'Start', icon: <IconPlayerPlay size={12} />, onClick: handleStart },
-    { label: 'Delete', icon: <IconTrash size={12} />, onClick: handleDelete, variant: 'error' },
-  ]}
-/>
-```
-
-#### StatusIndicator
-
-```tsx
-<StatusIndicator variant="active" label="Active" />
-<StatusIndicator variant="shutoff" label="Stopped" />
-<StatusIndicator variant="error" label="Error" />
-<StatusIndicator variant="paused" label="Paused" />
-// 16개 variant: active, shutoff, error, paused, building, spawning, ...
-```
-
-#### Badge
-
-```tsx
-// theme은 약어 사용 (중요!)
-<Badge theme="gre" type="solid">Active</Badge>    // green
-<Badge theme="red" type="subtle">Failed</Badge>    // red
-<Badge theme="blu" size="sm">Info</Badge>           // blue
-<Badge theme="ylw">Warning</Badge>                  // yellow
-<Badge theme="gry">Disabled</Badge>                 // gray
-```
-
-#### Pagination
-
-```tsx
-<Pagination
-  currentPage={currentPage}
-  totalCount={totalItems} // totalCount 기반 (totalPages 아님!)
-  size={pageSize} // 페이지당 아이템 수
-  onPageChange={setCurrentPage}
-  onSizeChange={setPageSize}
-/>
-```
-
-#### FilterSearchInput
-
-```tsx
-import type { FilterKey, FilterKeyWithValue } from '@thaki/shared';
-
-const FILTER_KEYS: FilterKey[] = [
-  { key: 'name', label: 'Name' },
-  { key: 'status', label: 'Status', values: ['running', 'stopped', 'pending'] },
-  { key: 'az', label: 'AZ' },
-];
-
-const [filters, setFilters] = useState<FilterKeyWithValue[]>([]);
-
-<FilterSearchInput
-  filterKeys={FILTER_KEYS}
-  placeholder="Search instance by attributes"
-  defaultFilterKey="name"
-  value={filters}
-  onChange={setFilters}
-/>;
 ```
 
 #### ContextMenu
 
 ```tsx
-// Compound 패턴 (children)
+// shared (Compound)
 <ContextMenu.Root>
-  <ContextMenu.Item label="Edit" onClick={handleEdit} />
-  <ContextMenu.Item label="Duplicate" onClick={handleDuplicate} />
-  <ContextMenu.Divider />
-  <ContextMenu.Item label="Delete" onClick={handleDelete} status="danger" />
+  <ContextMenu.Item label="Edit" onClick={fn} />
+  <ContextMenu.Item label="Delete" status="danger" onClick={fn} />
 </ContextMenu.Root>
+
+// TDS (배열)
+<ContextMenu items={[
+  { id: 'edit', label: 'Edit', onClick: fn },
+  { id: 'delete', label: 'Delete', status: 'danger', onClick: fn },
+]} trigger="click">
+  <Button>Actions</Button>
+</ContextMenu>
 ```
+
+### 🟡 Props 이름/타입이 다른 컴포넌트
+
+| 컴포넌트            | shared                                 | TDS                          | 변경 사항                   |
+| ------------------- | -------------------------------------- | ---------------------------- | --------------------------- |
+| **Button**          | `variant` + `appearance` 분리          | `variant`에 통합             | `primary/solid` → `primary` |
+| **Badge**           | `theme="gre"` (약어)                   | `variant="success"`          | 이름 체계 전체 다름         |
+| **Pagination**      | `totalCount` + `size`                  | `totalPages` + `totalItems`  | 계산 방식 다름              |
+| **ProgressBar**     | `variant="success"`                    | `status="success"`           | prop 이름 변경              |
+| **StatusIndicator** | `variant` (16종) + `colorScheme`       | `status` (19종)              | 확장 + 단순화               |
+| **Toast**           | `sonner` + `Toast` 직접 사용           | `ToastProvider` + `useToast` | Provider 패턴 도입          |
+| **Breadcrumb**      | `path`                                 | `href`                       | prop 이름 변경              |
+| **Tabs**            | `activeTabId` + `<Tab id="" label="">` | `value` + `<Tab value="">`   | prop 이름 변경              |
+| **Disclosure**      | 단일 (`label` + `children`)            | Compound (Trigger + Panel)   | 구조 변경                   |
+| **Toggle**          | `checkedLabel` / `uncheckedLabel`      | `label` / `description`      | 라벨링 방식 변경            |
+| **DatePicker**      | `onApply` / `onCancel`                 | 즉시 `onChange`              | 동작 방식 변경              |
+
+### 🟢 호환 가능한 컴포넌트 (이름만 변경)
+
+| shared              | TDS                 | 비고                        |
+| ------------------- | ------------------- | --------------------------- |
+| `Input`             | `Input`             | fullWidth, variant 추가됨   |
+| `Checkbox`          | `Checkbox`          | ✅ 호환                     |
+| `Toggle`            | `Toggle`            | label 방식만 다름           |
+| `Table`             | `Table`             | columns API 유사            |
+| `SectionCard`       | `SectionCard`       | ✅ 거의 동일                |
+| `Tooltip`           | `Tooltip`           | delay, disabled 추가됨      |
+| `Popover`           | `Popover`           | ✅ 호환                     |
+| `InlineMessage`     | `InlineMessage`     | type→variant, closable 제거 |
+| `Skeleton`          | `Skeleton`          | ✅ 호환                     |
+| `Tag`               | `Tag`               | ✅ 호환                     |
+| `CopyButton`        | `CopyButton`        | ✅ 호환                     |
+| `Accordion`         | `Accordion`         | ✅ 호환                     |
+| `MonitoringToolbar` | `MonitoringToolbar` | 기본값만 다름               |
+| `FloatingCard`      | `FloatingCard`      | 접기/펼치기 API 다름        |
+| `TabBar`            | `TabBar`            | title→label 등 이름 변경    |
 
 ---
 
-## Part 3: 5가지 페이지 패턴 가이드
+## 4. shared 보완 권장 로드맵
 
-### Pattern 1: List Page
+### Phase 1: 필수 보완 (리스트/상세 페이지 구현에 필요)
 
-**구조**: Title + FilterSearch + Table + Pagination
+| 항목                          | 설명                                                                                 | 난이도 |
+| ----------------------------- | ------------------------------------------------------------------------------------ | ------ |
+| **ListToolbar 추가**          | 검색 + 필터 + 벌크 액션 통합 툴바. 현재 shared에서는 수동으로 조합해야 함            | 중     |
+| **ConfirmModal 추가**         | 삭제 확인 전용 모달. 현재 `DeleteResourceModal`이 있지만 TDS ConfirmModal과 API 다름 | 하     |
+| **Select options 방식 지원**  | `Dropdown.Select`에 `options` 배열 shorthand 추가 (기존 children 패턴 유지)          | 하     |
+| **Badge variant 네이밍 통일** | `gre/blu/ylw/gry` → `success/info/warning/danger` 별칭 추가                          | 하     |
 
-**대표 예시**: `ComputeInstancesPage.tsx` (`/compute/instances`)
+### Phase 2: 개선 (Create/Dashboard 페이지 구현에 필요)
 
-```tsx
-import { Button } from '@shared/components/Button';
-import { Table } from '@shared/components/Table';
-import { SelectableTable } from '@shared/components/Table/SelectableTable';
-import { Pagination } from '@shared/components/Pagination';
-import { FilterSearchInput } from '@shared/components/FilterSearch';
-import { ContextMenu } from '@shared/components/ContextMenu';
-import { StatusIndicator } from '@shared/components/StatusIndicator';
-import { Title } from '@shared/components/Title';
+| 항목                   | 설명                                                 | 난이도 |
+| ---------------------- | ---------------------------------------------------- | ------ |
+| **Wizard 패턴 추가**   | 섹션 상태 관리 (pre/active/done/writing) 포함 위자드 | 상     |
+| **MetricCard 추가**    | 대시보드용 메트릭 카드 (title + value + tooltip)     | 하     |
+| **Card 범용 컨테이너** | 대시보드 카드 래퍼                                   | 하     |
+| **BadgeList 추가**     | 테이블 내 배열 데이터 뱃지 오버플로 처리             | 중     |
+| **EmptyState 개선**    | icon/title/description/action 패턴으로 확장          | 하     |
 
-export function InstanceListPage() {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [filters, setFilters] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+### Phase 3: 정리 (코드 품질 향상)
 
-  return (
-    <>
-      {/* 헤더: 타이틀 + Create 버튼 */}
-      <Title title="Instances" />
-      <Button variant="primary" onClick={() => navigate('/compute/instances/create')}>
-        Create Instance
-      </Button>
-
-      {/* 필터 + 벌크 액션 */}
-      <FilterSearchInput filterKeys={FILTER_KEYS} placeholder="Search..." />
-      <Button variant="muted" disabled={selected.length === 0}>
-        Delete
-      </Button>
-
-      {/* 페이지네이션 */}
-      <Pagination
-        currentPage={currentPage}
-        totalCount={total}
-        size={20}
-        onPageChange={setCurrentPage}
-      />
-
-      {/* 선택 가능 테이블 */}
-      <SelectableTable
-        columns={columns}
-        rows={filteredData}
-        selectedRowKeys={selected}
-        onSelectedRowKeysChange={setSelected}
-        getRowId={(row) => row.id}
-      />
-    </>
-  );
-}
-```
-
-### Pattern 2: Detail Page
-
-**구조**: DetailPageHeader + Tabs + SectionCard
-
-**대표 예시**: `ComputeInstanceDetailPage.tsx` (`/compute/instances/:id`)
-
-```tsx
-import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHeader';
-import SectionCard from '@shared/components/SectionCard/SectionCard';
-import { Tabs, Tab } from '@shared/components/Tabs';
-import { Table } from '@shared/components/Table';
-
-export function InstanceDetailPage() {
-  return (
-    <>
-      {/* 헤더: 이름, 상태, ID, 액션 버튼 */}
-      <DetailPageHeader
-        title={instance.name}
-        infoFields={[
-          { label: 'Status', value: <StatusIndicator variant="active" /> },
-          { label: 'ID', value: instance.id, copyText: instance.id },
-        ]}
-        actionButtons={[
-          { label: 'Console', onClick: handleConsole },
-          { label: 'Delete', onClick: handleDelete, variant: 'error' },
-        ]}
-      />
-
-      {/* 탭: Details, Volumes, Interfaces, ... */}
-      <Tabs activeTabId={activeTab} onChange={setActiveTab} variant="line" size="sm">
-        <Tab id="details" label="Details">
-          <SectionCard>
-            <SectionCard.Header title="Basic information" />
-            <SectionCard.Content>
-              <SectionCard.DataRow label="Name" value={instance.name} />
-              <SectionCard.DataRow label="AZ" value={instance.az} />
-            </SectionCard.Content>
-          </SectionCard>
-        </Tab>
-
-        <Tab id="volumes" label="Volumes">
-          <Table columns={volumeColumns} rows={volumes} />
-          <Pagination ... />
-        </Tab>
-      </Tabs>
-    </>
-  );
-}
-```
-
-### Pattern 3: Create Page (Wizard)
-
-**구조**: CreateLayout + FloatingCard (스텝별) + Stepper + Summary
-
-**대표 예시**: `ComputeCreateInstancePage.tsx` (`/compute/instances/create`)
-
-```tsx
-import { CreateLayout } from '@shared/components/CreateLayout';
-import { FloatingCard } from '@shared/components/FloatingCard';
-import { Stepper } from '@shared/components/Stepper';
-import { Input, NumberInput } from '@shared/components/Input';
-import { Dropdown } from '@shared/components/Dropdown';
-import { RadioButton } from '@shared/components/RadioButton';
-
-export function CreateInstancePage() {
-  const [activeStep, setActiveStep] = useState(0);
-
-  return (
-    <CreateLayout>
-      {/* 좌측: 스텝별 폼 */}
-      <CreateLayout.Content>
-        <FloatingCard title="Basic Information" status={getStepStatus(0)}>
-          <FormField label="Instance Name" required>
-            <Input value={name} onChange={...} />
-          </FormField>
-          <FormField label="Availability Zone">
-            <Dropdown.Select value={az} onChange={setAz}>
-              <Dropdown.Option value="nova" label="nova" />
-            </Dropdown.Select>
-          </FormField>
-        </FloatingCard>
-
-        <FloatingCard title="Source" status={getStepStatus(1)}>
-          <Tabs variant="button" size="sm">
-            <Tab id="image" label="Image">
-              <Table columns={imageColumns} rows={images} />
-            </Tab>
-          </Tabs>
-        </FloatingCard>
-      </CreateLayout.Content>
-
-      {/* 우측: 요약 사이드바 */}
-      <CreateLayout.Summary>
-        <Stepper steps={steps} activeStep={activeStep} />
-        <Button variant="primary" disabled={!isAllDone}>Create</Button>
-      </CreateLayout.Summary>
-    </CreateLayout>
-  );
-}
-```
-
-### Pattern 4: Form Drawer
-
-**구조**: Overlay.Template type="drawer-horizontal"
-
-**대표 예시**: `EditInstanceDrawer`, `CreateInstanceSnapshotDrawer`
-
-```tsx
-<Overlay.Template
-  type="drawer-horizontal"
-  title="Edit Instance"
-  appeared={isOpen}
-  onConfirm={handleSave}
-  onCancel={onClose}
-  confirmUI="Save"
-  cancelUI="Cancel"
->
-  <Layout.VStack gap="lg">
-    <FormField label="Instance Name" required>
-      <Input value={name} onChange={(e) => setName(e.target.value)} />
-    </FormField>
-    <FormField label="Description">
-      <Textarea value={desc} onChange={(e) => setDesc(e.target.value)} />
-    </FormField>
-  </Layout.VStack>
-</Overlay.Template>
-```
-
-### Pattern 5: Dashboard
-
-**구조**: 쿼타 카드 + 리소스 테이블 + 차트
-
-**대표 예시**: `ComputeHomePage.tsx` (`/compute`)
-
-```tsx
-import { ProgressBar } from '@shared/components/ProgressBar';
-import { Badge } from '@shared/components/Badge';
-import { Table } from '@shared/components/Table';
-
-export function ComputeDashboard() {
-  return (
-    <>
-      {/* 쿼타 바 */}
-      <ProgressBar value={used} max={total} variant="success" showValue="fraction" />
-
-      {/* 리소스 현황 테이블 */}
-      <Table columns={resourceColumns} rows={resourceData} />
-
-      {/* 최근 활동 */}
-      <Table columns={activityColumns} rows={recentActivities} />
-    </>
-  );
-}
-```
+| 항목                           | 설명                                                | 난이도 |
+| ------------------------------ | --------------------------------------------------- | ------ |
+| **FormField Compound 지원**    | 기존 simple + compound 두 API 모두 지원             | 중     |
+| **Button variant 단순화**      | `variant` + `appearance` → 단일 `variant` 옵션 추가 | 하     |
+| **Input fullWidth 기본 지원**  | `fullWidth` prop 명시적 추가                        | 하     |
+| **Pagination totalPages 지원** | `totalPages` prop 추가 (기존 `totalCount` 유지)     | 하     |
 
 ---
 
-## Part 4: CSS / 토큰 사용법
+## 5. 디자인 토큰 차이
 
-### 4.1 CSS 엔트리포인트
-
-```tsx
-// 앱 엔트리에서 한 번 import
-import '@thaki/shared/index.css'; // 전체 (core + tailwind utilities)
-import '@thaki/shared/core.css'; // core만 (tailwind 없이)
-import '@thaki/shared/tokens-only.css'; // CSS 변수만
-```
-
-### 4.2 Tailwind Preset
-
-```js
-// tailwind.config.ts
-import sharedPreset from '@thaki/shared/tailwind.preset';
-
-export default {
-  presets: [sharedPreset],
-  content: ['./src/**/*.{ts,tsx}'],
-};
-```
-
-### 4.3 디자인 토큰 네이밍
-
-```css
-/* Semantic 토큰 (용도 기반) */
---semantic-color-primary
---semantic-color-surface
---semantic-color-text
---semantic-color-textMuted
---semantic-color-border
---semantic-color-success
---semantic-color-error
-
-/* Primitive 토큰 (절대값) */
---primitive-color-blue600
---primitive-color-blueGray100
---primitive-space-4
---semantic-radius-base8
-```
-
-### 4.4 Tailwind 유틸리티 클래스
-
-```tsx
-// 색상 (semantic 토큰 매핑)
-<div className="bg-surface text-text">기본</div>
-<div className="bg-surface-subtle text-text-muted">보조</div>
-<div className="border-border">테두리</div>
-<div className="text-success">성공</div>
-<div className="text-error">에러</div>
-
-// 간격 (semantic 토큰)
-<div className="p-4 gap-3">간격</div>
-
-// 반경
-<div className="rounded-base8">8px radius</div>
-<div className="rounded-lg">large radius</div>
-```
-
-### 4.5 다크모드
-
-```html
-<!-- light (기본) -->
-<html>
-  <!-- dark -->
-  <html data-theme="dark"></html>
-</html>
-```
-
-### 4.6 유틸리티
-
-```tsx
-import { cn } from '@thaki/shared';
-
-<div className={cn('bg-surface p-4', isActive && 'border-primary', className)}>
-```
+| 영역              | shared                                | TDS                                 | 비고                                      |
+| ----------------- | ------------------------------------- | ----------------------------------- | ----------------------------------------- |
+| **색상 변수**     | `--semantic-color-*`                  | `--color-*`                         | TDS는 호환성 별칭 사용                    |
+| **Tailwind 색상** | `bg-surface`, `text-text`             | `bg-[var(--color-surface-default)]` | shared는 preset 매핑, TDS는 CSS 변수 직접 |
+| **간격**          | `--primitive-space-*`                 | `--spacing-*`                       | 값은 동일, 이름만 다름                    |
+| **Radius**        | `--semantic-radius-base8`             | `--radius-lg`                       | 네이밍 체계 다름                          |
+| **타이포**        | `Typography.Title`, `Typography.Text` | `.text-heading-h5`, `.text-body-md` | shared: 컴포넌트 / TDS: 유틸리티 클래스   |
+| **다크모드**      | `data-theme="dark"`                   | ✅ 동일                             |                                           |
 
 ---
 
-## Part 5: 알려진 차이점 및 주의사항
+## 6. 확인 방법
 
-### 5.1 TDS SSoT vs shared 라이브러리 API 차이
-
-TDS SSoT(`@thaki/tds`)는 디자인 시스템 원본이고, shared(`@ThakiCloud/shared`)는 프로덕션에서 사용하는 라이브러리입니다. 주요 API 차이:
-
-| 영역             | shared (`@ThakiCloud/shared`)                    | TDS (`@thaki/tds`)                                 |
-| ---------------- | ------------------------------------------------ | -------------------------------------------------- |
-| **Select**       | `Dropdown.Select` + `Dropdown.Option` (children) | `Select options={[...]}` (배열 props)              |
-| **FormField**    | 단일 컴포넌트 (children에 props 자동 주입)       | Compound (Label + Control + HelperText)            |
-| **ContextMenu**  | Compound (`Root` + `Item` + `Divider`)           | 배열 기반 (`items` prop)                           |
-| **Pagination**   | `totalCount` + `size` → 자동 계산                | `totalPages` 직접 제공                             |
-| **Badge**        | 약어 theme (`gre`, `blu`, `ylw`, `gry`)          | 전체 이름 (`info`, `success`, `warning`)           |
-| **Button**       | `variant` + `appearance` 분리                    | `variant`에 통합 (`primary`, `secondary`, `ghost`) |
-| **Toast**        | `sonner` + `Toast` 컴포넌트 직접 사용            | Provider 패턴 (`useToast`)                         |
-| **Modal/Drawer** | `Overlay.Template` (type으로 구분)               | `Modal` / `Drawer` 별도 컴포넌트                   |
-| **Typography**   | `Typography.Title` / `Typography.Text`           | Tailwind utility 클래스 (`text-heading-h5`)        |
-
-### 5.2 프리뷰 앱과 실제 앱의 차이
-
-| 항목          | 프리뷰 앱              | 실제 앱 (thaki-ui)               |
-| ------------- | ---------------------- | -------------------------------- |
-| **라우팅**    | `react-router-dom` v6  | TanStack Router + 가상 탭 라우팅 |
-| **데이터**    | 하드코딩된 mock 데이터 | TanStack Query + API 연동        |
-| **폼 관리**   | `useState` 기반        | React Hook Form + Zod            |
-| **상태 관리** | 로컬 state만 사용      | Zustand + React Context          |
-| **i18n**      | 영어 하드코딩          | i18next 다국어                   |
-| **인증**      | 없음                   | AuthProvider + 토큰 관리         |
-
-### 5.3 Mock 데이터 위치
-
-```
-thaki-shared-v2/preview/src/pages/
-├── computeInstancesMockData.ts      # Instance 목록 mock
-├── instanceDetailPageMockData.ts    # Instance 상세 mock
-└── tableDateDisplay.ts              # 날짜 포맷 유틸
-```
-
-각 페이지 파일 내에 인라인으로 정의된 mock 데이터도 있습니다.
-
-### 5.4 구현 시 주의사항
-
-1. **패키지 이름**: `@ThakiCloud/shared` (대소문자 주의, `@thakicloud/shared` 아님)
-2. **앱 alias**: `@thaki/shared`로 import (tsconfig paths 설정 필요)
-3. **Badge theme 약어**: `gre`(green), `blu`(blue), `ylw`(yellow), `gry`(gray) — 전체 이름 사용 불가
-4. **Toast**: `@thaki/shared`가 아닌 `sonner` 패키지에서 `toast` import
-5. **Table getRowId**: `Table`이 아닌 `SelectableTable`에서만 사용
-6. **Overlay appeared**: `isOpen`이 아닌 `appeared` prop 사용
-
-### 5.5 프리뷰 사이트 URL 구조
-
-```
-https://thakicloud.github.io/tds_ssot/shared-v2/
-
-# 앱별 진입점
-/shared-v2/                          → Entry (앱 허브)
-/shared-v2/compute/instances         → Compute 인스턴스 리스트
-/shared-v2/compute/instances/vm-001  → Compute 인스턴스 상세
-/shared-v2/compute-admin/            → Compute Admin 홈
-/shared-v2/container/dashboard       → Container 대시보드
-/shared-v2/iam/                      → IAM 홈
-/shared-v2/storage/                  → Storage 홈
-/shared-v2/design/                   → 컴포넌트 쇼케이스
-```
+1. **프리뷰 사이트 접속**: https://thakicloud.github.io/tds_ssot/shared-v2/
+2. **앱별 페이지 확인**: 사이드바에서 앱 선택 → 리스트/상세/생성 페이지 탐색
+3. **소스 코드 참고**: `thaki-shared-v2/preview/src/pages/` 디렉토리
+4. **컴포넌트 쇼케이스**: `/design` 경로에서 개별 컴포넌트 확인
 
 ---
 
 ## 참고 문서
 
-| 문서          | 경로                                   | 설명                         |
-| ------------- | -------------------------------------- | ---------------------------- |
-| AI Guide      | `thaki-shared-v2/AI_GUIDE.md`          | 컴포넌트 Quick Start         |
-| API 비교      | `COMPONENT_API_COMPARISON.md`          | TDS vs shared Props 비교     |
-| Code-to-Code  | `CODE_TO_CODE_GUIDE.md`                | 페이지 패턴 및 URL→소스 매핑 |
-| 프로덕션 분석 | `THAKI_UI_SHARED_ANALYSIS.md`          | thaki-ui 코드베이스 분석     |
-| 라우팅 정의   | `thaki-shared-v2/preview/src/main.tsx` | 전체 라우트 트리             |
-| 패키지 정보   | `thaki-shared-v2/package.json`         | 버전, 의존성, 배포 설정      |
+| 문서                   | 경로                                   |
+| ---------------------- | -------------------------------------- |
+| 컴포넌트 API 비교 상세 | `COMPONENT_API_COMPARISON.md`          |
+| 페이지 패턴 가이드     | `CODE_TO_CODE_GUIDE.md`                |
+| AI 가이드              | `thaki-shared-v2/AI_GUIDE.md`          |
+| 라우팅 정의            | `thaki-shared-v2/preview/src/main.tsx` |
