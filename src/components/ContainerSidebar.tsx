@@ -36,7 +36,6 @@ import {
   IconReorder,
   IconChartPie3,
   IconRulerMeasure,
-  IconSettings,
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -69,28 +68,10 @@ interface IconSidebarItemProps {
   iconText?: string;
   active?: boolean;
   onClick?: () => void;
-  onSettingsClick?: () => void;
   tooltip?: string;
 }
 
-function IconSidebarItem({
-  icon,
-  iconText,
-  active,
-  onClick,
-  onSettingsClick,
-  tooltip,
-}: IconSidebarItemProps) {
-  const hasSettings = !!onSettingsClick;
-
-  const handleClick = () => {
-    if (hasSettings && active) {
-      onSettingsClick();
-      return;
-    }
-    onClick?.();
-  };
-
+function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSidebarItemProps) {
   const renderContent = () => {
     if (iconText) {
       return (
@@ -105,9 +86,9 @@ function IconSidebarItem({
   return (
     <button
       type="button"
-      onClick={handleClick}
+      onClick={onClick}
       className={`
-        relative group w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]
+        w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]
         transition-colors duration-[var(--duration-fast)]
         ${
           active
@@ -117,18 +98,7 @@ function IconSidebarItem({
       `}
       title={tooltip}
     >
-      <span
-        className={`flex items-center justify-center transition-opacity duration-[var(--duration-fast)] ${
-          hasSettings && active ? 'group-hover:opacity-0' : ''
-        }`}
-      >
-        {renderContent()}
-      </span>
-      {hasSettings && active && (
-        <span className="absolute inset-0 flex items-center justify-center rounded-[var(--radius-md)] bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-fast)]">
-          <IconSettings size={16} stroke={1.5} className="text-white" />
-        </span>
-      )}
+      {renderContent()}
     </button>
   );
 }
@@ -645,7 +615,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               iconText={cluster.iconText || undefined}
               active={idx === 0 && activeIconSection === 'cluster'}
               onClick={() => navigate('/container/dashboard')}
-              onSettingsClick={() => openAppearance(cluster)}
               tooltip={cluster.name}
             />
           ))}

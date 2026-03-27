@@ -27,6 +27,7 @@ import {
   IconCheck,
   IconChevronDown,
   IconChevronRight,
+  IconPencilCog,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -1066,6 +1067,13 @@ export function CreateSecretPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
