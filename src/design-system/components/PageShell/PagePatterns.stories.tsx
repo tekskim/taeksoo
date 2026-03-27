@@ -170,7 +170,7 @@ function ShellWrapper({
     breadcrumbItems[breadcrumbItems.length - 1]?.label.toLowerCase().replace(/\s+/g, '') ||
       'instances'
   );
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const defaultTabs = tabs || [
     {

@@ -194,7 +194,7 @@ export function EditHPAYamlPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Handle copy to clipboard
   const handleCopy = useCallback(async () => {

@@ -1,5 +1,15 @@
-import { useState } from 'react';
-import { VStack, MenuItem, MenuSection } from '@/design-system';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import {
+  VStack,
+  MenuItem,
+  MenuSection,
+  Drawer,
+  Button,
+  HStack,
+  FormField,
+  Input,
+} from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
@@ -17,7 +27,7 @@ import containerIcon from '@/assets/appIcon/container.png';
 /* ----------------------------------------
    Cluster Management Sidebar Component
    Features dual-sidebar layout:
-   - Icon sidebar (40px) on the left
+   - Icon sidebar (48px) on the left
    - Menu sidebar (200px) on the right
    ---------------------------------------- */
 
@@ -40,7 +50,7 @@ function IconSidebarItem({ icon, active, onClick, tooltip }: IconSidebarItemProp
       type="button"
       onClick={onClick}
       className={`
-        w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)]
+        w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]
         transition-colors duration-[var(--duration-fast)]
         ${
           active
@@ -55,12 +65,104 @@ function IconSidebarItem({ icon, active, onClick, tooltip }: IconSidebarItemProp
   );
 }
 
+interface ClusterItem {
+  id: string;
+  name: string;
+  iconText?: string;
+}
+
 // Sample clusters data for the sidebar
-const clusters = [
+const defaultClusters: ClusterItem[] = [
   { id: 'cluster-001', name: 'Cluster1' },
   { id: 'cluster-002', name: 'ClusterName' },
   { id: 'cluster-003', name: 'production-cluster' },
 ];
+
+function ClusterAppearanceDrawer({
+  isOpen,
+  onClose,
+  cluster,
+  onSave,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  cluster: ClusterItem | null;
+  onSave: (clusterId: string, iconText: string) => void;
+}) {
+  const [draftText, setDraftText] = useState('');
+
+  useEffect(() => {
+    if (isOpen && cluster) {
+      setDraftText(cluster.iconText || '');
+    }
+  }, [isOpen, cluster]);
+
+  const handleSave = () => {
+    if (cluster) {
+      onSave(cluster.id, draftText.trim());
+    }
+    onClose();
+  };
+
+  const previewText = draftText.trim().toUpperCase().slice(0, 3);
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Cluster appearance"
+      width={280}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSave} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        <VStack gap={2}>
+          <span className="text-label-lg text-[var(--color-text-default)]">Preview</span>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4">
+            <span className="text-body-xs text-[var(--color-text-subtle)] uppercase tracking-wider">
+              Menu style
+            </span>
+            <div className="mt-3 flex items-center">
+              <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                {previewText ? (
+                  <span className="text-[11px] font-semibold leading-none select-none text-[var(--color-text-default)]">
+                    {previewText}
+                  </span>
+                ) : (
+                  <IconAffiliate
+                    size={16}
+                    stroke={1.5}
+                    className="text-[var(--color-text-default)]"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </VStack>
+
+        <FormField
+          label="Icon text"
+          helperText="Up to 3 characters in any language. Leave blank to use the default icon."
+        >
+          <Input
+            value={draftText}
+            onChange={(e) => setDraftText(e.target.value.slice(0, 3))}
+            placeholder=""
+            fullWidth
+          />
+        </FormField>
+      </VStack>
+    </Drawer>
+  );
+}
 
 export function ClusterManagementSidebar({
   isOpen = true,
@@ -70,6 +172,34 @@ export function ClusterManagementSidebar({
   const location = useLocation();
   const navigate = useNavigate();
   const [bookmarksExpanded, setBookmarksExpanded] = useState(false);
+
+  // Cluster appearance state
+  const [clusters, setClusters] = useState<ClusterItem[]>(defaultClusters);
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const [editingCluster, setEditingCluster] = useState<ClusterItem | null>(null);
+
+  const openAppearance = (cluster: ClusterItem) => {
+    setEditingCluster(cluster);
+    setAppearanceOpen(true);
+  };
+
+  const handleSaveAppearance = (clusterId: string, iconText: string) => {
+    setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
+  };
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const clusterId = (e as CustomEvent<string>).detail;
+      const cluster = clusters.find((c) => c.id === clusterId);
+      if (cluster) {
+        openAppearance(cluster);
+      } else if (clusters.length > 0) {
+        openAppearance(clusters[0]);
+      }
+    };
+    window.addEventListener('open-cluster-appearance', handler);
+    return () => window.removeEventListener('open-cluster-appearance', handler);
+  }, [clusters]);
 
   const isActive = (href: string) => {
     return location.pathname === href || location.pathname.startsWith(href + '/');
@@ -94,8 +224,8 @@ export function ClusterManagementSidebar({
 
   return (
     <div className="flex h-screen fixed left-0 top-0">
-      {/* Icon Sidebar (40px) - Always visible */}
-      <aside className="w-[40px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
+      {/* Icon Sidebar (48px) - Always visible */}
+      <aside className="w-[48px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
         <div className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
           <img src={containerIcon} alt="Container" className="w-[24px] h-[24px]" />
@@ -198,6 +328,15 @@ export function ClusterManagementSidebar({
             </VStack>
           </nav>
         </aside>
+      )}
+      {createPortal(
+        <ClusterAppearanceDrawer
+          isOpen={appearanceOpen}
+          onClose={() => setAppearanceOpen(false)}
+          cluster={editingCluster}
+          onSave={handleSaveAppearance}
+        />,
+        document.body
       )}
     </div>
   );

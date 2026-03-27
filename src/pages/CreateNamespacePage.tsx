@@ -165,7 +165,7 @@ export function CreateNamespacePage() {
 
   // Sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Basic Information state
   const [namespaceName, setNamespaceName] = useState('');

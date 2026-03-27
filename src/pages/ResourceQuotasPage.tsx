@@ -154,7 +154,7 @@ export function ResourceQuotasPage() {
   );
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Create menu items for each row
   const createMenuItems = (row: ResourceQuotaRow): ContextMenuItem[] => {

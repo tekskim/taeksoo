@@ -260,7 +260,7 @@ export default function CreateHPAPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Form state
   const [namespace, setNamespace] = useState('default');

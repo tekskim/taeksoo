@@ -363,7 +363,7 @@ export function ContainerDashboardPage() {
   }, [updateActiveTabLabel]);
 
   // Calculate sidebar width (40px icon sidebar always visible + 200px menu sidebar when open)
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   return (
     <PageShell

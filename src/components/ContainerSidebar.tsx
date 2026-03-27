@@ -1,6 +1,15 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { VStack, MenuItem, MenuSection } from '@/design-system';
+import {
+  VStack,
+  MenuItem,
+  MenuSection,
+  Drawer,
+  Button,
+  HStack,
+  FormField,
+  Input,
+} from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconHome,
@@ -27,6 +36,7 @@ import {
   IconReorder,
   IconChartPie3,
   IconRulerMeasure,
+  IconSettings,
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -35,7 +45,7 @@ import containerIcon from '@/assets/appIcon/container.png';
 /* ----------------------------------------
    Container Sidebar Component
    Features dual-sidebar layout:
-   - Icon sidebar (40px) on the left
+   - Icon sidebar (48px) on the left
    - Menu sidebar (200px) on the right
    ---------------------------------------- */
 
@@ -44,21 +54,58 @@ interface ContainerSidebarProps {
   onToggle?: () => void;
 }
 
+// Cluster data
+interface ClusterItem {
+  id: string;
+  name: string;
+  iconText?: string;
+}
+
 // Icon sidebar item component
 interface IconSidebarItemProps {
   icon: React.ReactNode;
+  iconText?: string;
   active?: boolean;
   onClick?: () => void;
+  onSettingsClick?: () => void;
   tooltip?: string;
 }
 
-function IconSidebarItem({ icon, active, onClick, tooltip }: IconSidebarItemProps) {
+function IconSidebarItem({
+  icon,
+  iconText,
+  active,
+  onClick,
+  onSettingsClick,
+  tooltip,
+}: IconSidebarItemProps) {
+  const hasSettings = !!onSettingsClick;
+
+  const handleClick = () => {
+    if (hasSettings && active) {
+      onSettingsClick();
+      return;
+    }
+    onClick?.();
+  };
+
+  const renderContent = () => {
+    if (iconText) {
+      return (
+        <span className="text-[11px] font-semibold leading-none select-none uppercase">
+          {iconText}
+        </span>
+      );
+    }
+    return icon;
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={`
-        w-8 h-8 flex items-center justify-center rounded-[var(--radius-md)]
+        relative group w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]
         transition-colors duration-[var(--duration-fast)]
         ${
           active
@@ -68,7 +115,18 @@ function IconSidebarItem({ icon, active, onClick, tooltip }: IconSidebarItemProp
       `}
       title={tooltip}
     >
-      {icon}
+      <span
+        className={`flex items-center justify-center transition-opacity duration-[var(--duration-fast)] ${
+          hasSettings && active ? 'group-hover:opacity-0' : ''
+        }`}
+      >
+        {renderContent()}
+      </span>
+      {hasSettings && active && (
+        <span className="absolute inset-0 flex items-center justify-center rounded-[var(--radius-md)] bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-fast)]">
+          <IconSettings size={16} stroke={1.5} className="text-white" />
+        </span>
+      )}
     </button>
   );
 }
@@ -372,11 +430,130 @@ function NamespaceSelector() {
 // Store scroll position outside component to persist across re-renders
 let savedScrollPosition = 0;
 
+// Cluster Appearance Drawer
+function ClusterAppearanceDrawer({
+  isOpen,
+  onClose,
+  cluster,
+  onSave,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  cluster: ClusterItem | null;
+  onSave: (clusterId: string, iconText: string) => void;
+}) {
+  const [draftText, setDraftText] = useState('');
+
+  useEffect(() => {
+    if (isOpen && cluster) {
+      setDraftText(cluster.iconText || '');
+    }
+  }, [isOpen, cluster]);
+
+  const handleSave = () => {
+    if (cluster) {
+      onSave(cluster.id, draftText.trim());
+    }
+    onClose();
+  };
+
+  const previewText = draftText.trim().toUpperCase().slice(0, 3);
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Cluster appearance"
+      width={280}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSave} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        <VStack gap={2}>
+          <span className="text-label-lg text-[var(--color-text-default)]">Preview</span>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4">
+            <span className="text-body-xs text-[var(--color-text-subtle)] uppercase tracking-wider">
+              Menu style
+            </span>
+            <div className="mt-3 flex items-center">
+              <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                {previewText ? (
+                  <span className="text-[11px] font-semibold leading-none select-none text-[var(--color-text-default)]">
+                    {previewText}
+                  </span>
+                ) : (
+                  <IconAffiliate
+                    size={16}
+                    stroke={1.5}
+                    className="text-[var(--color-text-default)]"
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </VStack>
+
+        <FormField
+          label="Icon text"
+          helperText="Up to 3 characters in any language. Leave blank to use the default icon."
+        >
+          <Input
+            value={draftText}
+            onChange={(e) => setDraftText(e.target.value.slice(0, 3))}
+            placeholder=""
+            fullWidth
+          />
+        </FormField>
+      </VStack>
+    </Drawer>
+  );
+}
+
 export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarProps) {
   const { isDark } = useDarkMode();
   const location = useLocation();
   const navigate = useNavigate();
   const navRef = useRef<HTMLElement>(null);
+
+  // Cluster state
+  const [clusters, setClusters] = useState<ClusterItem[]>([
+    { id: 'cluster-001', name: 'Cluster', iconText: '' },
+    { id: 'cluster-002', name: 'Cluster', iconText: '' },
+  ]);
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const [editingCluster, setEditingCluster] = useState<ClusterItem | null>(null);
+
+  const openAppearance = (cluster: ClusterItem) => {
+    setEditingCluster(cluster);
+    setAppearanceOpen(true);
+  };
+
+  const handleSaveAppearance = (clusterId: string, iconText: string) => {
+    setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
+  };
+
+  // Listen for external "open appearance" events from other pages
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const clusterId = (e as CustomEvent<string>).detail;
+      const cluster = clusters.find((c) => c.id === clusterId);
+      if (cluster) {
+        openAppearance(cluster);
+      } else if (clusters.length > 0) {
+        openAppearance(clusters[0]);
+      }
+    };
+    window.addEventListener('open-cluster-appearance', handler);
+    return () => window.removeEventListener('open-cluster-appearance', handler);
+  }, [clusters]);
 
   // Restore scroll position after route change - use useLayoutEffect for synchronous update
   useLayoutEffect(() => {
@@ -449,8 +626,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
   return (
     <div className="flex h-screen fixed left-0 top-0">
-      {/* Icon Sidebar (40px) - Always visible */}
-      <aside className="w-[40px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
+      {/* Icon Sidebar (48px) - Always visible */}
+      <aside className="w-[48px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-subtle)] flex flex-col">
         {/* App Icon */}
         <div className="h-[36px] flex items-center justify-center border-b border-[var(--color-border-subtle)]">
           <img src={containerIcon} alt="Container" className="w-[24px] h-[24px]" />
@@ -470,18 +647,17 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             onClick={() => navigate('/container/cluster-management')}
             tooltip="Cluster management"
           />
-          <IconSidebarItem
-            icon={<IconAffiliate size={16} stroke={1.5} />}
-            active={activeIconSection === 'cluster'}
-            onClick={() => navigate('/container/dashboard')}
-            tooltip="Cluster"
-          />
-          <IconSidebarItem
-            icon={<IconAffiliate size={16} stroke={1.5} />}
-            active={false}
-            onClick={() => {}}
-            tooltip="Cluster"
-          />
+          {clusters.map((cluster, idx) => (
+            <IconSidebarItem
+              key={cluster.id}
+              icon={<IconAffiliate size={16} stroke={1.5} />}
+              iconText={cluster.iconText || undefined}
+              active={idx === 0 && activeIconSection === 'cluster'}
+              onClick={() => navigate('/container/dashboard')}
+              onSettingsClick={() => openAppearance(cluster)}
+              tooltip={cluster.name}
+            />
+          ))}
           <IconSidebarItem
             icon={<IconPlus size={16} stroke={1.5} />}
             active={false}
@@ -682,6 +858,15 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             </VStack>
           </nav>
         </aside>
+      )}
+      {createPortal(
+        <ClusterAppearanceDrawer
+          isOpen={appearanceOpen}
+          onClose={() => setAppearanceOpen(false)}
+          cluster={editingCluster}
+          onSave={handleSaveAppearance}
+        />,
+        document.body
       )}
     </div>
   );

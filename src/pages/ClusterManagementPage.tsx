@@ -134,7 +134,7 @@ export function ClusterManagementPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns
   const columns: TableColumn<Cluster>[] = [
@@ -219,6 +219,15 @@ export function ClusterManagementPage() {
             id: 'download-yaml',
             label: 'Download YAML',
             onClick: () => console.log('Download YAML for', row.name),
+          },
+          {
+            id: 'customize-appearance',
+            label: 'Customize appearance',
+            divider: true,
+            onClick: () =>
+              setTimeout(() =>
+                window.dispatchEvent(new CustomEvent('open-cluster-appearance', { detail: row.id }))
+              ),
           },
           {
             id: 'delete',
