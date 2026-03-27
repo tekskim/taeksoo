@@ -39,6 +39,7 @@ import {
   IconChevronDown,
   IconTrash,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -100,7 +101,7 @@ const mockJobData: Record<string, JobData> = {
   '1': {
     id: '1',
     name: 'jobName',
-    status: 'OK',
+    status: 'Succeeded',
     namespace: 'default',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 16:45:11',
@@ -119,7 +120,7 @@ const mockJobData: Record<string, JobData> = {
   '2': {
     id: '2',
     name: 'data-migration-job',
-    status: 'True',
+    status: 'Succeeded',
     namespace: 'database',
     image: 'migration-tool:v2.1',
     createdAt: 'Nov 9, 2025 09:12:33',
@@ -137,7 +138,7 @@ const mockJobData: Record<string, JobData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Succeeded',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -156,7 +157,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Failed',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -168,7 +169,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'podName-79',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -262,7 +263,12 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -792,8 +798,14 @@ export function JobDetailPage() {
               label="Status"
               value={
                 <Tooltip content={job.status === 'Completed' ? 'Active' : job.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        job.status === 'Completed' ? 'Active' : job.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {job.status === 'Completed' ? 'Active' : job.status}
                     </Badge>
                   </span>

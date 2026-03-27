@@ -40,6 +40,7 @@ import {
   IconTrash,
   IconHelpCircle,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -112,7 +113,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
   '1': {
     id: '1',
     name: 'statefulsetName',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 16:45:11',
@@ -132,7 +133,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
   '2': {
     id: '2',
     name: 'mysql-primary',
-    status: 'True',
+    status: 'Active',
     namespace: 'database',
     image: 'mysql:8.0',
     createdAt: 'Nov 9, 2025 09:12:33',
@@ -151,7 +152,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -170,7 +171,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -182,7 +183,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'podName-79',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -194,7 +195,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'podName-80',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -210,7 +211,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'statefulset-headless',
-    status: 'OK',
+    status: 'Active',
     target: '10.0.0.100:80',
     selector: 'app=statefulset',
     type: 'ClusterIP',
@@ -305,7 +306,12 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -487,7 +493,12 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -1004,8 +1015,14 @@ export function StatefulSetDetailPage() {
               label="Status"
               value={
                 <Tooltip content={statefulset.status === 'Running' ? 'Active' : statefulset.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        statefulset.status === 'Running' ? 'Active' : statefulset.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {statefulset.status === 'Running' ? 'Active' : statefulset.status}
                     </Badge>
                   </span>

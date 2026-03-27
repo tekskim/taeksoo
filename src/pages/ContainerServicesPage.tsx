@@ -37,6 +37,7 @@ import {
   IconTrash,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -61,7 +62,7 @@ interface ServiceRow {
 const servicesData: ServiceRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-loadbalancer-service',
     namespace: 'namespaceName',
     target: ['http + 80/TCP', 'https-internal + 444/TCP'],
@@ -72,7 +73,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'backend-api-gateway-cluster-internal-service',
     namespace: 'namespaceName',
     target: ['myport + 80/TCP'],
@@ -83,7 +84,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '3',
-    status: 'None',
+    status: 'Error',
     name: 'external-database-connection-externalname-service',
     namespace: 'namespaceName',
     target: ['my.database.example.com'],
@@ -94,7 +95,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '4',
-    status: 'CreateContainerConfigError',
+    status: 'Active',
     name: 'ingress-nginx-loadbalancer-external-service',
     namespace: 'namespaceName',
     target: ['80/TCP', '443/TCP'],
@@ -105,7 +106,7 @@ const servicesData: ServiceRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Processing',
     name: 'legacy-application-nodeport-external-access-service',
     namespace: 'namespaceName',
     target: ['[Any Node]:31575'],
@@ -178,7 +179,12 @@ export function ContainerServicesPage() {
       render: (value: string) => (
         <span className="min-w-0 block">
           <Tooltip content={value}>
-            <Badge theme="white" size="sm" className="max-w-[80px]">
+            <Badge
+              theme={getContainerStatusTheme(value)}
+              type="subtle"
+              size="sm"
+              className="max-w-[80px]"
+            >
               <span className="truncate">{value}</span>
             </Badge>
           </Tooltip>
@@ -227,38 +233,40 @@ export function ContainerServicesPage() {
       key: 'target',
       label: 'Target',
       flex: 1,
-      minWidth: columnMinWidths.target,
+      minWidth: columnMinWidths.ip,
       sortable: false,
       render: (value: string[]) => (
-        <div className="flex items-center gap-1 min-w-0">
-          <span className="truncate min-w-0" title={value[0]}>
+        <div className="flex w-full items-center gap-1 min-w-0">
+          <span className="truncate min-w-0 flex-1" title={value[0]}>
             {value[0]}
           </span>
           {value.length > 1 && (
-            <Popover
-              trigger="hover"
-              position="bottom"
-              delay={100}
-              hideDelay={100}
-              content={
-                <div className="p-3 min-w-[120px] max-w-[320px]">
-                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                    All targets ({value.length})
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All targets ({value.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {value.map((item, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {value.map((item, i) => (
-                      <Badge key={i} theme="white" size="sm">
-                        {item}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              }
-            >
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                +{value.length - 1}
-              </span>
-            </Popover>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{value.length - 1}
+                </span>
+              </Popover>
+            </span>
           )}
         </div>
       ),
@@ -268,7 +276,6 @@ export function ContainerServicesPage() {
       label: 'IP addresses',
       flex: 1,
       minWidth: columnMinWidths.ip,
-      sortable: true,
       render: (value: string[]) => (
         <div className="flex w-full items-center gap-1 min-w-0">
           <span className="truncate min-w-0 flex-1" title={value[0]}>
@@ -309,38 +316,40 @@ export function ContainerServicesPage() {
       key: 'selector',
       label: 'Selector',
       flex: 1,
-      minWidth: columnMinWidths.selector,
+      minWidth: columnMinWidths.ip,
       sortable: false,
       render: (value: string[]) => (
-        <div className="flex items-center gap-1 min-w-0">
-          <span className="truncate min-w-0" title={value[0]}>
+        <div className="flex w-full items-center gap-1 min-w-0">
+          <span className="truncate min-w-0 flex-1" title={value[0]}>
             {value[0]}
           </span>
           {value.length > 1 && (
-            <Popover
-              trigger="hover"
-              position="bottom"
-              delay={100}
-              hideDelay={100}
-              content={
-                <div className="p-3 min-w-[120px] max-w-[320px]">
-                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                    All selectors ({value.length})
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All selectors ({value.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {value.map((item, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {value.map((item, i) => (
-                      <Badge key={i} theme="white" size="sm">
-                        {item}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              }
-            >
-              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                +{value.length - 1}
-              </span>
-            </Popover>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{value.length - 1}
+                </span>
+              </Popover>
+            </span>
           )}
         </div>
       ),

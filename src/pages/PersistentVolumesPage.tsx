@@ -34,6 +34,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -57,7 +58,7 @@ interface PersistentVolumeRow {
 const persistentVolumesData: PersistentVolumeRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: 'Ceph-pvc',
@@ -67,7 +68,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Processing',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: 'data-postgres-0',
@@ -77,7 +78,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '3',
-    status: 'True',
+    status: 'Failed',
     name: 'pvc-a1b2c3d4-e5f6-7890-abcd-1234567890ab-data-volume',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: '',
@@ -87,7 +88,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '4',
-    status: 'Raw',
+    status: 'Released',
     name: 'pvc-f1e2d3c4-b5a6-7890-fedc-0987654321ba-logs-storage',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: '',
@@ -97,7 +98,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '5',
-    status: 'None',
+    status: 'Active',
     name: 'pvc-redis-cluster-sentinel-persistent-data-01-volume',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: 'redis-data',
@@ -107,7 +108,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '6',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'pvc-failed-provisioning-rbd-csi-ceph-storage-volume',
     reclaimPolicy: 'Delete',
     persistentVolumeClaim: '',
@@ -117,7 +118,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
   },
   {
     id: '7',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'pvc-pending-nfs-provisioning-waiting-for-node-volume',
     reclaimPolicy: 'Retain',
     persistentVolumeClaim: 'pending-claim',
@@ -215,7 +216,12 @@ export function PersistentVolumesPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
