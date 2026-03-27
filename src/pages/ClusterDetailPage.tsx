@@ -217,7 +217,7 @@ export function ClusterDetailPage() {
   }, [updateActiveTabLabel, clusterData.name]);
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
@@ -240,6 +240,17 @@ export function ClusterDetailPage() {
       id: 'edit',
       label: 'Edit cluster',
       onClick: () => navigate(`/container/cluster-management/${clusterData.id}/edit`),
+    },
+    {
+      id: 'customize-appearance',
+      label: 'Customize appearance',
+      divider: true,
+      onClick: () =>
+        setTimeout(() =>
+          window.dispatchEvent(
+            new CustomEvent('open-cluster-appearance', { detail: clusterData.id })
+          )
+        ),
     },
     {
       id: 'delete',

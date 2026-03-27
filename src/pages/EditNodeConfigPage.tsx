@@ -192,7 +192,7 @@ export function EditNodeConfigPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
     navigate('/container/nodes');

@@ -788,7 +788,7 @@ export function CreatePersistentVolumePage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Calculate section status for sidebar display
   const getSectionStatus = useCallback(

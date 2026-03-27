@@ -216,7 +216,7 @@ export function PodDisruptionBudgetDetailPage() {
   };
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Labels and annotations counts
   const labelsCount = Object.keys(pdbData.labels).length;

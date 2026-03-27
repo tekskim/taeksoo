@@ -785,7 +785,7 @@ export function NamespaceDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Context menu items for more actions
   const moreActionsItems: ContextMenuItem[] = [

@@ -201,7 +201,7 @@ export function ConfigMapDetailPage() {
   };
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [

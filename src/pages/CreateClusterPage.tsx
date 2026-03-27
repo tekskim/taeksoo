@@ -263,7 +263,7 @@ export function CreateClusterPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Filtered network data
   const filteredExternalNetworks = mockExternalNetworks.filter(

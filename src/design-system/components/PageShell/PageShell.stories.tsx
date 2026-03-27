@@ -46,7 +46,7 @@ const meta: Meta<typeof PageShell> = {
 ### 사용 예시
 \`\`\`tsx
 const [sidebarOpen, setSidebarOpen] = useState(true);
-const sidebarWidth = sidebarOpen ? 240 : 40;
+const sidebarWidth = sidebarOpen ? 248 : 48;
 
 <PageShell
   sidebar={<ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
@@ -210,7 +210,7 @@ const podColumns = [
 function DefaultExample() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState('pods');
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const [tabs, setTabs] = useState([
     { id: 'pods', label: 'Pods', closable: false },
@@ -303,7 +303,7 @@ export const Default: Story = {
 function CollapsedSidebarExample() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState('pods');
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   return (
     <PageShell
@@ -371,7 +371,7 @@ export const CollapsedSidebar: Story = {
 function WithoutTabBarExample() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState('pods');
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   return (
     <PageShell

@@ -683,7 +683,7 @@ export function CreatePersistentVolumeClaimPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Calculate section statuses for summary sidebar
   const getSectionStatuses = useCallback((): Record<SectionStep, 'done' | 'active' | 'pending'> => {
