@@ -36,6 +36,8 @@ import {
   IconReorder,
   IconChartPie3,
   IconRulerMeasure,
+  IconApps,
+  IconPackage,
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -661,7 +663,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           <nav
             ref={navRef}
             onScroll={handleNavScroll}
-            className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll"
+            className="flex-1 px-3 py-3 overflow-y-auto overflow-x-hidden sidebar-scroll [&>div]:!min-w-0"
           >
             <VStack gap={4} className="w-full min-w-0">
               {/* Bookmarks */}
@@ -777,6 +779,22 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       label="Pods"
                       href="/container/pods"
                       active={isActive('/container/pods')}
+                    />
+                  </MenuSection>
+
+                  {/* App Catalog Section */}
+                  <MenuSection title="App Catalog" defaultOpen={true}>
+                    <MenuItem
+                      icon={<IconApps size={16} stroke={1.5} />}
+                      label="Catalog"
+                      href="/container/catalog"
+                      active={isActive('/container/catalog')}
+                    />
+                    <MenuItem
+                      icon={<IconPackage size={16} stroke={1.5} />}
+                      label="Installed Apps"
+                      href="/container/installed-apps"
+                      active={isActive('/container/installed-apps')}
                     />
                   </MenuSection>
 
