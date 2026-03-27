@@ -26,7 +26,13 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconSearch, IconChevronDown } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconTerminal2,
+  IconSearch,
+  IconChevronDown,
+  IconPencilCog,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -312,6 +318,13 @@ export function ContainerIngressDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
