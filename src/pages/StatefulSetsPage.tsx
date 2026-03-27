@@ -35,6 +35,7 @@ import {
   IconRefresh,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -55,7 +56,7 @@ interface StatefulSetRow {
 const statefulSetsData: StatefulSetRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'postgresql-primary-replication-statefulset',
     namespace: 'default',
     image: 'nginx',
@@ -64,7 +65,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Active',
     name: 'mysql-primary-replication-cluster-statefulset',
     namespace: 'database',
     image: 'mysql:8.0',
@@ -73,7 +74,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Stopped',
     name: 'elasticsearch-cluster-data-node-statefulset',
     namespace: 'logging',
     image: 'elasticsearch:8.10.2',
@@ -82,7 +83,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'mongodb-replica-set-sharded-cluster-statefulset',
     namespace: 'database',
     image: 'mongo:7.0',
@@ -91,7 +92,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'kafka-broker-messaging-cluster-statefulset',
     namespace: 'messaging',
     image: 'confluentinc/cp-kafka:7.5.0',
@@ -100,7 +101,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Error',
     name: 'zookeeper-ensemble-coordination-statefulset',
     namespace: 'messaging',
     image: 'zookeeper:3.9',
@@ -109,7 +110,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Active',
     name: 'redis-cluster-sentinel-high-availability-statefulset',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
@@ -118,7 +119,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Active',
     name: 'cockroachdb-distributed-sql-database-statefulset',
     namespace: 'database',
     image: 'cockroachdb/cockroach:v23.1.11',
@@ -189,7 +190,12 @@ export function StatefulSetsPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

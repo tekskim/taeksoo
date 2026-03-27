@@ -34,6 +34,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -56,7 +57,7 @@ interface PodRow {
 const podsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'frontend-web-application-deployment-7fb96c846b-x2vnl',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -67,7 +68,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Running',
     name: 'backend-api-gateway-service-5d4f8b7c9a-k8m2n',
     namespace: 'default',
     image: 'nginx:1.27',
@@ -78,7 +79,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Failed',
     name: 'monitoring-prometheus-alertmanager-statefulset-0',
     namespace: 'production',
     image: 'backend-api:v2.1.0',
@@ -89,7 +90,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'ingress-nginx-controller-admission-create-28t5q',
     namespace: 'analytics',
     image: 'data-processor:v1.5',
@@ -100,7 +101,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Running',
     name: 'kube-system-coredns-autoscaler-7f89d5c6b4-2pv8r',
     namespace: 'cache',
     image: 'redis:7.2',
@@ -111,7 +112,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Succeeded',
     name: 'postgresql-primary-replication-statefulset-0',
     namespace: 'database',
     image: 'postgres:15',
@@ -122,7 +123,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Running',
     name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'database',
     image: 'migration:v1.0',
@@ -133,7 +134,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Running',
     name: 'monitoring-node-exporter-prometheus-daemonset-node1',
     namespace: 'monitoring',
     image: 'prometheus-agent:v2.45',
@@ -248,7 +249,12 @@ export function PodsPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

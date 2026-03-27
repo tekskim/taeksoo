@@ -486,7 +486,8 @@ export function Table<T extends Record<string, any>>({
               className={cn(
                 'flex items-stretch min-h-[var(--table-row-height)]',
                 'bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-r-[var(--table-row-radius)]',
-                'border-l-0'
+                'border-l-0',
+                'shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]'
               )}
             >
               {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, true))}
@@ -512,6 +513,7 @@ export function Table<T extends Record<string, any>>({
                         'flex items-stretch min-h-[var(--table-row-height)]',
                         'rounded-r-[var(--table-row-radius)] border border-[var(--color-border-default)] border-l-0',
                         'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                        'shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]',
                         isSelected
                           ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                           : 'bg-[var(--color-surface-default)]',

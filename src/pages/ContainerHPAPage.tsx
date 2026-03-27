@@ -35,6 +35,7 @@ import {
   IconTrash,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -59,7 +60,7 @@ interface HPARow {
 const hpaData: HPARow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-horizontal-autoscaler',
     namespace: 'namespaceName',
     workload: 'workloadName',
@@ -70,7 +71,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'backend-api-gateway-cpu-memory-autoscaler',
     namespace: 'default',
     workload: 'api-deployment',
@@ -81,7 +82,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Error',
     name: 'frontend-web-production-pending-workload-autoscaler',
     namespace: 'production',
     workload: 'web-deployment',
@@ -92,7 +93,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'staging-environment-workload-autoscaler',
     namespace: 'staging',
     workload: 'staging-deployment',
@@ -168,7 +169,12 @@ export function ContainerHPAPage() {
       sortable: false,
       render: (value) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

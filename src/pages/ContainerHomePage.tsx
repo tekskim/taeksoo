@@ -30,6 +30,7 @@ import {
   IconDotsCircleHorizontal,
   IconSettings,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -56,7 +57,7 @@ const clustersData: ClusterRow[] = [
   {
     id: '1',
     name: 'ClusterName',
-    status: 'OK',
+    status: 'Provisioned',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
     cpu: '8 cores',
@@ -68,7 +69,55 @@ const clustersData: ClusterRow[] = [
   {
     id: '2',
     name: 'ClusterName',
-    status: 'OK',
+    status: 'Failed',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
+  },
+  {
+    id: '3',
+    name: 'ClusterName',
+    status: 'Provisioning',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
+  },
+  {
+    id: '4',
+    name: 'ClusterName',
+    status: 'Processing',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
+  },
+  {
+    id: '5',
+    name: 'ClusterName',
+    status: 'Deleting',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
+  },
+  {
+    id: '6',
+    name: 'ClusterName',
+    status: 'Unknown',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
     cpu: '8 cores',
@@ -107,7 +156,12 @@ export function ContainerHomePage() {
       render: (value: string) => (
         <div className="min-w-0">
           <Tooltip content={value}>
-            <Badge theme="white" size="sm" className="max-w-[80px]">
+            <Badge
+              theme={getContainerStatusTheme(value)}
+              type="subtle"
+              size="sm"
+              className="max-w-[80px]"
+            >
               <span className="truncate">{value}</span>
             </Badge>
           </Tooltip>

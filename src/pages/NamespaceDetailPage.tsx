@@ -35,6 +35,7 @@ import {
   IconChevronDown,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -68,9 +69,41 @@ interface NamespaceData {
    ---------------------------------------- */
 
 const mockNamespaceData: Record<string, NamespaceData> = {
+  'production-microservices-platform-namespace': {
+    name: 'production-microservices-platform-namespace',
+    status: 'Active',
+    createdAt: 'Nov 10, 2025 08:12:33',
+    labels: { 'kubernetes.io/metadata.name': 'production-microservices-platform-namespace' },
+    annotations: {},
+    resources: { active: 122, processing: 0, error: 0, total: 138 },
+  },
+  'monitoring-observability-stack-namespace': {
+    name: 'monitoring-observability-stack-namespace',
+    status: 'Processing',
+    createdAt: 'Nov 10, 2025 15:31:14',
+    labels: { 'kubernetes.io/metadata.name': 'monitoring-observability-stack-namespace' },
+    annotations: {},
+    resources: { active: 80, processing: 12, error: 0, total: 92 },
+  },
+  'kube-public-cluster-info-public-namespace': {
+    name: 'kube-public-cluster-info-public-namespace',
+    status: 'Terminating',
+    createdAt: 'Nov 10, 2025 17:57:02',
+    labels: { 'kubernetes.io/metadata.name': 'kube-public-cluster-info-public-namespace' },
+    annotations: {},
+    resources: { active: 0, processing: 0, error: 0, total: 5 },
+  },
+  'kube-system-cluster-components-namespace': {
+    name: 'kube-system-cluster-components-namespace',
+    status: 'CreateContainerConfigError',
+    createdAt: 'Nov 10, 2025 18:09:45',
+    labels: { 'kubernetes.io/metadata.name': 'kube-system-cluster-components-namespace' },
+    annotations: {},
+    resources: { active: 95, processing: 0, error: 3, total: 98 },
+  },
   'cattle-clusters-system': {
     name: 'cattle-clusters-system',
-    status: 'OK',
+    status: 'Active',
     createdAt: 'Nov 6, 2025 21:25:53',
     labels: { 'kubernetes.io/metadata.name': 'cattle-clusters-system' },
     annotations: {},
@@ -78,7 +111,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   },
   'kube-system': {
     name: 'kube-system',
-    status: 'OK',
+    status: 'Active',
     createdAt: 'Nov 6, 2025 21:25:53',
     labels: { 'kubernetes.io/metadata.name': 'kube-system' },
     annotations: {},
@@ -86,7 +119,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   },
   default: {
     name: 'default',
-    status: 'OK',
+    status: 'Active',
     createdAt: 'Nov 6, 2025 21:25:53',
     labels: { 'kubernetes.io/metadata.name': 'default' },
     annotations: {},
@@ -124,7 +157,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 25, 2025 10:32:16',
     health: '3 Running',
-    status: 'OK',
+    status: 'Active',
   },
   {
     id: '2',
@@ -135,7 +168,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 2,
     createdAt: 'Jul 24, 2025 03:19:59',
     health: '5 Running',
-    status: 'OK',
+    status: 'Active',
   },
   {
     id: '3',
@@ -146,7 +179,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 20, 2025 23:27:51',
     health: '4 Running',
-    status: 'OK',
+    status: 'Active',
   },
   {
     id: '4',
@@ -157,7 +190,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 1,
     createdAt: 'Jul 18, 2025 09:01:17',
     health: '4 Running',
-    status: 'True',
+    status: 'Active',
   },
   {
     id: '5',
@@ -168,7 +201,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 15, 2025 12:22:26',
     health: '3 Running',
-    status: 'True',
+    status: 'Active',
   },
   {
     id: '6',
@@ -179,7 +212,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 14, 2025 05:09:09',
     health: '3 Running',
-    status: 'Raw',
+    status: 'Processing',
   },
   {
     id: '7',
@@ -190,7 +223,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 10, 2025 01:17:01',
     health: '0 Running',
-    status: 'Raw',
+    status: 'Terminating',
   },
   {
     id: '8',
@@ -201,7 +234,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 12, 2025 15:43:35',
     health: '0 Running',
-    status: 'None',
+    status: 'Active',
   },
   {
     id: '9',
@@ -212,7 +245,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     restarts: 0,
     createdAt: 'Jul 25, 2025 10:32:16',
     health: '1 Running',
-    status: 'None',
+    status: 'Stopped',
   },
   {
     id: '10',
@@ -275,21 +308,21 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     condition: 'NamespaceDeletionContentFailure',
-    status: 'None',
+    status: 'False',
     message: '',
     updated: 'Nov 10, 2025',
   },
   {
     id: '4',
     condition: 'NamespaceContentRemaining',
-    status: 'None',
+    status: 'False',
     message: '',
     updated: 'Nov 10, 2025',
   },
   {
     id: '5',
     condition: 'NamespaceFinalizersRemaining',
-    status: 'None',
+    status: 'False',
     message: '',
     updated: 'Nov 10, 2025',
   },
@@ -526,7 +559,12 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -696,7 +734,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -762,7 +805,7 @@ export function NamespaceDetailPage() {
   // Get namespace data
   const namespace = mockNamespaceData[namespaceName || ''] || {
     name: namespaceName || 'unknown',
-    status: 'OK' as const,
+    status: 'Active' as const,
     createdAt: 'Nov 6, 2025 21:25:53',
     labels: { 'kubernetes.io/metadata.name': namespaceName || '' },
     annotations: {},
@@ -885,8 +928,12 @@ export function NamespaceDetailPage() {
               label="Status"
               value={
                 <Tooltip content={namespace.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(namespace.status)}
+                      type="subtle"
+                      size="sm"
+                    >
                       {namespace.status}
                     </Badge>
                   </span>

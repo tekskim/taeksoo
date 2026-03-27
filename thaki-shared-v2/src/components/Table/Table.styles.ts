@@ -76,7 +76,7 @@ export const tableStyles = {
     'flex flex-col items-center justify-center min-h-60 gap-sm text-center text-text w-full',
 
   // Sticky last column
-  stickyLast: 'sticky right-0 z-[2]',
+  stickyLast: 'sticky right-0 z-[2] shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]',
   stickyLastTh: 'z-[3]',
   stickyLastTheadBg: 'bg-surface-subtle',
   stickyLastTbodyBg: 'bg-inherit',

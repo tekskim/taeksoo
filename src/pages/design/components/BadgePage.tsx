@@ -624,30 +624,205 @@ export function BadgePage() {
       }
       guidelines={<BadgeGuidelines />}
       tokens={
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[100px]">Size</Th>
-              <Th>Padding</Th>
-              <Th>Font Size</Th>
-              <Th>Line Height</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>sm</Td>
-              <Td>6×2px</Td>
-              <Td>11px</Td>
-              <Td>16px</Td>
-            </tr>
-            <tr>
-              <Td>md</Td>
-              <Td>8×2px</Td>
-              <Td>13px</Td>
-              <Td>18px</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
+        <VStack gap={6}>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[100px]">Size</Th>
+                <Th>Padding</Th>
+                <Th>Font Size</Th>
+                <Th>Line Height</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>sm</Td>
+                <Td>6×2px</Td>
+                <Td>11px</Td>
+                <Td>16px</Td>
+              </tr>
+              <tr>
+                <Td>md</Td>
+                <Td>8×2px</Td>
+                <Td>13px</Td>
+                <Td>18px</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+
+          <SubSectionTitle>Color Tokens (Subtle)</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[100px]">Theme</Th>
+                <Th>Background</Th>
+                <Th>Text</Th>
+                <Th className="w-[80px]">예시</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>blue</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-blue-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(blue-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-blue-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-info-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="blue" type="subtle">
+                    Blue
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>green</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-green-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(green-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-green-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-success-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="green" type="subtle">
+                    Green
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>red</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-red-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(red-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-red-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-danger-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="red" type="subtle">
+                    Red
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>yellow</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-yellow-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(orange-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-yellow-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-warning-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="yellow" type="subtle">
+                    Yellow
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>gray</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-gray-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (surface-muted)
+                  </span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-gray-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(#475569)</span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="gray" type="subtle">
+                    Gray
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>white</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--color-surface-default</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(#ffffff)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--color-text-default</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(slate-900)</span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="white">
+                    White
+                  </Badge>
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+
+          <SubSectionTitle>Common Tokens</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[200px]">Token</Th>
+                <Th>Value</Th>
+                <Th>설명</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-radius</code>
+                </Td>
+                <Td>4px</Td>
+                <Td>Border radius (radius-sm)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-gap</code>
+                </Td>
+                <Td>4px</Td>
+                <Td>아이콘과 텍스트 사이 간격</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-dot-size</code>
+                </Td>
+                <Td>6px</Td>
+                <Td>Dot indicator 크기</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-white-border</code>
+                </Td>
+                <Td>1px inset</Td>
+                <Td>White 테마 보더 (border-default)</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
       }
       relatedLinks={[
         {
