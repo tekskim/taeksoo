@@ -39,6 +39,7 @@ import {
   IconChevronDown,
   IconTrash,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -111,7 +112,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
   '1': {
     id: '1',
     name: 'daemonsetName',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 11:32:18',
@@ -131,7 +132,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
   '2': {
     id: '2',
     name: 'fluentd-logging',
-    status: 'True',
+    status: 'Active',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
     createdAt: 'Nov 9, 2025 08:45:22',
@@ -150,7 +151,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -167,13 +168,37 @@ const mockPodsData: PodRow[] = [
       'container-5',
     ],
   },
+  {
+    id: '2',
+    status: 'Failed',
+    name: 'podName-78',
+    image: 'fluentd:v1.16',
+    ready: '0/1',
+    restarts: 2,
+    ip: '10.11.0.12',
+    node: 'nodeName',
+    createdAt: 'Nov 9, 2025 08:46:10',
+    containers: ['container-0'],
+  },
+  {
+    id: '3',
+    status: 'Processing',
+    name: 'podName-79',
+    image: 'fluentd:v1.16',
+    ready: '0/1',
+    restarts: 0,
+    ip: '10.11.0.13',
+    node: 'nodeName',
+    createdAt: 'Nov 9, 2025 08:47:05',
+    containers: ['container-0'],
+  },
 ];
 
 const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'daemonset-service',
-    status: 'OK',
+    status: 'Active',
     target: '10.0.0.100:80',
     selector: 'app=daemonset',
     type: 'ClusterIP',
@@ -268,7 +293,12 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -461,7 +491,12 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px] min-w-0">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -1026,8 +1061,14 @@ export function DaemonSetDetailPage() {
               label="Status"
               value={
                 <Tooltip content={daemonset.status === 'Running' ? 'Active' : daemonset.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        daemonset.status === 'Running' ? 'Active' : daemonset.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {daemonset.status === 'Running' ? 'Active' : daemonset.status}
                     </Badge>
                   </span>

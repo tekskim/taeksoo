@@ -37,6 +37,7 @@ import {
   IconPlayerPause,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -58,7 +59,7 @@ interface CronJobRow {
 const cronJobsData: CronJobRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'automated-database-backup-daily-schedule-cronjob',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -68,7 +69,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Suspended',
     name: 'database-backup-nightly-incremental-schedule-cronjob',
     namespace: 'database',
     image: 'backup-tool:v2.1',
@@ -78,7 +79,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'log-rotation-cleanup-weekly-maintenance-cronjob',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.5',
@@ -88,7 +89,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Error',
     name: 'analytics-weekly-report-generator-schedule-cronjob',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
@@ -98,7 +99,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'data-sync-incremental-replication-schedule-cronjob',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
@@ -108,7 +109,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Suspended',
     name: 'search-index-rebuild-weekly-full-sync-cronjob',
     namespace: 'search',
     image: 'indexer:v4.1',
@@ -118,7 +119,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Processing',
     name: 'cache-warmup-daily-preload-schedule-cronjob',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
@@ -128,7 +129,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Error',
     name: 'monitoring-metrics-collector-aggregation-cronjob',
     namespace: 'monitoring',
     image: 'metrics:v1.0',
@@ -235,7 +236,12 @@ export function CronJobsPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

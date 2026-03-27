@@ -34,6 +34,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -57,7 +58,7 @@ interface JobRow {
 const jobsData: JobRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Succeeded',
     name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -67,7 +68,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Succeeded',
     name: 'data-warehouse-etl-pipeline-extraction-transform-job',
     namespace: 'database',
     image: 'migration-tool:v2.1',
@@ -77,7 +78,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Failed',
     name: 'backup-automated-daily-snapshot-creation-job',
     namespace: 'backup',
     image: 'backup-agent:v1.5',
@@ -87,7 +88,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'maintenance-cleanup-temp-files-retention-job',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.0',
@@ -97,7 +98,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Succeeded',
     name: 'analytics-report-generator-weekly-summary-job',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
@@ -107,7 +108,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Failed',
     name: 'data-sync-incremental-replication-worker-job',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
@@ -117,7 +118,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Processing',
     name: 'search-index-rebuild-full-sync-job',
     namespace: 'search',
     image: 'indexer:v4.1',
@@ -127,7 +128,7 @@ const jobsData: JobRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Succeeded',
     name: 'cache-warmup-preload-frequently-accessed-job',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
@@ -197,7 +198,12 @@ export function JobsPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

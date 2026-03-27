@@ -35,6 +35,7 @@ import {
   IconSearch,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -87,7 +88,7 @@ const mockHPAData: Record<string, HPAData> = {
   '1': {
     id: '1',
     name: 'php-apache-hpa',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default',
     targetReference: 'php-apache',
     createdAt: 'Jul 25, 2025 10:32:16',
@@ -105,7 +106,7 @@ const mockHPAData: Record<string, HPAData> = {
   '2': {
     id: '2',
     name: 'nginx-hpa',
-    status: 'True',
+    status: 'Processing',
     namespace: 'kube-system',
     targetReference: 'nginx-deployment',
     createdAt: 'Nov 8, 2025 11:51:27',
@@ -162,7 +163,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     condition: 'ScalingLimited',
-    status: 'None',
+    status: 'False',
     message: '[DesiredWithinRange] the desired count is within the acceptable range',
     updated: 'Nov 10, 2025',
   },
@@ -489,8 +490,8 @@ export function ContainerHPADetailPage() {
               label="Status"
               value={
                 <Tooltip content={hpa.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge theme={getContainerStatusTheme(hpa.status)} type="subtle" size="sm">
                       {hpa.status}
                     </Badge>
                   </span>

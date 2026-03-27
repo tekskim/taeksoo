@@ -35,6 +35,7 @@ import {
   IconRefresh,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -57,7 +58,7 @@ interface DaemonSetRow {
 const daemonSetsData: DaemonSetRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'monitoring-node-exporter-prometheus-daemonset',
     namespace: 'default',
     image: 'nginx',
@@ -68,7 +69,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Active',
     name: 'logging-fluentd-elasticsearch-forwarder-daemonset',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
@@ -79,7 +80,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Stopped',
     name: 'monitoring-node-exporter-metrics-collector-daemonset',
     namespace: 'monitoring',
     image: 'prom/node-exporter:v1.6.1',
@@ -90,7 +91,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'networking-calico-node-cni-daemonset',
     namespace: 'kube-system',
     image: 'calico/node:v3.26.1',
@@ -101,7 +102,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'kube-system-proxy-network-routing-daemonset',
     namespace: 'kube-system',
     image: 'k8s.gcr.io/kube-proxy:v1.28.0',
@@ -112,7 +113,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Error',
     name: 'logging-filebeat-elasticsearch-shipper-daemonset',
     namespace: 'logging',
     image: 'elastic/filebeat:8.10.2',
@@ -123,7 +124,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Active',
     name: 'gpu-nvidia-device-plugin-k8s-daemonset',
     namespace: 'gpu-operator',
     image: 'nvidia/k8s-device-plugin:v0.14.1',
@@ -134,7 +135,7 @@ const daemonSetsData: DaemonSetRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Active',
     name: 'networking-cilium-ebpf-cni-daemonset',
     namespace: 'kube-system',
     image: 'cilium/cilium:v1.14.2',
@@ -207,7 +208,12 @@ export function DaemonSetsPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

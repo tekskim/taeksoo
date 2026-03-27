@@ -37,6 +37,7 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -64,7 +65,7 @@ interface NodeRow {
 const nodesData: NodeRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'master-control-plane-high-availability-node-01',
     roles: 'Control Plane',
     version: 'v1.34',
@@ -78,7 +79,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Processing',
     name: 'worker-node-production-cluster-az1-pool-001',
     roles: 'Worker',
     version: 'v1.34',
@@ -92,7 +93,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '3',
-    status: 'True',
+    status: 'Error',
     name: 'worker-node-production-cluster-az1-pool-002',
     roles: 'Worker',
     version: 'v1.34',
@@ -106,7 +107,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '4',
-    status: 'Raw',
+    status: 'Stopped',
     name: 'worker-node-production-cluster-az2-pool-003',
     roles: 'Worker',
     version: 'v1.34',
@@ -120,7 +121,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '5',
-    status: 'None',
+    status: 'Active',
     name: 'worker-node-production-cluster-az2-pool-004',
     roles: 'Worker',
     version: 'v1.34',
@@ -134,7 +135,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '6',
-    status: 'ImagePullBackOff',
+    status: 'Processing',
     name: 'worker-node-gpu-inference-accelerator-pool-001',
     roles: 'Worker, GPU',
     version: 'v1.34',
@@ -225,7 +226,12 @@ export function ContainerNodesPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>

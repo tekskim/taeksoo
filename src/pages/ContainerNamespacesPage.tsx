@@ -23,6 +23,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
+import { getContainerStatusTheme } from './containerStatusUtils';
 import { useNavigate } from 'react-router-dom';
 import {
   IconBell,
@@ -55,63 +56,63 @@ interface NamespaceRow {
 const namespacesData: NamespaceRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'production-microservices-platform-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 08:12:33',
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Active',
     name: 'staging-integration-testing-environment',
     description: 'description text',
     createdAt: 'Nov 10, 2025 09:25:17',
   },
   {
     id: '3',
-    status: 'OK',
+    status: 'Active',
     name: 'development-sandbox-experimental-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 10:38:42',
   },
   {
     id: '4',
-    status: 'True',
+    status: 'Active',
     name: 'shared-global-data-persistence-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 11:52:08',
   },
   {
     id: '5',
-    status: 'True',
+    status: 'Active',
     name: 'cattle-impersonation-system-rbac-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 13:05:25',
   },
   {
     id: '6',
-    status: 'Raw',
+    status: 'Active',
     name: 'cattle-provisioning-capi-cluster-api-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 14:18:51',
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Processing',
     name: 'monitoring-observability-stack-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 15:31:14',
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Active',
     name: 'default-system-resources-default-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 16:44:38',
   },
   {
     id: '9',
-    status: 'None',
+    status: 'Terminating',
     name: 'kube-public-cluster-info-public-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 17:57:02',
@@ -188,7 +189,12 @@ export function ContainerNamespacesPage() {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
