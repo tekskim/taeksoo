@@ -39,6 +39,7 @@ import {
   IconChevronDown,
   IconTrash,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -89,7 +90,7 @@ const mockCronJobData: Record<string, CronJobData> = {
   '1': {
     id: '1',
     name: 'cronjobName',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 09:14:33',
@@ -108,7 +109,7 @@ const mockCronJobData: Record<string, CronJobData> = {
   '2': {
     id: '2',
     name: 'backup-cronjob',
-    status: 'True',
+    status: 'Suspended',
     namespace: 'database',
     image: 'backup-tool:v2.1',
     createdAt: 'Nov 9, 2025 02:18:47',
@@ -126,7 +127,7 @@ const mockCronJobData: Record<string, CronJobData> = {
 const mockJobsData: JobRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'jobName-77',
     image: 'nginx:1.27',
     completions: '1/1',
@@ -134,6 +135,28 @@ const mockJobsData: JobRow[] = [
     restarts: 0,
     health: 'succeeded = 1',
     createdAt: 'Jul 25, 2025 09:22:15',
+  },
+  {
+    id: '2',
+    status: 'Suspended',
+    name: 'jobName-78',
+    image: 'nginx:1.27',
+    completions: '0/1',
+    duration: '—',
+    restarts: 0,
+    health: '—',
+    createdAt: 'Jul 25, 2025 09:25:02',
+  },
+  {
+    id: '3',
+    status: 'Processing',
+    name: 'jobName-79',
+    image: 'nginx:1.27',
+    completions: '0/1',
+    duration: '2m',
+    restarts: 1,
+    health: 'running',
+    createdAt: 'Jul 25, 2025 09:28:44',
   },
 ];
 
@@ -200,7 +223,12 @@ function JobsTab({ jobs }: JobsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -650,8 +678,8 @@ export function CronJobDetailPage() {
               label="Status"
               value={
                 <Tooltip content={cronjob.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge theme={getContainerStatusTheme(cronjob.status)} type="subtle" size="sm">
                       {cronjob.status}
                     </Badge>
                   </span>

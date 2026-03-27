@@ -34,6 +34,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -58,7 +59,7 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-001',
     name: 'production-kubernetes-high-availability-cluster',
-    status: 'OK',
+    status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     cpu: '8 cores',
     memory: '16 GiB',
@@ -68,7 +69,7 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-002',
     name: 'staging-development-testing-environment-cluster',
-    status: 'OK',
+    status: 'Failed',
     kubernetesVersion: 'v1.33.4',
     cpu: '4 cores',
     memory: '8 GiB',
@@ -78,7 +79,7 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-003',
     name: 'production-microservices-platform-cluster',
-    status: 'True',
+    status: 'Provisioning',
     kubernetesVersion: 'v1.32.2',
     cpu: '16 cores',
     memory: '32 GiB',
@@ -88,7 +89,7 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-004',
     name: 'staging-integration-testing-environment-cluster',
-    status: 'None',
+    status: 'Deleting',
     kubernetesVersion: 'v1.33.1',
     cpu: '4 cores',
     memory: '8 GiB',
@@ -98,7 +99,7 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-005',
     name: 'development-sandbox-experimental-cluster',
-    status: 'ImagePullBackOff',
+    status: 'Unknown',
     kubernetesVersion: 'v1.31.0',
     cpu: '2 cores',
     memory: '4 GiB',
@@ -145,7 +146,12 @@ export function ClusterManagementPage() {
       sortable: false,
       render: (status) => (
         <Tooltip content={status}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(status)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{status}</span>
           </Badge>
         </Tooltip>

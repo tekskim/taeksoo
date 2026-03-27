@@ -40,6 +40,7 @@ import {
   IconChevronDown,
   IconTrash,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -114,7 +115,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
   '1': {
     id: '1',
     name: 'cart-manager',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 10:32:16',
@@ -136,7 +137,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
   '2': {
     id: '2',
     name: 'nginx-ingress-controller',
-    status: 'True',
+    status: 'Active',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
     createdAt: 'Nov 8, 2025 11:51:27',
@@ -157,7 +158,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -176,7 +177,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -188,7 +189,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'podName-79',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -200,7 +201,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'podName-80',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -216,7 +217,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'capi-webhook-service',
-    status: 'OK',
+    status: 'Active',
     target: '10.43.136.100:443 → webhook-server/TCP',
     selector: 'cluster.x-k8s.io/provider=cluster-api',
     type: 'Cluster IP',
@@ -225,7 +226,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '2',
     name: 'cart-manager-svc',
-    status: 'True',
+    status: 'Processing',
     target: '10.43.136.101:80 → http/TCP',
     selector: 'app=cart-manager',
     type: 'Cluster IP',
@@ -246,7 +247,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'None',
+    status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet "cart-manager-77" has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -329,7 +330,12 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -510,7 +516,12 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -1006,8 +1017,14 @@ export function DeploymentDetailPage() {
               label="Status"
               value={
                 <Tooltip content={deployment.status === 'Running' ? 'Active' : deployment.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        deployment.status === 'Running' ? 'Active' : deployment.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {deployment.status === 'Running' ? 'Active' : deployment.status}
                     </Badge>
                   </span>

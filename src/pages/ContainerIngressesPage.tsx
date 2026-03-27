@@ -35,6 +35,7 @@ import {
   IconTrash,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -58,7 +59,7 @@ interface IngressRow {
 const ingressesData: IngressRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-tls-ingress-controller',
     namespace: 'namespaceName',
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
@@ -68,7 +69,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'api-gateway-external-routing-ingress-rule',
     namespace: 'default',
     target: ['api → 8080/TCP'],
@@ -78,7 +79,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Error',
     name: 'web-application-production-tls-ingress-rule',
     namespace: 'production',
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
@@ -88,7 +89,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'staging-application-preview-ingress-rule',
     namespace: 'staging',
     target: ['app → 3000/TCP'],
@@ -160,7 +161,12 @@ export function ContainerIngressesPage() {
       render: (value: string) => (
         <span className="min-w-0 block">
           <Tooltip content={value}>
-            <Badge theme="white" size="sm" className="max-w-[80px]">
+            <Badge
+              theme={getContainerStatusTheme(value)}
+              type="subtle"
+              size="sm"
+              className="max-w-[80px]"
+            >
               <span className="truncate">{value}</span>
             </Badge>
           </Tooltip>

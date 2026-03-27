@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -22,7 +21,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Tooltip,
-  Popover,
+  BadgeList,
   SearchInput,
   CopyButton,
 } from '@/design-system';
@@ -37,6 +36,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -51,6 +51,7 @@ interface ServiceData {
   clusterIP: string;
   loadBalancerIP: string;
   externalIP: string;
+  externalTrafficPolicy: string;
   sessionAffinity: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -102,12 +103,13 @@ const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
     name: 'capi-webhook-service',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default',
     type: 'LoadBalancer',
     clusterIP: '10.11.111.10',
     loadBalancerIP: '203.0.113.10',
     externalIP: '198.51.100.5',
+    externalTrafficPolicy: 'Local',
     sessionAffinity: 'None',
     createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
@@ -124,12 +126,13 @@ const mockServiceData: Record<string, ServiceData> = {
   '2': {
     id: '2',
     name: 'nginx-service',
-    status: 'True',
+    status: 'Processing',
     namespace: 'ingress-nginx',
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
     loadBalancerIP: '203.0.113.50',
     externalIP: '198.51.100.10',
+    externalTrafficPolicy: 'Cluster',
     sessionAffinity: 'ClientIP',
     createdAt: 'Nov 8, 2025 11:51:27',
     labels: {
@@ -145,7 +148,7 @@ const mockServiceData: Record<string, ServiceData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'deploymentName-77f6bb9c69-4ww7f',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -156,7 +159,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     name: 'deploymentName-77f6bb9c69-5xx8g',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -167,7 +170,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'deploymentName-77f6bb9c69-6yy9h',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -178,7 +181,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'deploymentName-77f6bb9c69-7zz0i',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -235,7 +238,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'None',
+    status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -309,7 +312,12 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -838,8 +846,14 @@ export function ContainerServiceDetailPage() {
               label="Status"
               value={
                 <Tooltip content={service.status === 'Running' ? 'Active' : service.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        service.status === 'Running' ? 'Active' : service.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {service.status === 'Running' ? 'Active' : service.status}
                     </Badge>
                   </span>
@@ -848,114 +862,42 @@ export function ContainerServiceDetailPage() {
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
             <DetailHeader.InfoCard label="Type" value={service.type} />
-            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
-            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
             <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
+            <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
             <DetailHeader.InfoCard
               label="Load balancer IP"
               value={service.loadBalancerIP}
               copyable
             />
-            <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
+            <DetailHeader.InfoCard
+              label="External Traffic Policy"
+              value={service.externalTrafficPolicy}
+            />
+            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
+            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${Object.keys(service.labels).length})`}
+              value={
+                <BadgeList
+                  items={Object.entries(service.labels).map(([k, v]) => `${k}: ${v}`)}
+                  maxVisible={1}
+                  maxBadgeWidth="140px"
+                  popoverTitle={`All labels (${Object.keys(service.labels).length})`}
+                />
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${Object.keys(service.annotations).length})`}
+              value={
+                <BadgeList
+                  items={Object.entries(service.annotations).map(([k, v]) => `${k}: ${v}`)}
+                  maxVisible={1}
+                  maxBadgeWidth="140px"
+                  popoverTitle={`All annotations (${Object.keys(service.annotations).length})`}
+                />
+              }
+            />
           </DetailHeader.InfoGrid>
-
-          {/* Second row: Labels, Annotations */}
-          <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Labels ({Object.keys(service.labels).length})
-                </span>
-                <div className="flex items-center gap-1 min-w-0 w-full">
-                  {Object.entries(service.labels)
-                    .slice(0, 1)
-                    .map(([key, val]) => (
-                      <Badge
-                        key={key}
-                        theme="white"
-                        size="sm"
-                        className="min-w-0 truncate justify-start text-left"
-                      >
-                        {`${key}: ${val}`}
-                      </Badge>
-                    ))}
-                  {Object.keys(service.labels).length > 1 && (
-                    <Popover
-                      trigger="hover"
-                      position="bottom"
-                      delay={100}
-                      hideDelay={100}
-                      content={
-                        <div className="p-3 min-w-[120px] max-w-[480px]">
-                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All labels ({Object.keys(service.labels).length})
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            {Object.entries(service.labels).map(([k, v]) => (
-                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      }
-                    >
-                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                        +{Object.keys(service.labels).length - 1}
-                      </span>
-                    </Popover>
-                  )}
-                </div>
-              </VStack>
-            </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Annotations ({Object.keys(service.annotations).length})
-                </span>
-                <div className="flex items-center gap-1 min-w-0 w-full">
-                  {Object.entries(service.annotations)
-                    .slice(0, 1)
-                    .map(([key, val]) => (
-                      <Badge
-                        key={key}
-                        theme="white"
-                        size="sm"
-                        className="min-w-0 truncate justify-start text-left"
-                      >
-                        {`${key}: ${val}`}
-                      </Badge>
-                    ))}
-                  {Object.keys(service.annotations).length > 1 && (
-                    <Popover
-                      trigger="hover"
-                      position="bottom"
-                      delay={100}
-                      hideDelay={100}
-                      content={
-                        <div className="p-3 min-w-[120px] max-w-[480px]">
-                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All annotations ({Object.keys(service.annotations).length})
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            {Object.entries(service.annotations).map(([k, v]) => (
-                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="whitespace-nowrap">{`${k}: ${v}`}</span>
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      }
-                    >
-                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                        +{Object.keys(service.annotations).length - 1}
-                      </span>
-                    </Popover>
-                  )}
-                </div>
-              </VStack>
-            </div>
-          </HStack>
         </DetailHeader>
 
         {/* Tabs */}

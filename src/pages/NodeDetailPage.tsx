@@ -42,6 +42,7 @@ import {
   IconHelpCircle,
   IconTrash,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -134,7 +135,7 @@ interface EventRow {
 const mockNodeData: Record<string, NodeData> = {
   'node-control-plane-01': {
     name: 'node-control-plane-01',
-    status: 'OK',
+    status: 'Active',
     internalIp: '172.16.0.237',
     kubernetesVersion: 'v1.34',
     os: 'Ubuntu 24.04.3 LTS',
@@ -180,7 +181,7 @@ const mockNodeData: Record<string, NodeData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'helm-install-thakicloud-webhook',
     namespace: 'cattle-system',
     image: 'thakicloud/Shell:v0.21',
@@ -192,7 +193,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'coredns-7b98449c4-x2k4m',
     namespace: 'kube-system',
     image: 'rancher/mirrored-coredns-coredns:1.10.1',
@@ -204,7 +205,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'local-path-provisioner-6795b5f9d8-p3n2q',
     namespace: 'kube-system',
     image: 'rancher/local-path-provisioner:v0.0.24',
@@ -231,7 +232,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
     type: 'MemoryPressure',
-    status: 'None',
+    status: 'False',
     reason: 'KubeletHasSufficientMemory',
     size: '14 GB',
     message: 'kubelet has sufficient memory available',
@@ -241,7 +242,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'DiskPressure',
-    status: 'None',
+    status: 'False',
     reason: 'KubeletHasNoDiskPressure',
     size: '256 GB',
     message: 'kubelet has no disk pressure',
@@ -251,7 +252,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     type: 'PIDPressure',
-    status: 'None',
+    status: 'False',
     reason: 'KubeletHasSufficientPID',
     size: '32768',
     message: 'kubelet has sufficient PID available',
@@ -378,7 +379,12 @@ function PodsTab({ pods }: PodsTabProps) {
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -927,8 +933,14 @@ export function NodeDetailPage() {
               label="Status"
               value={
                 <Tooltip content={node.status === 'Ready' ? 'Active' : 'Not Ready'}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        node.status === 'Ready' ? 'Active' : 'Not Ready'
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {node.status === 'Ready' ? 'Active' : 'Not Ready'}
                     </Badge>
                   </span>

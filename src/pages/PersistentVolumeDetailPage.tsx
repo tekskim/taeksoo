@@ -33,6 +33,7 @@ import {
   IconSearch,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -75,7 +76,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
   '1': {
     id: '1',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
-    status: 'OK',
+    status: 'Active',
     createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -107,7 +108,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
   '2': {
     id: '2',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
-    status: 'OK',
+    status: 'Processing',
     createdAt: 'Jul 24, 2025 03:19:59',
     labels: {
       app: 'postgres',
@@ -338,10 +339,10 @@ export function PersistentVolumeDetailPage() {
             <DetailHeader.InfoCard
               label="Status"
               value={
-                <Tooltip content={pvData.status === 'Bound' ? 'Active' : pvData.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
-                      {pvData.status === 'Bound' ? 'Active' : pvData.status}
+                <Tooltip content={pvData.status}>
+                  <span className="max-w-full truncate">
+                    <Badge theme={getContainerStatusTheme(pvData.status)} type="subtle" size="sm">
+                      {pvData.status}
                     </Badge>
                   </span>
                 </Tooltip>

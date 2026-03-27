@@ -28,6 +28,8 @@ import {
   IconSearch,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { Tooltip } from '@/design-system';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -71,7 +73,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
   'cluster-001': {
     id: 'cluster-001',
     name: 'Cluster1',
-    status: 'Raw',
+    status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
     createdAt: 'Nov 11, 2025 08:30:18',
@@ -98,7 +100,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
   'cluster-002': {
     id: 'cluster-002',
     name: 'ClusterName',
-    status: 'OK',
+    status: 'Failed',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
     createdAt: 'Oct 6, 2025 21:25:53',
@@ -125,7 +127,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
   'cluster-003': {
     id: 'cluster-003',
     name: 'Cluster3',
-    status: 'OK',
+    status: 'Provisioning',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
     createdAt: 'Oct 5, 2025 14:12:36',
@@ -186,7 +188,7 @@ export function ClusterDetailPage() {
   const clusterData = cluster || {
     id: 'cluster-001',
     name: 'tk-test',
-    status: 'OK',
+    status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
     createdAt: 'Jul 25, 2025 10:32:16',
@@ -333,9 +335,17 @@ export function ClusterDetailPage() {
             <DetailHeader.InfoCard
               label="Status"
               value={
-                <Badge theme="white" size="sm">
-                  {clusterData.status}
-                </Badge>
+                <Tooltip content={clusterData.status}>
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(clusterData.status)}
+                      type="subtle"
+                      size="sm"
+                    >
+                      {clusterData.status}
+                    </Badge>
+                  </span>
+                </Tooltip>
               }
             />
             <DetailHeader.InfoCard
