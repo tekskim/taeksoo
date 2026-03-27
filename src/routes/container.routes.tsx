@@ -117,6 +117,8 @@ const PodDisruptionBudgetDetailPage = lazy(() => import('@/pages/PodDisruptionBu
 const ClusterManagementPage = lazy(() => import('@/pages/ClusterManagementPage'));
 const CreateClusterPage = lazy(() => import('@/pages/CreateClusterPage'));
 const ClusterDetailPage = lazy(() => import('@/pages/ClusterDetailPage'));
+const CatalogPage = lazy(() => import('@/pages/CatalogPage'));
+const InstalledAppsPage = lazy(() => import('@/pages/InstalledAppsPage'));
 
 export const containerRoutes = (
   <>
@@ -319,6 +321,8 @@ export const containerRoutes = (
     <Route path="/container/pdb/create-yaml-v2" element={<CreatePodDisruptionBudgetYamlPage />} />
     <Route path="/container/pdb/:pdbName/edit-yaml" element={<EditPodDisruptionBudgetYamlPage />} />
     <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
+    <Route path="/container/catalog" element={<CatalogPage />} />
+    <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
     <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />

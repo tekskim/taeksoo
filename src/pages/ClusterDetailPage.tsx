@@ -15,6 +15,9 @@ import {
   ContextMenu,
   PageShell,
   CopyButton,
+  ProgressBar,
+  InfoBox,
+  InlineMessage,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
@@ -332,11 +335,10 @@ export function ClusterDetailPage() {
           </DetailHeader.Actions>
 
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard
-              label="Status"
-              value={
+            <InfoBox label="Status" className="flex-1">
+              <div className="flex items-center gap-3 w-full">
                 <Tooltip content={clusterData.status}>
-                  <span className="max-w-full truncate">
+                  <span className="shrink-0">
                     <Badge
                       theme={getContainerStatusTheme(clusterData.status)}
                       type="subtle"
@@ -346,8 +348,16 @@ export function ClusterDetailPage() {
                     </Badge>
                   </span>
                 </Tooltip>
-              }
-            />
+                {clusterData.status === 'Provisioning' && (
+                  <span className="flex-1 min-w-0 flex flex-col gap-1">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Control plane initializing
+                    </span>
+                    <ProgressBar value={65} max={100} size="sm" showValue={false} />
+                  </span>
+                )}
+              </div>
+            </InfoBox>
             <DetailHeader.InfoCard
               label="Kubernetes version"
               value={clusterData.kubernetesVersion}
@@ -356,6 +366,13 @@ export function ClusterDetailPage() {
             <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
+
+        {clusterData.status === 'Provisioning' && (
+          <InlineMessage variant="info">
+            Cluster provisioning is in progress. Some features may be unavailable until the process
+            is complete.
+          </InlineMessage>
+        )}
 
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>

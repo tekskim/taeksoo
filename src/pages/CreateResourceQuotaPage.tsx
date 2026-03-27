@@ -265,7 +265,7 @@ const getResourceUnit = (resourceType: string): string | null => {
     case 'memory-limit':
     case 'memory-reservation':
     case 'storage-reservation':
-      return 'GiB';
+      return 'MiB';
     default:
       return null;
   }
@@ -284,24 +284,6 @@ const getResourcePlaceholder = (resourceType: string): string => {
       return 'e.g. 512';
     default:
       return 'e.g. 50';
-  }
-};
-
-// Get range helper text for resource type
-const getResourceRangeText = (resourceType: string): string | null => {
-  switch (resourceType) {
-    case 'cpu-reservation':
-      return '10-1000 mCPUs';
-    case 'cpu-limit':
-      return '10-1000 mCPUs';
-    case 'memory-reservation':
-      return '4-128 GiB';
-    case 'memory-limit':
-      return '4-128 GiB';
-    case 'storage-reservation':
-      return '4-512000 GiB';
-    default:
-      return null;
   }
 };
 
@@ -346,7 +328,6 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
               {quotaItems.map((item) => {
                 const unit = getResourceUnit(item.resourceType);
                 const placeholder = getResourcePlaceholder(item.resourceType);
-                const rangeText = getResourceRangeText(item.resourceType);
                 return (
                   <div
                     key={item.id}
@@ -385,26 +366,19 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                           placeholder="Select resource type"
                           fullWidth
                         />
-                        <VStack gap={1}>
-                          <HStack gap={2} align="center">
-                            <NumberInput
-                              value={item.limit === '' ? undefined : Number(item.limit)}
-                              onChange={(val) => updateQuotaItem(item.id, 'limit', String(val))}
-                              width="sm"
-                              placeholder={placeholder}
-                            />
-                            {unit && (
-                              <span className="text-body-md text-[var(--color-text-default)] shrink-0">
-                                {unit}
-                              </span>
-                            )}
-                          </HStack>
-                          {rangeText && (
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              {rangeText}
+                        <HStack gap={2} align="center">
+                          <NumberInput
+                            value={item.limit === '' ? undefined : Number(item.limit)}
+                            onChange={(val) => updateQuotaItem(item.id, 'limit', String(val))}
+                            width="sm"
+                            placeholder={placeholder}
+                          />
+                          {unit && (
+                            <span className="text-body-md text-[var(--color-text-default)] shrink-0">
+                              {unit}
                             </span>
                           )}
-                        </VStack>
+                        </HStack>
                         <div />
                       </div>
                     </VStack>

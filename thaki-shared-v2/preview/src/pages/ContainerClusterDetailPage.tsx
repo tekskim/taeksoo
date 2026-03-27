@@ -4,7 +4,9 @@ import DetailPageHeader from '@shared/components/DetailPageHeader/DetailPageHead
 import type { DetailPageHeaderInfoField } from '@shared/components/DetailPageHeader/DetailPageHeader';
 import { Button } from '@shared/components/Button';
 import { Badge } from '@shared/components/Badge';
+import { ProgressBar } from '@shared/components/ProgressBar';
 import { ContextMenu } from '@shared/components/ContextMenu';
+import { InlineMessage } from '@shared/components/InlineMessage';
 import { Tabs, Tab } from '@shared/components/Tabs';
 import { IconChevronDown } from '@tabler/icons-react';
 
@@ -203,6 +205,16 @@ export function ContainerClusterDetailPage() {
             {clusterData.status}
           </Badge>
         ),
+        ...(clusterData.status === 'Provisioning' && {
+          accessory: (
+            <span className="flex-1 min-w-0 flex flex-col gap-1">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                Control plane initializing
+              </span>
+              <ProgressBar value={65} max={100} size="sm" showValue={false} />
+            </span>
+          ),
+        }),
       },
       { label: 'Kubernetes version', value: clusterData.kubernetesVersion },
       { label: 'Container network', value: clusterData.containerNetwork },
@@ -253,6 +265,13 @@ export function ContainerClusterDetailPage() {
         }
         infoFields={infoFields}
       />
+
+      {clusterData.status === 'Provisioning' && (
+        <InlineMessage variant="info">
+          Cluster provisioning is in progress. Some features may be unavailable until the process is
+          complete.
+        </InlineMessage>
+      )}
 
       <Tabs activeTabId={activeTabId} onChange={setActiveTabId} variant="line" size="sm">
         <Tab id="networking" label="Networking">
