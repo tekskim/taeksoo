@@ -95,7 +95,7 @@ export function ContainerHomePage() {
   }, [updateActiveTabLabel]);
 
   // Home page only shows icon sidebar (40px), menu sidebar is hidden
-  const sidebarWidth = 40;
+  const sidebarWidth = 48;
 
   // Table columns
   const columns: TableColumn<ClusterRow>[] = [
