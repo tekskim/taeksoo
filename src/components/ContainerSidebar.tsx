@@ -40,6 +40,8 @@ import {
 } from '@tabler/icons-react';
 import { ArrowRightLeft, FolderCog, HardDrive, Scaling, Group, Network } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
+import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
@@ -594,29 +596,18 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
     return false;
   };
 
+  const [bookmarksExpanded, setBookmarksExpanded] = useState(false);
+
   // Determine active icon section based on current route
   const getActiveIconSection = () => {
     const path = location.pathname;
 
-    // Home - exact match for /container
     if (path === '/container') {
       return 'home';
     }
 
-    // Cluster section: Dashboard, Namespaces, Nodes, Events, AND Workloads (Deployments, StatefulSets, DaemonSets, Jobs, CronJobs, Pods)
-    if (
-      path === '/container/dashboard' ||
-      path.startsWith('/container/namespaces') ||
-      path.startsWith('/container/nodes') ||
-      path.startsWith('/container/events') ||
-      path.startsWith('/container/deployments') ||
-      path.startsWith('/container/statefulsets') ||
-      path.startsWith('/container/daemonsets') ||
-      path.startsWith('/container/jobs') ||
-      path.startsWith('/container/cronjobs') ||
-      path.startsWith('/container/pods')
-    ) {
-      return 'cluster';
+    if (path.startsWith('/container/cluster-management')) {
+      return 'cluster-management';
     }
 
     return 'cluster';
@@ -634,7 +625,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
         </div>
 
         {/* Icon Navigation */}
-        <div className="flex-1 flex flex-col items-center py-3 gap-0">
+        <div className="flex-1 flex flex-col items-center py-3 gap-1">
           <IconSidebarItem
             icon={<IconHome size={16} stroke={1.5} />}
             active={activeIconSection === 'home'}
@@ -669,9 +660,17 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
       {/* Menu Sidebar (200px) - Toggleable, hidden on Home page */}
       {isOpen && activeIconSection !== 'home' && (
         <aside className="w-[200px] h-full bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col">
-          {/* Logo */}
+          {/* Logo / Title */}
           <div className="h-[33px] px-3 flex items-center justify-between">
-            <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
+            {activeIconSection === 'cluster-management' ? (
+              <img
+                src={isDark ? ThakiLogoDark : ThakiLogoLight}
+                alt="THAKI Cloud"
+                className="h-4"
+              />
+            ) : (
+              <span className="text-label-lg text-[var(--color-text-default)]">Container</span>
+            )}
             <button
               type="button"
               onClick={onToggle}
@@ -686,8 +685,8 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             </button>
           </div>
 
-          {/* Namespace Selector */}
-          <NamespaceSelector />
+          {/* Namespace Selector - only for cluster section */}
+          {activeIconSection === 'cluster' && <NamespaceSelector />}
 
           {/* Navigation */}
           <nav
@@ -698,163 +697,205 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             <VStack gap={4} className="w-full min-w-0">
               {/* Bookmarks */}
               <div className="py-2">
-                <button className="flex items-center gap-2 px-0 py-1.5 text-label-md leading-[16px] text-[var(--color-text-default)]">
-                  <IconChevronDown size={12} stroke={2} className="rotate-[-90deg]" />
+                <button
+                  type="button"
+                  onClick={() => setBookmarksExpanded(!bookmarksExpanded)}
+                  className="flex items-center gap-2 px-0 py-1.5 text-label-md leading-[16px] text-[var(--color-text-default)]"
+                >
+                  <IconChevronDown
+                    size={12}
+                    stroke={2}
+                    className={`transition-transform ${bookmarksExpanded ? '' : 'rotate-[-90deg]'}`}
+                  />
                   <span>Bookmarks</span>
                 </button>
+                {bookmarksExpanded && (
+                  <div className="mt-2 pl-4">
+                    <p className="text-body-sm text-[var(--color-text-muted)]">No bookmarks yet</p>
+                  </div>
+                )}
               </div>
 
-              {/* Cluster Section */}
-              <MenuSection title="Cluster" defaultOpen={true}>
-                <MenuItem
-                  icon={<IconHome size={16} stroke={1.5} />}
-                  label="Dashboard"
-                  href="/container/dashboard"
-                  active={isActive('/container/dashboard')}
-                />
-                <MenuItem
-                  icon={<IconFolders size={16} stroke={1.5} />}
-                  label="Namespaces"
-                  href="/container/namespaces"
-                  active={isActive('/container/namespaces')}
-                />
-                <MenuItem
-                  icon={<IconTopologyStar size={16} stroke={1.5} />}
-                  label="Nodes"
-                  href="/container/nodes"
-                  active={isActive('/container/nodes')}
-                />
-                <MenuItem
-                  icon={<IconTimelineEvent size={16} stroke={1.5} />}
-                  label="Events"
-                  href="/container/events"
-                  active={isActive('/container/events')}
-                />
-              </MenuSection>
+              {activeIconSection === 'cluster-management' ? (
+                <>
+                  {/* Cluster Management Section */}
+                  <MenuSection title="Cluster management" defaultOpen={true}>
+                    <MenuItem
+                      icon={<FolderCog size={16} strokeWidth={1.5} />}
+                      label="Clusters"
+                      href="/container/cluster-management"
+                      active={isActive('/container/cluster-management')}
+                    />
+                  </MenuSection>
 
-              {/* Workloads Section */}
-              <MenuSection title="Workloads" defaultOpen={true}>
-                <MenuItem
-                  icon={<IconRocket size={16} stroke={1.5} />}
-                  label="Deployments"
-                  href="/container/deployments"
-                  active={isActive('/container/deployments')}
-                />
-                <MenuItem
-                  icon={<Group size={16} strokeWidth={1.5} />}
-                  label="StatefulSets"
-                  href="/container/statefulsets"
-                  active={isActive('/container/statefulsets')}
-                />
-                <MenuItem
-                  icon={<IconRefresh size={16} stroke={1.5} />}
-                  label="DaemonSets"
-                  href="/container/daemonsets"
-                  active={isActive('/container/daemonsets')}
-                />
-                <MenuItem
-                  icon={<IconClock size={16} stroke={1.5} />}
-                  label="Jobs"
-                  href="/container/jobs"
-                  active={isActive('/container/jobs')}
-                />
-                <MenuItem
-                  icon={<IconCalendarTime size={16} stroke={1.5} />}
-                  label="CronJobs"
-                  href="/container/cronjobs"
-                  active={isActive('/container/cronjobs')}
-                />
-                <MenuItem
-                  icon={<IconBox size={16} stroke={1.5} />}
-                  label="Pods"
-                  href="/container/pods"
-                  active={isActive('/container/pods')}
-                />
-              </MenuSection>
+                  {/* Cluster Section */}
+                  <MenuSection title="Cluster" defaultOpen={true}>
+                    {clusters.map((cluster) => (
+                      <MenuItem
+                        key={cluster.id}
+                        icon={<IconAffiliate size={16} stroke={1.5} />}
+                        label={cluster.name}
+                        href={`/container/cluster-management/${cluster.id}`}
+                        active={isActive(`/container/cluster-management/${cluster.id}`)}
+                      />
+                    ))}
+                  </MenuSection>
+                </>
+              ) : (
+                <>
+                  {/* Cluster Section */}
+                  <MenuSection title="Cluster" defaultOpen={true}>
+                    <MenuItem
+                      icon={<IconHome size={16} stroke={1.5} />}
+                      label="Dashboard"
+                      href="/container/dashboard"
+                      active={isActive('/container/dashboard')}
+                    />
+                    <MenuItem
+                      icon={<IconFolders size={16} stroke={1.5} />}
+                      label="Namespaces"
+                      href="/container/namespaces"
+                      active={isActive('/container/namespaces')}
+                    />
+                    <MenuItem
+                      icon={<IconTopologyStar size={16} stroke={1.5} />}
+                      label="Nodes"
+                      href="/container/nodes"
+                      active={isActive('/container/nodes')}
+                    />
+                    <MenuItem
+                      icon={<IconTimelineEvent size={16} stroke={1.5} />}
+                      label="Events"
+                      href="/container/events"
+                      active={isActive('/container/events')}
+                    />
+                  </MenuSection>
 
-              {/* Service Discovery Section */}
-              <MenuSection title="Service discovery" defaultOpen={true}>
-                <MenuItem
-                  icon={<Network size={16} strokeWidth={1.5} />}
-                  label="Services"
-                  href="/container/services"
-                  active={isActive('/container/services')}
-                />
-                <MenuItem
-                  icon={<IconArrowsShuffle size={16} stroke={1.5} />}
-                  label="Ingresses"
-                  href="/container/ingresses"
-                  active={isActive('/container/ingresses')}
-                />
-                <MenuItem
-                  icon={<Scaling size={16} strokeWidth={1.5} />}
-                  label="Horizontal pod autoscalers"
-                  href="/container/hpa"
-                  active={isActive('/container/hpa')}
-                />
-              </MenuSection>
+                  {/* Workloads Section */}
+                  <MenuSection title="Workloads" defaultOpen={true}>
+                    <MenuItem
+                      icon={<IconRocket size={16} stroke={1.5} />}
+                      label="Deployments"
+                      href="/container/deployments"
+                      active={isActive('/container/deployments')}
+                    />
+                    <MenuItem
+                      icon={<Group size={16} strokeWidth={1.5} />}
+                      label="StatefulSets"
+                      href="/container/statefulsets"
+                      active={isActive('/container/statefulsets')}
+                    />
+                    <MenuItem
+                      icon={<IconRefresh size={16} stroke={1.5} />}
+                      label="DaemonSets"
+                      href="/container/daemonsets"
+                      active={isActive('/container/daemonsets')}
+                    />
+                    <MenuItem
+                      icon={<IconClock size={16} stroke={1.5} />}
+                      label="Jobs"
+                      href="/container/jobs"
+                      active={isActive('/container/jobs')}
+                    />
+                    <MenuItem
+                      icon={<IconCalendarTime size={16} stroke={1.5} />}
+                      label="CronJobs"
+                      href="/container/cronjobs"
+                      active={isActive('/container/cronjobs')}
+                    />
+                    <MenuItem
+                      icon={<IconBox size={16} stroke={1.5} />}
+                      label="Pods"
+                      href="/container/pods"
+                      active={isActive('/container/pods')}
+                    />
+                  </MenuSection>
 
-              {/* Storage Section */}
-              <MenuSection title="Storage" defaultOpen={true}>
-                <MenuItem
-                  icon={<HardDrive size={16} strokeWidth={1.5} />}
-                  label="Persistent volumes"
-                  href="/container/persistent-volumes"
-                  active={isActive('/container/persistent-volumes')}
-                />
-                <MenuItem
-                  icon={<IconDatabase size={16} stroke={1.5} />}
-                  label="Persistent volume claims"
-                  href="/container/pvc"
-                  active={isActive('/container/pvc')}
-                />
-                <MenuItem
-                  icon={<IconStack3 size={16} stroke={1.5} />}
-                  label="Storage classes"
-                  href="/container/storage-classes"
-                  active={isActive('/container/storage-classes')}
-                />
-                <MenuItem
-                  icon={<IconFileSettings size={16} stroke={1.5} />}
-                  label="ConfigMaps"
-                  href="/container/configmaps"
-                  active={isActive('/container/configmaps')}
-                />
-                <MenuItem
-                  icon={<IconKey size={16} stroke={1.5} />}
-                  label="Secrets"
-                  href="/container/secrets"
-                  active={isActive('/container/secrets')}
-                />
-              </MenuSection>
+                  {/* Service Discovery Section */}
+                  <MenuSection title="Service discovery" defaultOpen={true}>
+                    <MenuItem
+                      icon={<Network size={16} strokeWidth={1.5} />}
+                      label="Services"
+                      href="/container/services"
+                      active={isActive('/container/services')}
+                    />
+                    <MenuItem
+                      icon={<IconArrowsShuffle size={16} stroke={1.5} />}
+                      label="Ingresses"
+                      href="/container/ingresses"
+                      active={isActive('/container/ingresses')}
+                    />
+                    <MenuItem
+                      icon={<Scaling size={16} strokeWidth={1.5} />}
+                      label="Horizontal pod autoscalers"
+                      href="/container/hpa"
+                      active={isActive('/container/hpa')}
+                    />
+                  </MenuSection>
 
-              {/* Policy Section */}
-              <MenuSection title="Policy" defaultOpen={true}>
-                <MenuItem
-                  icon={<IconRulerMeasure size={16} stroke={1.5} />}
-                  label="Limit ranges"
-                  href="/container/limit-ranges"
-                  active={isActive('/container/limit-ranges')}
-                />
-                <MenuItem
-                  icon={<IconChartPie3 size={16} stroke={1.5} />}
-                  label="Resource quotas"
-                  href="/container/resource-quotas"
-                  active={isActive('/container/resource-quotas')}
-                />
-                <MenuItem
-                  icon={<IconShieldLock size={16} stroke={1.5} />}
-                  label="Network policies"
-                  href="/container/network-policies"
-                  active={isActive('/container/network-policies')}
-                />
-                <MenuItem
-                  icon={<IconReorder size={16} stroke={1.5} />}
-                  label="Pod disruption budgets"
-                  href="/container/pdb"
-                  active={isActive('/container/pdb')}
-                />
-              </MenuSection>
+                  {/* Storage Section */}
+                  <MenuSection title="Storage" defaultOpen={true}>
+                    <MenuItem
+                      icon={<HardDrive size={16} strokeWidth={1.5} />}
+                      label="Persistent volumes"
+                      href="/container/persistent-volumes"
+                      active={isActive('/container/persistent-volumes')}
+                    />
+                    <MenuItem
+                      icon={<IconDatabase size={16} stroke={1.5} />}
+                      label="Persistent volume claims"
+                      href="/container/pvc"
+                      active={isActive('/container/pvc')}
+                    />
+                    <MenuItem
+                      icon={<IconStack3 size={16} stroke={1.5} />}
+                      label="Storage classes"
+                      href="/container/storage-classes"
+                      active={isActive('/container/storage-classes')}
+                    />
+                    <MenuItem
+                      icon={<IconFileSettings size={16} stroke={1.5} />}
+                      label="ConfigMaps"
+                      href="/container/configmaps"
+                      active={isActive('/container/configmaps')}
+                    />
+                    <MenuItem
+                      icon={<IconKey size={16} stroke={1.5} />}
+                      label="Secrets"
+                      href="/container/secrets"
+                      active={isActive('/container/secrets')}
+                    />
+                  </MenuSection>
+
+                  {/* Policy Section */}
+                  <MenuSection title="Policy" defaultOpen={true}>
+                    <MenuItem
+                      icon={<IconRulerMeasure size={16} stroke={1.5} />}
+                      label="Limit ranges"
+                      href="/container/limit-ranges"
+                      active={isActive('/container/limit-ranges')}
+                    />
+                    <MenuItem
+                      icon={<IconChartPie3 size={16} stroke={1.5} />}
+                      label="Resource quotas"
+                      href="/container/resource-quotas"
+                      active={isActive('/container/resource-quotas')}
+                    />
+                    <MenuItem
+                      icon={<IconShieldLock size={16} stroke={1.5} />}
+                      label="Network policies"
+                      href="/container/network-policies"
+                      active={isActive('/container/network-policies')}
+                    />
+                    <MenuItem
+                      icon={<IconReorder size={16} stroke={1.5} />}
+                      label="Pod disruption budgets"
+                      href="/container/pdb"
+                      active={isActive('/container/pdb')}
+                    />
+                  </MenuSection>
+                </>
+              )}
             </VStack>
           </nav>
         </aside>

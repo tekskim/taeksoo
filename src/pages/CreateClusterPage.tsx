@@ -39,7 +39,7 @@ import {
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
-import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
+import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -513,10 +513,7 @@ export function CreateClusterPage() {
   return (
     <PageShell
       sidebar={
-        <ClusterManagementSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
       sidebarWidth={sidebarWidth}
       tabBar={
