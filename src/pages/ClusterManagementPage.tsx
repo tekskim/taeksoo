@@ -20,7 +20,7 @@ import {
   Badge,
   Tooltip,
 } from '@/design-system';
-import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
+import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -274,10 +274,7 @@ export function ClusterManagementPage() {
   return (
     <PageShell
       sidebar={
-        <ClusterManagementSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
       sidebarWidth={sidebarWidth}
       tabBar={
