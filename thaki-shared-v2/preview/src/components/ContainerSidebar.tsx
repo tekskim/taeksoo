@@ -6,6 +6,8 @@ import type { SidebarSection, SidebarIconComponent } from '@shared/components/Si
 import ContainerIcon from '../assets/appIcon/container.png';
 import {
   IconHome,
+  IconApps,
+  IconPackage,
   IconAffiliate,
   IconPlus,
   IconChevronDown,
@@ -352,6 +354,8 @@ const LimitRangeIconW = makeTablerIcon(IconRulerMeasure);
 const ResourceQuotaIconW = makeTablerIcon(IconChartPie3);
 const NetworkPolicyIconW = makeTablerIcon(IconShieldLock);
 const PDBIconW = makeTablerIcon(IconReorder);
+const CatalogIconW = makeTablerIcon(IconApps);
+const InstalledAppsIconW = makeTablerIcon(IconPackage);
 
 const sections: SidebarSection[] = [
   {
@@ -394,6 +398,19 @@ const sections: SidebarSection[] = [
       { id: 'jobs', label: 'Jobs', path: '/container/jobs', icon: JobsIconW },
       { id: 'cronjobs', label: 'CronJobs', path: '/container/cronjobs', icon: CronJobsIconW },
       { id: 'pods', label: 'Pods', path: '/container/pods', icon: PodsIconW },
+    ],
+  },
+  {
+    id: 'app-catalog',
+    label: 'App Catalog',
+    children: [
+      { id: 'catalog', label: 'Catalog', path: '/container/catalog', icon: CatalogIconW },
+      {
+        id: 'installed-apps',
+        label: 'Installed Apps',
+        path: '/container/installed-apps',
+        icon: InstalledAppsIconW,
+      },
     ],
   },
   {

@@ -122,6 +122,8 @@ import { ContainerCreateIngressYamlPage } from './pages/ContainerCreateIngressYa
 import { ContainerEditNamespaceYamlPage } from './pages/ContainerEditNamespaceYamlPage';
 import { ContainerEditNodeYamlPage } from './pages/ContainerEditNodeYamlPage';
 import { ContainerConsolePage } from './pages/ContainerConsolePage';
+import { ContainerCatalogPage } from './pages/ContainerCatalogPage';
+import { ContainerInstalledAppsPage } from './pages/ContainerInstalledAppsPage';
 import { ContainerEditNodeConfigPage } from './pages/ContainerEditNodeConfigPage';
 import { ContainerEditDeploymentYamlPage } from './pages/ContainerEditDeploymentYamlPage';
 import { ContainerEditStatefulSetYamlPage } from './pages/ContainerEditStatefulSetYamlPage';
@@ -429,6 +431,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="namespaces/:id/edit-yaml" element={<ContainerEditNamespaceYamlPage />} />
           <Route path="namespaces/:id" element={<ContainerNamespaceDetailPage />} />
           <Route path="events" element={<ContainerEventsPage />} />
+          <Route path="catalog" element={<ContainerCatalogPage />} />
+          <Route path="installed-apps" element={<ContainerInstalledAppsPage />} />
         </Route>
         <Route path="/compute" element={<ComputeLayout />}>
           <Route index element={<ComputeHomePage />} />

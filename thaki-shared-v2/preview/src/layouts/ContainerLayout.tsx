@@ -200,6 +200,16 @@ const BREADCRUMB_MAP: Record<string, BreadcrumbItem[]> = {
     { label: 'Pod disruption budgets', path: '/container/pdb' },
     { label: 'Create YAML' },
   ],
+  '/container/catalog': [
+    { label: 'Container', path: '/container' },
+    { label: 'Apps', path: '/container/catalog' },
+    { label: 'Catalog' },
+  ],
+  '/container/installed-apps': [
+    { label: 'Container', path: '/container' },
+    { label: 'Apps', path: '/container/catalog' },
+    { label: 'Installed Apps' },
+  ],
 };
 
 const DETAIL_ROUTES: { prefix: string; listLabel: string; listPath: string }[] = [
@@ -313,6 +323,8 @@ const TITLE_MAP: Record<string, string> = {
   '/container/resource-quotas': 'Resource quotas',
   '/container/network-policies': 'Network policies',
   '/container/pdb': 'Pod disruption budgets',
+  '/container/catalog': 'Catalog',
+  '/container/installed-apps': 'Installed Apps',
 };
 
 function getTabTitle(pathname: string): string {
