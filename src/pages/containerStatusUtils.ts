@@ -11,6 +11,7 @@ const GREEN_STATUSES = new Set([
   'bound',
   'succeeded',
   'provisioned',
+  'deployed',
 ]);
 
 const BLUE_STATUSES = new Set([
@@ -21,6 +22,7 @@ const BLUE_STATUSES = new Set([
   'deploying',
   'scaling',
   'updating',
+  'pending',
 ]);
 
 const RED_STATUSES = new Set(['error', 'failed']);
@@ -30,7 +32,6 @@ const GRAY_STATUSES = new Set([
   'terminating',
   'terminated',
   'released',
-  'pending',
   'waiting',
   'suspended',
   'inactive',

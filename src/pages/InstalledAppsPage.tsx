@@ -10,16 +10,16 @@ import {
   Badge,
   SearchInput,
   ListToolbar,
-  Pagination,
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
+import { Link } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconDownload } from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
@@ -43,8 +43,8 @@ interface InstalledApp {
   version: string;
   namespace: string;
   status: string;
-  chart: string;
-  updatedAt: string;
+  chartName: string;
+  lastDeployed: string;
 }
 
 /* ----------------------------------------
@@ -54,21 +54,57 @@ interface InstalledApp {
 const installedApps: InstalledApp[] = [
   {
     id: '1',
-    name: 'postgresql-primary',
-    version: '16.2.0',
+    name: 'postgresql-1',
+    version: 'v16.2',
     namespace: 'default',
     status: 'Deployed',
-    chart: 'postgresql-16.2.0',
-    updatedAt: 'Mar 15, 2026 10:30:00',
+    chartName: 'postgresql',
+    lastDeployed: 'Mar 01, 2026',
   },
   {
     id: '2',
-    name: 'nginx-ingress',
-    version: '4.11.0',
+    name: 'kafka',
+    version: 'v08.33',
+    namespace: 'data',
+    status: 'Deployed',
+    chartName: 'kafka',
+    lastDeployed: 'Mar 10, 2026',
+  },
+  {
+    id: '3',
+    name: 'valkey',
+    version: 'v80.2',
+    namespace: 'cache',
+    status: 'Deployed',
+    chartName: 'valkey',
+    lastDeployed: 'Mar 06, 2026',
+  },
+  {
+    id: '4',
+    name: 'nginx-1',
+    version: 'v4.05',
     namespace: 'ingress-nginx',
     status: 'Deployed',
-    chart: 'nginx-ingress-4.11.0',
-    updatedAt: 'Mar 10, 2026 14:22:00',
+    chartName: 'nginx',
+    lastDeployed: 'Mar 08, 2026',
+  },
+  {
+    id: '5',
+    name: 'milvus',
+    version: 'v4.27',
+    namespace: 'ai',
+    status: 'Pending',
+    chartName: 'milvus',
+    lastDeployed: 'Mar 12, 2026',
+  },
+  {
+    id: '6',
+    name: 'postgresql-1',
+    version: 'v16.30',
+    namespace: 'ai',
+    status: 'Failed',
+    chartName: 'postgresql',
+    lastDeployed: 'Mar 12, 2026',
   },
 ];
 
@@ -82,54 +118,84 @@ export default function InstalledAppsPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const filteredApps = installedApps.filter(
     (app) =>
       !searchQuery ||
       app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.chart.toLowerCase().includes(searchQuery.toLowerCase())
+      app.chartName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.namespace.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const getContextMenuItems = (row: InstalledApp): ContextMenuItem[] => [
-    { id: 'upgrade', label: 'Upgrade', onClick: () => console.log('Upgrade', row.id) },
-    { id: 'rollback', label: 'Rollback', onClick: () => console.log('Rollback', row.id) },
+    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', row.id) },
     {
-      id: 'uninstall',
-      label: 'Uninstall',
+      id: 'delete',
+      label: 'Delete',
       status: 'danger',
       divider: true,
-      onClick: () => console.log('Uninstall', row.id),
+      onClick: () => console.log('Delete', row.id),
     },
   ];
 
   const columns: TableColumn<InstalledApp>[] = [
     {
       key: 'status',
-      title: 'Status',
-      ...fixedColumns.status,
-      render: (row) => (
+      label: 'Status',
+      width: fixedColumns.statusLabel,
+      render: (_value, row) => (
         <Badge theme={getContainerStatusTheme(row.status)} type="subtle" size="sm">
           {row.status}
         </Badge>
       ),
     },
-    { key: 'name', title: 'Name', minWidth: columnMinWidths.name },
-    { key: 'chart', title: 'Chart', minWidth: 160 },
-    { key: 'version', title: 'Version', minWidth: 100 },
-    { key: 'namespace', title: 'Namespace', minWidth: columnMinWidths.namespace },
-    { key: 'updatedAt', title: 'Updated at', minWidth: columnMinWidths.createdAt, align: 'right' },
+    {
+      key: 'name',
+      label: 'App name',
+      minWidth: columnMinWidths.name,
+      render: (value, row) => (
+        <Link
+          to={`/container/installed-apps/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate block min-w-0"
+        >
+          {value}
+        </Link>
+      ),
+    },
+    { key: 'namespace', label: 'Namespace', minWidth: columnMinWidths.namespace },
+    { key: 'chartName', label: 'Chart name', minWidth: '140px' },
+    {
+      key: 'version',
+      label: 'Version',
+      minWidth: '100px',
+      render: (value) => (
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    {
+      key: 'lastDeployed',
+      label: 'Last deployed',
+      minWidth: columnMinWidths.createdAt,
+    },
     {
       key: 'actions',
-      title: '',
-      ...fixedColumns.actions,
-      render: (row) => (
-        <ContextMenu items={getContextMenuItems(row)} trigger="click">
-          <Button variant="ghost" size="sm" aria-label="More actions">
-            ···
-          </Button>
-        </ContextMenu>
+      label: 'Action',
+      width: fixedColumns.actions,
+      align: 'center',
+      render: (_value, row) => (
+        <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-muted)]"
+              />
+            </button>
+          </ContextMenu>
+        </div>
       ),
     },
   ];
@@ -185,38 +251,21 @@ export default function InstalledAppsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search installed apps"
+                placeholder="Search installed apps by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-              />
             </ListToolbar.Actions>
           }
-        />
-
-        <Pagination
-          currentPage={currentPage}
-          totalPages={1}
-          onPageChange={setCurrentPage}
-          totalItems={filteredApps.length}
-          selectedCount={selectedItems.length}
         />
 
         <Table
           columns={columns}
           data={filteredApps}
           rowKey="id"
-          selectable
-          selectedKeys={selectedItems}
-          onSelectionChange={setSelectedItems}
           emptyMessage="No installed apps found"
         />
       </VStack>
