@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Button } from '@shared/components/Button';
 import { Badge } from '@shared/components/Badge';
+import postgresqlLogo from '@shared/assets/catalog/postgresql.svg';
+import valkeyLogo from '@shared/assets/catalog/valkey.svg';
+import kafkaLogo from '@shared/assets/catalog/kafka.svg';
+import nginxLogo from '@shared/assets/catalog/nginx.svg';
+import milvusLogo from '@shared/assets/catalog/milvus.svg';
 
 type AppCategory = 'All' | 'Database' | 'Data Processing' | 'Networking' | 'Vector DB';
 
@@ -10,8 +15,7 @@ interface CatalogApp {
   version: string;
   description: string;
   category: AppCategory;
-  iconBg: string;
-  iconText: string;
+  iconSrc: string;
   installed: boolean;
 }
 
@@ -23,8 +27,7 @@ const catalogApps: CatalogApp[] = [
     description:
       'PostgreSQL is a powerful open-source object-relational database system with a strong reputation for reliability, feature robustness, and performance.',
     category: 'Database',
-    iconBg: '#336791',
-    iconText: 'P',
+    iconSrc: postgresqlLogo,
     installed: true,
   },
   {
@@ -34,8 +37,7 @@ const catalogApps: CatalogApp[] = [
     description:
       'Valkey is an open source, high performance key/value database that supports a variety of workloads such as caching, message queues, and can act as a primary database.',
     category: 'Database',
-    iconBg: '#7B4EFA',
-    iconText: 'V',
+    iconSrc: valkeyLogo,
     installed: false,
   },
   {
@@ -45,8 +47,7 @@ const catalogApps: CatalogApp[] = [
     description:
       'Apache Kafka is an open-source distributed event streaming platform used for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.',
     category: 'Data Processing',
-    iconBg: '#231F20',
-    iconText: 'K',
+    iconSrc: kafkaLogo,
     installed: false,
   },
   {
@@ -56,8 +57,7 @@ const catalogApps: CatalogApp[] = [
     description:
       'NGINX Ingress Controller for Kubernetes – routes external HTTP/HTTPS traffic into cluster services using Ingress resources. Multiple instances are allowed per namespace.',
     category: 'Networking',
-    iconBg: '#009639',
-    iconText: 'N',
+    iconSrc: nginxLogo,
     installed: true,
   },
   {
@@ -67,8 +67,7 @@ const catalogApps: CatalogApp[] = [
     description:
       'Milvus is an open-source vector database built to power embedding similarity search and AI applications. It supports trillion-scale vector similarity search and is used for AI/ML workflows.',
     category: 'Vector DB',
-    iconBg: '#00A1EA',
-    iconText: 'M',
+    iconSrc: milvusLogo,
     installed: false,
   },
 ];
@@ -142,11 +141,8 @@ export function ContainerCatalogPage() {
             className="flex flex-col gap-3 p-4 bg-surface border border-border rounded-base8"
           >
             <div className="flex items-start gap-3">
-              <div
-                className="w-10 h-10 rounded-base8 flex items-center justify-center shrink-0 text-white font-semibold text-16"
-                style={{ backgroundColor: app.iconBg }}
-              >
-                {app.iconText}
+              <div className="w-10 h-10 rounded-base8 shrink-0 border border-border flex items-center justify-center">
+                <img src={app.iconSrc} alt={app.name} className="w-6 h-6 object-contain" />
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
                 <span className="font-sans text-14 font-semibold leading-5 text-text">
