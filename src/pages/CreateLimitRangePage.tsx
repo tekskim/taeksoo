@@ -13,7 +13,6 @@ import {
   Input,
   NumberInput,
   Select,
-  Slider,
   SectionCard,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -273,26 +272,16 @@ function ContainerResourceLimitSection({
                 Specify the minimum CPU amount reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={10}
-                    max={1000}
-                    step={10}
-                    value={parseInt(resourceLimit.cpuReservation) || 0}
-                    onChange={(val) => updateField('cpuReservation', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.cpuReservation}
-                    onChange={(val) => updateField('cpuReservation', val)}
-                    min={10}
-                    max={1000}
-                    step={1}
-                    width="xs"
-                    suffix="mCPUs"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.cpuReservation}
+                  onChange={(val) => updateField('cpuReservation', val)}
+                  min={10}
+                  max={1000}
+                  step={1}
+                  width="sm"
+                  suffix="mCPUs"
+                />
               </FormField.Control>
-              <FormField.HelperText>10-1000 mCPUs</FormField.HelperText>
             </FormField>
 
             {/* CPU Limit */}
@@ -302,26 +291,16 @@ function ContainerResourceLimitSection({
                 Specify the maximum CPU amount the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={10}
-                    max={1000}
-                    step={10}
-                    value={parseInt(resourceLimit.cpuLimit) || 0}
-                    onChange={(val) => updateField('cpuLimit', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.cpuLimit}
-                    onChange={(val) => updateField('cpuLimit', val)}
-                    min={10}
-                    max={1000}
-                    step={1}
-                    width="xs"
-                    suffix="mCPUs"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.cpuLimit}
+                  onChange={(val) => updateField('cpuLimit', val)}
+                  min={10}
+                  max={1000}
+                  step={1}
+                  width="sm"
+                  suffix="mCPUs"
+                />
               </FormField.Control>
-              <FormField.HelperText>10-1000 mCPUs</FormField.HelperText>
             </FormField>
 
             {/* Memory Reservation */}
@@ -331,26 +310,16 @@ function ContainerResourceLimitSection({
                 Specify the minimum memory capacity reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={4}
-                    max={128}
-                    step={4}
-                    value={parseInt(resourceLimit.memoryReservation) || 0}
-                    onChange={(val) => updateField('memoryReservation', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.memoryReservation}
-                    onChange={(val) => updateField('memoryReservation', val)}
-                    min={4}
-                    max={128}
-                    step={1}
-                    width="xs"
-                    suffix="GiB"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.memoryReservation}
+                  onChange={(val) => updateField('memoryReservation', val)}
+                  min={4}
+                  max={128}
+                  step={1}
+                  width="sm"
+                  suffix="MiB"
+                />
               </FormField.Control>
-              <FormField.HelperText>4-128 GiB</FormField.HelperText>
             </FormField>
 
             {/* Memory Limit */}
@@ -360,26 +329,16 @@ function ContainerResourceLimitSection({
                 Specify the maximum memory capacity the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <HStack gap={3} align="center">
-                  <Slider
-                    min={4}
-                    max={128}
-                    step={4}
-                    value={parseInt(resourceLimit.memoryLimit) || 0}
-                    onChange={(val) => updateField('memoryLimit', val.toString())}
-                  />
-                  <NumberInput
-                    value={resourceLimit.memoryLimit}
-                    onChange={(val) => updateField('memoryLimit', val)}
-                    min={4}
-                    max={128}
-                    step={1}
-                    width="xs"
-                    suffix="GiB"
-                  />
-                </HStack>
+                <NumberInput
+                  value={resourceLimit.memoryLimit}
+                  onChange={(val) => updateField('memoryLimit', val)}
+                  min={4}
+                  max={128}
+                  step={1}
+                  width="sm"
+                  suffix="MiB"
+                />
               </FormField.Control>
-              <FormField.HelperText>4-128 GiB</FormField.HelperText>
             </FormField>
           </div>
         </VStack>
@@ -561,10 +520,10 @@ export function CreateLimitRangePage() {
 
   // Container Resource Limit state
   const [resourceLimit, setResourceLimit] = useState<ContainerResourceLimit>({
-    cpuReservation: '1000',
-    cpuLimit: '1000',
-    memoryReservation: '128',
-    memoryLimit: '128',
+    cpuReservation: '100',
+    cpuLimit: '500',
+    memoryReservation: '256',
+    memoryLimit: '512',
   });
 
   // Labels & Annotations state

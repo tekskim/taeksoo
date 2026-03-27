@@ -1031,7 +1031,16 @@ export function CreateCronJobPage() {
     args: string;
     workingDir: string;
     // Ports
-    ports: { name: string; containerPort: string; protocol: string }[];
+    ports: {
+      id: string;
+      serviceType: string;
+      name: string;
+      containerPort: string;
+      protocol: string;
+      hostPort: string;
+      hostIP: string;
+      listeningPort: string;
+    }[];
     // Environment Variables
     envVars: {
       name: string;
@@ -3188,7 +3197,7 @@ export function CreateCronJobPage() {
                                     {
                                       key: 'status',
                                       label: 'Status',
-                                      width: fixedColumns.statusLabel,
+                                      width: '120px',
                                       render: (value: string) => (
                                         <Tooltip content={value}>
                                           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -4737,6 +4746,212 @@ export function CreateCronJobPage() {
                               fullWidth
                             />
                           </VStack>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
+                    {/* 2a-2. Networking Section */}
+                    <SectionCard className="pb-4">
+                      <SectionCard.Header title="Networking" />
+                      <SectionCard.Content>
+                        <VStack gap={4}>
+                          <span className="text-body-md text-[var(--color-text-subtle)]">
+                            Define a Service to expose the container, or define a non-Kubernetes
+                            network port that the new service will run when the app on the container
+                            is expected to run.
+                          </span>
+
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                            <VStack gap={3} className="w-full">
+                              {config.ports.map((port, portIdx) => {
+                                const showListeningPort =
+                                  port.serviceType === 'NodePort' ||
+                                  port.serviceType === 'LoadBalancer';
+                                return (
+                                  <div
+                                    key={port.id}
+                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                  >
+                                    <div
+                                      className={`grid ${showListeningPort ? 'grid-cols-[140px_1fr_1fr_100px_1fr_1fr_1fr_20px]' : 'grid-cols-[140px_1fr_1fr_100px_1fr_1fr_20px]'} gap-2`}
+                                    >
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Service Type
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Name
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Private Container Port
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Protocol
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Public Host Port
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Host IP
+                                      </span>
+                                      {showListeningPort && (
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Listening Port
+                                        </span>
+                                      )}
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          const newPorts = config.ports.filter(
+                                            (_, i) => i !== portIdx
+                                          );
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)] ml-auto"
+                                        aria-label="Remove port"
+                                      >
+                                        <IconX
+                                          size={14}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+
+                                      <Select
+                                        options={[
+                                          {
+                                            value: 'DoNotCreate',
+                                            label: 'Do not create a service',
+                                          },
+                                          { value: 'ClusterIP', label: 'Cluster IP' },
+                                          { value: 'NodePort', label: 'Node Port' },
+                                          { value: 'LoadBalancer', label: 'Load Balancer' },
+                                        ]}
+                                        value={port.serviceType}
+                                        onChange={(val) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            serviceType: val,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder=""
+                                        value={port.name}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            name: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. 8080"
+                                        value={port.containerPort}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            containerPort: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={[
+                                          { value: 'TCP', label: 'TCP' },
+                                          { value: 'UDP', label: 'UDP' },
+                                          { value: 'SCTP', label: 'SCTP' },
+                                        ]}
+                                        value={port.protocol}
+                                        onChange={(val) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            protocol: val,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. 80"
+                                        value={port.hostPort}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            hostPort: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. 1111"
+                                        value={port.hostIP}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            hostIP: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      {showListeningPort && (
+                                        <Input
+                                          placeholder="e.g. 30080"
+                                          value={port.listeningPort}
+                                          onChange={(e) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              listeningPort: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                      )}
+                                      <div />
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={() => {
+                                    const newPort = {
+                                      id: crypto.randomUUID(),
+                                      serviceType: 'DoNotCreate',
+                                      name: '',
+                                      containerPort: '',
+                                      protocol: 'TCP',
+                                      hostPort: '',
+                                      hostIP: '',
+                                      listeningPort: '',
+                                    };
+                                    updateContainerConfig(containerId, {
+                                      ports: [...config.ports, newPort],
+                                    });
+                                  }}
+                                >
+                                  Add Port or Service
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>

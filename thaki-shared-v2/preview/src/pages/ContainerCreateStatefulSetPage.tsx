@@ -289,7 +289,22 @@ interface CreatePVCVolume {
   readOnly: boolean;
 }
 
-type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume;
+interface EmptyDirVolume {
+  type: 'emptydir';
+  volumeName: string;
+  medium: string;
+  sizeLimit: string;
+}
+
+type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume | EmptyDirVolume;
+
+// Volume Mount
+interface VolumeClaimMount {
+  id: string;
+  mountPath: string;
+  subPath: string;
+  readOnly: boolean;
+}
 
 // Volume Claim Template
 interface VolumeClaimTemplate {
@@ -303,6 +318,7 @@ interface VolumeClaimTemplate {
     readOnlyMany: boolean;
     readWriteMany: boolean;
   };
+  mounts: VolumeClaimMount[];
 }
 
 // Node Affinity Term
@@ -1025,6 +1041,9 @@ export function ContainerCreateStatefulSetPage() {
             capacity: '',
             persistentVolume: '',
             accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            mounts: [
+              { id: crypto.randomUUID(), mountPath: '/mnt/data', subPath: '', readOnly: false },
+            ],
           },
         ]
       : []
@@ -1308,6 +1327,8 @@ export function ContainerCreateStatefulSetPage() {
             readOnly: false,
           },
         ]);
+      } else if (type === 'emptydir') {
+        setVolumes([...volumes, { type: 'emptydir', volumeName: '', medium: '', sizeLimit: '' }]);
       }
     },
     [volumes]
@@ -1340,6 +1361,7 @@ export function ContainerCreateStatefulSetPage() {
         capacity: '',
         persistentVolume: '',
         accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+        mounts: [],
       },
     ]);
   }, [volumeClaimTemplates]);
@@ -3344,6 +3366,7 @@ export function ContainerCreateStatefulSetPage() {
                             {volume.type === 'secret' && 'Secret'}
                             {volume.type === 'pvc' && 'Persistent Volume Claim'}
                             {volume.type === 'create-pvc' && 'Create Persistent Volume Claim'}
+                            {volume.type === 'emptydir' && 'Empty Dir'}
                           </h6>
                           <button
                             onClick={() => removeVolume(index)}
@@ -3710,6 +3733,59 @@ export function ContainerCreateStatefulSetPage() {
                             </div>
                           </>
                         )}
+
+                        {/* Empty Dir content */}
+                        {volume.type === 'emptydir' && (
+                          <>
+                            <div className="flex flex-col gap-2 w-full">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Volume Name{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </span>
+                              <Input
+                                placeholder="Input name"
+                                value={volume.volumeName}
+                                onChange={(e) =>
+                                  updateVolume(index, { volumeName: e.target.value })
+                                }
+                                className="w-full"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2 w-full">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Medium
+                              </span>
+                              <Select
+                                options={[
+                                  { value: '', label: "Node's Default Medium" },
+                                  { value: 'Memory', label: 'Memory' },
+                                ]}
+                                value={(volume as EmptyDirVolume).medium}
+                                onChange={(val) => updateVolume(index, { medium: val })}
+                                placeholder="Node's Default Medium"
+                                className="w-full"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
+                                Size Limit
+                              </span>
+                              <NumberInput
+                                value={
+                                  (volume as EmptyDirVolume).sizeLimit
+                                    ? parseInt((volume as EmptyDirVolume).sizeLimit)
+                                    : undefined
+                                }
+                                onChange={(val) =>
+                                  updateVolume(index, { sizeLimit: val?.toString() || '' })
+                                }
+                                placeholder="e.g. 300"
+                                suffix="MiB"
+                                width="sm"
+                              />
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -3720,6 +3796,7 @@ export function ContainerCreateStatefulSetPage() {
                       { value: 'secret', label: 'Secret' },
                       { value: 'pvc', label: 'Persistent volume claim' },
                       { value: 'create-pvc', label: 'Create persistent volume claim' },
+                      { value: 'emptydir', label: 'Empty Dir' },
                     ]}
                     value=""
                     onChange={(val) => addVolume(val)}
@@ -3890,6 +3967,105 @@ export function ContainerCreateStatefulSetPage() {
                                   })
                                 }
                               />
+                            </div>
+                          </div>
+
+                          {/* Mounts */}
+                          <div className="flex flex-col gap-2">
+                            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                              <div className="flex flex-col gap-2">
+                                {template.mounts.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
+                                      Mount Point{' '}
+                                      <span className="text-[var(--color-state-danger)]">*</span>
+                                    </span>
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
+                                      Sub Path in Volume
+                                    </span>
+                                    <div />
+                                    <div />
+                                  </div>
+                                )}
+                                {template.mounts.map((mount) => (
+                                  <div
+                                    key={mount.id}
+                                    className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="/mnt/data"
+                                      value={mount.mountPath}
+                                      onChange={(e) => {
+                                        const newMounts = template.mounts.map((m) =>
+                                          m.id === mount.id
+                                            ? { ...m, mountPath: e.target.value }
+                                            : m
+                                        );
+                                        updateVolumeClaimTemplate(index, { mounts: newMounts });
+                                      }}
+                                      className="w-full"
+                                    />
+                                    <Input
+                                      placeholder=""
+                                      value={mount.subPath}
+                                      onChange={(e) => {
+                                        const newMounts = template.mounts.map((m) =>
+                                          m.id === mount.id ? { ...m, subPath: e.target.value } : m
+                                        );
+                                        updateVolumeClaimTemplate(index, { mounts: newMounts });
+                                      }}
+                                      className="w-full"
+                                    />
+                                    <div className="flex items-center whitespace-nowrap">
+                                      <Checkbox
+                                        label="Read Only"
+                                        checked={mount.readOnly}
+                                        onChange={(checked) => {
+                                          const newMounts = template.mounts.map((m) =>
+                                            m.id === mount.id
+                                              ? { ...m, readOnly: checked as boolean }
+                                              : m
+                                          );
+                                          updateVolumeClaimTemplate(index, { mounts: newMounts });
+                                        }}
+                                      />
+                                    </div>
+                                    <button
+                                      onClick={() => {
+                                        const newMounts = template.mounts.filter(
+                                          (m) => m.id !== mount.id
+                                        );
+                                        updateVolumeClaimTemplate(index, { mounts: newMounts });
+                                      }}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                                    </button>
+                                  </div>
+                                ))}
+                                <div className="w-fit">
+                                  <Button
+                                    variant="muted"
+                                    appearance="outline"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} />}
+                                    onClick={() => {
+                                      const newMounts = [
+                                        ...template.mounts,
+                                        {
+                                          id: crypto.randomUUID(),
+                                          mountPath: '',
+                                          subPath: '',
+                                          readOnly: false,
+                                        },
+                                      ];
+                                      updateVolumeClaimTemplate(index, { mounts: newMounts });
+                                    }}
+                                  >
+                                    Add Mount
+                                  </Button>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -6926,7 +7102,6 @@ export function ContainerCreateStatefulSetPage() {
                                         <div className="flex items-center whitespace-nowrap">
                                           <Checkbox
                                             label="Read Only"
-                                            className="[&>label]:flex-row-reverse"
                                             checked={mount.readOnly || false}
                                             onChange={(checked) => {
                                               const newVolumes = [
