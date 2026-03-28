@@ -14,11 +14,19 @@ import {
   Tab,
   TabPanel,
   type TableColumn,
+  columnMinWidths,
 } from '@/design-system';
 import { useParams } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconTerminal2,
+  IconEdit,
+  IconTrash,
+  IconCopy,
+  IconDownload,
+} from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
@@ -143,19 +151,54 @@ export default function InstalledAppDetailPage() {
   const app = installedAppsData[appId || '1'];
   const resources = appResourcesData[appId || '1'] || [];
 
+  const valuesYaml = `auth:
+  postgresPassword: "change-me"
+  username: "appuser"
+  password: "change-me"
+  database: "appdb"
+
+primary:
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClass: "longhorn"
+
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+`;
+
   const resourceColumns: TableColumn<AppResource>[] = [
-    { key: 'type', label: 'Type', minWidth: '160px' },
+    {
+      key: 'type',
+      label: 'Type',
+      flex: 1,
+      minWidth: columnMinWidths.type,
+      sortable: true,
+    },
     {
       key: 'name',
       label: 'Name',
-      minWidth: '240px',
+      flex: 2,
+      minWidth: columnMinWidths.name,
+      sortable: true,
       render: (value) => (
         <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
           {value}
         </span>
       ),
     },
-    { key: 'namespace', label: 'Namespace', minWidth: '120px' },
+    {
+      key: 'namespace',
+      label: 'Namespace',
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
+      sortable: true,
+    },
   ];
 
   if (!app) return null;
@@ -238,7 +281,7 @@ export default function InstalledAppDetailPage() {
         <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
           <TabList>
             <Tab value="resources">Resources</Tab>
-            <Tab value="values">Values (yaml)</Tab>
+            <Tab value="values">Values.yaml</Tab>
           </TabList>
 
           <TabPanel value="resources" className="pt-0">
@@ -253,27 +296,38 @@ export default function InstalledAppDetailPage() {
           </TabPanel>
 
           <TabPanel value="values" className="pt-0">
-            <VStack gap={4} className="pt-4">
-              <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-default)] font-mono overflow-auto whitespace-pre-wrap">
-                {`image:
-  registry: docker.io
-  repository: bitnami/postgresql
-  tag: 16.3.0-debian-12-r6
-primary:
-  persistence:
-    enabled: true
-    size: 8Gi
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 250m
-    limits:
-      memory: 512Mi
-      cpu: 500m
-auth:
-  postgresPassword: "********"
-  database: "app_db"`}
-              </pre>
+            <VStack gap={3} className="pt-4">
+              <div className="flex items-center justify-end gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCopy size={12} />}
+                  onClick={() => navigator.clipboard.writeText(valuesYaml)}
+                >
+                  Copy
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
+                  Download
+                </Button>
+              </div>
+              <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden p-2">
+                <div className="overflow-auto bg-[var(--color-surface-default)]">
+                  <table className="w-full border-collapse">
+                    <tbody>
+                      {valuesYaml.split('\n').map((line, i) => (
+                        <tr key={i} className="leading-[20px]">
+                          <td className="px-3 py-0 text-right select-none text-body-sm text-[var(--color-text-disabled)] font-mono w-[1%] whitespace-nowrap align-top">
+                            {i + 1}
+                          </td>
+                          <td className="px-3 py-0 text-body-sm text-[var(--color-text-default)] font-mono whitespace-pre">
+                            {line || '\u00A0'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </VStack>
           </TabPanel>
         </Tabs>
