@@ -729,30 +729,17 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
-      render: (_: unknown, row: Port) => {
-        const portMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit port', row.id) },
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete port', row.id),
-          },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={portMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_: unknown, row: Port) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={() => console.log('Delete port', row.id)}
+            aria-label="Delete port"
+          >
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -992,11 +979,8 @@ export default function NetworkDetailPage() {
             <TabPanel value="ports" className="pt-0">
               <VStack gap={3} className="pt-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between min-h-[28px]">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Port
-                  </Button>
                 </div>
 
                 {/* Action Bar */}
