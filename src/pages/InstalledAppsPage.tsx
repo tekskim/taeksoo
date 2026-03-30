@@ -16,7 +16,7 @@ import {
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconTerminal2, IconDotsCircleHorizontal } from '@tabler/icons-react';
@@ -113,6 +113,7 @@ const installedApps: InstalledApp[] = [
    ---------------------------------------- */
 
 export default function InstalledAppsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
@@ -128,7 +129,11 @@ export default function InstalledAppsPage() {
   );
 
   const getContextMenuItems = (row: InstalledApp): ContextMenuItem[] => [
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', row.id) },
+    {
+      id: 'edit',
+      label: 'Edit',
+      onClick: () => navigate(`/container/installed-apps/${row.id}/edit`),
+    },
     {
       id: 'delete',
       label: 'Delete',

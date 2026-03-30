@@ -120,16 +120,11 @@ const storageClassOptions = [
 interface SummarySidebarProps {
   sectionStatus: Record<SectionStep, WizardSectionState>;
   onCancel: () => void;
-  onInstall: () => void;
-  isInstallDisabled: boolean;
+  onSave: () => void;
+  isSaveDisabled: boolean;
 }
 
-function SummarySidebar({
-  sectionStatus,
-  onCancel,
-  onInstall,
-  isInstallDisabled,
-}: SummarySidebarProps) {
+function SummarySidebar({ sectionStatus, onCancel, onSave, isSaveDisabled }: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -146,13 +141,8 @@ function SummarySidebar({
             <Button variant="secondary" onClick={onCancel}>
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              onClick={onInstall}
-              disabled={isInstallDisabled}
-              className="flex-1"
-            >
-              Install
+            <Button variant="primary" onClick={onSave} disabled={isSaveDisabled} className="flex-1">
+              Save
             </Button>
           </div>
         </div>
@@ -162,10 +152,89 @@ function SummarySidebar({
 }
 
 /* ----------------------------------------
+   Mock installed app data (for edit pre-fill)
+   ---------------------------------------- */
+
+const installedAppData: Record<
+  string,
+  {
+    name: string;
+    chartName: string;
+    namespace: string;
+    version: string;
+    adminPassword: string;
+    databaseName: string;
+    storageClass: string;
+    storageSize: number;
+  }
+> = {
+  '1': {
+    name: 'postgresql-1',
+    chartName: 'postgresql',
+    namespace: 'default',
+    version: '16.2.0',
+    adminPassword: 'change-me',
+    databaseName: 'appdb',
+    storageClass: 'ceph-block',
+    storageSize: 20,
+  },
+  '2': {
+    name: 'kafka',
+    chartName: 'kafka',
+    namespace: 'data',
+    version: '3.6.1',
+    adminPassword: 'kafka-secret',
+    databaseName: 'kafka-db',
+    storageClass: 'ceph-filesystem',
+    storageSize: 50,
+  },
+  '3': {
+    name: 'valkey',
+    chartName: 'valkey',
+    namespace: 'cache',
+    version: '7.2.6',
+    adminPassword: 'valkey-secret',
+    databaseName: 'valkey-db',
+    storageClass: 'local-path',
+    storageSize: 10,
+  },
+  '4': {
+    name: 'nginx-1',
+    chartName: 'nginx',
+    namespace: 'ingress-nginx',
+    version: '4.10.1',
+    adminPassword: 'nginx-secret',
+    databaseName: 'nginx-db',
+    storageClass: 'ceph-block',
+    storageSize: 8,
+  },
+  '5': {
+    name: 'milvus',
+    chartName: 'milvus',
+    namespace: 'ai',
+    version: '4.1.0',
+    adminPassword: 'milvus-secret',
+    databaseName: 'milvus-db',
+    storageClass: 'ceph-filesystem',
+    storageSize: 100,
+  },
+  '6': {
+    name: 'postgresql-1',
+    chartName: 'postgresql',
+    namespace: 'ai',
+    version: '16.3.0',
+    adminPassword: 'pg-secret',
+    databaseName: 'pgdb',
+    storageClass: 'local-path',
+    storageSize: 15,
+  },
+};
+
+/* ----------------------------------------
    Main Component
    ---------------------------------------- */
 
-export default function CatalogInstallPage() {
+export default function InstalledAppEditPage() {
   const { appId } = useParams<{ appId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -173,27 +242,29 @@ export default function CatalogInstallPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
 
-  const app = appCatalog[appId || ''];
-  const appName = app?.name || appId || 'App';
+  const installedApp = installedAppData[appId || ''];
+  const chartName = installedApp?.chartName || '';
+  const app = appCatalog[chartName];
+  const appName = app?.name || installedApp?.chartName || appId || 'App';
   const appDescription = app?.description || '';
 
   useEffect(() => {
-    updateActiveTabLabel(`Install ${appName}`);
+    updateActiveTabLabel(`Edit ${appName}`);
   }, [updateActiveTabLabel, appName]);
 
   // Target section state
   const [releaseName] = useState('Cluster name (current)');
-  const [namespace, setNamespace] = useState('');
+  const [namespace, setNamespace] = useState(installedApp?.namespace || '');
 
   // Version section state
-  const [selectedVersion, setSelectedVersion] = useState('');
+  const [selectedVersion, setSelectedVersion] = useState(installedApp?.version || '');
 
   // Configuration section state
-  const [configAppName, setConfigAppName] = useState('postgresql-2');
-  const [adminPassword, setAdminPassword] = useState('');
-  const [databaseName, setDatabaseName] = useState('');
-  const [storageClass, setStorageClass] = useState('');
-  const [storageSize, setStorageSize] = useState<number | undefined>(undefined);
+  const [configAppName, setConfigAppName] = useState(installedApp?.name || 'postgresql-2');
+  const [adminPassword, setAdminPassword] = useState(installedApp?.adminPassword || '');
+  const [databaseName, setDatabaseName] = useState(installedApp?.databaseName || '');
+  const [storageClass, setStorageClass] = useState(installedApp?.storageClass || '');
+  const [storageSize, setStorageSize] = useState<number | undefined>(installedApp?.storageSize);
   const [showPassword, setShowPassword] = useState(false);
 
   // Validation errors
@@ -346,11 +417,11 @@ export default function CatalogInstallPage() {
   const allDone = SECTION_ORDER.every((s) => sectionStatus[s] === 'done');
 
   const handleCancel = () => {
-    navigate('/container/catalog');
+    navigate(`/container/installed-apps/${appId}`);
   };
 
-  const handleInstall = () => {
-    console.log('Installing:', {
+  const handleSave = () => {
+    console.log('Saving:', {
       appId,
       namespace,
       selectedVersion,
@@ -360,10 +431,10 @@ export default function CatalogInstallPage() {
       storageClass,
       storageSize,
     });
-    navigate('/container/installed-apps');
+    navigate(`/container/installed-apps/${appId}`);
   };
 
-  const currentVersions = versionOptions[appId || ''] || [
+  const currentVersions = versionOptions[chartName] || [
     { value: '1.0.0', label: '1.0.0 (latest)' },
   ];
 
@@ -394,9 +465,9 @@ export default function CatalogInstallPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog', href: '/container/catalog' },
-                { label: `Install ${appName}` },
+                { label: 'Apps', href: '/container/installed-apps' },
+                { label: 'Installed Apps', href: '/container/installed-apps' },
+                { label: `Edit ${appName}` },
               ]}
             />
           }
@@ -416,7 +487,7 @@ export default function CatalogInstallPage() {
       <VStack gap={6}>
         {/* Page Title */}
         <VStack gap={1}>
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Install {appName}</h1>
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Edit {appName}</h1>
           {appDescription && (
             <p className="text-body-md text-[var(--color-text-subtle)]">{appDescription}</p>
           )}
@@ -768,8 +839,8 @@ export default function CatalogInstallPage() {
           <SummarySidebar
             sectionStatus={sectionStatus}
             onCancel={handleCancel}
-            onInstall={handleInstall}
-            isInstallDisabled={!allDone}
+            onSave={handleSave}
+            isSaveDisabled={!allDone}
           />
         </HStack>
       </VStack>

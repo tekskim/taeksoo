@@ -16,7 +16,7 @@ import {
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -143,6 +143,7 @@ const appResourcesData: Record<string, AppResource[]> = {
 
 export default function InstalledAppDetailPage() {
   const { appId } = useParams<{ appId: string }>();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
@@ -253,7 +254,12 @@ primary:
           <DetailHeader.Title>{app.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={() => navigate(`/container/installed-apps/${appId}/edit`)}
+            >
               Edit
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
