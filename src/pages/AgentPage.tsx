@@ -382,15 +382,13 @@ export function AgentPage() {
           />
 
           {/* Pagination */}
-          {filteredAgents.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              totalItems={filteredAgents.length}
-              selectedCount={selectedAgents.length}
-            />
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredAgents.length}
+            selectedCount={selectedAgents.length}
+          />
 
           {/* Table */}
           <Table<AgentRow>

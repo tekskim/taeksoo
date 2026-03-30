@@ -478,16 +478,14 @@ export function ComputeAdminBareMetalNodesPage() {
         </div>
 
         {/* Pagination */}
-        {filteredItems.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredItems.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredItems.length}
+        />
 
         {/* Table */}
         <Table<BareMetalNode>

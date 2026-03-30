@@ -8,6 +8,8 @@ import {
   DetailHeader,
   Badge,
   Button,
+  Modal,
+  InfoBox,
   Table,
   Tabs,
   TabList,
@@ -148,6 +150,7 @@ export default function InstalledAppDetailPage() {
   const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [activeTab, setActiveTab] = useState('resources');
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const app = installedAppsData[appId || '1'];
   const resources = appResourcesData[appId || '1'] || [];
@@ -262,7 +265,12 @@ primary:
             >
               Edit
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setIsDeleteOpen(true)}
+            >
               Delete
             </Button>
           </DetailHeader.Actions>
@@ -338,6 +346,32 @@ primary:
           </TabPanel>
         </Tabs>
       </VStack>
+
+      <Modal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        title="Delete App"
+        description="This will remove the Helm release and all associated Kubernetes resources. This action cannot be undone."
+        size="sm"
+      >
+        <InfoBox label="App / Namespace" value={`${app.name} / ${app.namespace}`} />
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={() => setIsDeleteOpen(false)} className="flex-1">
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              console.log('Delete', app.id);
+              setIsDeleteOpen(false);
+              navigate('/container/installed-apps');
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }

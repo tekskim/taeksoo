@@ -8,6 +8,9 @@ import {
   PageHeader,
   Table,
   Badge,
+  Button,
+  Modal,
+  InfoBox,
   SearchInput,
   ListToolbar,
   ContextMenu,
@@ -119,6 +122,7 @@ export default function InstalledAppsPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<InstalledApp | null>(null);
 
   const filteredApps = installedApps.filter(
     (app) =>
@@ -139,7 +143,7 @@ export default function InstalledAppsPage() {
       label: 'Delete',
       status: 'danger',
       divider: true,
-      onClick: () => console.log('Delete', row.id),
+      onClick: () => setDeleteTarget(row),
     },
   ];
 
@@ -274,6 +278,34 @@ export default function InstalledAppsPage() {
           emptyMessage="No installed apps found"
         />
       </VStack>
+
+      <Modal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Delete App"
+        description="This will remove the Helm release and all associated Kubernetes resources. This action cannot be undone."
+        size="sm"
+      >
+        <InfoBox
+          label="App / Namespace"
+          value={deleteTarget ? `${deleteTarget.name} / ${deleteTarget.namespace}` : ''}
+        />
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)} className="flex-1">
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              console.log('Delete', deleteTarget?.id);
+              setDeleteTarget(null);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }

@@ -379,17 +379,15 @@ export function KeyPairsPage() {
         />
 
         {/* Pagination */}
-        {filteredKeyPairs.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredKeyPairs.length}
-            selectedCount={selectedKeyPairs.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredKeyPairs.length}
+          selectedCount={selectedKeyPairs.length}
+        />
 
         {/* Key pairs Table */}
         <Table<KeyPair>

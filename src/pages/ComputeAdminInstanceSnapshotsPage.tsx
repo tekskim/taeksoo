@@ -580,17 +580,15 @@ export function ComputeAdminInstanceSnapshotsPage() {
         />
 
         {/* Pagination */}
-        {filteredSnapshots.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredSnapshots.length}
-            selectedCount={selectedSnapshots.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredSnapshots.length}
+          selectedCount={selectedSnapshots.length}
+        />
 
         {/* Table */}
         <Table<InstanceSnapshot>

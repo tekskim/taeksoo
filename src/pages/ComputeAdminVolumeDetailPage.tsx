@@ -30,7 +30,6 @@ import {
   IconBell,
   IconTrash,
   IconChevronDown,
-  IconDownload,
   IconEdit,
 } from '@tabler/icons-react';
 
@@ -57,6 +56,8 @@ interface VolumeDetail {
   attachedToId: string | null;
   // Source
   dataSourceType: string;
+  snapshotId: string | null;
+  snapshotName: string | null;
   // Specifications
   volumeType: string;
   bootable: boolean;
@@ -98,6 +99,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: 'web-server-1',
     attachedToId: 'inst-001',
     dataSourceType: 'Blank Volume',
+    snapshotId: 'snap-001',
+    snapshotName: 'db-data-snap-01',
     volumeType: '_DEFAULT_',
     bootable: false,
     encryption: false,
@@ -114,6 +117,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: 'app-server-1',
     attachedToId: 'inst-002',
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: '_DEFAULT_',
     bootable: false,
     encryption: false,
@@ -130,6 +135,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: null,
     attachedToId: null,
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: 'SSD',
     bootable: false,
     encryption: true,
@@ -146,6 +153,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: 'log-server',
     attachedToId: 'inst-003',
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: '_DEFAULT_',
     bootable: false,
     encryption: false,
@@ -162,6 +171,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: 'cache-01',
     attachedToId: 'inst-004',
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: 'NVMe',
     bootable: false,
     encryption: false,
@@ -178,6 +189,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: null,
     attachedToId: null,
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: 'HDD',
     bootable: false,
     encryption: false,
@@ -194,6 +207,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: null,
     attachedToId: null,
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: '_DEFAULT_',
     bootable: false,
     encryption: false,
@@ -210,6 +225,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: 'gpu-server-1',
     attachedToId: 'inst-005',
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: 'NVMe',
     bootable: false,
     encryption: true,
@@ -226,6 +243,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: null,
     attachedToId: null,
     dataSourceType: 'Blank Volume',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: 'HDD',
     bootable: false,
     encryption: false,
@@ -242,6 +261,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     attachedTo: 'web-server-2',
     attachedToId: 'inst-006',
     dataSourceType: 'Image',
+    snapshotId: null,
+    snapshotName: null,
     volumeType: 'SSD',
     bootable: true,
     encryption: false,
@@ -260,6 +281,8 @@ const defaultVolumeDetail: VolumeDetail = {
   attachedTo: null,
   attachedToId: null,
   dataSourceType: '-',
+  snapshotId: null,
+  snapshotName: null,
   volumeType: '-',
   bootable: false,
   encryption: false,
@@ -408,7 +431,6 @@ export function ComputeAdminVolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
@@ -472,7 +494,6 @@ export function ComputeAdminVolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
@@ -490,6 +511,7 @@ export function ComputeAdminVolumeDetailPage() {
       key: 'backupMode',
       label: 'Backup mode',
       flex: 1,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -659,7 +681,21 @@ export function ComputeAdminVolumeDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Volume snapshot" value={volume.dataSourceType} />
+                    <SectionCard.DataRow
+                      label="Volume snapshot"
+                      value={
+                        volume.snapshotId ? (
+                          <Link
+                            to={`/compute-admin/volume-snapshots/${volume.snapshotId}`}
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {volume.snapshotName}
+                          </Link>
+                        ) : (
+                          volume.dataSourceType
+                        )
+                      }
+                    />
                     <SectionCard.DataRow
                       label="Image"
                       value={
@@ -708,23 +744,14 @@ export function ComputeAdminVolumeDetailPage() {
                 </div>
 
                 {/* Search */}
-                <div className="flex items-center gap-1">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      placeholder="Search snapshot by attributes"
-                      value={snapshotSearchQuery}
-                      onChange={(e) => setSnapshotSearchQuery(e.target.value)}
-                      onClear={() => setSnapshotSearchQuery('')}
-                      size="sm"
-                      fullWidth
-                    />
-                  </div>
-                  <Button
-                    variant="secondary"
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search snapshot by attributes"
+                    value={snapshotSearchQuery}
+                    onChange={(e) => setSnapshotSearchQuery(e.target.value)}
+                    onClear={() => setSnapshotSearchQuery('')}
                     size="sm"
-                    iconOnly
-                    icon={<IconDownload size={12} stroke={1.5} />}
-                    aria-label="Download"
+                    fullWidth
                   />
                 </div>
 
