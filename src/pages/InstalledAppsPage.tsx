@@ -19,7 +19,7 @@ import {
 import { Link } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTerminal2, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
@@ -235,6 +235,10 @@ export default function InstalledAppsPage() {
           actions={
             <>
               <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
+              <TopBarActionButton
+                icon={<IconBell size={16} stroke={1.5} />}
+                label="Notifications"
+              />
             </>
           }
         />

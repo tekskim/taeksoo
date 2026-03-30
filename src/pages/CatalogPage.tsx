@@ -16,7 +16,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
-import { IconTerminal2 } from '@tabler/icons-react';
+import { IconBell, IconTerminal2 } from '@tabler/icons-react';
 import postgresqlLogo from '@/assets/catalog/postgresql.svg';
 import valkeyLogo from '@/assets/catalog/valkey.svg';
 import kafkaLogo from '@/assets/catalog/kafka.svg';
@@ -173,6 +173,10 @@ export default function CatalogPage() {
           actions={
             <>
               <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
+              <TopBarActionButton
+                icon={<IconBell size={16} stroke={1.5} />}
+                label="Notifications"
+              />
             </>
           }
         />
