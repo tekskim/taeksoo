@@ -30,7 +30,6 @@ import {
   IconBell,
   IconDotsCircleHorizontal,
   IconLock,
-  IconLockOpen,
   IconTerminal2,
 } from '@tabler/icons-react';
 
@@ -507,10 +506,8 @@ export function ComputeAdminFlavorDetailPage() {
       align: 'center',
       render: (_, row) =>
         row.locked ? (
-          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        ) : (
-          <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        ),
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
     },
     {
       key: 'image',
