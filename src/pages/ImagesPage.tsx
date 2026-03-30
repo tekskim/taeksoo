@@ -9,9 +9,7 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
-  ProgressBar,
   Badge,
-  STATUS_THRESHOLDS,
   PageShell,
   PageHeader,
   columnMinWidths,
@@ -200,27 +198,6 @@ const mockImages: Image[] = [
 ];
 
 /* ----------------------------------------
-   Usage Cell Component
-   ---------------------------------------- */
-
-interface UsageCellProps {
-  usage: number;
-}
-
-function UsageCell({ usage }: UsageCellProps) {
-  return (
-    <ProgressBar
-      variant="quota"
-      value={usage}
-      max={100}
-      showValue
-      size="sm"
-      thresholds={STATUS_THRESHOLDS.storage}
-    />
-  );
-}
-
-/* ----------------------------------------
    Name Cell Component
    ---------------------------------------- */
 
@@ -318,14 +295,6 @@ export function ImagesPage() {
       sortable: true,
     },
     {
-      key: 'usage',
-      label: 'Usage',
-      flex: 1,
-      minWidth: columnMinWidths.usage,
-      sortable: true,
-      render: (_, row) => <UsageCell usage={row.usage} />,
-    },
-    {
       key: 'objects',
       label: 'Objects',
       flex: 1,
@@ -371,6 +340,11 @@ export function ImagesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => {
+        if (!value || value === '-') return '-';
+        const d = new Date(value);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      },
     },
   ];
 
