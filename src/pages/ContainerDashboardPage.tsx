@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -17,6 +18,7 @@ import {
   PageShell,
   Badge,
   Tooltip,
+  SearchInput,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -354,6 +356,7 @@ export function ContainerDashboardPage() {
   const activeTab = searchParams.get('tab') || 'events';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [currentPage, setCurrentPage] = useState(1);
+  const [eventSearchQuery, setEventSearchQuery] = useState('');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -546,14 +549,7 @@ export function ContainerDashboardPage() {
       </div>
 
       {/* Events & Secrets */}
-      <Card
-        title="Events & Secrets"
-        actions={
-          <Button variant="secondary" size="sm">
-            Full events list
-          </Button>
-        }
-      >
+      <Card title="Events & Secrets">
         <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
           <TabList className="w-full mb-3">
             <Tab value="events">Events</Tab>
@@ -562,6 +558,19 @@ export function ContainerDashboardPage() {
 
           <TabPanel value="events" className="pt-0">
             <VStack gap={3}>
+              <HStack gap={2} align="center">
+                <SearchInput
+                  value={eventSearchQuery}
+                  onChange={setEventSearchQuery}
+                  placeholder="Search events by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                <Button variant="secondary" size="sm">
+                  Full events list
+                </Button>
+              </HStack>
               <div className="flex justify-start">
                 <Pagination
                   currentPage={currentPage}
