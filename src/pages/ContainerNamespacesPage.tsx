@@ -26,7 +26,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { getContainerStatusTheme } from './containerStatusUtils';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconBell,
   IconTerminal2,
   IconFile,
   IconCopy,
@@ -356,9 +355,6 @@ export function ContainerNamespacesPage() {
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
