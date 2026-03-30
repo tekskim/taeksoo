@@ -339,17 +339,15 @@ export function PoolsPage() {
         </div>
 
         {/* Pagination */}
-        {filteredPools.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => console.log('Settings clicked')}
-            totalItems={filteredPools.length}
-            selectedCount={selectedPools.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => console.log('Settings clicked')}
+          totalItems={filteredPools.length}
+          selectedCount={selectedPools.length}
+        />
 
         {/* Pools Table */}
         <Table<Pool>

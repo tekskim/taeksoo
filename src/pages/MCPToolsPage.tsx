@@ -855,15 +855,13 @@ export function MCPToolsPage() {
             />
 
             {/* Pagination */}
-            {filteredTools.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                totalItems={filteredTools.length}
-                selectedCount={selectedTools.length}
-              />
-            )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredTools.length}
+              selectedCount={selectedTools.length}
+            />
 
             {/* Table */}
             <Table<MCPToolRow>
@@ -904,15 +902,13 @@ export function MCPToolsPage() {
             </div>
 
             {/* Pagination */}
-            {filteredTemplates.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={templateTotalPages}
-                onPageChange={setCurrentPage}
-                totalItems={filteredTemplates.length}
-                selectedCount={selectedTemplates.length}
-              />
-            )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={templateTotalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredTemplates.length}
+              selectedCount={selectedTemplates.length}
+            />
 
             {/* Table */}
             <Table<TemplateRow>

@@ -448,15 +448,13 @@ export function StoragePage() {
           />
 
           {/* Pagination */}
-          {filteredDataSources.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              totalItems={filteredDataSources.length}
-              selectedCount={selectedDataSources.length}
-            />
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredDataSources.length}
+            selectedCount={selectedDataSources.length}
+          />
 
           {/* Table */}
           <Table<DataSourceRow>

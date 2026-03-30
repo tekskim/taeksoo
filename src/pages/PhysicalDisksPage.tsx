@@ -515,16 +515,14 @@ export function PhysicalDisksPage() {
         />
 
         {/* Pagination */}
-        {filteredDisks.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => console.log('Settings clicked')}
-            totalItems={totalItems}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => console.log('Settings clicked')}
+          totalItems={totalItems}
+        />
 
         {/* Table */}
         <Table columns={columns} data={paginatedDisks} getRowId={(row) => row.id} />

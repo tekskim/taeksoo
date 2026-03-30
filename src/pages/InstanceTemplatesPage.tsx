@@ -570,17 +570,15 @@ export function InstanceTemplatesPage() {
         />
 
         {/* Pagination */}
-        {filteredTemplates.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredTemplates.length}
-            selectedCount={selectedTemplates.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredTemplates.length}
+          selectedCount={selectedTemplates.length}
+        />
 
         {/* Template Table */}
         <Table<InstanceTemplate>

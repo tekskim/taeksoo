@@ -249,6 +249,14 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
                     <SectionCard.DataRow label="Size" value={snapshot.size} />
                   </SectionCard.Content>
                 </SectionCard>
+
+                {/* Metadata */}
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                  </SectionCard.Content>
+                </SectionCard>
               </VStack>
             </TabPanel>
           </Tabs>

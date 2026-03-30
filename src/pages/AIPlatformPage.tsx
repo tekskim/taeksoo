@@ -1380,16 +1380,14 @@ function WorkloadsContent() {
       />
 
       {/* Pagination */}
-      {filteredWorkloads.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          totalItems={filteredWorkloads.length}
-          showSettings
-          onSettingsClick={() => console.log('Settings clicked')}
-        />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredWorkloads.length}
+        showSettings
+        onSettingsClick={() => console.log('Settings clicked')}
+      />
 
       {/* Table */}
       <Table<Workload>

@@ -544,20 +544,18 @@ export function CloudBuilderConsolePage() {
         }
       />
 
-      {filteredRows.length > 0 && (
-        <Pagination
-          id="tds-Pagination"
-          data-figma-name="[TDS] Pagination"
-          aria-label="[TDS] Pagination"
-          currentPage={safePage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          showSettings={hasTabs}
-          onSettingsClick={() => window.alert('View settings: Coming Soon')}
-          totalItems={filteredRows.length}
-          selectedCount={selected.length}
-        />
-      )}
+      <Pagination
+        id="tds-Pagination"
+        data-figma-name="[TDS] Pagination"
+        aria-label="[TDS] Pagination"
+        currentPage={safePage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        showSettings={hasTabs}
+        onSettingsClick={() => window.alert('View settings: Coming Soon')}
+        totalItems={filteredRows.length}
+        selectedCount={selected.length}
+      />
 
       <Table<Record<string, string> & { id: string }>
         id="tds-Table"
