@@ -1775,7 +1775,7 @@ export function InstanceListPage() {
         />
 
         {/* Pagination */}
-        {activeTab === 'vm' && filteredInstances.length > 0 && (
+        {activeTab === 'vm' && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -1786,7 +1786,7 @@ export function InstanceListPage() {
             selectedCount={selectedInstances.length}
           />
         )}
-        {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
+        {activeTab === 'bare-metal' && (
           <Pagination
             currentPage={currentBareMetalPage}
             totalPages={totalBareMetalPages}

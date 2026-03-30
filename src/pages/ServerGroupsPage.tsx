@@ -465,17 +465,15 @@ export function ServerGroupsPage() {
         />
 
         {/* Pagination */}
-        {filteredServerGroups.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredServerGroups.length}
-            selectedCount={selectedServerGroups.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredServerGroups.length}
+          selectedCount={selectedServerGroups.length}
+        />
 
         {/* Server groups Table */}
         <Table<ServerGroup>

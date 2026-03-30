@@ -583,17 +583,15 @@ export function ComputeAdminVolumesPage() {
         />
 
         {/* Pagination */}
-        {filteredVolumes.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredVolumes.length}
-            selectedCount={selectedVolumes.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredVolumes.length}
+          selectedCount={selectedVolumes.length}
+        />
 
         {/* Volumes Table */}
         <Table<Volume>

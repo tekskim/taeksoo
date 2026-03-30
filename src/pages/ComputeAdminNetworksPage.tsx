@@ -305,8 +305,8 @@ export function ComputeAdminNetworksPage() {
 
   // Context menu items
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
-    { id: 'create-subnet', label: 'Create subnet', onClick: () => handleCreateSubnet(network) },
     { id: 'edit', label: 'Edit', onClick: () => handleEditNetwork(network) },
+    { id: 'create-subnet', label: 'Create subnet', onClick: () => handleCreateSubnet(network) },
     {
       id: 'delete',
       label: 'Delete',
