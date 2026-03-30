@@ -751,7 +751,6 @@ export function ImageDetailPage() {
             <DetailHeader.InfoCard label="Size" value={imageData.size} />
             <DetailHeader.InfoCard label="Objects" value={imageData.objects} />
             <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
-            <DetailHeader.InfoCard label="Total provisioned" value={imageData.totalProvisioned} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 

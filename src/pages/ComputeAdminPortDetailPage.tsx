@@ -570,7 +570,6 @@ export default function PortDetailPage() {
                 status={portStatusMap[port.status]}
               />
               <DetailHeader.InfoCard label="ID" value={port.id} copyable onCopy={handleCopyId} />
-              <DetailHeader.InfoCard label="Tenant" value="tenantA" />
               <DetailHeader.InfoCard label="Admin state" value="Up" />
               <DetailHeader.InfoCard
                 label="Port security"
