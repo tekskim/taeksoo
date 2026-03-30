@@ -40,7 +40,6 @@ import {
   IconBell,
   IconDownload,
   IconLock,
-  IconLockOpen,
   IconTerminal2,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -1355,15 +1354,10 @@ export function InstanceListPage() {
       width: fixedColumns.locked,
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <div className="flex items-center justify-center w-full">
-          {row.locked ? (
-            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-          ) : (
-            <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
-          )}
-        </div>
-      ),
+      render: (_, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
     },
     {
       key: 'fixedIp',
@@ -1532,15 +1526,10 @@ export function InstanceListPage() {
       width: fixedColumns.locked,
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <div className="flex items-center justify-center w-full">
-          {row.locked ? (
-            <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-          ) : (
-            <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
-          )}
-        </div>
-      ),
+      render: (_, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
     },
     {
       key: 'os',
