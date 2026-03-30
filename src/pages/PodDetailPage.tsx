@@ -31,6 +31,7 @@ import { getContainerStatusTheme } from './containerStatusUtils';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
+  IconBell,
   IconTerminal2,
   IconFile,
   IconSearch,
@@ -727,6 +728,9 @@ export function PodDetailPage() {
               />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }

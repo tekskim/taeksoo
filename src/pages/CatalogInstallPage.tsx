@@ -18,7 +18,7 @@ import {
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTerminal2, IconEdit } from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconEdit } from '@tabler/icons-react';
 
 function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -312,13 +312,17 @@ export default function CatalogInstallPage() {
           actions={
             <>
               <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
+              <TopBarActionButton
+                icon={<IconBell size={16} stroke={1.5} />}
+                label="Notifications"
+              />
             </>
           }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={3}>
+      <VStack gap={6}>
         {/* Page Title */}
         <VStack gap={1}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Install {appName}</h1>
