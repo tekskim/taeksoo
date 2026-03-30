@@ -568,17 +568,15 @@ export function ComputeAdminImagesPage() {
         />
 
         {/* Pagination */}
-        {filteredImages.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredImages.length}
-            selectedCount={selectedImages.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredImages.length}
+          selectedCount={selectedImages.length}
+        />
 
         {/* Image Table */}
         <Table<Image>

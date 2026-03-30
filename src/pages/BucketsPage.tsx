@@ -425,17 +425,15 @@ export function BucketsPage() {
         />
 
         {/* Pagination */}
-        {filteredBuckets.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => console.log('Settings clicked')}
-            totalItems={totalItems}
-            selectedCount={selectedRows.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => console.log('Settings clicked')}
+          totalItems={totalItems}
+          selectedCount={selectedRows.length}
+        />
 
         {/* Table */}
         <Table

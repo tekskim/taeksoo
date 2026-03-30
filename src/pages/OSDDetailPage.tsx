@@ -1064,16 +1064,14 @@ export function OSDDetailPage() {
                 </div>
 
                 {/* Pagination */}
-                {filteredDevices.length > 0 && (
-                  <Pagination
-                    currentPage={deviceCurrentPage}
-                    totalPages={deviceTotalPages}
-                    onPageChange={setDeviceCurrentPage}
-                    totalItems={filteredDevices.length}
-                    itemsPerPage={deviceRowsPerPage}
-                    showItemCount
-                  />
-                )}
+                <Pagination
+                  currentPage={deviceCurrentPage}
+                  totalPages={deviceTotalPages}
+                  onPageChange={setDeviceCurrentPage}
+                  totalItems={filteredDevices.length}
+                  itemsPerPage={deviceRowsPerPage}
+                  showItemCount
+                />
 
                 {/* Devices Table */}
                 <Table<Device>

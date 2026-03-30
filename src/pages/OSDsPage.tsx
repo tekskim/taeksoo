@@ -361,18 +361,16 @@ export function OSDsPage() {
         </div>
 
         {/* Pagination */}
-        {filteredOSDs.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => console.log('Settings clicked')}
-            totalItems={filteredOSDs.length}
-            itemsPerPage={rowsPerPage}
-            showItemCount
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => console.log('Settings clicked')}
+          totalItems={filteredOSDs.length}
+          itemsPerPage={rowsPerPage}
+          showItemCount
+        />
 
         {/* OSDs Table */}
         <Table<OSD>

@@ -413,16 +413,14 @@ export function HostsPage() {
         />
 
         {/* Pagination */}
-        {filteredHosts.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => console.log('Settings clicked')}
-            totalItems={filteredHosts.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => console.log('Settings clicked')}
+          totalItems={filteredHosts.length}
+        />
 
         {/* Hosts Table */}
         <Table<Host>

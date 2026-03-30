@@ -1612,7 +1612,7 @@ export function ComputeAdminInstanceListPage() {
         />
 
         {/* Pagination */}
-        {activeTab === 'vm' && filteredInstances.length > 0 && (
+        {activeTab === 'vm' && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -1623,7 +1623,7 @@ export function ComputeAdminInstanceListPage() {
             selectedCount={selectedInstances.length}
           />
         )}
-        {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
+        {activeTab === 'bare-metal' && (
           <Pagination
             currentPage={currentBareMetalPage}
             totalPages={totalBareMetalPages}
