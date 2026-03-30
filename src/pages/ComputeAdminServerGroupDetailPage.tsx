@@ -22,7 +22,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconLock, IconLockOpen } from '@tabler/icons-react';
+import { IconTrash, IconBell, IconLock } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -224,9 +224,7 @@ export function ComputeAdminServerGroupDetailPage() {
       render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-        ) : (
-          <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        ),
+        ) : null,
     },
     {
       key: 'host',

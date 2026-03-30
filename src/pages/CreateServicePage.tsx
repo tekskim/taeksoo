@@ -27,7 +27,6 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconTerminal2,
   IconSearch,
   IconX,
@@ -535,9 +534,6 @@ export function CreateServicePage() {
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />

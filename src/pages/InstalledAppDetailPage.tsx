@@ -19,14 +19,7 @@ import {
 import { useParams } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconEdit,
-  IconTrash,
-  IconCopy,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconTerminal2, IconEdit, IconTrash, IconCopy, IconDownload } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
@@ -239,10 +232,6 @@ primary:
           actions={
             <>
               <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
             </>
           }
         />

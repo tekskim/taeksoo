@@ -33,7 +33,6 @@ import {
   IconBell,
   IconDotsCircleHorizontal,
   IconLock,
-  IconLockOpen,
   IconTerminal2,
 } from '@tabler/icons-react';
 
@@ -334,9 +333,7 @@ export function ServerGroupDetailPage() {
       render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-        ) : (
-          <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        ),
+        ) : null,
     },
     {
       key: 'fixedIP',

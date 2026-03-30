@@ -39,7 +39,6 @@ import {
   IconBell,
   IconDownload,
   IconLock,
-  IconLockOpen,
   IconTerminal2,
   IconPower,
 } from '@tabler/icons-react';
@@ -1165,9 +1164,7 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-        ) : (
-          <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-disabled)]" />
-        ),
+        ) : null,
     },
     {
       key: 'tenant',
