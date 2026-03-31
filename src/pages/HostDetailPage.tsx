@@ -1756,7 +1756,7 @@ export default function HostDetailPage() {
                 </div>
 
                 {/* System Overview Section */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg pt-4 px-6 pb-6">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
                     System overview
                   </h3>
@@ -1915,7 +1915,7 @@ export default function HostDetailPage() {
                 </div>
 
                 {/* DISK PERFORMANCE Section */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg pt-4 px-6 pb-6">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
                     Disk performance
                   </h3>
