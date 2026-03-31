@@ -11,22 +11,20 @@ interface DocSectionProps {
 
 export function DocSection({ id, title, description, actions, children }: DocSectionProps) {
   return (
-    <VStack
-      id={id}
-      gap={5}
-      align="stretch"
-      className="scroll-mt-6 p-6 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]"
-    >
-      <div className="flex items-center justify-between">
-        <VStack gap={1} align="start">
-          <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
-          {description && (
-            <p className="text-body-md text-[var(--color-text-muted)]">{description}</p>
-          )}
-        </VStack>
-        {actions}
-      </div>
-      {children}
-    </VStack>
+    <div id={id} className="scroll-mt-6">
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+      <VStack gap={5} align="stretch" className="pt-8 pb-4">
+        <div className="flex items-center justify-between">
+          <VStack gap={1} align="start">
+            <h3 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h3>
+            {description && (
+              <p className="text-body-md text-[var(--color-text-muted)]">{description}</p>
+            )}
+          </VStack>
+          {actions}
+        </div>
+        {children}
+      </VStack>
+    </div>
   );
 }

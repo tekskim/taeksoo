@@ -16,7 +16,6 @@ import {
   IconLoadBalancer,
   IconCertificate,
   IconTopologyStar3,
-  IconListSearch,
   IconServer2,
   IconActivity,
   IconCpu2,
@@ -26,7 +25,7 @@ import {
   IconUsersGroup,
   IconFileCode,
 } from '@tabler/icons-react';
-import { EthernetPort, ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
+import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
@@ -128,28 +127,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
 
           {isCloudBuilder ? (
             <>
-              <MenuSection title="Inventory(1.0v)" defaultOpen={true}>
-                <MenuItem
-                  icon={<IconListSearch size={16} stroke={1.5} />}
-                  label="Discovery"
-                  href="/cloudbuilder/discovery"
-                  active={isActive('/cloudbuilder/discovery')}
-                />
-                <MenuItem
-                  icon={<IconServer2 size={16} stroke={1.5} />}
-                  label="Servers"
-                  href="/cloudbuilder/servers"
-                  active={isActive('/cloudbuilder/servers')}
-                />
-                <MenuItem
-                  icon={<EthernetPort size={16} strokeWidth={1.5} />}
-                  label="Switch"
-                  href="/cloudbuilder/switch"
-                  active={isActive('/cloudbuilder/switch')}
-                />
-              </MenuSection>
-
-              <MenuSection title="Inventory(0.7v)" defaultOpen={true}>
+              <MenuSection title="Inventory" defaultOpen={true}>
                 <MenuItem
                   icon={<IconServer2 size={16} stroke={1.5} />}
                   label="Severs"

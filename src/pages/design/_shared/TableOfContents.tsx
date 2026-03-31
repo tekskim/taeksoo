@@ -58,10 +58,10 @@ export function TableOfContents({ items, scrollContainerRef }: TableOfContentsPr
 
   return (
     <nav
-      className="hidden xl:block absolute -right-[180px] top-0 w-[160px]"
+      className="hidden xl:block fixed right-8 top-[60px] w-[160px] z-40"
       aria-label="Table of contents"
     >
-      <div className="sticky top-8">
+      <div>
         <span className="text-body-xs font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider mb-2 block">
           On this page
         </span>
