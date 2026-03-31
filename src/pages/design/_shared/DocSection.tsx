@@ -12,7 +12,7 @@ interface DocSectionProps {
 export function DocSection({ id, title, description, actions, children }: DocSectionProps) {
   return (
     <div id={id} className="scroll-mt-6">
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
+      <div className="w-full h-px bg-[var(--color-border-strong)]" />
       <VStack gap={5} align="stretch" className="pt-8 pb-4">
         <div className="flex items-center justify-between">
           <VStack gap={1} align="start">

@@ -102,7 +102,7 @@ export function DesignSystemLayout() {
             {/* EntryPage Link */}
             <Link
               to="/"
-              className="flex items-center gap-2 w-[188px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+              className="flex items-center gap-2 w-[188px] box-border px-3 py-2 mb-2 bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors"
             >
               <IconHome size={16} stroke={1.5} className="shrink-0" />
               <span className="truncate flex-1 min-w-0">Entry page</span>
@@ -182,12 +182,12 @@ export function DesignSystemLayout() {
             <button
               onClick={() => navigate('/design/all')}
               className={`
-              w-[188px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] flex items-center gap-2
-              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
+              w-[188px] box-border px-3 py-2 mb-2 flex items-center gap-2
+              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
               ${
                 currentPath === '/design/all'
-                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
-                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
+                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium'
+                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
               }
             `}
             >
@@ -199,12 +199,12 @@ export function DesignSystemLayout() {
             <button
               onClick={() => navigate('/design/changelog')}
               className={`
-              w-[188px] box-border px-3 py-2 mb-3 rounded-[var(--radius-button)] flex items-center gap-2
-              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
+              w-[188px] box-border px-3 py-2 mb-3 flex items-center gap-2
+              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
               ${
                 currentPath === '/design/changelog'
-                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
-                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
+                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium'
+                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
               }
             `}
             >
@@ -245,7 +245,7 @@ export function DesignSystemLayout() {
                               key={id}
                               onClick={() => navigate(path)}
                               className={`
-                              w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                              w-full px-3 py-2 flex items-center gap-2
                               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                               ${
                                 currentPath === path

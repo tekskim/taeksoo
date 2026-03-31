@@ -17,7 +17,7 @@ export function PrevNextNav() {
       {prev ? (
         <Link
           to={prev.path}
-          className="group flex-1 flex items-center gap-2 px-4 py-3 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
+          className="group flex-1 flex items-center gap-2 px-4 py-3 border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
         >
           <IconChevronLeft
             size={14}
@@ -37,7 +37,7 @@ export function PrevNextNav() {
       {next ? (
         <Link
           to={next.path}
-          className="group flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors text-right"
+          className="group flex-1 flex items-center justify-end gap-2 px-4 py-3 border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors text-right"
         >
           <div className="flex flex-col min-w-0">
             <span className="text-body-xs text-[var(--color-text-subtle)]">Next</span>

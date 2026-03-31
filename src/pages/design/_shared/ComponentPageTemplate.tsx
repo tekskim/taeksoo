@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { VStack } from '@/design-system';
-import { IconArrowRight, IconCheck, IconX, IconClock } from '@tabler/icons-react';
+import { IconArrowRight, IconCheck, IconX } from '@tabler/icons-react';
 import { DocSection } from './DocSection';
 import { type PropDef } from './PropsTable';
 import { PrevNextNav } from './PrevNextNav';
@@ -96,12 +96,42 @@ export function ComponentPageTemplate({
   const location = useLocation();
   const lastUpdated = pageLastUpdated[location.pathname];
 
+  const formattedDate = lastUpdated
+    ? (() => {
+        const [y, m, d] = lastUpdated.split(' ')[0].split('-');
+        const months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ];
+        return `${months[parseInt(m) - 1]} ${d}, ${y}`;
+      })()
+    : null;
+
   return (
     <div>
       <VStack gap={0} align="stretch">
-        {/* Page Header */}
-        <VStack gap={2} align="start" className="pb-4">
-          <div className="flex items-center gap-2">
+        {/* Row 1: Last updated — right-aligned with bottom border */}
+        {formattedDate && (
+          <div className="flex items-center justify-end py-6 border-b border-[var(--color-border-strong)]">
+            <span className="text-body-md text-[var(--color-text-default)]">
+              Last updated: {formattedDate}
+            </span>
+          </div>
+        )}
+
+        {/* Row 2: Title (left) + Description (right) with bottom border */}
+        <div className="flex items-start justify-between gap-8 py-6">
+          <div className="flex items-center gap-2 shrink-0">
             <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
             {maturity && (
               <span
@@ -126,47 +156,23 @@ export function ComponentPageTemplate({
               </span>
             )}
           </div>
-          {tags && tags.length > 0 && (
-            <div className="flex items-center gap-1.5">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center px-2 py-0.5 rounded-full text-body-xs font-medium bg-[var(--color-state-info-bg)] text-[var(--color-state-info)] border border-[var(--color-state-info)]"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-          <p className="text-body-lg text-[var(--color-text-muted)]">{description}</p>
-          {lastUpdated && (
-            <div className="flex items-center gap-1.5 mt-1">
-              <IconClock size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Last updated{' '}
-                {(() => {
-                  const [y, m, d] = lastUpdated.split(' ')[0].split('-');
-                  const months = [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec',
-                  ];
-                  return `${months[parseInt(m) - 1]} ${d}, ${y}`;
-                })()}
-              </span>
-            </div>
-          )}
+          <div className="flex flex-col items-start gap-2 max-w-[624px]">
+            <p className="text-body-lg text-[var(--color-text-muted)]">{description}</p>
+            {tags && tags.length > 0 && (
+              <div className="flex items-center gap-1.5">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center px-2 py-0.5 rounded-full text-body-xs font-medium bg-[var(--color-state-info-bg)] text-[var(--color-state-info)] border border-[var(--color-state-info)]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
           {headerActions}
-        </VStack>
+        </div>
 
         {/* Preview */}
         {preview && (
@@ -180,7 +186,7 @@ export function ComponentPageTemplate({
           <DocSection id="when-to-use" title="When to use">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {whenToUse && whenToUse.length > 0 && (
-                <div className="p-4 rounded-[var(--primitive-radius-lg)] border border-[var(--color-state-success)] bg-[var(--color-state-success-bg)]">
+                <div className="p-4 border border-[var(--color-state-success)] bg-[var(--color-state-success-bg)]">
                   <div className="flex items-center gap-2 mb-3">
                     <IconCheck size={16} stroke={2} className="text-[var(--color-state-success)]" />
                     <span className="text-label-md text-[var(--color-state-success)]">
@@ -200,7 +206,7 @@ export function ComponentPageTemplate({
                 </div>
               )}
               {whenNotToUse && whenNotToUse.length > 0 && (
-                <div className="p-4 rounded-[var(--primitive-radius-lg)] border border-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
+                <div className="p-4 border border-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
                   <div className="flex items-center gap-2 mb-3">
                     <IconX size={16} stroke={2} className="text-[var(--color-state-danger)]" />
                     <span className="text-label-md text-[var(--color-state-danger)]">
@@ -291,7 +297,7 @@ export function ComponentPageTemplate({
         {/* Related Links */}
         {relatedLinks && relatedLinks.length > 0 && (
           <div id="related" className="scroll-mt-6">
-            <div className="w-full h-px bg-[var(--color-border-default)]" />
+            <div className="w-full h-px bg-[var(--color-border-strong)]" />
             <VStack gap={4} align="stretch" className="pt-8 pb-4">
               <h3 className="text-heading-h5 text-[var(--color-text-default)]">Related</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -299,7 +305,7 @@ export function ComponentPageTemplate({
                   <Link
                     key={link.path}
                     to={link.path}
-                    className="group flex items-center justify-between gap-3 p-4 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                    className="group flex items-center justify-between gap-3 p-4 border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
                   >
                     <VStack gap={0.5} align="start" className="min-w-0">
                       <span className="text-label-md text-[var(--color-text-default)] group-hover:text-[var(--color-action-primary)] transition-colors">
