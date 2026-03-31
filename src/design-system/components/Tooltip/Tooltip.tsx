@@ -115,6 +115,14 @@ export function Tooltip({
     setIsPositioned(false);
   };
 
+  const handleClick = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsVisible(false);
+    setIsPositioned(false);
+  };
+
   useEffect(() => {
     if (isVisible) {
       updatePosition();
@@ -184,6 +192,7 @@ export function Tooltip({
         onMouseLeave={handleMouseLeave}
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
+        onClick={handleClick}
         className="inline-flex"
       >
         {children}

@@ -1,6 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, PageShell } from '@/design-system';
+import {
+  Button,
+  Breadcrumb,
+  HStack,
+  VStack,
+  TabBar,
+  TopBar,
+  PageShell,
+  InlineMessage,
+} from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -257,6 +266,14 @@ export function EditDaemonSetYamlPage() {
             DaemonSet: {daemonSetName}
           </h1>
         </VStack>
+
+        {/* matchLabels immutability warning */}
+        <InlineMessage variant="warning">
+          <strong>spec.selector.matchLabels is immutable.</strong> Once a workload is created, its
+          label selector cannot be changed. Any modification to{' '}
+          <code className="font-mono">spec.selector.matchLabels</code> will be rejected by the
+          server. To change the selector, delete and recreate the workload.
+        </InlineMessage>
 
         {/* YAML Editor */}
         <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />

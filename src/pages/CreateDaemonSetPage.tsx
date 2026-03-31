@@ -47,6 +47,7 @@ import {
   IconInfoCircle,
   IconPencilCog,
   IconKey,
+  IconLock,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -335,6 +336,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  matchLabels: Label[];
 }
 
 function SummarySidebar({
@@ -344,12 +346,16 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  matchLabels,
 }: SummarySidebarProps) {
   // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
   const labelsComplete = true; // Labels are optional
+  const selectorComplete =
+    matchLabels.length > 0 && matchLabels.every((ml) => ml.key.trim() && ml.value.trim()); // at least one entry required
   const scalingComplete = true; // Scaling are optional
-  const deploymentComplete = basicInfoComplete && labelsComplete && scalingComplete;
+  const deploymentComplete =
+    basicInfoComplete && labelsComplete && selectorComplete && scalingComplete;
   const podComplete = true; // All pod sections are optional
   const containersComplete = containerTabs.length > 0; // At least one container exists
 
@@ -413,6 +419,10 @@ function SummarySidebar({
                   <SummarySubItem
                     label="Labels & Annotations"
                     status={labelsComplete ? 'complete' : 'in-progress'}
+                  />
+                  <SummarySubItem
+                    label="Selector"
+                    status={selectorComplete ? 'complete' : 'in-progress'}
                   />
                   <SummarySubItem
                     label="Scaling and Upgrade Policy"
@@ -716,6 +726,98 @@ function LabelsAnnotationsSection({
               </VStack>
             </div>
           </VStack>
+        </VStack>
+      </SectionCard.Content>
+    </SectionCard>
+  );
+}
+
+/* ----------------------------------------
+   SelectorSection Component
+   ---------------------------------------- */
+
+interface SelectorSectionProps {
+  matchLabels: Label[];
+  onAddMatchLabel: () => void;
+  onRemoveMatchLabel: (index: number) => void;
+  onUpdateMatchLabel: (index: number, field: 'key' | 'value', value: string) => void;
+  error?: string | null;
+}
+
+function SelectorSection({
+  matchLabels,
+  onAddMatchLabel,
+  onRemoveMatchLabel,
+  onUpdateMatchLabel,
+  error,
+}: SelectorSectionProps) {
+  return (
+    <SectionCard className="pb-4">
+      <SectionCard.Header title="Selector" />
+      <SectionCard.Content>
+        <VStack gap={4}>
+          <VStack gap={1}>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              matchLabels
+              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Define label selectors to identify which Pods belong to this workload. Entries are
+              automatically synced to Pod Labels as read-only. This setting cannot be changed after
+              creation.
+            </p>
+          </VStack>
+
+          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <VStack gap={1.5}>
+              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
+                <div className="w-5" />
+              </div>
+              {matchLabels.map((label, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                >
+                  <Input
+                    placeholder="label key"
+                    value={label.key}
+                    onChange={(e) => onUpdateMatchLabel(index, 'key', e.target.value)}
+                    fullWidth
+                  />
+                  <Input
+                    placeholder="label value"
+                    value={label.value}
+                    onChange={(e) => onUpdateMatchLabel(index, 'value', e.target.value)}
+                    fullWidth
+                  />
+                  {matchLabels.length > 1 ? (
+                    <button
+                      onClick={() => onRemoveMatchLabel(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  ) : (
+                    <div className="w-5" />
+                  )}
+                </div>
+              ))}
+              <div className="w-fit">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddMatchLabel}
+                >
+                  Add matchLabel
+                </Button>
+              </div>
+            </VStack>
+          </div>
+
+          {error && <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -1120,6 +1222,11 @@ export function CreateDaemonSetPage() {
     isV2 ? [{ key: '', value: '' }] : []
   );
 
+  // Selector matchLabels state (spec.selector.matchLabels)
+  const [matchLabels, setMatchLabels] = useState<Label[]>([{ key: '', value: '' }]);
+  const [matchLabelsError, setMatchLabelsError] = useState<string | null>(null);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+
   // Scaling and Upgrade Policy state
   const [terminationGracePeriod, setTerminationGracePeriod] = useState<string>('30');
 
@@ -1307,10 +1414,23 @@ export function CreateDaemonSetPage() {
   }, [navigate]);
 
   const handleCreate = useCallback(() => {
+    setHasAttemptedSubmit(true);
+
     if (!name.trim()) {
       setNameError('Name is required.');
       return;
     }
+
+    if (matchLabels.length === 0) {
+      setMatchLabelsError('At least one matchLabel entry is required.');
+      return;
+    }
+    const invalidMatchLabel = matchLabels.some((ml) => !ml.key.trim() || !ml.value.trim());
+    if (invalidMatchLabel) {
+      setMatchLabelsError('All matchLabels entries must have a non-empty key and value.');
+      return;
+    }
+    setMatchLabelsError(null);
 
     console.log('Creating daemonset:', {
       namespace,
@@ -1318,6 +1438,9 @@ export function CreateDaemonSetPage() {
       description,
       labels,
       annotations,
+      matchLabels,
+      podLabels,
+      podAnnotations,
       strategy,
       maxUnavailable,
       maxUnavailableUnit,
@@ -1330,6 +1453,9 @@ export function CreateDaemonSetPage() {
     description,
     labels,
     annotations,
+    matchLabels,
+    podLabels,
+    podAnnotations,
     strategy,
     maxUnavailable,
     maxUnavailableUnit,
@@ -1398,6 +1524,28 @@ export function CreateDaemonSetPage() {
       setPodLabels(newLabels);
     },
     [podLabels]
+  );
+
+  // Match Labels management (spec.selector.matchLabels)
+  const addMatchLabel = useCallback(() => {
+    setMatchLabels([...matchLabels, { key: '', value: '' }]);
+  }, [matchLabels]);
+
+  const removeMatchLabel = useCallback(
+    (index: number) => {
+      setMatchLabels(matchLabels.filter((_, i) => i !== index));
+    },
+    [matchLabels]
+  );
+
+  const updateMatchLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...matchLabels];
+      newLabels[index][field] = value;
+      setMatchLabels(newLabels);
+      if (hasAttemptedSubmit) setMatchLabelsError(null);
+    },
+    [matchLabels, hasAttemptedSubmit]
   );
 
   // Pod Annotation management
@@ -1866,6 +2014,13 @@ export function CreateDaemonSetPage() {
                   onRemoveAnnotation={removeAnnotation}
                   onUpdateAnnotation={updateAnnotation}
                 />
+                <SelectorSection
+                  matchLabels={matchLabels}
+                  onAddMatchLabel={addMatchLabel}
+                  onRemoveMatchLabel={removeMatchLabel}
+                  onUpdateMatchLabel={updateMatchLabel}
+                  error={matchLabelsError}
+                />
                 <ScalingPolicySection
                   strategy={strategy}
                   onStrategyChange={setStrategy}
@@ -1896,14 +2051,15 @@ export function CreateDaemonSetPage() {
                             Labels
                           </span>
                           <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Specify the labels used to identify and categorize the resource.
+                            Specify the labels for the Pod. Entries synced from matchLabels are
+                            read-only and cannot be modified or removed.
                           </p>
                         </VStack>
 
                         {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
-                            {podLabels.length > 0 && (
+                            {(matchLabels.some((ml) => ml.key.trim()) || podLabels.length > 0) && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
@@ -1914,9 +2070,43 @@ export function CreateDaemonSetPage() {
                                 <div className="w-5" />
                               </div>
                             )}
+
+                            {/* Read-only matchLabels entries synced from Selector */}
+                            {matchLabels
+                              .filter((ml) => ml.key.trim())
+                              .map((label, index) => (
+                                <div
+                                  key={`ml-${index}`}
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                >
+                                  <Input
+                                    placeholder="label key"
+                                    value={label.key}
+                                    disabled
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="label value"
+                                    value={label.value}
+                                    disabled
+                                    fullWidth
+                                  />
+                                  <div className="size-5 flex items-center justify-center">
+                                    <Tooltip content="Synced from matchLabels. Read-only.">
+                                      <IconLock
+                                        size={14}
+                                        className="text-[var(--color-text-disabled)]"
+                                        stroke={1.5}
+                                      />
+                                    </Tooltip>
+                                  </div>
+                                </div>
+                              ))}
+
+                            {/* Editable additional Pod labels */}
                             {podLabels.map((label, index) => (
                               <div
-                                key={index}
+                                key={`pl-${index}`}
                                 className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
@@ -1960,13 +2150,15 @@ export function CreateDaemonSetPage() {
 
                       {/* Annotations */}
                       <VStack gap={2}>
-                        <span className="text-label-lg text-[var(--color-text-default)]">
-                          Annotations
-                        </span>
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          Specify the annotations used to provide additional metadata for the
-                          resource.
-                        </p>
+                        <VStack gap={1}>
+                          <span className="text-label-lg text-[var(--color-text-default)]">
+                            Annotations
+                          </span>
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
+                            Specify the annotations used to provide additional metadata for the
+                            resource.
+                          </p>
+                        </VStack>
 
                         {/* Annotations container */}
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
@@ -7392,6 +7584,7 @@ export function CreateDaemonSetPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            matchLabels={matchLabels}
           />
         </HStack>
       </VStack>

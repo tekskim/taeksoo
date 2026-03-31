@@ -15,7 +15,7 @@ import {
   ContextMenu,
   PageShell,
   CopyButton,
-  ProgressBar,
+  Loading,
   InfoBox,
   InlineMessage,
   type ContextMenuItem,
@@ -80,11 +80,11 @@ const PROGRESS_BAR_STATUSES = new Set(['Provisioning', 'Processing', 'Deleting']
 const getProgressBarLabel = (status: string): string => {
   switch (status) {
     case 'Provisioning':
-      return 'Control plane initializing';
+      return 'Control plane initializing...';
     case 'Processing':
-      return 'Processing operation';
+      return 'Processing operation...';
     case 'Deleting':
-      return 'Removing worker nodes';
+      return 'Removing worker nodes...';
     default:
       return '';
   }
@@ -495,11 +495,11 @@ export function ClusterDetailPage() {
                   </span>
                 </Tooltip>
                 {showProgressBar && (
-                  <span className="flex-1 min-w-0 flex flex-col gap-1">
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                  <span className="flex items-center gap-1.5 min-w-0">
+                    <Loading variant="spinner" size="sm" text="" />
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       {getProgressBarLabel(clusterData.status)}
                     </span>
-                    <ProgressBar value={65} max={100} size="sm" showValue={false} />
                   </span>
                 )}
               </div>
