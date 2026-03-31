@@ -29,9 +29,9 @@ import {
 import {
   IconDotsCircleHorizontal,
   IconDownload,
-  IconPlus,
   IconTrash,
   IconBell,
+  IconBinaryTree,
 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { FigmaCaptureWrapper } from '@/components/FigmaCaptureWrapper';
@@ -204,7 +204,7 @@ export function CloudBuilderConsolePage() {
   );
 
   // /cloudbuilder 또는 /cloudbuilder/:slug
-  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'discovery';
+  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'severs0.7';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
 
   const breadcrumbItems = [{ label: 'Proj-1', href: '/project' }, { label: config.title }];
@@ -386,7 +386,7 @@ export function CloudBuilderConsolePage() {
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
-                className="text-[var(--color-text-muted)]"
+                className="text-[var(--action-icon-color)]"
               />
             </button>
           </ContextMenu>
@@ -458,7 +458,6 @@ export function CloudBuilderConsolePage() {
             id="tds-CreateButton"
             data-figma-name="[TDS] Button-Create"
             aria-label="[TDS] Button-Create"
-            leftIcon={<IconPlus size={12} />}
             onClick={handleCreate}
           >
             {config.createLabel}
@@ -528,6 +527,14 @@ export function CloudBuilderConsolePage() {
         bulkActions={
           selectable && showBulkDelete ? (
             <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconBinaryTree size={12} />}
+                disabled={selected.length === 0}
+              >
+                Allocate
+              </Button>
               <Button
                 variant="muted"
                 size="sm"

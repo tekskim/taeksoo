@@ -6,7 +6,6 @@ import type { SidebarSection, SidebarIconComponent } from '@shared/components/Si
 import CloudBuilderIcon from '@shared/assets/app-icons/cloud-builder.png';
 import {
   IconLayoutSidebar,
-  IconListSearch,
   IconServer2,
   IconCpu,
   IconCpu2,
@@ -26,40 +25,7 @@ function makeTablerIcon(
   return Wrapped as unknown as SidebarIconComponent;
 }
 
-function EthernetPortIcon({
-  size = 16,
-  stroke = 1.5,
-  className = '',
-}: {
-  size?: number;
-  stroke?: number;
-  className?: string;
-}) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={stroke}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M3 8h4v8H3z" />
-      <path d="M17 8h4v8h-4z" />
-      <path d="M7 12h10" />
-      <path d="M12 8v-4" />
-      <path d="M10 4h4" />
-    </svg>
-  );
-}
-
-const DiscoveryIcon = makeTablerIcon(IconListSearch);
 const ServersIcon = makeTablerIcon(IconServer2);
-const SwitchIcon = makeTablerIcon(EthernetPortIcon as never);
 const CpuIcon = makeTablerIcon(IconCpu);
 const Cpu2Icon = makeTablerIcon(IconCpu2);
 const NetworkIcon = makeTablerIcon(IconNetwork);
@@ -67,15 +33,6 @@ const DatabaseIcon = makeTablerIcon(IconDatabase);
 const AffiliateIcon = makeTablerIcon(IconAffiliate);
 
 const sections: SidebarSection[] = [
-  {
-    id: 'inventory-1.0',
-    label: 'Inventory(1.0v)',
-    children: [
-      { id: 'discovery', label: 'Discovery', path: '/cloudbuilder/discovery', icon: DiscoveryIcon },
-      { id: 'servers', label: 'Servers', path: '/cloudbuilder/servers', icon: ServersIcon },
-      { id: 'switch', label: 'Switch', path: '/cloudbuilder/switch', icon: SwitchIcon },
-    ],
-  },
   {
     id: 'inventory-0.7',
     label: 'Inventory(0.7v)',

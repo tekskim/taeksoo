@@ -282,10 +282,8 @@ export function DesignSystemLayout() {
         ref={mainRef}
         className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
       >
-        <div className="py-12 px-8 overflow-x-auto">
-          <div className="max-w-[1000px] mx-auto">
-            <Outlet context={{ mainRef }} />
-          </div>
+        <div className="py-12 px-12 overflow-x-auto">
+          <Outlet context={{ mainRef }} />
         </div>
 
         {/* Scroll to Top Button */}
