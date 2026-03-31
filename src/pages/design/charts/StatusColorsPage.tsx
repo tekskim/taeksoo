@@ -62,34 +62,10 @@ export function StatusColorsPage() {
           </VStack>
           {[
             {
-              label: 'Compute',
-              key: 'compute',
-              thresholds: '{ warning: 70, danger: 90 }',
-              ranges: ['0% ~ 69%: Normal', '70% ~ 89%: Warning', '90%+: Danger'],
-            },
-            {
-              label: 'Compute Admin',
-              key: 'computeAdmin',
-              thresholds: '{ warning: 70, danger: 100 }',
-              ranges: ['0% ~ 69%: Normal', '70% ~ 99%: Warning', '100%+: Danger'],
-            },
-            {
-              label: 'Storage',
-              key: 'storage',
-              thresholds: '{ warning: 85, danger: 95 }',
-              ranges: ['0% ~ 84%: Normal', '85% ~ 94%: Warning', '95%+: Danger'],
-            },
-            {
-              label: 'Container',
-              key: 'container',
-              thresholds: '{ warning: 70, danger: 95 }',
-              ranges: ['0% ~ 69%: Normal', '70% ~ 94%: Warning', '95%+: Danger'],
-            },
-            {
               label: 'Default',
               key: 'default',
-              thresholds: '{ warning: 70, danger: 95 }',
-              ranges: ['0% ~ 69%: Normal', '70% ~ 94%: Warning', '95%+: Danger'],
+              thresholds: '{ warning: 70, danger: 90 }',
+              ranges: ['0% ~ 69%: Normal', '70-89%: Warning', '90%+: Danger'],
             },
           ].map(({ label, key, thresholds, ranges }) => (
             <VStack key={label} gap={3}>
@@ -127,10 +103,10 @@ export function StatusColorsPage() {
             <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] flex flex-col gap-1">
               <div>{"import { STATUS_THRESHOLDS } from '@/design-system';"}</div>
               <div className="mt-1">
-                {'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}
+                {'<ProgressBar thresholds={STATUS_THRESHOLDS.default} ... />'}
               </div>
               <div className="mt-2 text-[var(--color-text-muted)]">
-                Available presets: compute · computeAdmin · storage · container · default
+                All presets share the same thresholds: warning 70%, danger 90%
               </div>
             </div>
           </VStack>

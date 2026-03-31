@@ -338,6 +338,13 @@ export function ButtonPage() {
                 >
                   Hover
                 </Button>
+                <Button
+                  size="sm"
+                  variant="primary"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
+                </Button>
               </VStack>
               <VStack gap={1.5} align="center">
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
@@ -352,6 +359,13 @@ export function ButtonPage() {
                   className="bg-[var(--button-secondary-hover-bg)]"
                 >
                   Hover
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
                 </Button>
               </VStack>
               <VStack gap={1.5} align="center">
@@ -368,6 +382,13 @@ export function ButtonPage() {
                 >
                   Hover
                 </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
+                </Button>
               </VStack>
               <VStack gap={1.5} align="center">
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
@@ -378,6 +399,13 @@ export function ButtonPage() {
                 </Button>
                 <Button size="sm" variant="ghost" className="bg-[var(--button-ghost-hover-bg)]">
                   Hover
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
                 </Button>
               </VStack>
               <VStack gap={1.5} align="center">
@@ -394,6 +422,13 @@ export function ButtonPage() {
                 >
                   Hover
                 </Button>
+                <Button
+                  size="sm"
+                  variant="muted"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
+                </Button>
               </VStack>
               <VStack gap={1.5} align="center">
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
@@ -405,6 +440,13 @@ export function ButtonPage() {
                 <Button size="sm" variant="danger" className="bg-[var(--color-state-danger-hover)]">
                   Hover
                 </Button>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
+                </Button>
               </VStack>
               <VStack gap={1.5} align="center">
                 <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
@@ -415,6 +457,13 @@ export function ButtonPage() {
                 </Button>
                 <Button size="sm" variant="link" className="underline underline-offset-4">
                   Hover
+                </Button>
+                <Button
+                  size="sm"
+                  variant="link"
+                  className="ring-1 ring-[var(--color-border-focus)] ring-offset-1"
+                >
+                  Focused
                 </Button>
               </VStack>
             </div>

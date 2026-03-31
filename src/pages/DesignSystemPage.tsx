@@ -16304,138 +16304,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     </div>
                   </VStack>
 
-                  {/* Compute thresholds */}
-                  <VStack gap={3}>
-                    <Label>Compute</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 69%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 89%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            90%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.compute}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 90 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
-                  {/* Compute Admin thresholds */}
-                  <VStack gap={3}>
-                    <Label>Compute Admin</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 69%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 99%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            100%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.computeAdmin}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 100 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
-                  {/* Storage thresholds */}
-                  <VStack gap={3}>
-                    <Label>Storage</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 84%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            85% ~ 94%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            95%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.storage}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 85, danger: 95 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
-                  {/* Container thresholds */}
-                  <VStack gap={3}>
-                    <Label>Container</Label>
-                    <div className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
-                      <div className="flex flex-wrap gap-6">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-success)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            0% ~ 69%: Normal
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 94%: Warning
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            95%+: Danger
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                        <code>{'thresholds={STATUS_THRESHOLDS.container}'}</code>
-                        <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 95 }'}
-                        </span>
-                      </div>
-                    </div>
-                  </VStack>
-
                   {/* Default thresholds */}
                   <VStack gap={3}>
                     <Label>Default</Label>
@@ -16450,20 +16318,20 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <div className="flex items-center gap-2">
                           <div className="w-4 h-4 rounded bg-[var(--color-state-warning)]" />
                           <span className="text-body-md text-[var(--color-text-default)]">
-                            70% ~ 94%: Warning
+                            70-89%: Warning
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-4 h-4 rounded bg-[var(--color-state-danger)]" />
                           <span className="text-body-md text-[var(--color-text-default)]">
-                            95%+: Danger
+                            90%+: Danger
                           </span>
                         </div>
                       </div>
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
                         <code>{'thresholds={STATUS_THRESHOLDS.default}'}</code>
                         <span className="ml-2 text-[var(--color-text-muted)]">
-                          {'{ warning: 70, danger: 95 }'}
+                          {'{ warning: 70, danger: 90 }'}
                         </span>
                       </div>
                     </div>
@@ -16477,11 +16345,10 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         <code>{"import { STATUS_THRESHOLDS } from '@/design-system';"}</code>
                       </div>
                       <div className="mt-1">
-                        <code>{'<ProgressBar thresholds={STATUS_THRESHOLDS.compute} ... />'}</code>
+                        <code>{'<ProgressBar thresholds={STATUS_THRESHOLDS.default} ... />'}</code>
                       </div>
                       <div className="mt-2 text-[var(--color-text-muted)]">
-                        Available presets: <code>compute</code> · <code>computeAdmin</code> ·{' '}
-                        <code>storage</code> · <code>container</code> · <code>default</code>
+                        All presets share the same thresholds: warning 70%, danger 90%
                       </div>
                     </div>
                   </VStack>
