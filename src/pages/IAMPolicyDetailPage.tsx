@@ -23,7 +23,6 @@ import {
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
-import { IconAction } from '@/design-system/components/Icons';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -32,6 +31,7 @@ import {
   IconChevronDown,
   IconChevronRight,
   IconSettings,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -462,7 +462,7 @@ export default function IAMPolicyDetailPage() {
     });
   };
 
-  // More Actions menu items
+  // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
     { id: 'manage-roles', label: 'Manage roles', onClick: () => console.log('Manage roles') },
     { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate') },
@@ -541,7 +541,11 @@ export default function IAMPolicyDetailPage() {
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
-              <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-default)]"
+              />
             </button>
           </ContextMenu>
         );
@@ -650,7 +654,7 @@ export default function IAMPolicyDetailPage() {
             </Button>
             <ContextMenu items={moreActionsItems} trigger="click" align="right">
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -856,9 +860,9 @@ export default function IAMPolicyDetailPage() {
                             type="button"
                             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                           >
-                            <IconAction
+                            <IconDotsCircleHorizontal
                               size={16}
-                              stroke={1}
+                              stroke={1.5}
                               className="text-[var(--color-text-default)]"
                             />
                           </button>

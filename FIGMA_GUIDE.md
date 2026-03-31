@@ -392,7 +392,6 @@ Figma에서는 `Fill container` + `Hug contents`로 반응형을 구현합니다
 | `text-heading-h4`   | `TDS/Heading/H4`      | Mona Sans / 18px / 28px / 600 |
 | `text-heading-h5`   | `TDS/Heading/H5`      | Mona Sans / 16px / 24px / 600 |
 | `text-heading-h6`   | `TDS/Heading/H6`      | Mona Sans / 14px / 20px / 600 |
-| `text-heading-h7`   | `TDS/Heading/H7`      | Mona Sans / 12px / 18px / 600 |
 | `text-body-lg`      | `TDS/Body/LG`         | Mona Sans / 14px / 20px / 400 |
 | `text-body-md`      | `TDS/Body/MD`         | Mona Sans / 12px / 18px / 400 |
 | `text-body-sm`      | `TDS/Body/SM`         | Mona Sans / 11px / 16px / 400 |

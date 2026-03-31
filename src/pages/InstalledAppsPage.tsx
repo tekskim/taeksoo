@@ -1,259 +1,213 @@
-/**
- * Installed Apps — FR-020 설치된 앱 목록 조회, FR-023 앱 삭제
- *
- * 정책서 4-1: 앱 이름, 버전, 설치된 네임스페이스, 현재 상태
- * 정책서 4-4: 삭제 확인 다이얼로그에 앱 이름 + 네임스페이스 명시
- * 정책서 2-5: Pending(Spinner) / Deployed(녹색) / Failed(빨간색)
- */
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import {
   VStack,
   TabBar,
   TopBar,
   Breadcrumb,
-  Table,
-  Button,
   PageShell,
   PageHeader,
-  ConfirmModal,
-  StatusIndicator,
-  Tooltip,
-  EmptyState,
-  ContextMenu,
-  ListToolbar,
-  FilterSearchInput,
+  Table,
   Badge,
+  Button,
+  Modal,
+  InfoBox,
+  SearchInput,
+  ListToolbar,
+  ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  type AppliedFilter,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
+import { Link, useNavigate } from 'react-router-dom';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconPackages,
-  IconTrash,
-  IconEdit,
-  IconDotsCircleHorizontal,
-  IconSearch,
-} from '@tabler/icons-react';
-import type { InstalledApp, InstalledAppStatus } from '@/pages/apps/appsTypes';
-import { installedAppsMock } from '@/pages/apps/appsMockData';
+import { IconBell, IconTerminal2, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
-/** 정책서 2-5: 상태 → StatusIndicator 매핑 */
-const statusIndicatorMap: Record<InstalledAppStatus, 'active' | 'building' | 'error'> = {
-  Deployed: 'active',
-  Pending: 'building',
-  Failed: 'error',
-};
+function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <button
+      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+      aria-label={label}
+    >
+      <span className="text-[var(--color-text-muted)]">{icon}</span>
+    </button>
+  );
+}
 
-/* ────────────────────────────────────────────────────────────
-   InstalledAppsPage
-   ──────────────────────────────────────────────────────────── */
+/* ----------------------------------------
+   Types
+   ---------------------------------------- */
 
-export function InstalledAppsPage() {
+interface InstalledApp {
+  id: string;
+  name: string;
+  version: string;
+  namespace: string;
+  status: string;
+  chartName: string;
+  lastDeployed: string;
+}
+
+/* ----------------------------------------
+   Mock Data
+   ---------------------------------------- */
+
+const installedApps: InstalledApp[] = [
+  {
+    id: '1',
+    name: 'postgresql-1',
+    version: 'v16.2',
+    namespace: 'default',
+    status: 'Deployed',
+    chartName: 'postgresql',
+    lastDeployed: 'Mar 01, 2026',
+  },
+  {
+    id: '2',
+    name: 'kafka',
+    version: 'v08.33',
+    namespace: 'data',
+    status: 'Deployed',
+    chartName: 'kafka',
+    lastDeployed: 'Mar 10, 2026',
+  },
+  {
+    id: '3',
+    name: 'valkey',
+    version: 'v80.2',
+    namespace: 'cache',
+    status: 'Deployed',
+    chartName: 'valkey',
+    lastDeployed: 'Mar 06, 2026',
+  },
+  {
+    id: '4',
+    name: 'nginx-1',
+    version: 'v4.05',
+    namespace: 'ingress-nginx',
+    status: 'Deployed',
+    chartName: 'nginx',
+    lastDeployed: 'Mar 08, 2026',
+  },
+  {
+    id: '5',
+    name: 'milvus',
+    version: 'v4.27',
+    namespace: 'ai',
+    status: 'Pending',
+    chartName: 'milvus',
+    lastDeployed: 'Mar 12, 2026',
+  },
+  {
+    id: '6',
+    name: 'postgresql-1',
+    version: 'v16.30',
+    namespace: 'ai',
+    status: 'Failed',
+    chartName: 'postgresql',
+    lastDeployed: 'Mar 12, 2026',
+  },
+];
+
+/* ----------------------------------------
+   Component
+   ---------------------------------------- */
+
+export default function InstalledAppsPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 248 : 48;
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [appToDelete, setAppToDelete] = useState<InstalledApp | null>(null);
-  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<InstalledApp | null>(null);
 
-  /* ── 필터 적용 ── */
-  const filteredApps = useMemo(() => {
-    const nameFilter = appliedFilters.find((f) => f.id === 'name')?.value ?? '';
-    const chartFilter = appliedFilters.find((f) => f.id === 'chart')?.value ?? '';
-    const nsFilter = appliedFilters.find((f) => f.id === 'namespace')?.value ?? '';
-    const statusFilter = appliedFilters.find((f) => f.id === 'status')?.value ?? '';
+  const filteredApps = installedApps.filter(
+    (app) =>
+      !searchQuery ||
+      app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.chartName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.namespace.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-    return installedAppsMock.filter((app) => {
-      if (nameFilter && !app.releaseName.toLowerCase().includes(nameFilter.toLowerCase()))
-        return false;
-      if (chartFilter && !app.name.toLowerCase().includes(chartFilter.toLowerCase())) return false;
-      if (nsFilter && !app.namespace.toLowerCase().includes(nsFilter.toLowerCase())) return false;
-      if (statusFilter && app.status !== statusFilter) return false;
-      return true;
-    });
-  }, [appliedFilters]);
-
-  const filterFields = [
+  const getContextMenuItems = (row: InstalledApp): ContextMenuItem[] => [
     {
-      id: 'name',
-      label: 'App name',
-      type: 'text' as const,
-      placeholder: 'Search by app name (release)...',
+      id: 'edit',
+      label: 'Edit',
+      onClick: () => navigate(`/container/installed-apps/${row.id}/edit`),
     },
     {
-      id: 'chart',
-      label: 'Chart name',
-      type: 'text' as const,
-      placeholder: 'Search by chart name...',
-    },
-    {
-      id: 'namespace',
-      label: 'Namespace',
-      type: 'text' as const,
-      placeholder: 'Search by namespace...',
-    },
-    {
-      id: 'status',
-      label: 'Status',
-      type: 'select' as const,
-      options: [
-        { value: 'Deployed', label: 'Deployed' },
-        { value: 'Pending', label: 'Pending' },
-        { value: 'Failed', label: 'Failed' },
-      ],
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      divider: true,
+      onClick: () => setDeleteTarget(row),
     },
   ];
 
-  /* ── Handlers ── */
-  const openDetail = (app: InstalledApp) => {
-    navigate(`/container/apps/installed-apps/${app.id}`);
-  };
-
-  const openEditPage = (app: InstalledApp, e?: React.MouseEvent) => {
-    e?.stopPropagation?.();
-    navigate(`/container/apps/installed-apps/${app.id}/edit`);
-  };
-
-  const openDeleteModal = (app: InstalledApp, e?: React.MouseEvent) => {
-    e?.stopPropagation?.();
-    setAppToDelete(app);
-    setDeleteModalOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!appToDelete) return;
-    setDeleteSubmitting(true);
-    await new Promise((r) => setTimeout(r, 600));
-    setDeleteSubmitting(false);
-    setDeleteModalOpen(false);
-    setAppToDelete(null);
-  };
-
-  /* ── Table columns (정책서 4-1) ── */
   const columns: TableColumn<InstalledApp>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: '120px',
-      minWidth: 120,
-      align: 'center',
-      render: (value: InstalledAppStatus, row) => {
-        const indicator = (
-          <StatusIndicator status={statusIndicatorMap[value]} label={value} layout="default" />
-        );
-        if (value === 'Failed' && row.errorMessage) {
-          return (
-            <Tooltip content={row.errorMessage} position="top">
-              {indicator}
-            </Tooltip>
-          );
-        }
-        return indicator;
-      },
-    },
-    {
-      key: 'releaseName',
-      label: 'App name',
-      flex: 1,
-      minWidth: 140,
-      render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
-          onClick={() => openDetail(row)}
-        >
-          {value}
-        </span>
+      width: fixedColumns.statusLabel,
+      render: (_value, row) => (
+        <Badge theme={getContainerStatusTheme(row.status)} type="subtle" size="sm">
+          {row.status}
+        </Badge>
       ),
-    },
-    {
-      key: 'namespace',
-      label: 'Namespace',
-      minWidth: 120,
-      width: '130px',
     },
     {
       key: 'name',
-      label: 'Chart name',
-      minWidth: 120,
-      width: '140px',
-      render: (value: string) => (
-        <span className="text-body-md text-[var(--color-text-muted)]">{value}</span>
+      label: 'App name',
+      minWidth: columnMinWidths.name,
+      render: (value, row) => (
+        <Link
+          to={`/container/installed-apps/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate block min-w-0"
+        >
+          {value}
+        </Link>
       ),
     },
+    { key: 'namespace', label: 'Namespace', minWidth: columnMinWidths.namespace },
+    { key: 'chartName', label: 'Chart name', minWidth: '140px' },
     {
       key: 'version',
       label: 'Version',
-      width: '100px',
-      render: (value: string) => (
-        <Badge variant="default" size="sm">
-          v{value}
+      minWidth: '100px',
+      render: (value) => (
+        <Badge theme="white" size="sm">
+          {value}
         </Badge>
       ),
     },
     {
       key: 'lastDeployed',
       label: 'Last deployed',
-      flex: 1,
-      minWidth: 140,
-      render: (value: string | undefined, row) => (
-        <span className="text-body-md text-[var(--color-text-muted)]">
-          {value ?? row.installedAt ?? '—'}
-        </span>
-      ),
+      minWidth: columnMinWidths.createdAt,
     },
     {
       key: 'actions',
-      label: 'Actions',
-      width: '64px',
+      label: 'Action',
+      width: fixedColumns.actions,
       align: 'center',
-      render: (_, row) => {
-        const isEditDisabled = row.status === 'Pending';
-        const menuItems: ContextMenuItem[] = [
-          {
-            id: 'edit',
-            label: 'Edit',
-            icon: <IconEdit size={14} stroke={1.5} />,
-            onClick: () => openEditPage(row),
-            disabled: isEditDisabled,
-            divider: true,
-          },
-          {
-            id: 'delete',
-            label: 'Delete',
-            icon: <IconTrash size={14} stroke={1.5} />,
-            onClick: () => openDeleteModal(row),
-          },
-        ];
-
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click" align="right">
-              <button
-                type="button"
-                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
-                aria-label={`Actions for ${row.releaseName}`}
-              >
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_value, row) => (
+        <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
+          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
+            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-muted)]"
+              />
+            </button>
+          </ContextMenu>
+        </div>
+      ),
     },
   ];
-
-  const isEmpty = filteredApps.length === 0;
-  const hasFilters = appliedFilters.length > 0;
 
   return (
     <PageShell
@@ -282,14 +236,22 @@ export function InstalledAppsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/apps/catalog' },
+                { label: 'Apps', href: '/container/catalog' },
                 { label: 'Installed Apps' },
               ]}
             />
           }
+          actions={
+            <>
+              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
+              <TopBarActionButton
+                icon={<IconBell size={16} stroke={1.5} />}
+                label="Notifications"
+              />
+            </>
+          }
         />
       }
-      contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
         <PageHeader title="Installed Apps" />
@@ -297,75 +259,53 @@ export function InstalledAppsPage() {
         <ListToolbar
           primaryActions={
             <ListToolbar.Actions>
-              <FilterSearchInput
-                filters={filterFields}
-                appliedFilters={appliedFilters}
-                onFiltersChange={setAppliedFilters}
+              <SearchInput
                 placeholder="Search installed apps by attributes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onClear={() => setSearchQuery('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
-                hideAppliedFilters
               />
             </ListToolbar.Actions>
           }
-          filters={appliedFilters.map((f) => ({
-            id: f.id,
-            label: filterFields.find((ff) => ff.id === f.id)?.label ?? f.id,
-            value: String(f.value),
-          }))}
-          onFilterRemove={(id) => setAppliedFilters((prev) => prev.filter((f) => f.id !== id))}
-          onFiltersClear={() => setAppliedFilters([])}
         />
 
-        {isEmpty ? (
-          hasFilters ? (
-            <EmptyState
-              variant="inline"
-              icon={<IconSearch size={48} stroke={1} />}
-              title="No results found"
-              description="No installed apps match the selected filters. Try adjusting your search criteria."
-            />
-          ) : (
-            <EmptyState
-              variant="card"
-              icon={<IconPackages size={48} stroke={1} />}
-              title="No installed apps"
-              description="Install apps from the Catalog to see them here."
-              action={
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/container/apps/catalog')}
-                >
-                  Go to Catalog
-                </Button>
-              }
-            />
-          )
-        ) : (
-          <Table<InstalledApp> columns={columns} data={filteredApps} rowKey="id" />
-        )}
+        <Table
+          columns={columns}
+          data={filteredApps}
+          rowKey="id"
+          emptyMessage="No installed apps found"
+        />
       </VStack>
 
-      {/* 정책서 4-4: 삭제 확인 다이얼로그에 앱 이름 + 네임스페이스 명시 */}
-      <ConfirmModal
-        isOpen={deleteModalOpen}
-        onClose={() => {
-          setDeleteModalOpen(false);
-          setAppToDelete(null);
-        }}
-        onConfirm={handleDeleteConfirm}
+      <Modal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
         title="Delete App"
         description="This will remove the Helm release and all associated Kubernetes resources. This action cannot be undone."
-        infoLabel="App / Namespace"
-        infoValue={appToDelete ? `${appToDelete.releaseName} / ${appToDelete.namespace}` : ''}
-        cancelText="Cancel"
-        confirmText="Delete"
-        confirmVariant="danger"
-        isLoading={deleteSubmitting}
-      />
+        size="sm"
+      >
+        <InfoBox
+          label="App / Namespace"
+          value={deleteTarget ? `${deleteTarget.name} / ${deleteTarget.namespace}` : ''}
+        />
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)} className="flex-1">
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              console.log('Delete', deleteTarget?.id);
+              setDeleteTarget(null);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }
-
-export default InstalledAppsPage;

@@ -27,6 +27,7 @@ import { ScheduledTasksPage } from '@/pages/ScheduledTasksPage';
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
 import { InstanceDetailPage } from '@/pages/InstanceDetailPage';
+import { BareMetalDetailPage } from '@/pages/BareMetalDetailPage';
 import { HomePage } from '@/pages/HomePage';
 import { ComputeHomePage } from '@/pages/ComputeHomePage';
 import { ComputeAdminHomePage } from '@/pages/ComputeAdminHomePage';
@@ -82,6 +83,11 @@ import LoadBalancerDetailPage from '@/pages/LoadBalancerDetailPage';
 import CreateLoadBalancerPage from '@/pages/CreateLoadBalancerPage';
 import { CertificatesPage } from '@/pages/CertificatesPage';
 import CertificateDetailPage from '@/pages/CertificateDetailPage';
+import FirewallsPage from '@/pages/FirewallsPage';
+import FirewallDetailPage from '@/pages/FirewallDetailPage';
+import FirewallPolicyDetailPage from '@/pages/FirewallPolicyDetailPage';
+import FirewallRuleDetailPage from '@/pages/FirewallRuleDetailPage';
+import CreateFirewallRulePage from '@/pages/CreateFirewallRulePage';
 import SubnetDetailPage from '@/pages/SubnetDetailPage';
 import ListenerDetailPage from '@/pages/ListenerDetailPage';
 import PoolDetailPage from '@/pages/PoolDetailPage';
@@ -270,11 +276,11 @@ import { PodDisruptionBudgetDetailPage } from '@/pages/PodDisruptionBudgetDetail
 import { ClusterManagementPage } from '@/pages/ClusterManagementPage';
 import { ClusterDetailPage } from '@/pages/ClusterDetailPage';
 import { CreateClusterPage } from '@/pages/CreateClusterPage';
-import { AppCatalogPage } from '@/pages/AppCatalogPage';
-import { AppInstallPage } from '@/pages/AppInstallPage';
-import { AppEditPage } from '@/pages/AppEditPage';
-import { InstalledAppsPage } from '@/pages/InstalledAppsPage';
-import { InstalledAppDetailPage } from '@/pages/InstalledAppDetailPage';
+import CatalogPage from '@/pages/CatalogPage';
+import InstalledAppsPage from '@/pages/InstalledAppsPage';
+import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
+import CatalogInstallPage from '@/pages/CatalogInstallPage';
+import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -316,6 +322,7 @@ import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
 import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
 import { DesignSystemLayout } from '@/pages/design/DesignSystemLayout';
+import { LabLayout } from '@/pages/lab/LabLayout';
 import { DesignOverviewPage } from '@/pages/design/DesignOverviewPage';
 import { AllComponentsPage } from '@/pages/design/AllComponentsPage';
 import { TokenArchitecturePage } from '@/pages/design/foundation/TokenArchitecturePage';
@@ -405,6 +412,9 @@ import { AIWorkspacePrototypePage } from '@/pages/design/prototype/AIWorkspacePr
 import { NestedBoxTestPage } from '@/pages/design/test/NestedBoxTestPage';
 import { DesignAuditPage } from '@/pages/design/DesignAuditPage';
 import { DesignTodoPage } from '@/pages/design/DesignTodoPage';
+import { SharedComponentsPage } from '@/pages/design/SharedComponentsPage';
+import { ChangelogPage } from '@/pages/design/ChangelogPage';
+import { ProjectSelectorPage } from '@/pages/design/components/ProjectSelectorPage';
 import { ChartOverviewPage } from '@/pages/design/charts/ChartOverviewPage';
 import { StatusColorsPage } from '@/pages/design/charts/StatusColorsPage';
 import { UsageChartPage } from '@/pages/design/charts/UsageChartPage';
@@ -419,7 +429,6 @@ import { DesktopPage } from '@/pages/DesktopPage';
 import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
 import { TableStyleGuidePage } from '@/pages/TableStyleGuidePage';
 import { TopologyPopoversPage } from '@/pages/TopologyPopoversPage';
-import { IconographyPage } from '@/pages/IconographyPage';
 import { CreatePagesDirectoryPage } from '@/pages/CreatePagesDirectoryPage';
 import { DetailPagesDirectoryPage } from '@/pages/DetailPagesDirectoryPage';
 import { FormPatternsPage } from '@/pages/FormPatternsPage';
@@ -508,6 +517,7 @@ function AppRoutes() {
       <Route path="/compute/instances/create" element={<CreateInstancePage />} />
       <Route path="/compute/instances/create-v2" element={<CreateInstancePage />} />
       <Route path="/compute/instances/:id" element={<InstanceDetailPage />} />
+      <Route path="/compute/bare-metal/:id" element={<BareMetalDetailPage />} />
       <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
       <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
       <Route path="/compute/instance-templates/create-v2" element={<CreateTemplatePage />} />
@@ -556,6 +566,12 @@ function AppRoutes() {
       <Route path="/compute/l7-policies/:id" element={<L7PolicyDetailPage />} />
       <Route path="/compute/certificates" element={<CertificatesPage />} />
       <Route path="/compute/certificates/:id" element={<CertificateDetailPage />} />
+      <Route path="/compute/firewall" element={<FirewallsPage />} />
+      <Route path="/compute/firewalls/:id" element={<FirewallDetailPage />} />
+      <Route path="/compute/firewall-policies/:id" element={<FirewallPolicyDetailPage />} />
+      <Route path="/compute/firewall-rules/:id" element={<FirewallRuleDetailPage />} />
+      <Route path="/compute/firewall/create-rule" element={<CreateFirewallRulePage />} />
+      <Route path="/compute/firewall/create-rule-v2" element={<CreateFirewallRulePage />} />
       <Route path="/compute/dns-zones" element={<DNSZonesPage />} />
       <Route path="/compute/backup-policies" element={<BackupPoliciesPage />} />
       <Route path="/compute/scheduled-tasks" element={<ScheduledTasksPage />} />
@@ -972,6 +988,11 @@ function AppRoutes() {
       />
       <Route path="/container/pdb/:pdbName/edit" element={<CreatePodDisruptionBudgetPage />} />
       <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
+      <Route path="/container/catalog" element={<CatalogPage />} />
+      <Route path="/container/catalog/:appId/install" element={<CatalogInstallPage />} />
+      <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
+      <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
+      <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
       <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
       <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
@@ -1114,6 +1135,7 @@ function AppRoutes() {
         <Route path="components/disclosure" element={<DisclosurePage />} />
         <Route path="components/window-control" element={<WindowControlPage />} />
         <Route path="components/scrollbar" element={<ScrollbarPage />} />
+        <Route path="components/project-selector" element={<ProjectSelectorPage />} />
         <Route path="patterns/detail-header" element={<DetailHeaderPage />} />
         <Route path="patterns/editor" element={<EditorPage />} />
         <Route path="patterns/section-card" element={<SectionCardPage />} />
@@ -1133,10 +1155,7 @@ function AppRoutes() {
         <Route path="patterns/form-field-pattern" element={<FormFieldPatternPage />} />
         <Route path="patterns/shell" element={<ShellPatternPage />} />
         <Route path="patterns/empty-states" element={<EmptyStatesPage />} />
-        {/* AI Workspace prototype has been moved outside DesignSystemLayout for standalone PageShell */}
-        <Route path="test/nested-box" element={<NestedBoxTestPage />} />
-        <Route path="audit" element={<DesignAuditPage />} />
-        <Route path="todo" element={<DesignTodoPage />} />
+        <Route path="changelog" element={<ChangelogPage />} />
         <Route path="patterns/*" element={<DesignOverviewPage />} />
         <Route path="charts/overview" element={<ChartOverviewPage />} />
         <Route path="charts/status-colors" element={<StatusColorsPage />} />
@@ -1157,12 +1176,8 @@ function AppRoutes() {
         <Route path="charts/pie-chart" element={<PieChartPage />} />
         <Route path="charts/tooltip" element={<ChartTooltipPage />} />
         <Route path="charts/*" element={<DesignOverviewPage />} />
-        <Route path="figma/guide" element={<FigmaGuidePage />} />
-        <Route path="figma/foundation" element={<FigmaFoundationPage />} />
-        <Route path="figma/components" element={<FigmaComponentsPage />} />
       </Route>
       {/* Standalone design showcase pages (outside DesignSystemLayout) */}
-      <Route path="/design/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
       <Route path="/design/drawers" element={<DrawersPage />} />
       <Route path="/design/modals" element={<ModalsPage />} />
       <Route path="/design/cloudbuilder-modals" element={<CloudBuilderModalsPage />} />
@@ -1173,17 +1188,28 @@ function AppRoutes() {
       {/* Legacy route */}
       <Route path="/design-system" element={<DesignSystemPage />} />
 
+      {/* Lab Routes */}
+      <Route path="/lab" element={<LabLayout />}>
+        <Route path="figma/guide" element={<FigmaGuidePage />} />
+        <Route path="figma/foundation" element={<FigmaFoundationPage />} />
+        <Route path="figma/components" element={<FigmaComponentsPage />} />
+        <Route path="audit" element={<DesignAuditPage />} />
+        <Route path="todo" element={<DesignTodoPage />} />
+        <Route path="shared-components" element={<SharedComponentsPage />} />
+        <Route path="test/nested-box" element={<NestedBoxTestPage />} />
+        <Route path="sidebar-icons" element={<SidebarIconsPage />} />
+        <Route path="topology-popovers" element={<TopologyPopoversPage />} />
+        <Route path="create-pages" element={<CreatePagesDirectoryPage />} />
+        <Route path="form-patterns" element={<FormPatternsPage />} />
+      </Route>
+      <Route path="/lab/prototype/ai-workspace" element={<AIWorkspacePrototypePage />} />
+
       {/* Desktop Routes */}
       <Route path="/desktop" element={<DesktopPage />} />
 
       {/* Developer Resources */}
-      <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
       <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
-      <Route path="/topology-popovers" element={<TopologyPopoversPage />} />
-      <Route path="/iconography" element={<IconographyPage />} />
-      <Route path="/create-pages" element={<CreatePagesDirectoryPage />} />
       <Route path="/detail-pages" element={<DetailPagesDirectoryPage />} />
-      <Route path="/form-patterns" element={<FormPatternsPage />} />
       <Route path="/system-errors" element={<SystemErrorPagesPage />} />
       <Route path="/system-errors/:variant" element={<SystemErrorPagesPage />} />
 

@@ -24,6 +24,8 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Popover,
+  Badge,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -696,9 +698,36 @@ export default function NetworkDetailPage() {
         const displaySg = row.securityGroups[0];
         const additionalCount = sgCount - 1;
         return (
-          <span className="text-[var(--color-text-default)]">
+          <span className="flex items-center gap-1 text-[var(--color-text-default)]">
             {displaySg}
-            {additionalCount > 0 && ` (+${additionalCount})`}
+            {additionalCount > 0 && (
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Security Groups ({sgCount})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {row.securityGroups.map((sg, i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {sg}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{additionalCount}
+                  </span>
+                </Popover>
+              </span>
+            )}
           </span>
         );
       },
@@ -794,14 +823,7 @@ export default function NetworkDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Network name" value={network.networkName} />
                     <SectionCard.DataRow

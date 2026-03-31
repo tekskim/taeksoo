@@ -39,7 +39,7 @@ interface WizardSummaryProps {
 export function WizardSummary({ title = 'Summary', items, onItemClick }: WizardSummaryProps) {
   return (
     <div
-      data-figma-name="WizardSummary"
+      data-figma-name="[TDS] Stepper.Summary"
       className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4"
     >
       <VStack gap={3}>

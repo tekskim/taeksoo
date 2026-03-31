@@ -105,64 +105,38 @@ function SectionCardGuidelines() {
           <tbody>
             <tr>
               <Td>Border</Td>
-              <Td>
-                <span className="font-mono">1px default</span>
-              </Td>
-              <Td>
-                <span className="font-mono">2px primary (blue)</span>
-              </Td>
+              <Td>1px default</Td>
+              <Td>2px primary (blue)</Td>
             </tr>
             <tr>
               <Td>Header ↔ Content gap</Td>
-              <Td>
-                <span className="font-mono">gap-3 (12px)</span>
-              </Td>
-              <Td>
-                <span className="font-mono">gap-3 (12px)</span>
-              </Td>
+              <Td>gap-3 (12px)</Td>
+              <Td>gap-3 (12px)</Td>
             </tr>
             <tr>
               <Td>Header divider</Td>
-              <Td>
-                <span className="font-mono">showDivider=true</span>
-              </Td>
-              <Td>
-                <span className="font-mono">showDivider=false</span> (Content 내부로 이동)
-              </Td>
+              <Td>showDivider=true</Td>
+              <Td>showDivider=false (Content 내부로 이동)</Td>
             </tr>
             <tr>
               <Td>Content dividers</Td>
-              <Td>
-                <span className="font-mono">showDividers=true</span> (자동)
-              </Td>
-              <Td>
-                <span className="font-mono">showDividers=false</span> (수동 관리)
-              </Td>
+              <Td>showDividers=true (자동)</Td>
+              <Td>showDividers=false (수동 관리)</Td>
             </tr>
             <tr>
               <Td>필드 간격</Td>
-              <Td>
-                <span className="font-mono">gap-3 (12px)</span> + divider
-              </Td>
-              <Td>
-                <span className="font-mono">py-6 (24px)</span> per field
-              </Td>
+              <Td>gap-3 (12px) + divider</Td>
+              <Td>py-6 (24px) per field</Td>
             </tr>
             <tr>
               <Td>라벨 스타일</Td>
-              <Td>
-                <span className="font-mono">text-label-sm</span> (11px)
-              </Td>
-              <Td>
-                <span className="font-mono">text-label-lg</span> (13px)
-              </Td>
+              <Td>text-label-sm (11px)</Td>
+              <Td>text-label-lg (13px)</Td>
             </tr>
             <tr>
               <Td>Footer 간격</Td>
               <Td>—</Td>
-              <Td>
-                <span className="font-mono">pt-3 (12px)</span> Next 버튼
-              </Td>
+              <Td>pt-3 (12px) Next 버튼</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -223,17 +197,11 @@ function SectionCardGuidelines() {
             </tr>
             <tr>
               <Td>Value (link)</Td>
-              <Td>
-                <span className="font-mono">isLink</span> prop으로 클릭 가능한 링크 형태로 표시
-              </Td>
+              <Td>isLink prop으로 클릭 가능한 링크 형태로 표시</Td>
             </tr>
             <tr>
               <Td>Value (custom)</Td>
-              <Td>
-                <span className="font-mono">value</span> prop 대신{' '}
-                <span className="font-mono">children</span>으로 StatusIndicator, Chip 등 커스텀
-                콘텐츠 삽입 가능
-              </Td>
+              <Td>value prop 대신 children으로 StatusIndicator, Chip 등 커스텀 콘텐츠 삽입 가능</Td>
             </tr>
           </tbody>
         </TableWrapper>
@@ -248,39 +216,27 @@ function SectionCardGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">padding</span>
-              </Td>
+              <Td>padding</Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">border-radius</span>
-              </Td>
+              <Td>border-radius</Td>
               <Td>6px (md)</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">header.height</span>
-              </Td>
+              <Td>header.height</Td>
               <Td>32px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">title</span>
-              </Td>
+              <Td>title</Td>
               <Td>14px medium</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">label</span>
-              </Td>
+              <Td>label</Td>
               <Td>11px medium</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">value</span>
-              </Td>
+              <Td>value</Td>
               <Td>12px regular</Td>
             </tr>
           </tbody>
@@ -358,8 +314,7 @@ function SectionCardGuidelines() {
               레이블만으로 값의 의미를 파악할 수 있어야 한다.
             </li>
             <li>
-              <strong>Value (빈 값 처리)</strong>: 값이 없을 경우 빈 칸 대신{' '}
-              <span className="font-mono">—</span> (em dash)로 표시한다.
+              <strong>Value (빈 값 처리)</strong>: 값이 없을 경우 빈 칸 대신 — (em dash)로 표시한다.
             </li>
           </ul>
         </Prose>
@@ -435,7 +390,7 @@ export function SectionCardPage() {
             <VStack gap={1}>
               <Label>With Link Values</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                <span className="font-mono">isLink</span> prop으로 클릭 가능한 링크 형태로 값 표시.
+                isLink prop으로 클릭 가능한 링크 형태로 값 표시.
               </span>
             </VStack>
             <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
@@ -659,39 +614,27 @@ export function SectionCardPage() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">padding</span>
-              </Td>
+              <Td>padding</Td>
               <Td>16×12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">border-radius</span>
-              </Td>
+              <Td>border-radius</Td>
               <Td>6px (md)</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">header.height</span>
-              </Td>
+              <Td>header.height</Td>
               <Td>32px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">title</span>
-              </Td>
+              <Td>title</Td>
               <Td>14px medium</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">label</span>
-              </Td>
+              <Td>label</Td>
               <Td>11px medium</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">value</span>
-              </Td>
+              <Td>value</Td>
               <Td>12px regular</Td>
             </tr>
           </tbody>

@@ -23,6 +23,7 @@ import {
   type ContextMenuItem,
   type TableColumn,
   columnMinWidths,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -31,11 +32,12 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconChevronDown,
   IconCirclePlus,
   IconX,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -200,7 +202,7 @@ export function NetworkPolicyDetailPage() {
   };
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
@@ -274,10 +276,12 @@ export function NetworkPolicyDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
           onClick={() => navigate(`/container/pods/${value}`)}
         >
           {value}
@@ -290,7 +294,14 @@ export function NetworkPolicyDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value}>
+            {display}
+          </span>
+        );
+      },
     },
   ];
 
@@ -335,6 +346,20 @@ export function NetworkPolicyDetailPage() {
             <>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
@@ -356,9 +381,7 @@ export function NetworkPolicyDetailPage() {
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={networkPolicyData.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>

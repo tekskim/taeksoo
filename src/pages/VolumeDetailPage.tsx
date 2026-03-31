@@ -33,8 +33,8 @@ import {
   IconTrash,
   IconChevronDown,
   IconDotsCircleHorizontal,
-  IconExternalLink,
   IconDownload,
+  IconEdit,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -427,16 +427,14 @@ export function VolumeDetailPage() {
       label: 'Name',
       flex: 1,
       minWidth: columnMinWidths.name,
-      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/volume-snapshots/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -498,16 +496,14 @@ export function VolumeDetailPage() {
       label: 'Name',
       flex: 1,
       minWidth: columnMinWidths.name,
-      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
             to={`/compute/volume-backups/${row.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -518,6 +514,7 @@ export function VolumeDetailPage() {
       label: 'Backup mode',
       flex: 1,
       minWidth: columnMinWidths.backupMode,
+      sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
@@ -596,46 +593,85 @@ export function VolumeDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{volume.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-              Create transfer
-            </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-              Delete
-            </Button>
-            <ContextMenu
-              items={
-                [
-                  {
-                    id: 'data-protection',
-                    label: 'Data protection',
-                    onClick: () => console.log('Data protection'),
-                  },
-                  { id: 'operate', label: 'Operate', onClick: () => console.log('Operate') },
-                  {
-                    id: 'configuration',
-                    label: 'Configuration',
-                    submenu: [
+            {activeDetailTab === 'details' ? (
+              <>
+                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  Create transfer
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                  Delete
+                </Button>
+                <ContextMenu
+                  items={
+                    [
                       {
-                        id: 'extend-volume',
-                        label: 'Extend volume',
-                        onClick: () => console.log('Extend volume'),
+                        id: 'data-protection',
+                        label: 'Data protection',
+                        onClick: () => console.log('Data protection'),
                       },
+                      { id: 'operate', label: 'Operate', onClick: () => console.log('Operate') },
                       {
-                        id: 'change-type',
-                        label: 'Change type',
-                        onClick: () => console.log('Change type'),
+                        id: 'configuration',
+                        label: 'Configuration',
+                        submenu: [
+                          {
+                            id: 'extend-volume',
+                            label: 'Extend volume',
+                            onClick: () => console.log('Extend volume'),
+                          },
+                          {
+                            id: 'change-type',
+                            label: 'Change type',
+                            onClick: () => console.log('Change type'),
+                          },
+                        ],
                       },
-                    ],
-                  },
-                  { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
-                ] as ContextMenuItem[]
-              }
-              trigger="click"
-            >
-              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
-              </Button>
-            </ContextMenu>
+                      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
+                    ] as ContextMenuItem[]
+                  }
+                  trigger="click"
+                >
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More actions
+                  </Button>
+                </ContextMenu>
+              </>
+            ) : (
+              <>
+                <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                  Update status
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                  Edit
+                </Button>
+                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                  Delete
+                </Button>
+                <ContextMenu
+                  items={
+                    [
+                      {
+                        id: 'update-status',
+                        label: 'Update status',
+                        onClick: () => console.log('Update status'),
+                      },
+                      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
+                      {
+                        id: 'delete',
+                        label: 'Delete',
+                        status: 'danger' as const,
+                        onClick: () => console.log('Delete'),
+                      },
+                    ] as ContextMenuItem[]
+                  }
+                  trigger="click"
+                >
+                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    More actions
+                  </Button>
+                </ContextMenu>
+              </>
+            )}
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
@@ -644,6 +680,7 @@ export function VolumeDetailPage() {
               status="active"
             />
             <DetailHeader.InfoCard label="ID" value={volume.id} copyable />
+            <DetailHeader.InfoCard label="Origin" value="Container" />
             <DetailHeader.InfoCard label="Size" value={volume.size} />
             <DetailHeader.InfoCard label="Created at" value={volume.createdAt} />
           </DetailHeader.InfoGrid>
@@ -663,13 +700,14 @@ export function VolumeDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header title="Basic information" showEditButton onEdit={() => {}} />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Volume name" value={volume.volumeName} />
                     <SectionCard.DataRow
                       label="AZ(Availability zone)"
                       value={volume.availabilityZone}
                     />
+                    <SectionCard.DataRow label="Bootable" value={volume.bootable ? 'Yes' : 'No'} />
                     <SectionCard.DataRow label="Description" value={volume.description} />
                   </SectionCard.Content>
                 </SectionCard>
@@ -684,13 +722,9 @@ export function VolumeDetailPage() {
                         volume.attachedTo && volume.attachedToId ? (
                           <Link
                             to={`/compute/instances/${volume.attachedToId}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                           >
                             {volume.attachedTo}
-                            <IconExternalLink
-                              size={12}
-                              className="text-[var(--color-action-primary)]"
-                            />
                           </Link>
                         ) : (
                           '-'
@@ -704,7 +738,28 @@ export function VolumeDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Data source Type" value={volume.dataSourceType} />
+                    <SectionCard.DataRow
+                      label="Volume snapshot"
+                      value={
+                        <Link
+                          to={`/compute/volume-snapshots/snap-001`}
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          snapshot
+                        </Link>
+                      }
+                    />
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={
+                        <Link
+                          to="/compute/images/img-001"
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          image
+                        </Link>
+                      }
+                    />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -714,11 +769,18 @@ export function VolumeDetailPage() {
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Size" value={volume.size} />
                     <SectionCard.DataRow label="Volume type" value={volume.volumeType} />
-                    <SectionCard.DataRow label="Bootable" value={volume.bootable ? 'Yes' : 'No'} />
                     <SectionCard.DataRow
                       label="Encryption"
                       value={volume.encryption ? 'Yes' : 'No'}
                     />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Metadata */}
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="{metadata}" value="{value}" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -732,9 +794,6 @@ export function VolumeDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Volume snapshots
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Snapshot
-                  </Button>
                 </div>
 
                 {/* Search */}
@@ -784,9 +843,6 @@ export function VolumeDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Volume backups
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Backup
-                  </Button>
                 </div>
 
                 {/* Search */}

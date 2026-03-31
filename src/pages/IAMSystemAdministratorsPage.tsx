@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IconDownload, IconLock } from '@tabler/icons-react';
+import { IconDownload, IconLock, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import {
   Button,
   Pagination,
@@ -19,7 +19,6 @@ import {
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
-import { IconAction } from '@/design-system/components/Icons';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
@@ -172,11 +171,9 @@ export default function IAMSystemAdministratorsPage() {
     { id: 'view', label: 'View details' },
     { id: 'edit', label: 'Edit account' },
     { id: 'reset-password', label: 'Reset password' },
-    { type: 'divider' },
     { id: 'lock', label: 'Lock account' },
     { id: 'unlock', label: 'Unlock account' },
-    { type: 'divider' },
-    { id: 'delete', label: 'Delete account', danger: true },
+    { id: 'delete', label: 'Delete account', status: 'danger' },
   ];
 
   // Table columns (using fixedColumns / columnMinWidths preset)
@@ -253,7 +250,11 @@ export default function IAMSystemAdministratorsPage() {
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
           >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),

@@ -132,7 +132,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
-  if (totalPages <= 0) return null;
+  const isEmpty = totalPages <= 0;
 
   const baseButtonClass = `
     inline-flex items-center justify-center
@@ -180,7 +180,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <nav
-      data-figma-name="Pagination"
+      data-figma-name="[TDS] Pagination"
       aria-label="Pagination"
       className={`inline-flex items-center gap-[var(--pagination-gap)] ${className}`}
       {...rest}
@@ -189,7 +189,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <button
         type="button"
         onClick={handlePrevious}
-        disabled={disabled || currentPage === 1}
+        disabled={disabled || isEmpty || currentPage === 1}
         className={navButtonClass}
         aria-label="Previous page"
       >
@@ -197,38 +197,50 @@ export const Pagination: React.FC<PaginationProps> = ({
       </button>
 
       {/* Page Numbers */}
-      {paginationRange.map((pageNumber, index) => {
-        if (pageNumber === DOTS) {
+      {isEmpty ? (
+        <button
+          type="button"
+          disabled
+          className={activePageClass}
+          aria-label="Page 1"
+          aria-current="page"
+        >
+          1
+        </button>
+      ) : (
+        paginationRange.map((pageNumber, index) => {
+          if (pageNumber === DOTS) {
+            return (
+              <span key={`dots-${index}`} className={dotsClass}>
+                ···
+              </span>
+            );
+          }
+
+          const page = pageNumber as number;
+          const isActive = page === currentPage;
+
           return (
-            <span key={`dots-${index}`} className={dotsClass}>
-              ···
-            </span>
+            <button
+              key={page}
+              type="button"
+              onClick={() => handlePageClick(page)}
+              disabled={disabled}
+              className={isActive ? activePageClass : pageButtonClass}
+              aria-label={`Page ${page}`}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {page}
+            </button>
           );
-        }
-
-        const page = pageNumber as number;
-        const isActive = page === currentPage;
-
-        return (
-          <button
-            key={page}
-            type="button"
-            onClick={() => handlePageClick(page)}
-            disabled={disabled}
-            className={isActive ? activePageClass : pageButtonClass}
-            aria-label={`Page ${page}`}
-            aria-current={isActive ? 'page' : undefined}
-          >
-            {page}
-          </button>
-        );
-      })}
+        })
+      )}
 
       {/* Next Button */}
       <button
         type="button"
         onClick={handleNext}
-        disabled={disabled || currentPage === totalPages}
+        disabled={disabled || isEmpty || currentPage === totalPages}
         className={navButtonClass}
         aria-label="Next page"
       >

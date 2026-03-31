@@ -36,7 +36,10 @@ import {
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -64,7 +67,7 @@ interface NodeRow {
 const nodesData: NodeRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'master-control-plane-high-availability-node-01',
     roles: 'Control Plane',
     version: 'v1.34',
@@ -78,7 +81,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Processing',
     name: 'worker-node-production-cluster-az1-pool-001',
     roles: 'Worker',
     version: 'v1.34',
@@ -92,7 +95,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '3',
-    status: 'True',
+    status: 'Error',
     name: 'worker-node-production-cluster-az1-pool-002',
     roles: 'Worker',
     version: 'v1.34',
@@ -106,7 +109,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '4',
-    status: 'Raw',
+    status: 'Stopped',
     name: 'worker-node-production-cluster-az2-pool-003',
     roles: 'Worker',
     version: 'v1.34',
@@ -120,7 +123,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '5',
-    status: 'None',
+    status: 'Active',
     name: 'worker-node-production-cluster-az2-pool-004',
     roles: 'Worker',
     version: 'v1.34',
@@ -134,7 +137,7 @@ const nodesData: NodeRow[] = [
   },
   {
     id: '6',
-    status: 'ImagePullBackOff',
+    status: 'Processing',
     name: 'worker-node-gpu-inference-accelerator-pool-001',
     roles: 'Worker, GPU',
     version: 'v1.34',
@@ -214,7 +217,7 @@ export function ContainerNodesPage() {
   const paginatedData = nodesData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns configuration
   const columns: TableColumn<NodeRow>[] = [
@@ -223,10 +226,14 @@ export function ContainerNodesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -235,7 +242,7 @@ export function ContainerNodesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
@@ -265,29 +272,26 @@ export function ContainerNodesPage() {
     },
     {
       key: 'ip',
-      label: 'External/Internal IP',
+      label: 'Internal IP',
       flex: 1,
       minWidth: columnMinWidths.ipAddress,
       sortable: true,
-      render: (_, row) => {
-        const ipText = `${row.externalIp} / ${row.internalIp}`;
-        return (
-          <span className="inline-flex items-center gap-1 min-w-0 w-full">
-            <span className="truncate" title={ipText}>
-              {ipText}
-            </span>
-            <span className="shrink-0" onClick={(e) => e.stopPropagation()}>
-              <CopyButton
-                value={ipText}
-                size="sm"
-                variant="ghost"
-                iconOnly
-                className="!ring-0 !ring-offset-0 !outline-none !border-transparent text-[var(--color-action-primary)]"
-              />
-            </span>
+      render: (_, row) => (
+        <span className="inline-flex items-center gap-1 min-w-0 w-full">
+          <span className="truncate" title={row.internalIp}>
+            {row.internalIp}
           </span>
-        );
-      },
+          <span className="shrink-0" onClick={(e) => e.stopPropagation()}>
+            <CopyButton
+              value={row.internalIp}
+              size="sm"
+              variant="ghost"
+              iconOnly
+              className="!ring-0 !ring-offset-0 !outline-none !border-transparent text-[var(--color-action-primary)]"
+            />
+          </span>
+        </span>
+      ),
     },
     {
       key: 'os',
@@ -301,6 +305,7 @@ export function ContainerNodesPage() {
       label: 'CPU',
       flex: 1,
       minWidth: columnMinWidths.cpuUsage,
+      sortable: true,
       render: (value: number) => <ProgressCell value={value} />,
     },
     {
@@ -308,6 +313,7 @@ export function ContainerNodesPage() {
       label: 'RAM',
       flex: 1,
       minWidth: columnMinWidths.ramUsage,
+      sortable: true,
       render: (value: number) => <ProgressCell value={value} />,
     },
     {
@@ -315,6 +321,7 @@ export function ContainerNodesPage() {
       label: 'Pods',
       flex: 1,
       minWidth: columnMinWidths.podsUsage,
+      sortable: true,
       render: (value: number) => <ProgressCell value={value} />,
     },
     {
@@ -410,6 +417,20 @@ export function ContainerNodesPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

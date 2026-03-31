@@ -49,7 +49,7 @@ export function MenuItem({
   ].join(' ');
 
   const stateStyles = active
-    ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+    ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium'
     : disabled
       ? 'text-[var(--color-text-disabled)] cursor-not-allowed'
       : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] font-normal';
@@ -58,14 +58,14 @@ export function MenuItem({
     <>
       {icon && (
         <span
-          className={`shrink-0 ${active ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'}`}
+          className={`shrink-0 ${active ? 'text-[var(--menu-item-active-text)]' : 'text-[var(--color-text-default)]'}`}
         >
           {icon}
         </span>
       )}
       <span className="text-left truncate">{label}</span>
       {badge && (
-        <span className="px-1.5 py-0.5 text-body-xs font-medium bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] rounded">
+        <span className="px-1.5 py-0.5 text-body-xs font-medium bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] rounded">
           {badge}
         </span>
       )}
@@ -77,7 +77,7 @@ export function MenuItem({
     return (
       <Link
         to={href}
-        data-figma-name="MenuItem"
+        data-figma-name="[TDS] MenuItem"
         onClick={disabled ? (e) => e.preventDefault() : onClick}
         className={twMerge(baseStyles, stateStyles)}
         aria-current={active ? 'page' : undefined}
@@ -92,7 +92,7 @@ export function MenuItem({
   return (
     <button
       type="button"
-      data-figma-name="MenuItem"
+      data-figma-name="[TDS] MenuItem"
       onClick={disabled ? undefined : onClick}
       className={twMerge(baseStyles, stateStyles)}
       aria-disabled={disabled}

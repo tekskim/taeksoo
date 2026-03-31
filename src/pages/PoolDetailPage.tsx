@@ -34,8 +34,6 @@ import {
   IconBell,
   IconChevronDown,
   IconDotsCircleHorizontal,
-  IconCopy,
-  IconExternalLink,
   IconSettings,
 } from '@tabler/icons-react';
 
@@ -278,46 +276,6 @@ export default function PoolDetailPage() {
       ),
     },
     {
-      key: 'id',
-      label: 'ID',
-      flex: 1,
-      minWidth: columnMinWidths.id,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex items-center gap-1.5">
-          <span className="text-[var(--color-text-default)]">{row.id}</span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigator.clipboard.writeText(row.id);
-            }}
-            className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-          >
-            <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
-          </button>
-        </div>
-      ),
-    },
-    {
-      key: 'source',
-      label: 'Source',
-      flex: 1,
-      minWidth: columnMinWidths.name,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/instances/${row.source.id}`}
-            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.source.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.source.id}</span>
-        </div>
-      ),
-    },
-    {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
@@ -364,10 +322,10 @@ export default function PoolDetailPage() {
         const memberMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },
           {
-            id: 'delete',
-            label: 'Delete',
+            id: 'remove',
+            label: 'Remove',
             status: 'danger',
-            onClick: () => console.log('Delete member', row.id),
+            onClick: () => console.log('Remove member', row.id),
           },
         ];
         return (
@@ -459,7 +417,7 @@ export default function PoolDetailPage() {
               trigger="click"
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -496,14 +454,7 @@ export default function PoolDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Name" value={pool.name} />
                     <SectionCard.DataRow label="Description" value={pool.description} />
@@ -521,26 +472,18 @@ export default function PoolDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Association" />
                   <SectionCard.Content>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Listener
-                        </span>
-                        {pool.listener ? (
-                          <Link
-                            to={`/compute/listeners/${pool.listener.id}`}
-                            className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                          >
-                            {pool.listener.name}
-                          </Link>
-                        ) : (
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                            -
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <SectionCard.DataRow label="Listener">
+                      {pool.listener ? (
+                        <Link
+                          to={`/compute/listeners/${pool.listener.id}`}
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                        >
+                          {pool.listener.name}
+                        </Link>
+                      ) : (
+                        '-'
+                      )}
+                    </SectionCard.DataRow>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -588,19 +531,7 @@ export default function PoolDetailPage() {
             <TabPanel value="health-monitor" className="pt-0">
               <VStack gap={4} className="pt-4">
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Health monitor"
-                    actions={
-                      <div className="flex items-center gap-2">
-                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                          Edit
-                        </Button>
-                        <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                          Delete
-                        </Button>
-                      </div>
-                    }
-                  />
+                  <SectionCard.Header title="Health monitor" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Name" value={healthMonitor.name} />
                     <SectionCard.DataRow label="State" value={healthMonitor.state} />

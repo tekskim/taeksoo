@@ -33,7 +33,10 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -56,7 +59,7 @@ interface PodRow {
 const podsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'frontend-web-application-deployment-7fb96c846b-x2vnl',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -67,7 +70,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Running',
     name: 'backend-api-gateway-service-5d4f8b7c9a-k8m2n',
     namespace: 'default',
     image: 'nginx:1.27',
@@ -78,7 +81,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Failed',
     name: 'monitoring-prometheus-alertmanager-statefulset-0',
     namespace: 'production',
     image: 'backend-api:v2.1.0',
@@ -89,7 +92,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'ingress-nginx-controller-admission-create-28t5q',
     namespace: 'analytics',
     image: 'data-processor:v1.5',
@@ -100,7 +103,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Running',
     name: 'kube-system-coredns-autoscaler-7f89d5c6b4-2pv8r',
     namespace: 'cache',
     image: 'redis:7.2',
@@ -111,7 +114,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Succeeded',
     name: 'postgresql-primary-replication-statefulset-0',
     namespace: 'database',
     image: 'postgres:15',
@@ -122,7 +125,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Running',
     name: 'database-migration-schema-update-v2-job-20240115',
     namespace: 'database',
     image: 'migration:v1.0',
@@ -133,7 +136,7 @@ const podsData: PodRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Running',
     name: 'monitoring-node-exporter-prometheus-daemonset-node1',
     namespace: 'monitoring',
     image: 'prometheus-agent:v2.45',
@@ -202,7 +205,7 @@ export function PodsPage() {
   const paginatedData = podsData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Create menu items for each row
   const createMenuItems = (row: PodRow): ContextMenuItem[] => [
@@ -246,10 +249,14 @@ export function PodsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -258,12 +265,12 @@ export function PodsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -280,28 +287,49 @@ export function PodsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.image,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
+      sortable: true,
     },
     {
       key: 'ip',
       label: 'IP',
       flex: 1,
       minWidth: columnMinWidths.ip,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -309,7 +337,14 @@ export function PodsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+        return (
+          <span className="truncate block min-w-0" title={value}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -317,7 +352,7 @@ export function PodsPage() {
       width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
-        <div onClick={(e) => e.stopPropagation()}>
+        <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
@@ -382,38 +417,84 @@ export function PodsPage() {
           }
           actions={
             <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => {
-                  if (shellPanel.isExpanded) {
-                    shellPanel.setIsExpanded(false);
-                  } else {
-                    shellPanel.openConsole('kubectl-pods', 'Kubectl: ClusterName');
-                  }
-                }}
-              >
-                <IconTerminal2
-                  size={16}
-                  className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
-                      : 'text-[var(--color-text-muted)]'
-                  }
-                  stroke={1.5}
-                />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <Tooltip content="Customize appearance" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                  aria-label="Customize cluster appearance"
+                >
+                  <IconPencilCog
+                    size={16}
+                    className="text-[var(--color-text-muted)]"
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Access Token" position="bottom">
+                <button
+                  type="button"
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                  aria-label="Access Token"
+                >
+                  <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="kubectl Shell" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="kubectl Shell"
+                  onClick={() => {
+                    if (shellPanel.isExpanded) {
+                      shellPanel.setIsExpanded(false);
+                    } else {
+                      shellPanel.openConsole('kubectl-pods', 'Kubectl: ClusterName');
+                    }
+                  }}
+                >
+                  <IconTerminal2
+                    size={16}
+                    className={
+                      shellPanel.isExpanded
+                        ? 'text-[var(--color-action-primary)]'
+                        : 'text-[var(--color-text-muted)]'
+                    }
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Download kubeconfig" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Download kubeconfig"
+                >
+                  <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Copy kubeconfig" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Copy kubeconfig"
+                >
+                  <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Search resource types" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Search resource types"
+                >
+                  <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Notifications" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Notifications"
+                >
+                  <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
             </>
           }
         />

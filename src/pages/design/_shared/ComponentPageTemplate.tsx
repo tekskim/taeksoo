@@ -1,12 +1,10 @@
-import { type ReactNode, useMemo } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { type ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { VStack } from '@/design-system';
 import { IconArrowRight, IconCheck, IconX, IconClock } from '@tabler/icons-react';
 import { DocSection } from './DocSection';
 import { type PropDef } from './PropsTable';
-import { TableOfContents } from './TableOfContents';
 import { PrevNextNav } from './PrevNextNav';
-import { useDesignLayoutContext } from '../DesignSystemLayout';
 import { pageLastUpdated } from './navigationData';
 
 export type { PropDef };
@@ -34,6 +32,7 @@ interface ComponentPageTemplateProps {
   status?: ComponentStatus;
   tags?: string[];
   preview?: ReactNode;
+  previewActions?: ReactNode;
   examples?: ReactNode;
   guidelines?: ReactNode;
   whenToUse?: string[];
@@ -83,6 +82,7 @@ export function ComponentPageTemplate({
   status,
   tags,
   preview,
+  previewActions,
   examples,
   guidelines,
   whenToUse,
@@ -93,39 +93,14 @@ export function ComponentPageTemplate({
   relatedLinks,
   headerActions,
 }: ComponentPageTemplateProps) {
-  const mainRef = useDesignLayoutContext();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const isCaptureMode = searchParams.get('capture') === 'true';
   const lastUpdated = pageLastUpdated[location.pathname];
 
-  const tocItems = useMemo(() => {
-    const items: { id: string; label: string }[] = [];
-    if (preview) items.push({ id: 'preview', label: 'Preview' });
-    if (whenToUse || whenNotToUse) items.push({ id: 'when-to-use', label: 'When to use' });
-    if (examples) items.push({ id: 'examples', label: 'Examples' });
-    if (guidelines) items.push({ id: 'guidelines', label: 'Guidelines' });
-    if (tokens || structureSpecs) items.push({ id: 'tokens', label: 'Design tokens' });
-    if (relatedLinks && relatedLinks.length > 0) items.push({ id: 'related', label: 'Related' });
-    return items;
-  }, [
-    preview,
-    whenToUse,
-    whenNotToUse,
-    examples,
-    guidelines,
-    tokens,
-    structureSpecs,
-    relatedLinks,
-  ]);
-
   return (
-    <div className="relative">
-      {!isCaptureMode && <TableOfContents items={tocItems} scrollContainerRef={mainRef} />}
-
-      <VStack gap={10} align="stretch">
+    <div>
+      <VStack gap={0} align="stretch">
         {/* Page Header */}
-        <VStack gap={2} align="start">
+        <VStack gap={2} align="start" className="pb-4">
           <div className="flex items-center gap-2">
             <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
             {maturity && (
@@ -195,7 +170,7 @@ export function ComponentPageTemplate({
 
         {/* Preview */}
         {preview && (
-          <DocSection id="preview" title="Preview">
+          <DocSection id="preview" title="Preview" actions={previewActions}>
             {preview}
           </DocSection>
         )}
@@ -214,7 +189,10 @@ export function ComponentPageTemplate({
                   </div>
                   <ul className="flex flex-col gap-2">
                     {whenToUse.map((item, i) => (
-                      <li key={i} className="text-body-md text-[var(--color-text-default)] pl-1">
+                      <li
+                        key={i}
+                        className="text-body-md text-[var(--color-text-default)] dark:text-white pl-1"
+                      >
                         {item}
                       </li>
                     ))}
@@ -231,7 +209,10 @@ export function ComponentPageTemplate({
                   </div>
                   <ul className="flex flex-col gap-2">
                     {whenNotToUse.map((item, i) => (
-                      <li key={i} className="text-body-md text-[var(--color-text-default)] pl-1">
+                      <li
+                        key={i}
+                        className="text-body-md text-[var(--color-text-default)] dark:text-white pl-1"
+                      >
                         {item}
                       </li>
                     ))}
@@ -309,43 +290,43 @@ export function ComponentPageTemplate({
 
         {/* Related Links */}
         {relatedLinks && relatedLinks.length > 0 && (
-          <VStack
-            id="related"
-            gap={4}
-            align="stretch"
-            className="scroll-mt-6 p-6 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]"
-          >
-            <h3 className="text-heading-h5 text-[var(--color-text-default)]">Related</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {relatedLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="group flex items-center justify-between gap-3 p-4 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
-                >
-                  <VStack gap={0.5} align="start" className="min-w-0">
-                    <span className="text-label-md text-[var(--color-text-default)] group-hover:text-[var(--color-action-primary)] transition-colors">
-                      {link.label}
-                    </span>
-                    {link.description && (
-                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                        {link.description}
+          <div id="related" className="scroll-mt-6">
+            <div className="w-full h-px bg-[var(--color-border-default)]" />
+            <VStack gap={4} align="stretch" className="pt-8 pb-4">
+              <h3 className="text-heading-h5 text-[var(--color-text-default)]">Related</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {relatedLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className="group flex items-center justify-between gap-3 p-4 rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                  >
+                    <VStack gap={0.5} align="start" className="min-w-0">
+                      <span className="text-label-md text-[var(--color-text-default)] group-hover:text-[var(--color-action-primary)] transition-colors">
+                        {link.label}
                       </span>
-                    )}
-                  </VStack>
-                  <IconArrowRight
-                    size={14}
-                    stroke={1.5}
-                    className="shrink-0 text-[var(--color-text-subtle)] group-hover:text-[var(--color-action-primary)] transition-colors"
-                  />
-                </Link>
-              ))}
-            </div>
-          </VStack>
+                      {link.description && (
+                        <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+                          {link.description}
+                        </span>
+                      )}
+                    </VStack>
+                    <IconArrowRight
+                      size={14}
+                      stroke={1.5}
+                      className="shrink-0 text-[var(--color-text-subtle)] group-hover:text-[var(--color-action-primary)] transition-colors"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </VStack>
+          </div>
         )}
 
         {/* Prev/Next Navigation */}
-        <PrevNextNav />
+        <div className="pt-8">
+          <PrevNextNav />
+        </div>
       </VStack>
     </div>
   );

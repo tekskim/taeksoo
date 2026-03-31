@@ -18,13 +18,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -194,6 +188,12 @@ export function VolumeSnapshotDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
               Create volume
             </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+              Manage metadata
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
@@ -222,16 +222,9 @@ export function VolumeSnapshotDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Volume snapshot name" value={snapshot.name} />
+                    <SectionCard.DataRow label="Volume name" value={snapshot.name} />
                     <SectionCard.DataRow label="Description" value={snapshot.description} />
                   </SectionCard.Content>
                 </SectionCard>
@@ -243,10 +236,9 @@ export function VolumeSnapshotDetailPage() {
                     <SectionCard.DataRow label="Volume">
                       <Link
                         to={`/compute/volumes/${snapshot.sourceVolumeId}`}
-                        className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline"
+                        className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                       >
                         {snapshot.sourceVolume}
-                        <IconExternalLink size={12} stroke={1.5} />
                       </Link>
                     </SectionCard.DataRow>
                   </SectionCard.Content>
@@ -257,6 +249,14 @@ export function VolumeSnapshotDetailPage() {
                   <SectionCard.Header title="Specifications" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Size" value={snapshot.size} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Metadata */}
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="{metadata}" value="{value}" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

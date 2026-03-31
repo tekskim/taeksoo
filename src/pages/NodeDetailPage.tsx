@@ -27,6 +27,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -34,14 +35,16 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconInfoCircle,
+  IconHelpCircle,
   IconTrash,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -134,7 +137,7 @@ interface EventRow {
 const mockNodeData: Record<string, NodeData> = {
   'node-control-plane-01': {
     name: 'node-control-plane-01',
-    status: 'OK',
+    status: 'Active',
     internalIp: '172.16.0.237',
     kubernetesVersion: 'v1.34',
     os: 'Ubuntu 24.04.3 LTS',
@@ -180,7 +183,7 @@ const mockNodeData: Record<string, NodeData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'helm-install-thakicloud-webhook',
     namespace: 'cattle-system',
     image: 'thakicloud/Shell:v0.21',
@@ -192,7 +195,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'coredns-7b98449c4-x2k4m',
     namespace: 'kube-system',
     image: 'rancher/mirrored-coredns-coredns:1.10.1',
@@ -204,7 +207,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'local-path-provisioner-6795b5f9d8-p3n2q',
     namespace: 'kube-system',
     image: 'rancher/local-path-provisioner:v0.0.24',
@@ -231,7 +234,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
     type: 'MemoryPressure',
-    status: 'None',
+    status: 'False',
     reason: 'KubeletHasSufficientMemory',
     size: '14 GB',
     message: 'kubelet has sufficient memory available',
@@ -241,7 +244,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'DiskPressure',
-    status: 'None',
+    status: 'False',
     reason: 'KubeletHasNoDiskPressure',
     size: '256 GB',
     message: 'kubelet has no disk pressure',
@@ -251,7 +254,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     type: 'PIDPressure',
-    status: 'None',
+    status: 'False',
     reason: 'KubeletHasSufficientPID',
     size: '32768',
     message: 'kubelet has sufficient PID available',
@@ -321,7 +324,7 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
         </VStack>
         <Tooltip content={tooltip}>
           <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+            <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
           </button>
         </Tooltip>
       </HStack>
@@ -375,10 +378,15 @@ function PodsTab({ pods }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -391,7 +399,10 @@ function PodsTab({ pods }: PodsTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -403,15 +414,17 @@ function PodsTab({ pods }: PodsTabProps) {
       minWidth: columnMinWidths.namespace,
       sortable: true,
     },
-    { key: 'image', label: 'Image', flex: 1, minWidth: columnMinWidths.image },
-    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready },
+    { key: 'image', label: 'Image', flex: 1, minWidth: columnMinWidths.image, sortable: true },
+    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready, sortable: true },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
+      sortable: true,
     },
-    { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip },
-    { key: 'node', label: 'Node', flex: 1, minWidth: columnMinWidths.node },
+    { key: 'ip', label: 'IP', flex: 1, minWidth: columnMinWidths.ip, sortable: true },
+    { key: 'node', label: 'Node', flex: 1, minWidth: columnMinWidths.node, sortable: true },
     {
       key: 'createdAt',
       label: 'Created at',
@@ -461,7 +474,7 @@ function LabelWithTooltip({ label, tooltip }: LabelWithTooltipProps) {
       {label}
       <Tooltip content={tooltip}>
         <button className="p-0 bg-transparent border-none cursor-pointer">
-          <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
+          <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
         </button>
       </Tooltip>
     </span>
@@ -822,7 +835,7 @@ export function NodeDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Context menu items
   const moreActionsItems: ContextMenuItem[] = [
@@ -883,15 +896,27 @@ export function NodeDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={node.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -924,8 +949,14 @@ export function NodeDetailPage() {
               label="Status"
               value={
                 <Tooltip content={node.status === 'Ready' ? 'Active' : 'Not Ready'}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        node.status === 'Ready' ? 'Active' : 'Not Ready'
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {node.status === 'Ready' ? 'Active' : 'Not Ready'}
                     </Badge>
                   </span>
@@ -974,8 +1005,8 @@ export function NodeDetailPage() {
                           </div>
                         }
                       >
-                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                          (+{Object.keys(node.labels).length - 1})
+                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                          +{Object.keys(node.labels).length - 1}
                         </span>
                       </Popover>
                     )}
@@ -1023,8 +1054,8 @@ export function NodeDetailPage() {
                           </div>
                         }
                       >
-                        <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                          (+{Object.keys(node.annotations).length - 1})
+                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                          +{Object.keys(node.annotations).length - 1}
                         </span>
                       </Popover>
                     )}

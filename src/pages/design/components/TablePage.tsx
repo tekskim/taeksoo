@@ -75,7 +75,7 @@ Table은 일반적으로 다음 패턴과 함께 사용된다.
 | 유형 | 설명 |
 | --- | --- |
 | Text | 문자열 |
-| Status | 상태 표시, 아이콘 또는 뱃지 |
+| Status | 상태 표시, 아이콘 또는 뱃지. \`icon-only\` 레이아웃 사용 시 호버하면 상태명이 Tooltip으로 자동 표시됨 |
 | Date | 날짜 |
 | Number | 숫자 또는 숫자+단위 |
 | Action | 행 액션 버튼 |
@@ -179,7 +179,7 @@ Table은 일반적으로 다음 패턴과 함께 사용된다.
 | Search Input | Pattern | 데이터 검색 |
 | Pagination | Component | 페이지 이동 |
 | Context Menu | Component | 행 액션 |
-| Status | Component | 상태 표시 |
+| Status | Component | 상태 표시 (\`layout="icon-only"\` 시 호버 Tooltip 자동 제공) |
 `;
 
 const sampleData = [

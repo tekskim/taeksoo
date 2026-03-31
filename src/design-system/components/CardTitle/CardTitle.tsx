@@ -1,4 +1,6 @@
-import React, { ReactNode } from 'react';
+import { type ReactNode } from 'react';
+import { Badge, type BadgeVariant } from '../Badge/Badge';
+import { StatusIndicator, type StatusType } from '../StatusIndicator';
 
 /* ----------------------------------------
    Badge Type for CardTitle
@@ -9,6 +11,14 @@ export interface CardTitleBadge {
   icon?: ReactNode;
 }
 
+const STATUS_COLOR_MAP: Record<string, StatusType> = {
+  success: 'active',
+  warning: 'pending',
+  error: 'error',
+  info: 'building',
+  muted: 'disabled',
+};
+
 /* ----------------------------------------
    CardTitle Props
    ---------------------------------------- */
@@ -17,7 +27,7 @@ export interface CardTitleProps {
   title: string;
   /** Optional description text */
   description?: string;
-  /** Show status indicator (colored dot) */
+  /** Show status indicator */
   showStatus?: boolean;
   /** Status indicator color */
   statusColor?: 'success' | 'warning' | 'error' | 'info' | 'muted';
@@ -37,72 +47,13 @@ export interface CardTitleProps {
   onClick?: () => void;
 }
 
-/* ----------------------------------------
-   Status Indicator Sub-component
-   ---------------------------------------- */
-interface StatusDotProps {
-  color?: 'success' | 'warning' | 'error' | 'info' | 'muted';
-}
-
-function StatusDot({ color = 'success' }: StatusDotProps) {
-  const colorClasses = {
-    success: 'bg-[var(--color-state-success)]',
-    warning: 'bg-[var(--color-state-warning)]',
-    error: 'bg-[var(--color-state-danger)]',
-    info: 'bg-[var(--color-action-primary)]',
-    muted: 'bg-[var(--color-text-muted)]',
-  };
-
-  return (
-    <div
-      className={`w-6 h-6 rounded-full ${colorClasses[color]} flex items-center justify-center shrink-0`}
-    >
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M13.3334 4L6.00008 11.3333L2.66675 8"
-          stroke="white"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   Badge Sub-component
-   ---------------------------------------- */
-interface BadgeItemProps {
-  badge: CardTitleBadge;
-}
-
-function BadgeItem({ badge }: BadgeItemProps) {
-  const variantClasses = {
-    default: 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]',
-    success: 'bg-[var(--color-state-success-bg)] text-[var(--color-state-success)]',
-    info: 'bg-[var(--color-state-info-bg)] text-[var(--color-state-info)]',
-    warning: 'bg-[var(--color-state-warning-bg)] text-[var(--color-state-warning)]',
-    muted: 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]',
-  };
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-label-sm leading-4 ${
-        variantClasses[badge.variant || 'muted']
-      }`}
-    >
-      {badge.icon && <span className="w-[9px] h-[9px]">{badge.icon}</span>}
-      {badge.label}
-    </span>
-  );
-}
+const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
+  default: 'default',
+  success: 'success',
+  info: 'info',
+  warning: 'warning',
+  muted: 'default',
+};
 
 /* ----------------------------------------
    CardTitle Component
@@ -161,12 +112,19 @@ export function CardTitle({
 
   return (
     <div
-      data-figma-name="CardTitle"
+      data-figma-name="[TDS] CardTitle"
       className={`flex items-start gap-3 ${className} ${onClick ? 'cursor-pointer' : ''}`}
       onClick={onClick}
     >
       {/* Status Indicator */}
-      {showStatus && <StatusDot color={statusColor} />}
+      {showStatus && (
+        <StatusIndicator
+          status={STATUS_COLOR_MAP[statusColor] || 'active'}
+          layout="icon-only"
+          size="lg"
+          className="shrink-0"
+        />
+      )}
 
       {/* Main Content */}
       <div className="flex-1 min-w-0 flex flex-col gap-3">
@@ -176,7 +134,7 @@ export function CardTitle({
             {title}
           </h4>
           {description && (
-            <p className="text-body-md leading-4 text-[var(--color-text-subtle)] line-clamp-2">
+            <p className="text-body-md leading-4 text-[var(--color-text-muted)] line-clamp-2">
               {description}
             </p>
           )}
@@ -186,7 +144,14 @@ export function CardTitle({
         {hasBadges && (
           <div className="flex flex-wrap gap-1">
             {badges.map((badge, index) => (
-              <BadgeItem key={index} badge={badge} />
+              <Badge
+                key={index}
+                variant={BADGE_VARIANT_MAP[badge.variant || 'muted']}
+                size="sm"
+                leftIcon={badge.icon}
+              >
+                {badge.label}
+              </Badge>
             ))}
           </div>
         )}

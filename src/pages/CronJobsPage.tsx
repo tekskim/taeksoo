@@ -33,9 +33,13 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconPlayerPlay,
+  IconCircleDashed,
   IconPlayerPause,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -57,7 +61,7 @@ interface CronJobRow {
 const cronJobsData: CronJobRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'automated-database-backup-daily-schedule-cronjob',
     namespace: 'namespaceName',
     image: 'imageName',
@@ -67,7 +71,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Suspended',
     name: 'database-backup-nightly-incremental-schedule-cronjob',
     namespace: 'database',
     image: 'backup-tool:v2.1',
@@ -77,7 +81,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'log-rotation-cleanup-weekly-maintenance-cronjob',
     namespace: 'maintenance',
     image: 'cleanup-tool:v1.5',
@@ -87,7 +91,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Error',
     name: 'analytics-weekly-report-generator-schedule-cronjob',
     namespace: 'analytics',
     image: 'report-gen:v3.2',
@@ -97,7 +101,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'data-sync-incremental-replication-schedule-cronjob',
     namespace: 'data-sync',
     image: 'sync-worker:v2.0',
@@ -107,7 +111,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Suspended',
     name: 'search-index-rebuild-weekly-full-sync-cronjob',
     namespace: 'search',
     image: 'indexer:v4.1',
@@ -117,7 +121,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Processing',
     name: 'cache-warmup-daily-preload-schedule-cronjob',
     namespace: 'cache',
     image: 'cache-warmer:v1.2',
@@ -127,7 +131,7 @@ const cronJobsData: CronJobRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Error',
     name: 'monitoring-metrics-collector-aggregation-cronjob',
     namespace: 'monitoring',
     image: 'metrics:v1.0',
@@ -188,7 +192,7 @@ export function CronJobsPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Create menu items for each row
   const createMenuItems = (row: CronJobRow): ContextMenuItem[] => [
@@ -233,10 +237,14 @@ export function CronJobsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -245,20 +253,22 @@ export function CronJobsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
-          title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/cronjobs/${row.id}`);
-          }}
-        >
-          {value}
-        </span>
+        <div className="min-w-0">
+          <span
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            title={value}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/container/cronjobs/${row.id}`);
+            }}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
@@ -267,24 +277,47 @@ export function CronJobsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
-      minWidth: columnMinWidths.image,
+      minWidth: columnMinWidths.containerImage,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'schedule',
       label: 'Schedule',
       flex: 1,
       minWidth: columnMinWidths.schedule,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'lastSchedule',
       label: 'Last Schedule',
       flex: 1,
       minWidth: columnMinWidths.lastSchedule,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -292,7 +325,14 @@ export function CronJobsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const formatted = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block whitespace-nowrap" title={formatted}>
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -367,6 +407,20 @@ export function CronJobsPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
@@ -461,7 +515,7 @@ export function CronJobsPage() {
               <Button
                 variant="muted"
                 size="sm"
-                leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
+                leftIcon={<IconCircleDashed size={12} stroke={1.5} />}
                 disabled={selectedRows.length === 0}
               >
                 Run now

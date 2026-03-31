@@ -16,6 +16,7 @@ import {
   PageHeader,
   fixedColumns,
   columnMinWidths,
+  CopyButton,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -25,14 +26,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconCopy,
-  IconCheck,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -134,9 +128,6 @@ export function KeyPairsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [keyPairToDelete, setKeyPairToDelete] = useState<KeyPair | null>(null);
 
-  // Copy feedback state
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -177,17 +168,6 @@ export function KeyPairsPage() {
   const handleDeleteCancel = () => {
     setDeleteModalOpen(false);
     setKeyPairToDelete(null);
-  };
-
-  // Copy fingerprint to clipboard
-  const handleCopyFingerprint = async (id: string, fingerprint: string) => {
-    try {
-      await navigator.clipboard.writeText(fingerprint);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
   };
 
   // Filter key pairs by search
@@ -259,20 +239,7 @@ export function KeyPairsPage() {
           <span className="font-mono text-body-sm text-[var(--color-text-default)]">
             {row.fingerprint}
           </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopyFingerprint(row.id, row.fingerprint);
-            }}
-            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors"
-            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
-          >
-            {copiedId === row.id ? (
-              <IconCheck size={16} className="text-[var(--color-state-success)]" />
-            ) : (
-              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-            )}
-          </button>
+          <CopyButton value={row.fingerprint} size="sm" iconOnly tooltip="Copy fingerprint" />
         </div>
       ),
     },
@@ -368,7 +335,14 @@ export function KeyPairsPage() {
     >
       <VStack gap={3}>
         {/* Page Header */}
-        <PageHeader title="Key pairs" />
+        <PageHeader
+          title="Key pairs"
+          actions={
+            <Button variant="primary" size="md">
+              Create Key Pair
+            </Button>
+          }
+        />
 
         {/* List Toolbar */}
         <ListToolbar
@@ -405,17 +379,15 @@ export function KeyPairsPage() {
         />
 
         {/* Pagination */}
-        {filteredKeyPairs.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredKeyPairs.length}
-            selectedCount={selectedKeyPairs.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredKeyPairs.length}
+          selectedCount={selectedKeyPairs.length}
+        />
 
         {/* Key pairs Table */}
         <Table<KeyPair>

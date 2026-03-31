@@ -96,6 +96,7 @@ import {
   IconUbuntu,
   IconRocky,
   IconGrid,
+  CopyButton,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -284,11 +285,7 @@ import {
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
-import {
-  IconExpandOff,
-  IconExpandOn,
-  IconAction,
-} from '@/design-system/components/Icons/CustomIcons';
+import { IconExpandOff, IconExpandOn } from '@/design-system/components/Icons/CustomIcons';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -900,7 +897,7 @@ function WizardPatternSection() {
         <Label>2. 구성요소</Label>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
               입력 카드 (Input Card)
             </h4>
             <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -909,7 +906,9 @@ function WizardPatternSection() {
             </p>
           </div>
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">Floating Card</h4>
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+              Floating Card
+            </h4>
             <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
               Create/Edit 페이지에서 고정된 위치로 표시 (기본 position: <code>top-left</code>,
               스크롤 시에도 sticky 유지)
@@ -1086,7 +1085,9 @@ Step 3 Next 클릭
         <Label>5. 인터랙션 정책</Label>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">기본 원칙</h4>
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+              기본 원칙
+            </h4>
             <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
               <li>
                 <strong>순차적 진행</strong> — 1단계부터 순서대로, 한 번에 하나의 단계만 활성화
@@ -1104,7 +1105,7 @@ Step 3 Next 클릭
             </ul>
           </div>
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
               주요 인터랙션 요소
             </h4>
             <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -1132,7 +1133,7 @@ Step 3 Next 클릭
       <VStack gap={3}>
         <Label>Section States (WizardSectionState)</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>'pre' | 'active' | 'done' | 'skipped' | 'writing'</code>
+          'pre' | 'active' | 'done' | 'skipped' | 'writing'
         </div>
       </VStack>
 
@@ -1516,7 +1517,7 @@ function NotificationCenterSection() {
           <Label>2. 구성요소</Label>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                 알림센터 아이콘
               </h4>
               <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -1525,7 +1526,9 @@ function NotificationCenterSection() {
               </ul>
             </div>
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">탭</h4>
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+                탭
+              </h4>
               <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>
                   <strong>전체(All)</strong> → 모든 알림
@@ -1539,7 +1542,7 @@ function NotificationCenterSection() {
               </ul>
             </div>
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                 전체 읽음 처리 버튼
               </h4>
               <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -1549,7 +1552,9 @@ function NotificationCenterSection() {
               </ul>
             </div>
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">개별 알림</h4>
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+                개별 알림
+              </h4>
               <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
                 <li>토스트와 유사한 형태 (유형 아이콘, 메시지 내용, 발생 시각)</li>
                 <li>개별 읽음 처리 버튼, 파티션 정보(선택), 상세 보기 버튼(선택)</li>
@@ -1750,7 +1755,9 @@ function NotificationCenterSection() {
           <Label>4. 예시 시나리오</Label>
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-1">시나리오 1</h4>
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-1">
+                시나리오 1
+              </h4>
               <p className="text-body-sm font-medium text-[var(--color-text-default)] mb-2">
                 토스트를 놓쳤지만, 알림센터에서 바로 확인 &amp; 읽음
               </p>
@@ -1764,7 +1771,9 @@ function NotificationCenterSection() {
               </p>
             </div>
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-1">시나리오 2</h4>
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-1">
+                시나리오 2
+              </h4>
               <p className="text-body-sm font-medium text-[var(--color-text-default)] mb-2">
                 실패 원인 먼저 보고(읽음 아님), 나중에 개별 읽음으로 정리
               </p>
@@ -1779,7 +1788,9 @@ function NotificationCenterSection() {
               </p>
             </div>
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-1">시나리오 3</h4>
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-1">
+                시나리오 3
+              </h4>
               <p className="text-body-sm font-medium text-[var(--color-text-default)] mb-2">
                 여러 알림이 쌓였을 때 한 번에 정리(전체 읽음)
               </p>
@@ -1795,7 +1806,9 @@ function NotificationCenterSection() {
               </p>
             </div>
             <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-              <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-1">시나리오 4</h4>
+              <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-1">
+                시나리오 4
+              </h4>
               <p className="text-body-sm font-medium text-[var(--color-text-default)] mb-2">
                 토스트가 폭주할 때 알림센터를 열어 실시간 확인 · 정리
               </p>
@@ -1817,8 +1830,7 @@ function NotificationCenterSection() {
         <VStack gap={3}>
           <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>width: 360px</code> · <code>padding: 16px</code> · <code>border-radius: 8px</code>{' '}
-            · <code>shadow: lg</code>
+            width: 360px · padding: 16px · border-radius: 8px · shadow: lg
           </div>
         </VStack>
 
@@ -2217,8 +2229,7 @@ function DatePickerSection() {
         <VStack gap={3}>
           <Label>Design tokens</Label>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            <code>padding: 12px</code> · <code>gap: 12px</code> · <code>radius: 8px</code> ·{' '}
-            <code>cell: 32×32px</code>
+            padding: 12px · gap: 12px · radius: 8px · cell: 32×32px
           </div>
         </VStack>
 
@@ -2508,8 +2519,7 @@ function TabBarDemo() {
       <VStack gap={3}>
         <Label>Design tokens</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>height: 36px</code> · <code>max-width: 160px</code> · <code>padding-x: 12px</code> ·{' '}
-          <code>font: 12px</code>
+          height: 36px · max-width: 160px · padding-x: 12px · font: 12px
         </div>
       </VStack>
 
@@ -2737,19 +2747,6 @@ const sampleKeyPairData: KeyPairData[] = [
 
 function TableDemo() {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  // Copy handler with visual feedback
-  const handleCopy = async (id: string, text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
   // Basic columns for main table demos
   const basicColumns = [
     {
@@ -2838,7 +2835,7 @@ function TableDemo() {
             <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
-            <IconAction size={16} stroke={1} />
+            <IconDotsCircleHorizontal size={16} stroke={1.5} />
           </button>
         </div>
       ),
@@ -2926,20 +2923,7 @@ function TableDemo() {
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
             {row.fingerprint}
           </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopy(row.id, row.fingerprint);
-            }}
-            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors flex-shrink-0 cursor-pointer"
-            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
-          >
-            {copiedId === row.id ? (
-              <IconCheck size={12} className="text-[var(--color-state-success)]" />
-            ) : (
-              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-            )}
-          </button>
+          <CopyButton value={row.fingerprint} size="sm" iconOnly tooltip="Copy fingerprint" />
         </div>
       ),
     },
@@ -3014,12 +2998,9 @@ function TableDemo() {
       <VStack gap={3}>
         <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> ·{' '}
-          <code>radius: 8px</code> · <code>font: 12px</code>
+          cell-padding: 12×10px · header-padding: 12×8px · radius: 8px · font: 12px
           <br />
-          <span className="text-[var(--color-text-muted)]">Features:</span>{' '}
-          <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> ·{' '}
-          <code>title tooltip on hover</code>
+          Features: overflow-x: auto · text-overflow: ellipsis · title tooltip on hover
         </div>
       </VStack>
 
@@ -5664,7 +5645,9 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <Label>Guidelines</Label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)]/20 rounded-[var(--primitive-radius-lg)]">
-                      <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-2">DO</h4>
+                      <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-2">
+                        DO
+                      </h4>
                       <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
                         <li>• Use duration tokens instead of hardcoded values</li>
                         <li>
@@ -5680,7 +5663,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       </ul>
                     </div>
                     <div className="p-4 bg-[var(--color-state-danger-bg)] border border-[var(--color-state-danger)]/20 rounded-[var(--primitive-radius-lg)]">
-                      <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-2">
+                      <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-2">
                         DON'T
                       </h4>
                       <ul className="text-body-md text-[var(--color-text-default)] space-y-1.5">
@@ -6356,7 +6339,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -6374,7 +6357,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -6444,8 +6427,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       </table>
                     </div>
                     <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1">
-                      <code>radius: 6px (md)</code> · <code>border: slate-300 (secondary)</code> ·{' '}
-                      <code>disabled-bg: slate-200 (primary)</code>
+                      radius: 6px (md) · border: slate-300 (secondary) · disabled-bg: slate-200
+                      (primary)
                     </div>
                   </VStack>
 
@@ -6992,7 +6975,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -7006,7 +6989,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -7026,9 +7009,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>height: 28/32px</code> · <code>padding: 10×8px</code> ·{' '}
-                      <code>radius: 6px</code> · <code>font: 11-12px</code> ·{' '}
-                      <code>border: 1px → 2px focus</code>
+                      height: 28/32px · padding: 10×8px · radius: 6px · font: 11-12px · border: 1px
+                      → 2px focus
                     </div>
                   </VStack>
 
@@ -8141,9 +8123,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>height: 32px (sm) / 36px (md)</code> · <code>padding: 8×12px</code> ·{' '}
-                      <code>radius: 6px</code> · <code>font: 12px</code> ·{' '}
-                      <code>chip-gap: 4px</code>
+                      height: 32px (sm) / 36px (md) · padding: 8×12px · radius: 6px · font: 12px ·
+                      chip-gap: 4px
                     </div>
                   </VStack>
 
@@ -8476,7 +8457,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -8491,7 +8472,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -8511,9 +8492,8 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>padding: 10×8px</code> · <code>radius: 6px</code> ·{' '}
-                      <code>font: 12px</code> · <code>item: 10×6px, 11px</code> ·{' '}
-                      <code>border: 1px → 2px focus</code>
+                      padding: 10×8px · radius: 6px · font: 12px · item: 10×6px, 11px · border: 1px
+                      → 2px focus
                     </div>
                   </VStack>
 
@@ -9113,7 +9093,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                             </table>
                           </div>
                           <div className="text-body-xs text-[var(--color-text-subtle)] p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-                            <code>--slider-track-width: 240px</code>
+                            --slider-track-width: 240px
                           </div>
                         </VStack>
                       </VStack>
@@ -9124,8 +9104,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>track: 6px height</code> · <code>thumb: 16px, 3px border</code> ·{' '}
-                      <code>fill: primary</code>
+                      track: 6px height · thumb: 16px, 3px border · fill: primary
                     </div>
                   </VStack>
 
@@ -9210,8 +9189,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>padding: 8×4px</code> · <code>gap: 6px</code> · <code>radius: 6px</code>{' '}
-                      · <code>font: 11px</code>
+                      padding: 8×4px · gap: 6px · radius: 6px · font: 11px
                     </div>
                   </VStack>
 
@@ -9290,8 +9268,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>min-height: 42px</code> · <code>padding: 8×12px</code> ·{' '}
-                      <code>radius: table-row-radius</code> · <code>gap: 16px</code>
+                      min-height: 42px · padding: 8×12px · radius: table-row-radius · gap: 16px
                     </div>
                   </VStack>
 
@@ -9399,8 +9376,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>item-size: 24px</code> · <code>gap: 8px</code> ·{' '}
-                      <code>radius: 4px</code> · <code>font: 12px</code>
+                      item-size: 24px · gap: 8px · radius: 4px · font: 12px
                     </div>
                   </VStack>
 
@@ -9604,8 +9580,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>spinner: 16/22/32px</code> · <code>progress: h-1</code> ·{' '}
-                      <code>button: min-w-80px</code>
+                      spinner: 16/22/32px · progress: h-1 · button: min-w-80px
                     </div>
                   </VStack>
 
@@ -9744,8 +9719,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Design tokens</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-                      <code>track: 36×20px</code> · <code>thumb: 16×16px</code> ·{' '}
-                      <code>padding: 4px</code> · <code>radius: pill</code> · <code>gap: 8px</code>
+                      track: 36×20px · thumb: 16×16px · padding: 4px · radius: pill · gap: 8px
                     </div>
                   </VStack>
 
@@ -9823,8 +9797,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   <VStack gap={3}>
                     <Label>Mini Toggle (Chart Controls)</Label>
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] mb-2">
-                      <code>size: 24×12px</code> · <code>thumb: 8×8px</code> ·{' '}
-                      <code>border: 1px</code> · <code>radius: 6px</code>
+                      size: 24×12px · thumb: 8×8px · border: 1px · radius: 6px
                     </div>
                     <div className="flex gap-8 items-center">
                       <VStack gap={2}>
@@ -10865,7 +10838,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -10881,7 +10854,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -11061,7 +11034,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="flex gap-3 items-center">
                       <Badge size="sm">Small</Badge>
                       <Badge size="md">Medium</Badge>
-                      <Badge size="lg">Large</Badge>
                     </div>
                   </VStack>
 
@@ -11895,7 +11867,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -11910,7 +11882,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -12868,7 +12840,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                                     명시적인 버튼 클릭으로 메뉴 오픈. 주요 액션 제공 시 사용.
                                   </td>
                                   <td className="py-2 text-[var(--color-text-muted)]">
-                                    More Actions, Create 드롭다운
+                                    More actions, Create 드롭다운
                                   </td>
                                 </tr>
                                 <tr>
@@ -12918,7 +12890,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -12928,7 +12900,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -13052,7 +13024,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       items={[
                         { id: 'edit', label: 'Edit', onClick: () => {} },
                         { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
-                        { id: 'copy', label: 'Copy', onClick: () => {}, divider: true },
+                        { id: 'copy', label: 'Copy', onClick: () => {} },
                         { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
                       ]}
                     >
@@ -13070,7 +13042,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                       items={[
                         { id: 'view', label: 'View details', onClick: () => {} },
                         { id: 'edit', label: 'Edit', onClick: () => {} },
-                        { id: 'share', label: 'Share', onClick: () => {}, divider: true },
+                        { id: 'share', label: 'Share', onClick: () => {} },
                         { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
                       ]}
                     >
@@ -13197,7 +13169,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>2. 구성 요소</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           1. 타이틀
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
@@ -13215,7 +13187,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           2. 디스크립션
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
@@ -13232,7 +13204,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           3. 주체{' '}
                           <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
                             (선택)
@@ -13247,7 +13219,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           4. 액션 가능한 주체{' '}
                           <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
                             (선택)
@@ -13266,7 +13238,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           5. 액션 불가능한 주체{' '}
                           <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
                             (선택)
@@ -13286,7 +13258,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           6. 경고 문구{' '}
                           <span className="text-body-sm text-[var(--color-text-subtle)] font-normal">
                             (선택)
@@ -13589,7 +13561,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>가이드라인</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-success)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-success)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-3">
                           Do
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -13599,7 +13571,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-state-danger)] border-opacity-30">
-                        <h4 className="text-heading-h7 text-[var(--color-state-danger)] mb-3">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-3">
                           Don&apos;t
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1.5">
@@ -13776,7 +13748,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>2. 구성 요소</Label>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           상대 시간 버튼
                         </h4>
                         <ol className="list-decimal pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -13789,7 +13761,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ol>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           커스텀 기간 버튼
                         </h4>
                         <ol className="list-decimal pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -13803,7 +13775,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ol>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           새로 고침 버튼
                         </h4>
                         <ol className="list-decimal pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -14093,7 +14065,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>2. 구성 요소</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           유형 아이콘
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -14101,7 +14073,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </p>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           메시지 내용
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -14109,7 +14081,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </p>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           파티션 정보 (선택)
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -14118,7 +14090,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </p>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           닫기(x) 버튼
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -14128,7 +14100,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </p>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           메시지 발생 시각
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14142,7 +14114,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           앱 아이콘 (선택)
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14152,7 +14124,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           상세 보기 버튼 (선택)
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14162,7 +14134,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           버튼 외 클릭 영역
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14578,7 +14550,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>2. 구성 요소</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           전역 알림 패널 아이콘
                         </h4>
                         <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -14586,7 +14558,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </p>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           알림 패널
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14597,7 +14569,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           앱별 헤더
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14618,7 +14590,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           개별 알림
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">
@@ -14914,7 +14886,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>필터/검색 적용 시 동작</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           필터/검색 조건 없음
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -14925,7 +14897,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           필터/검색 조건 있음
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -15552,7 +15524,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <Label>4. UI 작동 방식</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           분할 패널 View (기본)
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -15567,7 +15539,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </ul>
                       </div>
                       <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                        <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                        <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                           탭 View (새 탭으로 보기)
                         </h4>
                         <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -16034,7 +16006,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                               퍼센트
                             </h4>
                             <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -16042,7 +16014,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                             </p>
                           </div>
                           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-                            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+                            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
                               실제 사용량 / 전체 사용량
                             </h4>
                             <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-0.5">

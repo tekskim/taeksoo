@@ -4,6 +4,7 @@ import {
   useCallback,
   type ButtonHTMLAttributes,
   type ReactNode,
+  type MouseEvent,
 } from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
@@ -52,7 +53,7 @@ const variantStyles: Record<CopyButtonVariant, string> = {
   default:
     'bg-[var(--color-surface-muted)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-transparent',
   ghost:
-    'bg-transparent text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] border-transparent',
+    'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-transparent',
   outline:
     'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]',
 };
@@ -103,23 +104,27 @@ export const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
 
     const sizeConfig = sizeStyles[size];
 
-    const handleCopy = useCallback(async () => {
-      if (disabled) return;
+    const handleCopy = useCallback(
+      async (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        if (disabled) return;
 
-      try {
-        await navigator.clipboard.writeText(value);
-        setCopied(true);
-        onCopy?.(value);
+        try {
+          await navigator.clipboard.writeText(value);
+          setCopied(true);
+          onCopy?.(value);
 
-        setTimeout(() => {
-          setCopied(false);
-        }, successDuration);
-      } catch (error) {
-        const copyError = error instanceof Error ? error : new Error('Failed to copy');
-        onError?.(copyError);
-        console.error('Failed to copy:', copyError);
-      }
-    }, [value, disabled, onCopy, onError, successDuration]);
+          setTimeout(() => {
+            setCopied(false);
+          }, successDuration);
+        } catch (error) {
+          const copyError = error instanceof Error ? error : new Error('Failed to copy');
+          onError?.(copyError);
+          console.error('Failed to copy:', copyError);
+        }
+      },
+      [value, disabled, onCopy, onError, successDuration]
+    );
 
     const defaultCopyIcon = <IconCopy size={sizeConfig.icon} stroke={1.5} />;
     const defaultSuccessIcon = <IconCheck size={sizeConfig.icon} stroke={2} />;
@@ -133,7 +138,7 @@ export const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
     return (
       <button
         ref={ref}
-        data-figma-name="CopyButton"
+        data-figma-name="[TDS] CopyButton"
         type="button"
         onClick={handleCopy}
         disabled={disabled}
@@ -187,7 +192,7 @@ export const Copyable = forwardRef<HTMLDivElement, CopyableProps>(
     return (
       <div
         ref={ref}
-        data-figma-name="Copyable"
+        data-figma-name="[TDS] Copyable"
         className={twMerge(
           'inline-flex items-center gap-1.5',
           'px-2 py-1',

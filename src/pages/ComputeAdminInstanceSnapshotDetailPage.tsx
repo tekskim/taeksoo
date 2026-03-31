@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import {
   Button,
+  CopyButton,
   VStack,
   TabBar,
   TopBar,
@@ -17,14 +18,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconCopy,
-  IconCheck,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconBell, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -175,41 +169,6 @@ const defaultSnapshotDetail: SnapshotDetail = {
 };
 
 /* ----------------------------------------
-   Copyable Value Component
-   ---------------------------------------- */
-
-interface CopyableValueProps {
-  value: string;
-}
-
-function CopyableValue({ value }: CopyableValueProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      <button
-        onClick={handleCopy}
-        className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-        aria-label="Copy to clipboard"
-      >
-        {copied ? (
-          <IconCheck size={16} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-        )}
-      </button>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Compute Admin Instance Snapshot Detail Page
    ---------------------------------------- */
 
@@ -321,14 +280,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
                     <SectionCard.DataRow label="Description" value={snapshot.description} />
@@ -390,7 +342,12 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
                         <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                           Filename
                         </span>
-                        <CopyableValue value={snapshot.filename} />
+                        <div className="flex items-center gap-2">
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            {snapshot.filename}
+                          </span>
+                          <CopyButton value={snapshot.filename} size="sm" iconOnly />
+                        </div>
                       </div>
                     </div>
                     <div className="flex flex-col gap-3 w-full">
@@ -399,7 +356,12 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
                         <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                           Checksum
                         </span>
-                        <CopyableValue value={snapshot.checksum} />
+                        <div className="flex items-center gap-2">
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            {snapshot.checksum}
+                          </span>
+                          <CopyButton value={snapshot.checksum} size="sm" iconOnly />
+                        </div>
                       </div>
                     </div>
                   </SectionCard.Content>

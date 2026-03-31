@@ -38,12 +38,12 @@ import {
   IconLayoutList,
   IconAccessible,
   IconChecklist,
-  IconBook,
-  IconComponents,
   IconDeviceDesktop,
   IconAlertTriangle,
   IconStack2,
   IconSettings,
+  IconHistory,
+  IconFolder,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -93,12 +93,6 @@ const foundationItems: NavItem[] = [
   },
   { id: 'borders', label: 'Borders', icon: IconBorderAll, path: '/design/foundation/borders' },
   { id: 'shadows', label: 'Shadows', icon: IconBoxMultiple, path: '/design/foundation/shadows' },
-  {
-    id: 'transitions',
-    label: 'Transitions',
-    icon: IconActivity,
-    path: '/design/foundation/transitions',
-  },
   { id: 'icons', label: 'Icons', icon: IconStar, path: '/design/foundation/icons' },
   { id: 'app-icons', label: 'App Icons', icon: IconApps, path: '/design/foundation/app-icons' },
 ];
@@ -235,6 +229,12 @@ const feedbackItems: NavItem[] = [
     icon: IconBell,
     path: '/design/components/notification-center',
   },
+  {
+    id: 'global-notification-panel',
+    label: 'Global Notification Panel',
+    icon: IconBell,
+    path: '/design/components/global-notification-panel',
+  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -344,12 +344,6 @@ const patternItems: NavItem[] = [
     path: '/design/patterns/form-field-pattern',
   },
   {
-    id: 'global-notification-panel',
-    label: 'Global Notification Panel',
-    icon: IconBell,
-    path: '/design/components/global-notification-panel',
-  },
-  {
     id: 'csv-download',
     label: 'List Download (CSV Export)',
     icon: IconDownload,
@@ -380,6 +374,12 @@ const patternItems: NavItem[] = [
     label: 'Form Field Spacing',
     icon: IconLayoutGrid,
     path: '/design/patterns/form-field',
+  },
+  {
+    id: 'dynamic-form-fields',
+    label: 'Dynamic Form Fields',
+    icon: IconForms,
+    path: '/design/patterns/dynamic-form-fields',
   },
 ];
 
@@ -435,10 +435,16 @@ const graphItems: NavItem[] = [
 
 const etcItems: NavItem[] = [
   {
-    id: 'dynamic-form-fields',
-    label: 'Dynamic Form Fields',
-    icon: IconForms,
-    path: '/design/patterns/dynamic-form-fields',
+    id: 'project-selector',
+    label: 'Project Selector',
+    icon: IconFolder,
+    path: '/design/components/project-selector',
+  },
+  {
+    id: 'transitions',
+    label: 'Transitions',
+    icon: IconActivity,
+    path: '/design/foundation/transitions',
   },
   {
     id: 'editor',
@@ -460,57 +466,12 @@ const etcItems: NavItem[] = [
   },
 ];
 
-const figmaItems: NavItem[] = [
+const changelogItems: NavItem[] = [
   {
-    id: 'figma-guide',
-    label: 'Migration Guide',
-    icon: IconBook,
-    path: '/design/figma/guide',
-  },
-  {
-    id: 'figma-foundation',
-    label: 'Foundation Capture',
-    icon: IconPalette,
-    path: '/design/figma/foundation',
-  },
-  {
-    id: 'figma-components',
-    label: 'Components Capture',
-    icon: IconComponents,
-    path: '/design/figma/components',
-  },
-];
-
-const prototypeItems: NavItem[] = [
-  {
-    id: 'ai-workspace',
-    label: 'AI Workspace Setup',
-    icon: IconStack2,
-    path: '/design/prototype/ai-workspace',
-  },
-];
-
-const auditItems: NavItem[] = [
-  {
-    id: 'audit-checklist',
-    label: 'Audit Checklist',
-    icon: IconChecklist,
-    path: '/design/audit',
-  },
-  {
-    id: 'project-todo',
-    label: 'Project TODO',
-    icon: IconListNumbers,
-    path: '/design/todo',
-  },
-];
-
-const testItems: NavItem[] = [
-  {
-    id: 'nested-box-test',
-    label: 'Nested Box',
-    icon: IconBoxMultiple,
-    path: '/design/test/nested-box',
+    id: 'changelog',
+    label: 'Changelog',
+    icon: IconHistory,
+    path: '/design/changelog',
   },
 ];
 
@@ -525,20 +486,27 @@ export const navGroups: NavGroup[] = [
   { title: 'Patterns', items: patternItems },
   { title: 'Graphs', items: graphItems },
   { title: 'Etc', items: etcItems },
-  { title: 'Figma Migration', items: figmaItems },
-  { title: 'Audit', items: auditItems },
-  { title: 'Prototype', items: prototypeItems },
-  { title: 'Test', items: testItems },
 ];
 
 export const allNavItems: NavItem[] = navGroups.flatMap((g) => g.items);
 
+export function isRecentlyUpdated(path: string, withinDays = 3): boolean {
+  const lastUpdated = pageLastUpdated[path];
+  if (!lastUpdated) return false;
+  const updatedDate = new Date(lastUpdated);
+  const now = new Date();
+  const diffMs = now.getTime() - updatedDate.getTime();
+  return diffMs >= 0 && diffMs <= withinDays * 24 * 60 * 60 * 1000;
+}
+
 export const pageLastUpdated: Record<string, string> = {
+  // Changelog
+  '/design/changelog': '2026-03-23 12:00:00',
   // Foundation
   '/design/foundation/tokens': '2026-02-25 14:00:00',
   '/design/foundation/primitive-colors': '2026-02-25 14:00:00',
-  '/design/foundation/semantic-colors': '2026-02-25 14:00:00',
-  '/design/foundation/typography': '2026-02-25 14:00:00',
+  '/design/foundation/semantic-colors': '2026-03-20 16:00:00',
+  '/design/foundation/typography': '2026-03-23 12:00:00',
   '/design/foundation/spacing': '2026-02-25 14:00:00',
   '/design/foundation/borders': '2026-02-25 14:00:00',
   '/design/foundation/shadows': '2026-02-25 14:00:00',
@@ -548,58 +516,59 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/policies/ux-writing': '2026-03-05 13:00:00',
   '/design/policies/accessibility': '2026-02-25 14:00:00',
   '/design/policies/error-alert': '2026-03-09 10:30:00',
-  '/design/policies/system-error': '2026-03-09 10:30:00',
+  '/design/policies/system-error': '2026-03-20 16:00:00',
   // Form Controls
-  '/design/components/button': '2026-03-09 10:30:00',
+  '/design/components/button': '2026-03-18 11:00:00',
   '/design/components/input': '2026-03-01 10:30:00',
   '/design/components/text-input': '2026-03-09 15:00:00',
   '/design/components/number-input': '2026-03-09 15:00:00',
   '/design/components/textarea': '2026-03-09 15:00:00',
   '/design/components/search-input': '2026-03-09 15:00:00',
   '/design/patterns/form-field': '2026-03-01 10:30:00',
-  '/design/components/filter-search-input': '2026-03-09 10:30:00',
-  '/design/components/select': '2026-03-09 10:30:00',
+  '/design/components/filter-search-input': '2026-03-18 11:00:00',
+  '/design/components/select': '2026-03-18 11:00:00',
   '/design/components/datepicker': '2026-03-09',
   '/design/components/slider': '2026-03-05 13:00:00',
-  '/design/components/toggle': '2026-03-09 10:30:00',
-  '/design/components/checkbox': '2026-03-09 10:30:00',
-  '/design/components/radio': '2026-03-09 10:30:00',
+  '/design/components/toggle': '2026-03-18 11:00:00',
+  '/design/components/checkbox': '2026-03-18 11:00:00',
+  '/design/components/radio': '2026-03-18 11:00:00',
   '/design/components/password': '2026-03-13 10:00:00',
-  '/design/components/copy-button': '2026-03-13 10:00:00',
+  '/design/components/copy-button': '2026-03-23 12:00:00',
   '/design/components/selection-indicator': '2026-03-13 10:00:00',
   // Data Display
-  '/design/components/table': '2026-03-09 10:30:00',
-  '/design/components/badge': '2026-03-05 13:00:00',
-  '/design/components/card': '2026-03-09 10:30:00',
+  '/design/components/table': '2026-03-20 16:00:00',
+  '/design/components/badge': '2026-03-18 18:00:00',
+  '/design/components/card': '2026-03-18 18:00:00',
   '/design/components/chip': '2026-03-09',
-  '/design/components/status-indicator': '2026-03-09 10:30:00',
+  '/design/components/status-indicator': '2026-03-18 11:00:00',
   '/design/components/pagination': '2026-03-09',
   '/design/components/file-list-card': '2026-03-01 10:30:00',
-  '/design/components/expandable-checklist': '2026-03-09 10:30:00',
-  '/design/components/info-box': '2026-03-13 10:00:00',
-  '/design/components/card-title': '2026-03-13 10:00:00',
+  '/design/components/expandable-checklist': '2026-03-18 18:00:00',
+  '/design/components/info-box': '2026-03-23 12:00:00',
+  '/design/components/card-title': '2026-03-18 18:00:00',
   '/design/components/list-toolbar': '2026-03-13 10:00:00',
   // Feedback
-  '/design/components/inline-message': '2026-03-09 10:30:00',
+  '/design/components/inline-message': '2026-03-18 11:00:00',
   '/design/components/loading': '2026-03-09',
-  '/design/components/progress-bar': '2026-03-09',
+  '/design/components/progress-bar': '2026-03-26 09:00:00',
   '/design/components/skeleton': '2026-03-09',
   '/design/components/spinner': '2026-03-09',
-  '/design/components/toast': '2026-03-09 10:30:00',
-  '/design/components/snackbar': '2026-03-09 10:30:00',
-  '/design/components/notification-center': '2026-03-09 10:30:00',
-  '/design/components/global-notification-panel': '2026-03-09 10:30:00',
+  '/design/components/toast': '2026-03-18 11:00:00',
+  '/design/components/snackbar': '2026-03-26 10:00:00',
+  '/design/components/notification-center': '2026-03-26 10:00:00',
+  '/design/components/global-notification-panel': '2026-03-18 11:00:00',
   // Navigation
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',
   '/design/components/tabs': '2026-03-09',
   '/design/components/breadcrumb': '2026-03-05 13:00:00',
+  '/design/components/project-selector': '2026-03-23 12:00:00',
   // Overlay
-  '/design/components/tooltip': '2026-03-09 10:30:00',
+  '/design/components/tooltip': '2026-03-18 11:00:00',
   '/design/components/popover': '2026-03-01 10:30:00',
   '/design/components/menu': '2026-03-09',
   '/design/components/context-menu': '2026-03-09',
-  '/design/components/modal': '2026-03-09 10:30:00',
+  '/design/components/modal': '2026-03-18 11:00:00',
   '/design/components/drawer': '2026-03-09 10:30:00',
   '/design/components/floating-card': '2026-03-05 13:00:00',
   // Layout & Patterns
@@ -609,38 +578,27 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/common': '2026-03-01 10:30:00',
   '/design/patterns/detail-header': '2026-03-09',
   '/design/patterns/section-card': '2026-03-09',
-  '/design/patterns/wizard': '2026-03-05 13:00:00',
+  '/design/patterns/wizard': '2026-03-18 11:00:00',
   '/design/patterns/open-form': '2026-03-01 10:30:00',
   '/design/patterns/monitoring-toolbar': '2026-03-09',
   '/design/policies/csv-download': '2026-03-09 15:00:00',
-  '/design/policies/app-window': '2026-03-09 10:30:00',
+  '/design/policies/app-window': '2026-03-18 11:00:00',
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
   '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
   '/design/patterns/editor': '2026-03-09',
   '/design/patterns/list-page': '2026-03-09 15:00:00',
   '/design/patterns/detail-page': '2026-03-09',
-  '/design/patterns/list-selector': '2026-03-09 10:30:00',
-  '/design/patterns/view-preferences': '2026-03-09 10:30:00',
+  '/design/patterns/list-selector': '2026-03-18 11:00:00',
+  '/design/patterns/view-preferences': '2026-03-18 11:00:00',
   '/design/patterns/form-field-pattern': '2026-03-09 15:00:00',
   '/design/patterns/shell': '2026-03-09 15:00:00',
   '/design/patterns/empty-states': '2026-03-09',
   // Charts
-  '/design/charts/overview': '2026-03-09 10:30:00',
+  '/design/charts/overview': '2026-03-18 11:00:00',
   '/design/charts/status-colors': '2026-03-01 10:30:00',
   '/design/charts/usage-chart': '2026-03-09',
   '/design/charts/area-chart': '2026-03-09',
   '/design/charts/pie-chart': '2026-03-09',
   '/design/charts/tooltip': '2026-03-01 10:30:00',
-  // Figma Migration
-  '/design/figma/guide': '2026-03-01 10:30:00',
-  '/design/figma/foundation': '2026-03-01 10:30:00',
-  '/design/figma/components': '2026-03-01 10:30:00',
-  // Prototype
-  '/design/prototype/ai-workspace': '2026-03-05 14:00:00',
-  // Audit
-  '/design/audit': '2026-03-11 10:00:00',
-  '/design/todo': '2026-03-11 12:00:00',
-  // Test
-  '/design/test/nested-box': '2026-03-05 01:30:00',
 };

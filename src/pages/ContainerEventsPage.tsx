@@ -31,6 +31,8 @@ import {
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -232,7 +234,7 @@ export function ContainerEventsPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns configuration
   const columns: TableColumn<EventRow>[] = [
@@ -241,7 +243,6 @@ export function ContainerEventsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -253,7 +254,7 @@ export function ContainerEventsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
     },
@@ -276,12 +277,14 @@ export function ContainerEventsPage() {
       label: 'Type',
       flex: 1,
       minWidth: columnMinWidths.type,
+      sortable: true,
     },
     {
       key: 'reason',
       label: 'Reason',
       flex: 1,
       minWidth: columnMinWidths.reason,
+      sortable: true,
     },
     {
       key: 'object',
@@ -312,7 +315,7 @@ export function ContainerEventsPage() {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-body-md text-[var(--color-text-default)] truncate block"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -407,6 +410,20 @@ export function ContainerEventsPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

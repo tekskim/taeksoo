@@ -15,7 +15,6 @@ export type { CustomIconProps } from './CustomIcons';
 
 // Custom Icons (Figma 디자인에 맞는 비율)
 export {
-  IconAction,
   IconActivity,
   IconAdd,
   IconAddRobot,
@@ -103,7 +102,6 @@ export {
   IconStop,
   IconStorage,
   IconTemplate,
-  IconTimeout,
   IconTopology,
   IconUpload,
 } from './CustomIcons';
@@ -377,7 +375,6 @@ import {
   IconRobotCustom,
   IconAddRobotCustom,
   IconHistory,
-  IconTimeout,
   IconChat,
 } from './CustomIcons';
 
@@ -682,7 +679,6 @@ export const Icons = {
   Retry: IconRotateClockwise,
   Pending: IconProgress,
   Progress: IconProgress,
-  Timeout: IconTimeout,
   Terminate: IconCircleX,
 } as const;
 

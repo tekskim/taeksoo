@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Button,
+  CopyButton,
   VStack,
   TabBar,
   TopBar,
@@ -23,10 +24,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconCirclePlus,
   IconTrash,
-  IconEdit,
   IconBell,
-  IconCopy,
-  IconCheck,
   IconChevronDown,
   IconExternalLink,
 } from '@tabler/icons-react';
@@ -85,11 +83,17 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
       hw_qemu_guest_agent: 'yes',
       os_distro: 'ubuntu',
       hw_disk_bus: 'scsi',
-      os_version: '22.04',
+      os_version: '24.04',
       os_require_quiesce: 'yes',
+      'owner_specified.openstack.sha256': '-',
+      'owner_specified.openstack.md5': '-',
       image_type: 'snapshot',
+      'owner_specified.openstack.object': 'images/ubuntu-24.04-server',
+      base_image_ref: '1e568eb7-a277-48f0-97d4-e481f2dd1ef4',
       owner_user_name: 'admin',
       owner_project_name: 'test',
+      boot_roles: 'reader,member,load-balancer_member,manager',
+      hw_machine_type: 'pc',
     },
   },
   'snap-002': {
@@ -162,41 +166,6 @@ const defaultSnapshotDetail: SnapshotDetail = {
   checksum: '-',
   metadata: {},
 };
-
-/* ----------------------------------------
-   Copyable Value Component
-   ---------------------------------------- */
-
-interface CopyableValueProps {
-  value: string;
-}
-
-function CopyableValue({ value }: CopyableValueProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      <button
-        onClick={handleCopy}
-        className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-        aria-label="Copy to clipboard"
-      >
-        {copied ? (
-          <IconCheck size={12} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-        )}
-      </button>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Instance Snapshot Detail Page
@@ -299,13 +268,14 @@ export function InstanceSnapshotDetailPage() {
               trigger="click"
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard label="Status" value="Active" status="active" />
             <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value="test" />
             <DetailHeader.InfoCard label="Size" value={snapshot.size} />
             <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
           </DetailHeader.InfoGrid>
@@ -324,14 +294,7 @@ export function InstanceSnapshotDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
                     <SectionCard.DataRow label="Description" value={snapshot.description} />
@@ -387,24 +350,22 @@ export function InstanceSnapshotDetailPage() {
                       label="Protected"
                       value={snapshot.protected ? 'Enabled' : 'Disabled'}
                     />
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Filename
+                    <SectionCard.DataRow label="Filename">
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {snapshot.filename}
                         </span>
-                        <CopyableValue value={snapshot.filename} />
+                        <CopyButton value={snapshot.filename} size="sm" iconOnly />
                       </div>
-                    </div>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Checksum
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="Checksum">
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {snapshot.checksum}
                         </span>
-                        <CopyableValue value={snapshot.checksum} />
+                        <CopyButton value={snapshot.checksum} size="sm" iconOnly />
                       </div>
-                    </div>
+                    </SectionCard.DataRow>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
 import { useIsDesktopWindow } from '@/contexts/DesktopWindowContext';
 
@@ -71,8 +72,17 @@ export const TabBar: React.FC<TabBarProps> = ({
   onWindowClose,
   className = '',
 }) => {
+  const navigate = useNavigate();
   const isDesktopWindow = useIsDesktopWindow();
   const effectiveShowWindowControls = showWindowControls && !isDesktopWindow;
+
+  const handleWindowClose = useCallback(() => {
+    if (onWindowClose) {
+      onWindowClose();
+    } else {
+      navigate('/');
+    }
+  }, [onWindowClose, navigate]);
 
   // Drag and drop state
   const [draggedTabId, setDraggedTabId] = useState<string | null>(null);
@@ -134,7 +144,7 @@ export const TabBar: React.FC<TabBarProps> = ({
 
   return (
     <div
-      data-figma-name="TabBar"
+      data-figma-name="[TDS] TabBar"
       className={`
         relative
         flex items-center
@@ -316,7 +326,7 @@ export const TabBar: React.FC<TabBarProps> = ({
           </button>
           <button
             type="button"
-            onClick={onWindowClose}
+            onClick={handleWindowClose}
             className="
               flex items-center justify-center
               size-[24px]

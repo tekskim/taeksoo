@@ -97,27 +97,19 @@ function WindowControlGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">size</span>
-              </Td>
+              <Td>size</Td>
               <Td>24×24px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">icon</span>
-              </Td>
+              <Td>icon</Td>
               <Td>12px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">radius</span>
-              </Td>
+              <Td>radius</Td>
               <Td>4px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">gap</span>
-              </Td>
+              <Td>gap</Td>
               <Td>4px</Td>
             </tr>
           </tbody>
@@ -342,10 +334,7 @@ export function WindowControlPage() {
       guidelines={<WindowControlGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">size: 24×24px</span> ·{' '}
-          <span className="font-mono">icon: 12px</span> ·{' '}
-          <span className="font-mono">radius: 4px</span> ·{' '}
-          <span className="font-mono">gap: 4px</span>
+          size: 24×24px · icon: 12px · radius: 4px · gap: 4px
         </div>
       }
       relatedLinks={[

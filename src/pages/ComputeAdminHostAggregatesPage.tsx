@@ -20,6 +20,8 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
+  Popover,
+  Badge,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -330,14 +332,13 @@ export function ComputeAdminHostAggregatesPage() {
             </div>
 
             {/* Pagination */}
-            {filteredItems.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                totalItems={filteredItems.length}
-              />
-            )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={filteredItems.length}
+              showSettings
+            />
 
             {/* Table */}
             <Table<HostAggregate>
@@ -346,6 +347,7 @@ export function ComputeAdminHostAggregatesPage() {
                   key: 'name',
                   label: 'Name',
                   flex: 1,
+                  sortable: true,
                   render: (_: string, row: HostAggregate) => {
                     const isExpanded = expandedRows.includes(row.id);
                     return (
@@ -366,7 +368,7 @@ export function ComputeAdminHostAggregatesPage() {
                     );
                   },
                 },
-                { key: 'availabilityZone', label: 'Availability Zone', flex: 1 },
+                { key: 'availabilityZone', label: 'Availability Zone', flex: 1, sortable: true },
                 {
                   key: 'hosts',
                   label: 'Hosts',
@@ -375,14 +377,45 @@ export function ComputeAdminHostAggregatesPage() {
                     const first = row.hosts[0];
                     const rest = row.hosts.length - 1;
                     return (
-                      <span>
-                        {first}
-                        {rest > 0 && ` (+${rest})`}
+                      <span className="flex items-center justify-between w-full">
+                        <span className="truncate">{first}</span>
+                        {rest > 0 && (
+                          <Popover
+                            trigger="hover"
+                            position="bottom"
+                            delay={100}
+                            hideDelay={100}
+                            content={
+                              <div className="p-3 min-w-[120px] max-w-[320px]">
+                                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                                  All Hosts ({row.hosts.length})
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  {row.hosts.map((h, i) => (
+                                    <Badge key={i} theme="white" size="sm">
+                                      {h}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            }
+                          >
+                            <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                              +{rest}
+                            </span>
+                          </Popover>
+                        )}
                       </span>
                     );
                   },
                 },
-                { key: 'createdAt', label: 'Created at', flex: 1 },
+                {
+                  key: 'createdAt',
+                  label: 'Created at',
+                  flex: 1,
+                  sortable: true,
+                  render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+                },
                 {
                   key: 'actions' as keyof HostAggregate,
                   label: 'Action',
@@ -444,14 +477,13 @@ export function ComputeAdminHostAggregatesPage() {
             </div>
 
             {/* Pagination */}
-            {filteredAZs.length > 0 && (
-              <Pagination
-                currentPage={azCurrentPage}
-                totalPages={azTotalPages}
-                onPageChange={setAzCurrentPage}
-                totalItems={filteredAZs.length}
-              />
-            )}
+            <Pagination
+              currentPage={azCurrentPage}
+              totalPages={azTotalPages}
+              onPageChange={setAzCurrentPage}
+              totalItems={filteredAZs.length}
+              showSettings
+            />
 
             {/* Availability Zones Table */}
             <Table<AvailabilityZone>
@@ -465,9 +497,34 @@ export function ComputeAdminHostAggregatesPage() {
                     const first = row.hosts[0];
                     const rest = row.hosts.length - 1;
                     return (
-                      <span>
-                        {first}
-                        {rest > 0 && ` (+${rest})`}
+                      <span className="flex items-center justify-between w-full">
+                        <span className="truncate">{first}</span>
+                        {rest > 0 && (
+                          <Popover
+                            trigger="hover"
+                            position="bottom"
+                            delay={100}
+                            hideDelay={100}
+                            content={
+                              <div className="p-3 min-w-[120px] max-w-[320px]">
+                                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                                  All Hosts ({row.hosts.length})
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  {row.hosts.map((h, i) => (
+                                    <Badge key={i} theme="white" size="sm">
+                                      {h}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            }
+                          >
+                            <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                              +{rest}
+                            </span>
+                          </Popover>
+                        )}
                       </span>
                     );
                   },

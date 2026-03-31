@@ -26,7 +26,14 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconSearch, IconChevronDown } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconTerminal2,
+  IconSearch,
+  IconChevronDown,
+  IconPencilCog,
+  IconKey,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -128,7 +135,10 @@ function RulesTab({ rules }: RulesTabProps) {
       minWidth: columnMinWidths.path,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -137,9 +147,13 @@ function RulesTab({ rules }: RulesTabProps) {
       key: 'targetService',
       label: 'Target service',
       flex: 1,
+      minWidth: columnMinWidths.targetService,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -148,15 +162,20 @@ function RulesTab({ rules }: RulesTabProps) {
       key: 'port',
       label: 'Port',
       flex: 1,
+      minWidth: columnMinWidths.port,
       sortable: true,
     },
     {
       key: 'certificates',
       label: 'Certificates',
       flex: 1,
+      minWidth: columnMinWidths.certificates,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -207,7 +226,7 @@ export function ContainerIngressDetailPage() {
   }, [updateActiveTabLabel, ingress]);
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -303,6 +322,20 @@ export function ContainerIngressDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -408,8 +441,8 @@ export function ContainerIngressDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(ingress.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(ingress.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -455,8 +488,8 @@ export function ContainerIngressDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(ingress.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(ingress.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

@@ -118,7 +118,11 @@ export function Tabs({
 
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant }}>
-      <div data-figma-name="Tabs" className={twMerge('flex flex-col h-fit', className)} {...rest}>
+      <div
+        data-figma-name="[TDS] Tabs"
+        className={twMerge('flex flex-col h-fit', className)}
+        {...rest}
+      >
         {children}
       </div>
     </TabsContext.Provider>
@@ -191,7 +195,7 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
 
   return (
     <div
-      data-figma-name="TabList"
+      data-figma-name="[TDS] Tabs.List"
       {...rest}
       role="tablist"
       className={twMerge(variantStyles[variant], className)}
@@ -219,7 +223,7 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
   if (variant === 'underline') {
     return (
       <button
-        data-figma-name="Tab"
+        data-figma-name="[TDS] Tabs.Tab"
         {...rest}
         role="tab"
         type="button"
@@ -267,7 +271,7 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
   // Boxed variant
   return (
     <button
-      data-figma-name="Tab"
+      data-figma-name="[TDS] Tabs.Tab"
       {...rest}
       role="tab"
       type="button"
@@ -306,7 +310,7 @@ export function TabPanel({ value, children, className = '', ...rest }: TabPanelP
 
   return (
     <div
-      data-figma-name="TabPanel"
+      data-figma-name="[TDS] Tabs.Panel"
       {...rest}
       role="tabpanel"
       aria-hidden={!isActive}

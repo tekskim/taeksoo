@@ -68,7 +68,7 @@ const badgeListProps: PropDef[] = [
   },
   {
     name: 'size',
-    type: "'sm' | 'md' | 'lg'",
+    type: "'sm' | 'md'",
     default: "'sm'",
     required: false,
     description: 'Badge size',
@@ -127,47 +127,8 @@ function BadgeGuidelines() {
               </Td>
               <Td>카드, 상세 페이지 등 일반 컨텍스트 (기본값)</Td>
             </tr>
-            <tr>
-              <Td>
-                <strong>Large</strong>
-              </Td>
-              <Td>강조가 필요한 단독 표시 영역</Td>
-            </tr>
           </tbody>
         </TableWrapper>
-
-        <SubSectionTitle>Type</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[120px]">Type</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Solid</strong> (default)
-              </Td>
-              <Td>배경색이 진한 형태. white/gray 테마에서 중립적인 레이블로 사용</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Subtle</strong>
-              </Td>
-              <Td>
-                연한 배경 + 텍스트 색상. 시맨틱 컬러(info, success, warning, danger)와 함께 사용 시
-                권장
-              </Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-        <p className="text-body-sm text-[var(--color-text-subtle)]">
-          <strong>Default가 solid인 이유:</strong> Badge의 가장 빈번한 사용처인 테이블 셀에서는
-          white/gray 테마의 solid 배지가 시각적으로 가장 균형 잡혀 있습니다. 시맨틱 컬러(info,
-          success 등)를 사용할 때는 subtle 타입이 더 적절하므로 명시적으로{' '}
-          <span className="font-mono text-body-sm">type=&quot;subtle&quot;</span>을 지정하세요.
-        </p>
 
         <SubSectionTitle>Semantic Color</SubSectionTitle>
         <TableWrapper>
@@ -306,67 +267,8 @@ function BadgeGuidelines() {
           </tbody>
         </TableWrapper>
 
-        <SubSectionTitle>Design Token</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[100px]">Size</Th>
-              <Th>Padding</Th>
-              <Th>Font Size</Th>
-              <Th>Line Height</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <span className="font-mono">sm</span>
-              </Td>
-              <Td>
-                <span className="font-mono">6×2px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">11px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <span className="font-mono">md</span>
-              </Td>
-              <Td>
-                <span className="font-mono">8×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <span className="font-mono">lg</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">14px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">20px</span>
-              </Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
         <Prose>
-          <p>
-            <span className="font-mono">radius: 4px</span> ·{' '}
-            <span className="font-mono">gap: 4px</span> ·{' '}
-            <span className="font-mono">dot-size: 6px</span>
-          </p>
+          <p>radius: 4px · gap: 4px · dot-size: 6px</p>
         </Prose>
       </VStack>
 
@@ -378,8 +280,7 @@ function BadgeGuidelines() {
         <Prose>
           <p>
             테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
-            가능한 개수(<span className="font-mono">maxVisible</span>)를 초과하면{' '}
-            <span className="font-mono">+N</span> 인디케이터로 숨김 처리하고, 클릭 시 Popover로 전체
+            가능한 개수(maxVisible)를 초과하면 +N 인디케이터로 숨김 처리하고, 클릭 시 Popover로 전체
             항목을 확인할 수 있다.
           </p>
         </Prose>
@@ -428,14 +329,8 @@ function BadgeGuidelines() {
         <SubSectionTitle>Overflow 처리 정책</SubSectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
-            <li>
-              <span className="font-mono">maxVisible</span> 값을 초과하는 항목은{' '}
-              <span className="font-mono">+N</span> 인디케이터로 표시한다.
-            </li>
-            <li>
-              <span className="font-mono">+N</span> 클릭 시 Popover가 열리며 전체 Badge 목록을
-              표시한다.
-            </li>
+            <li>maxVisible 값을 초과하는 항목은 +N 인디케이터로 표시한다.</li>
+            <li>+N 클릭 시 Popover가 열리며 전체 Badge 목록을 표시한다.</li>
             <li>Popover 내에서도 동일한 Badge 스타일을 유지한다.</li>
           </ul>
         </Prose>
@@ -509,9 +404,8 @@ function BadgeGuidelines() {
         <SubSectionTitle>Semantic ↔ Theme 매핑</SubSectionTitle>
         <Prose>
           <p>
-            Badge의 <span className="font-mono">variant</span>(semantic)와{' '}
-            <span className="font-mono">theme</span>(색상)은 다음과 같이 매핑된다. Semantic variant
-            사용 시 자동으로 대응되는 theme 색상이 적용된다.
+            Badge의 variant(semantic)와 theme(색상)은 다음과 같이 매핑된다. Semantic variant 사용 시
+            자동으로 대응되는 theme 색상이 적용된다.
           </p>
         </Prose>
         <TableWrapper>
@@ -612,17 +506,31 @@ export function BadgePage() {
       ]}
       preview={
         <ComponentPreview
-          code={`<Badge size="sm">Default</Badge>
-<Badge size="sm" theme="blue" type="subtle">Label</Badge>
-<Badge size="sm" theme="green" type="subtle">Completed</Badge>`}
+          code={`<Badge size="sm" theme="white" type="subtle">White</Badge>
+<Badge size="sm" theme="gray" type="subtle">Gray</Badge>
+<Badge size="sm" theme="blue" type="subtle">Blue</Badge>
+<Badge size="sm" theme="green" type="subtle">Green</Badge>
+<Badge size="sm" theme="red" type="subtle">Red</Badge>
+<Badge size="sm" theme="yellow" type="subtle">Yellow</Badge>`}
         >
-          <div className="flex gap-2">
-            <Badge size="sm">Default</Badge>
+          <div className="flex gap-2 flex-wrap">
+            <Badge size="sm" theme="white" type="subtle">
+              White
+            </Badge>
+            <Badge size="sm" theme="gray" type="subtle">
+              Gray
+            </Badge>
             <Badge size="sm" theme="blue" type="subtle">
-              Label
+              Blue
             </Badge>
             <Badge size="sm" theme="green" type="subtle">
-              Completed
+              Green
+            </Badge>
+            <Badge size="sm" theme="red" type="subtle">
+              Red
+            </Badge>
+            <Badge size="sm" theme="yellow" type="subtle">
+              Yellow
             </Badge>
           </div>
         </ComponentPreview>
@@ -633,7 +541,7 @@ export function BadgePage() {
             <VStack gap={1}>
               <Label>Sizes</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Small(테이블 셀), Medium(기본), Large(강조).
+                Small(테이블 셀), Medium(기본).
               </span>
             </VStack>
             <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
@@ -643,51 +551,35 @@ export function BadgePage() {
               <Badge size="md" theme="white">
                 Medium
               </Badge>
-              <Badge size="lg" theme="white">
-                Large
-              </Badge>
             </div>
           </VStack>
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Types</Label>
+              <Label>Colors</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                Solid(진한 배경)와 Subtle(연한 배경 + 텍스트 색상).
+                6가지 컬러 테마로 상태와 카테고리를 구분합니다.
               </span>
             </VStack>
-            <div className="flex gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Solid</span>
-                <div className="flex gap-2">
-                  <Badge size="sm" theme="white">
-                    White
-                  </Badge>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Subtle</span>
-                <div className="flex gap-2">
-                  <Badge size="sm" type="subtle" theme="white">
-                    White
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="blue">
-                    Blue
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="green">
-                    Green
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="red">
-                    Red
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="yellow">
-                    Yellow
-                  </Badge>
-                  <Badge size="sm" type="subtle" theme="gray">
-                    Gray
-                  </Badge>
-                </div>
-              </VStack>
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <Badge size="sm" type="subtle" theme="white">
+                White
+              </Badge>
+              <Badge size="sm" type="subtle" theme="gray">
+                Gray
+              </Badge>
+              <Badge size="sm" type="subtle" theme="blue">
+                Blue
+              </Badge>
+              <Badge size="sm" type="subtle" theme="green">
+                Green
+              </Badge>
+              <Badge size="sm" type="subtle" theme="red">
+                Red
+              </Badge>
+              <Badge size="sm" type="subtle" theme="yellow">
+                Yellow
+              </Badge>
             </div>
           </VStack>
 
@@ -732,60 +624,205 @@ export function BadgePage() {
       }
       guidelines={<BadgeGuidelines />}
       tokens={
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[100px]">Size</Th>
-              <Th>Padding</Th>
-              <Th>Font Size</Th>
-              <Th>Line Height</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <span className="font-mono">sm</span>
-              </Td>
-              <Td>
-                <span className="font-mono">6×2px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">11px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <span className="font-mono">md</span>
-              </Td>
-              <Td>
-                <span className="font-mono">8×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">16px</span>
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <span className="font-mono">lg</span>
-              </Td>
-              <Td>
-                <span className="font-mono">12×4px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">14px</span>
-              </Td>
-              <Td>
-                <span className="font-mono">20px</span>
-              </Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
+        <VStack gap={6}>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[100px]">Size</Th>
+                <Th>Padding</Th>
+                <Th>Font Size</Th>
+                <Th>Line Height</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>sm</Td>
+                <Td>6×2px</Td>
+                <Td>11px</Td>
+                <Td>16px</Td>
+              </tr>
+              <tr>
+                <Td>md</Td>
+                <Td>8×2px</Td>
+                <Td>13px</Td>
+                <Td>18px</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+
+          <SubSectionTitle>Color Tokens (Subtle)</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[100px]">Theme</Th>
+                <Th>Background</Th>
+                <Th>Text</Th>
+                <Th className="w-[80px]">예시</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <strong>blue</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-blue-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(blue-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-blue-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-info-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="blue" type="subtle">
+                    Blue
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>green</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-green-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(green-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-green-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-success-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="green" type="subtle">
+                    Green
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>red</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-red-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(red-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-red-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-danger-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="red" type="subtle">
+                    Red
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>yellow</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-yellow-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(orange-100)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-yellow-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (state-warning-text)
+                  </span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="yellow" type="subtle">
+                    Yellow
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>gray</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-gray-bg</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">
+                    (surface-muted)
+                  </span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--badge-subtle-gray-text</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(#475569)</span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="gray" type="subtle">
+                    Gray
+                  </Badge>
+                </Td>
+              </tr>
+              <tr>
+                <Td>
+                  <strong>white</strong>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--color-surface-default</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(#ffffff)</span>
+                </Td>
+                <Td>
+                  <code className="text-body-sm">--color-text-default</code>{' '}
+                  <span className="text-body-xs text-[var(--color-text-subtle)]">(slate-900)</span>
+                </Td>
+                <Td>
+                  <Badge size="sm" theme="white">
+                    White
+                  </Badge>
+                </Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+
+          <SubSectionTitle>Common Tokens</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[200px]">Token</Th>
+                <Th>Value</Th>
+                <Th>설명</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-radius</code>
+                </Td>
+                <Td>4px</Td>
+                <Td>Border radius (radius-sm)</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-gap</code>
+                </Td>
+                <Td>4px</Td>
+                <Td>아이콘과 텍스트 사이 간격</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-dot-size</code>
+                </Td>
+                <Td>6px</Td>
+                <Td>Dot indicator 크기</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <code className="text-body-sm">--badge-white-border</code>
+                </Td>
+                <Td>1px inset</Td>
+                <Td>White 테마 보더 (border-default)</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+        </VStack>
       }
       relatedLinks={[
         {
@@ -806,8 +843,7 @@ export function BadgePage() {
           <Prose>
             <p>
               테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 나열할 때 사용하는 컴포넌트다. 표시
-              가능한 개수(<span className="font-mono">maxVisible</span>)를 초과하면{' '}
-              <span className="font-mono">+N</span> 인디케이터로 숨김 처리하고, 클릭 시 Popover로
+              가능한 개수(maxVisible)를 초과하면 +N 인디케이터로 숨김 처리하고, 클릭 시 Popover로
               전체 항목을 확인할 수 있다.
             </p>
           </Prose>

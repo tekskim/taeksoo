@@ -31,6 +31,8 @@ import {
   IconCopy,
   IconSearch,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -201,7 +203,7 @@ export function ConfigMapDetailPage() {
   };
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
@@ -246,12 +248,6 @@ export function ConfigMapDetailPage() {
   const dataEntries = Object.entries(configMapData.data);
   const binaryDataEntries = Object.entries(configMapData.binaryData);
 
-  // Copy to clipboard function
-  const copyToClipboard = (value: string) => {
-    navigator.clipboard.writeText(value);
-    // Could add toast notification here
-  };
-
   return (
     <PageShell
       sidebar={
@@ -283,6 +279,20 @@ export function ConfigMapDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

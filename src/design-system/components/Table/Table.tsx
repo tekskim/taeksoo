@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
+import { Radio } from '../Radio';
 import { cn } from '../../utils/cn';
 import { useColumnResize } from './useColumnResize';
 
@@ -24,6 +25,8 @@ export interface TableColumn<T = any> {
   sortable?: boolean;
   /** Whether this column can be resized. Defaults to true for flex columns, false for fixed-width columns */
   resizable?: boolean;
+  /** Pin column to 'left' or 'right' edge during horizontal scroll */
+  sticky?: 'left' | 'right';
   headerRender?: () => React.ReactNode;
   render?: (value: any, row: T, rowIndex: number) => React.ReactNode;
 }
@@ -39,6 +42,7 @@ export interface TableProps<T = any> extends Omit<
   rows?: T[];
   rowKey: keyof T | ((row: T) => string);
   selectable?: boolean;
+  selectionType?: 'checkbox' | 'radio';
   selectedKeys?: string[];
   onSelectionChange?: (keys: string[]) => void;
   hideSelectAll?: boolean;
@@ -91,6 +95,7 @@ export function Table<T extends Record<string, any>>({
   rows,
   rowKey,
   selectable = false,
+  selectionType = 'checkbox',
   selectedKeys = [],
   onSelectionChange,
   hideSelectAll = false,
@@ -183,10 +188,14 @@ export function Table<T extends Record<string, any>>({
   }, [tableData, sortKey, sortDirection]);
 
   const handleSelectRow = (key: string) => {
-    if (selectedKeys.includes(key)) {
-      onSelectionChange?.(selectedKeys.filter((k) => k !== key));
+    if (selectionType === 'radio') {
+      onSelectionChange?.(selectedKeys.includes(key) ? [] : [key]);
     } else {
-      onSelectionChange?.([...selectedKeys, key]);
+      if (selectedKeys.includes(key)) {
+        onSelectionChange?.(selectedKeys.filter((k) => k !== key));
+      } else {
+        onSelectionChange?.([...selectedKeys, key]);
+      }
     }
   };
 
@@ -204,7 +213,7 @@ export function Table<T extends Record<string, any>>({
 
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
-      return <IconSelector size={14} stroke={1} className="text-[var(--color-text-disabled)]" />;
+      return <IconSelector size={14} stroke={1} className="text-[var(--color-text-subtle)]" />;
     }
     if (sortDirection === 'asc') {
       return <IconChevronUp size={14} stroke={1} className="text-[var(--color-action-primary)]" />;
@@ -213,6 +222,7 @@ export function Table<T extends Record<string, any>>({
   };
 
   const enableStickyHeader = stickyHeader || !!maxHeight;
+  const hasStickyColumns = columns.some((c) => c.sticky);
 
   const isColumnResizable = (column: TableColumn<T>): boolean => {
     if (!resizable) return false;
@@ -245,13 +255,289 @@ export function Table<T extends Record<string, any>>({
 
   const getEffectiveColumnStyle = (column: TableColumn<T>): React.CSSProperties => {
     const baseStyle = getColumnStyle(column);
-    if (!resizable || !isColumnResizable(column)) return baseStyle;
-    return getResizedColumnStyle(column.key, baseStyle, column.minWidth, column.maxWidth);
+    return !resizable || !isColumnResizable(column)
+      ? { ...baseStyle }
+      : getResizedColumnStyle(column.key, baseStyle, column.minWidth, column.maxWidth);
   };
+
+  const scrollColumns = hasStickyColumns ? columns.filter((c) => !c.sticky) : columns;
+  const stickyRightColumns = hasStickyColumns ? columns.filter((c) => c.sticky === 'right') : [];
+
+  const stickyRightWidth = stickyRightColumns.reduce((sum, c) => {
+    const w = c.width ? parseInt(c.width, 10) : 72;
+    return sum + w;
+  }, 0);
+
+  const renderHeaderCell = (column: TableColumn<T>, index: number, showFirstDivider: boolean) => {
+    const isFirstColumn = index === 0;
+    const showDivider = isFirstColumn ? showFirstDivider : true;
+    const columnResizable = isColumnResizable(column);
+    const align = column.align || 'left';
+
+    return (
+      <div
+        key={column.key}
+        data-column-key={column.key}
+        className={cn(
+          'relative flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]',
+          'text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]',
+          'min-w-0 overflow-hidden',
+          HEADER_ALIGN_CLS[align],
+          column.sortable &&
+            'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors',
+          showDivider && 'border-l border-[var(--color-border-default)]'
+        )}
+        style={getEffectiveColumnStyle(column)}
+        onClick={
+          column.sortable
+            ? () => {
+                if (!shouldIgnoreHeaderClick()) handleSort(column.key);
+              }
+            : undefined
+        }
+        title={column.label}
+      >
+        {column.headerRender ? (
+          column.headerRender()
+        ) : (
+          <div className={cn('flex items-center gap-1 w-full min-w-0', INNER_ALIGN_CLS[align])}>
+            <span className="whitespace-nowrap truncate" title={column.label}>
+              {column.label}
+            </span>
+            {column.sortable && <span className="flex-shrink-0">{renderSortIcon(column.key)}</span>}
+          </div>
+        )}
+        {columnResizable && (
+          <div
+            className={cn(
+              'absolute top-0 right-0 h-full w-[var(--table-resize-handle-width)] cursor-col-resize z-[1] flex items-center justify-center',
+              "after:content-[''] after:absolute after:top-2 after:bottom-2 after:w-[1px] after:rounded-full",
+              'after:bg-[var(--table-resize-handle-hover-color)] after:opacity-0 after:transition-opacity after:duration-150',
+              resizingColumnKey !== column.key && 'hover:after:opacity-100',
+              resizingColumnKey === column.key && 'after:opacity-100'
+            )}
+            {...getResizeHandleProps(column.key, column.label)}
+          />
+        )}
+      </div>
+    );
+  };
+
+  const renderBodyCell = (
+    column: TableColumn<T>,
+    row: T,
+    rowIndex: number,
+    colIndex: number,
+    isSelected: boolean,
+    showFirstDivider: boolean
+  ) => {
+    const isFirstColumn = colIndex === 0;
+    const showCellDivider = isFirstColumn ? showFirstDivider : true;
+    const align = column.align || 'left';
+    const cellValue = row[column.key];
+    const cellTitle =
+      typeof cellValue === 'string' || typeof cellValue === 'number'
+        ? String(cellValue)
+        : undefined;
+
+    return (
+      <div
+        key={column.key}
+        data-column-key={column.key}
+        className={cn(
+          'flex items-center',
+          'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
+          'text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]',
+          'min-w-0 overflow-hidden',
+          CELL_ALIGN_CLS[align],
+          showCellDivider && 'border-l border-transparent'
+        )}
+        style={getEffectiveColumnStyle(column)}
+        title={cellTitle}
+      >
+        <div
+          className={cn(
+            'truncate w-full min-w-0',
+            align === 'center' && 'text-center flex justify-center',
+            align === 'right' && 'text-right'
+          )}
+        >
+          {column.render ? column.render(row[column.key], row, rowIndex) : row[column.key]}
+        </div>
+      </div>
+    );
+  };
+
+  if (hasStickyColumns) {
+    return (
+      <div
+        data-figma-name="[TDS] Table"
+        {...rest}
+        ref={tableRef}
+        className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}
+        style={rowHeight ? ({ '--table-row-height': rowHeight } as React.CSSProperties) : undefined}
+      >
+        <div className="flex">
+          {/* Scrollable area */}
+          <div
+            className={cn('flex-1 min-w-0 overflow-x-auto', maxHeight && 'overflow-y-auto')}
+            style={maxHeight ? { maxHeight } : undefined}
+          >
+            <div className="min-w-fit w-full">
+              {/* Header */}
+              <div
+                className={cn(
+                  'flex items-stretch min-h-[var(--table-row-height)] w-full',
+                  'bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-l-[var(--table-row-radius)]',
+                  'border-r-0',
+                  enableStickyHeader && 'sticky top-0 z-10',
+                  isResizing && 'select-none'
+                )}
+              >
+                {selectable && (
+                  <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
+                    {!hideSelectAll && selectionType !== 'radio' && (
+                      <Checkbox
+                        checked={allSelected}
+                        indeterminate={someSelected}
+                        onChange={handleSelectAll}
+                        aria-label="Select all rows"
+                      />
+                    )}
+                  </div>
+                )}
+                {scrollColumns.map((col, i) => renderHeaderCell(col, i, selectable))}
+                {hasResizedColumns && (
+                  <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                )}
+              </div>
+
+              {/* Body */}
+              <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
+                {sortedData.length === 0 ? (
+                  <div
+                    className={cn(
+                      'px-[var(--table-cell-padding-x)] py-[var(--table-empty-padding-y)] text-center',
+                      'text-[length:var(--table-font-size)] text-[var(--color-text-muted)]',
+                      'border border-[var(--color-border-default)] rounded-l-[var(--table-row-radius)] border-r-0 bg-[var(--color-surface-default)]'
+                    )}
+                  >
+                    {emptyMessage}
+                  </div>
+                ) : (
+                  sortedData.map((row, rowIndex) => {
+                    const key = getRowKey(row);
+                    const isSelected = selectedKeys.includes(key);
+                    return (
+                      <div
+                        key={key}
+                        className={cn(
+                          'flex items-stretch min-h-[var(--table-row-height)] w-full',
+                          'rounded-l-[var(--table-row-radius)] border border-[var(--color-border-default)] border-r-0',
+                          'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                          isSelected
+                            ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
+                            : 'bg-[var(--color-surface-default)]',
+                          onRowClick && 'cursor-pointer'
+                        )}
+                        onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                      >
+                        {selectable && (
+                          <div
+                            className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {selectionType === 'radio' ? (
+                              <Radio
+                                checked={isSelected}
+                                onChange={() => handleSelectRow(key)}
+                                aria-label={`Select row ${rowIndex + 1}`}
+                              />
+                            ) : (
+                              <Checkbox
+                                checked={isSelected}
+                                onChange={() => handleSelectRow(key)}
+                                aria-label={`Select row ${rowIndex + 1}`}
+                              />
+                            )}
+                          </div>
+                        )}
+                        {scrollColumns.map((col, i) =>
+                          renderBodyCell(col, row, rowIndex, i, isSelected, selectable)
+                        )}
+                        {hasResizedColumns && (
+                          <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Fixed right column(s) */}
+          <div
+            className="shrink-0 flex flex-col gap-[var(--table-row-gap)]"
+            style={{ width: stickyRightWidth }}
+          >
+            {/* Header */}
+            <div
+              className={cn(
+                'flex items-stretch min-h-[var(--table-row-height)]',
+                'bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-r-[var(--table-row-radius)]',
+                'border-l-0',
+                'shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]'
+              )}
+            >
+              {stickyRightColumns.map((col, i) => renderHeaderCell(col, i, true))}
+            </div>
+
+            {/* Body */}
+            <div className="flex flex-col gap-[var(--table-row-gap)]">
+              {sortedData.length === 0 ? (
+                <div
+                  className={cn(
+                    'min-h-[var(--table-row-height)]',
+                    'border border-[var(--color-border-default)] rounded-r-[var(--table-row-radius)] border-l-0 bg-[var(--color-surface-default)]'
+                  )}
+                />
+              ) : (
+                sortedData.map((row, rowIndex) => {
+                  const key = getRowKey(row);
+                  const isSelected = selectedKeys.includes(key);
+                  return (
+                    <div
+                      key={key}
+                      className={cn(
+                        'flex items-stretch min-h-[var(--table-row-height)]',
+                        'rounded-r-[var(--table-row-radius)] border border-[var(--color-border-default)] border-l-0',
+                        'transition-all hover:bg-[var(--table-row-hover-bg)]',
+                        'shadow-[-8px_0_16px_-4px_rgba(0,0,0,0.04)]',
+                        isSelected
+                          ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
+                          : 'bg-[var(--color-surface-default)]',
+                        onRowClick && 'cursor-pointer'
+                      )}
+                      onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                    >
+                      {stickyRightColumns.map((col, i) =>
+                        renderBodyCell(col, row, rowIndex, i, isSelected, true)
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      data-figma-name="Table"
+      data-figma-name="[TDS] Table"
       {...rest}
       ref={tableRef}
       className={cn('flex flex-col gap-[var(--table-row-gap)]', className)}
@@ -273,7 +559,7 @@ export function Table<T extends Record<string, any>>({
           >
             {selectable && (
               <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
-                {!hideSelectAll && (
+                {!hideSelectAll && selectionType !== 'radio' && (
                   <Checkbox
                     checked={allSelected}
                     indeterminate={someSelected}
@@ -283,71 +569,7 @@ export function Table<T extends Record<string, any>>({
                 )}
               </div>
             )}
-
-            {columns.map((column, index) => {
-              const isFirstColumn = index === 0;
-              const showDivider = isFirstColumn ? selectable : true;
-              const columnResizable = isColumnResizable(column);
-              const align = column.align || 'left';
-
-              return (
-                <div
-                  key={column.key}
-                  data-column-key={column.key}
-                  className={cn(
-                    'relative flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]',
-                    'text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]',
-                    'min-w-0 overflow-hidden',
-                    HEADER_ALIGN_CLS[align],
-                    column.sortable &&
-                      'cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors',
-                    showDivider && 'border-l border-[var(--color-border-default)]'
-                  )}
-                  style={getEffectiveColumnStyle(column)}
-                  onClick={
-                    column.sortable
-                      ? () => {
-                          if (!shouldIgnoreHeaderClick()) handleSort(column.key);
-                        }
-                      : undefined
-                  }
-                  title={column.label}
-                >
-                  {column.headerRender ? (
-                    column.headerRender()
-                  ) : (
-                    <div
-                      className={cn(
-                        'flex items-center gap-1 w-full min-w-0',
-                        INNER_ALIGN_CLS[align]
-                      )}
-                    >
-                      <span className="whitespace-nowrap truncate" title={column.label}>
-                        {column.label}
-                      </span>
-                      {column.sortable && (
-                        <span className="flex-shrink-0">{renderSortIcon(column.key)}</span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Resize Handle */}
-                  {columnResizable && (
-                    <div
-                      className={cn(
-                        'absolute top-0 right-0 h-full w-[var(--table-resize-handle-width)] cursor-col-resize z-[1] flex items-center justify-center',
-                        "after:content-[''] after:absolute after:top-2 after:bottom-2 after:w-[1px] after:rounded-full",
-                        'after:bg-[var(--table-resize-handle-hover-color)] after:opacity-0 after:transition-opacity after:duration-150',
-                        resizingColumnKey !== column.key && 'hover:after:opacity-100',
-                        resizingColumnKey === column.key && 'after:opacity-100'
-                      )}
-                      {...getResizeHandleProps(column.key, column.label)}
-                    />
-                  )}
-                </div>
-              );
-            })}
-
+            {columns.map((column, index) => renderHeaderCell(column, index, selectable))}
             {hasResizedColumns && <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />}
           </div>
 
@@ -368,7 +590,6 @@ export function Table<T extends Record<string, any>>({
                 const key = getRowKey(row);
                 const isSelected = selectedKeys.includes(key);
                 const expanded = expandedContent?.(row, rowIndex);
-
                 return (
                   <div
                     key={key}
@@ -376,7 +597,7 @@ export function Table<T extends Record<string, any>>({
                       'rounded-[var(--table-row-radius)] overflow-hidden',
                       'border border-[var(--color-border-default)]',
                       isSelected
-                        ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
+                        ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                         : 'bg-[var(--color-surface-default)]'
                     )}
                   >
@@ -393,55 +614,24 @@ export function Table<T extends Record<string, any>>({
                           className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Checkbox
-                            checked={isSelected}
-                            onChange={() => handleSelectRow(key)}
-                            aria-label={`Select row ${rowIndex + 1}`}
-                          />
+                          {selectionType === 'radio' ? (
+                            <Radio
+                              checked={isSelected}
+                              onChange={() => handleSelectRow(key)}
+                              aria-label={`Select row ${rowIndex + 1}`}
+                            />
+                          ) : (
+                            <Checkbox
+                              checked={isSelected}
+                              onChange={() => handleSelectRow(key)}
+                              aria-label={`Select row ${rowIndex + 1}`}
+                            />
+                          )}
                         </div>
                       )}
-
-                      {columns.map((column, colIndex) => {
-                        const isFirstColumn = colIndex === 0;
-                        const showCellDivider = isFirstColumn ? selectable : true;
-                        const align = column.align || 'left';
-
-                        const cellValue = row[column.key];
-                        const cellTitle =
-                          typeof cellValue === 'string' || typeof cellValue === 'number'
-                            ? String(cellValue)
-                            : undefined;
-
-                        return (
-                          <div
-                            key={column.key}
-                            data-column-key={column.key}
-                            className={cn(
-                              'flex items-center',
-                              'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
-                              'text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]',
-                              'min-w-0 overflow-hidden',
-                              CELL_ALIGN_CLS[align],
-                              showCellDivider && 'border-l border-transparent'
-                            )}
-                            style={getEffectiveColumnStyle(column)}
-                            title={cellTitle}
-                          >
-                            <div
-                              className={cn(
-                                'truncate w-full min-w-0',
-                                align === 'center' && 'text-center flex justify-center',
-                                align === 'right' && 'text-right'
-                              )}
-                            >
-                              {column.render
-                                ? column.render(row[column.key], row, rowIndex)
-                                : row[column.key]}
-                            </div>
-                          </div>
-                        );
-                      })}
-
+                      {columns.map((col, i) =>
+                        renderBodyCell(col, row, rowIndex, i, isSelected, selectable)
+                      )}
                       {hasResizedColumns && (
                         <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />
                       )}

@@ -52,6 +52,7 @@ interface Router {
   externalNetworkId: string;
   adminState: boolean;
   status: RouterStatus;
+  createdAt: string;
 }
 
 /* ----------------------------------------
@@ -69,6 +70,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '29tgj234',
     adminState: true,
     status: 'active',
+    createdAt: 'Sep 12, 2025 15:43:35',
   },
   {
     id: 'router-002',
@@ -80,6 +82,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-002',
     adminState: true,
     status: 'active',
+    createdAt: 'Sep 10, 2025 01:17:01',
   },
   {
     id: 'router-003',
@@ -91,6 +94,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: true,
     status: 'active',
+    createdAt: 'Sep 8, 2025 11:51:27',
   },
   {
     id: 'router-004',
@@ -102,6 +106,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-003',
     adminState: true,
     status: 'building',
+    createdAt: 'Sep 5, 2025 14:12:36',
   },
   {
     id: 'router-005',
@@ -113,6 +118,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: false,
     status: 'active',
+    createdAt: 'Aug 30, 2025 21:37:41',
   },
   {
     id: 'router-006',
@@ -124,6 +130,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-004',
     adminState: true,
     status: 'active',
+    createdAt: 'Aug 25, 2025 10:32:16',
   },
   {
     id: 'router-007',
@@ -135,6 +142,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-005',
     adminState: false,
     status: 'error',
+    createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'router-008',
@@ -146,6 +154,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: true,
     status: 'active',
+    createdAt: 'Aug 15, 2025 12:22:26',
   },
   {
     id: 'router-009',
@@ -157,6 +166,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-006',
     adminState: true,
     status: 'active',
+    createdAt: 'Aug 10, 2025 01:17:01',
   },
   {
     id: 'router-010',
@@ -168,6 +178,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-007',
     adminState: true,
     status: 'active',
+    createdAt: 'Aug 5, 2025 14:12:36',
   },
 ];
 
@@ -245,6 +256,7 @@ export function RoutersPage() {
     { id: 'externalFixedIp', label: 'External fixed IP', visible: true },
     { id: 'externalNetwork', label: 'External network', visible: true },
     { id: 'adminState', label: 'Admin state', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -300,13 +312,16 @@ export function RoutersPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute/routers/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute/routers/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </div>
       ),
     },
     {
@@ -321,7 +336,6 @@ export function RoutersPage() {
       label: 'External fixed IP',
       flex: 1,
       minWidth: columnMinWidths.externalFixedIp,
-      sortable: true,
     },
     {
       key: 'externalNetwork',
@@ -360,6 +374,14 @@ export function RoutersPage() {
       ),
     },
     {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+    },
+    {
       key: 'actions',
       label: 'Action',
       width: fixedColumns.actions,
@@ -371,10 +393,8 @@ export function RoutersPage() {
               { id: 'connect-subnet', label: 'Connect subnet', onClick: () => {} },
               { id: 'disconnect-subnet', label: 'Disconnect subnet', onClick: () => {} },
               { id: 'external-gateway', label: 'External gateway Setting', onClick: () => {} },
-              { id: 'enable-snat', label: 'Enable SNAT', onClick: () => {} },
-              { id: 'disable-snat', label: 'Disable SNAT', onClick: () => {} },
               { id: 'edit', label: 'Edit', onClick: () => {} },
-              { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger', divider: true },
+              { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
             ]}
             trigger="click"
           >
@@ -450,7 +470,7 @@ export function RoutersPage() {
           title="Routers"
           actions={
             <Button variant="primary" size="md" onClick={() => setIsCreateRouterDrawerOpen(true)}>
-              Create Router
+              Create router
             </Button>
           }
         />

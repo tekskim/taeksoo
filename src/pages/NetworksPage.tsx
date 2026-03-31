@@ -25,6 +25,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
+  Popover,
   type AppliedFilter,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -45,12 +46,13 @@ type NetworkStatus = 'active' | 'error' | 'building';
 interface Network {
   id: string;
   name: string;
-  subnetCidr: string;
+  subnetCidr: string[];
   external: boolean;
   shared: boolean;
   adminState: 'Up' | 'Down';
   diskTag: string;
   status: NetworkStatus;
+  createdAt: string;
 }
 
 /* ----------------------------------------
@@ -61,102 +63,112 @@ const mockNetworks: Network[] = [
   {
     id: 'net-001',
     name: 'net-01',
-    subnetCidr: '10.62.0.0/24',
+    subnetCidr: ['10.62.0.0/24', '10.62.1.0/24', '10.62.2.0/24'],
     external: true,
     shared: true,
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
+    createdAt: '2026-01-15 09:30:00',
   },
   {
     id: 'net-002',
     name: 'internal-net',
-    subnetCidr: '192.168.1.0/24',
+    subnetCidr: ['192.168.1.0/24', '192.168.2.0/24'],
     external: false,
     shared: false,
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
+    createdAt: '2026-01-20 14:15:00',
   },
   {
     id: 'net-003',
     name: 'dev-network',
-    subnetCidr: '10.10.0.0/16',
+    subnetCidr: ['10.10.0.0/16'],
     external: false,
     shared: true,
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
+    createdAt: '2026-02-01 11:00:00',
   },
   {
     id: 'net-004',
     name: 'prod-net',
-    subnetCidr: '172.16.0.0/12',
+    subnetCidr: ['172.16.0.0/12', '172.17.0.0/16'],
     external: true,
     shared: false,
     adminState: 'Up',
     diskTag: 'Project',
     status: 'building',
+    createdAt: '2026-02-10 08:45:00',
   },
   {
     id: 'net-005',
     name: 'test-network',
-    subnetCidr: '10.20.0.0/24',
+    subnetCidr: ['10.20.0.0/24'],
     external: false,
     shared: false,
     adminState: 'Down',
     diskTag: 'Project',
     status: 'active',
+    createdAt: '2026-02-15 16:30:00',
   },
   {
     id: 'net-006',
     name: 'dmz-net',
-    subnetCidr: '10.30.0.0/24',
+    subnetCidr: ['10.30.0.0/24'],
     external: true,
     shared: true,
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
+    createdAt: '2026-02-20 10:00:00',
   },
   {
     id: 'net-007',
     name: 'management-net',
-    subnetCidr: '10.0.0.0/8',
+    subnetCidr: ['10.0.0.0/8'],
     external: false,
     shared: false,
     adminState: 'Down',
     diskTag: 'Project',
     status: 'error',
+    createdAt: '2026-03-01 13:20:00',
   },
   {
     id: 'net-008',
     name: 'backup-network',
-    subnetCidr: '192.168.100.0/24',
+    subnetCidr: ['192.168.100.0/24'],
     external: false,
     shared: true,
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
+    createdAt: '2026-03-05 07:50:00',
   },
   {
     id: 'net-009',
     name: 'external-gateway',
-    subnetCidr: '203.0.113.0/24',
+    subnetCidr: ['203.0.113.0/24'],
     external: true,
     shared: true,
     adminState: 'Up',
     diskTag: 'Shared',
     status: 'active',
+    createdAt: '2026-03-10 15:10:00',
   },
   {
     id: 'net-010',
     name: 'provider-net',
-    subnetCidr: '198.51.100.0/24',
+    subnetCidr: ['198.51.100.0/24'],
     external: true,
     shared: true,
     adminState: 'Up',
     diskTag: 'External',
     status: 'active',
+    createdAt: '2026-03-15 12:00:00',
   },
 ];
 
@@ -259,6 +271,7 @@ export function NetworksPage() {
     { id: 'external', label: 'External', visible: true },
     { id: 'diskTag', label: 'Shared / Is Current Tenant', visible: true },
     { id: 'adminState', label: 'Admin state', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -343,13 +356,16 @@ export function NetworksPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute/networks/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <VStack gap={0} align="start">
+          <Link
+            to={`/compute/networks/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </VStack>
       ),
     },
     {
@@ -358,12 +374,46 @@ export function NetworksPage() {
       flex: 1,
       minWidth: columnMinWidths.subnetCidr,
       sortable: true,
+      render: (_, row) => (
+        <span className="flex items-center gap-1">
+          {row.subnetCidr[0]}
+          {row.subnetCidr.length > 1 && (
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Subnet CIDRs ({row.subnetCidr.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {row.subnetCidr.map((cidr, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {cidr}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{row.subnetCidr.length - 1}
+                </span>
+              </Popover>
+            </span>
+          )}
+        </span>
+      ),
     },
     {
       key: 'external',
       label: 'External',
       flex: 1,
       minWidth: columnMinWidths.external,
+      sortable: true,
       render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
     {
@@ -371,6 +421,7 @@ export function NetworksPage() {
       label: activeTab === 'current' ? 'Shared' : 'Is Current Tenant',
       flex: 1,
       minWidth: columnMinWidths.diskTag,
+      sortable: true,
       render: (_, row) => (row.shared ? 'On' : 'Off'),
     },
     {
@@ -383,6 +434,14 @@ export function NetworksPage() {
           {row.adminState}
         </Badge>
       ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
     {
       key: 'actions',

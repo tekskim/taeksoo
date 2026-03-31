@@ -42,7 +42,7 @@ export function MenuSection({
   };
 
   return (
-    <VStack gap={1.5} className="w-[175px]" data-figma-name="MenuSection">
+    <VStack gap={1.5} className="w-[175px]" data-figma-name="[TDS] MenuSection">
       {/* Section Header */}
       {collapsible ? (
         <button

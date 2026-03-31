@@ -18,14 +18,13 @@ import {
   InlineMessage,
   ContextMenu,
   PageShell,
+  CopyButton,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPause,
   IconBell,
-  IconCopy,
-  IconCheck,
   IconTerminal2,
   IconWorld,
   IconNetwork,
@@ -251,28 +250,10 @@ interface CopyableCommandProps {
 }
 
 function CopyableCommand({ command }: CopyableCommandProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(command);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 flex items-center justify-between mt-3">
       <code className="text-label-lg text-[var(--color-text-default)] font-mono">{command}</code>
-      <button
-        onClick={handleCopy}
-        className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-        title={copied ? 'Copied!' : 'Copy to clipboard'}
-      >
-        {copied ? (
-          <IconCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
-        ) : (
-          <IconCopy size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-        )}
-      </button>
+      <CopyButton value={command} size="sm" iconOnly tooltip="Copy to clipboard" />
     </div>
   );
 }
@@ -402,7 +383,7 @@ export function WorkloadDetailPage() {
               trigger="click"
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>

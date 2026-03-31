@@ -34,7 +34,10 @@ import {
   IconDotsCircleHorizontal,
   IconRefresh,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -57,7 +60,7 @@ interface DeploymentRow {
 const deploymentsData: DeploymentRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-nginx-deployment',
     namespace: 'cart5-production-dev-api-system',
     image: 'mirrored-cluster-api-controller:v1.6.2',
@@ -68,7 +71,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Active',
     name: 'ingress-nginx-controller-admission-webhook-deployment',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
@@ -79,7 +82,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Stopped',
     name: 'monitoring-prometheus-alertmanager-server-deployment',
     namespace: 'monitoring',
     image: 'prometheus/prometheus:v2.47.0',
@@ -90,7 +93,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'monitoring-grafana-dashboard-visualization-deployment',
     namespace: 'monitoring',
     image: 'grafana/grafana:10.2.0',
@@ -101,7 +104,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'cache-redis-master-replication-deployment',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
@@ -112,7 +115,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Error',
     name: 'payment-service-gateway-microservice-deployment',
     namespace: 'payment-system',
     image: 'payment-service:v2.1.0',
@@ -123,7 +126,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Active',
     name: 'backend-api-gateway-microservice-deployment',
     namespace: 'gateway',
     image: 'api-gateway:v3.0.1',
@@ -134,7 +137,7 @@ const deploymentsData: DeploymentRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Active',
     name: 'user-management-service-authentication-deployment',
     namespace: 'user-management',
     image: 'user-service:v1.5.3',
@@ -196,7 +199,7 @@ export function DeploymentsPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns configuration
   const columns: TableColumn<DeploymentRow>[] = [
@@ -205,10 +208,14 @@ export function DeploymentsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -217,7 +224,7 @@ export function DeploymentsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -239,27 +246,44 @@ export function DeploymentsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.image,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'upToDate',
       label: 'Up to date',
-      width: '100px',
+      flex: 1,
+      minWidth: columnMinWidths.upToDate,
+      sortable: true,
     },
     {
       key: 'available',
       label: 'Available',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.available,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -267,7 +291,11 @@ export function DeploymentsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+        </span>
+      ),
     },
     {
       key: 'actions',
@@ -317,6 +345,7 @@ export function DeploymentsPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
           },
         ];
@@ -390,6 +419,20 @@ export function DeploymentsPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

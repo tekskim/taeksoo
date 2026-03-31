@@ -24,6 +24,7 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -32,13 +33,16 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconHelpCircle,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -111,7 +115,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
   '1': {
     id: '1',
     name: 'statefulsetName',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 16:45:11',
@@ -131,7 +135,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
   '2': {
     id: '2',
     name: 'mysql-primary',
-    status: 'True',
+    status: 'Active',
     namespace: 'database',
     image: 'mysql:8.0',
     createdAt: 'Nov 9, 2025 09:12:33',
@@ -150,7 +154,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -169,7 +173,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -181,7 +185,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'podName-79',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -193,7 +197,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'podName-80',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -209,7 +213,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'statefulset-headless',
-    status: 'OK',
+    status: 'Active',
     target: '10.0.0.100:80',
     selector: 'app=statefulset',
     type: 'ClusterIP',
@@ -301,11 +305,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -315,10 +323,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -329,18 +338,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -475,11 +492,15 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -493,7 +514,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={() => navigate(`/container/services/${row.id}`)}
         >
@@ -505,26 +526,52 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'target',
       label: 'Target',
       flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'selector',
       label: 'Selector',
       flex: 1,
+      minWidth: columnMinWidths.selector,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+        return (
+          <span className="truncate block min-w-0" title={value}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -583,38 +630,47 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'type',
       label: 'Condition',
       flex: 1,
+      minWidth: columnMinWidths.condition,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
-      render: (value: string, row: ConditionRow) => (
-        <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
-          [{row.reason}] {value}
-        </span>
-      ),
+      render: (value: string, row: ConditionRow) => {
+        const fullText = `[${row.reason}] ${value}`;
+        return (
+          <span className="truncate block min-w-0" title={fullText}>
+            {fullText}
+          </span>
+        );
+      },
     },
     {
       key: 'lastUpdate',
       label: 'Updated',
       flex: 1,
+      minWidth: columnMinWidths.lastUpdate,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
   ];
 
@@ -672,9 +728,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+    },
+    { key: 'source', label: 'Source', flex: 1, minWidth: columnMinWidths.source, sortable: true },
     {
       key: 'message',
       label: 'Message',
@@ -694,10 +756,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -799,7 +862,7 @@ export function StatefulSetDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -829,7 +892,7 @@ export function StatefulSetDetailPage() {
     { id: 'container-5', label: 'container-5', onClick: () => handleExecuteShell('container-5') },
   ];
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',
@@ -902,15 +965,27 @@ export function StatefulSetDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={statefulset.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -959,8 +1034,14 @@ export function StatefulSetDetailPage() {
               label="Status"
               value={
                 <Tooltip content={statefulset.status === 'Running' ? 'Active' : statefulset.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        statefulset.status === 'Running' ? 'Active' : statefulset.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {statefulset.status === 'Running' ? 'Active' : statefulset.status}
                     </Badge>
                   </span>
@@ -975,28 +1056,36 @@ export function StatefulSetDetailPage() {
           {/* Second row: Pod Restarts, Ready, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Pod restarts
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <HStack gap={1.5} align="center">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">
+                    Pod restarts
+                  </span>
+                  <Tooltip content="Total number of container restarts across all pods">
+                    <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+                  </Tooltip>
+                </HStack>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {statefulset.podRestarts}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Ready
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <HStack gap={1.5} align="center">
+                  <span className="text-label-sm text-[var(--color-text-subtle)]">Ready</span>
+                  <Tooltip content="Number of ready replicas out of desired replicas">
+                    <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+                  </Tooltip>
+                </HStack>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {statefulset.ready.current}/{statefulset.ready.desired}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(statefulset.labels).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -1033,8 +1122,8 @@ export function StatefulSetDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(statefulset.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(statefulset.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -1043,7 +1132,7 @@ export function StatefulSetDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(statefulset.annotations).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -1080,8 +1169,8 @@ export function StatefulSetDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(statefulset.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(statefulset.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

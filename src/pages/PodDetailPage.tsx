@@ -24,21 +24,24 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { getContainerStatusTheme } from './containerStatusUtils';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
   IconCheck,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -102,7 +105,7 @@ const mockPodData: Record<string, PodData> = {
   '1': {
     id: '1',
     name: 'podName',
-    status: 'OK',
+    status: 'Running',
     namespace: 'default',
     podIP: '10.11.0.11',
     createdAt: 'Jul 25, 2025 10:32:16',
@@ -131,7 +134,7 @@ const mockPodData: Record<string, PodData> = {
   '2': {
     id: '2',
     name: 'nginx-deployment-7fb96c846b-x2vnl',
-    status: 'True',
+    status: 'Running',
     namespace: 'default',
     podIP: '10.76.0.12',
     createdAt: 'Nov 9, 2025 18:04:44',
@@ -149,7 +152,7 @@ const mockPodData: Record<string, PodData> = {
 const mockContainersData: ContainerRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     ready: true,
     name: 'manager',
     image: 'imageName',
@@ -159,7 +162,7 @@ const mockContainersData: ContainerRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     ready: true,
     name: 'nginx',
     image: 'nginx:1.27',
@@ -169,7 +172,7 @@ const mockContainersData: ContainerRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Failed',
     ready: false,
     name: 'sidecar',
     image: 'sidecar:latest',
@@ -192,7 +195,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'ContainersReady',
-    status: 'None',
+    status: 'True',
     reason: 'ContainersReady',
     message: 'All containers are ready.',
     lastTransition: 'Jul 25, 2025',
@@ -261,10 +264,15 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
+      sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -273,7 +281,8 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
       render: (value: boolean) =>
         value ? (
@@ -312,7 +321,8 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -321,7 +331,14 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -385,17 +402,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -404,7 +414,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
-        <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
+        <span className="truncate min-w-0" title={`[${row.reason}] ${value}`}>
           [{row.reason}] {value}
         </span>
       ),
@@ -502,7 +512,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
           title={value}
         >
           {value}
@@ -602,7 +612,7 @@ export function PodDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -629,7 +639,7 @@ export function PodDetailPage() {
     onClick: () => handleExecuteShell(container),
   }));
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',
@@ -698,15 +708,32 @@ export function PodDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton
+                value={`${pod.namespace}/${pod.name}`}
+                size="sm"
+                iconOnly
+                tooltip="Copy pod reference"
+              />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -757,8 +784,14 @@ export function PodDetailPage() {
               label="Status"
               value={
                 <Tooltip content={pod.status === 'Running' ? 'Active' : pod.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        pod.status === 'Running' ? 'Active' : pod.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {pod.status === 'Running' ? 'Active' : pod.status}
                     </Badge>
                   </span>
@@ -778,12 +811,10 @@ export function PodDetailPage() {
           {/* Second row: Workload, Node, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Workload
-                </span>
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Workload</span>
                 <span
-                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-body-md font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/deployments/${pod.workload}`)}
                 >
                   {pod.workload}
@@ -791,12 +822,10 @@ export function PodDetailPage() {
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Node
-                </span>
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Node</span>
                 <span
-                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  className="text-body-md font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline"
                   onClick={() => navigate(`/container/nodes/${pod.node}`)}
                 >
                   {pod.node}
@@ -805,7 +834,7 @@ export function PodDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(pod.labels).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -842,8 +871,8 @@ export function PodDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(pod.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(pod.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -852,7 +881,7 @@ export function PodDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(pod.annotations).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -889,8 +918,8 @@ export function PodDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(pod.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(pod.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

@@ -286,33 +286,23 @@ function SliderGuidelines() {
           </thead>
           <tbody>
             <tr>
-              <Td>
-                <span className="font-mono">track-width</span>
-              </Td>
+              <Td>track-width</Td>
               <Td>220px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">track-height</span>
-              </Td>
+              <Td>track-height</Td>
               <Td>6px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">thumb-size</span>
-              </Td>
+              <Td>thumb-size</Td>
               <Td>16px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">thumb-border</span>
-              </Td>
+              <Td>thumb-border</Td>
               <Td>3px</Td>
             </tr>
             <tr>
-              <Td>
-                <span className="font-mono">fill-color</span>
-              </Td>
+              <Td>fill-color</Td>
               <Td>primary</Td>
             </tr>
           </tbody>
@@ -539,10 +529,7 @@ export function SliderPage() {
       guidelines={<SliderGuidelines />}
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
-          <span className="font-mono">track: 6px height</span> ·{' '}
-          <span className="font-mono">thumb: 16px, 3px border</span> ·{' '}
-          <span className="font-mono">fill: primary</span> ·{' '}
-          <span className="font-mono">--slider-track-width: 220px</span>
+          track: 6px height · thumb: 16px, 3px border · fill: primary · --slider-track-width: 220px
         </div>
       }
       relatedLinks={[

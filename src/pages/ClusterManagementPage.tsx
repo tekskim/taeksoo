@@ -20,7 +20,7 @@ import {
   Badge,
   Tooltip,
 } from '@/design-system';
-import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
+import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -34,6 +34,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -44,6 +45,9 @@ interface Cluster {
   name: string;
   status: string;
   kubernetesVersion: string;
+  cpu: string;
+  memory: string;
+  pods: string;
   createdAt: string;
 }
 
@@ -55,36 +59,51 @@ const mockClusters: Cluster[] = [
   {
     id: 'cluster-001',
     name: 'production-kubernetes-high-availability-cluster',
-    status: 'OK',
+    status: 'Provisioned',
     kubernetesVersion: 'v1.34',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
     createdAt: 'Nov 11, 2025 08:30:18',
   },
   {
     id: 'cluster-002',
     name: 'staging-development-testing-environment-cluster',
-    status: 'OK',
+    status: 'Failed',
     kubernetesVersion: 'v1.33.4',
+    cpu: '4 cores',
+    memory: '8 GiB',
+    pods: '23/110',
     createdAt: 'Oct 6, 2025 21:25:53',
   },
   {
     id: 'cluster-003',
     name: 'production-microservices-platform-cluster',
-    status: 'True',
+    status: 'Provisioning',
     kubernetesVersion: 'v1.32.2',
+    cpu: '16 cores',
+    memory: '32 GiB',
+    pods: '89/110',
     createdAt: 'Sep 15, 2025 12:22:26',
   },
   {
     id: 'cluster-004',
     name: 'staging-integration-testing-environment-cluster',
-    status: 'None',
+    status: 'Deleting',
     kubernetesVersion: 'v1.33.1',
+    cpu: '4 cores',
+    memory: '8 GiB',
+    pods: '12/110',
     createdAt: 'Aug 20, 2025 23:27:51',
   },
   {
     id: 'cluster-005',
     name: 'development-sandbox-experimental-cluster',
-    status: 'ImagePullBackOff',
+    status: 'Unknown',
     kubernetesVersion: 'v1.31.0',
+    cpu: '2 cores',
+    memory: '4 GiB',
+    pods: '5/110',
     createdAt: 'Jul 10, 2025 01:17:01',
   },
 ];
@@ -116,7 +135,7 @@ export function ClusterManagementPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns
   const columns: TableColumn<Cluster>[] = [
@@ -127,7 +146,12 @@ export function ClusterManagementPage() {
       sortable: false,
       render: (status) => (
         <Tooltip content={status}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(status)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{status}</span>
           </Badge>
         </Tooltip>
@@ -136,7 +160,7 @@ export function ClusterManagementPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
@@ -156,9 +180,12 @@ export function ClusterManagementPage() {
       key: 'kubernetesVersion',
       label: 'Kubernetes version',
       flex: 1,
-      minWidth: columnMinWidths.version,
+      minWidth: columnMinWidths.kubernetesVersion,
       sortable: true,
     },
+    { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
+    { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
+    { key: 'pods', label: 'Pods', flex: 1, minWidth: columnMinWidths.pods, sortable: true },
     {
       key: 'createdAt',
       label: 'Created at',
@@ -190,8 +217,28 @@ export function ClusterManagementPage() {
             onClick: () => console.log('Copy KubeConfig for', row.name),
           },
           {
+            id: 'view-yaml',
+            label: 'View YAML',
+            onClick: () => console.log('View YAML for', row.name),
+          },
+          {
+            id: 'download-yaml',
+            label: 'Download YAML',
+            onClick: () => console.log('Download YAML for', row.name),
+          },
+          {
+            id: 'customize-appearance',
+            label: 'Customize appearance',
+            divider: true,
+            onClick: () =>
+              setTimeout(() =>
+                window.dispatchEvent(new CustomEvent('open-cluster-appearance', { detail: row.id }))
+              ),
+          },
+          {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete', row.name),
           },
         ];
@@ -233,10 +280,7 @@ export function ClusterManagementPage() {
   return (
     <PageShell
       sidebar={
-        <ClusterManagementSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
       sidebarWidth={sidebarWidth}
       tabBar={

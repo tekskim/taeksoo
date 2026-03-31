@@ -49,7 +49,7 @@ export const Chip = memo(function Chip({
 
   return (
     <div
-      data-figma-name="Chip"
+      data-figma-name="[TDS] Tag"
       className={twMerge(
         'inline-flex items-center gap-[var(--chip-gap)]',
         'py-[var(--chip-padding-y)]',

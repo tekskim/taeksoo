@@ -1,0 +1,20 @@
+.root :where(path, circle, rect, ellipse, line, polyline, polygon, g) {
+  vector-effect: non-scaling-stroke;
+}
+
+.root[data-thaki-svg-mode='stroke']
+  :where(path, circle, rect, ellipse, line, polyline, polygon, g) {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+.root[data-thaki-svg-mode='fill'] :where(path, circle, rect, ellipse, line, polyline, polygon, g) {
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+.root[data-thaki-svg-mode='fill-stroke']
+  :where(path, circle, rect, ellipse, line, polyline, polygon, g) {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}

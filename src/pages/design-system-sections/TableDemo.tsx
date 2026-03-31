@@ -4,20 +4,19 @@ import {
   StatusIndicator,
   Tooltip,
   VStack,
+  CopyButton,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
 import { Label } from './HelperComponents';
 import {
   IconLock,
-  IconCheck,
-  IconCopy,
   IconExternalLink,
   IconRouter,
   IconCube,
   IconTerminal2,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
-import { IconAction } from '@/design-system/components/Icons';
 
 interface InstanceData {
   id: string;
@@ -186,18 +185,6 @@ const sampleKeyPairData: KeyPairData[] = [
 
 export function TableDemo() {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const handleCopy = async (id: string, text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
   const basicColumns = [
     {
       key: 'status',
@@ -286,7 +273,7 @@ export function TableDemo() {
             <IconTerminal2 size={16} stroke={1.5} />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] cursor-pointer">
-            <IconAction size={16} stroke={1} />
+            <IconDotsCircleHorizontal size={16} stroke={1.5} />
           </button>
         </div>
       ),
@@ -372,20 +359,7 @@ export function TableDemo() {
           <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
             {row.fingerprint}
           </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCopy(row.id, row.fingerprint);
-            }}
-            className="p-1.5 -m-1 rounded-md hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-surface-subtle)] transition-colors flex-shrink-0 cursor-pointer"
-            title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
-          >
-            {copiedId === row.id ? (
-              <IconCheck size={12} className="text-[var(--color-state-success)]" />
-            ) : (
-              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-            )}
-          </button>
+          <CopyButton value={row.fingerprint} size="sm" iconOnly tooltip="Copy fingerprint" />
         </div>
       ),
     },
@@ -457,12 +431,9 @@ export function TableDemo() {
       <VStack gap={3}>
         <Label>Design Tokens & Features</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>cell-padding: 12×10px</code> · <code>header-padding: 12×8px</code> ·{' '}
-          <code>radius: 8px</code> · <code>font: 12px</code>
+          cell-padding: 12×10px · header-padding: 12×8px · radius: 8px · font: 12px
           <br />
-          <span className="text-[var(--color-text-muted)]">Features:</span>{' '}
-          <code>overflow-x: auto</code> · <code>text-overflow: ellipsis</code> ·{' '}
-          <code>title tooltip on hover</code>
+          Features: overflow-x: auto · text-overflow: ellipsis · title tooltip on hover
         </div>
       </VStack>
 

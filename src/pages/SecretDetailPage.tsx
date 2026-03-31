@@ -33,6 +33,8 @@ import {
   IconChevronDown,
   IconEye,
   IconEyeOff,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -194,7 +196,7 @@ export function SecretDetailPage() {
   };
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
@@ -245,12 +247,6 @@ export function SecretDetailPage() {
     }));
   };
 
-  // Copy to clipboard function
-  const copyToClipboard = (value: string) => {
-    navigator.clipboard.writeText(value);
-    // Could add toast notification here
-  };
-
   // Mask value
   const maskValue = (value: string) => {
     return '••••••••';
@@ -287,6 +283,20 @@ export function SecretDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

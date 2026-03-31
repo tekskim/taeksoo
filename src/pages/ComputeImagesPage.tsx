@@ -48,6 +48,7 @@ interface Image {
   size: string;
   diskFormat: string;
   protected: boolean;
+  visibility: 'Public' | 'Private' | 'Shared' | 'Community';
   access: AccessType;
   description: string;
   createdAt: string;
@@ -66,6 +67,7 @@ const mockImages: Image[] = [
     size: '16GiB',
     diskFormat: 'RAW',
     protected: true,
+    visibility: 'Private',
     access: 'Private',
     description: 'Base Ubuntu 22.04 image',
     createdAt: 'Sep 12, 2025 15:43:35',
@@ -78,6 +80,7 @@ const mockImages: Image[] = [
     size: '8GiB',
     diskFormat: 'QCOW2',
     protected: false,
+    visibility: 'Private',
     access: 'Private',
     description: 'Minimal CentOS 8 installation',
     createdAt: 'Sep 10, 2025 01:17:01',
@@ -90,6 +93,7 @@ const mockImages: Image[] = [
     size: '12GiB',
     diskFormat: 'RAW',
     protected: true,
+    visibility: 'Shared',
     access: 'Shared',
     description: 'Rocky Linux 9 server image',
     createdAt: 'Sep 8, 2025 11:51:27',
@@ -102,6 +106,7 @@ const mockImages: Image[] = [
     size: '10GiB',
     diskFormat: 'QCOW2',
     protected: false,
+    visibility: 'Public',
     access: 'Public',
     description: 'Standard Debian 12 image',
     createdAt: 'Sep 5, 2025 14:12:36',
@@ -114,6 +119,7 @@ const mockImages: Image[] = [
     size: '14GiB',
     diskFormat: 'RAW',
     protected: true,
+    visibility: 'Private',
     access: 'Private',
     description: 'Ubuntu 20.04 LTS server',
     createdAt: 'Aug 28, 2025 07:11:07',
@@ -126,6 +132,7 @@ const mockImages: Image[] = [
     size: '32GiB',
     diskFormat: 'QCOW2',
     protected: false,
+    visibility: 'Shared',
     access: 'Shared',
     description: 'Windows Server 2022 Datacenter',
     createdAt: 'Aug 25, 2025 10:32:16',
@@ -138,6 +145,7 @@ const mockImages: Image[] = [
     size: '256MiB',
     diskFormat: 'RAW',
     protected: false,
+    visibility: 'Public',
     access: 'Public',
     description: 'Lightweight Alpine Linux',
     createdAt: 'Aug 20, 2025 23:27:51',
@@ -150,6 +158,7 @@ const mockImages: Image[] = [
     size: '20GiB',
     diskFormat: 'RAW',
     protected: true,
+    visibility: 'Community',
     access: 'Private',
     description: 'Fedora 39 workstation image',
     createdAt: 'Aug 15, 2025 12:22:26',
@@ -162,6 +171,7 @@ const mockImages: Image[] = [
     size: '18GiB',
     diskFormat: 'QCOW2',
     protected: false,
+    visibility: 'Shared',
     access: 'Shared',
     description: 'Oracle Linux 8 for databases',
     createdAt: 'Aug 10, 2025 01:17:01',
@@ -174,6 +184,7 @@ const mockImages: Image[] = [
     size: '24GiB',
     diskFormat: 'RAW',
     protected: true,
+    visibility: 'Private',
     access: 'Private',
     description: 'Ubuntu with GPU drivers',
     createdAt: 'Aug 5, 2025 14:12:36',
@@ -270,6 +281,7 @@ export function ComputeImagesPage() {
     { id: 'size', label: 'Size', visible: true },
     { id: 'diskFormat', label: 'Disk format', visible: true },
     { id: 'protected', label: 'Protected', visible: true },
+    { id: 'visibility', label: 'Visibility', visible: true },
     { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -385,6 +397,7 @@ export function ComputeImagesPage() {
       key: 'os',
       label: 'OS',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'size',
@@ -402,8 +415,12 @@ export function ComputeImagesPage() {
       key: 'protected',
       label: 'Protected',
       flex: 1,
-      sortable: true,
       render: (_, row) => (row.protected ? 'On' : 'Off'),
+    },
+    {
+      key: 'visibility',
+      label: 'Visibility',
+      flex: 1,
     },
     {
       key: 'createdAt',
@@ -443,7 +460,6 @@ export function ComputeImagesPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            divider: true,
             onClick: () => handleDeleteClick(row),
           },
         ];
@@ -571,17 +587,15 @@ export function ComputeImagesPage() {
         />
 
         {/* Pagination */}
-        {filteredImages.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredImages.length}
-            selectedCount={selectedImages.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredImages.length}
+          selectedCount={selectedImages.length}
+        />
 
         {/* Image Table */}
         <Table<Image>

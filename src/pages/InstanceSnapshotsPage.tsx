@@ -427,6 +427,7 @@ export function InstanceSnapshotsPage() {
       label: 'Description',
       flex: 1,
       minWidth: columnMinWidths.description,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -571,17 +572,15 @@ export function InstanceSnapshotsPage() {
         />
 
         {/* Pagination */}
-        {filteredSnapshots.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredSnapshots.length}
-            selectedCount={selectedSnapshots.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredSnapshots.length}
+          selectedCount={selectedSnapshots.length}
+        />
 
         {/* Table */}
         <Table<InstanceSnapshot>

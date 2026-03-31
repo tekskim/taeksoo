@@ -24,7 +24,7 @@ import {
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconBell, IconExternalLink, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconBell, IconExternalLink, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -570,7 +570,6 @@ export default function PortDetailPage() {
                 status={portStatusMap[port.status]}
               />
               <DetailHeader.InfoCard label="ID" value={port.id} copyable onCopy={handleCopyId} />
-              <DetailHeader.InfoCard label="Tenant" value="tenantA" />
               <DetailHeader.InfoCard label="Admin state" value="Up" />
               <DetailHeader.InfoCard
                 label="Port security"
@@ -597,14 +596,7 @@ export default function PortDetailPage() {
                 <VStack gap={4} className="pt-4">
                   {/* Basic information */}
                   <SectionCard>
-                    <SectionCard.Header
-                      title="Basic information"
-                      actions={
-                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                          Edit
-                        </Button>
-                      }
-                    />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
                       <SectionCard.DataRow label="Port name" value={port.name} />
                       <SectionCard.DataRow label="Description" value={port.description} />

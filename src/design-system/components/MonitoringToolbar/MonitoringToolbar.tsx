@@ -6,7 +6,17 @@ import { DatePicker } from '../DatePicker';
    Types
    ---------------------------------------- */
 
-export type TimeRangeValue = '30m' | '1h' | '3h' | '6h' | '12h' | '24h' | '1d' | '1w' | 'custom';
+export type TimeRangeValue =
+  | '30m'
+  | '1h'
+  | '3h'
+  | '6h'
+  | '12h'
+  | '24h'
+  | '1d'
+  | '1w'
+  | '2w'
+  | 'custom';
 
 export interface TimeRangeOption {
   label: string;
@@ -206,7 +216,7 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   const hasCustomPeriod = customPeriod !== null;
 
   return (
-    <div data-figma-name="MonitoringToolbar" className={`monitoring-toolbar ${className}`}>
+    <div data-figma-name="[TDS] MonitoringToolbar" className={`monitoring-toolbar ${className}`}>
       {/* Time Range Buttons */}
       <div className="monitoring-toolbar-segments">
         {timeRangeOptions.map((option) => (

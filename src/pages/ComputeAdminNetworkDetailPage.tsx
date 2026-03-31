@@ -24,6 +24,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  Popover,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -648,9 +649,36 @@ export default function NetworkDetailPage() {
         const displaySg = row.securityGroups[0];
         const additionalCount = sgCount - 1;
         return (
-          <span className="text-[var(--color-text-default)]">
+          <span className="flex items-center gap-1 text-[var(--color-text-default)]">
             {displaySg}
-            {additionalCount > 0 && ` (+${additionalCount})`}
+            {additionalCount > 0 && (
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Security Groups ({sgCount})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {row.securityGroups.map((sg, i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {sg}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{additionalCount}
+                  </span>
+                </Popover>
+              </span>
+            )}
           </span>
         );
       },
@@ -701,30 +729,17 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
-      render: (_: unknown, row: Port) => {
-        const portMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', onClick: () => console.log('Edit port', row.id) },
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete port', row.id),
-          },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={portMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_: unknown, row: Port) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            onClick={() => console.log('Delete port', row.id)}
+            aria-label="Delete port"
+          >
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -858,14 +873,7 @@ export default function NetworkDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic Information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Network name" value={network.networkName} />
                     <SectionCard.DataRow label="Description" value={network.description} />
@@ -971,11 +979,8 @@ export default function NetworkDetailPage() {
             <TabPanel value="ports" className="pt-0">
               <VStack gap={3} className="pt-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between min-h-[28px]">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create Port
-                  </Button>
                 </div>
 
                 {/* Action Bar */}

@@ -34,9 +34,6 @@ import {
   IconDotsCircleHorizontal,
   IconLock,
   IconLockOpen,
-  IconCopy,
-  IconCheck,
-  IconExternalLink,
   IconTerminal2,
 } from '@tabler/icons-react';
 
@@ -58,9 +55,10 @@ interface ServerGroupInstance {
   name: string;
   status: InstanceStatus;
   locked: boolean;
-  image: string;
   fixedIP: string;
+  floatingIP: string;
   az: string;
+  os: string;
   createdAt: string;
 }
 
@@ -94,140 +92,123 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     name: 'web-server-01',
     status: 'active',
     locked: true,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj235',
     name: 'web-server-01',
     status: 'active',
     locked: true,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj236',
     name: 'web-server-01',
     status: 'active',
     locked: true,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj237',
     name: 'web-server-01',
     status: 'error',
     locked: false,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj238',
     name: 'web-server-01',
     status: 'active',
     locked: true,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj239',
     name: 'web-server-01',
     status: 'shutoff',
     locked: false,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj240',
     name: 'web-server-01',
     status: 'active',
     locked: true,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj241',
     name: 'web-server-01',
     status: 'active',
     locked: false,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj242',
     name: 'web-server-01',
     status: 'building',
     locked: false,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj243',
     name: 'web-server-01',
     status: 'active',
     locked: true,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj244',
     name: 'web-server-01',
     status: 'paused',
     locked: false,
-    image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
+    floatingIP: '192.168.1.10',
     az: 'zone-o',
-    createdAt: 'Sep 30, 2025 21:37:41',
+    os: 'Ubuntu 24.04',
+    createdAt: 'Sep 30, 2025',
   },
 ];
-
-/* ----------------------------------------
-   Copy Button Component
-   ---------------------------------------- */
-
-function CopyButton({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <button
-      onClick={handleCopy}
-      className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-      aria-label="Copy to clipboard"
-    >
-      {copied ? (
-        <IconCheck size={16} className="text-[var(--color-state-success)]" />
-      ) : (
-        <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
-      )}
-    </button>
-  );
-}
 
 /* ----------------------------------------
    Server group Detail Page
@@ -332,19 +313,13 @@ export function ServerGroupDetailPage() {
       minWidth: columnMinWidths.name,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1">
-            <Link
-              to={`/compute/instances/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <IconExternalLink
-              size={12}
-              className="flex-shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
+          <Link
+            to={`/compute/instances/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
@@ -364,19 +339,25 @@ export function ServerGroupDetailPage() {
         ),
     },
     {
-      key: 'image',
-      label: 'Image',
-      flex: 1,
-      minWidth: columnMinWidths.image,
-      render: (value) => <span>{value}</span>,
-    },
-    {
       key: 'fixedIP',
       label: 'Fixed IP',
       flex: 1,
       minWidth: columnMinWidths.fixedIp,
-      sortable: true,
-      render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'floatingIP',
+      label: 'Floating IP',
+      flex: 1,
+      minWidth: columnMinWidths.fixedIp,
+      render: (value) => (
+        <Link
+          to="#"
+          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {value}
+        </Link>
+      ),
     },
     {
       key: 'az',
@@ -384,6 +365,13 @@ export function ServerGroupDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.az,
       render: (value) => <span>{value}</span>,
+    },
+    {
+      key: 'os',
+      label: 'OS',
+      flex: 1,
+      minWidth: 120,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -482,8 +470,8 @@ export function ServerGroupDetailPage() {
             </Button>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Policy" value={serverGroup.policy} />
             <DetailHeader.InfoCard label="ID" value={serverGroup.id} copyable />
+            <DetailHeader.InfoCard label="Policy" value={serverGroup.policy} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 

@@ -581,17 +581,15 @@ export function ComputeAdminFlavorsPage() {
         />
 
         {/* Pagination */}
-        {filteredFlavors.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredFlavors.length}
-            selectedCount={selectedFlavors.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredFlavors.length}
+          selectedCount={selectedFlavors.length}
+        />
 
         {/* Flavor Table */}
         <Table<Flavor>

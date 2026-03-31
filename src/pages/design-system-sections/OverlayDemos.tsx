@@ -21,6 +21,7 @@ import {
   Badge,
   Table,
   SelectionIndicator,
+  Popover,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -712,15 +713,38 @@ export function ConnectDataSourceDrawer({
       minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex w-full min-w-0 items-center gap-1">
           {row.tags.slice(0, 2).map((tag, idx) => (
             <Badge key={idx} variant="gray" size="sm">
               {tag}
             </Badge>
           ))}
           {row.tags.length > 2 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              +{row.tags.length - 2}
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Tags ({row.tags.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {row.tags.map((tag, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{row.tags.length - 2}
+                </span>
+              </Popover>
             </span>
           )}
         </div>
@@ -933,15 +957,38 @@ export function ConnectMCPServerDrawer({
       minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex w-full min-w-0 items-center gap-1">
           {row.tags.slice(0, 2).map((tag, idx) => (
             <Badge key={idx} variant="gray" size="sm">
               {tag}
             </Badge>
           ))}
           {row.tags.length > 2 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              +{row.tags.length - 2}
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All Tags ({row.tags.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {row.tags.map((tag, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{row.tags.length - 2}
+                </span>
+              </Popover>
             </span>
           )}
         </div>

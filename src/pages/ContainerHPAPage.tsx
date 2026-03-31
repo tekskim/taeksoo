@@ -34,7 +34,10 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -59,7 +62,7 @@ interface HPARow {
 const hpaData: HPARow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-horizontal-autoscaler',
     namespace: 'namespaceName',
     workload: 'workloadName',
@@ -70,7 +73,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'backend-api-gateway-cpu-memory-autoscaler',
     namespace: 'default',
     workload: 'api-deployment',
@@ -81,7 +84,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Error',
     name: 'frontend-web-production-pending-workload-autoscaler',
     namespace: 'production',
     workload: 'web-deployment',
@@ -92,7 +95,7 @@ const hpaData: HPARow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'staging-environment-workload-autoscaler',
     namespace: 'staging',
     workload: 'staging-deployment',
@@ -145,7 +148,7 @@ export function ContainerHPAPage() {
   };
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
@@ -165,11 +168,15 @@ export function ContainerHPAPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -178,11 +185,15 @@ export function ContainerHPAPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
-        <TableLink onClick={() => navigate(`/container/hpa/${row.id}`)}>{value}</TableLink>
+        <div className="min-w-0">
+          <TableLink onClick={() => navigate(`/container/hpa/${row.id}`)} title={value}>
+            {value}
+          </TableLink>
+        </div>
       ),
     },
     {
@@ -191,12 +202,23 @@ export function ContainerHPAPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'workload',
       label: 'Workload',
       flex: 1,
       minWidth: columnMinWidths.workload,
+      sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'minReplicas',
@@ -225,7 +247,14 @@ export function ContainerHPAPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -254,8 +283,8 @@ export function ContainerHPAPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
-            danger: true,
           },
         ];
 
@@ -325,6 +354,20 @@ export function ContainerHPAPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

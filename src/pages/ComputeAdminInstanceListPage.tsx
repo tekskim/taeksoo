@@ -42,6 +42,7 @@ import {
   IconTerminal2,
   IconPower,
 } from '@tabler/icons-react';
+import containerIcon from '@/assets/appIcon/container.png';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateInstanceSnapshotDrawer,
@@ -1135,17 +1136,22 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/instances/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
-          </span>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <img src={containerIcon} alt="Container" className="w-4 h-4" />
+          </div>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute-admin/instances/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+              ID : {row.id}
+            </span>
+          </div>
         </div>
       ),
     },
@@ -1273,6 +1279,7 @@ export function ComputeAdminInstanceListPage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
           <button
@@ -1430,6 +1437,7 @@ export function ComputeAdminInstanceListPage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
           <button
@@ -1604,7 +1612,7 @@ export function ComputeAdminInstanceListPage() {
         />
 
         {/* Pagination */}
-        {activeTab === 'vm' && filteredInstances.length > 0 && (
+        {activeTab === 'vm' && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -1615,7 +1623,7 @@ export function ComputeAdminInstanceListPage() {
             selectedCount={selectedInstances.length}
           />
         )}
-        {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
+        {activeTab === 'bare-metal' && (
           <Pagination
             currentPage={currentBareMetalPage}
             totalPages={totalBareMetalPages}

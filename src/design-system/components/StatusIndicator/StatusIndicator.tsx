@@ -1,5 +1,6 @@
 import { cloneElement, isValidElement, memo, type HTMLAttributes, type ReactNode } from 'react';
 import { twMerge } from '../../utils/cn';
+import { Tooltip } from '../Tooltip';
 import {
   IconAlertTriangle,
   IconPlugConnectedX,
@@ -287,15 +288,17 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
 
     return (
-      <span
-        data-figma-name="StatusIndicator"
-        className={classes}
-        role="status"
-        aria-label={displayLabel}
-        {...props}
-      >
-        <span className="shrink-0">{clonedIcon}</span>
-      </span>
+      <Tooltip content={displayLabel} position="top">
+        <span
+          data-figma-name="[TDS] StatusIndicator"
+          className={classes}
+          role="status"
+          aria-label={displayLabel}
+          {...props}
+        >
+          <span className="shrink-0">{clonedIcon}</span>
+        </span>
+      </Tooltip>
     );
   }
 
@@ -316,7 +319,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
     return (
       <span
-        data-figma-name="StatusIndicator"
+        data-figma-name="[TDS] StatusIndicator"
         className={classes}
         role="status"
         aria-label={displayLabel}
@@ -345,7 +348,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
   return (
     <span
-      data-figma-name="StatusIndicator"
+      data-figma-name="[TDS] StatusIndicator"
       className={classes}
       role="status"
       aria-label={displayLabel}

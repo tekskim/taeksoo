@@ -19,14 +19,20 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  Tooltip,
+  Chip,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  MonitoringToolbar,
+  type TimeRangeValue,
+  CopyButton,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
+import { ChartWithFullScreen, chartColors } from '@/pages/design-system-sections/ChartComponents';
 import {
   IconTerminal2,
   IconPlayerPlay,
@@ -35,18 +41,17 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconChevronRight,
-  IconEdit,
   IconBell,
   IconCirclePlus,
   IconSquarePlus,
   IconLinkPlus,
-  IconSettings,
   IconPower,
   IconDotsCircleHorizontal,
   IconDownload,
   IconSearch,
-  IconCopy,
-  IconSelector,
+  IconLock,
+  IconLockOpen,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -132,6 +137,8 @@ interface InstanceDetail {
     gpu: number;
   };
   image: string;
+  os: string;
+  locked: boolean;
   interfaces: number;
   keyPair: string;
   serverGroup: string;
@@ -154,6 +161,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
+    os: 'CentOS 7',
+    locked: true,
     interfaces: 5,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
@@ -169,6 +178,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
+    os: 'CentOS 7',
+    locked: false,
     interfaces: 3,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
@@ -184,6 +195,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: 'Kubernetes master node',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
     image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
+    locked: false,
     interfaces: 4,
     keyPair: 'master-key',
     serverGroup: 'master-group',
@@ -199,6 +212,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: 'Database server',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
     image: 'CentOS 8',
+    os: 'CentOS 8',
+    locked: true,
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
@@ -214,6 +229,8 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     description: 'GPU compute node',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
     image: 'Ubuntu 22.04',
+    os: 'Ubuntu 22.04',
+    locked: false,
     interfaces: 2,
     keyPair: 'gpu-key',
     serverGroup: 'gpu-group',
@@ -232,6 +249,8 @@ const defaultInstanceDetail: InstanceDetail = {
   description: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
   image: 'Unknown',
+  os: 'Unknown',
+  locked: false,
   interfaces: 0,
   keyPair: '-',
   serverGroup: '-',
@@ -743,7 +762,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-001',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -752,7 +771,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-002',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -761,7 +780,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-003',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -770,7 +789,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-004',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -779,7 +798,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-005',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -788,7 +807,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-006',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -797,7 +816,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-007',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -806,7 +825,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-008',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -815,7 +834,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-009',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -824,12 +843,41 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-010',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: 'Sep 11, 2025',
+    requestedTime: 'Sep 11, 2025 14:23:15',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
   },
 ];
+
+/* ----------------------------------------
+   Monitoring Mock Data
+   ---------------------------------------- */
+
+const monitoringTimeRangeOptions = [
+  { label: '1h', value: '1h' as TimeRangeValue },
+  { label: '1d', value: '1d' as TimeRangeValue },
+  { label: '1w', value: '1w' as TimeRangeValue },
+  { label: '2w', value: '2w' as TimeRangeValue },
+];
+
+function generateWaveData(base: number, amplitude: number, length = 12): number[] {
+  return Array.from({ length }, (_, i) => {
+    const t = i / (length - 1);
+    const wave = Math.sin(t * Math.PI) * amplitude;
+    const noise = (Math.random() - 0.5) * amplitude * 0.2;
+    return Math.round(base + wave + noise);
+  });
+}
+
+const cpuUtilizationData = generateWaveData(45, 30);
+const networkTrafficInData = generateWaveData(350, 180);
+const networkTrafficOutData = generateWaveData(250, 120);
+const networkPacketsInData = generateWaveData(500, 200);
+const networkPacketsOutData = generateWaveData(380, 150);
+const diskUsageData = generateWaveData(55, 20);
+const diskIOPSReadData = generateWaveData(600, 200);
+const diskIOPSWriteData = generateWaveData(420, 150);
 
 /* ----------------------------------------
    Instance Detail Page
@@ -871,6 +919,9 @@ export function InstanceDetailPage() {
   );
   const snapshotTotalPages = Math.ceil(filteredSnapshots.length / snapshotRowsPerPage);
 
+  // Monitoring tab state
+  const [monitoringTimeRange, setMonitoringTimeRange] = useState<TimeRangeValue>('1h');
+
   // Logs (Console Logs) state
   const [logLength, setLogLength] = useState(20);
 
@@ -878,34 +929,13 @@ export function InstanceDetailPage() {
   const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
   const [actionLogSearchQuery, setActionLogSearchQuery] = useState('');
   const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set());
-  const [actionLogSortKey, setActionLogSortKey] = useState<
-    'operationName' | 'requestId' | 'requestedTime' | null
-  >(null);
-  const [actionLogSortDirection, setActionLogSortDirection] = useState<'asc' | 'desc'>('asc');
   const actionLogRowsPerPage = 10;
-  const filteredActionLogs = mockActionLogs
-    .filter(
-      (log) =>
-        log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
-        log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (!actionLogSortKey) return 0;
-      const aValue = a[actionLogSortKey];
-      const bValue = b[actionLogSortKey];
-      const comparison = aValue.localeCompare(bValue);
-      return actionLogSortDirection === 'asc' ? comparison : -comparison;
-    });
+  const filteredActionLogs = mockActionLogs.filter(
+    (log) =>
+      log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
+      log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
+  );
   const actionLogTotalPages = Math.ceil(filteredActionLogs.length / actionLogRowsPerPage);
-
-  const handleActionLogSort = (key: 'operationName' | 'requestId' | 'requestedTime') => {
-    if (actionLogSortKey === key) {
-      setActionLogSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setActionLogSortKey(key);
-      setActionLogSortDirection('asc');
-    }
-  };
 
   const toggleLogExpansion = (logId: string) => {
     setExpandedLogIds((prev) => {
@@ -917,10 +947,6 @@ export function InstanceDetailPage() {
       }
       return newSet;
     });
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
   };
 
   // Get instance data based on the ID from URL
@@ -986,7 +1012,20 @@ export function InstanceDetailPage() {
       <VStack gap={6} className="min-w-[1176px]">
         {/* Instance Header Card */}
         <DetailHeader>
-          <DetailHeader.Title>{instance.name}</DetailHeader.Title>
+          <DetailHeader.Title>
+            <span className="inline-flex items-center gap-2">
+              {instance.locked ? (
+                <Tooltip content="This instance is locked">
+                  <IconLock size={16} className="text-[var(--color-text-muted)]" />
+                </Tooltip>
+              ) : (
+                <Tooltip content="This instance is unlocked">
+                  <IconLockOpen size={16} className="text-[var(--color-text-disabled)]" />
+                </Tooltip>
+              )}
+              {instance.name}
+            </span>
+          </DetailHeader.Title>
 
           <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
@@ -1010,59 +1049,78 @@ export function InstanceDetailPage() {
                   id: 'instance-status',
                   label: 'Instance status',
                   submenu: [
+                    { id: 'soft-reboot-sub', label: 'Soft reboot', onClick: () => {} },
+                    { id: 'pause-sub', label: 'Pause', onClick: () => {} },
+                    { id: 'suspend-sub', label: 'Suspend', onClick: () => {} },
+                    { id: 'shelve-sub', label: 'Shelve', onClick: () => {} },
+                    { id: 'unpause-sub', label: 'Unpause', onClick: () => {} },
+                    { id: 'resume-sub', label: 'Resume', onClick: () => {} },
+                    { id: 'unshelve-sub', label: 'Unshelve', onClick: () => {} },
+                    { id: 'rescue-sub', label: 'Rescue', onClick: () => {} },
+                    { id: 'unrescue-sub', label: 'Unrescue', onClick: () => {} },
+                  ],
+                },
+                {
+                  id: 'storage-snapshot',
+                  label: 'Storage&Snapshot',
+                  submenu: [
+                    { id: 'attach-volume', label: 'Attach volume', onClick: () => {} },
                     {
-                      id: 'soft-reboot',
-                      label: 'Soft reboot',
+                      id: 'detach-volume',
+                      label: 'Detach volume',
+                      status: 'danger',
+                      onClick: () => {},
+                    },
+                    { id: 'create-snapshot', label: 'Create instance snapshot', onClick: () => {} },
+                  ],
+                },
+                {
+                  id: 'network',
+                  label: 'Network',
+                  submenu: [
+                    { id: 'attach-interface', label: 'Attach interface', onClick: () => {} },
+                    {
+                      id: 'detach-interface',
+                      label: 'Detach interface',
+                      status: 'danger',
                       onClick: () => {},
                     },
                     {
-                      id: 'pause',
-                      label: 'Pause',
+                      id: 'associate-floating-ip',
+                      label: 'Associate floating IP',
                       onClick: () => {},
                     },
                     {
-                      id: 'suspend',
-                      label: 'Suspend',
+                      id: 'disassociate-floating-ip',
+                      label: 'Disassociate floating IP',
+                      status: 'danger',
                       onClick: () => {},
                     },
                     {
-                      id: 'shelve',
-                      label: 'Shelve',
-                      onClick: () => {},
-                    },
-                    {
-                      id: 'unpause',
-                      label: 'Unpause',
-                      onClick: () => {},
-                    },
-                    {
-                      id: 'resume',
-                      label: 'Resume',
-                      onClick: () => {},
-                    },
-                    {
-                      id: 'unshelve',
-                      label: 'Unshelve',
+                      id: 'manage-security-groups',
+                      label: 'Manage security groups',
                       onClick: () => {},
                     },
                   ],
                 },
                 {
-                  id: 'storage-snapshot',
-                  label: 'Storage & Snapshot',
-                  onClick: () => {},
-                },
-                { id: 'network', label: 'Network', onClick: () => {} },
-                {
                   id: 'configuration',
                   label: 'Configuration',
-                  onClick: () => {},
+                  submenu: [
+                    { id: 'lock-setting', label: 'Lock setting', onClick: () => {} },
+                    { id: 'rebuild', label: 'Rebuild', status: 'danger', onClick: () => {} },
+                    { id: 'resize', label: 'Resize', onClick: () => {} },
+                    { id: 'manage-tags', label: 'Manage tags', onClick: () => {} },
+                    { id: 'edit', label: 'Edit', onClick: () => {} },
+                  ],
                 },
+                { id: 'confirm-resize', label: 'Confirm resize', onClick: () => {} },
+                { id: 'revert-resize', label: 'Revert resize', onClick: () => {} },
               ]}
               trigger="click"
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -1071,6 +1129,23 @@ export function InstanceDetailPage() {
             <DetailHeader.InfoCard label="Status" value="Active" status="active" />
             <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
             <DetailHeader.InfoCard label="Host" value={instance.host} />
+            <DetailHeader.InfoCard label="Origin" value={instance.image} />
+            <DetailHeader.InfoCard
+              label="Locked state"
+              value={
+                <span className="inline-flex items-center gap-1 min-w-0">
+                  {instance.locked ? (
+                    <IconLock size={14} className="text-[var(--color-text-muted)] shrink-0" />
+                  ) : (
+                    <IconLockOpen
+                      size={14}
+                      className="text-[var(--color-text-disabled)] shrink-0"
+                    />
+                  )}
+                  <span>{instance.locked ? 'Locked' : 'Unlocked'}</span>
+                </span>
+              }
+            />
             <DetailHeader.InfoCard label="Created at" value={instance.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -1096,14 +1171,7 @@ export function InstanceDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Instance name" value={instance.name} />
                     <SectionCard.DataRow
@@ -1131,9 +1199,9 @@ export function InstanceDetailPage() {
                   </SectionCard.Content>
                 </SectionCard>
 
-                {/* Start Source */}
+                {/* Source */}
                 <SectionCard>
-                  <SectionCard.Header title="Start source" />
+                  <SectionCard.Header title="Source" />
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Image"
@@ -1141,6 +1209,7 @@ export function InstanceDetailPage() {
                       isLink
                       linkHref="/images"
                     />
+                    <SectionCard.DataRow label="OS" value={instance.os} />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -1159,16 +1228,14 @@ export function InstanceDetailPage() {
 
                 {/* Advanced */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Advanced"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
-                        Manage tags
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Advanced" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Tags" value="Team: Backend" />
+                    <SectionCard.DataRow label="Tags">
+                      <div className="flex flex-wrap items-center gap-1">
+                        <Chip label="Team" value="dev" />
+                        <Chip label="Key" value="Value" />
+                      </div>
+                    </SectionCard.DataRow>
                     <SectionCard.DataRow
                       label="Server group"
                       value={instance.serverGroup}
@@ -1547,17 +1614,12 @@ export function InstanceDetailPage() {
                       flex: 1,
                       minWidth: columnMinWidths.floatingIp,
                       render: (_value: string, row: FloatingIP) => (
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <Link
-                            to={`/compute/floating-ips/${row.id}`}
-                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline truncate"
-                          >
-                            {row.floatingIp}
-                          </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {row.id}
-                          </span>
-                        </div>
+                        <Link
+                          to={`/compute/floating-ips/${row.id}`}
+                          className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline truncate"
+                        >
+                          {row.floatingIp}
+                        </Link>
                       ),
                     },
                     {
@@ -1621,8 +1683,8 @@ export function InstanceDetailPage() {
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                     Security groups
                   </h2>
-                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
-                    Attach Security group
+                  <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                    Manage security group
                   </Button>
                 </div>
 
@@ -1900,11 +1962,72 @@ export function InstanceDetailPage() {
 
             {/* Monitoring Tab Panel */}
             <TabPanel value="monitoring" className="pt-0">
-              <div className="pt-6">
-                <p className="text-[var(--color-text-subtle)]">
-                  Monitoring content will be displayed here.
-                </p>
-              </div>
+              <VStack gap={3} className="pt-4">
+                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Monitoring</h2>
+
+                <MonitoringToolbar
+                  timeRangeOptions={monitoringTimeRangeOptions}
+                  timeRange={monitoringTimeRange}
+                  onTimeRangeChange={setMonitoringTimeRange}
+                  onRefresh={() => {}}
+                />
+
+                <VStack gap={3}>
+                  {/* Row 1: CPU Utilization + Network Traffic */}
+                  <div className="flex gap-3">
+                    <ChartWithFullScreen
+                      title="CPU Utilization"
+                      series={[
+                        {
+                          name: 'CPU Utilization',
+                          data: cpuUtilizationData,
+                          color: chartColors.cyan400,
+                        },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}%`}
+                    />
+                    <ChartWithFullScreen
+                      title="Network Traffic"
+                      series={[
+                        { name: 'In', data: networkTrafficInData, color: chartColors.cyan400 },
+                        { name: 'Out', data: networkTrafficOutData, color: chartColors.emerald400 },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v} MiB/s`}
+                    />
+                  </div>
+
+                  {/* Row 2: Network Packets + Disk Usage */}
+                  <div className="flex gap-3">
+                    <ChartWithFullScreen
+                      title="Network Packets"
+                      series={[
+                        { name: 'In', data: networkPacketsInData, color: chartColors.cyan400 },
+                        { name: 'Out', data: networkPacketsOutData, color: chartColors.emerald400 },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}`}
+                    />
+                    <ChartWithFullScreen
+                      title="Disk Usage"
+                      series={[
+                        { name: 'Disk Usage', data: diskUsageData, color: chartColors.cyan400 },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}%`}
+                    />
+                  </div>
+
+                  {/* Row 3: Disk IOPS — half width */}
+                  <div className="w-[calc(50%-6px)]">
+                    <ChartWithFullScreen
+                      title="Disk IOPS"
+                      series={[
+                        { name: 'Read', data: diskIOPSReadData, color: chartColors.cyan400 },
+                        { name: 'Write', data: diskIOPSWriteData, color: chartColors.emerald400 },
+                      ]}
+                      yAxisFormatter={(v: number) => `${v}`}
+                    />
+                  </div>
+                </VStack>
+              </VStack>
             </TabPanel>
 
             {/* Resource Map Tab Panel */}
@@ -1962,23 +2085,13 @@ export function InstanceDetailPage() {
                     </div>
                   </div>
 
-                  {/* Right side - View Full Log */}
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="text-[var(--color-text-default)]"
-                    >
-                      <IconTerminal2 size={14} stroke={1.5} />
-                      View Full Log
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
-                      aria-label="Download"
-                    />
-                  </div>
+                  {/* Right side - Download */}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconDownload size={12} stroke={1.5} />}
+                    aria-label="Download"
+                  />
                 </div>
 
                 {/* Console Area */}
@@ -2039,187 +2152,86 @@ export function InstanceDetailPage() {
                 />
 
                 {/* Action Logs Table */}
-                <div className="w-full flex flex-col gap-1">
-                  {/* Table Header */}
-                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                    <div
-                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                      onClick={() => handleActionLogSort('operationName')}
-                    >
-                      <div className="flex items-center gap-1 w-full">
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Action
-                        </span>
-                        {actionLogSortKey === 'operationName' ? (
-                          actionLogSortDirection === 'asc' ? (
-                            <IconChevronUp
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          ) : (
-                            <IconChevronDown
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          )
-                        ) : (
-                          <IconSelector
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)]"
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                      onClick={() => handleActionLogSort('requestId')}
-                    >
-                      <div className="flex items-center gap-1 w-full">
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Request ID
-                        </span>
-                        {actionLogSortKey === 'requestId' ? (
-                          actionLogSortDirection === 'asc' ? (
-                            <IconChevronUp
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          ) : (
-                            <IconChevronDown
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          )
-                        ) : (
-                          <IconSelector
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)]"
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                      onClick={() => handleActionLogSort('requestedTime')}
-                    >
-                      <div className="flex items-center gap-1 w-full">
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Requested Time
-                        </span>
-                        {actionLogSortKey === 'requestedTime' ? (
-                          actionLogSortDirection === 'asc' ? (
-                            <IconChevronUp
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          ) : (
-                            <IconChevronDown
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          )
-                        ) : (
-                          <IconSelector
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)]"
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Table Rows */}
-                  {filteredActionLogs
-                    .slice(
-                      (actionLogCurrentPage - 1) * actionLogRowsPerPage,
-                      actionLogCurrentPage * actionLogRowsPerPage
-                    )
-                    .map((log) => {
-                      const isExpanded = expandedLogIds.has(log.id);
-                      return (
-                        <div
-                          key={log.id}
-                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                        >
-                          {/* Main Row */}
-                          <div className="flex items-center w-full">
-                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
-                              <button
-                                onClick={() => toggleLogExpansion(log.id)}
-                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                {isExpanded ? (
-                                  <IconChevronDown
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-default)]"
-                                  />
-                                ) : (
-                                  <IconChevronRight
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-default)]"
-                                  />
-                                )}
-                              </button>
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.operationName}
-                              </span>
-                            </div>
-                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.requestId}
-                              </span>
-                              <button
-                                onClick={() => copyToClipboard(log.requestId)}
-                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                <IconCopy
-                                  size={12}
-                                  stroke={1.5}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </button>
-                            </div>
-                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.requestedTime}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Expanded Details */}
-                          {isExpanded && (
-                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                <span className="font-medium">Result :</span>
-                                <span>{log.result}</span>
-                              </div>
-                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                <span className="font-medium">Start Time :</span>
-                                <span>{log.startTime}</span>
-                              </div>
-                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                <span className="font-medium">End Time :</span>
-                                <span>{log.endTime}</span>
-                              </div>
-                            </div>
-                          )}
+                <Table<ActionLog>
+                  columns={[
+                    {
+                      key: 'operationName',
+                      label: 'Action',
+                      flex: 1,
+                      sortable: true,
+                      render: (_value: string, row: ActionLog) => (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleLogExpansion(row.id);
+                            }}
+                            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            {expandedLogIds.has(row.id) ? (
+                              <IconChevronDown
+                                size={12}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            ) : (
+                              <IconChevronRight
+                                size={12}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            )}
+                          </button>
+                          <span>{row.operationName}</span>
                         </div>
-                      );
-                    })}
-                </div>
+                      ),
+                    },
+                    {
+                      key: 'requestId',
+                      label: 'Request ID',
+                      flex: 1,
+                      sortable: true,
+                      render: (_value: string, row: ActionLog) => (
+                        <div className="flex items-center gap-1.5">
+                          <span>{row.requestId}</span>
+                          <CopyButton value={row.requestId} size="sm" iconOnly />
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'requestedTime',
+                      label: 'Requested time',
+                      flex: 1,
+                      sortable: true,
+                    },
+                  ]}
+                  data={filteredActionLogs.slice(
+                    (actionLogCurrentPage - 1) * actionLogRowsPerPage,
+                    actionLogCurrentPage * actionLogRowsPerPage
+                  )}
+                  rowKey="id"
+                  onRowClick={(row) => toggleLogExpansion(row.id)}
+                  expandedContent={(row) =>
+                    expandedLogIds.has(row.id) ? (
+                      <div className="flex items-center gap-4 px-8 py-3">
+                        <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                          <span className="font-medium">Result :</span>
+                          <span>{row.result}</span>
+                        </div>
+                        <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                        <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                          <span className="font-medium">Start Time :</span>
+                          <span>{row.startTime}</span>
+                        </div>
+                        <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                        <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                          <span className="font-medium">End Time :</span>
+                          <span>{row.endTime}</span>
+                        </div>
+                      </div>
+                    ) : null
+                  }
+                />
               </VStack>
             </TabPanel>
           </Tabs>

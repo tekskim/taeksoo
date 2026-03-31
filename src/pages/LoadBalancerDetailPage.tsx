@@ -30,12 +30,13 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconUnlink,
+  IconLinkPlus,
   IconTrash,
   IconBell,
-  IconChevronDown,
   IconEdit,
   IconCirclePlus,
   IconDotsCircleHorizontal,
+  IconDownload,
 } from '@tabler/icons-react';
 
 // Types
@@ -338,7 +339,6 @@ export function LoadBalancerDetailPage() {
           {
             id: 'edit',
             label: 'Edit',
-            icon: <IconEdit size={14} stroke={1.5} />,
             onClick: () => console.log('Edit listener', row.id),
           },
           {
@@ -455,7 +455,6 @@ export function LoadBalancerDetailPage() {
           {
             id: 'edit',
             label: 'Edit',
-            icon: <IconEdit size={14} stroke={1.5} />,
             onClick: () => console.log('Edit pool', row.id),
           },
           {
@@ -530,33 +529,21 @@ export function LoadBalancerDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{loadBalancer.name}</DetailHeader.Title>
           <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconLinkPlus size={12} />}>
+              Associate floating IP
+            </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconUnlink size={12} />}>
-              Disassociate
+              Disassociate floating IP
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Create listener
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
-            <ContextMenu
-              trigger="click"
-              items={[
-                {
-                  id: 'edit',
-                  label: 'Edit',
-                  icon: <IconEdit size={14} stroke={1.5} />,
-                  onClick: () => console.log('Edit clicked'),
-                },
-                {
-                  id: 'create-listener',
-                  label: 'Create listener',
-                  icon: <IconCirclePlus size={14} stroke={1.5} />,
-                  onClick: () => console.log('Create listener clicked'),
-                },
-              ]}
-            >
-              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
-              </Button>
-            </ContextMenu>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
@@ -571,8 +558,9 @@ export function LoadBalancerDetailPage() {
               copyable
               onCopy={handleCopyId}
             />
-            <DetailHeader.InfoCard label="Admin state" value={loadBalancer.adminState} />
             <DetailHeader.InfoCard label="VIP Address" value={loadBalancer.vipAddress} />
+            <DetailHeader.InfoCard label="Admin state" value={loadBalancer.adminState} />
+            <DetailHeader.InfoCard label="Origin" value={loadBalancer.provider} />
             <DetailHeader.InfoCard label="Created at" value={loadBalancer.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -584,7 +572,6 @@ export function LoadBalancerDetailPage() {
               <TabList>
                 <Tab value="details">Details</Tab>
                 <Tab value="listeners">Listeners</Tab>
-                <Tab value="pools">Pools</Tab>
               </TabList>
 
               {/* Details Tab Panel */}
@@ -592,16 +579,9 @@ export function LoadBalancerDetailPage() {
                 <VStack gap={4} className="pt-4">
                   {/* Basic information */}
                   <SectionCard>
-                    <SectionCard.Header
-                      title="Basic information"
-                      actions={
-                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                          Edit
-                        </Button>
-                      }
-                    />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
-                      <SectionCard.DataRow label="Name" value={loadBalancer.name} />
+                      <SectionCard.DataRow label="Load balancer name" value={loadBalancer.name} />
                       <SectionCard.DataRow label="Description" value={loadBalancer.description} />
                       <SectionCard.DataRow label="Admin state" value={loadBalancer.adminState} />
                       <SectionCard.DataRow label="Provider" value={loadBalancer.provider} />
@@ -667,14 +647,22 @@ export function LoadBalancerDetailPage() {
 
                   {/* Action Bar */}
                   <div className="flex items-center gap-2">
-                    <div className="w-[var(--search-input-width)]">
-                      <SearchInput
-                        value={listenerSearchTerm}
-                        onChange={(e) => {
-                          setListenerSearchTerm(e.target.value);
-                          setListenerCurrentPage(1);
-                        }}
-                        placeholder="Search listener by attributes"
+                    <div className="flex items-center gap-1">
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          value={listenerSearchTerm}
+                          onChange={(e) => {
+                            setListenerSearchTerm(e.target.value);
+                            setListenerCurrentPage(1);
+                          }}
+                          placeholder="Search listener by attributes"
+                        />
+                      </div>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
                       />
                     </div>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
@@ -709,65 +697,6 @@ export function LoadBalancerDetailPage() {
                     selectable
                     selectedKeys={selectedListeners}
                     onSelectionChange={setSelectedListeners}
-                  />
-                </VStack>
-              </TabPanel>
-
-              {/* Pools Tab Panel */}
-              <TabPanel value="pools" className="pt-0">
-                <VStack gap={4} className="pt-4">
-                  {/* Header */}
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">Pools</h3>
-                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                      Create Pool
-                    </Button>
-                  </div>
-
-                  {/* Action Bar */}
-                  <div className="flex items-center gap-2">
-                    <div className="w-[var(--search-input-width)]">
-                      <SearchInput
-                        value={poolSearchTerm}
-                        onChange={(e) => {
-                          setPoolSearchTerm(e.target.value);
-                          setPoolCurrentPage(1);
-                        }}
-                        placeholder="Search pool by attributes"
-                      />
-                    </div>
-                    <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selectedPools.length === 0}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-
-                  {/* Pagination */}
-                  <div className="flex items-center gap-2">
-                    <Pagination
-                      currentPage={poolCurrentPage}
-                      totalPages={totalPoolPages}
-                      onPageChange={setPoolCurrentPage}
-                      totalItems={filteredPools.length}
-                      selectedCount={selectedPools.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
-                    />
-                  </div>
-
-                  {/* Table */}
-                  <Table
-                    columns={poolColumns}
-                    data={paginatedPools}
-                    rowKey="id"
-                    selectable
-                    selectedKeys={selectedPools}
-                    onSelectionChange={setSelectedPools}
                   />
                 </VStack>
               </TabPanel>

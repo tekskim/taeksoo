@@ -1,0 +1,609 @@
+{
+  "generated": "2026-03-24T02:37:38.342Z",
+  "summary": {
+    "pagesCompared": 8,
+    "totalDiffs": 61,
+    "critical": 41,
+    "major": 19,
+    "minor": 1
+  },
+  "pages": [
+    {
+      "route": "/iam/users/create",
+      "pageName": "iam-users-create",
+      "diffs": [
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "First text input",
+          "component": "Input",
+          "styleFile": "Input.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "boundingHeight",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "height",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/iam/user-groups/create",
+      "pageName": "iam-user-groups-create",
+      "diffs": [
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "First text input",
+          "component": "Input",
+          "styleFile": "Input.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "boundingHeight",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "height",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/iam/roles/create",
+      "pageName": "iam-roles-create",
+      "diffs": [
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "First text input",
+          "component": "Input",
+          "styleFile": "Input.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "boundingHeight",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "height",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/iam/policies/create",
+      "pageName": "iam-policies-create",
+      "diffs": [
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "boundingHeight",
+          "tds": "310px",
+          "shared": "316px",
+          "severity": "major"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "height",
+          "tds": "310px",
+          "shared": "316px",
+          "severity": "major"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/iam/system-administrators/create",
+      "pageName": "iam-sysadmin-create",
+      "diffs": [
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "First text input",
+          "component": "Input",
+          "styleFile": "Input.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "boundingHeight",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "height",
+          "tds": "204px",
+          "shared": "208px",
+          "severity": "major"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/storage/buckets/create",
+      "pageName": "st-bucket-create",
+      "diffs": [
+        {
+          "element": "Page title",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "width",
+          "tds": "109.531px",
+          "shared": "110.719px",
+          "severity": "minor"
+        },
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "boundingHeight",
+          "tds": "230px",
+          "shared": "234px",
+          "severity": "major"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "height",
+          "tds": "230px",
+          "shared": "234px",
+          "severity": "major"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "91.40625px",
+          "shared": "63.078125px",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "91.4062px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/cloudbuilder/discovery/create",
+      "pageName": "cb-discovery-create",
+      "diffs": [
+        {
+          "element": "Page title",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "route": "/cloudbuilder/servers/create",
+      "pageName": "cb-servers-create",
+      "diffs": [
+        {
+          "element": "Page title",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step container (first accordion)",
+          "component": "Stepper/TcAccordion",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Step label",
+          "component": "Stepper",
+          "styleFile": "Stepper.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Sidebar outer container",
+          "component": "CreateLayout",
+          "styleFile": "CreateLayout.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Summary inner card",
+          "component": "FloatingCard",
+          "styleFile": "FloatingCard.styles.ts",
+          "property": "__presence",
+          "tds": "missing",
+          "shared": "exists",
+          "severity": "critical"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "boundingWidth",
+          "tds": "80px",
+          "shared": "63.078125px",
+          "severity": "major"
+        },
+        {
+          "element": "Cancel button",
+          "component": "Button",
+          "styleFile": "Button.styles.ts",
+          "property": "width",
+          "tds": "80px",
+          "shared": "63.0781px",
+          "severity": "critical"
+        }
+      ]
+    }
+  ]
+}

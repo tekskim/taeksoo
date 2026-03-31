@@ -1,5 +1,5 @@
 // Auto-generated from tokens/light.json - DO NOT EDIT
-// Generated at: 2026-03-16T08:32:43.982Z
+// Generated at: 2026-03-31T04:03:47.588Z
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -19,6 +19,7 @@ export default {
         'tertiary-focus': 'var(--semantic-color-tertiary-focus)',
         'on-tertiary': 'var(--semantic-color-on-tertiary)',
         'surface': 'var(--semantic-color-surface)',
+        'surface-subtle': 'var(--semantic-color-surface-subtle)',
         'surface-muted': 'var(--semantic-color-surface-muted)',
         'surface-hover': 'var(--semantic-color-surface-hover)',
         'surface-tertiary': 'var(--semantic-color-surface-tertiary)',

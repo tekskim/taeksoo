@@ -33,8 +33,8 @@ import {
   IconCircleX,
   IconLock,
   IconReload,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
-import { IconAction } from '@/design-system';
 
 /* ----------------------------------------
    Types
@@ -289,15 +289,15 @@ export default function IAMSystemAdminDetailPage() {
 
   // Context menu items for MFA
   const mfaContextMenuItems: ContextMenuItem[] = [
-    { id: 'remove', label: 'Remove MFA', danger: true },
+    { id: 'remove', label: 'Remove MFA', status: 'danger' },
   ];
 
   // Context menu items for sessions
   const sessionContextMenuItems: ContextMenuItem[] = [
-    { id: 'terminate', label: 'Terminate session', danger: true },
+    { id: 'terminate', label: 'Terminate session', status: 'danger' },
   ];
 
-  // More Actions menu items
+  // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
     { id: 'reset-password', label: 'Reset password' },
     { id: 'reset-mfa', label: 'Reset MFA' },
@@ -340,7 +340,11 @@ export default function IAMSystemAdminDetailPage() {
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
           >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),
@@ -390,7 +394,11 @@ export default function IAMSystemAdminDetailPage() {
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
           >
-            <IconAction size={16} stroke={1} className="text-[var(--color-text-default)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--color-text-default)]"
+            />
           </button>
         </ContextMenu>
       ),
@@ -445,7 +453,7 @@ export default function IAMSystemAdminDetailPage() {
               </Button>
               <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
                 <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More Actions
+                  More actions
                 </Button>
               </ContextMenu>
             </HStack>

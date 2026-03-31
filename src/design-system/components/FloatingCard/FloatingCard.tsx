@@ -185,7 +185,7 @@ export function FloatingCard({
 
   const cardContent = (
     <div
-      data-figma-name="FloatingCard"
+      data-figma-name="[TDS] FloatingCard"
       className={twMerge(baseStyles.join(' '), className)}
       style={cardStyle}
       {...props}

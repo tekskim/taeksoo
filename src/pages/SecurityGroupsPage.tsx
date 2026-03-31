@@ -14,6 +14,7 @@ import {
   ConfirmModal,
   PageShell,
   PageHeader,
+  Tooltip,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -30,6 +31,7 @@ import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawe
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Types
@@ -45,6 +47,7 @@ interface SecurityGroup {
   egressRules: number;
   createdAt: string;
   status: SecurityGroupStatus;
+  origin?: 'container';
 }
 
 /* ----------------------------------------
@@ -60,6 +63,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     egressRules: 3,
     createdAt: 'Jan 15, 2024 12:22:26',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'sg-002',
@@ -69,6 +73,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     egressRules: 2,
     createdAt: 'Jan 10, 2024 01:17:01',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'sg-003',
@@ -87,6 +92,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     egressRules: 4,
     createdAt: 'Feb 15, 2024 12:22:26',
     status: 'active',
+    origin: 'container',
   },
   {
     id: 'sg-005',
@@ -264,15 +270,27 @@ export function SecurityGroupsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/security-groups/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This security group was created via the Container cluster."
+              position="top"
+            >
+              <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                <img src={containerIcon} alt="Container" className="w-4 h-4" />
+              </div>
+            </Tooltip>
+          )}
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute/security-groups/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          </div>
         </div>
       ),
     },
@@ -389,7 +407,7 @@ export function SecurityGroupsPage() {
           title="Security groups"
           actions={
             <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
-              Create Security group
+              Create security group
             </Button>
           }
         />

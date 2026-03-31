@@ -61,7 +61,9 @@ const TypographySample = ({
 export const Headings: Story = {
   render: () => (
     <div className="flex flex-col">
-      <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)]">Headings</h3>
+      <h3 className="text-label-md font-semibold uppercase mb-[var(--primitive-spacing-4)]">
+        Headings
+      </h3>
       <TypographySample
         name="H1"
         fontSize="--font-size-40"
@@ -105,7 +107,9 @@ export const Headings: Story = {
 export const Body: Story = {
   render: () => (
     <div className="flex flex-col">
-      <h3 className="text-heading-h7 mb-[var(--primitive-spacing-4)]">Body Text</h3>
+      <h3 className="text-label-md font-semibold uppercase mb-[var(--primitive-spacing-4)]">
+        Body Text
+      </h3>
       <TypographySample name="body.lg" fontSize="--font-size-14" lineHeight="--line-height-20" />
       <TypographySample name="body.md" fontSize="--font-size-12" lineHeight="--line-height-18" />
       <TypographySample name="body.sm" fontSize="--font-size-11" lineHeight="--line-height-16" />
@@ -117,7 +121,7 @@ export const Body: Story = {
 export const FontSizes: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
-      <h3 className="text-heading-h7">Font Size Variables</h3>
+      <h3 className="text-label-md font-semibold uppercase">Font Size Variables</h3>
       <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-[var(--color-border-default)]">
@@ -155,7 +159,7 @@ export const FontSizes: Story = {
 export const LineHeights: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-4)]">
-      <h3 className="text-heading-h7">Line Height Variables</h3>
+      <h3 className="text-label-md font-semibold uppercase">Line Height Variables</h3>
       <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-[var(--color-border-default)]">

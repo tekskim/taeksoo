@@ -259,7 +259,6 @@ export function ComputeAdminCertificatesPage() {
       id: 'download',
       label: 'Download',
       onClick: () => console.log('Download:', cert.id),
-      divider: true,
     },
     {
       id: 'delete',
@@ -336,11 +335,11 @@ export function ComputeAdminCertificatesPage() {
           '-'
         ) : (
           <div className="flex flex-col gap-0.5 min-w-0">
-            <div className="flex items-center gap-1">
+            <div className="flex w-full items-center gap-1">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
               {row.listenerCount > 0 && (
-                <span className="text-body-md text-[var(--color-text-subtle)]">
-                  (+{row.listenerCount})
+                <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
+                  +{row.listenerCount}
                 </span>
               )}
             </div>

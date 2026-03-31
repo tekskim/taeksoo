@@ -1,0 +1,262 @@
+@font-face {
+  font-family: 'Mona Sans';
+  src:
+    url('../../public/fonts/MonaSans.woff2') format('woff2 supports variations'),
+    url('../../public/fonts/MonaSans.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-display: swap;
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+/* Remove default focus outline globally, use focus-visible for keyboard accessibility */
+*:focus {
+  outline: none;
+}
+
+/* Restore focus indicator for keyboard navigation (accessibility) */
+*:focus-visible {
+  outline: 2px solid var(--semantic-color-focus, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Remove focus ring from elements that handle their own focus styles */
+button:focus-visible,
+[role='button']:focus-visible,
+[role='tab']:focus-visible,
+[role='menuitem']:focus-visible,
+[role='option']:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: none;
+}
+
+html {
+  font-family: var(--semantic-font-family, 'Inter', sans-serif);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--semantic-font-family, 'Inter', sans-serif);
+  font-size: var(--semantic-font-sizeMd, 1rem);
+  background-color: var(--semantic-color-surface);
+  color: var(--semantic-color-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+:root {
+  --shared-scrollbar-size: var(--primitive-space-1-5, 0.375rem);
+  --shared-scrollbar-radius: calc(var(--shared-scrollbar-size) / 2);
+  --shared-scrollbar-track-background: transparent;
+  --shared-scrollbar-track-border-color: transparent;
+  --shared-scrollbar-thumb-background: var(--semantic-color-borderStrong);
+  --shared-scrollbar-thumb-hover-background: var(--semantic-color-textMuted);
+}
+
+html[data-theme='dark'] {
+  --shared-scrollbar-track-background: transparent;
+  --shared-scrollbar-track-border-color: transparent;
+  --shared-scrollbar-thumb-background: var(--semantic-color-borderStrong);
+  --shared-scrollbar-thumb-hover-background: var(--semantic-color-border);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--shared-scrollbar-thumb-background) var(--shared-scrollbar-track-background);
+}
+
+*::-webkit-scrollbar {
+  width: var(--shared-scrollbar-size);
+  height: var(--shared-scrollbar-size);
+}
+
+*::-webkit-scrollbar-track {
+  background-color: var(--shared-scrollbar-track-background);
+  border: 1px solid var(--shared-scrollbar-track-border-color);
+  border-radius: var(--shared-scrollbar-radius);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--shared-scrollbar-thumb-background);
+  border-radius: var(--shared-scrollbar-radius);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--shared-scrollbar-thumb-hover-background);
+}
+
+*::-webkit-scrollbar-corner {
+  background-color: var(--shared-scrollbar-track-background);
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--semantic-color-surface);
+  color: var(--semantic-color-text);
+}
+
+#root main form {
+  width: 100%;
+}
+
+/* Ensure proper text rendering */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--semantic-font-family, 'Inter', sans-serif);
+  color: var(--semantic-color-text);
+  margin: 0;
+}
+
+p {
+  font-family: var(--semantic-font-family, 'Inter', sans-serif);
+  color: var(--semantic-color-text);
+  margin: 0;
+}
+
+/* Button and input base styles */
+button,
+input,
+select,
+textarea {
+  font-family: var(--semantic-font-family, 'Inter', sans-serif);
+  margin: 0;
+}
+
+/* Reset webkit autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: #171717 !important;
+  background-color: transparent !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Remove styles on list */
+
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Link styles */
+a {
+  color: var(--semantic-color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--semantic-color-primaryHover);
+}
+
+/* Toast with action button styling */
+[data-sonner-toast].error-toast-with-action,
+.error-toast-with-action {
+  min-width: 350px !important;
+  max-width: 420px !important;
+  width: auto !important;
+}
+
+[data-sonner-toast].error-toast-with-action [data-content],
+.error-toast-with-action [data-content] {
+  min-width: 300px !important;
+}
+
+/* Action button styling - multiple selectors for compatibility */
+[data-sonner-toast].error-toast-with-action [data-action],
+.error-toast-with-action [data-action],
+[data-sonner-toast].error-toast-with-action [data-button],
+.error-toast-with-action [data-button],
+[data-sonner-toast].error-toast-with-action button,
+.error-toast-with-action button {
+  margin-left: 0 !important;
+  margin-top: 8px !important;
+  width: 100% !important;
+  display: block !important;
+  justify-content: center !important;
+  padding: 8px 16px !important;
+  background-color: var(--semantic-color-error) !important;
+  color: var(--semantic-color-onError) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+}
+
+[data-sonner-toast].error-toast-with-action button:hover,
+.error-toast-with-action button:hover {
+  background-color: var(--semantic-color-errorLight) !important;
+  color: var(--semantic-color-error) !important;
+}
+
+/* Ensure proper layout for toast with actions */
+[data-sonner-toast].error-toast-with-action,
+.error-toast-with-action {
+  flex-direction: column !important;
+}
+
+[data-sonner-toast].error-toast-with-action > div,
+.error-toast-with-action > div {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+/* Unstyled toast additional styling */
+[data-sonner-toast].error-toast-with-action[data-styled='false'] {
+  font-family: 'Inter', sans-serif !important;
+}
+
+[data-sonner-toast].error-toast-with-action[data-styled='false'] [data-title] {
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+[data-sonner-toast].error-toast-with-action[data-styled='false'] [data-description] {
+  opacity: 0.9 !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+/* Snap panel fade-in animation */
+@keyframes snapPanelFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

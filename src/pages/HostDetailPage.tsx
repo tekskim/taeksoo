@@ -1209,7 +1209,8 @@ export default function HostDetailPage() {
     {
       key: 'available',
       label: 'Available',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.available,
       sortable: true,
       render: (_, row) => (row.available ? 'Yes' : ''),
     },
@@ -1503,7 +1504,7 @@ export default function HostDetailPage() {
                 {/* Search */}
                 <div className="flex items-center gap-4">
                   <div className="w-[var(--search-input-width)]">
-                    <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                    <SearchInput placeholder="Search devices by attributes" size="sm" fullWidth />
                   </div>
                 </div>
 
@@ -1539,7 +1540,11 @@ export default function HostDetailPage() {
 
                 {/* Search */}
                 <div className="w-[var(--search-input-width)]">
-                  <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                  <SearchInput
+                    placeholder="Search physical disks by attributes"
+                    size="sm"
+                    fullWidth
+                  />
                 </div>
 
                 {/* Pagination */}
@@ -1572,7 +1577,7 @@ export default function HostDetailPage() {
 
                 {/* Search */}
                 <div className="w-[var(--search-input-width)]">
-                  <SearchInput placeholder="Search instance by attributes" size="sm" fullWidth />
+                  <SearchInput placeholder="Search daemons by attributes" size="sm" fullWidth />
                 </div>
 
                 {/* Pagination */}
@@ -1751,8 +1756,8 @@ export default function HostDetailPage() {
                 </div>
 
                 {/* System Overview Section */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                  <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg pt-4 px-6 pb-6">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
                     System overview
                   </h3>
 
@@ -1910,9 +1915,9 @@ export default function HostDetailPage() {
                 </div>
 
                 {/* DISK PERFORMANCE Section */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                  <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
-                    DISK PERFORMANCE
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg pt-4 px-6 pb-6">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
+                    Disk performance
                   </h3>
 
                   {/* Disk Charts Container with 24px vertical gap */}

@@ -88,10 +88,11 @@ function yyyyMmDd(i: number) {
 }
 
 function dateTime(i: number) {
-  const date = yyyyMmDd(i);
-  const hh = pad2(i % 24);
-  const min = pad2((i * 7) % 60);
-  return `${date} ${hh}:${min}`;
+  const yyyy = i % 3 === 0 ? 2025 : 2024;
+  const mm = (i % 12) + 1;
+  const dd = (i % 28) + 1;
+  const d = new Date(yyyy, mm - 1, dd);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function randIp(i: number) {
@@ -127,16 +128,7 @@ function makeRows(count: number, rowFactory: (i: number) => Record<string, strin
   });
 }
 
-const frontierTones: Record<string, BadgeTone> = {
-  OK: 'success',
-  Missing: 'neutral',
-  Invalid: 'blue',
-};
-
 export const CLOUD_BUILDER_SLUGS = [
-  'discovery',
-  'servers',
-  'switch',
   'severs0.7',
   'services',
   'compute-services',
@@ -151,272 +143,57 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
   const COUNT = 115;
   const detailHrefBase = `/cloudbuilder/${slug}/detail`;
 
-  if (slug === 'discovery') {
+  if (slug === 'severs0.7') {
+    const roleTones: Record<string, BadgeTone> = {
+      'Baremetal node': 'blue',
+    };
+
     return {
       slug,
-      title: 'Discovery',
-      searchPlaceholder: 'Search discovered assets by attributes',
+      title: 'Servers',
+      searchPlaceholder: 'Search servers by attributes',
       detailHrefBase,
       linkifyColumnKeys: ['serial'],
-      createLabel: 'Create',
-      createHref: '/cloudbuilder/discovery/create',
+      createLabel: 'Register server',
+      createHref: '/cloudbuilder/servers/create',
       actionMenu: {
         items: [
+          { id: 'allocate', label: 'Allocate', kind: 'action' as const, actionId: 'allocate' },
+          { id: 'edit', label: 'Edit', kind: 'action' as const, actionId: 'edit' },
           {
-            id: 'register-server',
-            label: 'Register server',
-            kind: 'action',
-            actionId: 'register-server',
+            id: 'delete',
+            label: 'Delete',
+            kind: 'action' as const,
+            actionId: 'delete',
+            status: 'danger' as const,
           },
-          {
-            id: 'register-switch',
-            label: 'Register switch',
-            kind: 'action',
-            actionId: 'register-switch',
-          },
-          { id: 'edit', label: 'Edit', kind: 'action', actionId: 'edit' },
-          { id: 'remove', label: 'Remove', kind: 'action', status: 'danger', actionId: 'remove' },
         ],
       },
       columns: [
         { key: 'serial', label: 'Serial', sortable: true },
-        { key: 'location', label: 'Location', sortable: true },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
-        { key: 'source', label: 'Source', sortable: true },
         {
-          key: 'frontierNet',
-          label: 'Frontier NET',
-          sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: frontierTones,
-        },
-        { key: 'updatedAt', label: 'Updated at', sortable: true },
-      ],
-      rows: makeRows(COUNT, (i) => {
-        const frontierNet = i % 10 === 0 ? 'Invalid' : i % 4 === 0 ? 'Missing' : 'OK';
-        return {
-          serial: `SN${String(2000 + i).padStart(4, '0')}`,
-          location: `R${(i % 6) + 1}-U${(i % 38) + 1}`,
-          mgmtIp: i % 5 === 0 ? '-' : randIp(i),
-          source: i % 3 === 0 ? 'Discovery' : 'Manual',
-          frontierNet,
-          updatedAt: dateTime(i),
-        };
-      }),
-    };
-  }
-
-  if (slug === 'servers') {
-    const observedHealthTones: Record<string, BadgeTone> = {
-      Running: 'success',
-      'Not Running': 'neutral',
-    };
-    const provisionStatusTones: Record<string, BadgeTone> = {
-      Done: 'success',
-      Registered: 'neutral',
-      Provisioning: 'blue',
-    };
-    const roleTones: Record<string, BadgeTone> = {
-      controller: 'blue',
-      'ceph-mon': 'blue',
-      'ceph-mgr': 'blue',
-      'ceph-mds': 'blue',
-      'ceph-osd': 'blue',
-    };
-
-    return {
-      slug,
-      title: 'Servers',
-      searchPlaceholder: 'Search servers by attributes',
-      detailHrefBase,
-      linkifyColumnKeys: ['serial'],
-      createLabel: 'Create',
-      createHref: '/cloudbuilder/servers/create',
-      columns: [
-        { key: 'serial', label: 'Serial', sortable: true },
-        {
-          key: 'macPrimary',
-          label: 'MAC (Primary)',
-          sortable: true,
-          kind: 'mono',
-          minWidth: columnMinWidths.macAddress,
-        },
-        { key: 'location', label: 'Location', sortable: true },
-        { key: 'nicPrimaryName', label: 'NIC (primary name)', sortable: true },
-        {
-          key: 'mgmtIp',
-          label: 'Mgmt IP',
+          key: 'bmcIp',
+          label: 'BMC IP',
           sortable: true,
           kind: 'mono',
           minWidth: columnMinWidths.ip,
         },
+        { key: 'productModel', label: 'Product model', sortable: true },
         { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
-        { key: 'purpose', label: 'Purpose', sortable: true },
+        { key: 'domain', label: 'Domain', sortable: true },
         {
-          key: 'frontierNet',
-          label: 'Frontier NET',
+          key: 'power',
+          label: 'Power',
           sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: frontierTones,
+          badgeTones: { On: 'success', Off: 'neutral' },
         },
-        {
-          key: 'observedHealth',
-          label: 'Observed health',
-          sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: observedHealthTones,
-        },
-        {
-          key: 'provisionStatus',
-          label: 'Provision status',
-          sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: provisionStatusTones,
-        },
-        {
-          key: 'updatedAt',
-          label: 'Updated at',
-          sortable: true,
-          minWidth: columnMinWidths.updatedAt,
-        },
-      ],
-      rows: makeRows(COUNT, (i) => {
-        const frontierNet = i % 11 === 0 ? 'Invalid' : i % 7 === 0 ? 'Missing' : 'OK';
-        const observedHealth = i % 9 === 0 ? 'Not Running' : 'Running';
-        const provisionStatus = i % 13 === 0 ? 'Provisioning' : i % 5 === 0 ? 'Registered' : 'Done';
-        const rolePool = [
-          'controller',
-          ...Array.from({ length: 24 }, (_, idx) => `compute${idx + 1}`),
-          ...Array.from({ length: 3 }, (_, idx) => `master${idx + 1}`),
-          ...Array.from({ length: 24 }, (_, idx) => `worker${idx + 1}`),
-          'ceph-mon',
-          'ceph-mgr',
-          'ceph-mds',
-          'ceph-osd',
-        ];
-        const role = rolePool[(i - 1) % rolePool.length]!;
-        const purpose = i % 3 === 0 ? 'K8s worker' : i % 3 === 1 ? 'Hypervisor' : 'Ceph Storage';
-
-        return {
-          serial: `SN${String(1000 + i).padStart(4, '0')}`,
-          macPrimary: randMac(i),
-          location: `R${(i % 8) + 1}-U${(i % 42) + 1}`,
-          updatedAt: dateTime(i),
-          nicPrimaryName: i % 2 === 0 ? 'eno1' : 'ens3',
-          frontierNet,
-          mgmtIp: randIp(i),
-          observedHealth,
-          provisionStatus,
-          role,
-          purpose,
-        };
-      }),
-    };
-  }
-
-  if (slug === 'switch') {
-    return {
-      slug,
-      title: 'Switch',
-      searchPlaceholder: 'Search switches by attributes',
-      detailHrefBase,
-      columns: [
-        { key: 'name', label: 'Switch', sortable: true },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
-        { key: 'model', label: 'Model', sortable: true },
         {
           key: 'status',
           label: 'Status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
-        },
-        { key: 'updatedAt', label: 'Updated at', sortable: true },
-      ],
-      rows: makeRows(COUNT, (i) => ({
-        name: `spine-${(i % 6) + 1}`,
-        mgmtIp: randIp(i + 50),
-        model: i % 2 === 0 ? 'X9300' : 'N9300',
-        status: i % 4 === 0 ? 'Down' : 'Up',
-        updatedAt: dateTime(i),
-      })),
-    };
-  }
-
-  if (slug === 'severs0.7') {
-    const observedHealthTones: Record<string, BadgeTone> = {
-      Running: 'success',
-      'Not Running': 'neutral',
-    };
-    const provisionStatusTones: Record<string, BadgeTone> = {
-      Done: 'success',
-      Registered: 'neutral',
-      Provisioning: 'blue',
-    };
-    const roleTones: Record<string, BadgeTone> = {
-      controller: 'blue',
-      'ceph-mon': 'blue',
-      'ceph-mgr': 'blue',
-      'ceph-mds': 'blue',
-      'ceph-osd': 'blue',
-    };
-
-    return {
-      slug,
-      title: 'Servers',
-      searchPlaceholder: 'Search servers by attributes',
-      detailHrefBase,
-      linkifyColumnKeys: ['serial'],
-      createLabel: 'Create',
-      createHref: '/cloudbuilder/servers/create',
-      columns: [
-        { key: 'serial', label: 'Serial', sortable: true },
-        {
-          key: 'macPrimary',
-          label: 'MAC (Primary)',
-          sortable: true,
-          kind: 'mono',
-          minWidth: columnMinWidths.macAddress,
-        },
-        { key: 'location', label: 'Location', sortable: true },
-        { key: 'nicPrimaryName', label: 'NIC (primary name)', sortable: true },
-        {
-          key: 'mgmtIp',
-          label: 'Mgmt IP',
-          sortable: true,
-          kind: 'mono',
-          minWidth: columnMinWidths.ip,
-        },
-        { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
-        { key: 'purpose', label: 'Purpose', sortable: true },
-        {
-          key: 'frontierNet',
-          label: 'Frontier NET',
-          sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: frontierTones,
-        },
-        {
-          key: 'observedHealth',
-          label: 'Observed health',
-          sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: observedHealthTones,
-        },
-        {
-          key: 'provisionStatus',
-          label: 'Provision status',
-          sortable: true,
-          minWidth: columnMinWidths.serviceStatus,
-          kind: 'badge',
-          badgeTones: provisionStatusTones,
+          badgeTones: { Available: 'success', Used: 'neutral' },
         },
         {
           key: 'updatedAt',
@@ -426,34 +203,19 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         },
       ],
       rows: makeRows(COUNT, (i) => {
-        const frontierNet = i % 11 === 0 ? 'Invalid' : i % 7 === 0 ? 'Missing' : 'OK';
-        const observedHealth = i % 9 === 0 ? 'Not Running' : 'Running';
-        const provisionStatus = i % 13 === 0 ? 'Provisioning' : i % 5 === 0 ? 'Registered' : 'Done';
-        const rolePool = [
-          'controller',
-          ...Array.from({ length: 24 }, (_, idx) => `compute${idx + 1}`),
-          ...Array.from({ length: 3 }, (_, idx) => `master${idx + 1}`),
-          ...Array.from({ length: 24 }, (_, idx) => `worker${idx + 1}`),
-          'ceph-mon',
-          'ceph-mgr',
-          'ceph-mds',
-          'ceph-osd',
-        ];
-        const role = rolePool[(i - 1) % rolePool.length]!;
-        const purpose = i % 3 === 0 ? 'K8s worker' : i % 3 === 1 ? 'Hypervisor' : 'Ceph Storage';
+        const models = ['PowerEdge R750', 'PowerEdge R650', 'ProLiant DL380', 'ThinkSystem SR650'];
+        const domains = ['infra-zone-1', 'infra-zone-2', 'compute-zone-1', 'storage-zone-1'];
+        const statuses = ['Available', 'Used'];
 
         return {
           serial: `SN${String(1000 + i).padStart(4, '0')}`,
-          macPrimary: randMac(i),
-          location: `R${(i % 8) + 1}-U${(i % 42) + 1}`,
+          bmcIp: randIp(i),
+          productModel: models[(i - 1) % models.length],
+          role: 'Baremetal node',
+          domain: domains[(i - 1) % domains.length],
+          power: i % 7 === 0 ? 'Off' : 'On',
+          status: statuses[(i - 1) % statuses.length],
           updatedAt: dateTime(i),
-          nicPrimaryName: i % 2 === 0 ? 'eno1' : 'ens3',
-          frontierNet,
-          mgmtIp: randIp(i),
-          observedHealth,
-          provisionStatus,
-          role,
-          purpose,
         };
       }),
     };
@@ -526,13 +288,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
-          key: 'serviceStatus',
-          label: 'Service status',
+          key: 'serviceState',
+          label: 'Service state',
           sortable: true,
           width: fixedColumns.status,
           align: 'center',
           kind: 'statusIndicator',
-          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+          statusMap: { Up: 'active', Down: 'error' },
         },
         { key: 'name', label: 'Name', sortable: true, minWidth: columnMinWidths.name },
         { key: 'host', label: 'Host', sortable: true, minWidth: columnMinWidths.host },
@@ -543,12 +305,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.availabilityZone,
         },
         {
-          key: 'serviceState',
-          label: 'Service state',
+          key: 'serviceStatus',
+          label: 'Service status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
+          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
         {
           key: 'lastUpdated',
@@ -924,13 +686,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
-          key: 'serviceStatus',
-          label: 'Service status',
+          key: 'serviceState',
+          label: 'Service state',
           sortable: true,
           width: fixedColumns.status,
           align: 'center',
           kind: 'statusIndicator',
-          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+          statusMap: { Up: 'active', Down: 'error' },
         },
         {
           key: 'name',
@@ -950,12 +712,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.availabilityZone,
         },
         {
-          key: 'serviceState',
-          label: 'Service state',
+          key: 'serviceStatus',
+          label: 'Service status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
+          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
         {
           key: 'lastUpdated',
@@ -1012,13 +774,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         {
-          key: 'serviceStatus',
-          label: 'Service status',
+          key: 'serviceState',
+          label: 'Service state',
           sortable: true,
           width: fixedColumns.status,
           align: 'center',
           kind: 'statusIndicator',
-          statusMap: { Enabled: 'enabled', Disabled: 'disabled' },
+          statusMap: { Up: 'active', Down: 'error' },
         },
         { key: 'name', label: 'Name', sortable: true, minWidth: columnMinWidths.name },
         { key: 'host', label: 'Host', sortable: true, minWidth: columnMinWidths.host },
@@ -1029,12 +791,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.availabilityZone,
         },
         {
-          key: 'serviceState',
-          label: 'Service state',
+          key: 'serviceStatus',
+          label: 'Service status',
           sortable: true,
-          minWidth: columnMinWidths.serviceState,
+          minWidth: columnMinWidths.serviceStatus,
           kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
         },
         {
           key: 'lastUpdated',
@@ -1138,6 +900,15 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       showCheckboxColumn: false,
       showBulkDelete: false,
       columns: [
+        {
+          key: 'status',
+          label: 'Status',
+          sortable: true,
+          width: fixedColumns.status,
+          align: 'center',
+          kind: 'statusIndicator',
+          statusMap: { Up: 'active', Down: 'error' },
+        },
         { key: 'name', label: 'Name', sortable: true, minWidth: columnMinWidths.name },
         {
           key: 'engineId',
@@ -1147,14 +918,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           minWidth: columnMinWidths.engineId,
         },
         { key: 'host', label: 'Host', sortable: true, minWidth: columnMinWidths.host },
-        {
-          key: 'status',
-          label: 'Status',
-          sortable: true,
-          minWidth: columnMinWidths.serviceState,
-          kind: 'badge',
-          badgeTones: { Up: 'success', Down: 'danger' },
-        },
         {
           key: 'lastUpdated',
           label: 'Last updated',

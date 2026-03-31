@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -14,11 +14,12 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  CopyButton,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconTrash, IconEdit, IconBell, IconCopy, IconCheck } from '@tabler/icons-react';
+import { IconTrash, IconBell } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -131,45 +132,6 @@ const defaultKeyPairDetail: KeyPairDetail = {
 };
 
 /* ----------------------------------------
-   Copyable Value Component
-   ---------------------------------------- */
-
-interface CopyableValueProps {
-  label: string;
-  value: string;
-}
-
-function CopyableDataRow({ label, value }: CopyableValueProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="flex flex-col gap-1.5 w-full">
-      <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-        <button
-          onClick={handleCopy}
-          className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-          aria-label="Copy to clipboard"
-        >
-          {copied ? (
-            <IconCheck size={16} className="text-[var(--color-state-success)]" />
-          ) : (
-            <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-          )}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Key pair Detail Page
    ---------------------------------------- */
 
@@ -271,17 +233,20 @@ export function KeyPairDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Key pair Name" value={keyPair.name} />
-                    <CopyableDataRow label="User ID" value={keyPair.userId} />
+                    <div className="flex flex-col gap-1.5 w-full">
+                      <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                        User ID
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {keyPair.userId}
+                        </span>
+                        <CopyButton value={keyPair.userId} size="sm" iconOnly />
+                      </div>
+                    </div>
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -289,8 +254,28 @@ export function KeyPairDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Key identity" />
                   <SectionCard.Content>
-                    <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
-                    <CopyableDataRow label="Public key" value={keyPair.publicKey} />
+                    <div className="flex flex-col gap-1.5 w-full">
+                      <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                        Fingerprint
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {keyPair.fingerprint}
+                        </span>
+                        <CopyButton value={keyPair.fingerprint} size="sm" iconOnly />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1.5 w-full">
+                      <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                        Public key
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {keyPair.publicKey}
+                        </span>
+                        <CopyButton value={keyPair.publicKey} size="sm" iconOnly />
+                      </div>
+                    </div>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>

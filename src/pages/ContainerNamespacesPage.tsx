@@ -23,6 +23,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
+import { getContainerStatusTheme } from './containerStatusUtils';
 import { useNavigate } from 'react-router-dom';
 import {
   IconBell,
@@ -34,6 +35,8 @@ import {
   IconTrash,
   IconChevronDown,
   IconDotsCircleHorizontal,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -55,63 +58,63 @@ interface NamespaceRow {
 const namespacesData: NamespaceRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'production-microservices-platform-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 08:12:33',
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Active',
     name: 'staging-integration-testing-environment',
     description: 'description text',
     createdAt: 'Nov 10, 2025 09:25:17',
   },
   {
     id: '3',
-    status: 'OK',
+    status: 'Active',
     name: 'development-sandbox-experimental-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 10:38:42',
   },
   {
     id: '4',
-    status: 'True',
+    status: 'Active',
     name: 'shared-global-data-persistence-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 11:52:08',
   },
   {
     id: '5',
-    status: 'True',
+    status: 'Active',
     name: 'cattle-impersonation-system-rbac-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 13:05:25',
   },
   {
     id: '6',
-    status: 'Raw',
+    status: 'Active',
     name: 'cattle-provisioning-capi-cluster-api-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 14:18:51',
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Processing',
     name: 'monitoring-observability-stack-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 15:31:14',
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Active',
     name: 'default-system-resources-default-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 16:44:38',
   },
   {
     id: '9',
-    status: 'None',
+    status: 'Terminating',
     name: 'kube-public-cluster-info-public-namespace',
     description: 'description text',
     createdAt: 'Nov 10, 2025 17:57:02',
@@ -177,7 +180,7 @@ export function ContainerNamespacesPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns configuration
   const columns: TableColumn<NamespaceRow>[] = [
@@ -186,10 +189,14 @@ export function ContainerNamespacesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -198,12 +205,13 @@ export function ContainerNamespacesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/container/namespaces/${value}`);
@@ -218,6 +226,7 @@ export function ContainerNamespacesPage() {
       label: 'Description',
       flex: 1,
       minWidth: columnMinWidths.description,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -252,6 +261,7 @@ export function ContainerNamespacesPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
           },
         ];
@@ -311,6 +321,20 @@ export function ContainerNamespacesPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

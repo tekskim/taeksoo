@@ -261,21 +261,13 @@ function OpenFormGuidelines() {
         <SectionTitle>Implementation checklist</SectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1 text-[var(--color-text-default)]">
+            <li>Wrap all SectionCards in VStack gap={'{4}'}</li>
             <li>
-              Wrap all SectionCards in <span className="font-mono">VStack gap={'{4}'}</span>
-            </li>
-            <li>
-              Add <span className="font-mono">className=&quot;pb-4&quot;</span> to every{' '}
-              <span className="font-mono">SectionCard</span> (16px bottom padding for Open Form
+              Add className=&quot;pb-4&quot; to every SectionCard (16px bottom padding for Open Form
               only)
             </li>
-            <li>
-              Use <span className="font-mono">VStack gap={'{6}'}</span> inside Content for field
-              spacing
-            </li>
-            <li>
-              Do NOT use <span className="font-mono">isActive</span> on SectionCards
-            </li>
+            <li>Use VStack gap={'{6}'} inside Content for field spacing</li>
+            <li>Do NOT use isActive on SectionCards</li>
             <li>Use FormField for all form inputs (label + control + helper text)</li>
             <li>Optional: Add SummarySidebar on the right with sticky positioning</li>
           </ul>
@@ -436,28 +428,24 @@ function OpenFormGuidelines() {
                   Tab 키 및 방향키(Arrow 키)로 모든 입력 필드와 버튼을 탐색할 수 있어야 합니다.
                 </li>
                 <li>
-                  각 탭 및 섹션 영역은{' '}
-                  <span className="font-mono">ARIA role=&quot;region&quot;</span>을 활용해 스크린
-                  리더에서 인식될 수 있도록 합니다.
+                  각 탭 및 섹션 영역은 ARIA role=&quot;region&quot;을 활용해 스크린 리더에서 인식될
+                  수 있도록 합니다.
                 </li>
                 <li>
-                  폼 구성요소는 라벨(label)과 필드(input)가 programmatically 연결되어야 하며,{' '}
-                  <span className="font-mono">aria-describedby</span> 속성을 사용해 오류 메시지나
-                  도움말을 제공합니다.
+                  폼 구성요소는 라벨(label)과 필드(input)가 programmatically 연결되어야 하며,
+                  aria-describedby 속성을 사용해 오류 메시지나 도움말을 제공합니다.
                 </li>
                 <li>
-                  버튼과 토글 요소는 활성화 상태를 명확히 알리기 위해{' '}
-                  <span className="font-mono">aria-pressed</span> 또는{' '}
-                  <span className="font-mono">aria-disabled</span> 속성을 사용합니다.
+                  버튼과 토글 요소는 활성화 상태를 명확히 알리기 위해 aria-pressed 또는
+                  aria-disabled 속성을 사용합니다.
                 </li>
                 <li>
                   Summary 패널의 진행 상태나 검증 결과는 시각적 정보 외에도 스크린 리더를 통한 대체
                   정보로 전달합니다.
                 </li>
                 <li>
-                  모든 툴팁과 헬퍼 텍스트는 Hover 또는 Focus 상태에서 스크린 리더가 읽을 수 있도록{' '}
-                  <span className="font-mono">aria-label</span> 또는{' '}
-                  <span className="font-mono">aria-describedby</span>를 설정합니다.
+                  모든 툴팁과 헬퍼 텍스트는 Hover 또는 Focus 상태에서 스크린 리더가 읽을 수 있도록
+                  aria-label 또는 aria-describedby를 설정합니다.
                 </li>
               </ul>
             </Prose>

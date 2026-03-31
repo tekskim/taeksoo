@@ -165,7 +165,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     return (
       <div
         className={twMerge('flex flex-col gap-[var(--checkbox-description-gap)]', className)}
-        data-figma-name="Checkbox"
+        data-figma-name="[TDS] Checkbox"
       >
         <label
           htmlFor={inputId}

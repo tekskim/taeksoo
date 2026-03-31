@@ -525,7 +525,7 @@ export function WizardPatternSection() {
         <Label>2. 구성요소</Label>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
               입력 카드 (Input Card)
             </h4>
             <p className="text-body-sm text-[var(--color-text-muted)]">
@@ -534,7 +534,9 @@ export function WizardPatternSection() {
             </p>
           </div>
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">Floating Card</h4>
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+              Floating Card
+            </h4>
             <p className="text-body-sm text-[var(--color-text-muted)] mb-1.5">
               Create/Edit 페이지에서 고정된 위치로 표시 (기본 position: <code>top-left</code>,
               스크롤 시에도 sticky 유지)
@@ -708,7 +710,9 @@ Step 3 Next 클릭
         <Label>5. 인터랙션 정책</Label>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">기본 원칙</h4>
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
+              기본 원칙
+            </h4>
             <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
               <li>
                 <strong>순차적 진행</strong> — 1단계부터 순서대로, 한 번에 하나의 단계만 활성화
@@ -726,7 +730,7 @@ Step 3 Next 클릭
             </ul>
           </div>
           <div className="p-4 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
-            <h4 className="text-heading-h7 text-[var(--color-text-default)] mb-2">
+            <h4 className="text-label-md font-semibold uppercase text-[var(--color-text-default)] mb-2">
               주요 인터랙션 요소
             </h4>
             <ul className="list-disc pl-4 text-body-sm text-[var(--color-text-muted)] space-y-1">
@@ -753,10 +757,8 @@ Step 3 Next 클릭
       <VStack gap={3}>
         <Label>Section States (WizardSectionState)</Label>
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <code>
-            &apos;pre&apos; | &apos;active&apos; | &apos;done&apos; | &apos;skipped&apos; |
-            &apos;writing&apos;
-          </code>
+          &apos;pre&apos; | &apos;active&apos; | &apos;done&apos; | &apos;skipped&apos; |
+          &apos;writing&apos;
         </div>
       </VStack>
 

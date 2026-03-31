@@ -15,8 +15,9 @@ import {
   IconChevronRight,
   IconArrowUp,
   IconListDetails,
+  IconHistory,
 } from '@tabler/icons-react';
-import { navGroups, allNavItems } from './_shared/navigationData';
+import { navGroups, allNavItems, isRecentlyUpdated } from './_shared/navigationData';
 
 interface DesignLayoutContext {
   mainRef: RefObject<HTMLDivElement | null>;
@@ -91,7 +92,7 @@ export function DesignSystemLayout() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
       {!isCaptureMode && (
-        <nav className="fixed left-0 top-0 w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
+        <nav className="fixed left-0 top-0 w-[220px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
           <div className="p-4 overflow-hidden">
             {/* Logo */}
             <Link to="/design" className="flex items-center mb-4">
@@ -101,7 +102,7 @@ export function DesignSystemLayout() {
             {/* EntryPage Link */}
             <Link
               to="/"
-              className="flex items-center gap-2 w-[166px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
+              className="flex items-center gap-2 w-[188px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors border border-[var(--color-border-default)]"
             >
               <IconHome size={16} stroke={1.5} className="shrink-0" />
               <span className="truncate flex-1 min-w-0">Entry page</span>
@@ -124,7 +125,7 @@ export function DesignSystemLayout() {
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
                   placeholder="Search"
-                  className="w-[166px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+                  className="w-[188px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
                 />
                 {searchQuery && (
                   <button
@@ -138,7 +139,7 @@ export function DesignSystemLayout() {
 
               {/* Search Results Dropdown */}
               {searchQuery.trim() && isSearchFocused && (
-                <div className="absolute top-full left-0 w-[166px] max-w-[166px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+                <div className="absolute top-full left-0 w-[188px] max-w-[188px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
                   {filteredNavItems.length > 0 ? (
                     <div className="p-2 min-w-0">
                       {filteredNavItems.map(({ id, label, icon: Icon, path }) => (
@@ -181,11 +182,11 @@ export function DesignSystemLayout() {
             <button
               onClick={() => navigate('/design/all')}
               className={`
-              w-[166px] box-border px-3 py-2 mb-3 rounded-[var(--radius-button)] flex items-center gap-2
+              w-[188px] box-border px-3 py-2 mb-2 rounded-[var(--radius-button)] flex items-center gap-2
               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
               ${
                 currentPath === '/design/all'
-                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium border-transparent'
+                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
                   : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
               }
             `}
@@ -194,8 +195,25 @@ export function DesignSystemLayout() {
               <span className="truncate flex-1 min-w-0">All Components</span>
             </button>
 
+            {/* Changelog Link */}
+            <button
+              onClick={() => navigate('/design/changelog')}
+              className={`
+              w-[188px] box-border px-3 py-2 mb-3 rounded-[var(--radius-button)] flex items-center gap-2
+              text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer border
+              ${
+                currentPath === '/design/changelog'
+                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium border-transparent'
+                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] border-[var(--color-border-default)]'
+              }
+            `}
+            >
+              <IconHistory size={16} stroke={1.5} className="shrink-0" />
+              <span className="truncate flex-1 min-w-0">Changelog</span>
+            </button>
+
             {/* Navigation Groups */}
-            <VStack gap={1} className="w-[166px]">
+            <VStack gap={1} className="w-[188px]">
               {navGroups.map((group) => {
                 const isOpen = openGroups.has(group.title);
                 return (
@@ -213,6 +231,9 @@ export function DesignSystemLayout() {
                     >
                       <Disclosure.Trigger className="w-full py-1.5 items-center gap-1.5 text-label-sm font-semibold !text-[var(--color-text-default)] tracking-wide hover:!text-[var(--color-text-muted)]">
                         {group.title}
+                        {group.items.some((item) => isRecentlyUpdated(item.path)) && (
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-action-primary)]" />
+                        )}
                         <span className="text-body-xs text-[var(--color-text-disabled)] ml-auto font-normal normal-case tracking-normal">
                           {group.items.length}
                         </span>
@@ -228,13 +249,18 @@ export function DesignSystemLayout() {
                               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
                               ${
                                 currentPath === path
-                                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                                  ? 'bg-[var(--menu-item-active-bg)] text-[var(--menu-item-active-text)] font-medium'
                                   : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
                               }
                             `}
                             >
-                              <Icon size={16} stroke={1.5} />
-                              {label}
+                              <Icon size={16} stroke={1.5} className="shrink-0" />
+                              <span className="truncate flex-1 min-w-0">{label}</span>
+                              {isRecentlyUpdated(path) && (
+                                <span className="shrink-0 px-[5px] py-[1px] rounded-[var(--radius-sm)] text-[9px] font-bold leading-[12px] bg-[var(--color-action-primary)] text-white">
+                                  N
+                                </span>
+                              )}
                             </button>
                           ))}
                         </VStack>
@@ -254,12 +280,10 @@ export function DesignSystemLayout() {
       {/* Main Content */}
       <main
         ref={mainRef}
-        className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-white ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
+        className={`absolute top-0 bottom-0 right-0 overflow-y-auto sidebar-scroll bg-[var(--color-surface-default)] ${isCaptureMode ? 'left-0' : 'left-[var(--layout-sidebar-width)]'}`}
       >
-        <div className="py-12 px-8 overflow-x-auto">
-          <div className="max-w-[1000px] mx-auto">
-            <Outlet context={{ mainRef }} />
-          </div>
+        <div className="py-12 px-12 overflow-x-auto">
+          <Outlet context={{ mainRef }} />
         </div>
 
         {/* Scroll to Top Button */}

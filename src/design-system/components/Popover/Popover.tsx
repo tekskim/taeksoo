@@ -18,6 +18,7 @@ import { createPortal } from 'react-dom';
 
 export type PopoverPosition = 'top' | 'bottom' | 'left' | 'right';
 export type PopoverTrigger = 'hover' | 'click';
+export type PopoverAlign = 'center' | 'start' | 'end';
 
 export interface PopoverProps {
   /** Popover content - can be interactive */
@@ -26,6 +27,8 @@ export interface PopoverProps {
   children: ReactNode;
   /** Position relative to trigger */
   position?: PopoverPosition;
+  /** Horizontal alignment for top/bottom, vertical for left/right */
+  align?: PopoverAlign;
   /** How to trigger the popover */
   trigger?: PopoverTrigger;
   /** Delay before showing (ms) - only for hover trigger */
@@ -58,6 +61,7 @@ export function Popover({
   content,
   children,
   position = 'bottom',
+  align = 'center',
   trigger = 'click',
   delay = 200,
   hideDelay = 150,
@@ -73,6 +77,7 @@ export function Popover({
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isPositioned, setIsPositioned] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [arrowOffset, setArrowOffset] = useState<number | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const showTimeoutRef = useRef<number | undefined>(undefined);
@@ -102,22 +107,34 @@ export function Popover({
     let x = 0;
     let y = 0;
 
+    const alignX = () => {
+      if (align === 'start') return triggerRect.left;
+      if (align === 'end') return triggerRect.right - popoverRect.width;
+      return triggerRect.left + (triggerRect.width - popoverRect.width) / 2;
+    };
+
+    const alignY = () => {
+      if (align === 'start') return triggerRect.top;
+      if (align === 'end') return triggerRect.bottom - popoverRect.height;
+      return triggerRect.top + (triggerRect.height - popoverRect.height) / 2;
+    };
+
     switch (position) {
       case 'top':
-        x = triggerRect.left + (triggerRect.width - popoverRect.width) / 2;
+        x = alignX();
         y = triggerRect.top - popoverRect.height - gap;
         break;
       case 'bottom':
-        x = triggerRect.left + (triggerRect.width - popoverRect.width) / 2;
+        x = alignX();
         y = triggerRect.bottom + gap;
         break;
       case 'left':
         x = triggerRect.left - popoverRect.width - gap;
-        y = triggerRect.top + (triggerRect.height - popoverRect.height) / 2;
+        y = alignY();
         break;
       case 'right':
         x = triggerRect.right + gap;
-        y = triggerRect.top + (triggerRect.height - popoverRect.height) / 2;
+        y = alignY();
         break;
     }
 
@@ -125,9 +142,18 @@ export function Popover({
     x = Math.max(8, Math.min(x, window.innerWidth - popoverRect.width - 8));
     y = Math.max(8, Math.min(y, window.innerHeight - popoverRect.height - 8));
 
+    // Calculate arrow offset: trigger center relative to popover
+    const triggerCenterX = triggerRect.left + triggerRect.width / 2;
+    const triggerCenterY = triggerRect.top + triggerRect.height / 2;
+    if (position === 'top' || position === 'bottom') {
+      setArrowOffset(triggerCenterX - x);
+    } else {
+      setArrowOffset(triggerCenterY - y);
+    }
+
     setCoords({ x, y });
     setIsPositioned(true);
-  }, [position, showArrow]);
+  }, [position, align, showArrow]);
 
   const clearTimeouts = useCallback(() => {
     if (showTimeoutRef.current) {
@@ -268,33 +294,41 @@ export function Popover({
   }, [clearTimeouts]);
 
   // Arrow renderer using double-triangle technique (border triangle + fill triangle)
-  // Same approach as PhysicalDisksPage OSD popover
   const renderArrow = (pos: PopoverPosition) => {
+    const hStyle =
+      arrowOffset != null
+        ? { left: `${arrowOffset}px`, transform: 'translateX(-50%)' }
+        : { left: '50%', transform: 'translateX(-50%)' };
+    const vStyle =
+      arrowOffset != null
+        ? { top: `${arrowOffset}px`, transform: 'translateY(-50%)' }
+        : { top: '50%', transform: 'translateY(-50%)' };
+
     switch (pos) {
       case 'bottom':
         return (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-[-1px]">
+          <div className="absolute bottom-full mb-[-1px]" style={hStyle}>
             <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-[-1px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
           </div>
         );
       case 'top':
         return (
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+          <div className="absolute top-full -mt-px" style={hStyle}>
             <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-[var(--color-border-default)]" />
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-[1px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[var(--color-surface-default)]" />
           </div>
         );
       case 'left':
         return (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 -ml-px">
+          <div className="absolute left-full -ml-px" style={vStyle}>
             <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-[7px] border-l-[var(--color-border-default)]" />
             <div className="absolute left-0 top-1/2 -translate-y-1/2 -ml-[1px] w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[6px] border-l-[var(--color-surface-default)]" />
           </div>
         );
       case 'right':
         return (
-          <div className="absolute right-full top-1/2 -translate-y-1/2 -mr-px">
+          <div className="absolute right-full -mr-px" style={vStyle}>
             <div className="w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-r-[7px] border-r-[var(--color-border-default)]" />
             <div className="absolute right-0 top-1/2 -translate-y-1/2 -mr-[1px] w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[6px] border-r-[var(--color-surface-default)]" />
           </div>
@@ -349,7 +383,7 @@ export function Popover({
             <div className="relative">
               {/* Popover Box */}
               <div
-                data-figma-name="Popover"
+                data-figma-name="[TDS] Popover"
                 className={`
                   bg-[var(--color-surface-default)]
                   border border-[var(--color-border-default)]

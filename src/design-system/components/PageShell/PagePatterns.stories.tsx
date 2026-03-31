@@ -120,7 +120,7 @@ function MockSidebar({
       {/* Expanded menu */}
       {isOpen && (
         <div className="absolute left-[40px] top-0 bottom-0 w-[200px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-default)] pt-[var(--primitive-spacing-4)] px-[var(--primitive-spacing-2)]">
-          <p className="text-heading-h7 text-[var(--color-text-muted)] uppercase px-[var(--primitive-spacing-2)] mb-[var(--primitive-spacing-2)]">
+          <p className="text-label-md font-semibold uppercase text-[var(--color-text-muted)] uppercase px-[var(--primitive-spacing-2)] mb-[var(--primitive-spacing-2)]">
             Resources
           </p>
           <nav className="flex flex-col gap-[var(--primitive-spacing-0-5)]">
@@ -170,7 +170,7 @@ function ShellWrapper({
     breadcrumbItems[breadcrumbItems.length - 1]?.label.toLowerCase().replace(/\s+/g, '') ||
       'instances'
   );
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const defaultTabs = tabs || [
     {
@@ -457,7 +457,7 @@ function DetailPageExample() {
                 size="sm"
                 rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>

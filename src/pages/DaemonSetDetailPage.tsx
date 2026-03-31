@@ -24,6 +24,7 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -32,13 +33,15 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -111,7 +114,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
   '1': {
     id: '1',
     name: 'daemonsetName',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 11:32:18',
@@ -131,7 +134,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
   '2': {
     id: '2',
     name: 'fluentd-logging',
-    status: 'True',
+    status: 'Active',
     namespace: 'kube-system',
     image: 'fluentd:v1.16',
     createdAt: 'Nov 9, 2025 08:45:22',
@@ -150,7 +153,7 @@ const mockDaemonSetData: Record<string, DaemonSetData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -167,13 +170,37 @@ const mockPodsData: PodRow[] = [
       'container-5',
     ],
   },
+  {
+    id: '2',
+    status: 'Failed',
+    name: 'podName-78',
+    image: 'fluentd:v1.16',
+    ready: '0/1',
+    restarts: 2,
+    ip: '10.11.0.12',
+    node: 'nodeName',
+    createdAt: 'Nov 9, 2025 08:46:10',
+    containers: ['container-0'],
+  },
+  {
+    id: '3',
+    status: 'Processing',
+    name: 'podName-79',
+    image: 'fluentd:v1.16',
+    ready: '0/1',
+    restarts: 0,
+    ip: '10.11.0.13',
+    node: 'nodeName',
+    createdAt: 'Nov 9, 2025 08:47:05',
+    containers: ['container-0'],
+  },
 ];
 
 const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'daemonset-service',
-    status: 'OK',
+    status: 'Active',
     target: '10.0.0.100:80',
     selector: 'app=daemonset',
     type: 'ClusterIP',
@@ -265,11 +292,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -279,10 +310,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -293,18 +325,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -318,9 +358,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'node',
       label: 'Node',
       flex: 1,
+      minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -331,7 +375,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -439,11 +490,15 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px] min-w-0"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -457,7 +512,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={() => navigate(`/container/services/${row.id}`)}
         >
@@ -469,26 +524,52 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'target',
       label: 'Target',
       flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'selector',
       label: 'Selector',
       flex: 1,
+      minWidth: columnMinWidths.selector,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -551,17 +632,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -634,17 +708,71 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
-    { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    {
+      key: 'type',
+      label: 'Type',
+      flex: 1,
+      minWidth: columnMinWidths.type,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'reason',
+      label: 'Reason',
+      flex: 1,
+      minWidth: columnMinWidths.reason,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: columnMinWidths.source,
+      sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
+    },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
       minWidth: columnMinWidths.message,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'firstSeen',
@@ -652,16 +780,28 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
-    { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count, sortable: true },
+    {
+      key: 'count',
+      label: 'Count',
+      flex: 1,
+      minWidth: columnMinWidths.count,
+      sortable: true,
+    },
     {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -763,7 +903,7 @@ export function DaemonSetDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -793,7 +933,7 @@ export function DaemonSetDetailPage() {
     { id: 'container-5', label: 'container-5', onClick: () => handleExecuteShell('container-5') },
   ];
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',
@@ -863,15 +1003,32 @@ export function DaemonSetDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton
+                value={`${daemonset.namespace}/${daemonset.name}`}
+                size="sm"
+                iconOnly
+                tooltip="Copy DaemonSet reference"
+              />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -920,8 +1077,14 @@ export function DaemonSetDetailPage() {
               label="Status"
               value={
                 <Tooltip content={daemonset.status === 'Running' ? 'Active' : daemonset.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        daemonset.status === 'Running' ? 'Active' : daemonset.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {daemonset.status === 'Running' ? 'Active' : daemonset.status}
                     </Badge>
                   </span>
@@ -936,28 +1099,24 @@ export function DaemonSetDetailPage() {
           {/* Second row: Pod Restarts, Ready, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Pod restarts
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Pod restarts</span>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {daemonset.podRestarts}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Ready
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Ready</span>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {daemonset.ready.current}/{daemonset.ready.desired}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(daemonset.labels).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -994,8 +1153,8 @@ export function DaemonSetDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(daemonset.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(daemonset.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -1004,7 +1163,7 @@ export function DaemonSetDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(daemonset.annotations).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -1041,8 +1200,8 @@ export function DaemonSetDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(daemonset.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(daemonset.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

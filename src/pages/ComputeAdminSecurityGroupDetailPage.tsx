@@ -18,19 +18,14 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
+  CopyButton,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconBell,
-  IconCopy,
-  IconDotsCircleHorizontal,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconTrash, IconBell, IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -221,11 +216,6 @@ export default function SecurityGroupDetailPage() {
     label: tab.label,
     closable: tab.closable,
   }));
-
-  // Copy to clipboard function
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
 
   // Context menu items for rules
   const getRuleContextMenuItems = (rule: SecurityGroupRule): ContextMenuItem[] => [
@@ -473,12 +463,7 @@ export default function SecurityGroupDetailPage() {
                   <p className="text-body-md text-[var(--color-text-default)]">
                     {securityGroup.id}
                   </p>
-                  <button
-                    onClick={() => copyToClipboard(securityGroup.id)}
-                    className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                  >
-                    <IconCopy size={12} className="text-[var(--color-action-primary)]" />
-                  </button>
+                  <CopyButton value={securityGroup.id} size="sm" iconOnly />
                 </div>
               </div>
 

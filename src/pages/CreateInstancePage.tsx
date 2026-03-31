@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
 import {
@@ -37,6 +37,8 @@ import {
   columnMinWidths,
   WizardSectionStatusIcon,
   FormField,
+  Popover,
+  Badge,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -52,6 +54,8 @@ import {
   IconStar,
   IconStarFilled,
   IconUpload,
+  IconAlertCircle,
+  IconDownload,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -607,28 +611,6 @@ function BasicInformationSection({
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* AZ (Availability zone) */}
-          <div className="py-6">
-            <FormField required>
-              <FormField.Label>AZ (Availability zone)</FormField.Label>
-              <FormField.Control>
-                <Select
-                  options={availabilityZoneOptions}
-                  value={availabilityZone}
-                  onChange={onAvailabilityZoneChange}
-                  placeholder="Select AZ"
-                  fullWidth
-                />
-              </FormField.Control>
-              <FormField.HelperText>
-                Select the availability zone for the instance.
-              </FormField.HelperText>
-            </FormField>
-          </div>
-
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
           {/* Description */}
           <div className="py-6">
             <FormField>
@@ -644,6 +626,28 @@ function BasicInformationSection({
               <FormField.HelperText>
                 You can use letters, numbers, and special characters (+=.@-_,()[]), and maximum 255
                 characters.
+              </FormField.HelperText>
+            </FormField>
+          </div>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* AZ (Availability zone) */}
+          <div className="py-6">
+            <FormField required>
+              <FormField.Label>AZ (Availability zone)</FormField.Label>
+              <FormField.Control>
+                <Select
+                  options={availabilityZoneOptions}
+                  value={availabilityZone}
+                  onChange={onAvailabilityZoneChange}
+                  placeholder="Select AZ"
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                Select the availability zone for the instance.
               </FormField.HelperText>
             </FormField>
           </div>
@@ -685,6 +689,7 @@ interface SnapshotRow {
   id: string;
   status: 'active' | 'error' | 'building';
   name: string;
+  version: string;
   size: string;
   sourceInstance: string;
   createdAt: string;
@@ -839,6 +844,7 @@ const mockSnapshots: SnapshotRow[] = [
     id: 's1',
     status: 'active',
     name: 'newsnapshot',
+    version: '24.04',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
     createdAt: 'Sep 1, 2025 08:14:32',
@@ -847,6 +853,7 @@ const mockSnapshots: SnapshotRow[] = [
     id: 's2',
     status: 'active',
     name: 'web-backup',
+    version: '22.04',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
     createdAt: 'Aug 28, 2025 12:25:41',
@@ -855,6 +862,7 @@ const mockSnapshots: SnapshotRow[] = [
     id: 's3',
     status: 'active',
     name: 'db-snapshot',
+    version: '9.2',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
     createdAt: 'Aug 25, 2025 15:33:18',
@@ -863,6 +871,7 @@ const mockSnapshots: SnapshotRow[] = [
     id: 's4',
     status: 'building',
     name: 'app-snapshot',
+    version: '24.04',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
     createdAt: 'Aug 20, 2025 09:42:55',
@@ -871,6 +880,7 @@ const mockSnapshots: SnapshotRow[] = [
     id: 's5',
     status: 'active',
     name: 'test-snapshot',
+    version: '22.04',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
     createdAt: 'Aug 15, 2025 17:08:27',
@@ -938,6 +948,10 @@ function ImageSection({
   const [storageType, setStorageType] = useState('_DEFAULT_');
   const [storageSize, setStorageSize] = useState(30);
   const [deleteWithInstance, setDeleteWithInstance] = useState(true);
+  const [createSystemDisk2, setCreateSystemDisk2] = useState(false);
+  const [storageType2, setStorageType2] = useState('_DEFAULT_');
+  const [storageSize2, setStorageSize2] = useState(30);
+  const [deleteWithInstance2, setDeleteWithInstance2] = useState(true);
   const [dataDisks, setDataDisks] = useState<
     { id: string; type: string; size: number; deleteWithInstance: boolean }[]
   >([{ id: 'dd-default', type: '_DEFAULT_', size: 10, deleteWithInstance: true }]);
@@ -1131,7 +1145,28 @@ function ImageSection({
         <StatusIndicator layout="icon-only" status={value as 'active' | 'error' | 'building'} />
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      render: (value: string, row: SnapshotRow) => (
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+            >
+              {value}
+            </a>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+        </VStack>
+      ),
+    },
+    { key: 'version', label: 'Version', sortable: true, flex: 1, minWidth: 80 },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
     {
       key: 'sourceInstance',
@@ -1139,6 +1174,20 @@ function ImageSection({
       sortable: true,
       flex: 1,
       minWidth: columnMinWidths.sourceInstance,
+      render: (value: string, row: SnapshotRow) => (
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+            >
+              {value}
+            </a>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+        </VStack>
+      ),
     },
     {
       key: 'createdAt',
@@ -1181,7 +1230,27 @@ function ImageSection({
         return <StatusIndicator layout="icon-only" status={statusMap[value] || 'error'} />;
       },
     },
-    { key: 'name', label: 'Name', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      render: (value: string, row: BootableVolumeRow) => (
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+            >
+              {value}
+            </a>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+        </VStack>
+      ),
+    },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
     { key: 'type', label: 'Type', sortable: true, flex: 1, minWidth: columnMinWidths.type },
     {
@@ -1614,6 +1683,9 @@ function ImageSection({
 
           {/* System disk Section */}
           <div className="py-6">
+            <span className="text-body-md italic text-[var(--color-text-subtle)] mb-2 block">
+              Image, Instance snapshot
+            </span>
             <FormField required>
               <FormField.Label>System disk</FormField.Label>
               <FormField.Description>
@@ -1660,6 +1732,29 @@ function ImageSection({
                 </HStack>
               </div>
             )}
+          </div>
+
+          {/* Divider */}
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* Delete Volume on Instance Delete Section */}
+          <div className="py-6">
+            <span className="text-body-md italic text-[var(--color-text-subtle)] mb-2 block">
+              Bootable volume
+            </span>
+            <FormField required>
+              <FormField.Label>Delete volume on instance delete</FormField.Label>
+              <FormField.Description>
+                Selecting this option will remove the source volume when the instance is deleted.
+              </FormField.Description>
+              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                <Checkbox
+                  checked={deleteWithInstance2}
+                  onChange={(e) => setDeleteWithInstance2(e.target.checked)}
+                  label="Delete with instance"
+                />
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider */}
@@ -1758,7 +1853,9 @@ interface FlavorRow {
   name: string;
   vCPU: number;
   ram: string;
+  access: string;
   disk: string;
+  metadata: Record<string, string>;
   ephemeralDisk: string;
   networkBandwidth: string;
   hasWarning?: boolean;
@@ -1770,7 +1867,14 @@ const mockFlavors: FlavorRow[] = [
     name: 'm5.large',
     vCPU: 2,
     ram: '2GiB',
+    access: 'Public',
     disk: '50GiB',
+    metadata: {
+      'hw:cpu_policy': 'dedicated',
+      'hw:mem_page_size': 'large',
+      'hw:numa_nodes': '2',
+      pci_passthrough: 'true',
+    },
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
   },
@@ -1779,7 +1883,9 @@ const mockFlavors: FlavorRow[] = [
     name: 't2.micro',
     vCPU: 2,
     ram: '2GiB',
+    access: 'Public',
     disk: '50GiB',
+    metadata: { 'hw:cpu_policy': 'shared' },
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
   },
@@ -1788,7 +1894,13 @@ const mockFlavors: FlavorRow[] = [
     name: 'r5.2xlarge',
     vCPU: 2,
     ram: '2GiB',
+    access: 'Private',
     disk: '50GiB',
+    metadata: {
+      'hw:cpu_policy': 'dedicated',
+      'hw:mem_page_size': 'large',
+      'aggregate_instance_extra_specs:pinned': 'true',
+    },
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
   },
@@ -1797,7 +1909,9 @@ const mockFlavors: FlavorRow[] = [
     name: 'p3.8xlarge',
     vCPU: 2,
     ram: '2GiB',
+    access: 'Public',
     disk: '50GiB',
+    metadata: {},
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
   },
@@ -1806,7 +1920,14 @@ const mockFlavors: FlavorRow[] = [
     name: 'c5.xlarge',
     vCPU: 2,
     ram: '2GiB',
+    access: 'Private',
     disk: '5GiB',
+    metadata: {
+      'hw:cpu_policy': 'dedicated',
+      'hw:numa_nodes': '1',
+      'quota:vif_outbound_peak': '10240',
+      'hw:watchdog_action': 'reset',
+    },
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
     hasWarning: true,
@@ -1816,7 +1937,9 @@ const mockFlavors: FlavorRow[] = [
     name: 'g4dn.xlarge',
     vCPU: 4,
     ram: '16GiB',
+    access: 'Public',
     disk: '125GiB',
+    metadata: { 'pci_passthrough:alias': 'gpu-v100:1', 'hw:cpu_policy': 'dedicated' },
     ephemeralDisk: '0GiB',
     networkBandwidth: '10 Gbps',
   },
@@ -1825,7 +1948,9 @@ const mockFlavors: FlavorRow[] = [
     name: 'i3.large',
     vCPU: 2,
     ram: '15.25GiB',
+    access: 'Public',
     disk: '475GiB',
+    metadata: { 'hw:cpu_policy': 'shared', 'hw:mem_page_size': 'small' },
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
   },
@@ -1834,7 +1959,15 @@ const mockFlavors: FlavorRow[] = [
     name: 'x1e.xlarge',
     vCPU: 4,
     ram: '122GiB',
+    access: 'Private',
     disk: '120GiB',
+    metadata: {
+      'hw:cpu_policy': 'dedicated',
+      'hw:mem_page_size': 'large',
+      'hw:numa_nodes': '4',
+      'hw:cpu_threads_policy': 'isolate',
+      'aggregate_instance_extra_specs:high_mem': 'true',
+    },
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
   },
@@ -1859,7 +1992,7 @@ function FlavorSection({
   onEditCancel,
   onEditDone,
 }: FlavorSectionProps) {
-  const [flavorTab, setFlavorTab] = useState('vcpu');
+  const [flavorTab, setFlavorTab] = useState('cpu');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -1939,7 +2072,13 @@ function FlavorSection({
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            {row.hasWarning && <span className="text-[var(--color-state-warning)]">⚠</span>}
+            {row.hasWarning && (
+              <IconAlertCircle
+                size={14}
+                stroke={1.5}
+                className="text-[var(--color-state-danger)]"
+              />
+            )}
           </HStack>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </VStack>
@@ -1947,20 +2086,55 @@ function FlavorSection({
     },
     { key: 'vCPU', label: 'vCPU', sortable: true, flex: 1, minWidth: columnMinWidths.vCPU },
     { key: 'ram', label: 'RAM', sortable: true, flex: 1, minWidth: columnMinWidths.ram },
-    { key: 'disk', label: 'Disk', sortable: true, flex: 1, minWidth: columnMinWidths.disk },
+    { key: 'disk', label: 'Root disk', sortable: true, flex: 1, minWidth: columnMinWidths.disk },
+    { key: 'access', label: 'Public', flex: 1, minWidth: 80 },
     {
-      key: 'ephemeralDisk',
-      label: 'Ephemeral disk',
-      sortable: true,
+      key: 'metadata',
+      label: 'Metadata',
       flex: 1,
-      minWidth: columnMinWidths.ephemeralDisk,
-    },
-    {
-      key: 'networkBandwidth',
-      label: 'Internal network Bandwidth',
-      sortable: true,
-      flex: 1,
-      minWidth: columnMinWidths.networkBandwidth,
+      minWidth: 160,
+      render: (_: unknown, row: FlavorRow) => {
+        const entries = Object.entries(row.metadata);
+        if (entries.length === 0) return <span className="text-[var(--color-text-muted)]">-</span>;
+        const [firstKey, firstVal] = entries[0];
+        const truncatedVal = firstVal.length > 3 ? firstVal.slice(0, 3) + '...' : firstVal;
+        const remaining = entries.length - 1;
+        return (
+          <span className="flex w-full items-center gap-1 min-w-0 text-body-md">
+            <span className="truncate min-w-0 flex-1">
+              {firstKey}={truncatedVal}
+            </span>
+            {remaining > 0 && (
+              <span className="ml-auto">
+                <Popover
+                  trigger="hover"
+                  position="bottom"
+                  delay={100}
+                  hideDelay={100}
+                  content={
+                    <div className="p-3 min-w-[120px] max-w-[320px]">
+                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                        All Metadata ({entries.length})
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {entries.map(([k, v], i) => (
+                          <Badge key={i} theme="white" size="sm">
+                            {k}={v}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  }
+                >
+                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                    +{remaining}
+                  </span>
+                </Popover>
+              </span>
+            )}
+          </span>
+        );
+      },
     },
   ];
 
@@ -1986,88 +2160,93 @@ function FlavorSection({
         <VStack gap={0}>
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-          {/* Flavors Label & Description */}
-          <VStack gap={3} className="py-6">
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
-              </span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the flavor that defines the vCPU, RAM, and disk capacity allocated to the
-                instance.
-              </span>
-            </VStack>
+          {/* Flavors Field Block */}
+          <div className="py-6">
+            <VStack gap={3}>
+              <VStack gap={1}>
+                <span className="text-label-lg text-[var(--color-text-default)]">
+                  Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                </span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">
+                  Select a flavor from the list to use for the instance.
+                </span>
+              </VStack>
 
-            {/* Flavor Type Tabs */}
-            <div>
-              <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="vcpu">vCPU</Tab>
-                  <Tab value="gpu">GPU</Tab>
-                  <Tab value="npu">NPU</Tab>
-                  <Tab value="custom">Custom</Tab>
-                </TabList>
-              </Tabs>
-            </div>
-          </VStack>
+              {/* Flavor Type Tabs */}
+              <div className="mt-1">
+                <Tabs value={flavorTab} onChange={setFlavorTab} variant="underline" size="sm">
+                  <TabList>
+                    <Tab value="cpu">CPU</Tab>
+                    <Tab value="gpu">GPU</Tab>
+                    <Tab value="npu">NPU</Tab>
+                  </TabList>
+                </Tabs>
+              </div>
+              {/* Search + Download */}
+              <HStack gap={1} align="center">
+                <SearchInput
+                  placeholder="Search flavors by attributes"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onClear={() => {
+                    setSearchQuery('');
+                    setCurrentPage(1);
+                  }}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                />
+              </HStack>
 
-          <VStack gap={3}>
-            {/* Search */}
-            <SearchInput
-              placeholder="Search flavors by attributes"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onClear={() => {
-                setSearchQuery('');
-                setCurrentPage(1);
-              }}
-              size="sm"
-              className="w-[var(--search-input-width)]"
-            />
-
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredFlavors.length}
-              onPageChange={setCurrentPage}
-              selectedCount={selectedFlavorId ? 1 : 0}
-            />
-
-            {/* Flavor Table */}
-            <VStack gap={2}>
-              <Table
-                columns={flavorColumns}
-                data={paginatedFlavors}
-                rowKey="id"
-                onRowClick={(row) => handleSelectFlavor(row.id)}
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredFlavors.length}
+                onPageChange={setCurrentPage}
+                selectedCount={selectedFlavorId ? 1 : 0}
               />
 
-              {/* Error Message or Selection Indicator */}
-              <SelectionIndicator
-                selectedItems={
-                  selectedFlavorId
-                    ? [
-                        {
-                          id: selectedFlavorId,
-                          label:
-                            mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                            selectedFlavorId,
-                        },
-                      ]
-                    : []
-                }
-                onRemove={() => onSelectFlavor('')}
-                error={!!flavorError}
-                errorMessage={flavorError}
-              />
+              {/* Flavor Table */}
+              <VStack gap={2}>
+                <Table
+                  columns={flavorColumns}
+                  data={paginatedFlavors}
+                  rowKey="id"
+                  onRowClick={(row) => handleSelectFlavor(row.id)}
+                />
+
+                {/* Error Message or Selection Indicator */}
+                <SelectionIndicator
+                  selectedItems={
+                    selectedFlavorId
+                      ? [
+                          {
+                            id: selectedFlavorId,
+                            label:
+                              mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
+                              selectedFlavorId,
+                          },
+                        ]
+                      : []
+                  }
+                  onRemove={() => onSelectFlavor('')}
+                  error={!!flavorError}
+                  errorMessage={flavorError}
+                />
+              </VStack>
             </VStack>
-          </VStack>
+          </div>
 
           {/* Divider + Next Button - hidden in edit mode or v2 */}
           {!isEditing && (
             <>
-              <div className="w-full h-px bg-[var(--color-border-subtle)] mt-4" />
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               <HStack justify="end" className="pt-3">
                 <Button variant="primary" onClick={handleNextClick}>
                   Next
@@ -2281,7 +2460,28 @@ function NetworkSection({
   // Network selection
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
   const [networkSearch, setNetworkSearch] = useState('');
+  const [networkTab, setNetworkTab] = useState('current-tenant');
   const [networkPage, setNetworkPage] = useState(1);
+
+  // Virtual LAN state
+  const [vlans, setVlans] = useState<
+    { id: string; network: string; subnet: string; autoAssign: string }[]
+  >([{ id: 'vlan-default', network: '', subnet: '', autoAssign: 'Auto-assign' }]);
+
+  const addVlan = () => {
+    setVlans((prev) => [
+      ...prev,
+      { id: `vlan-${Date.now()}`, network: '', subnet: '', autoAssign: 'Auto-assign' },
+    ]);
+  };
+
+  const removeVlan = (id: string) => {
+    setVlans((prev) => prev.filter((v) => v.id !== id));
+  };
+
+  const updateVlan = (id: string, field: 'network' | 'subnet' | 'autoAssign', value: string) => {
+    setVlans((prev) => prev.map((v) => (v.id === id ? { ...v, [field]: value } : v)));
+  };
 
   // Validation error
   const [networkError, setNetworkError] = useState<string | null>(null);
@@ -2375,24 +2575,40 @@ function NetworkSection({
       ),
     },
     {
+      key: 'status',
+      label: 'Status',
+      width: fixedColumns.status,
+      align: 'center',
+      render: (value: string) => (
+        <StatusIndicator layout="icon-only" status={value === 'Active' ? 'active' : 'error'} />
+      ),
+    },
+    {
       key: 'idName',
-      label: 'ID/Name',
+      label: 'Name',
       sortable: true,
       render: (_, row) => (
-        <VStack gap={0} align="start">
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
-          <span>{row.name}</span>
+        <VStack gap={0}>
+          <HStack gap={1} align="center">
+            <a
+              href="#"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+            >
+              {row.name}
+            </a>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          </HStack>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
       ),
     },
-    { key: 'status', label: 'Status' },
+    { key: 'subnetCidr', label: 'Subnet CIDR' },
     {
       key: 'external',
       label: 'External',
       render: (_, row) => <span>{row.external ? 'Yes' : 'No'}</span>,
     },
-    { key: 'access', label: 'Access' },
-    { key: 'subnetCidr', label: 'Subnet CIDR' },
+    { key: 'access', label: 'Shared' },
   ];
 
   // Floating IP Pool columns
@@ -2549,24 +2765,27 @@ function NetworkSection({
       label: 'Name',
       sortable: true,
       render: (_, row) => (
-        <a
-          href={`/security-groups/${row.id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
-        >
-          <span>{row.name}</span>
-          <svg
-            className="w-3 h-3"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
+        <VStack gap={0} align="start">
+          <a
+            href={`/security-groups/${row.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
           >
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-            <polyline points="15 3 21 3 21 9" />
-            <line x1="10" y1="14" x2="21" y2="3" />
-          </svg>
-        </a>
+            <span>{row.name}</span>
+            <svg
+              className="w-3 h-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </VStack>
       ),
     },
     { key: 'description', label: 'Description', sortable: true },
@@ -2608,16 +2827,60 @@ function NetworkSection({
     },
     {
       key: 'idName',
-      label: 'ID/Name',
+      label: 'Name',
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
+          <a
+            href={`/ports/${row.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
+          >
+            <span>{row.name}</span>
+            <svg
+              className="w-3 h-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
           <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
-          <span>{row.name}</span>
         </VStack>
       ),
     },
-    { key: 'ownedNetwork', label: 'Owned network', sortable: true },
+    {
+      key: 'ownedNetwork',
+      label: 'Owned network',
+      sortable: true,
+      render: (_, row) => (
+        <VStack gap={0} align="start">
+          <a
+            href={`/networks/${row.ownedNetwork}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
+          >
+            <span>{row.ownedNetwork}</span>
+            <svg
+              className="w-3 h-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </VStack>
+      ),
+    },
     { key: 'fixedIp', label: 'Fixed IP' },
     { key: 'macAddress', label: 'MAC Address' },
   ];
@@ -2693,20 +2956,45 @@ function NetworkSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Network Sub-section */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Network
-              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Network
+                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select the networks to attach to the instance.
+              </span>
+            </VStack>
 
-            {/* Search */}
-            <SearchInput
-              placeholder="Search network by attributes"
-              value={networkSearch}
-              onChange={(e) => setNetworkSearch(e.target.value)}
-              onClear={() => setNetworkSearch('')}
-              size="sm"
-              className="w-[var(--search-input-width)]"
-            />
+            <div className="mt-1">
+              <Tabs value={networkTab} onChange={setNetworkTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="current-tenant">Current tenant</Tab>
+                  <Tab value="shared">Shared</Tab>
+                  <Tab value="external">External</Tab>
+                </TabList>
+              </Tabs>
+            </div>
+
+            {/* Search + Create */}
+            <HStack gap={1} align="center" className="justify-between w-full">
+              <SearchInput
+                placeholder="Search network by attributes"
+                value={networkSearch}
+                onChange={(e) => setNetworkSearch(e.target.value)}
+                onClear={() => setNetworkSearch('')}
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconExternalLink size={12} />}
+                className="shrink-0"
+              >
+                Create a new network
+              </Button>
+            </HStack>
 
             {/* Pagination */}
             <Pagination
@@ -2756,175 +3044,98 @@ function NetworkSection({
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Virtual LAN Disclosure */}
-          <div className="py-6">
-            <Disclosure open={vlanOpen} onChange={setVlanOpen}>
-              <Disclosure.Trigger>
-                <HStack gap={2} align="center">
-                  <span className="text-label-lg">Virtual LAN</span>
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-                </HStack>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <div className="pt-3 text-[var(--color-text-subtle)]">
-                  Virtual LAN configuration options will be displayed here.
-                </div>
-              </Disclosure.Panel>
-            </Disclosure>
-          </div>
-
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-          {/* Floating IP Section */}
-          <VStack gap={3} className="py-6">
-            <span className="text-label-lg">Floating IP</span>
-
-            {/* Radio Options */}
+          {/* Virtual LAN Section */}
+          <VStack gap={4} className="py-6">
             <VStack gap={2}>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <Radio
-                  value="none"
-                  checked={floatingIpOption === 'none'}
-                  onChange={() => setFloatingIpOption('none')}
-                />
-                <span className="text-body-md">None (internal only)</span>
-              </label>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <Radio
-                  value="auto"
-                  checked={floatingIpOption === 'auto'}
-                  onChange={() => setFloatingIpOption('auto')}
-                />
-                <span className="text-body-md">Auto-assign IP</span>
-              </label>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <Radio
-                  value="existing"
-                  checked={floatingIpOption === 'existing'}
-                  onChange={() => setFloatingIpOption('existing')}
-                />
-                <span className="text-body-md">Use existing IP</span>
-              </label>
+              <span className="text-label-lg text-[var(--color-text-default)]">Virtual LAN</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Each selected network requires at least one Virtual LAN configuration. Each VLAN
+                represents a virtual network card (NIC) attached to the selected network.
+              </span>
             </VStack>
 
-            {/* Conditional Table for Auto-assign IP */}
-            {(isV2 || floatingIpOption === 'auto') && (
-              <VStack gap={3} className="mt-2">
-                <SearchInput
-                  placeholder="Search network by attributes"
-                  value={fipSearch}
-                  onChange={(e) => setFipSearch(e.target.value)}
-                  onClear={() => setFipSearch('')}
-                  size="sm"
-                  className="w-[var(--search-input-width)]"
-                />
-                <Pagination
-                  currentPage={fipPage}
-                  totalPages={Math.ceil(filteredFloatingPools.length / 5) || 1}
-                  totalItems={filteredFloatingPools.length}
-                  onPageChange={setFipPage}
-                  selectedCount={selectedFloatingPool ? 1 : 0}
-                />
-                <VStack gap={2}>
-                  <Table
-                    columns={floatingPoolColumns}
-                    data={filteredFloatingPools}
-                    rowKey="id"
-                    onRowClick={(row) => setSelectedFloatingPool(row.id)}
-                  />
-                  <SelectionIndicator
-                    selectedItems={
-                      selectedFloatingPool
-                        ? [
-                            {
-                              id: selectedFloatingPool,
-                              label:
-                                mockFloatingIPPools.find((p) => p.id === selectedFloatingPool)
-                                  ?.name || selectedFloatingPool,
-                            },
-                          ]
-                        : []
-                    }
-                    onRemove={() => setSelectedFloatingPool(null)}
-                  />
-                </VStack>
-              </VStack>
-            )}
-
-            {/* Conditional Table for Use existing IP */}
-            {(isV2 || floatingIpOption === 'existing') && (
-              <VStack gap={3} className="mt-2">
-                <HStack justify="between" align="center" className="w-full">
-                  <SearchInput
-                    placeholder="Search floating IP by attributes"
-                    value={fipSearch}
-                    onChange={(e) => setFipSearch(e.target.value)}
-                    onClear={() => setFipSearch('')}
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm">
-                    <HStack gap={1} align="center">
-                      <span>Create a new network</span>
-                      <svg
-                        className="w-3 h-3"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                        <polyline points="15 3 21 3 21 9" />
-                        <line x1="10" y1="14" x2="21" y2="3" />
-                      </svg>
+            <VStack gap={2} className="w-full">
+              {vlans.map((vlan) => (
+                <div
+                  key={vlan.id}
+                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                >
+                  <HStack gap={2} align="center" className="justify-between">
+                    <HStack gap={2} align="center">
+                      <HStack gap={1.5} align="center">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Network
+                        </span>
+                        <Select
+                          options={[
+                            { value: 'network-1', label: 'network' },
+                            { value: 'network-2', label: 'internal-01' },
+                            { value: 'network-3', label: 'external-net' },
+                          ]}
+                          value={vlan.network}
+                          onChange={(v) => updateVlan(vlan.id, 'network', v)}
+                          placeholder="network"
+                        />
+                      </HStack>
+                      <HStack gap={1.5} align="center">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Subnet
+                        </span>
+                        <Select
+                          options={[
+                            { value: 'subnet-1', label: 'subnet' },
+                            { value: 'subnet-2', label: '10.0.0.0/24' },
+                            { value: 'subnet-3', label: '192.168.1.0/24' },
+                          ]}
+                          value={vlan.subnet}
+                          onChange={(v) => updateVlan(vlan.id, 'subnet', v)}
+                          placeholder="subnet"
+                        />
+                      </HStack>
+                      <Select
+                        options={[
+                          { value: 'Auto-assign', label: 'Auto-assign' },
+                          { value: 'Manual', label: 'Manual' },
+                        ]}
+                        value={vlan.autoAssign}
+                        onChange={(v) => updateVlan(vlan.id, 'autoAssign', v)}
+                      />
                     </HStack>
-                  </Button>
-                </HStack>
-                <Pagination
-                  currentPage={fipPage}
-                  totalPages={Math.ceil(filteredExistingFips.length / 5) || 1}
-                  totalItems={filteredExistingFips.length}
-                  onPageChange={setFipPage}
-                  selectedCount={selectedExistingFip.size}
-                />
-                <VStack gap={2}>
-                  <Table
-                    columns={existingFipColumns}
-                    data={filteredExistingFips}
-                    rowKey="id"
-                    onRowClick={(row) => {
-                      const newSet = new Set(selectedExistingFip);
-                      if (newSet.has(row.id)) {
-                        newSet.delete(row.id);
-                      } else {
-                        newSet.add(row.id);
-                      }
-                      setSelectedExistingFip(newSet);
-                    }}
-                  />
-                  <SelectionIndicator
-                    selectedItems={mockExistingFloatingIPs
-                      .filter((f) => selectedExistingFip.has(f.id))
-                      .map((f) => ({ id: f.id, label: `${f.ipAddress} (${f.description})` }))}
-                    onRemove={(id) => {
-                      const newSet = new Set(selectedExistingFip);
-                      newSet.delete(id);
-                      setSelectedExistingFip(newSet);
-                    }}
-                  />
-                </VStack>
-              </VStack>
-            )}
+                    <button
+                      onClick={() => removeVlan(vlan.id)}
+                      className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+                    >
+                      <IconX size={14} className="text-[var(--color-text-muted)]" />
+                    </button>
+                  </HStack>
+                </div>
+              ))}
+
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} />}
+                onClick={addVlan}
+                className="self-start"
+              >
+                Add virtual LAN
+              </Button>
+            </VStack>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Security groups Section */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Security groups
-              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
-            </span>
+            <VStack gap={1}>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                Security groups
+                <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              </span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Security groups apply to all networks except ports with security disabled.
+              </span>
+            </VStack>
 
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
@@ -3001,7 +3212,6 @@ function NetworkSection({
               <Disclosure.Trigger>
                 <HStack gap={2} align="center">
                   <span className="text-label-lg">Port</span>
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
                 </HStack>
               </Disclosure.Trigger>
               <Disclosure.Panel>
@@ -3185,7 +3395,31 @@ function AuthenticationSection({
         </div>
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      render: (_, row) => (
+        <a
+          href={`/key-pairs/${row.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
+        >
+          <span>{row.name}</span>
+          <svg
+            className="w-3 h-3"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
+      ),
+    },
     { key: 'fingerprint', label: 'Fingerprint', sortable: true },
   ];
 
@@ -3229,7 +3463,13 @@ function AuthenticationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
           {/* Login type */}
           <VStack gap={4} className="py-6">
-            <span className="text-label-lg">Login type</span>
+            <VStack gap={1}>
+              <span className="text-label-lg">Login type</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Select the authentication method for accessing your instance. You can choose either
+                the Key Pair method or the Password method.
+              </span>
+            </VStack>
 
             {isV2 ? (
               <VStack gap={6}>
@@ -3242,14 +3482,35 @@ function AuthenticationSection({
                         <Tab value="password">Password</Tab>
                       </TabList>
                     </Tabs>
-                    <SearchInput
-                      placeholder="Search key pair by attributes"
-                      value={keyPairSearch}
-                      onChange={(e) => setKeyPairSearch(e.target.value)}
-                      onClear={() => setKeyPairSearch('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
+                    <HStack gap={2} align="center" justify="between" className="w-full">
+                      <SearchInput
+                        placeholder="Search key pair by attributes"
+                        value={keyPairSearch}
+                        onChange={(e) => setKeyPairSearch(e.target.value)}
+                        onClear={() => setKeyPairSearch('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        rightIcon={
+                          <svg
+                            className="w-3 h-3"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                          </svg>
+                        }
+                      >
+                        Create a new key pair
+                      </Button>
+                    </HStack>
                     <Pagination
                       currentPage={keyPairPage}
                       totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
@@ -3292,18 +3553,26 @@ function AuthenticationSection({
                         <Tab value="password">Password</Tab>
                       </TabList>
                     </Tabs>
-                    <FormField label="Login Name">
+                    <FormField
+                      label="Login Name"
+                      helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
+                    >
                       <Input
                         value={loginName}
                         onChange={(e) => {
                           setLoginName(e.target.value);
                           setAuthError(null);
                         }}
-                        placeholder="Input login name"
+                        placeholder="Enter login name"
                         fullWidth
                       />
                     </FormField>
-                    <FormField label="Password">
+                    <FormField
+                      label="Password"
+                      helperText={
+                        'You must use a mix of at least 3 types (uppercase/lowercase letters, numbers, special characters), and the length must be between 8-32 characters. Note that your Login Name, spaces, and specific symbols (" \' < > & \\ |) are not allowed.'
+                      }
+                    >
                       <div className="relative">
                         <Input
                           type={showPassword ? 'text' : 'password'}
@@ -3312,7 +3581,7 @@ function AuthenticationSection({
                             setPassword(e.target.value);
                             setAuthError(null);
                           }}
-                          placeholder="Input password"
+                          placeholder="Enter password"
                           fullWidth
                         />
                         <button
@@ -3359,7 +3628,7 @@ function AuthenticationSection({
                             setConfirmPassword(e.target.value);
                             setAuthError(null);
                           }}
-                          placeholder="Input password"
+                          placeholder="Enter password again"
                           fullWidth
                         />
                         <button
@@ -3457,7 +3726,7 @@ function AuthenticationSection({
                           setLoginName(e.target.value);
                           setAuthError(null);
                         }}
-                        placeholder="Input login name"
+                        placeholder="Enter login name"
                         fullWidth
                       />
                     </FormField>
@@ -3470,7 +3739,7 @@ function AuthenticationSection({
                             setPassword(e.target.value);
                             setAuthError(null);
                           }}
-                          placeholder="Input password"
+                          placeholder="Enter password"
                           fullWidth
                         />
                         <button
@@ -3517,7 +3786,7 @@ function AuthenticationSection({
                             setConfirmPassword(e.target.value);
                             setAuthError(null);
                           }}
-                          placeholder="Input password"
+                          placeholder="Enter password again"
                           fullWidth
                         />
                         <button
@@ -3608,6 +3877,12 @@ function AdvancedSection({
   onEditDone,
 }: AdvancedSectionProps) {
   const isV2 = useIsV2();
+  const MAX_TAGS = 50;
+  // Tags
+  const [tags, setTags] = useState<{ id: string; key: string; value: string }[]>([
+    { id: crypto.randomUUID(), key: '', value: '' },
+  ]);
+
   // Server group
   const [serverGroupOpen, setServerGroupOpen] = useState(isV2);
   const [selectedServerGroupId, setSelectedServerGroupId] = useState<string | null>(null);
@@ -3642,7 +3917,34 @@ function AdvancedSection({
         </div>
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      sortable: true,
+      render: (_, row) => (
+        <VStack gap={0} align="start">
+          <a
+            href={`/server-groups/${row.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 text-label-md text-[var(--color-action-primary)] hover:underline"
+          >
+            <span>{row.name}</span>
+            <svg
+              className="w-3 h-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </VStack>
+      ),
+    },
     {
       key: 'memberCount',
       label: 'Member count',
@@ -3711,125 +4013,179 @@ function AdvancedSection({
         <VStack gap={0}>
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-          {/* Server group Disclosure */}
-          <div className="py-6">
-            <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
-              <Disclosure.Trigger>
-                <HStack gap={2} align="center">
-                  <span className="text-label-lg">Server group</span>
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-                </HStack>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={2} className="pt-3">
-                  {/* Search */}
-                  <SearchInput
-                    placeholder="Search server group by attributes"
-                    value={serverGroupSearch}
-                    onChange={(e) => setServerGroupSearch(e.target.value)}
-                    onClear={() => setServerGroupSearch('')}
+
+          {/* Tags */}
+          <VStack gap={3} className="py-6">
+            <VStack gap={1}>
+              <span className="text-label-lg">Tags</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                A tag consists of a Key that defines the resource category and a Value that
+                describes it. Each resource can have up to {MAX_TAGS} tags.
+              </span>
+            </VStack>
+
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={3}>
+                {tags.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center w-full">
+                    <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
+                    <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
+                    <div />
+                    {tags.map((tag, i) => (
+                      <React.Fragment key={tag.id}>
+                        <Input
+                          value={tag.key}
+                          onChange={(e) => {
+                            const newTags = [...tags];
+                            newTags[i] = { ...newTags[i], key: e.target.value };
+                            setTags(newTags);
+                          }}
+                          placeholder="Enter key"
+                          fullWidth
+                        />
+                        <Input
+                          value={tag.value}
+                          onChange={(e) => {
+                            const newTags = [...tags];
+                            newTags[i] = { ...newTags[i], value: e.target.value };
+                            setTags(newTags);
+                          }}
+                          placeholder="Enter value"
+                          fullWidth
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
+                          className="flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
+                        >
+                          <IconX size={14} />
+                        </button>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                )}
+
+                <HStack gap={3} align="center">
+                  <Button
+                    variant="secondary"
                     size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={serverGroupPage}
-                    totalPages={Math.ceil(filteredServerGroups.length / 5) || 1}
-                    totalItems={filteredServerGroups.length}
-                    onPageChange={setServerGroupPage}
-                    selectedCount={selectedServerGroupId ? 1 : 0}
-                  />
-
-                  {/* Server group Table */}
-                  <VStack gap={2}>
-                    <Table
-                      columns={serverGroupColumns}
-                      data={filteredServerGroups}
-                      rowKey="id"
-                      onRowClick={(row) => setSelectedServerGroupId(row.id)}
-                    />
-
-                    {/* Selection Indicator for Server Group */}
-                    <SelectionIndicator
-                      selectedItems={
-                        selectedServerGroupId
-                          ? [
-                              {
-                                id: selectedServerGroupId,
-                                label:
-                                  mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
-                                    ?.name || selectedServerGroupId,
-                              },
-                            ]
-                          : []
-                      }
-                      onRemove={() => setSelectedServerGroupId(null)}
-                    />
-                  </VStack>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
-          </div>
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() =>
+                      setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
+                    }
+                    disabled={tags.length >= MAX_TAGS}
+                  >
+                    Add tag
+                  </Button>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                    {tags.length} / {MAX_TAGS} tags
+                  </span>
+                </HStack>
+              </VStack>
+            </div>
+          </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* User data Disclosure */}
-          <div className="py-6">
-            <Disclosure open={userDataOpen} onChange={setUserDataOpen}>
-              <Disclosure.Trigger>
-                <HStack gap={2} align="center">
-                  <span className="text-label-lg">User data</span>
-                  <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-                </HStack>
-              </Disclosure.Trigger>
-              <Disclosure.Panel>
-                <VStack gap={3} className="pt-3">
-                  {/* Upload Button */}
-                  <div>
-                    <input
-                      type="file"
-                      id="user-data-file"
-                      className="hidden"
-                      onChange={handleFileUpload}
-                      accept=".txt,.sh,.yaml,.yml,.json"
-                    />
-                    <label htmlFor="user-data-file">
-                      <Button variant="secondary" size="sm" as="span" className="cursor-pointer">
-                        <HStack gap={1} align="center">
-                          <IconUpload size={12} stroke={1.5} />
-                          <span>Choose file</span>
-                        </HStack>
-                      </Button>
-                    </label>
-                  </div>
+          {/* Server group */}
+          <VStack gap={3} className="py-6">
+            <VStack gap={1}>
+              <span className="text-label-lg">Server group</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                A server group controls the physical placement of instances. You can place instances
+                together on the same host or spread them across different hosts.
+              </span>
+            </VStack>
+            <SearchInput
+              placeholder="Search server group by attributes"
+              value={serverGroupSearch}
+              onChange={(e) => setServerGroupSearch(e.target.value)}
+              onClear={() => setServerGroupSearch('')}
+              size="sm"
+              className="w-[var(--search-input-width)]"
+            />
 
-                  {/* User data Textarea */}
-                  <div className="w-full">
-                    <Textarea
-                      value={userData}
-                      onChange={handleUserDataChange}
-                      placeholder="input user data"
-                      rows={6}
-                      fullWidth
-                      className="font-mono text-body-md"
-                      error={!!userDataError}
-                    />
-                    <div className="flex justify-between items-start mt-2">
-                      <span className="text-body-sm text-[var(--color-state-danger)]">
-                        {userDataError || ''}
-                      </span>
-                      <span
-                        className={`text-body-sm ${userDataError ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
-                      >
-                        {(new Blob([userData]).size / 1024).toFixed(1)} / 16 KB
-                      </span>
-                    </div>
-                  </div>
-                </VStack>
-              </Disclosure.Panel>
-            </Disclosure>
-          </div>
+            <Pagination
+              currentPage={serverGroupPage}
+              totalPages={Math.ceil(filteredServerGroups.length / 5) || 1}
+              totalItems={filteredServerGroups.length}
+              onPageChange={setServerGroupPage}
+              selectedCount={selectedServerGroupId ? 1 : 0}
+            />
+
+            <VStack gap={2}>
+              <Table
+                columns={serverGroupColumns}
+                data={filteredServerGroups}
+                rowKey="id"
+                onRowClick={(row) => setSelectedServerGroupId(row.id)}
+              />
+
+              <SelectionIndicator
+                selectedItems={
+                  selectedServerGroupId
+                    ? [
+                        {
+                          id: selectedServerGroupId,
+                          label:
+                            mockServerGroups.find((sg) => sg.id === selectedServerGroupId)?.name ||
+                            selectedServerGroupId,
+                        },
+                      ]
+                    : []
+                }
+                onRemove={() => setSelectedServerGroupId(null)}
+              />
+            </VStack>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* User data */}
+          <VStack gap={3} className="py-6">
+            <span className="text-label-lg">User data</span>
+            {/* Upload Button */}
+            <div>
+              <input
+                type="file"
+                id="user-data-file"
+                className="hidden"
+                onChange={handleFileUpload}
+                accept=".txt,.sh,.yaml,.yml,.json"
+              />
+              <label htmlFor="user-data-file">
+                <Button variant="secondary" size="sm" as="span" className="cursor-pointer">
+                  <HStack gap={1} align="center">
+                    <IconUpload size={12} stroke={1.5} />
+                    <span>Choose file</span>
+                  </HStack>
+                </Button>
+              </label>
+            </div>
+
+            {/* User data Textarea */}
+            <div className="w-full">
+              <Textarea
+                value={userData}
+                onChange={handleUserDataChange}
+                placeholder="input user data"
+                rows={6}
+                fullWidth
+                className="font-mono text-body-md"
+                error={!!userDataError}
+              />
+              <div className="flex justify-between items-start mt-2">
+                <span className="text-body-sm text-[var(--color-state-danger)]">
+                  {userDataError || ''}
+                </span>
+                <span
+                  className={`text-body-sm ${userDataError ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
+                >
+                  {(new Blob([userData]).size / 1024).toFixed(1)} / 16 KB
+                </span>
+              </div>
+            </div>
+          </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
@@ -4537,7 +4893,11 @@ export function CreateInstancePage() {
 
   const getStorageSummary = () => {
     if (storageOption === 'no-create') return 'No system disk';
-    return `${storageType} ${storageSize}GiB${deleteWithInstance ? ' (Deleted with instance)' : ''}`;
+    return `${storageSize} GiB`;
+  };
+
+  const getDataDiskSummary = () => {
+    return `${storageSize} GiB`;
   };
 
   const getNetworkSummary = () => {
@@ -4548,6 +4908,10 @@ export function CreateInstancePage() {
   const getSecurityGroupSummary = () => {
     const sgs = mockSecurityGroups.filter((sg) => selectedSecurityGroups.has(sg.id));
     return sgs.map((sg) => sg.name).join(', ') || '-';
+  };
+
+  const getPortSummary = () => {
+    return '-';
   };
 
   const getAuthSummary = () => {
@@ -4682,8 +5046,8 @@ export function CreateInstancePage() {
                   value={instanceName || '-'}
                   showDivider={false}
                 />
-                <SectionCard.DataRow label="AZ (Availability zone)" value={availabilityZone} />
                 <SectionCard.DataRow label="Description" value={description || '-'} />
+                <SectionCard.DataRow label="AZ (Availability zone)" value={availabilityZone} />
               </DoneSection>
             )}
 
@@ -4709,6 +5073,7 @@ export function CreateInstancePage() {
                   showDivider={false}
                 />
                 <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
+                <SectionCard.DataRow label="Data disk" value={getDataDiskSummary()} />
               </DoneSection>
             )}
 
@@ -4729,7 +5094,7 @@ export function CreateInstancePage() {
             {(isV2 || sectionStatus.flavor === 'done') && (
               <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
                 <SectionCard.DataRow
-                  label="Flavor"
+                  label="Flavors"
                   value={getFlavorSummary() || '-'}
                   showDivider={false}
                 />
@@ -4757,7 +5122,8 @@ export function CreateInstancePage() {
                   value={getNetworkSummary()}
                   showDivider={false}
                 />
-                <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
+                <SectionCard.DataRow label="Security group" value={getSecurityGroupSummary()} />
+                <SectionCard.DataRow label="Port" value={getPortSummary()} />
               </DoneSection>
             )}
 
@@ -4806,6 +5172,7 @@ export function CreateInstancePage() {
             )}
             {(isV2 || sectionStatus.advanced === 'done') && (
               <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
+                <SectionCard.DataRow label="Tags" value="-" showDivider={false} />
                 <SectionCard.DataRow
                   label="Server group"
                   value={
@@ -4813,7 +5180,6 @@ export function CreateInstancePage() {
                       ? mockServerGroups.find((sg) => sg.id === selectedServerGroupId)?.name
                       : '-'
                   }
-                  showDivider={false}
                 />
                 <SectionCard.DataRow label="User data" value={userData ? 'Configured' : '-'} />
               </DoneSection>

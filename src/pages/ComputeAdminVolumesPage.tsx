@@ -29,6 +29,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import containerIcon from '@/assets/appIcon/container.png';
 
 /* ----------------------------------------
    Types
@@ -346,15 +347,22 @@ export function ComputeAdminVolumesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/volumes/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.name}
-          </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+            <img src={containerIcon} alt="Volume" className="w-4 h-4" />
+          </div>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`/compute-admin/volumes/${row.id}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.name}
+            </Link>
+            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
+              ID : {row.id}
+            </span>
+          </div>
         </div>
       ),
     },
@@ -575,17 +583,15 @@ export function ComputeAdminVolumesPage() {
         />
 
         {/* Pagination */}
-        {filteredVolumes.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            onSettingsClick={() => setIsPreferencesOpen(true)}
-            totalItems={filteredVolumes.length}
-            selectedCount={selectedVolumes.length}
-          />
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+          totalItems={filteredVolumes.length}
+          selectedCount={selectedVolumes.length}
+        />
 
         {/* Volumes Table */}
         <Table<Volume>

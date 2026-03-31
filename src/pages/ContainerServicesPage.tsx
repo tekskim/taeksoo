@@ -20,6 +20,7 @@ import {
   columnMinWidths,
   Badge,
   Tooltip,
+  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -35,94 +36,25 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
-
-interface IpAddress {
-  ip: string;
-  type: 'Cluster' | 'External' | 'LoadBalancer';
-}
-
-// Structured target types per Service type
-interface ClusterIPTarget {
-  kind: 'clusterip';
-  portName: string;
-  targetPort: string;
-  protocol: string;
-}
-interface ExternalNameTarget {
-  kind: 'externalname';
-  dnsName: string;
-}
-interface LoadBalancerTarget {
-  kind: 'loadbalancer';
-  listeningPort: string;
-  protocol: string;
-}
-interface NodePortTarget {
-  kind: 'nodeport';
-  nodePort: string;
-}
-
-type ServiceTarget = ClusterIPTarget | ExternalNameTarget | LoadBalancerTarget | NodePortTarget;
 
 interface ServiceRow {
   id: string;
   status: string;
   name: string;
   namespace: string;
-  target: ServiceTarget[];
+  target: string[];
   selector: string[];
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
-  ipAddresses?: IpAddress[];
+  ipAddresses: string[];
   createdAt: string;
-}
-
-// Format a single ServiceTarget into display string
-function formatTarget(t: ServiceTarget): string {
-  switch (t.kind) {
-    case 'clusterip':
-      return `${t.portName} → ${t.targetPort}/${t.protocol}`;
-    case 'externalname':
-      return t.dnsName;
-    case 'loadbalancer':
-      return `${t.listeningPort}/${t.protocol}`;
-    case 'nodeport':
-      return `[Any Node]:${t.nodePort}`;
-  }
-}
-
-// Renders first item as text + gray Badge (+N) with tooltip for the rest
-function TextOverflowCell({ items }: { items: string[] }) {
-  if (items.length === 0) {
-    return <span className="text-body-md text-[var(--color-text-subtle)]">-</span>;
-  }
-  const [first, ...rest] = items;
-  return (
-    <span className="flex items-center gap-1 min-w-0">
-      <span className="truncate text-body-md text-[var(--color-text-default)]">{first}</span>
-      {rest.length > 0 && (
-        <Tooltip
-          content={
-            <div className="flex flex-col gap-0.5 text-left">
-              {rest.map((item, i) => (
-                <span key={i} className="whitespace-nowrap">
-                  {item}
-                </span>
-              ))}
-            </div>
-          }
-        >
-          <Badge theme="gray" type="subtle" size="sm" className="shrink-0 cursor-pointer">
-            +{rest.length}
-          </Badge>
-        </Tooltip>
-      )}
-    </span>
-  );
 }
 
 /* ----------------------------------------
@@ -132,92 +64,57 @@ function TextOverflowCell({ items }: { items: string[] }) {
 const servicesData: ServiceRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-loadbalancer-service',
     namespace: 'namespaceName',
-    target: [
-      { kind: 'clusterip', portName: 'http', targetPort: '80', protocol: 'TCP' },
-      { kind: 'clusterip', portName: 'https-internal', targetPort: '444', protocol: 'TCP' },
-    ],
+    target: ['http + 80/TCP', 'https-internal + 444/TCP'],
     selector: ['key1=value1'],
-    type: 'ClusterIP',
-    ipAddresses: [{ ip: '10.43.100.10', type: 'Cluster' }],
+    type: 'LoadBalancer',
+    ipAddresses: ['10.96.0.1', '203.0.113.10'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'backend-api-gateway-cluster-internal-service',
     namespace: 'namespaceName',
-    target: [{ kind: 'clusterip', portName: 'myport', targetPort: '80', protocol: 'TCP' }],
+    target: ['myport + 80/TCP'],
     selector: ['key1=value1', 'key2=value2', 'key3=value3'],
     type: 'ClusterIP (Headless)',
-    ipAddresses: [],
+    ipAddresses: ['None'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '3',
-    status: 'None',
+    status: 'Error',
     name: 'external-database-connection-externalname-service',
     namespace: 'namespaceName',
-    target: [{ kind: 'externalname', dnsName: 'my.database.example.com' }],
+    target: ['my.database.example.com'],
     selector: ['-'],
     type: 'ExternalName',
-    ipAddresses: [],
+    ipAddresses: ['-'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '4',
-    status: 'CreateContainerConfigError',
+    status: 'Active',
     name: 'ingress-nginx-loadbalancer-external-service',
     namespace: 'namespaceName',
-    target: [
-      { kind: 'loadbalancer', listeningPort: '80', protocol: 'TCP' },
-      { kind: 'loadbalancer', listeningPort: '443', protocol: 'TCP' },
-    ],
+    target: ['80/TCP', '443/TCP'],
     selector: ['key1=value1', 'key2=value2'],
     type: 'LoadBalancer',
-    ipAddresses: [
-      { ip: '10.43.136.100', type: 'Cluster' },
-      { ip: '192.168.10.50', type: 'LoadBalancer' },
-    ],
+    ipAddresses: ['10.96.12.34', '203.0.113.50'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Processing',
     name: 'legacy-application-nodeport-external-access-service',
     namespace: 'namespaceName',
-    target: [{ kind: 'nodeport', nodePort: '31575' }],
+    target: ['[Any Node]:31575'],
     selector: ['key1=value1'],
     type: 'NodePort',
-    ipAddresses: [
-      { ip: '10.43.200.20', type: 'Cluster' },
-      { ip: '203.0.113.5', type: 'External' },
-    ],
-    createdAt: 'Nov 10, 2025 01:17:01',
-  },
-  {
-    id: '6',
-    status: 'OK',
-    name: 'multi-region-loadbalancer-with-many-external-ips',
-    namespace: 'production',
-    target: [
-      { kind: 'loadbalancer', listeningPort: '80', protocol: 'TCP' },
-      { kind: 'loadbalancer', listeningPort: '443', protocol: 'TCP' },
-      { kind: 'loadbalancer', listeningPort: '8080', protocol: 'TCP' },
-    ],
-    selector: ['app=multi-region'],
-    type: 'LoadBalancer',
-    ipAddresses: [
-      { ip: '10.43.50.100', type: 'Cluster' },
-      { ip: '192.168.10.10', type: 'LoadBalancer' },
-      { ip: '203.0.113.1', type: 'External' },
-      { ip: '203.0.113.2', type: 'External' },
-      { ip: '203.0.113.3', type: 'External' },
-      { ip: '203.0.113.4', type: 'External' },
-      { ip: '203.0.113.5', type: 'External' },
-    ],
+    ipAddresses: ['10.96.5.67'],
     createdAt: 'Nov 10, 2025 01:17:01',
   },
 ];
@@ -272,34 +169,42 @@ export function ContainerServicesPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
-  // Table columns configuration — order: status, name, namespace, type, target, ipAddresses, selector, createdAt, actions
+  // Table columns configuration
   const columns: TableColumn<ServiceRow>[] = [
     {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
+        <span className="min-w-0 block">
+          <Tooltip content={value}>
+            <Badge
+              theme={getContainerStatusTheme(value)}
+              type="subtle"
+              size="sm"
+              className="max-w-[80px]"
+            >
+              <span className="truncate">{value}</span>
+            </Badge>
+          </Tooltip>
+        </span>
       ),
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (
-        <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
-          {value}
-        </TableLink>
+        <div className="min-w-0">
+          <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>
+            {value}
+          </TableLink>
+        </div>
       ),
     },
     {
@@ -308,6 +213,11 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
@@ -315,36 +225,136 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.type,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'target',
       label: 'Target',
       flex: 1,
-      minWidth: 160,
+      minWidth: columnMinWidths.ip,
       sortable: false,
-      render: (value: ServiceTarget[]) => <TextOverflowCell items={value.map(formatTarget)} />,
+      render: (value: string[]) => (
+        <div className="flex w-full items-center gap-1 min-w-0">
+          <span className="truncate min-w-0 flex-1" title={value[0]}>
+            {value[0]}
+          </span>
+          {value.length > 1 && (
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All targets ({value.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {value.map((item, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{value.length - 1}
+                </span>
+              </Popover>
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: 'ipAddresses',
-      label: 'IP Addresses',
+      label: 'IP addresses',
       flex: 1,
-      minWidth: 160,
-      sortable: false,
-      render: (value: IpAddress[] | undefined) => {
-        const items = (value ?? []).map((item) => `${item.ip} (${item.type})`);
-        return <TextOverflowCell items={items} />;
-      },
+      minWidth: columnMinWidths.ip,
+      render: (value: string[]) => (
+        <div className="flex w-full items-center gap-1 min-w-0">
+          <span className="truncate min-w-0 flex-1" title={value[0]}>
+            {value[0]}
+          </span>
+          {value.length > 1 && (
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All IP addresses ({value.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {value.map((item, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{value.length - 1}
+                </span>
+              </Popover>
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: 'selector',
       label: 'Selector',
       flex: 1,
-      minWidth: 140,
+      minWidth: columnMinWidths.ip,
       sortable: false,
-      render: (value: string[]) => {
-        const items = value[0] === '-' ? [] : value;
-        return <TextOverflowCell items={items} />;
-      },
+      render: (value: string[]) => (
+        <div className="flex w-full items-center gap-1 min-w-0">
+          <span className="truncate min-w-0 flex-1" title={value[0]}>
+            {value[0]}
+          </span>
+          {value.length > 1 && (
+            <span className="ml-auto">
+              <Popover
+                trigger="hover"
+                position="bottom"
+                delay={100}
+                hideDelay={100}
+                content={
+                  <div className="p-3 min-w-[120px] max-w-[320px]">
+                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                      All selectors ({value.length})
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {value.map((item, i) => (
+                        <Badge key={i} theme="white" size="sm">
+                          {item}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                  +{value.length - 1}
+                </span>
+              </Popover>
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: 'createdAt',
@@ -352,7 +362,14 @@ export function ContainerServicesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -365,8 +382,7 @@ export function ContainerServicesPage() {
           {
             id: 'edit-config',
             label: 'Edit config',
-            onClick: () =>
-              navigate(`/container/services/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
+            onClick: () => console.log('Edit Config:', row.id),
           },
           {
             id: 'edit-yaml',
@@ -381,15 +397,15 @@ export function ContainerServicesPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
-            danger: true,
           },
         ];
 
         return (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -441,6 +457,20 @@ export function ContainerServicesPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
@@ -602,6 +632,7 @@ export function ContainerServicesPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          onRowClick={(row) => navigate(`/container/services/${row.id}`)}
         />
       </VStack>
     </PageShell>

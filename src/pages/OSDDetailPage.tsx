@@ -1054,7 +1054,7 @@ export function OSDDetailPage() {
                 {/* Search */}
                 <div className="w-[var(--search-input-width)]">
                   <SearchInput
-                    placeholder="Search instance by attributes"
+                    placeholder="Search devices by attributes"
                     value={deviceSearchQuery}
                     onChange={(e) => setDeviceSearchQuery(e.target.value)}
                     onClear={() => setDeviceSearchQuery('')}
@@ -1064,16 +1064,14 @@ export function OSDDetailPage() {
                 </div>
 
                 {/* Pagination */}
-                {filteredDevices.length > 0 && (
-                  <Pagination
-                    currentPage={deviceCurrentPage}
-                    totalPages={deviceTotalPages}
-                    onPageChange={setDeviceCurrentPage}
-                    totalItems={filteredDevices.length}
-                    itemsPerPage={deviceRowsPerPage}
-                    showItemCount
-                  />
-                )}
+                <Pagination
+                  currentPage={deviceCurrentPage}
+                  totalPages={deviceTotalPages}
+                  onPageChange={setDeviceCurrentPage}
+                  totalItems={filteredDevices.length}
+                  itemsPerPage={deviceRowsPerPage}
+                  showItemCount
+                />
 
                 {/* Devices Table */}
                 <Table<Device>
@@ -1200,7 +1198,7 @@ export function OSDDetailPage() {
 
                 {/* OSD Performance Section */}
                 <SectionCard>
-                  <SectionCardHeader title="OSD performance" />
+                  <SectionCardHeader title="OSD performance" showDivider={false} />
                   <SectionCardContent>
                     <div className="flex flex-col gap-4">
                       {/* Top row - 2 charts */}
@@ -1266,7 +1264,10 @@ export function OSDDetailPage() {
 
                 {/* Physical Device Data Section */}
                 <SectionCard>
-                  <SectionCardHeader title={`Physical device data for OSD.${osdId}`} />
+                  <SectionCardHeader
+                    title={`Physical device data for OSD.${osdId}`}
+                    showDivider={false}
+                  />
                   <SectionCardContent>
                     <div className="flex flex-col gap-4">
                       {/* Top row - 2 charts */}

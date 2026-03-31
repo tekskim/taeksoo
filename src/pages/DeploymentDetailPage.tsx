@@ -25,6 +25,7 @@ import {
   columnMinWidths,
   Popover,
   InfoBox,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel } from '@/components/ShellPanel';
@@ -33,13 +34,15 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -114,7 +117,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
   '1': {
     id: '1',
     name: 'cart-manager',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 10:32:16',
@@ -136,7 +139,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
   '2': {
     id: '2',
     name: 'nginx-ingress-controller',
-    status: 'True',
+    status: 'Active',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
     createdAt: 'Nov 8, 2025 11:51:27',
@@ -157,7 +160,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -176,7 +179,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -188,7 +191,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'podName-79',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -200,7 +203,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'podName-80',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -216,7 +219,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '1',
     name: 'capi-webhook-service',
-    status: 'OK',
+    status: 'Active',
     target: '10.43.136.100:443 → webhook-server/TCP',
     selector: 'cluster.x-k8s.io/provider=cluster-api',
     type: 'Cluster IP',
@@ -225,7 +228,7 @@ const mockServicesData: ServiceRow[] = [
   {
     id: '2',
     name: 'cart-manager-svc',
-    status: 'True',
+    status: 'Processing',
     target: '10.43.136.101:80 → http/TCP',
     selector: 'app=cart-manager',
     type: 'Cluster IP',
@@ -246,7 +249,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'None',
+    status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet "cart-manager-77" has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -315,6 +318,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       {
         id: 'delete',
         label: 'Delete',
+        status: 'danger',
         onClick: () => console.log('Delete:', row.id),
       },
     ];
@@ -325,11 +329,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -360,13 +368,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
       sortable: true,
     },
     {
@@ -383,7 +393,10 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -491,6 +504,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       {
         id: 'delete',
         label: 'Delete',
+        status: 'danger',
         onClick: () => console.log('Delete:', row.id),
       },
     ];
@@ -501,11 +515,15 @@ function ServicesTab({ services }: ServicesTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -607,22 +625,6 @@ interface ConditionsTabProps {
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const createConditionMenuItems = (row: ConditionRow): ContextMenuItem[] => {
-    return [
-      {
-        id: 'download-yaml',
-        label: 'Download YAML',
-        onClick: () => console.log('Download YAML:', row.id),
-      },
-      {
-        id: 'delete',
-        label: 'Delete',
-        status: 'danger',
-        onClick: () => console.log('Delete:', row.id),
-      },
-    ];
-  };
-
   const columns: TableColumn<ConditionRow>[] = [
     {
       key: 'type',
@@ -633,17 +635,10 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -663,23 +658,6 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.lastUpdate,
       sortable: true,
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: fixedColumns.actions,
-      align: 'center',
-      render: (_: unknown, row: ConditionRow) => (
-        <ContextMenu items={createConditionMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal
-              size={16}
-              className="text-[var(--color-text-subtle)]"
-              stroke={1.5}
-            />
-          </button>
-        </ContextMenu>
-      ),
     },
   ];
 
@@ -871,7 +849,7 @@ export function DeploymentDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -901,7 +879,7 @@ export function DeploymentDetailPage() {
     { id: 'container-5', label: 'container-5', onClick: () => handleExecuteShell('container-5') },
   ];
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',
@@ -945,6 +923,7 @@ export function DeploymentDetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];
@@ -983,15 +962,32 @@ export function DeploymentDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton
+                value={`${deployment.namespace}/${deployment.name}`}
+                size="sm"
+                iconOnly
+                tooltip="Copy deployment reference"
+              />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -1040,8 +1036,14 @@ export function DeploymentDetailPage() {
               label="Status"
               value={
                 <Tooltip content={deployment.status === 'Running' ? 'Active' : deployment.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        deployment.status === 'Running' ? 'Active' : deployment.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {deployment.status === 'Running' ? 'Active' : deployment.status}
                     </Badge>
                   </span>
@@ -1122,8 +1124,8 @@ export function DeploymentDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(deployment.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(deployment.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -1169,8 +1171,8 @@ export function DeploymentDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(deployment.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(deployment.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

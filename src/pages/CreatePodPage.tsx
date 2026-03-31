@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -43,6 +43,8 @@ import {
   IconPlus,
   IconChevronRight,
   IconInfoCircle,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -317,7 +319,6 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
-  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -327,7 +328,6 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
-  isEditMode = false,
 }: SummarySidebarProps) {
   // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
@@ -358,7 +358,6 @@ function SummarySidebar({
   const containerSections = [
     'Basic Information',
     'Image',
-    'Networking',
     'Command',
     'Environment Variables',
     'Service Account Name',
@@ -430,7 +429,7 @@ function SummarySidebar({
             className="flex-1 min-w-[80px]"
             disabled={isCreateDisabled}
           >
-            {isEditMode ? 'Save' : 'Create'}
+            Create
           </Button>
         </HStack>
       </div>
@@ -451,7 +450,6 @@ interface BasicInfoSectionProps {
   onNameErrorChange: (error: string | null) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
-  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -463,7 +461,6 @@ function BasicInfoSection({
   onNameErrorChange,
   description,
   onDescriptionChange,
-  isEditMode = false,
 }: BasicInfoSectionProps) {
   const isV2 = useIsV2();
   return (
@@ -478,7 +475,6 @@ function BasicInfoSection({
               value={namespace}
               onChange={(value) => onNamespaceChange(value)}
               fullWidth
-              disabled={isEditMode}
             />
           </FormField>
 
@@ -498,7 +494,6 @@ function BasicInfoSection({
               }}
               error={!!nameError}
               fullWidth
-              disabled={isEditMode}
             />
           </FormField>
 
@@ -886,8 +881,6 @@ function ScalingPolicySection({
 
 export function CreatePodPage() {
   const navigate = useNavigate();
-  const { podName } = useParams();
-  const isEditMode = !!podName;
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -974,15 +967,13 @@ export function CreatePodPage() {
     workingDir: string;
     stdin: string;
     // Ports
-    ports: { name: string; containerPort: string; protocol: string }[];
-    // Networking
-    networkingPorts: {
+    ports: {
       id: string;
       serviceType: string;
       name: string;
-      privateContainerPort: string;
+      containerPort: string;
       protocol: string;
-      publicHostPort: string;
+      hostPort: string;
       hostIP: string;
       listeningPort: string;
     }[];
@@ -1086,7 +1077,6 @@ export function CreatePodPage() {
       workingDir: '',
       // Ports
       ports: [],
-      networkingPorts: [],
       // Environment Variables
       envVars: [
         { name: '', value: '', type: 'value' as const },
@@ -1301,14 +1291,8 @@ export function CreatePodPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel(isEditMode ? `Pod: ${nameFromQuery || podName}` : 'Create pod');
-  }, [updateActiveTabLabel, isEditMode, podName]);
-
-  useEffect(() => {
-    if (isEditMode && podName) {
-      setName(nameFromQuery || podName);
-    }
-  }, [isEditMode, podName]);
+    updateActiveTabLabel('Create pod');
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1318,14 +1302,8 @@ export function CreatePodPage() {
 
   // Active form tab (Pod, Container-X)
   const [searchParams, setSearchParams] = useSearchParams();
-  const nameFromQuery = searchParams.get('name');
   const activeTab = searchParams.get('tab') || 'pod';
-  const setActiveTab = (tab: string) => {
-    const newParams: Record<string, string> = { tab };
-    const name = searchParams.get('name');
-    if (name) newParams['name'] = name;
-    setSearchParams(newParams, { replace: true });
-  };
+  const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const tabListRef = useRef<HTMLDivElement>(null);
 
   // Build inner tabs for the form
@@ -1352,7 +1330,7 @@ export function CreatePodPage() {
   );
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   const handleCancel = useCallback(() => {
     navigate('/container/deployments');
@@ -1649,7 +1627,6 @@ export function CreatePodPage() {
         workingDir: '',
         // Ports
         ports: [],
-        networkingPorts: [],
         // Environment Variables
         envVars: [
           { name: '', value: '', type: 'value' as const },
@@ -1757,17 +1734,26 @@ export function CreatePodPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Pods', href: '/container/pods' },
-                ...(isEditMode
-                  ? [
-                      { label: nameFromQuery || podName!, href: `/container/pods/{podName}` },
-                      { label: 'Edit config' },
-                    ]
-                  : [{ label: 'Create pod' }]),
+                { label: 'Create pod' },
               ]}
             />
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -1793,7 +1779,7 @@ export function CreatePodPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            {isEditMode ? `Pod: ${nameFromQuery || podName}` : 'Create pod'}
+            Create pod
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a Pod to run one or more containers as the smallest deployable unit in
@@ -1853,7 +1839,6 @@ export function CreatePodPage() {
                   onNameErrorChange={setNameError}
                   description={description}
                   onDescriptionChange={setDescription}
-                  isEditMode={isEditMode}
                 />
 
                 {/* Labels & Annotations */}
@@ -3061,8 +3046,7 @@ export function CreatePodPage() {
                                     {
                                       key: 'status',
                                       label: 'Status',
-                                      width: fixedColumns.statusLabel,
-                                      align: 'center',
+                                      width: '120px',
                                       render: (value: string) => (
                                         <Tooltip content={value}>
                                           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -4545,6 +4529,10 @@ export function CreatePodPage() {
                                 Container Image{' '}
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
                             <Input
                               placeholder="nginx:latest"
@@ -4561,6 +4549,10 @@ export function CreatePodPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Policy
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
@@ -4583,6 +4575,10 @@ export function CreatePodPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pull Secrets
                               </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
                             <Select
                               options={[
@@ -4603,7 +4599,7 @@ export function CreatePodPage() {
                       </SectionCard.Content>
                     </SectionCard>
 
-                    {/* 2a. Networking Section */}
+                    {/* 2a-2. Networking Section */}
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Networking" />
                       <SectionCard.Content>
@@ -4613,196 +4609,197 @@ export function CreatePodPage() {
                             network port that the new service will run when the app on the container
                             is expected to run.
                           </span>
-                          {/* Port rows */}
-                          {(config.networkingPorts || []).map((port) => {
-                            const hasListening =
-                              port.serviceType === 'NodePort' ||
-                              port.serviceType === 'LoadBalancer';
-                            const gridCols = hasListening
-                              ? '1fr 1fr 1fr 80px 1fr 1fr 1fr 20px'
-                              : '1fr 1fr 1fr 80px 1fr 1fr 20px';
-                            return (
-                              <div
-                                key={port.id}
-                                className="grid gap-2 items-end"
-                                style={{ gridTemplateColumns: gridCols }}
-                              >
-                                <VStack gap={1}>
-                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                    Service Type
-                                  </span>
-                                  <Select
-                                    options={[
-                                      { value: 'DoNotCreate', label: 'Do not create a service' },
-                                      { value: 'ClusterIP', label: 'Cluster IP' },
-                                      { value: 'NodePort', label: 'Node Port' },
-                                      { value: 'LoadBalancer', label: 'Load Balancer' },
-                                    ]}
-                                    value={port.serviceType}
-                                    onChange={(val) =>
-                                      updateContainerConfig(containerId, {
-                                        networkingPorts: (config.networkingPorts || []).map((p) =>
-                                          p.id === port.id ? { ...p, serviceType: val } : p
-                                        ),
-                                      })
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                    Name
-                                  </span>
-                                  <Input
-                                    placeholder=""
-                                    value={port.name}
-                                    onChange={(e) =>
-                                      updateContainerConfig(containerId, {
-                                        networkingPorts: (config.networkingPorts || []).map((p) =>
-                                          p.id === port.id ? { ...p, name: e.target.value } : p
-                                        ),
-                                      })
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                    Private Container Port
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. 8080"
-                                    value={port.privateContainerPort}
-                                    onChange={(e) =>
-                                      updateContainerConfig(containerId, {
-                                        networkingPorts: (config.networkingPorts || []).map((p) =>
-                                          p.id === port.id
-                                            ? { ...p, privateContainerPort: e.target.value }
-                                            : p
-                                        ),
-                                      })
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                    Protocol
-                                  </span>
-                                  <Select
-                                    options={[
-                                      { value: 'TCP', label: 'TCP' },
-                                      { value: 'UDP', label: 'UDP' },
-                                    ]}
-                                    value={port.protocol}
-                                    onChange={(val) =>
-                                      updateContainerConfig(containerId, {
-                                        networkingPorts: (config.networkingPorts || []).map((p) =>
-                                          p.id === port.id ? { ...p, protocol: val } : p
-                                        ),
-                                      })
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                    Public Host Port
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. 80"
-                                    value={port.publicHostPort}
-                                    onChange={(e) =>
-                                      updateContainerConfig(containerId, {
-                                        networkingPorts: (config.networkingPorts || []).map((p) =>
-                                          p.id === port.id
-                                            ? { ...p, publicHostPort: e.target.value }
-                                            : p
-                                        ),
-                                      })
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                    Host IP
-                                  </span>
-                                  <Input
-                                    placeholder="e.g. 1.1.1.1"
-                                    value={port.hostIP}
-                                    onChange={(e) =>
-                                      updateContainerConfig(containerId, {
-                                        networkingPorts: (config.networkingPorts || []).map((p) =>
-                                          p.id === port.id ? { ...p, hostIP: e.target.value } : p
-                                        ),
-                                      })
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                                {hasListening && (
-                                  <VStack gap={1}>
-                                    <span className="text-label-sm text-[var(--color-text-subtle)]">
-                                      Listening Port
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 30080"
-                                      value={port.listeningPort}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          networkingPorts: (config.networkingPorts || []).map(
-                                            (p) =>
-                                              p.id === port.id
-                                                ? { ...p, listeningPort: e.target.value }
-                                                : p
-                                          ),
-                                        })
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                )}
-                                <button
-                                  onClick={() =>
-                                    updateContainerConfig(containerId, {
-                                      networkingPorts: (config.networkingPorts || []).filter(
-                                        (p) => p.id !== port.id
-                                      ),
-                                    })
-                                  }
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mb-1"
-                                >
-                                  <IconX size={14} className="text-[var(--color-text-muted)]" />
-                                </button>
-                              </div>
-                            );
-                          })}
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={() =>
-                                updateContainerConfig(containerId, {
-                                  networkingPorts: [
-                                    ...(config.networkingPorts || []),
-                                    {
+
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                            <VStack gap={3} className="w-full">
+                              {config.ports.map((port, portIdx) => {
+                                const showListeningPort =
+                                  port.serviceType === 'NodePort' ||
+                                  port.serviceType === 'LoadBalancer';
+                                return (
+                                  <div
+                                    key={port.id}
+                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                  >
+                                    <div
+                                      className={`grid ${showListeningPort ? 'grid-cols-[140px_1fr_1fr_100px_1fr_1fr_1fr_20px]' : 'grid-cols-[140px_1fr_1fr_100px_1fr_1fr_20px]'} gap-2`}
+                                    >
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Service Type
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Name
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Private Container Port
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Protocol
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Public Host Port
+                                      </span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Host IP
+                                      </span>
+                                      {showListeningPort && (
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Listening Port
+                                        </span>
+                                      )}
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          const newPorts = config.ports.filter(
+                                            (_, i) => i !== portIdx
+                                          );
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)] ml-auto"
+                                        aria-label="Remove port"
+                                      >
+                                        <IconX
+                                          size={14}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+
+                                      <Select
+                                        options={[
+                                          {
+                                            value: 'DoNotCreate',
+                                            label: 'Do not create a service',
+                                          },
+                                          { value: 'ClusterIP', label: 'Cluster IP' },
+                                          { value: 'NodePort', label: 'Node Port' },
+                                          { value: 'LoadBalancer', label: 'Load Balancer' },
+                                        ]}
+                                        value={port.serviceType}
+                                        onChange={(val) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            serviceType: val,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder=""
+                                        value={port.name}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            name: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. 8080"
+                                        value={port.containerPort}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            containerPort: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={[
+                                          { value: 'TCP', label: 'TCP' },
+                                          { value: 'UDP', label: 'UDP' },
+                                          { value: 'SCTP', label: 'SCTP' },
+                                        ]}
+                                        value={port.protocol}
+                                        onChange={(val) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            protocol: val,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. 80"
+                                        value={port.hostPort}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            hostPort: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. 1111"
+                                        value={port.hostIP}
+                                        onChange={(e) => {
+                                          const newPorts = [...config.ports];
+                                          newPorts[portIdx] = {
+                                            ...newPorts[portIdx],
+                                            hostIP: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, { ports: newPorts });
+                                        }}
+                                        fullWidth
+                                      />
+                                      {showListeningPort && (
+                                        <Input
+                                          placeholder="e.g. 30080"
+                                          value={port.listeningPort}
+                                          onChange={(e) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              listeningPort: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                      )}
+                                      <div />
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={() => {
+                                    const newPort = {
                                       id: crypto.randomUUID(),
                                       serviceType: 'DoNotCreate',
                                       name: '',
-                                      privateContainerPort: '',
+                                      containerPort: '',
                                       protocol: 'TCP',
-                                      publicHostPort: '',
+                                      hostPort: '',
                                       hostIP: '',
                                       listeningPort: '',
-                                    },
-                                  ],
-                                })
-                              }
-                            >
-                              Add Port or Service
-                            </Button>
+                                    };
+                                    updateContainerConfig(containerId, {
+                                      ports: [...config.ports, newPort],
+                                    });
+                                  }}
+                                >
+                                  Add Port or Service
+                                </Button>
+                              </div>
+                            </VStack>
                           </div>
                         </VStack>
                       </SectionCard.Content>
@@ -4817,6 +4814,10 @@ export function CreatePodPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Command
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Input
@@ -4835,6 +4836,10 @@ export function CreatePodPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Arguments
                               </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /usr/sbin/httpd -f httpd.conf"
@@ -4852,6 +4857,10 @@ export function CreatePodPage() {
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 WorkingDir
                               </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
+                              </span>
                             </VStack>
                             <Input
                               placeholder="e.g. /myapp"
@@ -4868,6 +4877,10 @@ export function CreatePodPage() {
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)]">
                                 Stdin
+                              </span>
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
+                                The period allowed after receiving a termination request before the
+                                pod is forcibly terminated.
                               </span>
                             </VStack>
                             <Select
@@ -5119,6 +5132,10 @@ export function CreatePodPage() {
                           <VStack gap={1}>
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Service Account Name
+                            </span>
+                            <span className="text-body-md text-[var(--color-text-subtle)]">
+                              The period allowed after receiving a termination request before the
+                              pod is forcibly terminated.
                             </span>
                           </VStack>
                           <Input
@@ -7330,7 +7347,6 @@ export function CreatePodPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
-            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

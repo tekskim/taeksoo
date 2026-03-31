@@ -73,7 +73,7 @@ function DetailPagePreview() {
             Stop
           </Button>
           <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-            More Actions
+            More actions
           </Button>
         </DetailHeader.Actions>
         <DetailHeader.InfoGrid>
@@ -189,7 +189,7 @@ function DetailPageGuidelines() {
             <tr>
               <Td>b. 액션 버튼 그룹</Td>
               <Td>
-                해당 리소스에 수행 가능한 주요 액션 버튼 나열 (Primary / Secondary / More Actions)
+                해당 리소스에 수행 가능한 주요 액션 버튼 나열 (Primary / Secondary / More actions)
               </Td>
               <Td>항상</Td>
             </tr>
@@ -342,10 +342,7 @@ function DetailPageGuidelines() {
               </tr>
               <tr>
                 <Td>속성값이 없거나 미설정 상태일 때</Td>
-                <Td>
-                  <span className="font-mono">—</span> (em dash) 또는{' '}
-                  <span className="font-mono">None</span> 표시, 빈 칸으로 두지 않음
-                </Td>
+                <Td>— (em dash) 또는 None 표시, 빈 칸으로 두지 않음</Td>
               </tr>
             </tbody>
           </TableWrapper>
@@ -360,7 +357,7 @@ function DetailPageGuidelines() {
         <DosDonts
           doItems={[
             '메타 정보 카드에는 리소스를 빠르게 식별할 수 있는 핵심 속성(ID, Status, 생성일 등) 4개 이하로 제한한다.',
-            '액션 버튼은 사용 빈도에 따라 Primary → Secondary → More Actions 순으로 배치한다.',
+            '액션 버튼은 사용 빈도에 따라 Primary → Secondary → More actions 순으로 배치한다.',
             'SectionCards는 정보의 논리적 범주에 따라 나눠 구성하고, 한 카드 내 속성은 관련성이 높은 항목끼리 묶는다.',
             '탭은 리소스와 직접적으로 연관된 카테고리만 노출하며, 불필요한 탭으로 인한 인지 부하를 줄인다.',
             'ID처럼 복사 수요가 높은 값에는 복사 버튼을 인라인으로 제공한다.',
@@ -387,11 +384,11 @@ function DetailPageGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>
                 리소스명은 사용자가 직접 입력한 이름을 그대로 표시하되, 최대 표시 글자 수를 초과할
-                경우 말줄임(<span className="font-mono">…</span>)으로 처리한다.
+                경우 말줄임(…)으로 처리한다.
               </li>
               <li>
-                시스템이 자동 생성한 이름인 경우 사용자가 인지할 수 있는 패턴(예:{' '}
-                <span className="font-mono">instance-production-01</span>)을 따른다.
+                시스템이 자동 생성한 이름인 경우 사용자가 인지할 수 있는 패턴(예:
+                instance-production-01)을 따른다.
               </li>
             </ul>
           </Prose>
@@ -405,11 +402,7 @@ function DetailPageGuidelines() {
                 섹션 타이틀은 해당 섹션이 담고 있는 정보의 범주를 명확하게 드러내는 명사형으로
                 작성한다.
               </li>
-              <li>
-                예시: <span className="font-mono">Basic information</span>,{' '}
-                <span className="font-mono">Network configuration</span>,{' '}
-                <span className="font-mono">Flavor</span>
-              </li>
+              <li>예시: Basic information, Network configuration, Flavor</li>
               <li>
                 동사형이나 문장형 표현은 사용하지 않는다. (예: <s>"Configure your network"</s>)
               </li>
@@ -426,11 +419,7 @@ function DetailPageGuidelines() {
                 레이블은 해당 속성이 무엇인지를 명확히 전달해야 하며, 약어 사용 시 Tooltip으로 전체
                 표현을 제공한다.
               </li>
-              <li>
-                예시: <span className="font-mono">Instance name</span>,{' '}
-                <span className="font-mono">Availability zone</span>,{' '}
-                <span className="font-mono">Created at</span>
-              </li>
+              <li>예시: Instance name, Availability zone, Created at</li>
             </ul>
           </Prose>
         </VStack>
@@ -439,11 +428,7 @@ function DetailPageGuidelines() {
           <SubSectionTitle>속성값 (Value)</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>
-                값이 없는 경우 <span className="font-mono">—</span>(em dash)를 사용하며{' '}
-                <span className="font-mono">N/A</span>, <span className="font-mono">null</span>, 빈
-                문자열은 사용하지 않는다.
-              </li>
+              <li>값이 없는 경우 —(em dash)를 사용하며 N/A, null, 빈 문자열은 사용하지 않는다.</li>
               <li>ID처럼 긴 값은 전체를 노출하되 복사 버튼을 함께 제공한다.</li>
             </ul>
           </Prose>
@@ -457,11 +442,7 @@ function DetailPageGuidelines() {
                 탭 레이블은 해당 탭의 콘텐츠 범주를 나타내는 명사형 단어 또는 짧은 명사구로
                 작성한다.
               </li>
-              <li>
-                예시: <span className="font-mono">Details</span>,{' '}
-                <span className="font-mono">Volumes</span>,{' '}
-                <span className="font-mono">Network</span>, <span className="font-mono">Logs</span>
-              </li>
+              <li>예시: Details, Volumes, Network, Logs</li>
               <li>동사, 문장 형태는 사용하지 않는다.</li>
             </ul>
           </Prose>

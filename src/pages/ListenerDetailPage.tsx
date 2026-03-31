@@ -34,8 +34,9 @@ import {
   IconBell,
   IconCirclePlus,
   IconDotsCircleHorizontal,
-  IconCertificate,
   IconSettings,
+  IconChevronDown,
+  IconReplace,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -167,7 +168,7 @@ const defaultListenerDetail: ListenerDetail = {
   name: 'Unknown',
   status: 'active',
   adminState: 'Up',
-  createdAt: '-',
+  createdAt: 'Jul 25, 2025 10:32:16',
   description: '-',
   protocol: 'HTTP',
   port: 80,
@@ -535,7 +536,6 @@ export default function ListenerDetailPage() {
           {
             id: 'edit',
             label: 'Edit',
-            icon: <IconEdit size={14} stroke={1.5} />,
             onClick: () => console.log('Edit policy', row.id),
           },
           {
@@ -631,8 +631,7 @@ export default function ListenerDetailPage() {
               return [
                 {
                   id: 'change-server-cert',
-                  label: 'Change server Certificate',
-                  icon: <IconCertificate size={14} stroke={1.5} />,
+                  label: 'Change server certificate',
                   onClick: () => console.log('Change server certificate', row.id),
                 },
               ];
@@ -641,7 +640,6 @@ export default function ListenerDetailPage() {
                 {
                   id: 'change-ca-cert',
                   label: 'Change CA certificate',
-                  icon: <IconCertificate size={14} stroke={1.5} />,
                   onClick: () => console.log('Change CA certificate', row.id),
                 },
               ];
@@ -716,12 +714,32 @@ export default function ListenerDetailPage() {
           <DetailHeader.Title>{listener.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-              Delete Default Pool
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
+            <ContextMenu
+              trigger="click"
+              items={[
+                { id: 'create-pool', label: 'Create default pool', onClick: () => {} },
+                { id: 'delete-pool', label: 'Delete default pool', onClick: () => {} },
+                { id: 'edit-pool', label: 'Edit default pool', onClick: () => {} },
+                { id: 'add-l7-policy', label: 'Add L7 policy', onClick: () => {} },
+                {
+                  id: 'change-server-cert',
+                  label: 'Change server certificates',
+                  onClick: () => {},
+                },
+                { id: 'change-ca-cert', label: 'Change CA certificate', onClick: () => {} },
+                { id: 'manage-sni-cert', label: 'Manage SNI certificate', onClick: () => {} },
+              ]}
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More actions
+              </Button>
+            </ContextMenu>
           </DetailHeader.Actions>
 
           <DetailHeader.InfoGrid>
@@ -757,17 +775,11 @@ export default function ListenerDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={listener.name} />
+                    <SectionCard.DataRow label="Listener name" value={listener.name} />
                     <SectionCard.DataRow label="Description" value={listener.description} />
+                    <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                     <SectionCard.DataRow label="Protocol" value={listener.protocol} />
                     <SectionCard.DataRow label="Port" value={String(listener.port)} />
                     <SectionCard.DataRow
@@ -792,7 +804,6 @@ export default function ListenerDetailPage() {
                       value={listener.tcpInspectTimeout}
                     />
                     <SectionCard.DataRow label="Allowed CIDRs" value={listener.allowedCidrs} />
-                    <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -800,26 +811,18 @@ export default function ListenerDetailPage() {
                 <SectionCard>
                   <SectionCard.Header title="Association" />
                   <SectionCard.Content>
-                    <div className="flex flex-col gap-3 w-full">
-                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                          Load balancer
-                        </span>
-                        {listener.loadBalancer ? (
-                          <Link
-                            to={`/compute/load-balancers/${listener.loadBalancer.id}`}
-                            className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                          >
-                            {listener.loadBalancer.name}
-                          </Link>
-                        ) : (
-                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                            -
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <SectionCard.DataRow label="Load balancer">
+                      {listener.loadBalancer ? (
+                        <Link
+                          to={`/compute/load-balancers/${listener.loadBalancer.id}`}
+                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
+                        >
+                          {listener.loadBalancer.name}
+                        </Link>
+                      ) : (
+                        '-'
+                      )}
+                    </SectionCard.DataRow>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -835,33 +838,36 @@ export default function ListenerDetailPage() {
                     actions={
                       <>
                         <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                          Edit
+                          Edit default pool
                         </Button>
                         <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                          Delete
+                          Delete default pool
                         </Button>
                       </>
                     }
                   />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={mockPools[0]?.name || '-'} />
-                    <SectionCard.DataRow
-                      label="Status"
-                      value={
-                        <StatusIndicator
-                          layout="icon-only"
-                          status={poolStatusMap[mockPools[0]?.status] || 'down'}
-                        />
-                      }
-                    />
+                    <SectionCard.DataRow label="Name">
+                      {mockPools[0] ? (
+                        <Link
+                          to={`/compute/pools/${mockPools[0].id}`}
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                        >
+                          {mockPools[0].name}
+                        </Link>
+                      ) : (
+                        '-'
+                      )}
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="Status" value="Available" />
                     <SectionCard.DataRow label="Description" value="-" />
-                    <SectionCard.DataRow label="Algorithm" value={mockPools[0]?.algorithm || '-'} />
-                    <SectionCard.DataRow label="Protocol" value={mockPools[0]?.protocol || '-'} />
-                    <SectionCard.DataRow label="Session persistence" value="-" />
                     <SectionCard.DataRow
                       label="Admin state"
                       value={mockPools[0]?.adminState || '-'}
                     />
+                    <SectionCard.DataRow label="Algorithm" value={mockPools[0]?.algorithm || '-'} />
+                    <SectionCard.DataRow label="Protocol" value={mockPools[0]?.protocol || '-'} />
+                    <SectionCard.DataRow label="Session persistence" value="-" />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -929,14 +935,14 @@ export default function ListenerDetailPage() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)]">Certificates</h3>
                   <div className="flex items-center gap-2">
-                    <Button variant="secondary" size="sm">
-                      Change server Certificate
+                    <Button variant="secondary" size="sm" leftIcon={<IconReplace size={12} />}>
+                      Change server certificate
                     </Button>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="secondary" size="sm" leftIcon={<IconReplace size={12} />}>
                       Change CA certificate
                     </Button>
                     <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
-                      Manage SNI Certificates
+                      Manage SNI certificates
                     </Button>
                   </div>
                 </div>

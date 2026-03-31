@@ -24,6 +24,7 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -32,13 +33,15 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -89,7 +92,7 @@ const mockCronJobData: Record<string, CronJobData> = {
   '1': {
     id: '1',
     name: 'cronjobName',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 09:14:33',
@@ -108,7 +111,7 @@ const mockCronJobData: Record<string, CronJobData> = {
   '2': {
     id: '2',
     name: 'backup-cronjob',
-    status: 'True',
+    status: 'Suspended',
     namespace: 'database',
     image: 'backup-tool:v2.1',
     createdAt: 'Nov 9, 2025 02:18:47',
@@ -126,7 +129,7 @@ const mockCronJobData: Record<string, CronJobData> = {
 const mockJobsData: JobRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'jobName-77',
     image: 'nginx:1.27',
     completions: '1/1',
@@ -134,6 +137,28 @@ const mockJobsData: JobRow[] = [
     restarts: 0,
     health: 'succeeded = 1',
     createdAt: 'Jul 25, 2025 09:22:15',
+  },
+  {
+    id: '2',
+    status: 'Suspended',
+    name: 'jobName-78',
+    image: 'nginx:1.27',
+    completions: '0/1',
+    duration: '—',
+    restarts: 0,
+    health: '—',
+    createdAt: 'Jul 25, 2025 09:25:02',
+  },
+  {
+    id: '3',
+    status: 'Processing',
+    name: 'jobName-79',
+    image: 'nginx:1.27',
+    completions: '0/1',
+    duration: '2m',
+    restarts: 1,
+    health: 'running',
+    createdAt: 'Jul 25, 2025 09:28:44',
   },
 ];
 
@@ -198,11 +223,15 @@ function JobsTab({ jobs }: JobsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -232,7 +261,8 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'completions',
       label: 'Completions',
-      width: '100px',
+      flex: 1,
+      minWidth: columnMinWidths.completions,
       sortable: true,
     },
     {
@@ -245,13 +275,15 @@ function JobsTab({ jobs }: JobsTabProps) {
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
       key: 'health',
       label: 'Health',
       flex: 1,
+      minWidth: columnMinWidths.health,
       sortable: true,
     },
     {
@@ -260,7 +292,14 @@ function JobsTab({ jobs }: JobsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -362,9 +401,27 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    {
+      key: 'reason',
+      label: 'Reason',
+      flex: 1,
+      minWidth: columnMinWidths.reason,
+      sortable: true,
+    },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: columnMinWidths.source,
+      sortable: true,
+    },
     {
       key: 'message',
       label: 'Message',
@@ -384,10 +441,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -489,7 +547,7 @@ export function CronJobDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -499,7 +557,7 @@ export function CronJobDetailPage() {
     console.log('Open in new tab:', tab);
   };
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'run-now',
@@ -569,15 +627,27 @@ export function CronJobDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={cronjob.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -626,8 +696,8 @@ export function CronJobDetailPage() {
               label="Status"
               value={
                 <Tooltip content={cronjob.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge theme={getContainerStatusTheme(cronjob.status)} type="subtle" size="sm">
                       {cronjob.status}
                     </Badge>
                   </span>
@@ -680,8 +750,8 @@ export function CronJobDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(cronjob.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(cronjob.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -727,8 +797,8 @@ export function CronJobDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(cronjob.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(cronjob.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

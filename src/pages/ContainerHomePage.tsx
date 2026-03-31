@@ -12,6 +12,7 @@ import {
   SearchInput,
   Pagination,
   PageShell,
+  ContextMenu,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
@@ -20,7 +21,16 @@ import {
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconTerminal2,
+  IconFile,
+  IconCopy,
+  IconSearch,
+  IconDotsCircleHorizontal,
+  IconSettings,
+} from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -35,6 +45,8 @@ interface ClusterRow {
   cpu: string;
   memory: string;
   pods: string;
+  manage: string;
+  actions: string;
 }
 
 /* ----------------------------------------
@@ -44,83 +56,75 @@ interface ClusterRow {
 const clustersData: ClusterRow[] = [
   {
     id: '1',
-    name: 'Cluster1',
-    status: 'OK',
-    kubernetesVersion: 'v1.24',
-    createdAt: 'Nov 11, 2025 08:30:18',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
+    name: 'ClusterName',
+    status: 'Provisioned',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
   {
     id: '2',
     name: 'ClusterName',
-    status: 'OK',
-    kubernetesVersion: 'v1.29.1',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
+    status: 'Failed',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
   {
     id: '3',
     name: 'ClusterName',
-    status: 'CreateContainerConfigError',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
+    status: 'Provisioning',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
     cpu: '8 cores',
-    memory: '-',
-    pods: '10/110',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
   {
     id: '4',
     name: 'ClusterName',
-    status: 'InvalidImageName',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
+    status: 'Processing',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
     memory: '16 GiB',
-    pods: '-',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
   {
     id: '5',
     name: 'ClusterName',
-    status: 'ImagePullBackOff',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
+    status: 'Deleting',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
+    memory: '16 GiB',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
   {
     id: '6',
     name: 'ClusterName',
-    status: 'True',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '-',
-  },
-  {
-    id: '7',
-    name: 'ClusterName',
-    status: 'Raw',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
+    status: 'Unknown',
+    kubernetesVersion: 'v1.34.0',
+    createdAt: 'Nov 11, 2025',
+    cpu: '8 cores',
     memory: '16 GiB',
-    pods: '10/110',
-  },
-  {
-    id: '8',
-    name: 'ClusterName',
-    status: 'None',
-    kubernetesVersion: 'v1.33.4',
-    createdAt: 'Oct 30, 2025 21:37:41',
-    cpu: '-',
-    memory: '-',
-    pods: '45/100',
+    pods: '46/110',
+    manage: '',
+    actions: '',
   },
 ];
 
@@ -140,7 +144,7 @@ export function ContainerHomePage() {
   }, [updateActiveTabLabel]);
 
   // Home page only shows icon sidebar (40px), menu sidebar is hidden
-  const sidebarWidth = 40;
+  const sidebarWidth = 48;
 
   // Table columns
   const columns: TableColumn<ClusterRow>[] = [
@@ -148,49 +152,102 @@ export function ContainerHomePage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
+        <div className="min-w-0">
+          <Tooltip content={value}>
+            <Badge
+              theme={getContainerStatusTheme(value)}
+              type="subtle"
+              size="sm"
+              className="max-w-[80px]"
+            >
+              <span className="truncate">{value}</span>
+            </Badge>
+          </Tooltip>
+        </div>
       ),
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline"
-          onClick={() => navigate('/container/dashboard')}
-        >
-          {value}
-        </span>
+        <div className="min-w-0">
+          <span
+            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+            title={value}
+            onClick={() => navigate('/container/dashboard')}
+          >
+            {value}
+          </span>
+        </div>
       ),
     },
     {
       key: 'kubernetesVersion',
-      label: 'Kubernetes version',
+      label: 'Kubernetes Version',
       flex: 1,
       minWidth: columnMinWidths.kubernetesVersion,
       sortable: true,
     },
+    { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
+    { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
+    { key: 'pods', label: 'Pods', flex: 1, minWidth: columnMinWidths.pods, sortable: true },
     {
       key: 'createdAt',
-      label: 'Created at',
+      label: 'Created At',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
     },
-    { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
-    { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
-    { key: 'pods', label: 'Pods', width: '80px', sortable: true },
+    {
+      key: 'manage',
+      label: 'Manage',
+      width: '120px',
+      align: 'center',
+      sortable: false,
+      render: (_value: string, row: ClusterRow) => (
+        <Button
+          variant="outline"
+          size="sm"
+          leftIcon={<IconSettings size={12} />}
+          onClick={() => navigate(`/container/clusters/${row.id}`)}
+        >
+          Manage
+        </Button>
+      ),
+    },
+    {
+      key: 'actions',
+      label: 'Action',
+      width: fixedColumns.actionWide,
+      align: 'center',
+      sortable: false,
+      render: (_value: string, row: ClusterRow) => (
+        <ContextMenu
+          items={[
+            { id: 'kubectl-shell', label: 'Kubectl Shell', onClick: () => {} },
+            { id: 'download-kubeconfig', label: 'Download KubeConfig', onClick: () => {} },
+            { id: 'copy-kubeconfig', label: 'Copy KubeConfig to Clipboard', onClick: () => {} },
+            { id: 'view-yaml', label: 'View YAML', onClick: () => {} },
+            { id: 'download-yaml', label: 'Download YAML', onClick: () => {} },
+            { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+          ]}
+          trigger="click"
+        >
+          <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-muted)]"
+              stroke={1.5}
+            />
+          </button>
+        </ContextMenu>
+      ),
+    },
   ];
 
   return (

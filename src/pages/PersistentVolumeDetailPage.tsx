@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -22,6 +21,7 @@ import {
   FormField,
   type ContextMenuItem,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -30,10 +30,12 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -76,7 +78,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
   '1': {
     id: '1',
     name: 'pvc-143076e7-d0b2-4d76-92fc-cea5cbe8b3a2',
-    status: 'OK',
+    status: 'Active',
     createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -108,7 +110,7 @@ const mockPersistentVolumeData: Record<string, PersistentVolumeData> = {
   '2': {
     id: '2',
     name: 'pvc-abc12345-1234-5678-abcd-1234567890ab',
-    status: 'OK',
+    status: 'Processing',
     createdAt: 'Jul 24, 2025 03:19:59',
     labels: {
       app: 'postgres',
@@ -182,7 +184,7 @@ export function PersistentVolumeDetailPage() {
   };
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   if (!pvData) {
     return <div>Loading...</div>;
@@ -220,13 +222,11 @@ export function PersistentVolumeDetailPage() {
   const labelsCount = Object.keys(pvData.labels).length;
   const firstLabel = Object.entries(pvData.labels)[0];
   const labelsDisplay = firstLabel ? `${firstLabel[0]}: ${firstLabel[1]}` : '-';
-  const labelsExtra = labelsCount > 1 ? `(+${labelsCount - 1})` : '';
 
   // Format annotations
   const annotationsCount = Object.keys(pvData.annotations).length;
   const firstAnnotation = Object.entries(pvData.annotations)[0];
   const annotationsDisplay = firstAnnotation ? `${firstAnnotation[0]}: ${firstAnnotation[1]}` : '-';
-  const annotationsExtra = annotationsCount > 1 ? `(+${annotationsCount - 1})` : '';
 
   // Operator options for node selectors
   const operatorOptions = [
@@ -273,6 +273,20 @@ export function PersistentVolumeDetailPage() {
             <>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
@@ -294,9 +308,7 @@ export function PersistentVolumeDetailPage() {
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={pvData.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -346,10 +358,10 @@ export function PersistentVolumeDetailPage() {
             <DetailHeader.InfoCard
               label="Status"
               value={
-                <Tooltip content={pvData.status === 'Bound' ? 'Active' : pvData.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
-                      {pvData.status === 'Bound' ? 'Active' : pvData.status}
+                <Tooltip content={pvData.status}>
+                  <span className="max-w-full truncate">
+                    <Badge theme={getContainerStatusTheme(pvData.status)} type="subtle" size="sm">
+                      {pvData.status}
                     </Badge>
                   </span>
                 </Tooltip>
@@ -393,8 +405,8 @@ export function PersistentVolumeDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{labelsCount - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{labelsCount - 1}
                       </span>
                     </Popover>
                   )}
@@ -438,8 +450,8 @@ export function PersistentVolumeDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{annotationsCount - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{annotationsCount - 1}
                       </span>
                     </Popover>
                   )}
@@ -506,15 +518,11 @@ export function PersistentVolumeDetailPage() {
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
                       Mount options
                     </h3>
-                    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
-                      <FormField label="Value" disabled className="w-full">
-                        <Input
-                          placeholder="e.g. bar"
-                          value={pvData.mountOptions}
-                          onChange={() => {}}
-                          fullWidth
-                        />
-                      </FormField>
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="grid grid-cols-[1fr] gap-2">
+                        <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
+                        <Input value={pvData.mountOptions} onChange={() => {}} fullWidth readOnly />
+                      </div>
                     </div>
                   </VStack>
 
@@ -527,53 +535,34 @@ export function PersistentVolumeDetailPage() {
                       {pvData.nodeSelectors.map((group) => (
                         <div
                           key={group.id}
-                          className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3"
+                          className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
                         >
-                          <VStack gap={2}>
-                            {/* Header Row */}
-                            <HStack gap={2} className="w-full">
-                              <div className="flex-1">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Operator
-                                </span>
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                              </div>
-                            </HStack>
-                            {/* Data Rows */}
+                          <div className="grid grid-cols-[1fr_140px_1fr] gap-2 items-center">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Key
+                            </span>
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Operator
+                            </span>
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Value
+                            </span>
                             {group.items.map((item) => (
-                              <HStack key={item.id} gap={2} className="w-full">
-                                <div className="flex-1">
-                                  <Input value={item.key} onChange={() => {}} fullWidth disabled />
-                                </div>
-                                <div className="flex-1">
-                                  <Select
-                                    options={operatorOptions}
-                                    value={item.operator}
-                                    onChange={() => {}}
-                                    fullWidth
-                                    disabled
-                                  />
-                                </div>
-                                <div className="flex-1">
-                                  <Input
-                                    value={item.value}
-                                    onChange={() => {}}
-                                    fullWidth
-                                    disabled
-                                  />
-                                </div>
-                              </HStack>
+                              <React.Fragment key={item.id}>
+                                <Input value={item.key} onChange={() => {}} fullWidth readOnly />
+                                <Input
+                                  value={
+                                    operatorOptions.find((o) => o.value === item.operator)?.label ??
+                                    item.operator
+                                  }
+                                  onChange={() => {}}
+                                  fullWidth
+                                  readOnly
+                                />
+                                <Input value={item.value} onChange={() => {}} fullWidth readOnly />
+                              </React.Fragment>
                             ))}
-                          </VStack>
+                          </div>
                         </div>
                       ))}
                       {pvData.nodeSelectors.length === 0 && (

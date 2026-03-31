@@ -1,7 +1,9 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { DosDonts } from '../_shared/DosDonts';
-import { VStack } from '@/design-system';
+import { VStack, ResourceCard, CardTitle, Button } from '@/design-system';
+import { IconDownload } from '@tabler/icons-react';
 
 const CARD_GUIDELINES = `## Overview
 
@@ -70,12 +72,112 @@ Card는 단일 항목(리소스, 서비스, 앱 등)의 핵심 정보를 시각�
 - **일반 작성 원칙**: 문장 첫 글자만 대문자(Sentence case)를 사용하며, 고유명사는 예외로 한다. Please, 느낌표(!) 등 불필요한 표현을 피한다. 능동태를 기본으로 사용한다.
 `;
 
+const FULL_CARD_CODE = `<ResourceCard>
+  <CardTitle
+    title="lively-sunset-6041"
+    description="PyTorch GPU-enabled template for AI/ML workloads"
+    showStatus
+    statusColor="success"
+    badges={[
+      { label: 'Public', variant: 'success' },
+      { label: 'ai-ml', variant: 'info' },
+      { label: 'gpu', variant: 'muted' },
+      { label: 'pytorch', variant: 'muted' },
+    ]}
+  />
+  <ResourceCard.DetailsBox>
+    <ResourceCard.DetailRow items={[
+      { label: 'Region', value: 'us-east-1' },
+      { label: 'Instance type', value: 'g5.xlarge' },
+    ]} />
+    <ResourceCard.DetailRow items={[
+      { label: 'GPU memory', value: '24 GB' },
+      { label: 'Storage', value: '100 GB NVMe' },
+    ]} />
+  </ResourceCard.DetailsBox>
+  <ResourceCard.Footer
+    metadata={[
+      { label: 'vCPU', value: '4' },
+      { label: 'RAM', value: '16 GB' },
+      { label: 'GPU', value: '1x A10G' },
+    ]}
+    actions={<>
+      <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+      <Button variant="secondary" size="sm">Details</Button>
+      <Button variant="primary" size="sm">Deploy</Button>
+    </>}
+  />
+</ResourceCard>`;
+
+function CardPreview() {
+  return (
+    <div className="max-w-[560px]">
+      <ResourceCard>
+        <CardTitle
+          title="lively-sunset-6041"
+          description="PyTorch GPU-enabled template for AI/ML workloads"
+          showStatus
+          statusColor="success"
+          badges={[
+            { label: 'Public', variant: 'success' },
+            { label: 'ai-ml', variant: 'info' },
+            { label: 'gpu', variant: 'muted' },
+            { label: 'pytorch', variant: 'muted' },
+          ]}
+        />
+        <ResourceCard.DetailsBox>
+          <ResourceCard.DetailRow
+            items={[
+              { label: 'Region', value: 'us-east-1' },
+              { label: 'Instance type', value: 'g5.xlarge' },
+            ]}
+          />
+          <ResourceCard.DetailRow
+            items={[
+              { label: 'GPU memory', value: '24 GB' },
+              { label: 'Storage', value: '100 GB NVMe' },
+            ]}
+          />
+        </ResourceCard.DetailsBox>
+        <ResourceCard.Footer
+          metadata={[
+            { label: 'vCPU', value: '4' },
+            { label: 'RAM', value: '16 GB' },
+            { label: 'GPU', value: '1x A10G' },
+          ]}
+          actions={
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+              <Button variant="secondary" size="sm">
+                Details
+              </Button>
+              <Button variant="primary" size="sm">
+                Deploy
+              </Button>
+            </>
+          }
+        />
+      </ResourceCard>
+    </div>
+  );
+}
+
 export function CardPage() {
   return (
     <ComponentPageTemplate
       title="Card"
       tags={['AI Component']}
       description="Card는 단일 항목(리소스, 서비스, 앱 등)의 핵심 정보를 시각적으로 묶어 표현하는 컴포넌트. 항목을 탐색하고 선택하는 진입점으로 사용된다."
+      preview={
+        <ComponentPreview code={FULL_CARD_CODE}>
+          <CardPreview />
+        </ComponentPreview>
+      }
       whenToUse={[
         '동일한 유형의 항목을 격자 형태로 나열하여 한눈에 비교·탐색해야 할 때',
         '항목의 핵심 속성과 상태를 빠르게 파악해야 할 때',
@@ -100,9 +202,7 @@ export function CardPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">border-radius: 8px</span> ·{' '}
-          <span className="font-mono">padding: 16px</span> ·{' '}
-          <span className="font-mono">gap: 16px</span>
+          border-radius: 8px · padding: 16px · gap: 16px
         </div>
       }
       relatedLinks={[

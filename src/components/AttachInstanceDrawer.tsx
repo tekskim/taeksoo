@@ -82,37 +82,39 @@ function AttachedVolumesCell({ volumes }: { volumes: AttachedVolume[] }) {
 
   return (
     <div className="flex flex-col gap-0 min-w-0">
-      <div className="flex items-center gap-1 min-w-0">
+      <div className="flex w-full items-center gap-1 min-w-0">
         <span className="text-body-md text-[var(--color-action-primary)] truncate">
           {first.name}
         </span>
         {remaining > 0 && (
-          <Popover
-            trigger="hover"
-            position="top"
-            delay={100}
-            hideDelay={100}
-            content={
-              <div className="p-3 min-w-[120px] max-w-[280px]">
-                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                  All Volumes ({volumes.length})
+          <span className="ml-auto">
+            <Popover
+              trigger="hover"
+              position="top"
+              delay={100}
+              hideDelay={100}
+              content={
+                <div className="p-3 min-w-[120px] max-w-[280px]">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                    All Volumes ({volumes.length})
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {volumes.map((vol) => (
+                      <Badge key={vol.id} theme="white" size="sm" className="w-fit max-w-full">
+                        <span className="break-all">
+                          {vol.name} (ID:{vol.id})
+                        </span>
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  {volumes.map((vol) => (
-                    <Badge key={vol.id} theme="white" size="sm" className="w-fit max-w-full">
-                      <span className="break-all">
-                        {vol.name} (ID:{vol.id})
-                      </span>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            }
-          >
-            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline shrink-0">
-              (+{remaining})
-            </span>
-          </Popover>
+              }
+            >
+              <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                +{remaining}
+              </span>
+            </Popover>
+          </span>
         )}
       </div>
       <span className="text-body-sm text-[var(--color-text-subtle)] truncate">ID:{first.id}</span>

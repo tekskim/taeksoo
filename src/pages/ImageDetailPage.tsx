@@ -15,10 +15,11 @@ import {
   DetailHeader,
   SectionCard,
   Table,
-  StatusIndicator,
+  Badge,
+  SearchInput,
+  Pagination,
   MonitoringToolbar,
   PageShell,
-  fixedColumns,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
@@ -30,9 +31,7 @@ import {
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
-  IconExternalLink,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
 import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
 
 const chartColors = {
@@ -441,8 +440,6 @@ interface ImageSnapshot {
   used: string;
   state: 'protected' | 'unprotected';
   created: string;
-  sourceVolumeName: string;
-  sourceVolumeId: string;
 }
 
 interface ImageConfig {
@@ -463,7 +460,7 @@ const mockImageDetail: ImageDetail = {
   name: 'volume-1f6b9382-6afe-4d37-acff-0bd507e6386d',
   pool: 'volumes',
   dataPool: '-',
-  created: '5/12/25 02:45 PM',
+  created: '2025-05-12 14:45',
   size: '10 GiB',
   objects: '2.6 k',
   objectSize: '4 MiB',
@@ -478,21 +475,30 @@ const mockImageDetail: ImageDetail = {
   formatVersion: '2',
 };
 
-const imageSnapshotStatusMap: Record<ImageSnapshot['state'], 'active' | 'pending'> = {
-  protected: 'active',
-  unprotected: 'pending',
-};
-
 const mockSnapshots: ImageSnapshot[] = [
   {
     id: 'snap-1',
-    name: 'volume-8fa55ce7-1031-40e1-8032-fbdfe6b7a967.clone_snap',
-    size: '1 GB',
+    name: 'backup.2fb15b89-77fe-433e-a25b-2ca6d1ca074d.snap.1770597864.3632324',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'unprotected',
+    created: '2026-02-09 09:46',
+  },
+  {
+    id: 'snap-2',
+    name: 'snapshot-69ed56eb-827d-483b-8fbd-8bca864c203b',
+    size: '10 GiB',
     used: '0 B',
     state: 'protected',
-    created: '13/1/26 11:38 PM',
-    sourceVolumeName: 'volume-8fa55ce7',
-    sourceVolumeId: 'volume-8fa55ce7-1031-40e1-8032-fbdfe6b7a967',
+    created: '2026-01-23 18:00',
+  },
+  {
+    id: 'snap-3',
+    name: 'volume-532ab768-bc2e-44ff-847f-c8cab2d7a42f.clone_snap',
+    size: '10 GiB',
+    used: '0 B',
+    state: 'protected',
+    created: '2026-01-28 18:09',
   },
 ];
 
@@ -646,46 +652,23 @@ export function ImageDetailPage() {
   }));
 
   const snapshotColumns: TableColumn<ImageSnapshot>[] = [
+    { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
     {
       key: 'state',
-      label: 'Status',
-      width: fixedColumns.status,
-      align: 'center',
-      sortable: false,
-      render: (_, row) => (
-        <StatusIndicator layout="icon-only" status={imageSnapshotStatusMap[row.state]} />
-      ),
+      label: 'Protected',
+      flex: 1,
+      minWidth: columnMinWidths.status,
+      sortable: true,
+      render: (_, row) => (row.state === 'protected' ? 'Yes' : 'No'),
     },
-    { key: 'name', label: 'Name', flex: 3, minWidth: columnMinWidths.nameWide, sortable: true },
     { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     { key: 'used', label: 'Used', flex: 1, minWidth: columnMinWidths.status, sortable: true },
     {
       key: 'created',
-      label: 'Created',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.creationDate,
       sortable: true,
-    },
-    {
-      key: 'sourceVolumeName',
-      label: 'Source volume',
-      flex: 2,
-      minWidth: columnMinWidths.nameWide,
-      sortable: true,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute/volumes/${row.sourceVolumeId}`}
-            className="inline-flex items-center gap-1 text-[var(--color-action-primary)] hover:underline truncate"
-          >
-            <span className="truncate">{row.sourceVolumeName}</span>
-            <IconExternalLink size={12} stroke={1.5} className="shrink-0" />
-          </Link>
-          <span className="text-body-xs text-[var(--color-text-muted)] truncate">
-            ID : {row.sourceVolumeId}
-          </span>
-        </div>
-      ),
     },
   ];
 
@@ -784,6 +767,7 @@ export function ImageDetailPage() {
             {/* Details Tab Panel */}
             <TabPanel value="details" className="pt-4">
               <SectionCard>
+                <SectionCard.Header title="Basic information" />
                 <SectionCard.Content>
                   <SectionCard.DataRow label="Name" value={imageData.name} />
                   <SectionCard.DataRow label="Pool" value={imageData.pool} />
@@ -793,14 +777,11 @@ export function ImageDetailPage() {
                   <SectionCard.DataRow label="Objects" value={imageData.objects} />
                   <SectionCard.DataRow label="Object size" value={imageData.objectSize} />
                   <SectionCard.DataRow label="Features">
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1">
                       {imageData.features.map((feature) => (
-                        <span
-                          key={feature}
-                          className="inline-flex items-center px-2.5 py-1 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] text-body-sm text-[var(--color-text-default)]"
-                        >
+                        <Badge key={feature} theme="white" size="sm">
                           {feature}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </SectionCard.DataRow>
@@ -826,29 +807,67 @@ export function ImageDetailPage() {
             </TabPanel>
 
             {/* Snapshots Tab Panel */}
-            <TabPanel value="snapshots" className="pt-4">
-              <Table<ImageSnapshot>
-                columns={snapshotColumns}
-                data={mockSnapshots}
-                rowKey="id"
-                emptyMessage="No data to display"
-              />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockSnapshots.length} total
-              </div>
+            <TabPanel value="snapshots" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Snapshots</h3>
+                </div>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput placeholder="Search snapshots by attributes" size="sm" fullWidth />
+                </div>
+
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(mockSnapshots.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={mockSnapshots.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                <Table<ImageSnapshot>
+                  columns={snapshotColumns}
+                  data={mockSnapshots}
+                  rowKey="id"
+                  emptyMessage="No snapshots found"
+                />
+              </VStack>
             </TabPanel>
 
             {/* Configuration Tab Panel */}
-            <TabPanel value="configuration" className="pt-4">
-              <Table<ImageConfig>
-                columns={configColumns}
-                data={mockConfigs}
-                rowKey="id"
-                emptyMessage="No data to display"
-              />
-              <div className="mt-2 text-body-sm text-[var(--color-text-muted)]">
-                {mockConfigs.length} total
-              </div>
+            <TabPanel value="configuration" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <div className="flex items-center h-7">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Configuration
+                  </h3>
+                </div>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search configuration by attributes"
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
+
+                <Pagination
+                  currentPage={1}
+                  totalPages={Math.ceil(mockConfigs.length / 10) || 1}
+                  onPageChange={() => {}}
+                  totalItems={mockConfigs.length}
+                  itemsPerPage={10}
+                  showItemCount
+                />
+
+                <Table<ImageConfig>
+                  columns={configColumns}
+                  data={mockConfigs}
+                  rowKey="id"
+                  emptyMessage="No configuration found"
+                />
+              </VStack>
             </TabPanel>
 
             {/* Performance Tab Panel */}

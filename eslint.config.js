@@ -11,7 +11,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import prettierConfig from 'eslint-config-prettier'
 
 export default defineConfig([
-  globalIgnores(['dist', 'docs', 'storybook-static', 'coverage']),
+  globalIgnores(['dist', 'docs', 'storybook-static', 'coverage', 'thaki-shared-v2', 'thaki-shared-components']),
   {
     files: ['**/*.{ts,tsx}'],
     ignores: ['**/*.stories.{ts,tsx}'],

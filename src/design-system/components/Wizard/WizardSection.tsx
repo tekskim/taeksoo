@@ -70,7 +70,7 @@ interface PreSectionProps {
 export function PreSection({ title }: PreSectionProps) {
   return (
     <div
-      data-figma-name="WizardSection"
+      data-figma-name="[TDS] Stepper"
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3"
     >
       <div className="h-[28px] flex items-center">
@@ -92,7 +92,7 @@ interface WritingSectionProps {
 export function WritingSection({ title, onEdit }: WritingSectionProps) {
   return (
     <div
-      data-figma-name="WizardSection"
+      data-figma-name="[TDS] Stepper"
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3"
     >
       <div className="h-[28px] flex items-center justify-between">
@@ -129,7 +129,7 @@ interface SkippedSectionProps {
 export function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
     <div
-      data-figma-name="WizardSection"
+      data-figma-name="[TDS] Stepper"
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3"
     >
       <div className="flex items-center justify-between h-[28px]">

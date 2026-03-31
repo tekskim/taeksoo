@@ -34,7 +34,10 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -58,7 +61,7 @@ interface IngressRow {
 const ingressesData: IngressRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'frontend-web-application-tls-ingress-controller',
     namespace: 'namespaceName',
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
@@ -68,7 +71,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Processing',
     name: 'api-gateway-external-routing-ingress-rule',
     namespace: 'default',
     target: ['api → 8080/TCP'],
@@ -78,7 +81,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Error',
     name: 'web-application-production-tls-ingress-rule',
     namespace: 'production',
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
@@ -88,7 +91,7 @@ const ingressesData: IngressRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'staging-application-preview-ingress-rule',
     namespace: 'staging',
     target: ['app → 3000/TCP'],
@@ -148,7 +151,7 @@ export function ContainerIngressesPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns configuration
   const columns: TableColumn<IngressRow>[] = [
@@ -157,25 +160,33 @@ export function ContainerIngressesPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
+        <span className="min-w-0 block">
+          <Tooltip content={value}>
+            <Badge
+              theme={getContainerStatusTheme(value)}
+              type="subtle"
+              size="sm"
+              className="max-w-[80px]"
+            >
+              <span className="truncate">{value}</span>
+            </Badge>
+          </Tooltip>
+        </span>
       ),
     },
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: IngressRow) => (
-        <TableLink title={value} onClick={() => navigate(`/container/ingresses/${row.id}`)}>
-          {value}
-        </TableLink>
+        <div className="min-w-0">
+          <TableLink title={value} onClick={() => navigate(`/container/ingresses/${row.id}`)}>
+            {value}
+          </TableLink>
+        </div>
       ),
     },
     {
@@ -184,6 +195,11 @@ export function ContainerIngressesPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'target',
@@ -194,7 +210,7 @@ export function ContainerIngressesPage() {
       render: (value: string[]) => {
         const text = value.join(', ');
         return (
-          <span className="truncate block w-full" title={text}>
+          <span className="min-w-0 truncate block w-full" title={text}>
             {text}
           </span>
         );
@@ -206,6 +222,11 @@ export function ContainerIngressesPage() {
       flex: 1,
       minWidth: columnMinWidths.default,
       sortable: false,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ingressClass',
@@ -213,6 +234,11 @@ export function ContainerIngressesPage() {
       flex: 1,
       minWidth: columnMinWidths.ingressClass,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
@@ -220,7 +246,14 @@ export function ContainerIngressesPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -249,8 +282,8 @@ export function ContainerIngressesPage() {
           {
             id: 'delete',
             label: 'Delete',
+            status: 'danger',
             onClick: () => console.log('Delete:', row.id),
-            danger: true,
           },
         ];
 
@@ -309,6 +342,20 @@ export function ContainerIngressesPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

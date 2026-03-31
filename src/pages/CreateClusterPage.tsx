@@ -35,9 +35,11 @@ import {
   Tab,
   PageShell,
   WizardSummary,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
-import { ClusterManagementSidebar } from '@/components/ClusterManagementSidebar';
+import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -261,7 +263,7 @@ export function CreateClusterPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Filtered network data
   const filteredExternalNetworks = mockExternalNetworks.filter(
@@ -317,14 +319,36 @@ export function CreateClusterPage() {
     {
       key: 'select',
       label: '',
-      width: 48,
+      width: fixedColumns.radio,
       align: 'center',
       render: (_value, row) => (
         <Radio checked={selectedKeyPair === row.id} onChange={() => setSelectedKeyPair(row.id)} />
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
-    { key: 'fingerprint', label: 'Fingerprint', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.name}>
+          {row.name}
+        </span>
+      ),
+    },
+    {
+      key: 'fingerprint',
+      label: 'Fingerprint',
+      flex: 1,
+      minWidth: columnMinWidths.fingerprint,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.fingerprint}>
+          {row.fingerprint}
+        </span>
+      ),
+    },
   ];
 
   const filteredKeyPairs = mockKeyPairs.filter((kp) =>
@@ -336,16 +360,60 @@ export function CreateClusterPage() {
     {
       key: 'select',
       label: '',
-      width: 48,
+      width: fixedColumns.radio,
       align: 'center',
       render: (_value, row) => (
         <Radio checked={cpFlavor === row.id} onChange={() => setCpFlavor(row.id)} />
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
-    { key: 'vcpu', label: 'vCPU', sortable: true },
-    { key: 'ram', label: 'RAM', sortable: true },
-    { key: 'disk', label: 'Disk', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.name}>
+          {row.name}
+        </span>
+      ),
+    },
+    {
+      key: 'vcpu',
+      label: 'vCPU',
+      flex: 1,
+      minWidth: columnMinWidths.vcpu,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={String(row.vcpu)}>
+          {row.vcpu}
+        </span>
+      ),
+    },
+    {
+      key: 'ram',
+      label: 'RAM',
+      flex: 1,
+      minWidth: columnMinWidths.ram,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.ram}>
+          {row.ram}
+        </span>
+      ),
+    },
+    {
+      key: 'disk',
+      label: 'Disk',
+      flex: 1,
+      minWidth: columnMinWidths.disk,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.disk}>
+          {row.disk}
+        </span>
+      ),
+    },
   ];
 
   // Worker Node Flavor columns
@@ -353,16 +421,60 @@ export function CreateClusterPage() {
     {
       key: 'select',
       label: '',
-      width: 48,
+      width: fixedColumns.radio,
       align: 'center',
       render: (_value, row) => (
         <Radio checked={nodeFlavor === row.id} onChange={() => setNodeFlavor(row.id)} />
       ),
     },
-    { key: 'name', label: 'Name', sortable: true },
-    { key: 'vcpu', label: 'vCPU', sortable: true },
-    { key: 'ram', label: 'RAM', sortable: true },
-    { key: 'disk', label: 'Disk', sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.name}>
+          {row.name}
+        </span>
+      ),
+    },
+    {
+      key: 'vcpu',
+      label: 'vCPU',
+      flex: 1,
+      minWidth: columnMinWidths.vcpu,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={String(row.vcpu)}>
+          {row.vcpu}
+        </span>
+      ),
+    },
+    {
+      key: 'ram',
+      label: 'RAM',
+      flex: 1,
+      minWidth: columnMinWidths.ram,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.ram}>
+          {row.ram}
+        </span>
+      ),
+    },
+    {
+      key: 'disk',
+      label: 'Disk',
+      flex: 1,
+      minWidth: columnMinWidths.disk,
+      sortable: true,
+      render: (_value, row) => (
+        <span className="truncate block min-w-0" title={row.disk}>
+          {row.disk}
+        </span>
+      ),
+    },
   ];
 
   const handleCreate = () => {
@@ -401,10 +513,7 @@ export function CreateClusterPage() {
   return (
     <PageShell
       sidebar={
-        <ClusterManagementSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-        />
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
       }
       sidebarWidth={sidebarWidth}
       tabBar={

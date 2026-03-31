@@ -24,6 +24,7 @@ import {
   columnMinWidths,
   Tooltip,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -32,13 +33,15 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDownload,
   IconDotsCircleHorizontal,
   IconChevronDown,
   IconTrash,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -100,7 +103,7 @@ const mockJobData: Record<string, JobData> = {
   '1': {
     id: '1',
     name: 'jobName',
-    status: 'OK',
+    status: 'Succeeded',
     namespace: 'default',
     image: 'nginx:1.27',
     createdAt: 'Jul 25, 2025 16:45:11',
@@ -119,7 +122,7 @@ const mockJobData: Record<string, JobData> = {
   '2': {
     id: '2',
     name: 'data-migration-job',
-    status: 'True',
+    status: 'Succeeded',
     namespace: 'database',
     image: 'migration-tool:v2.1',
     createdAt: 'Nov 9, 2025 09:12:33',
@@ -137,7 +140,7 @@ const mockJobData: Record<string, JobData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Succeeded',
     name: 'podName-77',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -156,7 +159,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Failed',
     name: 'podName-78',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -168,7 +171,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'podName-79',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -259,11 +262,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -273,10 +280,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -287,18 +295,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -312,9 +328,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'node',
       label: 'Node',
       flex: 1,
+      minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -325,7 +345,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate block min-w-0" title={value ?? ''}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -405,37 +432,36 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'type',
       label: 'Condition',
       flex: 1,
+      minWidth: columnMinWidths.condition,
       sortable: true,
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
-      render: (value: string, row: ConditionRow) => (
-        <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
-          [{row.reason}] {value}
-        </span>
-      ),
+      render: (value: string, row: ConditionRow) => {
+        const text = `[${row.reason}] ${value}`;
+        return (
+          <span className="truncate block min-w-0" title={text}>
+            {text}
+          </span>
+        );
+      },
     },
     {
       key: 'lastUpdate',
       label: 'Updated',
       flex: 1,
+      minWidth: columnMinWidths.lastUpdate,
       sortable: true,
     },
   ];
@@ -494,9 +520,27 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
+    {
+      key: 'reason',
+      label: 'Reason',
+      flex: 1,
+      minWidth: columnMinWidths.reason,
+      sortable: true,
+    },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: columnMinWidths.source,
+      sortable: true,
+    },
     {
       key: 'message',
       label: 'Message',
@@ -516,10 +560,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
         >
           {value}
@@ -621,7 +666,7 @@ export function JobDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -641,7 +686,7 @@ export function JobDetailPage() {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
@@ -701,15 +746,27 @@ export function JobDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={job.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -758,8 +815,14 @@ export function JobDetailPage() {
               label="Status"
               value={
                 <Tooltip content={job.status === 'Completed' ? 'Active' : job.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        job.status === 'Completed' ? 'Active' : job.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {job.status === 'Completed' ? 'Active' : job.status}
                     </Badge>
                   </span>
@@ -774,18 +837,16 @@ export function JobDetailPage() {
           {/* Second row: Duration, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                  Duration
-                </span>
-                <span className="text-label-md text-[var(--color-text-default)]">
+              <VStack gap={1.5}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Duration</span>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {job.duration}
                 </span>
               </VStack>
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(job.labels).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -822,8 +883,8 @@ export function JobDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(job.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(job.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -832,7 +893,7 @@ export function JobDetailPage() {
             </div>
             <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
               <VStack gap={2}>
-                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(job.annotations).length})
                 </span>
                 <div className="flex items-center gap-1 min-w-0 w-full">
@@ -869,8 +930,8 @@ export function JobDetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(job.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(job.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

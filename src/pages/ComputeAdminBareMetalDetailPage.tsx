@@ -20,6 +20,7 @@ import {
   ContextMenu,
   PageShell,
   fixedColumns,
+  CopyButton,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -31,10 +32,8 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconChevronRight,
-  IconEdit,
   IconBell,
   IconDownload,
-  IconCopy,
   IconSelector,
   IconLock,
   IconPower,
@@ -356,10 +355,6 @@ export function ComputeAdminBareMetalDetailPage() {
     });
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
-
   // Get bare metal data based on the ID from URL
   const bareMetal = id ? mockBareMetalMap[id] || defaultBareMetalDetail : defaultBareMetalDetail;
 
@@ -464,7 +459,7 @@ export function ComputeAdminBareMetalDetailPage() {
               trigger="click"
             >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                More Actions
+                More actions
               </Button>
             </ContextMenu>
           </DetailHeader.Actions>
@@ -491,14 +486,7 @@ export function ComputeAdminBareMetalDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Basic information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Basic information"
-                    actions={
-                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                        Edit
-                      </Button>
-                    }
-                  />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <SectionCard.DataRow label="Name" value={bareMetal.name} />
                     <SectionCard.DataRow
@@ -864,16 +852,7 @@ export function ComputeAdminBareMetalDetailPage() {
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.requestId}
                               </span>
-                              <button
-                                onClick={() => copyToClipboard(log.requestId)}
-                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                <IconCopy
-                                  size={12}
-                                  stroke={1.5}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </button>
+                              <CopyButton value={log.requestId} size="sm" iconOnly />
                             </div>
                             <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
                               <span className="text-body-md text-[var(--color-text-default)]">

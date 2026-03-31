@@ -43,7 +43,7 @@ export interface ListToolbarActionsProps {
 
 export function ListToolbarActions({ children, className }: ListToolbarActionsProps) {
   return (
-    <HStack data-figma-name="ListToolbar/Actions" gap={1} className={className}>
+    <HStack data-figma-name="[TDS] ListToolbar/Actions" gap={1} className={className}>
       {children}
     </HStack>
   );
@@ -125,7 +125,7 @@ export function ListToolbar({
 
   return (
     <div
-      data-figma-name="ListToolbar"
+      data-figma-name="[TDS] ListToolbar"
       className={twMerge('flex flex-col gap-2', className)}
       {...rest}
     >

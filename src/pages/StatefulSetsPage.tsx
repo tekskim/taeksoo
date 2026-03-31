@@ -34,7 +34,10 @@ import {
   IconDotsCircleHorizontal,
   IconRefresh,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -55,7 +58,7 @@ interface StatefulSetRow {
 const statefulSetsData: StatefulSetRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Active',
     name: 'postgresql-primary-replication-statefulset',
     namespace: 'default',
     image: 'nginx',
@@ -64,7 +67,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '2',
-    status: 'OK',
+    status: 'Active',
     name: 'mysql-primary-replication-cluster-statefulset',
     namespace: 'database',
     image: 'mysql:8.0',
@@ -73,7 +76,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Stopped',
     name: 'elasticsearch-cluster-data-node-statefulset',
     namespace: 'logging',
     image: 'elasticsearch:8.10.2',
@@ -82,7 +85,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '4',
-    status: 'InvalidImageName',
+    status: 'Processing',
     name: 'mongodb-replica-set-sharded-cluster-statefulset',
     namespace: 'database',
     image: 'mongo:7.0',
@@ -91,7 +94,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '5',
-    status: 'ImagePullBackOff',
+    status: 'Active',
     name: 'kafka-broker-messaging-cluster-statefulset',
     namespace: 'messaging',
     image: 'confluentinc/cp-kafka:7.5.0',
@@ -100,7 +103,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '6',
-    status: 'True',
+    status: 'Error',
     name: 'zookeeper-ensemble-coordination-statefulset',
     namespace: 'messaging',
     image: 'zookeeper:3.9',
@@ -109,7 +112,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '7',
-    status: 'Raw',
+    status: 'Active',
     name: 'redis-cluster-sentinel-high-availability-statefulset',
     namespace: 'cache',
     image: 'redis:7.2-alpine',
@@ -118,7 +121,7 @@ const statefulSetsData: StatefulSetRow[] = [
   },
   {
     id: '8',
-    status: 'None',
+    status: 'Active',
     name: 'cockroachdb-distributed-sql-database-statefulset',
     namespace: 'database',
     image: 'cockroachdb/cockroach:v23.1.11',
@@ -178,7 +181,7 @@ export function StatefulSetsPage() {
   );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Table columns configuration
   const columns: TableColumn<StatefulSetRow>[] = [
@@ -187,10 +190,14 @@ export function StatefulSetsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -199,12 +206,12 @@ export function StatefulSetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -227,11 +234,14 @@ export function StatefulSetsPage() {
       label: 'Image',
       flex: 1,
       minWidth: columnMinWidths.image,
+      sortable: true,
     },
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
+      sortable: true,
     },
     {
       key: 'createdAt',
@@ -239,7 +249,11 @@ export function StatefulSetsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => (
+        <span className="truncate block min-w-0" title={value}>
+          {value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
+        </span>
+      ),
     },
     {
       key: 'actions',
@@ -353,6 +367,20 @@ export function StatefulSetsPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

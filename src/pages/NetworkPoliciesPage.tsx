@@ -34,6 +34,8 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -148,7 +150,7 @@ export function NetworkPoliciesPage() {
   );
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Create menu items for each row
   const createMenuItems = (row: NetworkPolicyRow): ContextMenuItem[] => {
@@ -186,7 +188,6 @@ export function NetworkPoliciesPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -198,7 +199,7 @@ export function NetworkPoliciesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -233,8 +234,16 @@ export function NetworkPoliciesPage() {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const formatted = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+        return (
+          <span className="truncate whitespace-nowrap" title={value}>
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -309,6 +318,20 @@ export function NetworkPoliciesPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

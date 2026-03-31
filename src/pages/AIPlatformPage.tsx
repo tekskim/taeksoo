@@ -48,7 +48,7 @@ import {
   IconShield,
   IconApps,
   IconBell,
-  IconPalette,
+  IconHome,
   IconRefresh,
   IconDotsCircleHorizontal,
   IconTarget,
@@ -332,9 +332,9 @@ export function AIPlatformPageLayout({
     () => (
       <>
         <TopBarAction
-          icon={<IconPalette size={16} stroke={1} />}
-          onClick={() => navigate('/design-system')}
-          aria-label="Design system"
+          icon={<IconHome size={16} stroke={1.5} />}
+          onClick={() => navigate('/')}
+          aria-label="Home"
         />
         <TopBarAction
           icon={<IconBell size={16} stroke={1.5} />}
@@ -1380,16 +1380,14 @@ function WorkloadsContent() {
       />
 
       {/* Pagination */}
-      {filteredWorkloads.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          totalItems={filteredWorkloads.length}
-          showSettings
-          onSettingsClick={() => console.log('Settings clicked')}
-        />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredWorkloads.length}
+        showSettings
+        onSettingsClick={() => console.log('Settings clicked')}
+      />
 
       {/* Table */}
       <Table<Workload>

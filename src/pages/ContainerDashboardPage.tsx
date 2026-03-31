@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -17,19 +18,22 @@ import {
   PageShell,
   Badge,
   Tooltip,
+  SearchInput,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconTerminal2,
   IconExternalLink,
   IconFile,
   IconCopy,
   IconSearch,
+  IconBell,
   IconHelpCircle,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -286,15 +290,30 @@ const eventsColumns: TableColumn<EventRow>[] = [
     minWidth: columnMinWidths.object,
     sortable: true,
     render: (value: string) => (
-      <span
-        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-        title={value}
-      >
-        {value}
-      </span>
+      <div className="min-w-0">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          title={value}
+        >
+          {value}
+        </span>
+      </div>
     ),
   },
-  { key: 'message', label: 'Message', flex: 1, minWidth: columnMinWidths.message, sortable: true },
+  {
+    key: 'message',
+    label: 'Message',
+    flex: 1,
+    minWidth: columnMinWidths.message,
+    sortable: true,
+    render: (value: string) => (
+      <div className="min-w-0">
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      </div>
+    ),
+  },
   {
     key: 'name',
     label: 'Name',
@@ -302,12 +321,14 @@ const eventsColumns: TableColumn<EventRow>[] = [
     minWidth: columnMinWidths.name,
     sortable: true,
     render: (value: string) => (
-      <span
-        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-        title={value}
-      >
-        {value}
-      </span>
+      <div className="min-w-0">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          title={value}
+        >
+          {value}
+        </span>
+      </div>
     ),
   },
   {
@@ -337,6 +358,7 @@ export function ContainerDashboardPage() {
   const activeTab = searchParams.get('tab') || 'events';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [currentPage, setCurrentPage] = useState(1);
+  const [eventSearchQuery, setEventSearchQuery] = useState('');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -346,7 +368,7 @@ export function ContainerDashboardPage() {
   }, [updateActiveTabLabel]);
 
   // Calculate sidebar width (40px icon sidebar always visible + 200px menu sidebar when open)
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   return (
     <PageShell
@@ -375,21 +397,73 @@ export function ContainerDashboardPage() {
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <Tooltip content="Customize appearance" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                  aria-label="Customize cluster appearance"
+                >
+                  <IconPencilCog
+                    size={16}
+                    className="text-[var(--color-text-muted)]"
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Access Token" position="bottom">
+                <button
+                  type="button"
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                  aria-label="Access Token"
+                >
+                  <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="kubectl Shell" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="kubectl Shell"
+                >
+                  <IconTerminal2
+                    size={16}
+                    className="text-[var(--color-text-muted)]"
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Download kubeconfig" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Download kubeconfig"
+                >
+                  <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Copy kubeconfig" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Copy kubeconfig"
+                >
+                  <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Search resource types" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Search resource types"
+                >
+                  <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Notifications" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Notifications"
+                >
+                  <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
             </>
           }
         />
@@ -525,14 +599,7 @@ export function ContainerDashboardPage() {
       </div>
 
       {/* Events & Secrets */}
-      <Card
-        title="Events & Secrets"
-        actions={
-          <Button variant="secondary" size="sm">
-            Full events list
-          </Button>
-        }
-      >
+      <Card title="Events & Secrets">
         <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
           <TabList className="w-full mb-3">
             <Tab value="events">Events</Tab>
@@ -541,6 +608,19 @@ export function ContainerDashboardPage() {
 
           <TabPanel value="events" className="pt-0">
             <VStack gap={3}>
+              <HStack gap={2} align="center">
+                <SearchInput
+                  value={eventSearchQuery}
+                  onChange={setEventSearchQuery}
+                  placeholder="Search events by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                <Button variant="secondary" size="sm">
+                  Full events list
+                </Button>
+              </HStack>
               <div className="flex justify-start">
                 <Pagination
                   currentPage={currentPage}

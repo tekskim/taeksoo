@@ -1,6 +1,213 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import { VStack, Badge } from '@/design-system';
+import {
+  IconCircleCheck,
+  IconAlertTriangle,
+  IconAlertCircle,
+  IconInfoCircle,
+  IconX,
+  IconChevronUp,
+  IconChevronDown,
+} from '@tabler/icons-react';
+import AppIconIAM from '@/assets/appIcon/iam.png';
+
+/* ----------------------------------------
+   Static Card Component
+   ---------------------------------------- */
+
+function StaticNotificationCard({
+  type,
+  message,
+  time,
+  project,
+  showAppIcon = false,
+  detail,
+  isExpanded,
+}: {
+  type: 'success' | 'error' | 'warning' | 'info';
+  message: string;
+  time: string;
+  project?: string;
+  showAppIcon?: boolean;
+  detail?: { code?: string | number; message?: string };
+  isExpanded?: boolean;
+}) {
+  const iconMap = {
+    success: (
+      <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
+    ),
+    error: (
+      <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+    ),
+    warning: (
+      <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
+    ),
+    info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
+  };
+  const hasDetail = detail && (detail.code || detail.message);
+
+  return (
+    <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden">
+      <div className="flex gap-2 p-3">
+        <div className="shrink-0">{iconMap[type]}</div>
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-2 items-start">
+            <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
+              <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
+              {project && (
+                <Badge theme="white" size="sm">
+                  {project}
+                </Badge>
+              )}
+            </div>
+            <div className="shrink-0 flex flex-col items-end gap-1">
+              <div className="flex flex-col items-end">
+                <button
+                  type="button"
+                  className="size-5 flex items-center justify-center text-[var(--color-text-muted)]"
+                >
+                  <IconX size={16} stroke={1.5} />
+                </button>
+                <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+                  {time}
+                </span>
+              </div>
+              {showAppIcon && (
+                <img
+                  src={AppIconIAM}
+                  alt="App icon"
+                  className="size-5 object-cover pointer-events-none"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {hasDetail && (
+        <>
+          <div className="border-t border-[var(--color-border-subtle)]">
+            <button
+              type="button"
+              className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
+            >
+              <span className="text-label-sm text-[var(--color-text-muted)]">View detail</span>
+              {isExpanded ? (
+                <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              ) : (
+                <IconChevronDown
+                  size={12}
+                  stroke={1.5}
+                  className="text-[var(--color-text-muted)]"
+                />
+              )}
+            </button>
+          </div>
+
+          {isExpanded && (
+            <div className="px-3 pb-3">
+              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
+                {detail.code && (
+                  <p className="text-label-md text-[var(--color-text-default)]">
+                    code: {detail.code}
+                  </p>
+                )}
+                {detail.message && (
+                  <p className="text-body-md text-[var(--color-text-muted)]">{detail.message}</p>
+                )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Card States Example
+   ---------------------------------------- */
+
+function NotificationCardStates() {
+  return (
+    <VStack gap={3}>
+      <span className="text-label-md text-[var(--color-text-default)]">
+        Notification card states
+      </span>
+      <p className="text-body-sm text-[var(--color-text-subtle)]">
+        All six visual states of a notification card: read/unread, with/without detail disclosure,
+        and disclosure open.
+      </p>
+      <VStack gap={6} className="max-w-[463px]">
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Read (app icon)</span>
+          <StaticNotificationCard
+            type="success"
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
+            showAppIcon
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Read (without app icon)
+          </span>
+          <StaticNotificationCard
+            type="success"
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Read + Detail (collapsed)
+          </span>
+          <StaticNotificationCard
+            type="success"
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
+            showAppIcon
+            detail={{
+              code: 400,
+              message:
+                "Flavor's disk is smaller than the minimum size specified in image metadata.",
+            }}
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Read + Detail (expanded)
+          </span>
+          <StaticNotificationCard
+            type="success"
+            message='Instance "web-server-01" created successfully.'
+            time="hh:mm"
+            project="Proj-1"
+            showAppIcon
+            detail={{
+              code: 400,
+              message:
+                "Flavor's disk is smaller than the minimum size specified in image metadata.",
+            }}
+            isExpanded
+          />
+        </VStack>
+      </VStack>
+    </VStack>
+  );
+}
+
+/* ----------------------------------------
+   Guidelines
+   ---------------------------------------- */
 
 const SNACKBAR_GUIDELINES = `## Overview
 Snackbar는 사용자가 수행한 액션의 결과 또는 비동기 작업의 상태를 즉시 인지할 수 있도록 제공하는 기록형 알림 컴포넌트이다.
@@ -143,6 +350,10 @@ Snackbar는 단순한 일시적 피드백이 아니라, 알림센터에 기록�
 | Error & Alert | Foundation | 알림 계층 및 메시지 유형 정책 |
 `;
 
+/* ----------------------------------------
+   Page
+   ---------------------------------------- */
+
 export function SnackbarPage() {
   return (
     <ComponentPageTemplate
@@ -157,6 +368,7 @@ export function SnackbarPage() {
         '입력값 오류 또는 필드 단위 검증 (→ Validation)',
         '사용자의 결정이 반드시 필요한 경우 (→ Modal)',
       ]}
+      examples={<NotificationCardStates />}
       guidelines={
         <>
           <NotionRenderer markdown={SNACKBAR_GUIDELINES} />

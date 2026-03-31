@@ -88,8 +88,8 @@ function ShadowsGuidelines() {
         </TableWrapper>
         <Prose>
           <p>
-            Use CSS variable <span className="font-mono">var(--shadow-*)</span> for elevation.
-            Prefer tokens over hardcoded values for consistency.
+            Use CSS variable var(--shadow-*) for elevation. Prefer tokens over hardcoded values for
+            consistency.
           </p>
         </Prose>
       </VStack>

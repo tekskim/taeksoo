@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { Button, NotificationCenter, VStack, Chip } from '@/design-system';
+import { Button, Badge, NotificationCenter, VStack } from '@/design-system';
 import type { NotificationItem } from '@/design-system';
 import {
   IconCircleCheck,
@@ -10,9 +10,112 @@ import {
   IconAlertTriangle,
   IconInfoCircle,
   IconRefresh,
-  IconChevronDown,
   IconChevronUp,
+  IconChevronDown,
 } from '@tabler/icons-react';
+
+/* ----------------------------------------
+   Static Notification Card (for examples)
+   ---------------------------------------- */
+
+function StaticNotificationCard({
+  type,
+  message,
+  time,
+  project,
+  isRead,
+  detail,
+  isExpanded,
+}: {
+  type: 'success' | 'error' | 'warning' | 'info';
+  message: string;
+  time: string;
+  project?: string;
+  isRead: boolean;
+  detail?: { code?: string | number; message?: string };
+  isExpanded?: boolean;
+}) {
+  const iconMap = {
+    success: (
+      <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
+    ),
+    error: (
+      <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+    ),
+    warning: (
+      <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
+    ),
+    info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
+  };
+  const hasDetail = detail && (detail.code || detail.message);
+
+  return (
+    <div
+      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden ${
+        !isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'
+      }`}
+    >
+      <div className="flex gap-3 p-3">
+        <div className="shrink-0 pt-0.5">{iconMap[type]}</div>
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-2 items-start">
+            <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
+              <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
+              {project && (
+                <Badge theme="white" size="sm">
+                  {project}
+                </Badge>
+              )}
+            </div>
+            <div className="shrink-0 flex flex-col items-end gap-1">
+              {!isRead && <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />}
+              <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+                {time}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {hasDetail && (
+        <>
+          <div className="border-t border-[var(--color-border-subtle)]">
+            <button
+              type="button"
+              className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
+            >
+              <span className="text-label-sm text-[var(--color-text-muted)]">View detail</span>
+              {isExpanded ? (
+                <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              ) : (
+                <IconChevronDown
+                  size={12}
+                  stroke={1.5}
+                  className="text-[var(--color-text-muted)]"
+                />
+              )}
+            </button>
+          </div>
+
+          {isExpanded && (
+            <div className="px-3 pb-3">
+              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
+                {detail.code && (
+                  <p className="text-label-md text-[var(--color-text-default)]">
+                    code: {detail.code}
+                  </p>
+                )}
+                {detail.message && (
+                  <p className="text-body-md text-[var(--color-text-muted)]">{detail.message}</p>
+                )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 const NOTIFICATION_CENTER_GUIDELINES = `## Overview
 앱 내부 알림센터는 해당 앱에서 발생한 모든 기록형 알림의 원본 저장소이다. 사용자가 Snackbar를 놓치거나 과거 알림을 확인하려는 경우 알림센터를 통해 확인할 수 있다.
@@ -164,198 +267,6 @@ const initialNotifications: NotificationItem[] = [
   },
 ];
 
-function StaticNotificationCard({
-  type,
-  message,
-  time,
-  project,
-  isRead,
-  detail,
-  isExpanded,
-}: {
-  type: 'success' | 'error' | 'warning' | 'info';
-  message: string;
-  time: string;
-  project?: string;
-  isRead: boolean;
-  detail?: { code?: string | number; message?: string };
-  isExpanded?: boolean;
-}) {
-  const iconMap = {
-    success: (
-      <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
-    ),
-    error: (
-      <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
-    ),
-    warning: (
-      <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />
-    ),
-    info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
-  };
-  const hasDetail = detail && (detail.code || detail.message);
-
-  return (
-    <div
-      className={`relative rounded-lg border transition-all border-[var(--color-border-default)] ${
-        !isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'
-      }`}
-    >
-      <div className="flex gap-3 p-3">
-        <div className="shrink-0 pt-0.5">{iconMap[type]}</div>
-        <div className="flex-1 min-w-0">
-          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">{message}</p>
-          {project && <Chip value={project} variant="default" />}
-        </div>
-        <div className="shrink-0 flex flex-col items-end gap-1">
-          <div className="size-6 flex items-center justify-center">
-            {!isRead && <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />}
-          </div>
-          <span className="text-body-md text-[var(--color-text-muted)]">{time}</span>
-        </div>
-      </div>
-
-      {hasDetail && (
-        <>
-          <button
-            type="button"
-            className="flex items-center justify-end gap-1 w-full px-3 py-2 text-body-sm text-[var(--color-text-muted)] border-t border-[var(--color-border-subtle)] transition-colors"
-          >
-            <span>View detail</span>
-            {isExpanded ? (
-              <IconChevronUp size={14} stroke={1.5} />
-            ) : (
-              <IconChevronDown size={14} stroke={1.5} />
-            )}
-          </button>
-
-          {isExpanded && (
-            <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-md">
-                {detail.code && (
-                  <p className="text-label-md text-[var(--color-text-default)] mb-1">
-                    code: {detail.code}
-                  </p>
-                )}
-                {detail.message && (
-                  <p className="text-body-md text-[var(--color-text-muted)]">{detail.message}</p>
-                )}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
-}
-
-function NotificationCardStates() {
-  const detail = {
-    code: 200,
-    message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-  };
-
-  return (
-    <VStack gap={3}>
-      <span className="text-label-md text-[var(--color-text-default)]">
-        Notification card states
-      </span>
-      <p className="text-body-sm text-[var(--color-text-subtle)]">
-        All six visual states of a notification card: read/unread, with/without detail disclosure,
-        and disclosure open.
-      </p>
-      <div className="grid grid-cols-2 gap-6">
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Read</span>
-          <StaticNotificationCard
-            type="info"
-            message="System maintenance scheduled for tomorrow."
-            time="Yesterday"
-            isRead
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread</span>
-          <StaticNotificationCard
-            type="success"
-            message='Volume "data-vol-01" attached to instance.'
-            time="10:15"
-            project="Proj1"
-            isRead={false}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Read + Detail (collapsed)
-          </span>
-          <StaticNotificationCard
-            type="warning"
-            message='Instance "db-server" is running low on disk space.'
-            time="09:15"
-            project="Proj1"
-            isRead
-            detail={{ code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' }}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (collapsed)
-          </span>
-          <StaticNotificationCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj2"
-            isRead={false}
-            detail={{
-              code: 400,
-              message:
-                "Flavor's disk is smaller than the minimum size specified in image metadata.",
-            }}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Read + Detail (expanded)
-          </span>
-          <StaticNotificationCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj1"
-            isRead
-            detail={detail}
-            isExpanded
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (expanded)
-          </span>
-          <StaticNotificationCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj2"
-            isRead={false}
-            detail={{
-              code: 400,
-              message:
-                "Flavor's disk is smaller than the minimum size specified in image metadata.",
-            }}
-            isExpanded
-          />
-        </VStack>
-      </div>
-    </VStack>
-  );
-}
-
 export function NotificationCenterPage() {
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
   const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -435,13 +346,9 @@ export function NotificationCenterPage() {
                     strokeWidth={1.5}
                     className="text-[var(--color-state-success)]"
                   />
-                  <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
-                    Success
-                  </span>
+                  <span className="text-label-md text-[var(--color-text-default)]">Success</span>
                 </div>
-                <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                  Operation completed
-                </p>
+                <p className="text-body-sm text-[var(--color-text-muted)]">Operation completed</p>
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
@@ -450,13 +357,9 @@ export function NotificationCenterPage() {
                     strokeWidth={1.5}
                     className="text-[var(--color-state-danger)]"
                   />
-                  <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
-                    Error
-                  </span>
+                  <span className="text-label-md text-[var(--color-text-default)]">Error</span>
                 </div>
-                <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                  Operation failed
-                </p>
+                <p className="text-body-sm text-[var(--color-text-muted)]">Operation failed</p>
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
@@ -465,13 +368,9 @@ export function NotificationCenterPage() {
                     strokeWidth={1.5}
                     className="text-[var(--color-state-warning)]"
                   />
-                  <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
-                    Warning
-                  </span>
+                  <span className="text-label-md text-[var(--color-text-default)]">Warning</span>
                 </div>
-                <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                  Attention needed
-                </p>
+                <p className="text-body-sm text-[var(--color-text-muted)]">Attention needed</p>
               </div>
               <div className="p-3 bg-[var(--color-surface-default)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
                 <div className="flex items-center gap-2 mb-2">
@@ -480,18 +379,113 @@ export function NotificationCenterPage() {
                     strokeWidth={1.5}
                     className="text-[var(--color-state-info)]"
                   />
-                  <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
-                    Info
-                  </span>
+                  <span className="text-label-md text-[var(--color-text-default)]">Info</span>
                 </div>
-                <p className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-                  General information
-                </p>
+                <p className="text-body-sm text-[var(--color-text-muted)]">General information</p>
               </div>
             </div>
           </VStack>
 
-          <NotificationCardStates />
+          <VStack gap={3}>
+            <span className="text-label-md text-[var(--color-text-default)]">
+              Notification card states
+            </span>
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
+              All six visual states of a notification card: read/unread, with/without detail
+              disclosure, and disclosure open.
+            </p>
+            <div className="grid grid-cols-2 gap-6">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Read</span>
+                <StaticNotificationCard
+                  type="info"
+                  message="System maintenance scheduled for tomorrow."
+                  time="Yesterday"
+                  isRead
+                />
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Unread</span>
+                <StaticNotificationCard
+                  type="success"
+                  message='Volume "data-vol-01" attached to instance.'
+                  time="10:15"
+                  project="Proj1"
+                  isRead={false}
+                />
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Read + Detail (collapsed)
+                </span>
+                <StaticNotificationCard
+                  type="warning"
+                  message='Instance "db-server" is running low on disk space.'
+                  time="09:15"
+                  project="Proj1"
+                  isRead
+                  detail={{ code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' }}
+                />
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Unread + Detail (collapsed)
+                </span>
+                <StaticNotificationCard
+                  type="error"
+                  message='Failed to create volume "data-vol-02".'
+                  time="09:30"
+                  project="Proj2"
+                  isRead={false}
+                  detail={{
+                    code: 400,
+                    message:
+                      "Flavor's disk is smaller than the minimum size specified in image metadata.",
+                  }}
+                />
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Read + Detail (expanded)
+                </span>
+                <StaticNotificationCard
+                  type="success"
+                  message='Instance "web-server-01" created successfully.'
+                  time="10:23"
+                  project="Proj1"
+                  isRead
+                  detail={{
+                    code: 200,
+                    message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+                  }}
+                  isExpanded
+                />
+              </VStack>
+
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Unread + Detail (expanded)
+                </span>
+                <StaticNotificationCard
+                  type="error"
+                  message='Failed to create volume "data-vol-02".'
+                  time="09:30"
+                  project="Proj2"
+                  isRead={false}
+                  detail={{
+                    code: 400,
+                    message:
+                      "Flavor's disk is smaller than the minimum size specified in image metadata.",
+                  }}
+                  isExpanded
+                />
+              </VStack>
+            </div>
+          </VStack>
         </VStack>
       }
       guidelines={
@@ -513,10 +507,7 @@ export function NotificationCenterPage() {
       }
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">width: 360px</span> ·{' '}
-          <span className="font-mono">padding: 16px</span> ·{' '}
-          <span className="font-mono">border-radius: 8px</span> ·{' '}
-          <span className="font-mono">shadow: lg</span>
+          width: 360px · padding: 16px · border-radius: 8px · shadow: lg
         </div>
       }
       relatedLinks={[

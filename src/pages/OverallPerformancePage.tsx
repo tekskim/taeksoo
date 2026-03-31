@@ -985,8 +985,7 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Detail performance',
-      flex: 1,
-      minWidth: columnMinWidths.id,
+      width: fixedColumns.actions,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1022,8 +1021,7 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Detail performance',
-      flex: 1,
-      minWidth: columnMinWidths.id,
+      width: fixedColumns.actions,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1432,7 +1430,7 @@ export function OverallPerformancePage() {
                               key: 'throughput',
                               label: 'Throughput',
                               flex: 1,
-                              minWidth: '100px',
+                              minWidth: columnMinWidths.size,
                               sortable: true,
                             },
                           ]}
@@ -1477,7 +1475,7 @@ export function OverallPerformancePage() {
                               key: 'latency',
                               label: 'Latency',
                               flex: 1,
-                              minWidth: '100px',
+                              minWidth: columnMinWidths.size,
                               sortable: true,
                             },
                           ]}
@@ -1653,7 +1651,7 @@ export function OverallPerformancePage() {
                           key: 'throughput',
                           label: 'Throughput',
                           flex: 1,
-                          minWidth: '100px',
+                          minWidth: columnMinWidths.size,
                           sortable: true,
                         },
                         {

@@ -33,6 +33,8 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -171,7 +173,7 @@ export function PersistentVolumeClaimsPage() {
   );
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Create menu items for each row
   const createMenuItems = (row: PersistentVolumeClaimRow): ContextMenuItem[] => [
@@ -205,7 +207,6 @@ export function PersistentVolumeClaimsPage() {
       label: 'Status',
       width: fixedColumns.statusLabel,
       sortable: false,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -217,7 +218,7 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -239,11 +240,16 @@ export function PersistentVolumeClaimsPage() {
       flex: 1,
       minWidth: columnMinWidths.namespace,
       sortable: true,
+      render: (value: string) => (
+        <span className="min-w-0 truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'volume',
       label: 'Volume',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.volume,
       sortable: true,
       render: (value: string) =>
@@ -366,6 +372,20 @@ export function PersistentVolumeClaimsPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

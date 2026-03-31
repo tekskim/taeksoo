@@ -126,13 +126,10 @@ function InputPageGuidelines() {
           <SubSectionTitle>Placeholder 규칙</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>
-                입력 형식 예시를 표시합니다: <span className="font-mono">e.g. 192.168.0.1</span>,{' '}
-                <span className="font-mono">e.g. my-instance</span>
-              </li>
+              <li>입력 형식 예시를 표시합니다: e.g. 192.168.0.1, e.g. my-instance</li>
               <li>
                 라벨을 반복하지 않습니다: 라벨이 &quot;Name&quot;이면 placeholder는
-                &quot;Name&quot;이 아닌 <span className="font-mono">Enter instance name</span>
+                &quot;Name&quot;이 아닌 Enter instance name
               </li>
               <li>필수/선택 여부를 placeholder에 표시하지 않습니다 (라벨의 * 표시로 충분).</li>
             </ul>
@@ -436,8 +433,7 @@ export function InputPage() {
               </VStack>
             </div>
             <div className="text-body-xs text-[var(--color-text-subtle)] mt-1 p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
-              <span className="font-mono">aria-describedby</span>로 suffix를 연결하면 스크린 리더가
-              &quot;100 GiB&quot;로 읽습니다.
+              aria-describedby로 suffix를 연결하면 스크린 리더가 &quot;100 GiB&quot;로 읽습니다.
             </div>
           </VStack>
 
@@ -569,11 +565,7 @@ export function InputPage() {
       guidelines={<InputPageGuidelines />}
       tokens={
         <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          <span className="font-mono">height: 28/32px</span> ·{' '}
-          <span className="font-mono">padding: 10×8px</span> ·{' '}
-          <span className="font-mono">radius: 6px</span> ·{' '}
-          <span className="font-mono">font: 11-12px</span> ·{' '}
-          <span className="font-mono">border: 1px → 2px focus</span>
+          height: 28/32px · padding: 10×8px · radius: 6px · font: 11-12px · border: 1px → 2px focus
         </div>
       }
       relatedLinks={[

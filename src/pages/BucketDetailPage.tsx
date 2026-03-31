@@ -18,8 +18,8 @@ import {
   SectionCard,
   Table,
   PageShell,
+  CopyButton,
   type TableColumn,
-  ListToolbar,
   columnMinWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -32,14 +32,12 @@ import {
   IconChevronRight,
   IconFolder,
   IconFile,
+  IconDotsVertical,
   IconDotsCircleHorizontal,
+  IconFolderOpen,
   IconCirclePlus,
-  IconCopy,
-  IconCheck,
   IconLayoutSidebar,
-  IconEdit,
   IconSelector,
-  IconRefresh,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -89,21 +87,62 @@ const mockBucketDetail: BucketDetail = {
   owner: 'ai_platform$ai.platform',
   usedCapacity: 'ai_platform$ai.platform',
   objects: 13,
-  creationDate: 'Sep 19, 2025',
+  creationDate: 'Sep 19, 2025 14:30:00',
 };
 
 const mockObjectTree: ObjectItem[] = [
   {
-    id: 'folder-yeonii',
-    name: 'yeonii',
+    id: 'folder-a',
+    name: 'folder A',
     type: 'folder',
     expanded: true,
     children: [
-      { id: 'folder-test', name: 'test', type: 'folder' },
-      { id: 'object-343da1', name: '343da87798e1c6356', type: 'object' },
+      { id: 'object-a', name: 'object A', type: 'object' },
+      { id: 'folder-b', name: 'folder B', type: 'folder' },
+      {
+        id: 'folder-c',
+        name: 'folder C',
+        type: 'folder',
+        expanded: true,
+        children: [
+          { id: 'object-b', name: 'object B', type: 'object' },
+          {
+            id: 'folder-d',
+            name: 'folder D',
+            type: 'folder',
+            expanded: true,
+            children: [
+              {
+                id: 'folder-e',
+                name: 'folder E',
+                type: 'folder',
+                expanded: true,
+                children: [
+                  {
+                    id: 'folder-f',
+                    name: 'folder F',
+                    type: 'folder',
+                    expanded: true,
+                    children: [
+                      {
+                        id: 'folder-g',
+                        name: 'folder G',
+                        type: 'folder',
+                        expanded: true,
+                        children: [{ id: 'folder-b2', name: 'folder B', type: 'folder' }],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
-  { id: 'object-343da2', name: '343da87798e1c6356b4', type: 'object' },
+  { id: 'object-c', name: 'object C', type: 'object' },
+  { id: 'object-d', name: 'object D', type: 'object' },
 ];
 
 const mockTableObjects: ObjectItem[] = [
@@ -132,8 +171,8 @@ const mockTableObjects: ObjectItem[] = [
     ],
   },
   {
-    id: 'folder-yeonii-table',
-    name: 'yeonii',
+    id: 'folder-a-table',
+    name: 'folder A',
     type: 'folder',
     owner: '-',
     objectType: 'folder',
@@ -160,56 +199,65 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
   const isSelected = selectedId === item.id;
   const hasChildren = item.children && item.children.length > 0;
   const isExpanded = item.expanded;
+  const isFolder = item.type === 'folder';
 
   return (
     <div>
       <div
         className={`
-          group flex items-center gap-1 h-[28px] px-2 rounded cursor-pointer text-body-sm
+          group flex items-center gap-1 h-[25px] rounded cursor-pointer text-body-md
           ${isSelected ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium' : 'hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]'}
         `}
-        style={{ paddingLeft: `${8 + level * 20}px` }}
+        style={{ paddingLeft: `${level * 20}px` }}
         onClick={() => onSelect(item.id)}
       >
-        {hasChildren ? (
+        {isFolder ? (
           <button
-            className="p-0.5 hover:bg-black/10 rounded shrink-0"
+            className="shrink-0 flex items-center justify-center w-4 h-4"
             onClick={(e) => {
               e.stopPropagation();
               onToggle(item.id);
             }}
           >
-            {isExpanded ? (
-              <IconChevronDown size={14} stroke={1.5} />
+            {hasChildren && isExpanded ? (
+              <IconChevronDown size={16} stroke={1.5} />
             ) : (
-              <IconChevronRight size={14} stroke={1.5} />
+              <IconChevronRight size={16} stroke={1.5} />
             )}
           </button>
         ) : (
-          <span className="w-[22px] shrink-0" />
+          <span className="w-4 shrink-0" />
         )}
 
-        {item.type === 'folder' ? (
-          <IconFolder
-            size={14}
-            stroke={1.5}
-            className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`}
-          />
+        {isFolder ? (
+          isExpanded ? (
+            <IconFolderOpen
+              size={16}
+              stroke={1.5}
+              className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`}
+            />
+          ) : (
+            <IconFolder
+              size={16}
+              stroke={1.5}
+              className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`}
+            />
+          )
         ) : (
           <IconFile
-            size={14}
+            size={16}
             stroke={1.5}
             className={`shrink-0 ${isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'}`}
           />
         )}
 
-        <span className="flex-1 truncate ml-1">{item.name}</span>
+        <span className="flex-1 truncate">{item.name}</span>
 
         <button
-          className={`p-0.5 rounded opacity-0 group-hover:opacity-100 shrink-0 ${isSelected ? 'hover:bg-white/20' : 'hover:bg-[var(--color-surface-muted)]'}`}
+          className="shrink-0 p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-[var(--color-surface-muted)]"
           onClick={(e) => e.stopPropagation()}
         >
-          <IconDotsCircleHorizontal size={14} stroke={1.5} />
+          <IconDotsVertical size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
       </div>
 
@@ -251,13 +299,6 @@ function ObjectRow({
   onToggleSelect,
 }: ObjectRowProps) {
   const isFolder = object.type === 'folder';
-  const [copiedField, setCopiedField] = useState<'s3Uri' | 'objectUrl' | null>(null);
-
-  const handleCopy = (text: string, field: 's3Uri' | 'objectUrl') => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
 
   return (
     <div
@@ -369,20 +410,12 @@ function ObjectRow({
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">S3 URI</span>
-                <button
-                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => object.s3Uri && handleCopy(object.s3Uri, 's3Uri')}
-                >
-                  {copiedField === 's3Uri' ? (
-                    <IconCheck
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-state-success)]"
-                    />
-                  ) : (
-                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                  )}
-                </button>
+                <CopyButton
+                  value={object.s3Uri ?? ''}
+                  size="sm"
+                  iconOnly
+                  disabled={!object.s3Uri}
+                />
               </div>
               <div className="text-body-md text-[var(--color-text-default)] break-all">
                 {object.s3Uri || '-'}
@@ -392,20 +425,12 @@ function ObjectRow({
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">Object URL</span>
-                <button
-                  className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
-                  onClick={() => object.objectUrl && handleCopy(object.objectUrl, 'objectUrl')}
-                >
-                  {copiedField === 'objectUrl' ? (
-                    <IconCheck
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-state-success)]"
-                    />
-                  ) : (
-                    <IconCopy size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                  )}
-                </button>
+                <CopyButton
+                  value={object.objectUrl ?? ''}
+                  size="sm"
+                  iconOnly
+                  disabled={!object.objectUrl}
+                />
               </div>
               <div className="text-body-md text-[var(--color-text-default)] break-all">
                 {object.objectUrl || '-'}
@@ -506,7 +531,7 @@ export function BucketDetailPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
-  const [selectedTreeItem, setSelectedTreeItem] = useState<string | null>('folder-yeonii');
+  const [selectedTreeItem, setSelectedTreeItem] = useState<string | null>('folder-a');
   const [objectTree, setObjectTree] = useState<ObjectItem[]>(mockObjectTree);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -643,15 +668,12 @@ export function BucketDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
               Delete
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
-              Edit
-            </Button>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard label="Owner" value={bucketData.owner} />
             <DetailHeader.InfoCard label="Used capacity" value={bucketData.usedCapacity} />
             <DetailHeader.InfoCard label="Objects" value={String(bucketData.objects)} />
-            <DetailHeader.InfoCard label="CreationDate" value={bucketData.creationDate} />
+            <DetailHeader.InfoCard label="Created at" value={bucketData.creationDate} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
@@ -717,17 +739,14 @@ export function BucketDetailPage() {
 
             {/* Objects Tab Panel */}
             <TabPanel value="objects" className="pt-4">
-              <div className="flex gap-4">
-                {/* Left Sidebar - Objects Tree */}
-                {treeSidebarOpen && (
-                  <div className="w-[224px] shrink-0 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
-                    <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--color-border-subtle)]">
-                      <span className="text-label-md text-[var(--color-text-default)]">
-                        Objects
-                      </span>
+              <VStack gap={4}>
+                {/* Header Row */}
+                <div className="flex items-center justify-between h-7">
+                  <div className="flex items-center gap-2">
+                    {!treeSidebarOpen && (
                       <button
-                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded"
-                        onClick={() => setTreeSidebarOpen(false)}
+                        className="p-1 rounded border border-[var(--color-border-default)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)] transition-colors"
+                        onClick={() => setTreeSidebarOpen(true)}
                       >
                         <IconLayoutSidebar
                           size={14}
@@ -735,31 +754,30 @@ export function BucketDetailPage() {
                           className="text-[var(--color-text-muted)]"
                         />
                       </button>
-                    </div>
-                    <div className="p-2 max-h-[600px] overflow-auto">
-                      {objectTree.map((item) => (
-                        <TreeItem
-                          key={item.id}
-                          item={item}
-                          level={0}
-                          selectedId={selectedTreeItem}
-                          onSelect={setSelectedTreeItem}
-                          onToggle={toggleTreeItem}
-                        />
-                      ))}
-                    </div>
+                    )}
+                    <h2 className="text-heading-h5 text-[var(--color-text-default)]">Objects</h2>
                   </div>
-                )}
+                  <div className="flex items-center gap-2">
+                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                      Create folder
+                    </Button>
+                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                      Create object
+                    </Button>
+                  </div>
+                </div>
 
-                {/* Right Content - Object List */}
-                <VStack gap={3} className="flex-1 min-w-0">
-                  {/* Header Row */}
-                  <div className="flex items-center justify-between h-7">
-                    <div className="flex items-center gap-2">
-                      {!treeSidebarOpen && (
+                <div className="flex gap-4">
+                  {/* Left Sidebar - Objects Tree */}
+                  {treeSidebarOpen && (
+                    <div className="w-[224px] shrink-0 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
+                      <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--color-border-subtle)]">
+                        <span className="text-label-md text-[var(--color-text-default)]">
+                          Objects
+                        </span>
                         <button
-                          className="p-1 rounded border border-[var(--color-border-default)] hover:bg-[var(--color-surface-muted)] hover:border-[var(--color-border-strong)] transition-colors"
-                          onClick={() => setTreeSidebarOpen(true)}
+                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded"
+                          onClick={() => setTreeSidebarOpen(false)}
                         >
                           <IconLayoutSidebar
                             size={14}
@@ -767,148 +785,148 @@ export function BucketDetailPage() {
                             className="text-[var(--color-text-muted)]"
                           />
                         </button>
-                      )}
-                      <h2 className="text-heading-h5 text-[var(--color-text-default)]">Objects</h2>
+                      </div>
+                      <div className="p-2 max-h-[600px] overflow-auto">
+                        {objectTree.map((item) => (
+                          <TreeItem
+                            key={item.id}
+                            item={item}
+                            level={0}
+                            selectedId={selectedTreeItem}
+                            onSelect={setSelectedTreeItem}
+                            onToggle={toggleTreeItem}
+                          />
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Create folder
-                      </Button>
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Create object
-                      </Button>
-                    </div>
-                  </div>
+                  )}
 
-                  {/* Search and Actions Row */}
-                  <ListToolbar
-                    primaryActions={
-                      <ListToolbar.Actions>
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search object by attributes"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onClear={() => setSearchQuery('')}
-                            size="sm"
-                            fullWidth
+                  {/* Right Content - Object List */}
+                  <VStack gap={3} className="flex-1 min-w-0">
+                    {/* Selected folder name */}
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                      {objectTree.find((o) => o.id === selectedTreeItem)?.name ?? 'Objects'}
+                    </h3>
+
+                    {/* Search and Actions Row */}
+                    <div className="flex items-center gap-2">
+                      <div className="w-[280px]">
+                        <SearchInput
+                          placeholder="Search objects by attributes"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          onClear={() => setSearchQuery('')}
+                          size="sm"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                      <Button
+                        variant="muted"
+                        size="sm"
+                        leftIcon={<IconTrash size={12} />}
+                        disabled={selectedRows.length === 0}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="muted"
+                        size="sm"
+                        leftIcon={<IconDownload size={12} />}
+                        disabled={selectedRows.length === 0}
+                      >
+                        Download
+                      </Button>
+                    </div>
+
+                    {/* Pagination */}
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={5}
+                      onPageChange={setCurrentPage}
+                      totalItems={115}
+                    />
+
+                    {/* Table */}
+                    <div className="flex flex-col gap-[var(--table-row-gap)]">
+                      {/* Table Header */}
+                      <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                        <div className="w-[var(--table-checkbox-width)] flex items-center justify-center shrink-0 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
+                          <Checkbox
+                            checked={
+                              selectedRows.length === filteredObjects.length &&
+                              filteredObjects.length > 0
+                            }
+                            onChange={() => {
+                              if (selectedRows.length === filteredObjects.length) {
+                                setSelectedRows([]);
+                              } else {
+                                setSelectedRows(filteredObjects.map((o) => o.id));
+                              }
+                            }}
                           />
                         </div>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          icon={<IconDownload size={12} stroke={1.5} />}
-                          aria-label="Download"
-                        />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          icon={<IconRefresh size={12} stroke={1.5} />}
-                          aria-label="Refresh"
-                        />
-                      </ListToolbar.Actions>
-                    }
-                    bulkActions={
-                      <ListToolbar.Actions>
-                        <Button
-                          variant="muted"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} stroke={1.5} />}
-                          disabled={selectedRows.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </ListToolbar.Actions>
-                    }
-                  />
+                        <div className="flex-1 min-w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                          Name (= Key)
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        </div>
+                        <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                          Owner
+                        </div>
+                        <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                          Type
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        </div>
+                        <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                          Size
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        </div>
+                        <div className="w-[100px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                          StorageClass
+                        </div>
+                        <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                          ETag
+                        </div>
+                        <div className="w-[130px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
+                          Last Modified
+                          <IconSelector
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        </div>
+                        <div className="w-[60px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                          Action
+                        </div>
+                      </div>
 
-                  {/* Pagination */}
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={1}
-                    onPageChange={setCurrentPage}
-                    totalItems={2}
-                  />
-
-                  {/* Table */}
-                  <div className="flex flex-col gap-[var(--table-row-gap)]">
-                    {/* Table Header */}
-                    <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                      <div className="w-[var(--table-checkbox-width)] flex items-center justify-center shrink-0 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
-                        <Checkbox
-                          checked={
-                            selectedRows.length === filteredObjects.length &&
-                            filteredObjects.length > 0
-                          }
-                          onChange={() => {
-                            if (selectedRows.length === filteredObjects.length) {
-                              setSelectedRows([]);
-                            } else {
-                              setSelectedRows(filteredObjects.map((o) => o.id));
-                            }
-                          }}
+                      {/* Table Body */}
+                      {filteredObjects.map((object) => (
+                        <ObjectRow
+                          key={object.id}
+                          object={object}
+                          isExpanded={expandedRows.includes(object.id)}
+                          isSelected={selectedRows.includes(object.id)}
+                          onToggleExpand={() => toggleRowExpansion(object.id)}
+                          onToggleSelect={() => toggleRowSelection(object.id)}
                         />
-                      </div>
-                      <div className="flex-1 min-w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
-                        Name (= Key)
-                        <IconSelector
-                          size={14}
-                          stroke={1}
-                          className="text-[var(--color-text-disabled)]"
-                        />
-                      </div>
-                      <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                        Owner
-                      </div>
-                      <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
-                        Type
-                        <IconSelector
-                          size={14}
-                          stroke={1}
-                          className="text-[var(--color-text-disabled)]"
-                        />
-                      </div>
-                      <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
-                        Size
-                        <IconSelector
-                          size={14}
-                          stroke={1}
-                          className="text-[var(--color-text-disabled)]"
-                        />
-                      </div>
-                      <div className="w-[100px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                        StorageClass
-                      </div>
-                      <div className="w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                        ETag
-                      </div>
-                      <div className="w-[130px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center gap-1 border-l border-[var(--color-border-default)]">
-                        LastModified
-                        <IconSelector
-                          size={14}
-                          stroke={1}
-                          className="text-[var(--color-text-disabled)]"
-                        />
-                      </div>
-                      <div className="w-[60px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                        Action
-                      </div>
+                      ))}
                     </div>
-
-                    {/* Table Body */}
-                    {filteredObjects.map((object) => (
-                      <ObjectRow
-                        key={object.id}
-                        object={object}
-                        isExpanded={expandedRows.includes(object.id)}
-                        isSelected={selectedRows.includes(object.id)}
-                        onToggleExpand={() => toggleRowExpansion(object.id)}
-                        onToggleSelect={() => toggleRowSelection(object.id)}
-                      />
-                    ))}
-                  </div>
-                </VStack>
-              </div>
+                  </VStack>
+                </div>
+              </VStack>
             </TabPanel>
           </Tabs>
         </div>

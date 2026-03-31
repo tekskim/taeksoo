@@ -3,7 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, PageShell } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconTerminal2,
+  IconFile,
+  IconCopy,
+  IconSearch,
+  IconPencilCog,
+  IconKey,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Mock YAML Content (would be fetched from API)
@@ -126,7 +134,7 @@ export function EditCronJobYamlPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Handle copy to clipboard
   const handleCopy = useCallback(async () => {
@@ -204,6 +212,20 @@ export function EditCronJobYamlPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>

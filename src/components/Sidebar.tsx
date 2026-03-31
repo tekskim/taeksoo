@@ -16,7 +16,6 @@ import {
   IconLoadBalancer,
   IconCertificate,
   IconTopologyStar3,
-  IconListSearch,
   IconServer2,
   IconActivity,
   IconCpu2,
@@ -26,7 +25,7 @@ import {
   IconUsersGroup,
   IconFileCode,
 } from '@tabler/icons-react';
-import { EthernetPort, ChevronsLeftRightEllipsis } from 'lucide-react';
+import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
 import { IconRouterArrows } from '@/design-system/components/Icons/CustomIcons';
@@ -67,10 +66,17 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
     if (href === `${basePath}/networks` && location.pathname.startsWith(`${basePath}/subnets`)) {
       return true;
     }
-    // Match child resources - Bare metal detail pages are under Bare metal nodes
+    // Match child resources - Bare metal detail pages are under Bare metal nodes (admin)
     if (
       href === '/compute-admin/bare-metal-nodes' &&
       location.pathname.startsWith('/compute-admin/bare-metal/')
+    ) {
+      return true;
+    }
+    // Match child resources - Bare metal detail pages are under Instances (user)
+    if (
+      href === `${basePath}/instances` &&
+      location.pathname.startsWith(`${basePath}/bare-metal/`)
     ) {
       return true;
     }
@@ -80,6 +86,15 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
       (location.pathname.startsWith(`${basePath}/listeners`) ||
         location.pathname.startsWith(`${basePath}/pools`) ||
         location.pathname.startsWith(`${basePath}/l7-policies`))
+    ) {
+      return true;
+    }
+    // Match child resources - Firewalls, Firewall Policies, and Firewall Rules are under NACL/Firewall
+    if (
+      href === `${basePath}/firewall` &&
+      (location.pathname.startsWith(`${basePath}/firewalls`) ||
+        location.pathname.startsWith(`${basePath}/firewall-policies`) ||
+        location.pathname.startsWith(`${basePath}/firewall-rules`))
     ) {
       return true;
     }
@@ -112,28 +127,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
 
           {isCloudBuilder ? (
             <>
-              <MenuSection title="Inventory(1.0v)" defaultOpen={true}>
-                <MenuItem
-                  icon={<IconListSearch size={16} stroke={1.5} />}
-                  label="Discovery"
-                  href="/cloudbuilder/discovery"
-                  active={isActive('/cloudbuilder/discovery')}
-                />
-                <MenuItem
-                  icon={<IconServer2 size={16} stroke={1.5} />}
-                  label="Servers"
-                  href="/cloudbuilder/servers"
-                  active={isActive('/cloudbuilder/servers')}
-                />
-                <MenuItem
-                  icon={<EthernetPort size={16} strokeWidth={1.5} />}
-                  label="Switch"
-                  href="/cloudbuilder/switch"
-                  active={isActive('/cloudbuilder/switch')}
-                />
-              </MenuSection>
-
-              <MenuSection title="Inventory(0.7v)" defaultOpen={true}>
+              <MenuSection title="Inventory" defaultOpen={true}>
                 <MenuItem
                   icon={<IconServer2 size={16} stroke={1.5} />}
                   label="Severs"
@@ -456,6 +450,12 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                   label="Load balancers"
                   href={`${basePath}/load-balancers`}
                   active={isActive(`${basePath}/load-balancers`)}
+                />
+                <MenuItem
+                  icon={<BrickWallFire size={16} strokeWidth={1.5} />}
+                  label="NACL"
+                  href={`${basePath}/firewall`}
+                  active={isActive(`${basePath}/firewall`)}
                 />
                 <MenuItem
                   icon={<IconCertificate size={16} stroke={1.5} />}

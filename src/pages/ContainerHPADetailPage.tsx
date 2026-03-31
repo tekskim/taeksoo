@@ -21,9 +21,9 @@ import {
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
-  fixedColumns,
   Tooltip,
   Popover,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -32,10 +32,12 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -88,7 +90,7 @@ const mockHPAData: Record<string, HPAData> = {
   '1': {
     id: '1',
     name: 'php-apache-hpa',
-    status: 'OK',
+    status: 'Active',
     namespace: 'default',
     targetReference: 'php-apache',
     createdAt: 'Jul 25, 2025 10:32:16',
@@ -106,7 +108,7 @@ const mockHPAData: Record<string, HPAData> = {
   '2': {
     id: '2',
     name: 'nginx-hpa',
-    status: 'True',
+    status: 'Processing',
     namespace: 'kube-system',
     targetReference: 'nginx-deployment',
     createdAt: 'Nov 8, 2025 11:51:27',
@@ -163,7 +165,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '3',
     condition: 'ScalingLimited',
-    status: 'None',
+    status: 'False',
     message: '[DesiredWithinRange] the desired count is within the acceptable range',
     updated: 'Nov 10, 2025',
   },
@@ -214,8 +216,8 @@ function MetricsTab() {
 
 function BehaviorTab() {
   return (
-    <VStack gap={3}>
-      <HStack gap={3} className="w-full items-stretch">
+    <VStack gap={4}>
+      <HStack gap={4} align="start" className="w-full">
         {/* Scale down behavior Card */}
         <SectionCard className="flex-1">
           <SectionCard.Header title="Scale down behavior" />
@@ -269,20 +271,18 @@ function ConditionsTab() {
       flex: 1,
       minWidth: columnMinWidths.condition,
       sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
@@ -291,7 +291,7 @@ function ConditionsTab() {
       minWidth: columnMinWidths.message,
       sortable: true,
       render: (value) => (
-        <span className="truncate" title={value}>
+        <span className="truncate block" title={value ?? ''}>
           {value}
         </span>
       ),
@@ -302,6 +302,11 @@ function ConditionsTab() {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
+      render: (value) => (
+        <span className="truncate block" title={value ?? ''}>
+          {value}
+        </span>
+      ),
     },
   ];
 
@@ -350,7 +355,7 @@ export function ContainerHPADetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -373,7 +378,7 @@ export function ContainerHPADetailPage() {
     }
   };
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
@@ -393,6 +398,7 @@ export function ContainerHPADetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];
@@ -431,15 +437,27 @@ export function ContainerHPADetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={hpa.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -488,8 +506,8 @@ export function ContainerHPADetailPage() {
               label="Status"
               value={
                 <Tooltip content={hpa.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge theme={getContainerStatusTheme(hpa.status)} type="subtle" size="sm">
                       {hpa.status}
                     </Badge>
                   </span>
@@ -542,8 +560,8 @@ export function ContainerHPADetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(hpa.labels).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(hpa.labels).length - 1}
                       </span>
                     </Popover>
                   )}
@@ -589,8 +607,8 @@ export function ContainerHPADetailPage() {
                         </div>
                       }
                     >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(hpa.annotations).length - 1})
+                      <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
+                        +{Object.keys(hpa.annotations).length - 1}
                       </span>
                     </Popover>
                   )}

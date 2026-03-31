@@ -152,7 +152,6 @@ import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolume
 import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { AttachInstanceDrawer } from '@/components/AttachInstanceDrawer';
-import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
 import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
@@ -1120,8 +1119,8 @@ export function DrawersPage() {
                     </h2>
                     <div className="flex flex-col gap-2">
                       <DrawerCard
-                        title="Create security group rule"
-                        description="Create a rule to define allowed inbound or outbound network traffic for your security group."
+                        title="Create rule"
+                        description="A security group rule defines allowed inbound or outbound network traffic."
                         category="Security group"
                         onOpen={() => openDrawerFn('create-security-group-rule')}
                         linked

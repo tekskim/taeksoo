@@ -182,7 +182,7 @@ export function Slider({
 
   return (
     <div
-      data-figma-name="Slider"
+      data-figma-name="[TDS] Range"
       className={twMerge(
         'flex items-center gap-[var(--slider-gap)]',
         fullWidth && 'flex-1 min-w-0',

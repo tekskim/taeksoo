@@ -10,10 +10,11 @@ import {
   SelectionIndicator,
   Table,
   FormField,
+  Tooltip,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconInfinity } from '@tabler/icons-react';
+import { IconInfinity, IconHelpCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -205,16 +206,12 @@ export function CreateVolumeBackupWithSelectionDrawer({
       label: 'Name',
       flex: 1,
       render: (_, row) => (
-        <span className="flex items-center gap-1.5">
+        <div className="flex flex-col gap-0.5">
           <span className="text-label-md text-[var(--color-action-primary)] truncate">
             {row.name}
           </span>
-          <IconExternalLink
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-action-primary)]"
-          />
-        </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+        </div>
       ),
     },
     {
@@ -230,16 +227,12 @@ export function CreateVolumeBackupWithSelectionDrawer({
       flex: 1,
       render: (_, row) =>
         row.attachedTo ? (
-          <span className="flex items-center gap-1.5">
+          <div className="flex flex-col gap-0.5">
             <span className="text-label-md text-[var(--color-action-primary)] truncate">
               {row.attachedTo}
             </span>
-            <IconExternalLink
-              size={12}
-              stroke={1.5}
-              className="shrink-0 text-[var(--color-action-primary)]"
-            />
-          </span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          </div>
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
         ),
@@ -248,7 +241,6 @@ export function CreateVolumeBackupWithSelectionDrawer({
       key: 'diskTag',
       label: 'Disk tag',
       flex: 1,
-      sortable: true,
       render: (value) => value || '-',
     },
   ];
@@ -299,7 +291,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
         {/* Header */}
         {/* Volumes Section */}
         <VStack gap={3}>
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Volumes</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)]">
+            Volumes <span className="text-[var(--color-state-danger)]">*</span>
+          </h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -346,7 +340,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
         {/* Form Fields Section */}
         <VStack gap={6}>
           {/* Backup Mode */}
-          <FormField label="Backup mode" spacing="loose">
+          <FormField label="Backup mode" spacing="loose" required>
             <VStack gap={2}>
               <Radio
                 name="backup-mode"
@@ -355,18 +349,26 @@ export function CreateVolumeBackupWithSelectionDrawer({
                 onChange={() => setBackupMode('full')}
                 label="Full backup"
               />
-              <Radio
-                name="backup-mode"
-                value="incremental"
-                checked={backupMode === 'incremental'}
-                onChange={() => setBackupMode('incremental')}
-                label="Increment backup"
-              />
+              <HStack gap={1.5} align="center">
+                <Radio
+                  name="backup-mode"
+                  value="incremental"
+                  checked={backupMode === 'incremental'}
+                  onChange={() => setBackupMode('incremental')}
+                  label="Increment backup"
+                />
+                <Tooltip
+                  content="Backup only changes since the last backup. Actual quota usage cannot be precisely estimated."
+                  position="right"
+                >
+                  <IconHelpCircle size={14} className="text-[var(--color-text-subtle)]" />
+                </Tooltip>
+              </HStack>
             </VStack>
           </FormField>
 
           {/* Volume Backup Name */}
-          <FormField>
+          <FormField required>
             <FormField.Label>Volume backup name</FormField.Label>
             <FormField.Control>
               <Input
@@ -383,7 +385,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
           </FormField>
 
           {/* Description */}
-          <FormField className="pb-[24px] gap-0">
+          <FormField className="pb-[24px]">
             <FormField.Label>Description</FormField.Label>
             <FormField.Control>
               <Input
@@ -393,6 +395,10 @@ export function CreateVolumeBackupWithSelectionDrawer({
                 fullWidth
               />
             </FormField.Control>
+            <FormField.HelperText>
+              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+              characters.
+            </FormField.HelperText>
           </FormField>
         </VStack>
       </VStack>

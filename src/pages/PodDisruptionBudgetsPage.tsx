@@ -33,6 +33,8 @@ import {
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -159,7 +161,7 @@ export function PodDisruptionBudgetsPage() {
   );
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Create menu items for each row
   const createMenuItems = (row: PodDisruptionBudgetRow): ContextMenuItem[] => {
@@ -195,7 +197,6 @@ export function PodDisruptionBudgetsPage() {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       render: (value: string) => (
         <Tooltip content={value}>
           <Badge theme="white" size="sm" className="max-w-[80px]">
@@ -207,7 +208,7 @@ export function PodDisruptionBudgetsPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
@@ -232,26 +233,52 @@ export function PodDisruptionBudgetsPage() {
       key: 'minAvailable',
       label: 'Min available',
       flex: 1,
-      render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      minWidth: columnMinWidths.minAvailable,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)] truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'maxUnavailable',
       label: 'Max unavailable',
       flex: 1,
-      render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      minWidth: columnMinWidths.maxUnavailable,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)] truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'allowedDisruption',
       label: 'Allowed disruption',
       flex: 1,
-      render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      minWidth: columnMinWidths.allowedDisruption,
+      sortable: true,
+      render: (value: string) => (
+        <span className="text-[var(--color-text-default)] truncate" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const formatted = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '');
+        return (
+          <span className="truncate whitespace-nowrap" title={value}>
+            {formatted}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
@@ -329,6 +356,20 @@ export function PodDisruptionBudgetsPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {

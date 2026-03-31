@@ -16,13 +16,14 @@ import {
   DetailHeader,
   Badge,
   PageShell,
-  InlineMessage,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
   Tooltip,
-  Popover,
+  BadgeList,
+  SearchInput,
+  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -31,11 +32,13 @@ import {
   IconBell,
   IconTerminal2,
   IconFile,
-  IconCopy,
   IconSearch,
   IconDotsCircleHorizontal,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -48,9 +51,9 @@ interface ServiceData {
   namespace: string;
   type: 'ClusterIP' | 'ClusterIP (Headless)' | 'ExternalName' | 'LoadBalancer' | 'NodePort';
   clusterIP: string;
-  externalIP?: string;
-  loadBalancerIP?: string;
-  externalTrafficPolicy?: 'Cluster' | 'Local';
+  loadBalancerIP: string;
+  externalIP: string;
+  externalTrafficPolicy: string;
   sessionAffinity: string;
   createdAt: string;
   labels: Record<string, string>;
@@ -101,13 +104,16 @@ interface ConditionRow {
 const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
-    name: 'frontend-web-application-loadbalancer-service',
-    status: 'OK',
-    namespace: 'namespaceName',
-    type: 'ClusterIP',
-    clusterIP: '10.43.100.10',
+    name: 'capi-webhook-service',
+    status: 'Active',
+    namespace: 'default',
+    type: 'LoadBalancer',
+    clusterIP: '10.11.111.10',
+    loadBalancerIP: '203.0.113.10',
+    externalIP: '198.51.100.5',
+    externalTrafficPolicy: 'Local',
     sessionAffinity: 'None',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Jul 25, 2025 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -121,95 +127,22 @@ const mockServiceData: Record<string, ServiceData> = {
   },
   '2': {
     id: '2',
-    name: 'backend-api-gateway-cluster-internal-service',
-    status: 'True',
-    namespace: 'namespaceName',
-    type: 'ClusterIP (Headless)',
-    clusterIP: 'None',
-    sessionAffinity: 'None',
-    createdAt: 'Nov 10, 2025 01:17:01',
-    labels: {
-      app: 'backend-api',
-      'app.kubernetes.io/component': 'gateway',
-    },
-    annotations: {
-      'kubectl.kubernetes.io/last-applied-configuration': '{}',
-    },
-  },
-  '3': {
-    id: '3',
-    name: 'external-database-connection-externalname-service',
-    status: 'None',
-    namespace: 'namespaceName',
-    type: 'ExternalName',
-    clusterIP: 'None',
-    sessionAffinity: 'None',
-    createdAt: 'Nov 10, 2025 01:17:01',
-    labels: {
-      app: 'external-db',
-    },
-    annotations: {
-      'kubectl.kubernetes.io/last-applied-configuration': '{}',
-    },
-  },
-  '4': {
-    id: '4',
-    name: 'ingress-nginx-loadbalancer-external-service',
-    status: 'CreateContainerConfigError',
-    namespace: 'namespaceName',
+    name: 'nginx-service',
+    status: 'Processing',
+    namespace: 'ingress-nginx',
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
-    loadBalancerIP: '192.168.10.50',
+    loadBalancerIP: '203.0.113.50',
+    externalIP: '198.51.100.10',
     externalTrafficPolicy: 'Cluster',
-    sessionAffinity: 'None',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    sessionAffinity: 'ClientIP',
+    createdAt: 'Nov 8, 2025 11:51:27',
     labels: {
-      'app.kubernetes.io/name': 'ingress-nginx',
+      'app.kubernetes.io/name': 'nginx',
       'app.kubernetes.io/component': 'controller',
     },
     annotations: {
       'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
-    },
-  },
-  '5': {
-    id: '5',
-    name: 'legacy-application-nodeport-external-access-service',
-    status: 'ImagePullBackOff',
-    namespace: 'namespaceName',
-    type: 'NodePort',
-    clusterIP: '10.43.200.20',
-    externalIP: '203.0.113.5',
-    externalTrafficPolicy: 'Local',
-    sessionAffinity: 'None',
-    createdAt: 'Nov 10, 2025 01:17:01',
-    labels: {
-      app: 'legacy-app',
-      version: 'v1',
-    },
-    annotations: {
-      'kubectl.kubernetes.io/last-applied-configuration': '{}',
-    },
-  },
-  '6': {
-    id: '6',
-    name: 'multi-region-loadbalancer-with-many-external-ips',
-    status: 'OK',
-    namespace: 'production',
-    type: 'LoadBalancer',
-    clusterIP: '10.43.50.100',
-    externalIP: '203.0.113.1',
-    loadBalancerIP: '192.168.10.10',
-    externalTrafficPolicy: 'Local',
-    sessionAffinity: 'ClientIP',
-    createdAt: 'Nov 10, 2025 01:17:01',
-    labels: {
-      app: 'multi-region',
-      region: 'global',
-      'app.kubernetes.io/managed-by': 'Helm',
-    },
-    annotations: {
-      'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
-      'service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled': 'true',
     },
   },
 };
@@ -217,7 +150,7 @@ const mockServiceData: Record<string, ServiceData> = {
 const mockPodsData: PodRow[] = [
   {
     id: '1',
-    status: 'OK',
+    status: 'Running',
     name: 'deploymentName-77f6bb9c69-4ww7f',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -228,7 +161,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '2',
-    status: 'True',
+    status: 'Succeeded',
     name: 'deploymentName-77f6bb9c69-5xx8g',
     image: 'nginx:1.27',
     ready: '1/1',
@@ -239,7 +172,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '3',
-    status: 'CreateContainerConfigError',
+    status: 'Processing',
     name: 'deploymentName-77f6bb9c69-6yy9h',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -250,7 +183,7 @@ const mockPodsData: PodRow[] = [
   },
   {
     id: '4',
-    status: 'ImagePullBackOff',
+    status: 'Failed',
     name: 'deploymentName-77f6bb9c69-7zz0i',
     image: 'nginx:1.27',
     ready: '0/1',
@@ -307,7 +240,7 @@ const mockConditionsData: ConditionRow[] = [
   {
     id: '2',
     type: 'Progressing',
-    status: 'None',
+    status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
     lastTransition: 'Jul 25, 2025',
@@ -328,6 +261,14 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [podSearch, setPodSearch] = useState('');
+
+  const filteredPods = pods.filter(
+    (pod) =>
+      pod.name.toLowerCase().includes(podSearch.toLowerCase()) ||
+      pod.image.toLowerCase().includes(podSearch.toLowerCase()) ||
+      pod.node.toLowerCase().includes(podSearch.toLowerCase())
+  );
 
   const createPodMenuItems = (row: PodRow): ContextMenuItem[] => {
     return [
@@ -359,6 +300,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       {
         id: 'delete',
         label: 'Delete',
+        status: 'danger',
         onClick: () => console.log('Delete:', row.id),
       },
     ];
@@ -369,11 +311,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'status',
       label: 'Status',
       width: fixedColumns.statusLabel,
-      align: 'left',
       sortable: false,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -387,7 +333,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: true,
       render: (value: string, row: PodRow) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
           title={value}
           onClick={() => navigate(`/container/pods/${row.id}`)}
         >
@@ -405,13 +351,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'ready',
       label: 'Ready',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ready,
       sortable: true,
     },
     {
       key: 'restarts',
       label: 'Restarts',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
@@ -424,9 +372,13 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'node',
       label: 'Node',
       flex: 1,
+      minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -435,8 +387,16 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, ''),
+      render: (value: string) => {
+        const display = value?.replace(/\s+\d{2}:\d{2}:\d{2}$/, '') ?? '';
+        return (
+          <span className="truncate min-w-0" title={display}>
+            {display}
+          </span>
+        );
+      },
     },
     {
       key: 'action',
@@ -460,16 +420,26 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Pods</h3>
+      <SearchInput
+        value={podSearch}
+        onChange={(e) => setPodSearch(e.target.value)}
+        onClear={() => setPodSearch('')}
+        placeholder="Search pods by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredPods.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={pods.length}
+        totalItems={filteredPods.length}
         selectedCount={selectedKeys.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
       <Table
         columns={columns}
-        data={pods}
+        data={filteredPods}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -489,6 +459,14 @@ interface PortsTabProps {
 
 function PortsTab({ ports }: PortsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [portSearch, setPortSearch] = useState('');
+
+  const filteredPorts = ports.filter(
+    (port) =>
+      port.name.toLowerCase().includes(portSearch.toLowerCase()) ||
+      port.protocol.toLowerCase().includes(portSearch.toLowerCase()) ||
+      String(port.port).includes(portSearch)
+  );
 
   const columns: TableColumn<PortRow>[] = [
     {
@@ -509,12 +487,14 @@ function PortsTab({ ports }: PortsTabProps) {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
+      minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'target',
       label: 'Target',
       flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: true,
     },
     {
@@ -543,13 +523,23 @@ function PortsTab({ ports }: PortsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
+      <SearchInput
+        value={portSearch}
+        onChange={(e) => setPortSearch(e.target.value)}
+        onClear={() => setPortSearch('')}
+        placeholder="Search ports by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredPorts.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={ports.length}
+        totalItems={filteredPorts.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={ports} rowKey="id" />
+      <Table columns={columns} data={filteredPorts} rowKey="id" />
     </VStack>
   );
 }
@@ -564,6 +554,13 @@ interface SelectorsTabProps {
 
 function SelectorsTab({ selectors }: SelectorsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectorSearch, setSelectorSearch] = useState('');
+
+  const filteredSelectors = selectors.filter(
+    (sel) =>
+      sel.key.toLowerCase().includes(selectorSearch.toLowerCase()) ||
+      sel.value.toLowerCase().includes(selectorSearch.toLowerCase())
+  );
 
   const columns: TableColumn<SelectorRow>[] = [
     {
@@ -585,13 +582,23 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Selectors</h3>
+      <SearchInput
+        value={selectorSearch}
+        onChange={(e) => setSelectorSearch(e.target.value)}
+        onClear={() => setSelectorSearch('')}
+        placeholder="Search selectors by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredSelectors.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={selectors.length}
+        totalItems={filteredSelectors.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={selectors} rowKey="id" />
+      <Table columns={columns} data={filteredSelectors} rowKey="id" />
     </VStack>
   );
 }
@@ -606,35 +613,39 @@ interface ConditionsTabProps {
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [conditionSearch, setConditionSearch] = useState('');
+
+  const filteredConditions = conditions.filter(
+    (cond) =>
+      cond.type.toLowerCase().includes(conditionSearch.toLowerCase()) ||
+      cond.status.toLowerCase().includes(conditionSearch.toLowerCase()) ||
+      cond.message.toLowerCase().includes(conditionSearch.toLowerCase()) ||
+      cond.reason.toLowerCase().includes(conditionSearch.toLowerCase())
+  );
 
   const columns: TableColumn<ConditionRow>[] = [
     {
       key: 'type',
       label: 'Condition',
       flex: 1,
+      minWidth: columnMinWidths.condition,
       sortable: true,
     },
     {
       key: 'status',
-      label: 'Status',
-      width: fixedColumns.statusLabel,
-      align: 'left',
-      sortable: false,
-      render: (value: string) => (
-        <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
-            <span className="truncate">{value}</span>
-          </Badge>
-        </Tooltip>
-      ),
+      label: 'Size',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
-        <span className="truncate" title={`[${row.reason}] ${value}`}>
+        <span className="truncate min-w-0" title={`[${row.reason}] ${value}`}>
           [{row.reason}] {value}
         </span>
       ),
@@ -643,6 +654,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'lastTransition',
       label: 'Updated',
       flex: 1,
+      minWidth: columnMinWidths.lastUpdate,
       sortable: true,
     },
   ];
@@ -650,13 +662,23 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
   return (
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
+      <SearchInput
+        value={conditionSearch}
+        onChange={(e) => setConditionSearch(e.target.value)}
+        onClear={() => setConditionSearch('')}
+        placeholder="Search conditions by attributes"
+        size="sm"
+        className="w-[var(--search-input-width)]"
+      />
       <Pagination
         currentPage={currentPage}
-        totalPages={1}
+        totalPages={Math.max(1, Math.ceil(filteredConditions.length / 10))}
         onPageChange={setCurrentPage}
-        totalItems={conditions.length}
+        totalItems={filteredConditions.length}
+        showSettings
+        onSettingsClick={() => {}}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={filteredConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -692,7 +714,7 @@ export function ContainerServiceDetailPage() {
   }));
 
   // Sidebar width calculation
-  const sidebarWidth = sidebarOpen ? 240 : 40;
+  const sidebarWidth = sidebarOpen ? 248 : 48;
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -712,13 +734,12 @@ export function ContainerServiceDetailPage() {
     shellPanel.openConsole(podName, `Shell: ${podName}`);
   };
 
-  // Context menu items for More Actions
+  // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () =>
-        navigate(`/container/services/${service.id}/edit?name=${encodeURIComponent(service.name)}`),
+      onClick: () => navigate(`/container/services/${service.id}/edit`),
     },
     {
       id: 'edit-yaml',
@@ -733,6 +754,7 @@ export function ContainerServiceDetailPage() {
     {
       id: 'delete',
       label: 'Delete',
+      status: 'danger',
       onClick: () => console.log('Delete'),
     },
   ];
@@ -771,15 +793,27 @@ export function ContainerServiceDetailPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                aria-label="Access Token"
+              >
+                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <CopyButton value={service.name} size="sm" iconOnly />
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -828,8 +862,14 @@ export function ContainerServiceDetailPage() {
               label="Status"
               value={
                 <Tooltip content={service.status === 'Running' ? 'Active' : service.status}>
-                  <span className="max-w-[80px] truncate">
-                    <Badge theme="white" size="sm">
+                  <span className="max-w-full truncate">
+                    <Badge
+                      theme={getContainerStatusTheme(
+                        service.status === 'Running' ? 'Active' : service.status
+                      )}
+                      type="subtle"
+                      size="sm"
+                    >
                       {service.status === 'Running' ? 'Active' : service.status}
                     </Badge>
                   </span>
@@ -839,124 +879,41 @@ export function ContainerServiceDetailPage() {
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
             <DetailHeader.InfoCard label="Type" value={service.type} />
             <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
-            {service.externalIP && (
-              <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
-            )}
-            {service.type === 'LoadBalancer' && service.loadBalancerIP && (
-              <DetailHeader.InfoCard
-                label="LoadBalancer IP"
-                value={service.loadBalancerIP}
-                copyable
-              />
-            )}
-            {(service.type === 'NodePort' || service.type === 'LoadBalancer') &&
-              service.externalTrafficPolicy && (
-                <DetailHeader.InfoCard
-                  label="External Traffic Policy"
-                  value={service.externalTrafficPolicy}
-                />
-              )}
+            <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
+            <DetailHeader.InfoCard
+              label="Load balancer IP"
+              value={service.loadBalancerIP}
+              copyable
+            />
+            <DetailHeader.InfoCard
+              label="External Traffic Policy"
+              value={service.externalTrafficPolicy}
+            />
             <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
             <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
             <DetailHeader.InfoCard
               label={`Labels (${Object.keys(service.labels).length})`}
               value={
-                <div className="flex items-center gap-1 min-w-0 w-full">
-                  {Object.entries(service.labels)
-                    .slice(0, 1)
-                    .map(([key, val]) => (
-                      <Badge
-                        key={key}
-                        theme="white"
-                        size="sm"
-                        className="min-w-0 truncate justify-start text-left"
-                      >
-                        {`${key}: ${val}`}
-                      </Badge>
-                    ))}
-                  {Object.keys(service.labels).length > 1 && (
-                    <Popover
-                      trigger="hover"
-                      position="bottom"
-                      delay={100}
-                      hideDelay={100}
-                      content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
-                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All labels ({Object.keys(service.labels).length})
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            {Object.entries(service.labels).map(([k, v]) => (
-                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      }
-                    >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(service.labels).length - 1})
-                      </span>
-                    </Popover>
-                  )}
-                </div>
+                <BadgeList
+                  items={Object.entries(service.labels).map(([k, v]) => `${k}: ${v}`)}
+                  maxVisible={1}
+                  maxBadgeWidth="140px"
+                  popoverTitle={`All labels (${Object.keys(service.labels).length})`}
+                />
               }
             />
             <DetailHeader.InfoCard
               label={`Annotations (${Object.keys(service.annotations).length})`}
               value={
-                <div className="flex items-center gap-1 min-w-0 w-full">
-                  {Object.entries(service.annotations)
-                    .slice(0, 1)
-                    .map(([key, val]) => (
-                      <Badge
-                        key={key}
-                        theme="white"
-                        size="sm"
-                        className="min-w-0 truncate justify-start text-left"
-                      >
-                        {`${key}: ${val}`}
-                      </Badge>
-                    ))}
-                  {Object.keys(service.annotations).length > 1 && (
-                    <Popover
-                      trigger="hover"
-                      position="bottom"
-                      delay={100}
-                      hideDelay={100}
-                      content={
-                        <div className="p-3 min-w-[120px] max-w-[320px]">
-                          <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                            All annotations ({Object.keys(service.annotations).length})
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            {Object.entries(service.annotations).map(([k, v]) => (
-                              <Badge key={k} theme="white" size="sm" className="w-fit max-w-full">
-                                <span className="break-all">{`${k}: ${v}`}</span>
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      }
-                    >
-                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                        (+{Object.keys(service.annotations).length - 1})
-                      </span>
-                    </Popover>
-                  )}
-                </div>
+                <BadgeList
+                  items={Object.entries(service.annotations).map(([k, v]) => `${k}: ${v}`)}
+                  maxVisible={1}
+                  maxBadgeWidth="140px"
+                  popoverTitle={`All annotations (${Object.keys(service.annotations).length})`}
+                />
               }
             />
           </DetailHeader.InfoGrid>
-          {service.type === 'LoadBalancer' && service.externalTrafficPolicy === 'Cluster' && (
-            <div className="mt-3">
-              <InlineMessage variant="warning">
-                Load Balancer Service를 구축할 경우 external traffic policy는 local로 되어 있어야
-                정상적인 health check 가능합니다.
-              </InlineMessage>
-            </div>
-          )}
         </DetailHeader>
 
         {/* Tabs */}
