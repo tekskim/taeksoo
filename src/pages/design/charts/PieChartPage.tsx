@@ -1,3 +1,4 @@
+import ReactECharts from 'echarts-for-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { PieChartDemo, chartColors } from '../../design-system-sections/ChartComponents';
@@ -327,6 +328,44 @@ function PieChartGuidelines() {
   );
 }
 
+function PieChartLoadingDemo() {
+  const option = {
+    series: [
+      {
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
+        label: { show: false },
+        labelLine: { show: false },
+        data: [],
+      },
+    ],
+  };
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
+      <span className="text-label-md text-[var(--color-text-default)]">OSD Objectstore Types</span>
+      <div className="flex justify-center">
+        <ReactECharts
+          option={option}
+          showLoading
+          loadingOption={{
+            text: '',
+            color: '#2563eb',
+            maskColor: 'rgba(255, 255, 255, 0.9)',
+            zlevel: 0,
+            showSpinner: true,
+            spinnerRadius: 14,
+            lineWidth: 2,
+          }}
+          style={{ height: '180px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
+      </div>
+    </div>
+  );
+}
+
 const PIE_PRIMARY = [
   { name: 'cyan400', hex: chartColors.cyan400 },
   { name: 'emerald400', hex: chartColors.emerald400 },
@@ -436,6 +475,16 @@ export function PieChartPage() {
                 { name: 'seastore', value: 10 },
               ]}
             />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Loading State</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                데이터 로딩 중 ECharts 내장 스피너를 표시한다. showLoading prop을 사용하여 로딩
+                상태를 제어한다.
+              </span>
+            </VStack>
+            <PieChartLoadingDemo />
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>

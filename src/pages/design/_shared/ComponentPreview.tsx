@@ -17,8 +17,8 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
   );
 
   return (
-    <div className="rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)] rounded-t-[var(--primitive-radius-lg)]">
+    <div className="border border-[var(--color-border-default)]">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]">
         <span className="text-body-xs text-[var(--color-text-subtle)] font-medium uppercase tracking-wider">
           Preview
         </span>
@@ -60,7 +60,7 @@ export function ComponentPreview({ children, code, language }: ComponentPreviewP
       {!showCode && (
         <div
           data-theme={previewTheme}
-          className={`p-6 rounded-b-[var(--primitive-radius-lg)] transition-colors bg-[var(--color-surface-default)] ${previewTheme === 'dark' ? 'dark' : ''}`}
+          className={`p-6 transition-colors bg-[var(--color-surface-default)] ${previewTheme === 'dark' ? 'dark' : ''}`}
         >
           {children}
         </div>

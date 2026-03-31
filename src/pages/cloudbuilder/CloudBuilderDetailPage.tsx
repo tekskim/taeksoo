@@ -3,10 +3,16 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import {
   Badge,
   Button,
+  ConfirmModal,
   CopyButton,
   DetailHeader,
+  Drawer,
+  FormField,
+  HStack,
+  Input,
   Modal,
   ProgressBar,
+  Select,
   StatusIndicator,
   Tabs,
   TabList,
@@ -22,7 +28,14 @@ import {
   Breadcrumb,
   type TableColumn,
 } from '@/design-system';
-import { IconBell, IconBan, IconPower } from '@tabler/icons-react';
+import {
+  IconBell,
+  IconBan,
+  IconPower,
+  IconBinaryTree,
+  IconEdit,
+  IconTrash,
+} from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { FigmaCaptureWrapper } from '@/components/FigmaCaptureWrapper';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -177,6 +190,12 @@ export function CloudBuilderDetailPage() {
   const [nextStatus, setNextStatus] = useState<'Enabled' | 'Disabled'>('Disabled');
   const [disableReason, setDisableReason] = useState('');
 
+  const [allocateOpen, setAllocateOpen] = useState(false);
+  const [allocateDomain, setAllocateDomain] = useState('');
+  const [editOpen, setEditOpen] = useState(false);
+  const [editLocation, setEditLocation] = useState('');
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
   useEffect(() => {
     setServiceStatus(row?.serviceStatus ?? 'Enabled');
     setStatusModalOpen(false);
@@ -248,8 +267,15 @@ export function CloudBuilderDetailPage() {
 
     const type = 'Ironic Baremetal';
 
+    const hex = (n: number, len: number) => (n >>> 0).toString(16).padStart(len, '0');
+    const uA = stableInt(`uuid-a:${seed}`);
+    const uB = stableInt(`uuid-b:${seed}`);
+    const uC = stableInt(`uuid-c:${seed}`);
+    const uuid = `${hex(uA, 8)}-${hex(uB, 4).slice(0, 4)}-${hex(uC, 4).slice(0, 4)}-${hex(uA ^ uB, 4).slice(0, 4)}-${hex((uB ^ uC) + uA, 12).slice(0, 12)}`;
+
     return {
       serverId,
+      uuid,
       type,
       providerNetwork,
       domain,
@@ -547,10 +573,47 @@ export function CloudBuilderDetailPage() {
           >
             {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
           </DetailHeader.Title>
+          {isServer && (
+            <DetailHeader.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconBinaryTree size={12} />}
+                onClick={() => setAllocateOpen(true)}
+              >
+                Allocate
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconEdit size={12} />}
+                onClick={() => setEditOpen(true)}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                onClick={() => setDeleteOpen(true)}
+              >
+                Delete
+              </Button>
+            </DetailHeader.Actions>
+          )}
           <DetailHeader.InfoGrid
             data-figma-name="[TDS] DetailPageHeader.InfoGrid"
             aria-label="[TDS] DetailPageHeader.InfoGrid"
           >
+            {isServer && (
+              <DetailHeader.InfoCard
+                label="UUID"
+                value={serverDerived?.uuid ?? '-'}
+                copyable
+                data-figma-name="[TDS] DetailPageHeader.InfoField-UUID"
+                aria-label="[TDS] DetailPageHeader.InfoField-UUID"
+              />
+            )}
             <DetailHeader.InfoCard
               label={isServer ? 'Serial' : 'ID'}
               value={isServer ? (serverDerived?.serverId ?? row?.id ?? id) : (row?.id ?? id)}
@@ -988,21 +1051,131 @@ export function CloudBuilderDetailPage() {
     </VStack>
   );
 
+  const serverName = (row as any)?.serial ?? `Server #${id}`;
+
+  const drawersAndModals = (
+    <>
+      <Drawer
+        isOpen={allocateOpen}
+        onClose={() => setAllocateOpen(false)}
+        title="Allocate server"
+        description="Assign a role and domain to the selected server."
+        width={360}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={() => setAllocateOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setAllocateOpen(false)}
+              disabled={!allocateDomain}
+              className="flex-1"
+            >
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={6}>
+          <FormField label="Role" required>
+            <Select
+              value="baremetal-node"
+              options={[{ value: 'baremetal-node', label: 'Baremetal Node' }]}
+              disabled
+              fullWidth
+            />
+          </FormField>
+          <FormField label="Domain" required>
+            <Select
+              value={allocateDomain}
+              onChange={setAllocateDomain}
+              placeholder="Select domain"
+              options={[
+                { value: 'thaki-prod', label: 'thaki-prod' },
+                { value: 'thaki-stage', label: 'thaki-stage' },
+                { value: 'thaki-dev', label: 'thaki-dev' },
+                { value: 'thaki-lab', label: 'thaki-lab' },
+              ]}
+              fullWidth
+            />
+          </FormField>
+        </VStack>
+      </Drawer>
+
+      <Drawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        title="Edit server"
+        description="Change the location of the selected server."
+        width={360}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={() => setEditOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setEditOpen(false)}
+              disabled={!editLocation}
+              className="flex-1"
+            >
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={6}>
+          <FormField label="Location" required helperText="Building, rack and unit position">
+            <Input
+              value={editLocation}
+              onChange={(e) => setEditLocation(e.target.value)}
+              placeholder="e.g. DC-1 / Rack-1 / U18"
+              fullWidth
+            />
+          </FormField>
+        </VStack>
+      </Drawer>
+
+      <ConfirmModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => setDeleteOpen(false)}
+        title="Delete server"
+        description="This action cannot be undone. The server will be permanently removed from the inventory."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel="Server"
+        infoValue={serverName}
+      />
+    </>
+  );
+
   if (isFigmaCapture) {
     return (
-      <FigmaCaptureWrapper
-        {...shellProps}
-        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
-      >
-        {pageContent}
-      </FigmaCaptureWrapper>
+      <>
+        <FigmaCaptureWrapper
+          {...shellProps}
+          contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+        >
+          {pageContent}
+        </FigmaCaptureWrapper>
+        {drawersAndModals}
+      </>
     );
   }
 
   return (
-    <PageShell {...shellProps} contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-      {pageContent}
-    </PageShell>
+    <>
+      <PageShell
+        {...shellProps}
+        contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+      >
+        {pageContent}
+      </PageShell>
+      {drawersAndModals}
+    </>
   );
 }
 

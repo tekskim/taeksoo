@@ -16,7 +16,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
-import { IconBell, IconTerminal2 } from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconPencilCog } from '@tabler/icons-react';
 import postgresqlLogo from '@/assets/catalog/postgresql.svg';
 import valkeyLogo from '@/assets/catalog/valkey.svg';
 import kafkaLogo from '@/assets/catalog/kafka.svg';
@@ -172,6 +172,13 @@ export default function CatalogPage() {
           }
           actions={
             <>
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                aria-label="Customize cluster appearance"
+              >
+                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
               <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
               <TopBarActionButton
                 icon={<IconBell size={16} stroke={1.5} />}

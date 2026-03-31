@@ -15,16 +15,10 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 
-const BUTTON_GUIDELINES = `## Overview
+const GUIDELINES_OVERVIEW = `사용자가 시스템에 변화를 일으키는 액션을 실행하기 위한 기본 인터랙션 컴포넌트이다. Button은 기능의 존재와 실행 가능 여부를 명확히 전달해야 하며, 동일한 의미의 액션은 제품 전반에서 동일한 라벨/위치/동작으로 일관되게 제공되어야 한다.
+본 문서는 클라우드 콘솔 환경(권한/RBAC, 리소스 상태, 비동기 작업, 파괴적 작업)을 전제로 Button의 노출/상태/라벨/예외 규칙을 정의한다.`;
 
-사용자가 시스템에 변화를 일으키는 액션을 실행하기 위한 기본 인터랙션 컴포넌트이다. Button은 기능의 존재와 실행 가능 여부를 명확히 전달해야 하며, 동일한 의미의 액션은 제품 전반에서 동일한 라벨/위치/동작으로 일관되게 제공되어야 한다.
-본 문서는 클라우드 콘솔 환경(권한/RBAC, 리소스 상태, 비동기 작업, 파괴적 작업)을 전제로 Button의 노출/상태/라벨/예외 규칙을 정의한다.
-
----
-
-## Variants
-
-### 1) 유형 분류
+const GUIDELINES_VARIANTS = `### 1) 유형 분류
 
 버튼은 의미와 위험도에 따라 Variant를 구분한다.
 
@@ -55,26 +49,18 @@ const BUTTON_GUIDELINES = `## Overview
 | LG | 36px | 80px | 페이지 주요 CTA |
 
 **정렬 규칙**
-- 같은 행(row) 또는 같은 컨테이너 내 버튼은 동일한 사이즈를 사용한다.
+- 같은 행(row) 또는 같은 컨테이너 내 버튼은 동일한 사이즈를 사용한다.`;
 
----
-
-## States
-
-| State | 설명 |
+const GUIDELINES_STATES = `| State | 설명 |
 | --- | --- |
 | Enabled | 클릭 가능한 상태 |
 | Hover | 포인터가 올라간 상태 |
 | Pressed | 클릭 중 |
 | Focus | 키보드 포커스 |
 | Disabled | 클릭 불가(기능 존재는 노출) |
-| Loading | 실행 중(중복 클릭 방지) |
+| Loading | 실행 중(중복 클릭 방지) |`;
 
----
-
-## Behavior
-
-### 1) 노출 정책: Disabled vs Hidden
+const GUIDELINES_BEHAVIOR = `### 1) 노출 정책: Disabled vs Hidden
 
 - **원칙**: 기본은 **Disabled + (필요 시 Tooltip)** 이다. Hidden은 예외로만 허용한다.
 - **이유**: 기능 존재를 명확히 인지 / "안 보임 = 오류" 오인 방지 / 권한/상태 기반 콘솔 UX 일관성 유지
@@ -128,13 +114,9 @@ Tooltip은 "사용자가 화면만 보고 이유를 알 수 있는가"로 결정
 | --- | --- |
 | Left icon | 액션 강조 |
 | Right icon | 이동 / 다음 단계 |
-| Only icon | 다운로드, 즐겨찾기 등 아이콘만으로도 의미 전달이 가능한 보편적 액션 |
+| Only icon | 다운로드, 즐겨찾기 등 아이콘만으로도 의미 전달이 가능한 보편적 액션 |`;
 
----
-
-## Content Guidelines
-
-### 1) 라벨 기본 원칙
+const GUIDELINES_CONTENT = `### 1) 라벨 기본 원칙
 
 - 사용자의 "다음 행동"을 명확히 지시하는 단어 사용
 - \`EN\`: 동사형
@@ -164,68 +146,39 @@ Tooltip은 "사용자가 화면만 보고 이유를 알 수 있는가"로 결정
 | Download | 다운로드 | 올리기 | |
 | Upload | 업로드 | 내보내기 | |
 | Reset to default | 초기화 | 기본값으로 재설정 | 기본값으로 되돌리는 행위는 '초기화' |
-| View details | 상세 보기 | | 아코디언, 드로어를 통해 추가적인 정보가 확인 가능할 때 사용 |
+| View details | 상세 보기 | | 아코디언, 드로어를 통해 추가적인 정보가 확인 가능할 때 사용 |`;
 
----
-
-## Usage Guidelines
-
----
-
-## Related
-
-| 이름 | 유형 | 관련 이유 |
-| --- | --- | --- |
-| Tooltip | Component | Disabled 사유 전달 |
-| Validation | Component | 입력 오류 표시(버튼 대신 필드 근처) |
-| Modal | Component | Destructive confirm, 의사 확인 |
-| Context Menu | Component | 다중 액션 수용 |
-| Card | Component | CTA 버튼 포함 |
-| Create page | Pattern | 카드 입력 시 버튼 규칙 |
-| UX Writing Guide | Foundation | 용어/표기 통일 |
-
----
-
-<details>
-<summary>이전 버전</summary>
-
-## 버튼 노출 정책
-
-### 1. 비활성화 or 비노출
+const GUIDELINES_LEGACY = `### 1. 비활성화 or 비노출
 - 사용자에게 기능의 존재 여부를 명확히 알리기 위해 '비활성화 + 툴팁'을 기본으로 한다.
 - 버튼이 보이지 않을 경우 시스템 오류로 오인하는 것을 방지한다.
 - 단, 논리적으로 불가능하거나 사용자에게 불필요한 인지 부하를 주는 경우에 한해 예외적으로 '비노출(Hidden)' 처리한다.
 
 ### 2. 상태별 상세 정책
 
-1. 활성화 상태
-   - 정의: 기능을 즉시 실행할 수 있는 정상 상태로, 클릭 이벤트가 정상 동작함.
-   - 적용 기준:
-     1. 권한 충족: 사용자가 해당 기능을 실행할 권한을 가지고 있음.
-     2. 상태 적합: 대상 리소스가 해당 기능을 수행할 수 있는 상태임 (예: 정지된 VM -> '시작' 가능).
-   - 예외: 생성, 편집 등 입력 조건이 필요한 상황에서도 버튼은 '활성화 상태'를 유지하고, 클릭 시 어떤 입력값이 충족하지 못했는지 얼럿으로 표시
-     - 예외의 예외: 단계별로 진행되는 생성 화면에서는 플로팅 카드의 primary 버튼이 활성화될 경우 입력 카드의 primary 버튼과 시각적인 교란이 가능하고, 입력 사항이 많아 단계별로 입력값 체크가 필요하므로 모든 단계가 입력 완료 될 때까지 비활성화한다.
-
-2. 비활성화 상태
-   - 정의: 기능은 존재하지만 현재는 실행할 수 없음을 안내하는 상태로, 호버 시 사유를 설명하는 툴팁이 선택적으로 노출됨.
-   - 적용 기준:
-     1. 상태 부적합: 대상의 현재 상태 때문에 실행 불가
-     2. 권한 부족: 기능은 존재하나 사용자에게 권한이 없음
-     3. 선행 조건 미달: 지금은 액션이 안되지만, 종속성 문제 해결, 목록에서 아이템 선택 등 선행되는 조건을 수행하면 액션이 가능한 경우
-
-3. 비노출 상태
-   - 정의: 사용자에게 보여주는 것이 논리적으로 맞지 않거나 혼란을 주는 경우 버튼 비노출
-   - 적용 기준:
-     1. 상호 배타적 토글(버튼 교체): 하나의 리소스에 대해 두 개의 정반대 기능이 존재하며, 상태에 따라 둘 중 하나만 실행 가능할 때
-        - 예) 볼륨에 하나의 인스턴스 연결만 가능할 때 Attach instance/Detach instance 중 하나의 버튼만 노출
+- **활성화 상태**: 기능을 즉시 실행할 수 있는 정상 상태. 권한 충족 + 상태 적합 시 활성화. 생성/편집 등 입력 조건이 필요해도 버튼은 활성화 유지, 클릭 시 검증.
+- **비활성화 상태**: 기능은 존재하지만 현재 실행 불가. 상태 부적합, 권한 부족, 선행 조건 미달 시 적용.
+- **비노출 상태**: 논리적으로 맞지 않거나 혼란을 주는 경우. 상호 배타적 토글(버튼 교체) 시 적용.
 
 ### 3. 언어 원칙
-- 사용자의 다음 행동을 명확하게 지시하는 간결한 단어 사용한다.
-  - 영어: 동사형 사용
-  - 한국어: '~하기'를 생략한 단일 명사형 사용
+- 영어: 동사형 사용
+- 한국어: '~하기'를 생략한 단일 명사형 사용`;
 
-</details>
-`;
+function GuidelineCard({
+  title,
+  markdown,
+  className = '',
+}: {
+  title: string;
+  markdown: string;
+  className?: string;
+}) {
+  return (
+    <div className={`border border-[var(--color-border-default)] p-5 ${className}`}>
+      <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-3">{title}</h4>
+      <NotionRenderer markdown={markdown} />
+    </div>
+  );
+}
 
 export function ButtonPage() {
   return (
@@ -626,7 +579,23 @@ export function ButtonPage() {
       }
       guidelines={
         <VStack gap={6}>
-          <NotionRenderer markdown={BUTTON_GUIDELINES} />
+          <p className="text-body-lg text-[var(--color-text-muted)]">{GUIDELINES_OVERVIEW}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <GuidelineCard title="Variants" markdown={GUIDELINES_VARIANTS} />
+            <GuidelineCard title="States" markdown={GUIDELINES_STATES} />
+            <GuidelineCard
+              title="Behavior"
+              markdown={GUIDELINES_BEHAVIOR}
+              className="md:col-span-2"
+            />
+            <GuidelineCard
+              title="Content Guidelines"
+              markdown={GUIDELINES_CONTENT}
+              className="md:col-span-2"
+            />
+          </div>
+
           <DosDonts
             doItems={[
               'Disabled를 기본으로 사용하고, 숨김은 예외로만 허용한다.',
@@ -641,6 +610,15 @@ export function ButtonPage() {
               '컨테이너 내 Primary를 여러 개 두지 않는다(CTA 경쟁).',
             ]}
           />
+
+          <details className="border border-[var(--color-border-default)] p-5">
+            <summary className="text-heading-h6 text-[var(--color-text-default)] cursor-pointer">
+              이전 버전
+            </summary>
+            <div className="mt-3">
+              <NotionRenderer markdown={GUIDELINES_LEGACY} />
+            </div>
+          </details>
         </VStack>
       }
       tokens={
