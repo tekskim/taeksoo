@@ -18,7 +18,7 @@ export default defineConfig({
   output: {
     path: path.resolve(__dirname, 'docs'),
     filename: isDev ? '[name].js' : '[name].[contenthash].js',
-    publicPath: isDev ? '/' : '/tds_ssot/',
+    publicPath: isDev ? '/' : '/taeksoo/',
     clean: true,
   },
   resolve: {
