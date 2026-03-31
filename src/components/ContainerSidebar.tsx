@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import {
   VStack,
@@ -11,6 +11,7 @@ import {
   Input,
 } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
+import { KubectlAccessDrawer } from '@/components/KubectlAccessDrawer';
 import {
   IconHome,
   IconAffiliate,
@@ -139,7 +140,7 @@ function ClusterAppearanceDrawer({
       isOpen={isOpen}
       onClose={onClose}
       title="Cluster appearance"
-      width={280}
+      width={420}
       footer={
         <HStack gap={2} className="w-full">
           <Button variant="secondary" onClick={onClose} className="flex-1">
@@ -200,16 +201,21 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
   // Cluster state
   const [clusters, setClusters] = useState<ClusterItem[]>([
-    { id: 'cluster-001', name: 'Cluster', iconText: '' },
-    { id: 'cluster-002', name: 'Cluster', iconText: '' },
+    { id: 'cluster-001', name: 'Cluster1', iconText: '' },
+    { id: 'cluster-002', name: 'Cluster2', iconText: '' },
   ]);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const [editingCluster, setEditingCluster] = useState<ClusterItem | null>(null);
+  const [accessTokenOpen, setAccessTokenOpen] = useState(false);
 
   const openAppearance = (cluster: ClusterItem) => {
     setEditingCluster(cluster);
     setAppearanceOpen(true);
   };
+
+  const openAccessToken = useCallback(() => {
+    setAccessTokenOpen(true);
+  }, []);
 
   const handleSaveAppearance = (clusterId: string, iconText: string) => {
     setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
@@ -229,6 +235,12 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
     window.addEventListener('open-cluster-appearance', handler);
     return () => window.removeEventListener('open-cluster-appearance', handler);
   }, [clusters]);
+
+  // Listen for external "open access token" events from other pages
+  useEffect(() => {
+    window.addEventListener('open-access-token', openAccessToken);
+    return () => window.removeEventListener('open-access-token', openAccessToken);
+  }, [openAccessToken]);
 
   // Restore scroll position after route change - use useLayoutEffect for synchronous update
   useLayoutEffect(() => {
@@ -372,19 +384,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                       href="/container/cluster-management"
                       active={isActive('/container/cluster-management')}
                     />
-                  </MenuSection>
-
-                  {/* Cluster Section */}
-                  <MenuSection title="Cluster" defaultOpen={true}>
-                    {clusters.map((cluster) => (
-                      <MenuItem
-                        key={cluster.id}
-                        icon={<IconAffiliate size={16} stroke={1.5} />}
-                        label={cluster.name}
-                        href={`/container/cluster-management/${cluster.id}`}
-                        active={isActive(`/container/cluster-management/${cluster.id}`)}
-                      />
-                    ))}
                   </MenuSection>
                 </>
               ) : (
@@ -568,6 +567,14 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           onClose={() => setAppearanceOpen(false)}
           cluster={editingCluster}
           onSave={handleSaveAppearance}
+        />,
+        document.body
+      )}
+      {createPortal(
+        <KubectlAccessDrawer
+          isOpen={accessTokenOpen}
+          onClose={() => setAccessTokenOpen(false)}
+          clusterName={clusters[0]?.name || 'default-cluster'}
         />,
         document.body
       )}

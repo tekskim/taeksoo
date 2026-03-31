@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Cluster Inline Messages</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: fit-content;
+    height: fit-content;
+  }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8fafc;
+    padding: 28px 28px 32px;
+  }
+  .wrapper {
+    width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .header h1 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+  .header p {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .msg-icon { flex-shrink: 0; margin-top: 2px; }
+  .msg-text { flex: 1; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    white-space: nowrap;
+  }
+  b { font-weight: 400; }
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  /* Info */
+  .info { background: #eff6ff; color: #1e40af; }
+  .info .badge { background: #dbeafe; color: #1d4ed8; }
+  .info .msg-icon path, .info .msg-icon circle { stroke: #2563eb; }
+  .info .msg-icon circle.dot { stroke: none; fill: #2563eb; }
+
+  /* Warning */
+  .warning { background: #fff7ed; color: #9a3412; }
+  .warning .badge { background: #fed7aa; color: #c2410c; }
+  .warning .msg-icon path { stroke: #c2410c; }
+  .warning .msg-icon circle.dot { stroke: none; fill: #c2410c; }
+
+  /* Error */
+  .error { background: #fef2f2; color: #991b1b; }
+  .error .badge { background: #fecaca; color: #b91c1c; }
+  .error .msg-icon path, .error .msg-icon circle { stroke: #dc2626; }
+  .error .msg-icon circle.dot { stroke: none; fill: #dc2626; }
+  .error .link { color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <h1>Cluster Inline Messages</h1>
+    <p>Cluster 상세 페이지 — 상태별 안내 메시지</p>
+  </div>
+
+  <div class="messages">
+
+    <!-- Provisioning -->
+    <div class="msg info">
+      <span class="badge">Provisioning</span>
+      <svg class="msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="5.5" stroke-width="1.3"/>
+        <path d="M7 4.5V7" stroke-width="1.3" stroke-linecap="round"/>
+        <circle class="dot" cx="7" cy="9.2" r="0.7"/>
+      </svg>
+      <span class="msg-text">
+        Cluster provisioning is in progress. This typically takes a few minutes.
+        Status will become 'Provisioned' when provisioning is complete.
+      </span>
+    </div>
+
+    <!-- Deleting -->
+    <div class="msg warning">
+      <span class="badge">Deleting</span>
+      <svg class="msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 2L12.2 11H1.8L7 2Z" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M7 5.5V7.5" stroke-width="1.3" stroke-linecap="round"/>
+        <circle class="dot" cx="7" cy="9.5" r="0.7"/>
+      </svg>
+      <span class="msg-text">
+        Cluster deletion is in progress. All resources will be cleaned up automatically.
+      </span>
+    </div>
+
+    <!-- Processing -->
+    <div class="msg info">
+      <span class="badge">Processing</span>
+      <svg class="msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="5.5" stroke-width="1.3"/>
+        <path d="M7 4.5V7" stroke-width="1.3" stroke-linecap="round"/>
+        <circle class="dot" cx="7" cy="9.2" r="0.7"/>
+      </svg>
+      <span class="msg-text">
+        A cluster operation is in progress. Some actions may be temporarily unavailable.
+        Status will return to 'Provisioned' once the operation is complete.
+      </span>
+    </div>
+
+    <!-- Error -->
+    <div class="msg error">
+      <span class="badge">Failed</span>
+      <svg class="msg-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="5.5" stroke-width="1.3"/>
+        <path d="M7 4.5V7" stroke-width="1.3" stroke-linecap="round"/>
+        <circle class="dot" cx="7" cy="9.2" r="0.7"/>
+      </svg>
+      <span class="msg-text">
+        Cluster provisioning failed at Control plane initializing.&nbsp;
+        <span class="link">View error logs in Logs
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M1.5 8.5L8.5 1.5M8.5 1.5H4.5M8.5 1.5V5.5" stroke="#991b1b" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </span>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
