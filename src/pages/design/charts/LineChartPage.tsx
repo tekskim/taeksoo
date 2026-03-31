@@ -1,3 +1,4 @@
+import ReactECharts from 'echarts-for-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { AreaChartDemo, chartColors } from '../../design-system-sections/ChartComponents';
@@ -539,6 +540,55 @@ function LineChartGuidelines() {
   );
 }
 
+function LineChartLoadingDemo() {
+  const option = {
+    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: [],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+    },
+    series: [],
+  };
+
+  return (
+    <div className="chartCard">
+      <div className="chartHeader">
+        <span className="chartTitle">Network traffic</span>
+      </div>
+      <div className="chartBody">
+        <div className="chartWrapper">
+          <ReactECharts
+            option={option}
+            showLoading
+            loadingOption={{
+              text: '',
+              color: '#2563eb',
+              maskColor: 'rgba(255, 255, 255, 0.9)',
+              zlevel: 0,
+              showSpinner: true,
+              spinnerRadius: 14,
+              lineWidth: 2,
+            }}
+            style={{ height: '100%', width: '100%' }}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const PRIMARY_COLORS = [
   { name: 'cyan400', hex: chartColors.cyan400 },
   { name: 'emerald400', hex: chartColors.emerald400 },
@@ -646,6 +696,16 @@ export function LineChartPage() {
               </span>
             </VStack>
             <AreaChartDemo variant="stacked" />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Loading State</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                데이터 로딩 중 ECharts 내장 스피너를 표시한다. showLoading prop을 사용하여 로딩
+                상태를 제어한다.
+              </span>
+            </VStack>
+            <LineChartLoadingDemo />
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>
