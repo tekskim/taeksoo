@@ -85,38 +85,33 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   const isInfinite = max === Infinity || !isFinite(max);
 
   // 계산된 값들을 useMemo로 최적화
-  const { currentPercent, pendingPercent, totalPercent, hasPending } =
-    useMemo(() => {
-      // max가 무한대면 진행률을 0으로 설정
-      if (isInfinite) {
-        return {
-          currentPercent: 0,
-          pendingPercent: 0,
-          totalPercent: 0,
-          hasPending: pendingValue > 0,
-        };
-      }
-
-      // 백분율로 변환 (0-100 범위 제한)
-      const toPercent = (val: number) =>
-        Math.min(100, Math.max(0, (val / max) * 100));
-
-      const currentPercent = toPercent(value);
-      const pendingPercent = Math.min(
-        toPercent(pendingValue),
-        100 - currentPercent
-      ); // 100% 초과 방지
-
-      const totalPercent = currentPercent + pendingPercent;
-      const hasPending = pendingPercent > 0;
-
+  const { currentPercent, pendingPercent, totalPercent, hasPending } = useMemo(() => {
+    // max가 무한대면 진행률을 0으로 설정
+    if (isInfinite) {
       return {
-        currentPercent,
-        pendingPercent,
-        totalPercent,
-        hasPending,
+        currentPercent: 0,
+        pendingPercent: 0,
+        totalPercent: 0,
+        hasPending: pendingValue > 0,
       };
-    }, [value, pendingValue, max, isInfinite]);
+    }
+
+    // 백분율로 변환 (0-100 범위 제한)
+    const toPercent = (val: number) => Math.min(100, Math.max(0, (val / max) * 100));
+
+    const currentPercent = toPercent(value);
+    const pendingPercent = Math.min(toPercent(pendingValue), 100 - currentPercent); // 100% 초과 방지
+
+    const totalPercent = currentPercent + pendingPercent;
+    const hasPending = pendingPercent > 0;
+
+    return {
+      currentPercent,
+      pendingPercent,
+      totalPercent,
+      hasPending,
+    };
+  }, [value, pendingValue, max, isInfinite]);
 
   // 값 표시 렌더링
   const displayValueElement = useMemo(() => {
@@ -141,30 +136,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       return `${total}/${max}`;
     }
     return null;
-  }, [
-    showValue,
-    totalPercent,
-    hasPending,
-    value,
-    pendingValue,
-    max,
-    isInfinite,
-  ]);
+  }, [showValue, totalPercent, hasPending, value, pendingValue, max, isInfinite]);
 
   return (
-    <figure
-      className={cn(progressContainerStyles, className)}
-      style={rest.style}
-      {...rest}
-    >
+    <figure className={cn(progressContainerStyles, className)} style={rest.style} {...rest}>
       {/* 헤더 영역 - 라벨과 값 표시 */}
       {(label || showValue) && (
         <header className={progressHeaderStyles}>
           {label && <span className={progressLabelStyles}>{label}</span>}
           {showValue && displayValueElement && (
-            <output className={progressPercentageStyles}>
-              {displayValueElement}
-            </output>
+            <output className={progressPercentageStyles}>{displayValueElement}</output>
           )}
         </header>
       )}
@@ -172,10 +153,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       {/* 진행률 바 영역 - 시맨틱 progress 태그 사용 */}
       <div className={progressWrapperStyles}>
         <progress
-          className={cn(
-            progressTrackVariants({ variant }),
-            Boolean(color) && 'progress-custom'
-          )}
+          className={cn(progressTrackVariants({ variant }), Boolean(color) && 'progress-custom')}
           value={currentPercent}
           max={100}
           style={{

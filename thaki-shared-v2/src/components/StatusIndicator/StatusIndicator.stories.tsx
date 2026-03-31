@@ -2,11 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ActiveIcon, BuildingIcon, PausedIcon } from '../Icon';
 import Layout from '../Layout';
 import { Typography } from '../Typography';
-import {
-  StatusColorScheme,
-  StatusIndicator,
-  StatusVariant,
-} from './StatusIndicator';
+import { StatusColorScheme, StatusIndicator, StatusVariant } from './StatusIndicator';
 
 const meta: Meta<typeof StatusIndicator> = {
   title: 'Data Display/Status Indicator',
@@ -117,9 +113,7 @@ export const WithLabels: Story = {
     return (
       <Layout.VStack gap="md">
         <Layout.VStack gap="sm">
-          <Typography.Text variant="caption">
-            With Icon and Label
-          </Typography.Text>
+          <Typography.Text variant="caption">With Icon and Label</Typography.Text>
           <Layout.HStack gap="sm">
             {variants.map(({ variant, label }) => (
               <StatusIndicator key={variant} variant={variant} label={label} />
@@ -152,12 +146,8 @@ export const IconOnly: Story = {
       <Layout.VStack gap="md">
         <Typography.Text variant="caption">아이콘만 표시</Typography.Text>
         <Layout.HStack gap="sm" style={{ alignItems: 'center' }}>
-          {variants.map(variant => (
-            <StatusIndicator
-              key={variant}
-              variant={variant}
-              layout="iconOnly"
-            />
+          {variants.map((variant) => (
+            <StatusIndicator key={variant} variant={variant} layout="iconOnly" />
           ))}
         </Layout.HStack>
       </Layout.VStack>
@@ -202,19 +192,10 @@ export const UsageExample: Story = {
       <Layout.VStack gap="md">
         <Typography.Text variant="caption">인스턴스 상태 목록</Typography.Text>
         <Layout.VStack gap="sm">
-          {instances.map(instance => (
-            <Layout.HStack
-              key={instance.id}
-              gap="sm"
-              style={{ alignItems: 'center' }}
-            >
-              <Typography.Text style={{ minWidth: '120px' }}>
-                {instance.name}
-              </Typography.Text>
-              <StatusIndicator
-                variant={instance.status}
-                label={statusLabels[instance.status]}
-              />
+          {instances.map((instance) => (
+            <Layout.HStack key={instance.id} gap="sm" style={{ alignItems: 'center' }}>
+              <Typography.Text style={{ minWidth: '120px' }}>{instance.name}</Typography.Text>
+              <StatusIndicator variant={instance.status} label={statusLabels[instance.status]} />
             </Layout.HStack>
           ))}
         </Layout.VStack>
@@ -324,17 +305,10 @@ export const IconOnlyWithTooltip: Story = {
         <Typography.Text variant="caption">
           아이콘만 표시하고 툴팁으로 상세 정보 제공
         </Typography.Text>
-        <Typography.Text
-          variant="detail"
-          style={{ color: 'var(--semantic-color-textMuted)' }}
-        >
-          공간이 제한된 UI에서 유용합니다. 각 아이콘에 호버하여 상세 설명을
-          확인하세요.
+        <Typography.Text variant="detail" style={{ color: 'var(--semantic-color-textMuted)' }}>
+          공간이 제한된 UI에서 유용합니다. 각 아이콘에 호버하여 상세 설명을 확인하세요.
         </Typography.Text>
-        <Layout.HStack
-          gap="sm"
-          style={{ alignItems: 'center', flexWrap: 'wrap' }}
-        >
+        <Layout.HStack gap="sm" style={{ alignItems: 'center', flexWrap: 'wrap' }}>
           {variants.map(({ variant, label }) => (
             <StatusIndicator
               key={variant}
@@ -352,25 +326,16 @@ export const IconOnlyWithTooltip: Story = {
 
 export const ColorSchemes: Story = {
   render: () => {
-    const colorSchemes: StatusColorScheme[] = [
-      'success',
-      'danger',
-      'warning',
-      'muted',
-      'info',
-    ];
+    const colorSchemes: StatusColorScheme[] = ['success', 'danger', 'warning', 'muted', 'info'];
 
     return (
       <Layout.VStack gap="md">
         <Typography.Text variant="caption">색상 스킴별 표시</Typography.Text>
-        <Typography.Text
-          variant="detail"
-          style={{ color: 'var(--semantic-color-textMuted)' }}
-        >
+        <Typography.Text variant="detail" style={{ color: 'var(--semantic-color-textMuted)' }}>
           colorScheme prop으로 배경 색상을 직접 지정할 수 있습니다.
         </Typography.Text>
         <Layout.HStack gap="sm" style={{ flexWrap: 'wrap' }}>
-          {colorSchemes.map(colorScheme => (
+          {colorSchemes.map((colorScheme) => (
             <StatusIndicator
               key={colorScheme}
               colorScheme={colorScheme}
@@ -388,12 +353,8 @@ export const CustomIconWithColorScheme: Story = {
   render: () => (
     <Layout.VStack gap="md">
       <Typography.Text variant="caption">커스텀 아이콘 + 색상 스킴</Typography.Text>
-      <Typography.Text
-        variant="detail"
-        style={{ color: 'var(--semantic-color-textMuted)' }}
-      >
-        customIcon과 colorScheme을 조합하여 완전히 커스텀한 상태를 만들 수
-        있습니다.
+      <Typography.Text variant="detail" style={{ color: 'var(--semantic-color-textMuted)' }}>
+        customIcon과 colorScheme을 조합하여 완전히 커스텀한 상태를 만들 수 있습니다.
       </Typography.Text>
       <Layout.HStack gap="sm" style={{ flexWrap: 'wrap' }}>
         <StatusIndicator
@@ -420,30 +381,14 @@ export const OverrideVariantColor: Story = {
   render: () => (
     <Layout.VStack gap="md">
       <Typography.Text variant="caption">Variant 색상 오버라이드</Typography.Text>
-      <Typography.Text
-        variant="detail"
-        style={{ color: 'var(--semantic-color-textMuted)' }}
-      >
-        variant의 기본 아이콘을 유지하면서 colorScheme으로 색상만 변경할 수
-        있습니다.
+      <Typography.Text variant="detail" style={{ color: 'var(--semantic-color-textMuted)' }}>
+        variant의 기본 아이콘을 유지하면서 colorScheme으로 색상만 변경할 수 있습니다.
       </Typography.Text>
       <Layout.HStack gap="sm" style={{ flexWrap: 'wrap' }}>
         <StatusIndicator variant="active" label="Active (기본)" />
-        <StatusIndicator
-          variant="active"
-          colorScheme="info"
-          label="Active (info)"
-        />
-        <StatusIndicator
-          variant="active"
-          colorScheme="warning"
-          label="Active (warning)"
-        />
-        <StatusIndicator
-          variant="building"
-          colorScheme="success"
-          label="Building (success)"
-        />
+        <StatusIndicator variant="active" colorScheme="info" label="Active (info)" />
+        <StatusIndicator variant="active" colorScheme="warning" label="Active (warning)" />
+        <StatusIndicator variant="building" colorScheme="success" label="Building (success)" />
       </Layout.HStack>
     </Layout.VStack>
   ),

@@ -1,8 +1,4 @@
-import type {
-  ResolvedRoute,
-  RouteRegistry,
-  VirtualRoute,
-} from '../../types/routing';
+import type { ResolvedRoute, RouteRegistry, VirtualRoute } from '../../types/routing';
 
 /**
  * 경로 매칭 헬퍼 함수
@@ -49,10 +45,7 @@ const matchVirtualRoute = <TComponentName = string>(
  * 경로에서 파라미터 추출
  * 예: /networks/:id -> { id: '123' }
  */
-const extractParams = (
-  actualPath: string,
-  routePath: string
-): Record<string, string> => {
+const extractParams = (actualPath: string, routePath: string): Record<string, string> => {
   const actualSegments = actualPath.split('/').filter(Boolean);
   const routeSegments = routePath.split('/').filter(Boolean);
   const params: Record<string, string> = {};

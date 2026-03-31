@@ -65,20 +65,13 @@ export const validatePasswordRequirements = (
   const minLength = policy?.minLength ?? DEFAULT_MIN_PASSWORD_LENGTH;
   const maxLength = policy?.maxLength ?? DEFAULT_MAX_PASSWORD_LENGTH;
 
-  const hasValidLength =
-    password.length >= minLength && password.length <= maxLength;
+  const hasValidLength = password.length >= minLength && password.length <= maxLength;
 
   return {
     hasMinLength: hasValidLength,
-    hasUppercase: policy?.requireUppercase
-      ? PASSWORD_PATTERNS.UPPERCASE.test(password)
-      : true,
-    hasLowercase: policy?.requireLowercase
-      ? PASSWORD_PATTERNS.LOWERCASE.test(password)
-      : true,
-    hasNumber: policy?.requireDigit
-      ? PASSWORD_PATTERNS.DIGIT.test(password)
-      : true,
+    hasUppercase: policy?.requireUppercase ? PASSWORD_PATTERNS.UPPERCASE.test(password) : true,
+    hasLowercase: policy?.requireLowercase ? PASSWORD_PATTERNS.LOWERCASE.test(password) : true,
+    hasNumber: policy?.requireDigit ? PASSWORD_PATTERNS.DIGIT.test(password) : true,
     hasSpecialChar: policy?.requireSpecialChar
       ? PASSWORD_PATTERNS.SPECIAL_CHAR.test(password)
       : true,

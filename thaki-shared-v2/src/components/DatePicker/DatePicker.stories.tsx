@@ -86,7 +86,7 @@ const DefaultComponent = () => {
       <DatePicker
         value={dateRange}
         onChange={setDateRange}
-        onApply={range => {
+        onApply={(range) => {
           console.log('Applied date range:', range);
           alert(`Selected: ${range?.from} ~ ${range?.to}`);
         }}

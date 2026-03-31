@@ -6,9 +6,7 @@
       "name": "dark",
       "selector": "[data-theme=\"dark\"]",
       "tokens": {
-        "extends": [
-          "light"
-        ],
+        "extends": ["light"],
         "primitive": {
           "color": {
             "blueGray10": "#fcfdfe",
@@ -1094,16 +1092,12 @@
         {
           "name": "--extends",
           "path": "extends",
-          "value": [
-            "light"
-          ],
+          "value": ["light"],
           "type": null,
           "category": "extends",
           "group": null,
           "description": null,
-          "originalValue": [
-            "light"
-          ]
+          "originalValue": ["light"]
         },
         {
           "name": "--primitive-color-blueGray10",

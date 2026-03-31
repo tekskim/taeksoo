@@ -2,29 +2,23 @@ import { cva } from 'class-variance-authority';
 
 export const accordionGroupStyles = 'flex flex-col w-full';
 
-export const accordionItemStyles = cva(
-  'block relative w-full accordion-item group',
-  {
-    variants: {
-      disabled: {
-        true: '',
-      },
+export const accordionItemStyles = cva('block relative w-full accordion-item group', {
+  variants: {
+    disabled: {
+      true: '',
     },
   },
-);
+});
 
 export const accordionHeaderStyles = cva(
-  [
-    'block w-full cursor-pointer outline-none bg-transparent border-none p-0',
-    'accordion-header',
-  ],
+  ['block w-full cursor-pointer outline-none bg-transparent border-none p-0', 'accordion-header'],
   {
     variants: {
       disabled: {
         true: 'cursor-not-allowed opacity-50',
       },
     },
-  },
+  }
 );
 
 export const accordionContentStyles = [

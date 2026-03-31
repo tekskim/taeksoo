@@ -209,7 +209,8 @@ export function CronJobsPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/cronjobs/${row.id}/edit`),
+      onClick: () =>
+        navigate(`/container/cronjobs/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
     },
     {
       id: 'edit-yaml',

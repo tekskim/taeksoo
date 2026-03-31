@@ -51,4 +51,3 @@ const useCreateForgotPassword = () => {
 
 export default useCreateForgotPassword;
 export type { ForgotPasswordRequest, ForgotPasswordResponse };
-

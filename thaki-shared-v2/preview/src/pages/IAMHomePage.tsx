@@ -13,11 +13,51 @@ interface EventRow {
 }
 
 const eventsData: EventRow[] = [
-  { id: '1', time: 'Dec 12, 25 18:30:39', event: 'Sign-in', user: 'thaki.kim', target: '-', result: 'Success', ipAddress: '192.168.1.100' },
-  { id: '2', time: 'Dec 12, 25 18:30:39', event: 'Sign-in', user: 'thaki.kim', target: '-', result: 'Success', ipAddress: '192.168.1.100' },
-  { id: '3', time: 'Dec 12, 25 18:31:10', event: 'Sign-in', user: 'alex.johnson', target: '-', result: 'Success', ipAddress: '192.168.1.101' },
-  { id: '4', time: 'Dec 12, 25 18:32:25', event: 'Sign-in', user: 'sara.connor', target: '-', result: 'Success', ipAddress: '192.168.1.102' },
-  { id: '5', time: 'Dec 12, 25 18:32:25', event: 'Sign-in', user: 'sara.connor', target: '-', result: 'Success', ipAddress: '192.168.1.102' },
+  {
+    id: '1',
+    time: 'Dec 12, 25 18:30:39',
+    event: 'Sign-in',
+    user: 'thaki.kim',
+    target: '-',
+    result: 'Success',
+    ipAddress: '192.168.1.100',
+  },
+  {
+    id: '2',
+    time: 'Dec 12, 25 18:30:39',
+    event: 'Sign-in',
+    user: 'thaki.kim',
+    target: '-',
+    result: 'Success',
+    ipAddress: '192.168.1.100',
+  },
+  {
+    id: '3',
+    time: 'Dec 12, 25 18:31:10',
+    event: 'Sign-in',
+    user: 'alex.johnson',
+    target: '-',
+    result: 'Success',
+    ipAddress: '192.168.1.101',
+  },
+  {
+    id: '4',
+    time: 'Dec 12, 25 18:32:25',
+    event: 'Sign-in',
+    user: 'sara.connor',
+    target: '-',
+    result: 'Success',
+    ipAddress: '192.168.1.102',
+  },
+  {
+    id: '5',
+    time: 'Dec 12, 25 18:32:25',
+    event: 'Sign-in',
+    user: 'sara.connor',
+    target: '-',
+    result: 'Success',
+    ipAddress: '192.168.1.102',
+  },
 ];
 
 const eventColumns: TableColumn[] = [
@@ -29,7 +69,15 @@ const eventColumns: TableColumn[] = [
   { key: 'ipAddress', header: 'IP address', sortable: true },
 ];
 
-function StatCard({ label, value, variant = 'default' }: { label: string; value: string | number; variant?: 'default' | 'success' | 'warning' | 'danger' | 'primary' }) {
+function StatCard({
+  label,
+  value,
+  variant = 'default',
+}: {
+  label: string;
+  value: string | number;
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'primary';
+}) {
   const colorMap = {
     default: 'text-text',
     success: 'text-[var(--semantic-color-success,#22c55e)]',
@@ -37,7 +85,7 @@ function StatCard({ label, value, variant = 'default' }: { label: string; value:
     danger: 'text-[var(--semantic-color-danger,#ef4444)]',
     primary: 'text-primary',
   };
-  const textColor = (value === '0' || value === 0) ? 'text-text-muted' : colorMap[variant];
+  const textColor = value === '0' || value === 0 ? 'text-text-muted' : colorMap[variant];
   return (
     <div className="flex-1 bg-surface-muted rounded-lg px-4 py-3 min-w-0">
       <div className="flex flex-col gap-1.5">
@@ -57,7 +105,13 @@ function ResourceCard({ label, value }: { label: string; value: string | number 
   );
 }
 
-function SimplePieChart({ data, size = 120 }: { data: { name: string; value: number; color: string }[]; size?: number }) {
+function SimplePieChart({
+  data,
+  size = 120,
+}: {
+  data: { name: string; value: number; color: string }[];
+  size?: number;
+}) {
   const total = data.reduce((sum, d) => sum + d.value, 0);
   let cumulativePercent = 0;
   const segments = data.map((d) => {
@@ -89,7 +143,15 @@ function SimplePieChart({ data, size = 120 }: { data: { name: string; value: num
           <g key={i}>
             <path d={d} fill={seg.color} />
             {seg.pct >= 15 && (
-              <text x={lx} y={ly} textAnchor="middle" dominantBaseline="central" fontSize="12" fontWeight="600" fill="#0f172a">
+              <text
+                x={lx}
+                y={ly}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize="12"
+                fontWeight="600"
+                fill="#0f172a"
+              >
                 {Math.round(seg.pct)}%
               </text>
             )}
@@ -133,11 +195,15 @@ export function IAMHomePage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
-                    <span className="text-11 font-medium leading-16 text-text-subtle">Success: 1,234 (96%)</span>
+                    <span className="text-11 font-medium leading-16 text-text-subtle">
+                      Success: 1,234 (96%)
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-sm bg-[#f87171]" />
-                    <span className="text-11 font-medium leading-16 text-text-subtle">Failure: 45 (4%)</span>
+                    <span className="text-11 font-medium leading-16 text-text-subtle">
+                      Failure: 45 (4%)
+                    </span>
                   </div>
                 </div>
               </div>
@@ -156,11 +222,15 @@ export function IAMHomePage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
-                    <span className="text-11 font-medium leading-16 text-text-subtle">Enabled: 117 (78%)</span>
+                    <span className="text-11 font-medium leading-16 text-text-subtle">
+                      Enabled: 117 (78%)
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-sm bg-[#e2e8f0]" />
-                    <span className="text-11 font-medium leading-16 text-text-subtle">Disabled: 33 (22%)</span>
+                    <span className="text-11 font-medium leading-16 text-text-subtle">
+                      Disabled: 33 (22%)
+                    </span>
                   </div>
                 </div>
               </div>
@@ -205,14 +275,24 @@ export function IAMHomePage() {
             <Table columns={eventColumns} rows={eventsData}>
               {eventsData.map((row) => (
                 <Table.Tr key={row.id} rowData={row}>
-                  <Table.Td rowData={row} column={eventColumns[0]}>{row.time}</Table.Td>
-                  <Table.Td rowData={row} column={eventColumns[1]}>{row.event}</Table.Td>
-                  <Table.Td rowData={row} column={eventColumns[2]}>{row.user}</Table.Td>
-                  <Table.Td rowData={row} column={eventColumns[3]}>{row.target}</Table.Td>
+                  <Table.Td rowData={row} column={eventColumns[0]}>
+                    {row.time}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={eventColumns[1]}>
+                    {row.event}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={eventColumns[2]}>
+                    {row.user}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={eventColumns[3]}>
+                    {row.target}
+                  </Table.Td>
                   <Table.Td rowData={row} column={eventColumns[4]}>
                     <span className="text-primary">{row.result}</span>
                   </Table.Td>
-                  <Table.Td rowData={row} column={eventColumns[5]}>{row.ipAddress}</Table.Td>
+                  <Table.Td rowData={row} column={eventColumns[5]}>
+                    {row.ipAddress}
+                  </Table.Td>
                 </Table.Tr>
               ))}
             </Table>

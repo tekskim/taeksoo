@@ -51,18 +51,13 @@ export const decorators = [
 
     const getInitialTheme = () => {
       if (theme === 'system') {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'default';
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default';
       }
       return theme;
     };
 
     return (
-      <ThemeProvider
-        defaultTheme={getInitialTheme()}
-        availableThemes={['default', 'dark']}
-      >
+      <ThemeProvider defaultTheme={getInitialTheme()} availableThemes={['default', 'dark']}>
         <StorybookThemeSync storybookTheme={theme}>
           <RTLProvider>
             <OverlayProvider overlayStore={overlayStore}>

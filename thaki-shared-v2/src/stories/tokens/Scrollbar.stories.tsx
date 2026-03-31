@@ -19,7 +19,7 @@ const ScrollbarDemo = () => {
             padding: '8px',
           }}
         >
-          {items.map(item => (
+          {items.map((item) => (
             <div
               key={item}
               style={{
@@ -35,9 +35,7 @@ const ScrollbarDemo = () => {
 
       {/* Horizontal scroll */}
       <div>
-        <p style={{ marginBottom: '8px', fontWeight: 600 }}>
-          Horizontal Scroll
-        </p>
+        <p style={{ marginBottom: '8px', fontWeight: 600 }}>Horizontal Scroll</p>
         <div
           style={{
             width: '200px',
@@ -48,7 +46,7 @@ const ScrollbarDemo = () => {
           }}
         >
           <div style={{ display: 'flex', gap: '8px', width: 'max-content' }}>
-            {items.map(item => (
+            {items.map((item) => (
               <div
                 key={item}
                 style={{
@@ -79,7 +77,7 @@ const ScrollbarDemo = () => {
           }}
         >
           <div style={{ width: '400px' }}>
-            {items.map(item => (
+            {items.map((item) => (
               <div
                 key={item}
                 style={{

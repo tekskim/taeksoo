@@ -153,9 +153,7 @@ export function ManageUsersDrawer({
         <div className="flex flex-col gap-3 w-full pb-5">
           <div className="flex flex-col gap-1">
             <div className="flex items-start gap-[3px]">
-              <span className="text-13 font-medium text-text leading-5">
-                Users
-              </span>
+              <span className="text-13 font-medium text-text leading-5">Users</span>
               <span className="text-13 font-medium text-danger leading-5">*</span>
             </div>
             <p className="text-12 text-text-muted">
@@ -196,13 +194,20 @@ export function ManageUsersDrawer({
               {paginatedUsers.map((row) => (
                 <Table.Tr key={row.id} rowData={row}>
                   <Table.Td rowData={row} column={columns[0]}>
-                    <StatusIndicator variant={statusMap[row.status] ?? 'active'} layout="iconOnly" />
+                    <StatusIndicator
+                      variant={statusMap[row.status] ?? 'active'}
+                      layout="iconOnly"
+                    />
                   </Table.Td>
                   <Table.Td rowData={row} column={columns[1]}>
                     <span className="text-primary font-medium">{row.username}</span>
                   </Table.Td>
-                  <Table.Td rowData={row} column={columns[2]}>{row.userGroups}</Table.Td>
-                  <Table.Td rowData={row} column={columns[3]}>{row.roles}</Table.Td>
+                  <Table.Td rowData={row} column={columns[2]}>
+                    {row.userGroups}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={columns[3]}>
+                    {row.roles}
+                  </Table.Td>
                   <Table.Td rowData={row} column={columns[4]}>
                     {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
                   </Table.Td>

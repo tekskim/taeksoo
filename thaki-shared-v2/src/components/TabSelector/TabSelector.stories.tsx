@@ -65,31 +65,15 @@ export const Variants: Story = {
     <Layout.VStack gap="lg" style={{ minWidth: '400px' }}>
       <Layout.VStack gap="sm">
         <Typography.Text variant="caption">Small Variant</Typography.Text>
-        <TabSelector
-          options={basicOptions}
-          variant="small"
-          defaultValue="tab1"
-        />
+        <TabSelector options={basicOptions} variant="small" defaultValue="tab1" />
       </Layout.VStack>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          Medium Variant (Default)
-        </Typography.Text>
-        <TabSelector
-          options={basicOptions}
-          variant="medium"
-          defaultValue="tab1"
-        />
+        <Typography.Text variant="caption">Medium Variant (Default)</Typography.Text>
+        <TabSelector options={basicOptions} variant="medium" defaultValue="tab1" />
       </Layout.VStack>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          Pill Variant (Segment Control)
-        </Typography.Text>
-        <TabSelector
-          options={basicOptions}
-          variant="pill"
-          defaultValue="tab1"
-        />
+        <Typography.Text variant="caption">Pill Variant (Segment Control)</Typography.Text>
+        <TabSelector options={basicOptions} variant="pill" defaultValue="tab1" />
       </Layout.VStack>
     </Layout.VStack>
   ),
@@ -118,22 +102,12 @@ export const Layouts: Story = {
   render: () => (
     <Layout.HStack gap="lg" style={{ alignItems: 'flex-start' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          Horizontal (Default)
-        </Typography.Text>
-        <TabSelector
-          options={basicOptions}
-          layout="horizontal"
-          defaultValue="tab1"
-        />
+        <Typography.Text variant="caption">Horizontal (Default)</Typography.Text>
+        <TabSelector options={basicOptions} layout="horizontal" defaultValue="tab1" />
       </Layout.VStack>
       <Layout.VStack gap="sm">
         <Typography.Text variant="caption">Vertical</Typography.Text>
-        <TabSelector
-          options={basicOptions}
-          layout="vertical"
-          defaultValue="tab2"
-        />
+        <TabSelector options={basicOptions} layout="vertical" defaultValue="tab2" />
       </Layout.VStack>
     </Layout.HStack>
   ),
@@ -191,9 +165,7 @@ export const WithIcons: Story = {
     return (
       <Layout.VStack gap="lg" style={{ minWidth: '400px' }}>
         <Layout.VStack gap="sm">
-          <Typography.Text variant="caption">
-            아이콘과 텍스트 조합
-          </Typography.Text>
+          <Typography.Text variant="caption">아이콘과 텍스트 조합</Typography.Text>
           <TabSelector options={optionsWithIcons} defaultValue="grid" />
         </Layout.VStack>
       </Layout.VStack>
@@ -222,11 +194,7 @@ export const IconOnly: Story = {
       <Layout.VStack gap="lg">
         <Layout.VStack gap="sm">
           <Typography.Text variant="caption">아이콘만 사용</Typography.Text>
-          <TabSelector
-            options={iconOnlyOptions}
-            defaultValue="grid"
-            ariaLabel="보기 모드 선택"
-          />
+          <TabSelector options={iconOnlyOptions} defaultValue="grid" ariaLabel="보기 모드 선택" />
         </Layout.VStack>
       </Layout.VStack>
     );
@@ -246,14 +214,8 @@ const ControlledExample = () => {
   return (
     <Layout.VStack gap="md" style={{ minWidth: '400px' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          현재 선택: {selected}
-        </Typography.Text>
-        <TabSelector
-          options={options}
-          value={selected}
-          onChange={setSelected}
-        />
+        <Typography.Text variant="caption">현재 선택: {selected}</Typography.Text>
+        <TabSelector options={options} value={selected} onChange={setSelected} />
       </Layout.VStack>
       <Layout.VStack
         gap="sm"
@@ -291,19 +253,11 @@ const UncontrolledExample = () => {
   return (
     <Layout.VStack gap="md" style={{ minWidth: '400px' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          비제어 모드 (defaultValue 사용)
-        </Typography.Text>
-        <TabSelector
-          options={options}
-          defaultValue="tab2"
-          onChange={id => setLastChanged(id)}
-        />
+        <Typography.Text variant="caption">비제어 모드 (defaultValue 사용)</Typography.Text>
+        <TabSelector options={options} defaultValue="tab2" onChange={(id) => setLastChanged(id)} />
       </Layout.VStack>
       {lastChanged && (
-        <Typography.Text variant="caption">
-          마지막 선택: {lastChanged}
-        </Typography.Text>
+        <Typography.Text variant="caption">마지막 선택: {lastChanged}</Typography.Text>
       )}
     </Layout.VStack>
   );
@@ -327,9 +281,7 @@ export const ManyOptions: Story = {
     return (
       <Layout.VStack gap="lg" style={{ width: '600px' }}>
         <Layout.VStack gap="sm">
-          <Typography.Text variant="caption">
-            많은 옵션이 있는 경우
-          </Typography.Text>
+          <Typography.Text variant="caption">많은 옵션이 있는 경우</Typography.Text>
           <TabSelector options={manyOptions} defaultValue="instances" />
         </Layout.VStack>
       </Layout.VStack>
@@ -352,11 +304,7 @@ export const VerticalWithManyOptions: Story = {
     return (
       <Layout.VStack gap="sm" style={{ width: '200px' }}>
         <Typography.Text variant="caption">사이드바 네비게이션</Typography.Text>
-        <TabSelector
-          options={navigationOptions}
-          layout="vertical"
-          defaultValue="compute"
-        />
+        <TabSelector options={navigationOptions} layout="vertical" defaultValue="compute" />
       </Layout.VStack>
     );
   },
@@ -391,11 +339,7 @@ const FilterExample = () => {
         <Layout.HStack gap="md" style={{ alignItems: 'center' }}>
           <Layout.VStack gap="sm">
             <Typography.Text variant="caption">상태 필터</Typography.Text>
-            <TabSelector
-              options={statusOptions}
-              value={statusFilter}
-              onChange={setStatusFilter}
-            />
+            <TabSelector options={statusOptions} value={statusFilter} onChange={setStatusFilter} />
           </Layout.VStack>
           <Layout.VStack gap="sm">
             <Typography.Text variant="caption">보기 모드</Typography.Text>

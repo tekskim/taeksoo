@@ -9,13 +9,7 @@ type Response = {
 
 const URL = '/v1/iam/authn/pre-auth/mfa/totp/verify-setup';
 
-const verifyMfaOtpSetup = async ({
-  code,
-  xSessionId,
-}: {
-  code: string;
-  xSessionId: string;
-}) => {
+const verifyMfaOtpSetup = async ({ code, xSessionId }: { code: string; xSessionId: string }) => {
   const { data } = await authClient.post<Response>(
     URL,
     {
@@ -34,7 +28,7 @@ const verifyMfaOtpSetup = async ({
 const useCreateMfaOtpSetupVerify = () => {
   return useMutation({
     mutationFn: verifyMfaOtpSetup,
-    throwOnError: false
+    throwOnError: false,
   });
 };
 

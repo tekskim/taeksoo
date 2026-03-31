@@ -6,25 +6,15 @@ import Portal from '../Portal';
 import React from 'react';
 import { useClickOutside } from '../../services';
 import { cn } from '../../services/utils/cn';
-import ContextMenuItem, {
-  type PrivateItemProps as ContextMenuItemProps,
-} from './ContextMenu.Item';
-import {
-  contentStyles,
-  contextMenuStyles,
-  triggerStyles,
-} from './ContextMenu.styles';
+import ContextMenuItem, { type PrivateItemProps as ContextMenuItemProps } from './ContextMenu.Item';
+import { contentStyles, contextMenuStyles, triggerStyles } from './ContextMenu.styles';
 
 /**
  * @type
  *
  * 서브 컨텍스트 메뉴의 열리는 방향 (루트 컨텍스트 메뉴의 방향과 다르게 열릴 수 있음)
  */
-type SubContextMenuDirection =
-  | 'left-top'
-  | 'left-bottom'
-  | 'right-top'
-  | 'right-bottom';
+type SubContextMenuDirection = 'left-top' | 'left-bottom' | 'right-top' | 'right-bottom';
 
 type PortalPosition = {
   top?: number;
@@ -191,9 +181,7 @@ const RootPrivate = ({
   }, []);
 
   /** 부모 컨텍스트 메뉴 컴포넌트의 마운트된 순서 */
-  const parentContextMenuOrder = Number(
-    parentElement?.dataset.contextmenuOrder
-  );
+  const parentContextMenuOrder = Number(parentElement?.dataset.contextmenuOrder);
 
   /** 현재 컨텍스트 메뉴 컴포넌트의 마운트된 순서 */
   const currentContextMenuOrder = Number.isInteger(parentContextMenuOrder)
@@ -315,8 +303,7 @@ const RootPrivate = ({
       if (isSubContextMenu) {
         // 서브 컨텍스트 메뉴는 direction="left"로 열리므로, ArrowRight를 누르면 닫기 및 그 반대케이스의 경우
         if (
-          (e.key === 'ArrowRight' &&
-            subContextMenuDirection.startsWith('left')) ||
+          (e.key === 'ArrowRight' && subContextMenuDirection.startsWith('left')) ||
           (e.key === 'ArrowLeft' && subContextMenuDirection.startsWith('right'))
         ) {
           closeSubContextMenu();
@@ -326,8 +313,7 @@ const RootPrivate = ({
 
       // 루트에서는 서브 컨텍스트 메뉴가 열린 쪽으로만 키보드가 동작하도록 처리
       if (
-        (e.key === 'ArrowRight' &&
-          subContextMenuDirection.startsWith('right')) ||
+        (e.key === 'ArrowRight' && subContextMenuDirection.startsWith('right')) ||
         (e.key === 'ArrowLeft' && subContextMenuDirection.startsWith('left'))
       ) {
         toggleSubContextMenu();
@@ -358,9 +344,7 @@ const RootPrivate = ({
       return null;
     }
 
-    return getTargetContextMenuOrderRecursively(
-      targetParentElement as HTMLElement
-    );
+    return getTargetContextMenuOrderRecursively(targetParentElement as HTMLElement);
   };
 
   // <---------- 외부 영역이 클릭되면 현재 컨텍스트 메뉴의 자식 컨텍스트 메뉴나 트리거 요소가 클릭되었는지 판별하여 조건에 따라 컨텍스트 메뉴를 닫는 effect
@@ -378,25 +362,21 @@ const RootPrivate = ({
       ) as HTMLElement | null;
 
       /** 클릭된 요소가 직계 부모 컨텍스트 메뉴인 경우 */
-      const isParentContextMenu =
-        parentElementId && parentElementId === parentContextMenuId;
+      const isParentContextMenu = parentElementId && parentElementId === parentContextMenuId;
 
       /** 클릭된 요소가 루트 컨텍스트 메뉴인 경우 */
-      const isRootContextMenu =
-        rootTriggerElement && rootTriggerElement === triggerRef.current;
+      const isRootContextMenu = rootTriggerElement && rootTriggerElement === triggerRef.current;
 
       if (isParentContextMenu || isRootContextMenu) {
         return;
       }
 
       /** 이벤트 요소에서 찾은 컨텍스트 메뉴 순서 */
-      const targetContextMenuOrder =
-        getTargetContextMenuOrderRecursively(targetElement);
+      const targetContextMenuOrder = getTargetContextMenuOrderRecursively(targetElement);
 
       /** 완전 외부가 클릭되었거나(클릭된 요소에서 contextmenu order를 못찾은 경우) 또는, 부모가 아닌 조상 컨텍스트 메뉴인 경우 */
       const isOutsideOrGrandParentContextMenu =
-        targetContextMenuOrder === null ||
-        targetContextMenuOrder < currentContextMenuOrder;
+        targetContextMenuOrder === null || targetContextMenuOrder < currentContextMenuOrder;
 
       if (isOutsideOrGrandParentContextMenu) {
         handleClose();
@@ -462,17 +442,12 @@ const RootPrivate = ({
             onKeyDown={handleKeyDown}
             data-contextmenu-order={currentContextMenuOrder}
             data-parent-contextmenu-id={parentContextMenuId || undefined}
-            aria-label={
-              parentContextMenuId ? 'Submenu options' : 'Menu options'
-            }
-            onScroll={e => {
+            aria-label={parentContextMenuId ? 'Submenu options' : 'Menu options'}
+            onScroll={(e) => {
               if (!onScrollEnd) return;
               const target = e.currentTarget;
               const threshold = 20;
-              if (
-                target.scrollTop + target.clientHeight >=
-                target.scrollHeight - threshold
-              ) {
+              if (target.scrollTop + target.clientHeight >= target.scrollHeight - threshold) {
                 onScrollEnd();
               }
             }}
@@ -482,7 +457,7 @@ const RootPrivate = ({
               }
               clearCloseTimer();
             }}
-            onMouseLeave={event => {
+            onMouseLeave={(event) => {
               if (!closeOnMouseLeave) {
                 return;
               }
@@ -531,9 +506,8 @@ const RootPrivate = ({
               // 함수 컴포넌트가 자식으로 들어온 경우
               if (typeof child?.type === 'function') {
                 /** 컨텍스트 메뉴 함수컴포넌트 디스플레이네임 */
-                const childDiplayName = (
-                  child.type as unknown as { displayName: string }
-                ).displayName;
+                const childDiplayName = (child.type as unknown as { displayName: string })
+                  .displayName;
 
                 if (
                   childDiplayName === 'ContextMenuSubItems' ||

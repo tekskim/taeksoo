@@ -9,7 +9,7 @@ const meta: Meta<typeof InfoContainer> = {
   },
   tags: ['autodocs'],
   decorators: [
-    Story => (
+    (Story) => (
       <div style={{ width: 328 }}>
         <Story />
       </div>

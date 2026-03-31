@@ -32,8 +32,8 @@ import '@thaki/shared/index.css';
 ## Style Entry Points
 
 ```tsx
-import '@thaki/shared/index.css';       // core + tailwind utilities
-import '@thaki/shared/core.css';        // core only (no tailwind utilities)
+import '@thaki/shared/index.css'; // core + tailwind utilities
+import '@thaki/shared/core.css'; // core only (no tailwind utilities)
 import '@thaki/shared/tokens-only.css'; // CSS variables only
 ```
 
@@ -50,7 +50,7 @@ import '@thaki/shared/tokens-only.css'; // CSS variables only
 ```tsx
 import { cn } from '@thaki/shared';
 
-<Button className={cn('w-full', className)}>Save</Button>
+<Button className={cn('w-full', className)}>Save</Button>;
 ```
 
 ## Verified Usage Patterns
@@ -198,7 +198,7 @@ const [order, setOrder] = useState<SortOrder>('desc');
 import { toast } from 'sonner';
 import { Toast } from '@thaki/shared';
 
-toast.custom(id => (
+toast.custom((id) => (
   <Toast
     type="positive"
     message="Changes saved successfully"
@@ -210,6 +210,7 @@ toast.custom(id => (
 ```
 
 `Toast` key props:
+
 - `type`: `'positive' | 'negative'`
 - `message`: required
 - `description?`, `resourceName?`, `timestamp?`, `appIcon?`, `onNavigate?`
@@ -222,13 +223,15 @@ import { useOverlay, useFilterSearch } from '@thaki/shared';
 
 const { openOverlay, closeOverlayById, overlayStore } = useOverlay();
 
-const { filters, appliedFilters, addFilter, removeFilter, clearFilters } =
-  useFilterSearch(nextFilters => {
+const { filters, appliedFilters, addFilter, removeFilter, clearFilters } = useFilterSearch(
+  (nextFilters) => {
     console.log(nextFilters);
-  });
+  }
+);
 ```
 
 Notes:
+
 - `useOverlay()` does **not** return `{ open, close, isOpen }`.
 - `useFilterSearch()` takes an optional callback, not a `filterKeys` config.
 
@@ -267,6 +270,7 @@ const { TabProvider } = createTabProvider({
 ```
 
 Provider caveats:
+
 - `ToastProvider` requires `Toaster` prop.
 - `LocaleProvider` requires `changeLocale` callback.
 - `OverlayProvider` requires `overlayStore`.

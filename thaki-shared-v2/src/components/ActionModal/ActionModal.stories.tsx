@@ -154,7 +154,7 @@ const Default: Story = {
     isLoading: false,
     loadingText: 'Processing...',
   },
-  render: args => (
+  render: (args) => (
     <StoryWrapper
       actionConfig={
         args.actionConfig ?? {

@@ -72,7 +72,7 @@ export const ExpandableTable = <TData extends Record<string, unknown>>({
   // 행 확장 토글
   const toggleRowExpansion = useCallback(
     (rowId: string | number) => {
-      setExpandedRows(prev => {
+      setExpandedRows((prev) => {
         const newSet = new Set(prev);
         const stringRowId = String(rowId);
         if (newSet.has(stringRowId)) {
@@ -135,9 +135,7 @@ export const ExpandableTable = <TData extends Record<string, unknown>>({
   // 헤더 렌더링 (selection 전체 선택 체크박스)
   const renderHeaderCell = useCallback(
     (column: TableColumn, index: number) => {
-      const effectiveColumnsLength = hasSelection
-        ? columns.length + 1
-        : columns.length;
+      const effectiveColumnsLength = hasSelection ? columns.length + 1 : columns.length;
       const isFirstColumn = index === 0;
       const isLastDataColumn = index === effectiveColumnsLength - 1;
 
@@ -151,11 +149,7 @@ export const ExpandableTable = <TData extends Record<string, unknown>>({
             className={cn(tableStyles.thSelectionCell, 'table-selection-cell')}
           >
             {selectionType === 'checkbox' && showSelectAllCheckbox && (
-              <Checkbox
-                checked={isAllSelected}
-                onChange={handleSelectAll}
-                size="sm"
-              />
+              <Checkbox checked={isAllSelected} onChange={handleSelectAll} size="sm" />
             )}
           </Table.Th>
         );
@@ -184,14 +178,7 @@ export const ExpandableTable = <TData extends Record<string, unknown>>({
 
       // 첫 번째 데이터 컬럼 (selection이 없을 때)
       if (!hasSelection && isFirstColumn) {
-        return (
-          <Table.Th
-            key={column.key}
-            column={column}
-            isFirst={true}
-            isLast={false}
-          />
-        );
+        return <Table.Th key={column.key} column={column} isFirst={true} isLast={false} />;
       }
 
       return null;
@@ -236,141 +223,116 @@ export const ExpandableTable = <TData extends Record<string, unknown>>({
                   : undefined
               }
             >
-              {columnsWithSelection.map(
-                (column: TableColumn, index: number) => {
-                  const isSelectionColumn = hasSelection && index === 0;
-                  const isExpandColumn = hasSelection
-                    ? index === 1
-                    : index === 0;
-                  const effectiveColumnsLength = hasSelection
-                    ? columns.length + 1
-                    : columns.length;
-                  const isFirstColumn = index === 0;
-                  const isLastColumn = index === effectiveColumnsLength - 1;
+              {columnsWithSelection.map((column: TableColumn, index: number) => {
+                const isSelectionColumn = hasSelection && index === 0;
+                const isExpandColumn = hasSelection ? index === 1 : index === 0;
+                const effectiveColumnsLength = hasSelection ? columns.length + 1 : columns.length;
+                const isFirstColumn = index === 0;
+                const isLastColumn = index === effectiveColumnsLength - 1;
 
-                  // Selection cell (first column - tdSelectionCell에 first 스타일 포함)
-                  if (isSelectionColumn) {
-                    return (
-                      <Table.Td
-                        key="__select__"
-                        rowData={row}
-                        column={column}
-                        className={cn(
-                          tableStyles.tdSelectionCell,
-                          'table-selection-cell'
-                        )}
-                        preventClickPropagation={false}
-                      >
-                        {selectionType === 'radio' ? (
-                          <RadioButton
-                            name={resolvedRadioGroupName}
-                            value={String(rowId)}
-                            checked={isSelected}
-                            onChange={() =>
-                              handleRowSelection(rowId, true, row, rowIndex)
-                            }
-                            size="sm"
-                            disabled={disabled}
-                          />
-                        ) : (
-                          <Checkbox
-                            checked={isSelected}
-                            onChange={checked =>
-                              handleRowSelection(rowId, checked, row, rowIndex)
-                            }
-                            size="sm"
-                            disabled={disabled}
-                          />
-                        )}
-                      </Table.Td>
-                    );
-                  }
-
-                  // Expand 컬럼에 확장 아이콘 추가
-                  if (isExpandColumn) {
-                    // 실제 데이터 컬럼 key 가져오기
-                    const dataColumn = hasSelection ? columns[0] : column;
-                    const isFirstDataColumn = !hasSelection && isFirstColumn;
-                    return (
-                      <td
-                        key={column.key}
-                        className={cn(
-                          tableStyles.td,
-                          isFirstDataColumn && tableStyles.tdFirst,
-                          isLastColumn && tableStyles.tdLast,
-                          column.align === 'left' && tableStyles.alignLeft,
-                          column.align === 'center' && tableStyles.alignCenter,
-                          column.align === 'right' && tableStyles.alignRight,
-                          stickyLastColumn &&
-                            isLastColumn &&
-                            tableStyles.stickyLast,
-                          stickyLastColumn &&
-                            isLastColumn &&
-                            tableStyles.stickyLastTbodyBg
-                        )}
-                        style={
-                          column.width
-                            ? {
-                                width:
-                                  typeof column.width === 'number'
-                                    ? `${column.width}px`
-                                    : column.width,
-                              }
-                            : undefined
-                        }
-                      >
-                        <div className={tableStyles.expandCellWrapper}>
-                          <button
-                            type="button"
-                            className={tableStyles.expandButton}
-                            onClick={e => {
-                              e.stopPropagation();
-                              if (!disabled) {
-                                toggleRowExpansion(rowId);
-                              }
-                            }}
-                            aria-label={
-                              expanded ? 'Collapse row' : 'Expand row'
-                            }
-                            aria-expanded={expanded}
-                            disabled={disabled}
-                          >
-                            <ChevronRightIcon
-                              size={16}
-                              style={{
-                                transform: expanded
-                                  ? 'rotate(90deg)'
-                                  : 'rotate(0deg)',
-                                transition: 'transform 0.2s ease',
-                              }}
-                            />
-                          </button>
-                          <span className={tableStyles.expandCellContent}>
-                            {row[dataColumn.key] as React.ReactNode}
-                          </span>
-                        </div>
-                      </td>
-                    );
-                  }
-
+                // Selection cell (first column - tdSelectionCell에 first 스타일 포함)
+                if (isSelectionColumn) {
                   return (
                     <Table.Td
-                      key={column.key}
+                      key="__select__"
                       rowData={row}
                       column={column}
-                      className={cn(
-                        isLastColumn && tableStyles.tdLast,
-                        stickyLastColumn &&
-                          isLastColumn &&
-                          tableStyles.stickyLast,
-                        stickyLastColumn &&
-                          isLastColumn &&
-                          tableStyles.stickyLastTbodyBg
+                      className={cn(tableStyles.tdSelectionCell, 'table-selection-cell')}
+                      preventClickPropagation={false}
+                    >
+                      {selectionType === 'radio' ? (
+                        <RadioButton
+                          name={resolvedRadioGroupName}
+                          value={String(rowId)}
+                          checked={isSelected}
+                          onChange={() => handleRowSelection(rowId, true, row, rowIndex)}
+                          size="sm"
+                          disabled={disabled}
+                        />
+                      ) : (
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={(checked) => handleRowSelection(rowId, checked, row, rowIndex)}
+                          size="sm"
+                          disabled={disabled}
+                        />
                       )}
-                    />
+                    </Table.Td>
                   );
                 }
-              )}
+
+                // Expand 컬럼에 확장 아이콘 추가
+                if (isExpandColumn) {
+                  // 실제 데이터 컬럼 key 가져오기
+                  const dataColumn = hasSelection ? columns[0] : column;
+                  const isFirstDataColumn = !hasSelection && isFirstColumn;
+                  return (
+                    <td
+                      key={column.key}
+                      className={cn(
+                        tableStyles.td,
+                        isFirstDataColumn && tableStyles.tdFirst,
+                        isLastColumn && tableStyles.tdLast,
+                        column.align === 'left' && tableStyles.alignLeft,
+                        column.align === 'center' && tableStyles.alignCenter,
+                        column.align === 'right' && tableStyles.alignRight,
+                        stickyLastColumn && isLastColumn && tableStyles.stickyLast,
+                        stickyLastColumn && isLastColumn && tableStyles.stickyLastTbodyBg
+                      )}
+                      style={
+                        column.width
+                          ? {
+                              width:
+                                typeof column.width === 'number'
+                                  ? `${column.width}px`
+                                  : column.width,
+                            }
+                          : undefined
+                      }
+                    >
+                      <div className={tableStyles.expandCellWrapper}>
+                        <button
+                          type="button"
+                          className={tableStyles.expandButton}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!disabled) {
+                              toggleRowExpansion(rowId);
+                            }
+                          }}
+                          aria-label={expanded ? 'Collapse row' : 'Expand row'}
+                          aria-expanded={expanded}
+                          disabled={disabled}
+                        >
+                          <ChevronRightIcon
+                            size={16}
+                            style={{
+                              transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                              transition: 'transform 0.2s ease',
+                            }}
+                          />
+                        </button>
+                        <span className={tableStyles.expandCellContent}>
+                          {row[dataColumn.key] as React.ReactNode}
+                        </span>
+                      </div>
+                    </td>
+                  );
+                }
+
+                return (
+                  <Table.Td
+                    key={column.key}
+                    rowData={row}
+                    column={column}
+                    className={cn(
+                      isLastColumn && tableStyles.tdLast,
+                      stickyLastColumn && isLastColumn && tableStyles.stickyLast,
+                      stickyLastColumn && isLastColumn && tableStyles.stickyLastTbodyBg
+                    )}
+                  />
+                );
+              })}
             </Table.Tr>
 
             {/* 확장 영역 */}

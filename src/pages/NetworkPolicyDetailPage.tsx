@@ -209,7 +209,10 @@ export function NetworkPolicyDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/network-policies/${networkPolicyId}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/network-policies/${networkPolicyId}/edit?name=${encodeURIComponent(networkPolicyData?.name ?? networkPolicyId)}`
+        ),
     },
     {
       id: 'edit-yaml',

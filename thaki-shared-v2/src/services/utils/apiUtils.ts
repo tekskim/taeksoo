@@ -118,9 +118,7 @@ const checkIsRetryableError = (error: unknown): error is AxiosError => {
   return false;
 };
 
-const filterBasicResponse: Parameters<
-  typeof axios.interceptors.response.use
->[0] = response => {
+const filterBasicResponse: Parameters<typeof axios.interceptors.response.use>[0] = (response) => {
   if ('data' in response && response.data.result === undefined) {
     return response;
   }
@@ -132,7 +130,7 @@ const filterBasicResponse: Parameters<
  * useQuery 등을 사용할 때, 잘못된 서버요청을 보내지 않기 위해 모든 파라미터를 truthy한지 여부를 계산하고 그 결과를 반환합니다.
  */
 const checkIsEveryParameterValid = (params: Record<string, unknown>) =>
-  Object.keys(params).every(key => params[key] === 0 || Boolean(params[key]));
+  Object.keys(params).every((key) => params[key] === 0 || Boolean(params[key]));
 
 /**
  * useQuery 결과에서 데이터가 없을 경우, 기본 데이터를 반환합니다.
@@ -215,10 +213,7 @@ interface SessionExpiredOptions {
  * @param source - 이벤트 발생 소스 (예: 'iam', 'compute', 'container')
  * @param options - 옵션 (offToast: true면 토스트 메시지 표시 안 함)
  */
-const dispatchSessionExpired = (
-  source: string,
-  options?: SessionExpiredOptions
-): void => {
+const dispatchSessionExpired = (source: string, options?: SessionExpiredOptions): void => {
   window.dispatchEvent(
     new CustomEvent('auth:session-expired', {
       detail: { source, ...options },

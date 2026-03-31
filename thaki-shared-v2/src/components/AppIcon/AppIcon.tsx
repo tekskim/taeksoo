@@ -46,23 +46,21 @@ export interface AppIconProps {
  * @example
  * <AppIcon name="compute" size={24} />
  */
-const AppIcon = memo(
-  ({ name, size = 24, className }: AppIconProps): React.ReactElement => {
-    const iconSrc = APP_ICON_MAP[name];
+const AppIcon = memo(({ name, size = 24, className }: AppIconProps): React.ReactElement => {
+  const iconSrc = APP_ICON_MAP[name];
 
-    return (
-      <img
-        src={iconSrc}
-        alt={`${name} icon`}
-        width={size}
-        height={size}
-        draggable={false}
-        className={className}
-        style={{ objectFit: 'contain' }}
-      />
-    );
-  }
-);
+  return (
+    <img
+      src={iconSrc}
+      alt={`${name} icon`}
+      width={size}
+      height={size}
+      draggable={false}
+      className={className}
+      style={{ objectFit: 'contain' }}
+    />
+  );
+});
 
 AppIcon.displayName = 'AppIcon';
 
@@ -83,9 +81,7 @@ export function createAppIcon(
   }: {
     size?: number;
     className?: string;
-  }): React.ReactElement => (
-    <AppIcon name={name} size={size} className={className} />
-  );
+  }): React.ReactElement => <AppIcon name={name} size={size} className={className} />;
 
   AppIconComponent.displayName = `AppIcon(${name})`;
   return memo(AppIconComponent);

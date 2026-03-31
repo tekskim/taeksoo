@@ -11,11 +11,7 @@ import clsx from 'clsx';
 import 'xterm/css/xterm.css';
 
 import type { TerminalProps } from './types';
-import {
-  DEFAULT_THEME,
-  DEFAULT_TERMINAL_CONFIG,
-  DEFAULT_RECONNECT_CONFIG,
-} from './constants';
+import { DEFAULT_THEME, DEFAULT_TERMINAL_CONFIG, DEFAULT_RECONNECT_CONFIG } from './constants';
 import {
   useContainerReady,
   useTerminalInstance,
@@ -76,16 +72,15 @@ export const Terminal = ({
   const { isContainerReady } = useContainerReady(terminalRef, { isNewWindow });
 
   // 2. xterm 인스턴스 관리
-  const { terminal, fitAddon, isTerminalReady, focusTerminal } =
-    useTerminalInstance({
-      containerRef: terminalRef,
-      isContainerReady,
-      theme,
-      fontSize,
-      fontFamily,
-      cursorBlink,
-      debug,
-    });
+  const { terminal, fitAddon, isTerminalReady, focusTerminal } = useTerminalInstance({
+    containerRef: terminalRef,
+    isContainerReady,
+    theme,
+    fontSize,
+    fontFamily,
+    cursorBlink,
+    debug,
+  });
 
   // 3. WebSocket 연결 관리
   const { isConnected, sendMessage, handleResize } = useTerminalConnection({
@@ -282,9 +277,7 @@ export const Terminal = ({
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface-elevated">
             <div className="flex flex-col items-center gap-3">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-border border-t-primary" />
-              <span className="text-xs text-text-muted">
-                Initializing terminal...
-              </span>
+              <span className="text-xs text-text-muted">Initializing terminal...</span>
             </div>
           </div>
         )}

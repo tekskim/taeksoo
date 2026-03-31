@@ -1,11 +1,11 @@
-import { AxiosError } from "axios";
-import authClient from "../clients/authClient";
+import { AxiosError } from 'axios';
+import authClient from '../clients/authClient';
 
 interface Response {
   accessToken: string;
   refreshTokenRef: string;
   expiresIn: number;
-  tokenType: "Bearer";
+  tokenType: 'Bearer';
   sessionId: string;
 }
 
@@ -13,7 +13,7 @@ interface Params {
   refreshTokenRef: string;
 }
 
-const URL = "/v1/iam/authn/token/refresh";
+const URL = '/v1/iam/authn/token/refresh';
 
 /**
  * @description 리프레시 토큰 재발급

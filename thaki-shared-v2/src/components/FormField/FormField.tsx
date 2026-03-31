@@ -145,9 +145,8 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
     const hintId = `${fieldId}-hint`;
     const hasErrorOrSuccess = Boolean(finalError) || Boolean(success);
     const describedBy =
-      [hint ? hintId : null, hasErrorOrSuccess ? messageId : null]
-        .filter(Boolean)
-        .join(' ') || undefined;
+      [hint ? hintId : null, hasErrorOrSuccess ? messageId : null].filter(Boolean).join(' ') ||
+      undefined;
 
     // children에 props 주입 (ID, ARIA 속성들 자동 연결)
     // void elements (input, img, br 등)는 children을 가질 수 없으므로 안전하게 처리
@@ -227,9 +226,7 @@ export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
           {renderRequiredIndicator()}
         </label>
 
-        {description ? (
-          <div className={descriptionStyles}>{description}</div>
-        ) : null}
+        {description ? <div className={descriptionStyles}>{description}</div> : null}
 
         {/* Form Control */}
         <div className={controlStyles}>{enhancedChild}</div>

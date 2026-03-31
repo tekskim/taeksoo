@@ -24,9 +24,7 @@ export const ErrorTemplate = ({
   secondaryButtonText,
 }: ErrorTemplateProps): React.ReactElement => {
   const descriptionLines = description.split('\n');
-  const defaultIcon = icon ?? (
-    <AlertIcon variant={iconVariant} size={iconSize} />
-  );
+  const defaultIcon = icon ?? <AlertIcon variant={iconVariant} size={iconSize} />;
 
   return (
     <div
@@ -37,12 +35,7 @@ export const ErrorTemplate = ({
       )}
     >
       <Layout.VStack gap="lg" align="center" className="w-full gap-[45px]">
-        <Layout.HStack
-          gap="sm"
-          align="center"
-          justify="center"
-          className="w-full pr-5"
-        >
+        <Layout.HStack gap="sm" align="center" justify="center" className="w-full pr-5">
           {defaultIcon}
           <Typography.Title
             level={1}
@@ -75,22 +68,12 @@ export const ErrorTemplate = ({
         {(onGoBack || onSecondaryAction) && (
           <Layout.HStack gap="sm" align="center" justify="center">
             {onGoBack && (
-              <Button
-                variant="secondary"
-                appearance="outline"
-                size="lg"
-                onClick={onGoBack}
-              >
+              <Button variant="secondary" appearance="outline" size="lg" onClick={onGoBack}>
                 {buttonText}
               </Button>
             )}
             {onSecondaryAction && secondaryButtonText && (
-              <Button
-                variant="primary"
-                appearance="solid"
-                size="lg"
-                onClick={onSecondaryAction}
-              >
+              <Button variant="primary" appearance="solid" size="lg" onClick={onSecondaryAction}>
                 {secondaryButtonText}
               </Button>
             )}

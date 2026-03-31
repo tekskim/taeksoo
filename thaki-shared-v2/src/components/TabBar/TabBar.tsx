@@ -3,11 +3,7 @@ import { useDragAndDrop } from '../../services/hooks/useDragAndDrop';
 import { cn } from '../../services/utils';
 import { Button } from '../Button';
 import { AddIcon } from '../Icon';
-import {
-  addTabButtonStyles,
-  tabBarContainerStyles,
-  tabsWrapperStyles,
-} from './TabBar.styles';
+import { addTabButtonStyles, tabBarContainerStyles, tabsWrapperStyles } from './TabBar.styles';
 import TabItem from './TabItem';
 import { TabItem as TabItemType } from './types';
 import { useTabLayout } from './useTabLayout';
@@ -73,9 +69,8 @@ const TabBar: React.FC<TabBarProps> = ({
   const dragAndDrop = useDragAndDrop({
     items: tabs,
     onReorder: onTabReorder || (() => {}),
-    canDrag: tab =>
-      Boolean(onTabReorder && tab.draggable !== false && !tab.fixed),
-    canDrop: tab => Boolean(onTabReorder && !tab.fixed),
+    canDrag: (tab) => Boolean(onTabReorder && tab.draggable !== false && !tab.fixed),
+    canDrop: (tab) => Boolean(onTabReorder && !tab.fixed),
   });
 
   // 마우스 이벤트 차단 핸들러 (react-rnd와의 충돌 방지)
@@ -88,10 +83,7 @@ const TabBar: React.FC<TabBarProps> = ({
 
   return (
     <div ref={containerRef} className={cn(tabBarContainerStyles, className)}>
-      <div
-        ref={tabsWrapperRef}
-        className={cn(tabsWrapperStyles({ scrollable: needsScroll }))}
-      >
+      <div ref={tabsWrapperRef} className={cn(tabsWrapperStyles({ scrollable: needsScroll }))}>
         {tabs.map((tab, index) => (
           <TabItem
             key={tab.id}
@@ -101,10 +93,7 @@ const TabBar: React.FC<TabBarProps> = ({
             onClick={() => onTabClick(tab.id)}
             onClose={() => onTabClose(tab.id)}
             style={{
-              width:
-                activeTab === tab.id
-                  ? `${activeTabWidth}px`
-                  : `${inactiveTabWidth}px`,
+              width: activeTab === tab.id ? `${activeTabWidth}px` : `${inactiveTabWidth}px`,
               flexShrink: activeTab === tab.id ? 0 : 1,
               minWidth:
                 activeTab === tab.id
@@ -120,7 +109,7 @@ const TabBar: React.FC<TabBarProps> = ({
             onDragStart={
               enableWindowDragPassthrough
                 ? undefined
-                : e => {
+                : (e) => {
                     e.stopPropagation();
                     dragAndDrop.handleDragStart(e, index);
                     onTabDragStart?.(tab.id, e);
@@ -129,7 +118,7 @@ const TabBar: React.FC<TabBarProps> = ({
             onDragOver={
               enableWindowDragPassthrough
                 ? undefined
-                : e => {
+                : (e) => {
                     e.stopPropagation();
                     dragAndDrop.handleDragOver(e, index);
                   }
@@ -137,7 +126,7 @@ const TabBar: React.FC<TabBarProps> = ({
             onDragLeave={
               enableWindowDragPassthrough
                 ? undefined
-                : e => {
+                : (e) => {
                     e.stopPropagation();
                     dragAndDrop.handleDragLeave();
                   }
@@ -145,7 +134,7 @@ const TabBar: React.FC<TabBarProps> = ({
             onDrop={
               enableWindowDragPassthrough
                 ? undefined
-                : e => {
+                : (e) => {
                     e.stopPropagation();
                     dragAndDrop.handleDrop(e, index);
                   }
@@ -153,18 +142,14 @@ const TabBar: React.FC<TabBarProps> = ({
             onDragEnd={
               enableWindowDragPassthrough
                 ? undefined
-                : e => {
+                : (e) => {
                     e.stopPropagation();
                     dragAndDrop.handleDragEnd();
                   }
             }
             onMouseDown={handleMouseDown}
-            isDragging={
-              !enableWindowDragPassthrough && dragAndDrop.isDragging(index)
-            }
-            isDragOver={
-              !enableWindowDragPassthrough && dragAndDrop.isDragOver(index)
-            }
+            isDragging={!enableWindowDragPassthrough && dragAndDrop.isDragging(index)}
+            isDragOver={!enableWindowDragPassthrough && dragAndDrop.isDragOver(index)}
           />
         ))}
 
@@ -190,21 +175,55 @@ const TabBar: React.FC<TabBarProps> = ({
             className="flex items-center justify-center size-6 rounded-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors duration-150"
             aria-label="Minimize"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /></svg>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+            </svg>
           </button>
           <button
             type="button"
             className="flex items-center justify-center size-6 rounded-sm text-text-muted hover:bg-surface-hover hover:text-text transition-colors duration-150"
             aria-label="Maximize"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="4" y="4" width="16" height="16" rx="2" />
+            </svg>
           </button>
           <button
             type="button"
             className="flex items-center justify-center size-6 rounded-sm text-text-muted hover:bg-error-weak-bg hover:text-error transition-colors duration-150"
             aria-label="Close"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18" /><path d="M6 6l12 12" /></svg>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 6L6 18" />
+              <path d="M6 6l12 12" />
+            </svg>
           </button>
         </div>
       )}

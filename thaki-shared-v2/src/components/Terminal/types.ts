@@ -7,11 +7,7 @@
 /**
  * 터미널 연결 상태
  */
-export type TerminalConnectionStatus =
-  | 'connecting'
-  | 'connected'
-  | 'disconnected'
-  | 'error';
+export type TerminalConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
 
 /**
  * 터미널 테마 설정

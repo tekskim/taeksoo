@@ -23,7 +23,7 @@ export const useTabScroll = ({
 }: UseTabScrollParams): void => {
   // 활성 탭의 인덱스
   const activeTabIndex = useMemo(
-    () => tabs.findIndex(tab => tab.id === activeTab),
+    () => tabs.findIndex((tab) => tab.id === activeTab),
     [tabs, activeTab]
   );
 

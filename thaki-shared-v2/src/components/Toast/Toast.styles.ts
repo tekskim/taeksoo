@@ -31,33 +31,28 @@ export const toastContainerStyles = 'flex items-start gap-2 w-full';
  * - positive: green400 (#4ade80)
  * - negative: orange600 (#ea580c)
  */
-export const statusIconStyles = cva(
-  'flex-shrink-0 inline-flex items-center justify-center',
-  {
-    variants: {
-      type: {
-        positive: '',
-        negative: '',
-      },
+export const statusIconStyles = cva('flex-shrink-0 inline-flex items-center justify-center', {
+  variants: {
+    type: {
+      positive: '',
+      negative: '',
     },
-    defaultVariants: {
-      type: 'negative',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    type: 'negative',
+  },
+});
 
 /**
  * 메시지 컨텐츠 영역 (flexible width)
  */
-export const toastContentStyles =
-  'flex-1 flex flex-col gap-2 items-start min-w-0';
+export const toastContentStyles = 'flex-1 flex flex-col gap-2 items-start min-w-0';
 
 /**
  * 메시지 텍스트 스타일
  * Figma: font-size-12, line-height-16, color slate-600
  */
-export const messageStyles =
-  'm-0 font-sans text-12 leading-16 text-text-muted break-words';
+export const messageStyles = 'm-0 font-sans text-12 leading-16 text-text-muted break-words';
 
 /**
  * 리소스 이름 배지 스타일
@@ -84,41 +79,35 @@ export const viewDetailTextStyles =
 /**
  * 확장 아이콘 스타일 (회전 애니메이션)
  */
-export const expandIconStyles = cva(
-  'transition-transform duration-200 ease-in-out',
-  {
-    variants: {
-      expanded: {
-        true: 'rotate-180',
-        false: 'rotate-0',
-      },
+export const expandIconStyles = cva('transition-transform duration-200 ease-in-out', {
+  variants: {
+    expanded: {
+      true: 'rotate-180',
+      false: 'rotate-0',
     },
-    defaultVariants: {
-      expanded: false,
-    },
-  }
-);
+  },
+  defaultVariants: {
+    expanded: false,
+  },
+});
 
 /**
  * 설명 컨테이너 스타일
  * Figma: slate-50 background, 8px padding, 6px radius
  */
-export const descriptionContainerStyles =
-  'w-full bg-primitive-slate-50 rounded-base6 p-2';
+export const descriptionContainerStyles = 'w-full bg-primitive-slate-50 rounded-base6 p-2';
 
 /**
  * 설명 텍스트 스타일
  * Figma: font-size-12, line-height-16, color slate-500, subtle text
  */
-export const descriptionStyles =
-  'm-0 font-sans text-12 leading-16 text-text-subtle break-words';
+export const descriptionStyles = 'm-0 font-sans text-12 leading-16 text-text-subtle break-words';
 
 /**
  * 오른쪽 섹션 (닫기 버튼 + 타임스탬프)
  * Figma: 4px gap, items aligned to end
  */
-export const toastRightSectionStyles =
-  'flex flex-col items-end gap-1 flex-shrink-0';
+export const toastRightSectionStyles = 'flex flex-col items-end gap-1 flex-shrink-0';
 
 /**
  * 닫기 버튼 스타일
@@ -131,12 +120,10 @@ export const closeButtonStyles =
  * 타임스탬프 텍스트 스타일
  * Figma: font-size-11, line-height-16, color slate-400
  */
-export const timestampStyles =
-  'text-11 leading-16 text-text-subtle whitespace-nowrap';
+export const timestampStyles = 'text-11 leading-16 text-text-subtle whitespace-nowrap';
 
 /**
  * 앱 아이콘 컨테이너 스타일
  * Figma: 20x20 size
  */
-export const appIconStyles =
-  'flex items-center justify-center size-5 rounded-sm overflow-hidden';
+export const appIconStyles = 'flex items-center justify-center size-5 rounded-sm overflow-hidden';

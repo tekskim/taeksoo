@@ -1,26 +1,19 @@
-import React, { useState } from "react";
-import { cn } from "../../services/utils/cn";
-import { ComponentSize } from "../../types";
-import { HideIcon, ShowIcon } from "../Icon";
-import {
-  inputContainerStyles,
-  inputVariants,
-  passwordToggleStyles,
-} from "./Input.styles";
+import React, { useState } from 'react';
+import { cn } from '../../services/utils/cn';
+import { ComponentSize } from '../../types';
+import { HideIcon, ShowIcon } from '../Icon';
+import { inputContainerStyles, inputVariants, passwordToggleStyles } from './Input.styles';
 
 interface Props extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "size" | "defaultValue" | "onChange"
+  'size' | 'defaultValue' | 'onChange'
 > {
   error?: boolean;
   success?: boolean;
   size?: ComponentSize;
   showPasswordToggle?: boolean;
   filter?: RegExp | ((value: string) => string);
-  onChange?: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    filteredValue: string,
-  ) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>, filteredValue: string) => void;
   /** 비제어 모드 초기값 */
   defaultValue?: string | number;
 }
@@ -65,7 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
     {
       error,
       success,
-      size = "md",
+      size = 'md',
       className,
       type,
       showPasswordToggle = false,
@@ -76,28 +69,26 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
       defaultValue,
       ...restProps
     },
-    ref,
+    ref
   ): React.ReactElement => {
     // 비밀번호 토글 상태 관리
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     /** 필터 함수 */
     const applyFilter = (v: string): string => {
-      if (typeof filter === "function") {
+      if (typeof filter === 'function') {
         return filter(v);
       }
 
       if (filter instanceof RegExp) {
-        return v.replace(filter, "");
+        return v.replace(filter, '');
       }
 
       return v;
     };
 
     // 비제어 모드에서만 사용하는 내부 값
-    const [inputValue, setInputValue] = useState<string>(
-      applyFilter(String(defaultValue ?? "")),
-    );
+    const [inputValue, setInputValue] = useState<string>(applyFilter(String(defaultValue ?? '')));
 
     /** 제어/비제어 분기 */
     const isControlled = value !== undefined;
@@ -119,10 +110,10 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
     const renderedValue = isControlled ? String(value) : inputValue;
 
     /** 토글 버튼 표시 조건: password 타입이고 showPasswordToggle이 true일 때 */
-    const shouldShowToggle = type === "password" && showPasswordToggle;
+    const shouldShowToggle = type === 'password' && showPasswordToggle;
 
     /** 실제 input type: 토글 상태에 따라 password ↔ text 변경 */
-    const inputType = shouldShowToggle && isPasswordVisible ? "text" : type;
+    const inputType = shouldShowToggle && isPasswordVisible ? 'text' : type;
 
     /** 컴포넌트 사이즈에 따른 아이콘 크기 매핑 */
     const getIconSize = (inputSize: ComponentSize): number => {
@@ -140,7 +131,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
     const handleToggle = () => setIsPasswordVisible(!isPasswordVisible);
 
     // Map size to CVA-compatible size (xs maps to sm)
-    const cvaSize = size === "xs" ? "sm" : size;
+    const cvaSize = size === 'xs' ? 'sm' : size;
 
     return (
       <div className={cn(inputContainerStyles, className)}>
@@ -157,9 +148,9 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
               success,
               disabled,
               hasToggle: shouldShowToggle,
-            }),
+            })
           )}
-          aria-invalid={error ? "true" : undefined}
+          aria-invalid={error ? 'true' : undefined}
           {...restProps}
         />
 
@@ -168,9 +159,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
             type="button"
             className={passwordToggleStyles()}
             onClick={handleToggle}
-            aria-label={
-              isPasswordVisible ? "비밀번호 숨기기" : "비밀번호 보이기"
-            }
+            aria-label={isPasswordVisible ? '비밀번호 숨기기' : '비밀번호 보이기'}
             disabled={disabled}
           >
             {isPasswordVisible ? (
@@ -182,10 +171,10 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
         )}
       </div>
     );
-  },
+  }
 );
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
 export default Input;
 export type { Props as InputProps };

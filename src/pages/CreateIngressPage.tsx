@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -201,7 +201,7 @@ function SummarySidebar({
             Cancel
           </Button>
           <Button variant="primary" size="md" className="flex-1">
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -214,13 +214,23 @@ function SummarySidebar({
    ---------------------------------------- */
 export default function CreateIngressPage() {
   const navigate = useNavigate();
+  const { ingressId } = useParams();
+  const isEditMode = !!ingressId;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
     useTabs();
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create ingress');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(isEditMode ? `Ingress: ${nameFromQuery || ingressId}` : 'Create ingress');
+  }, [updateActiveTabLabel, isEditMode, ingressId]);
+
+  useEffect(() => {
+    if (isEditMode && ingressId) {
+      setName(nameFromQuery || ingressId);
+    }
+  }, [isEditMode, ingressId]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -275,12 +285,14 @@ export default function CreateIngressPage() {
   // Section states for summary
   const getSectionStates = (): Record<IngressSectionStep, WizardSectionState> => {
     return {
-      'basic-info': namespace && name ? 'done' : 'active',
-      rules: rules.length > 0 ? 'done' : 'pending',
-      'default-backend': defaultBackendService ? 'done' : 'pending',
-      certificates: certificates.length > 0 ? 'done' : 'pending',
-      'ingress-class': ingressClass ? 'done' : 'pending',
-      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
+      // namespace has default → 'active' until name is typed
+      'basic-info': name.trim() ? 'done' : 'active',
+      // all other sections are optional → always done
+      rules: 'done',
+      'default-backend': 'done',
+      certificates: 'done',
+      'ingress-class': 'done',
+      'labels-annotations': 'done',
     };
   };
 
@@ -440,7 +452,15 @@ export default function CreateIngressPage() {
               items={[
                 { label: 'Service Discovery', href: '/container/services' },
                 { label: 'Ingresses', href: '/container/ingresses' },
-                { label: 'Create ingress' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || ingressId!,
+                        href: `/container/ingresses/{ingressId}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create ingress' }]),
               ]}
             />
           }
@@ -484,7 +504,9 @@ export default function CreateIngressPage() {
       <VStack gap={6}>
         {/* Page Header */}
         <VStack gap={2}>
-          <h1 className="text-heading-h4">Create ingress</h1>
+          <h1 className="text-heading-h4">
+            {isEditMode ? `Ingress: ${nameFromQuery || ingressId}` : 'Create ingress'}
+          </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Ingresses route incoming traffic from the internet to Services within the cluster based
             on the hostname and path specified in the request. You can expose multiple Services on
@@ -511,6 +533,7 @@ export default function CreateIngressPage() {
                       value={namespace}
                       onChange={setNamespace}
                       fullWidth
+                      disabled={isEditMode}
                     />
                   </VStack>
 
@@ -523,6 +546,7 @@ export default function CreateIngressPage() {
                       placeholder="Enter a unique name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
+                      disabled={isEditMode}
                       fullWidth
                     />
                   </VStack>

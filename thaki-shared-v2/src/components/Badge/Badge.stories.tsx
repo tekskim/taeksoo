@@ -110,12 +110,7 @@ export const WithIcons: Story = {
       <Badge theme="ylw" layout="right-icon" icon={<CategoryIcon />}>
         Right Icon
       </Badge>
-      <Badge
-        theme="gre"
-        type="solid"
-        layout="left-icon"
-        icon={<CategoryIcon />}
-      >
+      <Badge theme="gre" type="solid" layout="left-icon" icon={<CategoryIcon />}>
         Solid
       </Badge>
     </div>

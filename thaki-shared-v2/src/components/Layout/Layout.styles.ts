@@ -31,11 +31,9 @@ export const blockStyles = cva(
     variants: {
       variant: {
         default: 'border-border bg-[var(--component-layout-surface-default-bg)]',
-        secondary:
-          'border-border-muted bg-[var(--component-layout-surface-secondary-bg)]',
+        secondary: 'border-border-muted bg-[var(--component-layout-surface-secondary-bg)]',
         info: 'border-[var(--component-layout-surface-info-border)] bg-[var(--component-layout-surface-info-bg)]',
-        success:
-          'border-success bg-[var(--component-layout-surface-success-bg)]',
+        success: 'border-success bg-[var(--component-layout-surface-success-bg)]',
         warning: 'border-warning bg-warning-light',
         error: 'border-error bg-error-light',
       },
@@ -61,8 +59,7 @@ export const blockHeaderStyles =
   'py-[var(--component-layout-padding-md)] px-[var(--component-layout-padding-lg)] border-b border-border flex items-center gap-[var(--component-layout-section-header-gap)] flex-shrink-0';
 
 // Block icon styles
-export const blockIconStyles =
-  'text-lg text-text-muted flex items-center justify-center';
+export const blockIconStyles = 'text-lg text-text-muted flex items-center justify-center';
 
 // Block header text wrapper
 export const blockHeaderTextStyles = 'flex-1 min-w-0';
@@ -76,8 +73,7 @@ export const blockSubtitleStyles =
   'text-[var(--component-layout-section-subtitle-size)] text-text-muted mt-xs mb-0 leading-normal';
 
 // Block content styles
-export const blockContentStyles =
-  'p-[var(--component-layout-padding-lg)] flex-1 flex flex-col';
+export const blockContentStyles = 'p-[var(--component-layout-padding-lg)] flex-1 flex flex-col';
 
 // Stack styles
 export const stackStyles = cva('flex min-w-0', {
@@ -118,31 +114,28 @@ export const stackStyles = cva('flex min-w-0', {
 });
 
 // Grid container styles
-export const gridContainerStyles = cva(
-  'grid gap-[var(--component-layout-grid-gap)]',
-  {
-    variants: {
-      columns: {
-        1: 'grid-cols-1',
-        2: 'grid-cols-2',
-        3: 'grid-cols-3',
-        4: 'grid-cols-4',
-        5: 'grid-cols-5',
-        6: 'grid-cols-6',
-        12: 'grid-cols-12',
-      },
-      gap: {
-        xs: 'gap-[var(--component-layout-gap-xs)]',
-        sm: 'gap-[var(--component-layout-gap-sm)]',
-        md: 'gap-[var(--component-layout-gap-md)]',
-        lg: 'gap-[var(--component-layout-gap-lg)]',
-      },
+export const gridContainerStyles = cva('grid gap-[var(--component-layout-grid-gap)]', {
+  variants: {
+    columns: {
+      1: 'grid-cols-1',
+      2: 'grid-cols-2',
+      3: 'grid-cols-3',
+      4: 'grid-cols-4',
+      5: 'grid-cols-5',
+      6: 'grid-cols-6',
+      12: 'grid-cols-12',
     },
-    defaultVariants: {
-      columns: 12,
+    gap: {
+      xs: 'gap-[var(--component-layout-gap-xs)]',
+      sm: 'gap-[var(--component-layout-gap-sm)]',
+      md: 'gap-[var(--component-layout-gap-md)]',
+      lg: 'gap-[var(--component-layout-gap-lg)]',
     },
-  }
-);
+  },
+  defaultVariants: {
+    columns: 12,
+  },
+});
 
 // Grid item styles
 export const gridItemStyles = cva('col-span-1', {

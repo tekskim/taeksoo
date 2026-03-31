@@ -35,8 +35,7 @@ export function useUnsavedChangesGuard({
   stateRef.current = { hasUnsavedChanges, onLeave, showConfirmModal };
 
   const guardFn = (): boolean => !stateRef.current.hasUnsavedChanges;
-  const guardModal = async (): Promise<boolean> =>
-    stateRef.current.showConfirmModal();
+  const guardModal = async (): Promise<boolean> => stateRef.current.showConfirmModal();
 
   useEffect(() => {
     if (!guardContext) return;

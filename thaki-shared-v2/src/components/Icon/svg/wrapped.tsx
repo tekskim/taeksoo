@@ -165,17 +165,12 @@ import {
 
 type WrappedIconProps = Omit<IconProps, 'children'>;
 
-export type IconComponent = (
-  props: Omit<IconProps, 'children'>
-) => ReactElement;
+export type IconComponent = (props: Omit<IconProps, 'children'>) => ReactElement;
 
 /**
  * Wrap a custom SVG icon (from generated.tsx) in the Icon component.
  */
-function wrapIcon(
-  Inner: React.ComponentType<SvgIconProps>,
-  displayName: string
-): IconComponent {
+function wrapIcon(Inner: React.ComponentType<SvgIconProps>, displayName: string): IconComponent {
   const Wrapped = (props: WrappedIconProps): ReactElement => (
     <Icon {...props}>
       <Inner />
@@ -206,10 +201,7 @@ function wrapFilledIcon(
  * Tabler icons accept size, color, stroke, className, style — compatible with Icon's cloneElement.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function wrapTablerIcon(
-  TablerIcon: React.ComponentType<any>,
-  displayName: string
-): IconComponent {
+function wrapTablerIcon(TablerIcon: React.ComponentType<any>, displayName: string): IconComponent {
   const Wrapped = (props: WrappedIconProps): ReactElement => (
     <Icon {...props}>
       <TablerIcon />
@@ -269,7 +261,10 @@ export const DotIcon: IconComponent = wrapTablerIcon(IconPoint, 'DotIcon');
 export const ActionIcon: IconComponent = wrapTablerIcon(IconDotsCircleHorizontal, 'ActionIcon');
 export const SettingIcon: IconComponent = wrapTablerIcon(IconSettings, 'SettingIcon');
 export const NotificationIcon: IconComponent = wrapTablerIcon(IconBell, 'NotificationIcon');
-export const NotificationNewIcon: IconComponent = wrapTablerIcon(IconBellRinging, 'NotificationNewIcon');
+export const NotificationNewIcon: IconComponent = wrapTablerIcon(
+  IconBellRinging,
+  'NotificationNewIcon'
+);
 export const FavoriteOffIcon: IconComponent = wrapTablerIcon(IconStar, 'FavoriteOffIcon');
 export const FavoriteOnIcon: IconComponent = wrapTablerIcon(IconStarFilled, 'FavoriteOnIcon');
 
@@ -294,7 +289,10 @@ export const CheckCircleIcon: IconComponent = wrapTablerIcon(IconCircleCheck, 'C
 export const CheckIcon: IconComponent = wrapTablerIcon(IconCheck, 'CheckIcon');
 export const VerifyIcon: IconComponent = wrapTablerIcon(IconShieldCheck, 'VerifyIcon');
 export const MaintenanceIcon: IconComponent = wrapTablerIcon(IconTool, 'MaintenanceIcon');
-export const SecurityErrorIcon: IconComponent = wrapTablerIcon(IconShieldExclamation, 'SecurityErrorIcon');
+export const SecurityErrorIcon: IconComponent = wrapTablerIcon(
+  IconShieldExclamation,
+  'SecurityErrorIcon'
+);
 export const InuseIcon: IconComponent = wrapIcon(Raw.StatusInUse, 'InuseIcon');
 export const LockIcon: IconComponent = wrapTablerIcon(IconLock, 'LockIcon');
 export const ShelvedIcon: IconComponent = wrapTablerIcon(IconPlugConnectedX, 'ShelvedIcon');
@@ -343,17 +341,29 @@ export const ImagesIcon: IconComponent = wrapTablerIcon(IconDisc, 'ImagesIcon');
 export const BackupIcon: IconComponent = wrapTablerIcon(IconDatabaseExport, 'BackupIcon');
 export const VolumeTypeIcon: IconComponent = wrapTablerIcon(IconDatabaseCog, 'VolumeTypeIcon');
 export const AddVolumeIcon: IconComponent = wrapTablerIcon(IconSquarePlus, 'AddVolumeIcon');
-export const VolumeSearchIcon: IconComponent = wrapTablerIcon(IconDatabaseSearch, 'VolumeSearchIcon');
+export const VolumeSearchIcon: IconComponent = wrapTablerIcon(
+  IconDatabaseSearch,
+  'VolumeSearchIcon'
+);
 export const FlavorIcon: IconComponent = wrapTablerIcon(IconCpu, 'FlavorIcon');
-export const HostAggregatesIcon: IconComponent = wrapTablerIcon(IconArrowsJoin2, 'HostAggregatesIcon');
-export const CloudComputingIcon: IconComponent = wrapTablerIcon(IconCloudComputing, 'CloudComputingIcon');
+export const HostAggregatesIcon: IconComponent = wrapTablerIcon(
+  IconArrowsJoin2,
+  'HostAggregatesIcon'
+);
+export const CloudComputingIcon: IconComponent = wrapTablerIcon(
+  IconCloudComputing,
+  'CloudComputingIcon'
+);
 export const TopologyIcon: IconComponent = wrapTablerIcon(IconTopologyStar3, 'TopologyIcon');
 export const BucketIcon: IconComponent = wrapTablerIcon(IconBucket, 'BucketIcon');
 export const SpeedTestIcon: IconComponent = wrapTablerIcon(IconBrandSpeedtest, 'SpeedTestIcon');
 export const ListSearchIcon: IconComponent = wrapTablerIcon(IconListSearch, 'ListSearchIcon');
 export const Cpu2Icon: IconComponent = wrapTablerIcon(IconCpu2, 'Cpu2Icon');
 export const ServerBoltIcon: IconComponent = wrapTablerIcon(IconServerBolt, 'ServerBoltIcon');
-export const CalendarEventIcon: IconComponent = wrapTablerIcon(IconCalendarEvent, 'CalendarEventIcon');
+export const CalendarEventIcon: IconComponent = wrapTablerIcon(
+  IconCalendarEvent,
+  'CalendarEventIcon'
+);
 export const MemoryStickIcon: IconComponent = wrapTablerIcon(IconDeviceSdCard, 'MemoryStickIcon');
 
 // AI & ML
@@ -364,7 +374,10 @@ export const AddRobotIcon: IconComponent = wrapIcon(Raw.AddRobot, 'AddRobotIcon'
 export const PuzzleIcon: IconComponent = wrapTablerIcon(IconPuzzle, 'PuzzleIcon');
 export const ChatbotIcon: IconComponent = wrapTablerIcon(IconMessageChatbot, 'ChatbotIcon');
 export const MessagesIcon: IconComponent = wrapTablerIcon(IconMessages, 'MessagesIcon');
-export const MessageCircleIcon: IconComponent = wrapTablerIcon(IconMessageCircle, 'MessageCircleIcon');
+export const MessageCircleIcon: IconComponent = wrapTablerIcon(
+  IconMessageCircle,
+  'MessageCircleIcon'
+);
 export const FinetuningIcon: IconComponent = wrapTablerIcon(IconAdjustments, 'FinetuningIcon');
 export const StudyIcon: IconComponent = wrapTablerIcon(IconBook, 'StudyIcon');
 export const CompassIcon: IconComponent = wrapTablerIcon(IconCompass, 'CompassIcon');
@@ -399,7 +412,10 @@ export const UnlinkIcon: IconComponent = wrapTablerIcon(IconLinkOff, 'UnlinkIcon
 
 // Console & Code
 export const CodeConsoleIcon: IconComponent = wrapTablerIcon(IconTerminal2, 'CodeConsoleIcon');
-export const DeviceDesktopAnalyticsIcon: IconComponent = wrapTablerIcon(IconDeviceDesktopAnalytics, 'DeviceDesktopAnalyticsIcon');
+export const DeviceDesktopAnalyticsIcon: IconComponent = wrapTablerIcon(
+  IconDeviceDesktopAnalytics,
+  'DeviceDesktopAnalyticsIcon'
+);
 
 // Other
 export const LanguageIcon: IconComponent = wrapTablerIcon(IconLanguage, 'LanguageIcon');
@@ -410,7 +426,10 @@ export const BranchIcon: IconComponent = wrapTablerIcon(IconGitBranch, 'BranchIc
 export const UserCircleIcon: IconComponent = wrapTablerIcon(IconUserCircle, 'UserCircleIcon');
 export const SunIcon: IconComponent = wrapTablerIcon(IconSun, 'SunIcon');
 export const MoonIcon: IconComponent = wrapTablerIcon(IconMoon, 'MoonIcon');
-export const AdjustmentsAltIcon: IconComponent = wrapTablerIcon(IconAdjustments, 'AdjustmentsAltIcon');
+export const AdjustmentsAltIcon: IconComponent = wrapTablerIcon(
+  IconAdjustments,
+  'AdjustmentsAltIcon'
+);
 
 // Arrows
 export const ArrowDownIcon: IconComponent = wrapTablerIcon(IconArrowDown, 'ArrowDownIcon');
@@ -428,7 +447,10 @@ export const ExpandOffIcon: IconComponent = wrapFilledIcon(Raw.ExpandOff, 'Expan
 
 // Domain-specific
 export const SwitchIcon: IconComponent = wrapIcon(Raw.Switch, 'SwitchIcon');
-export const DrawerCloseIcon: IconComponent = wrapTablerIcon(IconLayoutSidebarLeftCollapse, 'DrawerCloseIcon');
+export const DrawerCloseIcon: IconComponent = wrapTablerIcon(
+  IconLayoutSidebarLeftCollapse,
+  'DrawerCloseIcon'
+);
 export const TimeoutIcon: IconComponent = wrapIcon(Raw.Timeout, 'TimeoutIcon');
 export const ResetIcon: IconComponent = wrapIcon(Raw.Reset, 'ResetIcon');
 export const IdentifyIcon: IconComponent = wrapIcon(Raw.Identify, 'IdentifyIcon');
@@ -440,7 +462,10 @@ export const WindowCloseIcon: IconComponent = wrapIcon(Raw.WindowClose, 'WindowC
 export const WindowMaximizeIcon: IconComponent = wrapIcon(Raw.WindowMaximize, 'WindowMaximizeIcon');
 export const WindowMinimizeIcon: IconComponent = wrapIcon(Raw.WindowMinimize, 'WindowMinimizeIcon');
 export const FullscreenIcon: IconComponent = wrapTablerIcon(IconArrowsMaximize, 'FullscreenIcon');
-export const FullscreenExitIcon: IconComponent = wrapTablerIcon(IconArrowsMinimize, 'FullscreenExitIcon');
+export const FullscreenExitIcon: IconComponent = wrapTablerIcon(
+  IconArrowsMinimize,
+  'FullscreenExitIcon'
+);
 export const OtherIcon: IconComponent = wrapTablerIcon(IconDots, 'OtherIcon');
 export const UbuntuIcon: IconComponent = wrapIcon(Raw.Ubuntu, 'UbuntuIcon');
 export const RockyIcon: IconComponent = wrapIcon(Raw.Rocky, 'RockyIcon');
@@ -456,24 +481,54 @@ export const ToastSuccessIcon: IconComponent = wrapTablerIcon(IconCircleCheck, '
 export const ToastErrorIcon: IconComponent = wrapTablerIcon(IconAlertTriangle, 'ToastErrorIcon');
 
 // Sidebar icons (Container LNB, SSOT-aligned: Tabler)
-export const SidebarArrowsShuffleIcon: IconComponent = wrapTablerIcon(IconArrowsShuffle, 'SidebarArrowsShuffleIcon');
-export const SidebarCalendarTimeIcon: IconComponent = wrapTablerIcon(IconCalendarTime, 'SidebarCalendarTimeIcon');
-export const SidebarChartCohortIcon: IconComponent = wrapTablerIcon(IconAffiliate, 'SidebarChartCohortIcon');
-export const SidebarChartPieIcon: IconComponent = wrapTablerIcon(IconChartPie3, 'SidebarChartPieIcon');
-export const SidebarFileSettingsIcon: IconComponent = wrapTablerIcon(IconFileSettings, 'SidebarFileSettingsIcon');
+export const SidebarArrowsShuffleIcon: IconComponent = wrapTablerIcon(
+  IconArrowsShuffle,
+  'SidebarArrowsShuffleIcon'
+);
+export const SidebarCalendarTimeIcon: IconComponent = wrapTablerIcon(
+  IconCalendarTime,
+  'SidebarCalendarTimeIcon'
+);
+export const SidebarChartCohortIcon: IconComponent = wrapTablerIcon(
+  IconAffiliate,
+  'SidebarChartCohortIcon'
+);
+export const SidebarChartPieIcon: IconComponent = wrapTablerIcon(
+  IconChartPie3,
+  'SidebarChartPieIcon'
+);
+export const SidebarFileSettingsIcon: IconComponent = wrapTablerIcon(
+  IconFileSettings,
+  'SidebarFileSettingsIcon'
+);
 export const SidebarFoldersIcon: IconComponent = wrapTablerIcon(IconFolders, 'SidebarFoldersIcon');
-export const SidebarPackagesIcon: IconComponent = wrapTablerIcon(IconFolderCog, 'SidebarPackagesIcon');
+export const SidebarPackagesIcon: IconComponent = wrapTablerIcon(
+  IconFolderCog,
+  'SidebarPackagesIcon'
+);
 export const SidebarGroupIcon: IconComponent = wrapTablerIcon(IconUsersGroup, 'SidebarGroupIcon');
 export const SidebarReorderIcon: IconComponent = wrapTablerIcon(IconReorder, 'SidebarReorderIcon');
 export const SidebarRocketIcon: IconComponent = wrapTablerIcon(IconRocket, 'SidebarRocketIcon');
-export const SidebarRulerMeasureIcon: IconComponent = wrapTablerIcon(IconRulerMeasure, 'SidebarRulerMeasureIcon');
+export const SidebarRulerMeasureIcon: IconComponent = wrapTablerIcon(
+  IconRulerMeasure,
+  'SidebarRulerMeasureIcon'
+);
 export const SidebarNetworkIcon: IconComponent = wrapIcon(Raw.SidebarNetwork, 'SidebarNetworkIcon');
 export const SidebarScalingIcon: IconComponent = wrapIcon(Raw.SidebarScaling, 'SidebarScalingIcon');
-export const SidebarTimelineEventIcon: IconComponent = wrapTablerIcon(IconTimelineEvent, 'SidebarTimelineEventIcon');
-export const SidebarTopologyStarIcon: IconComponent = wrapTablerIcon(IconTopologyStar, 'SidebarTopologyStarIcon');
+export const SidebarTimelineEventIcon: IconComponent = wrapTablerIcon(
+  IconTimelineEvent,
+  'SidebarTimelineEventIcon'
+);
+export const SidebarTopologyStarIcon: IconComponent = wrapTablerIcon(
+  IconTopologyStar,
+  'SidebarTopologyStarIcon'
+);
 
 // IAM icons (SSOT-aligned: Tabler)
-export const IamDeviceDesktopIcon: IconComponent = wrapTablerIcon(IconDeviceDesktop, 'IamDeviceDesktopIcon');
+export const IamDeviceDesktopIcon: IconComponent = wrapTablerIcon(
+  IconDeviceDesktop,
+  'IamDeviceDesktopIcon'
+);
 export const IamHistoryIcon: IconComponent = wrapTablerIcon(IconHistory, 'IamHistoryIcon');
 export const IamUserCogIcon: IconComponent = wrapTablerIcon(IconUserCog, 'IamUserCogIcon');
 export const IamUsersIcon: IconComponent = wrapTablerIcon(IconUsers, 'IamUsersIcon');
@@ -485,6 +540,15 @@ export const DeviceMobileIcon: IconComponent = wrapIcon(Raw.DeviceMobile, 'Devic
 export const EnvelopeIcon: IconComponent = wrapIcon(Raw.Envelope, 'EnvelopeIcon');
 
 // AppBar icons (Tabler with stroke 1.5 to match original custom SVG)
-export const AppBarDocumentIcon: IconComponent = wrapTablerIconRegular(IconFileDescription, 'AppBarDocumentIcon');
-export const AppBarSettingsIcon: IconComponent = wrapTablerIconRegular(IconAdjustments, 'AppBarSettingsIcon');
-export const AppBarUserIcon: IconComponent = wrapTablerIconRegular(IconUserCircle, 'AppBarUserIcon');
+export const AppBarDocumentIcon: IconComponent = wrapTablerIconRegular(
+  IconFileDescription,
+  'AppBarDocumentIcon'
+);
+export const AppBarSettingsIcon: IconComponent = wrapTablerIconRegular(
+  IconAdjustments,
+  'AppBarSettingsIcon'
+);
+export const AppBarUserIcon: IconComponent = wrapTablerIconRegular(
+  IconUserCircle,
+  'AppBarUserIcon'
+);

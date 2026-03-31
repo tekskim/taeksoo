@@ -42,10 +42,7 @@ const URL = '/v1/iam/authn/password/reset';
 const completePasswordReset = async (
   params: CompletePasswordResetRequest
 ): Promise<CompletePasswordResetResponse> => {
-  const { data } = await authClient.put<CompletePasswordResetResponse>(
-    URL,
-    params
-  );
+  const { data } = await authClient.put<CompletePasswordResetResponse>(URL, params);
 
   return data;
 };
@@ -61,4 +58,3 @@ const useCompletePasswordReset = () => {
 
 export default useCompletePasswordReset;
 export type { CompletePasswordResetRequest, CompletePasswordResetResponse };
-

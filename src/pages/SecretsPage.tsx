@@ -152,7 +152,8 @@ export function SecretsPage() {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => navigate(`/container/secrets/${row.id}/edit`),
+        onClick: () =>
+          navigate(`/container/secrets/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
       },
       {
         id: 'edit-yaml',

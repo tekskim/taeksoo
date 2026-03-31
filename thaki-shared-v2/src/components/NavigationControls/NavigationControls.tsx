@@ -1,10 +1,7 @@
 import React, { memo } from 'react';
 import { cn } from '../../services';
 import { ArrowLeftIcon, ArrowRightIcon } from '../Icon';
-import {
-  navigationButtonStyles,
-  navigationContainerStyles,
-} from './NavigationControls.styles';
+import { navigationButtonStyles, navigationContainerStyles } from './NavigationControls.styles';
 
 interface NavigationControlsProps {
   /** 뒤로가기 가능 여부 */

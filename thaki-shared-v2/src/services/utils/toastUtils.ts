@@ -87,10 +87,7 @@ type CreateDefaultToastParams = {
  * @param isSuccess 성공 여부
  * @returns 기본 토스트 메시지
  */
-const createDefaultToast = ({
-  httpMethod,
-  isSuccess,
-}: CreateDefaultToastParams): ToastType => {
+const createDefaultToast = ({ httpMethod, isSuccess }: CreateDefaultToastParams): ToastType => {
   if (isSuccess) {
     return {
       message: httpMethod ? SUCCESS_MESSAGES[httpMethod] : 'Request succeeded.',
@@ -142,8 +139,7 @@ const showToastWithNotification = ({
   const isFocusedAppFrame = checkIsFocusedAppFrame(remoteAppRef);
 
   /** toastContent가 없으면 httpMethod 기반 기본 메시지 생성 (에러 케이스만) */
-  let finalToastContent =
-    toastContent ?? createDefaultToast({ httpMethod, isSuccess });
+  let finalToastContent = toastContent ?? createDefaultToast({ httpMethod, isSuccess });
 
   /** 에러 케이스에서 errorDescription이 있으면 description에 추가 */
   if (!isSuccess && errorDescription && !finalToastContent.description) {
@@ -167,9 +163,4 @@ const showToastWithNotification = ({
   }
 };
 
-export {
-  checkIsFocusedAppFrame,
-  createDefaultToast,
-  showToastWithNotification
-};
-
+export { checkIsFocusedAppFrame, createDefaultToast, showToastWithNotification };

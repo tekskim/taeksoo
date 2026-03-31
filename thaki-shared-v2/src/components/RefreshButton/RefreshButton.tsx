@@ -69,15 +69,13 @@ const RefreshButton = ({
     if (refreshUI) {
       return refreshUI;
     }
-    return (
-      <RefreshIcon size={iconSize} variant={iconVariant} weight="regular" />
-    );
+    return <RefreshIcon size={iconSize} variant={iconVariant} weight="regular" />;
   };
 
   /** 리프레시 버튼 클릭 핸들러 (불필요한 useCallback 제거) */
   const onClickRefresh = (e: React.MouseEvent<HTMLButtonElement>): void => {
     // 이미 회전 중이면 잠깐 멈췄다 다시 회전시켜 애니메이션을 재생
-    setIsRefreshing(prev => {
+    setIsRefreshing((prev) => {
       if (prev) {
         clearTimeout(rotatingTimeoutRef.current!);
         rotatingTimeoutRef.current = null;
@@ -97,7 +95,7 @@ const RefreshButton = ({
   /** 카운트다운 인터벌을 시작하는 함수 */
   const startCountdownInterval = (): void => {
     countdownIntervalRef.current = setInterval(() => {
-      setRemainDuration(prev => prev - 1000);
+      setRemainDuration((prev) => prev - 1000);
     }, 1000);
   };
 

@@ -71,7 +71,7 @@ export const BadgeList = memo(function BadgeList({
           delay={100}
           hideDelay={100}
           content={
-            <div className="p-3 min-w-[120px] max-w-[320px]">
+            <div className="p-3 min-w-[120px] max-w-[320px] text-left">
               <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                 {popoverTitle ?? `All items (${items.length})`}
               </div>
@@ -91,11 +91,9 @@ export const BadgeList = memo(function BadgeList({
             </div>
           }
         >
-          <span
-            className={`inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors ${size === 'sm' ? 'h-5' : size === 'md' ? 'h-6' : 'h-7'}`}
-          >
+          <Badge theme="gray" type="subtle" size={size} className="shrink-0 cursor-pointer">
             +{remainingCount}
-          </span>
+          </Badge>
         </Popover>
       )}
     </div>

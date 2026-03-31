@@ -12,11 +12,7 @@ export const tabBarContainerStyles = [
 
 // Tabs wrapper
 export const tabsWrapperStyles = cva(
-  [
-    'flex gap-0 flex-1 min-w-0 items-center',
-    'overflow-hidden pr-0 h-full',
-    'transition-none',
-  ],
+  ['flex gap-0 flex-1 min-w-0 items-center', 'overflow-hidden pr-0 h-full', 'transition-none'],
   {
     variants: {
       scrollable: {

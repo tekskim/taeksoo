@@ -76,13 +76,7 @@ const calculateOptimalDirection = (params: {
   gap?: number;
   viewport: Viewport;
 }): Direction => {
-  const {
-    triggerRect: rect,
-    elementSize,
-    preferred = 'bottom',
-    gap = 4,
-    viewport: vp,
-  } = params;
+  const { triggerRect: rect, elementSize, preferred = 'bottom', gap = 4, viewport: vp } = params;
 
   const spaceAbove = rect.top - gap;
   const spaceBelow = vp.height - rect.bottom - gap;

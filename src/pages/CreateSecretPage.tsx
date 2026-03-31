@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
 import {
   Button,
@@ -123,6 +123,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -134,22 +135,18 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   // Determine section status based on form data
   const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
     if (section === 'basic-info') {
-      const hasValidBasicInfo = secretName.trim() && (secretType !== 'custom' || customType.trim());
-      return hasValidBasicInfo ? 'done' : 'active';
+      // namespace & secretType have defaults → 'active' until name (and customType if needed) filled
+      if (!secretName.trim()) return 'active';
+      if (secretType === 'custom' && !customType.trim()) return 'active';
+      return 'done';
     }
-    if (section === 'data') {
-      return dataEntries.length > 0 && dataEntries.some((e) => e.key.trim() || e.value.trim())
-        ? 'done'
-        : 'pending';
-    }
-    if (section === 'labels-annotations') {
-      return hasLabelsOrAnnotations ? 'done' : 'pending';
-    }
-    return 'pending';
+    // data, labels-annotations are all optional → always done
+    return 'done';
   };
 
   return (
@@ -183,7 +180,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -211,6 +208,7 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -229,6 +227,7 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(true);
 
@@ -295,6 +294,7 @@ function BasicInfoSection({
                   if (secretNameError) onSecretNameErrorChange(null);
                 }}
                 fullWidth
+                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{secretNameError}</FormField.ErrorMessage>
@@ -887,6 +887,10 @@ function LabelsAnnotationsSection({
 
 export function CreateSecretPage() {
   const navigate = useNavigate();
+  const { secretName: secretNameParam } = useParams();
+  const isEditMode = !!secretNameParam;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -922,8 +926,16 @@ export function CreateSecretPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create secret');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `Secret: ${nameFromQuery || secretNameParam}` : 'Create secret'
+    );
+  }, [updateActiveTabLabel, isEditMode, secretNameParam]);
+
+  useEffect(() => {
+    if (isEditMode && secretNameParam) {
+      setSecretName(nameFromQuery || secretNameParam);
+    }
+  }, [isEditMode, secretNameParam]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -1062,7 +1074,15 @@ export function CreateSecretPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Secrets', href: '/container/secrets' },
-                { label: 'Create secret' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || secretNameParam!,
+                        href: `/container/secrets/{secretNameParam}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create secret' }]),
               ]}
             />
           }
@@ -1107,7 +1127,9 @@ export function CreateSecretPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create secret</h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              {isEditMode ? `Secret: ${nameFromQuery || secretNameParam}` : 'Create secret'}
+            </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Secret is a Kubernetes resource used to securely store sensitive information such as
@@ -1136,6 +1158,7 @@ export function CreateSecretPage() {
               onNamespaceChange={setNamespace}
               description={description}
               onDescriptionChange={setDescription}
+              isEditMode={isEditMode}
             />
 
             {/* Data Section */}
@@ -1175,6 +1198,7 @@ export function CreateSecretPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

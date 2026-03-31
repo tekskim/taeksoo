@@ -10,22 +10,22 @@ const RTLContext = createContext<RTLContextValue>({
 
 /**
  * RTL Provider for global right-to-left layout support
- * 
+ *
  * 🌍 사용자 요구사항 5: RTL은 아이콘뿐만 아니라 UI, Message 등 전체에서 사용
- * 
+ *
  * 주요 기능:
  * - Auto-detect RTL from document.dir
- * - Manual RTL control with toggle/set functions  
+ * - Manual RTL control with toggle/set functions
  * - Global state management for entire app
  * - Used by Icon, Text, Layout, Message components
- * 
+ *
  * @example
  * ```tsx
  * // App level
  * <RTLProvider autoDetect>
  *   <App />
  * </RTLProvider>
- * 
+ *
  * // Component level
  * const { isRTL, toggleRTL } = useRTL();
  * ```
@@ -38,12 +38,12 @@ export const RTLProvider: React.FC<RTLProviderProps> = ({
   const [isRTL, setIsRTL] = useState(() => {
     // Priority: initialRTL > document detection > false
     if (initialRTL !== undefined) return initialRTL;
-    
+
     if (autoDetect && typeof document !== 'undefined') {
       const dir = document.dir || document.documentElement.dir || '';
       return dir.toLowerCase() === 'rtl';
     }
-    
+
     return false;
   });
 
@@ -72,7 +72,7 @@ export const RTLProvider: React.FC<RTLProviderProps> = ({
 
   // Manual controls
   const toggleRTL = useCallback(() => {
-    setIsRTL(prev => !prev);
+    setIsRTL((prev) => !prev);
   }, []);
 
   const setRTL = useCallback((newRTL: boolean) => {
@@ -85,11 +85,7 @@ export const RTLProvider: React.FC<RTLProviderProps> = ({
     setRTL,
   };
 
-  return (
-    <RTLContext.Provider value={contextValue}>
-      {children}
-    </RTLContext.Provider>
-  );
+  return <RTLContext.Provider value={contextValue}>{children}</RTLContext.Provider>;
 };
 
-export { RTLContext }; 
+export { RTLContext };

@@ -2,12 +2,7 @@ import type { ReactElement } from 'react';
 import { useCallback, useState } from 'react';
 
 import { cn } from '../../services';
-import {
-  ChevronDownIcon,
-  CloseSmallIcon,
-  ToastErrorIcon,
-  ToastSuccessIcon,
-} from '../Icon';
+import { ChevronDownIcon, CloseSmallIcon, ToastErrorIcon, ToastSuccessIcon } from '../Icon';
 
 import {
   appIconStyles,
@@ -146,13 +141,10 @@ const Toast = ({
 }: Props): ReactElement => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleToggleExpand = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation();
-      setIsExpanded(prev => !prev);
-    },
-    []
-  );
+  const handleToggleExpand = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsExpanded((prev) => !prev);
+  }, []);
 
   return (
     <div
@@ -184,9 +176,7 @@ const Toast = ({
         {/* Message Content */}
         <div className={cn(toastContentStyles)}>
           <p className={cn(messageStyles)}>{message}</p>
-          {resourceName && (
-            <span className={cn(resourceNameBadgeStyles)}>{resourceName}</span>
-          )}
+          {resourceName && <span className={cn(resourceNameBadgeStyles)}>{resourceName}</span>}
         </div>
 
         {/* Right Section: Close Button + Timestamp + App Icon */}
@@ -194,7 +184,7 @@ const Toast = ({
           <button
             type="button"
             className={cn(closeButtonStyles)}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               handleDismiss();
             }}
@@ -202,11 +192,7 @@ const Toast = ({
           >
             <CloseSmallIcon size={16} color="currentColor" />
           </button>
-          {timestamp && (
-            <span className={cn(timestampStyles)}>
-              {formatTimestamp(timestamp)}
-            </span>
-          )}
+          {timestamp && <span className={cn(timestampStyles)}>{formatTimestamp(timestamp)}</span>}
           {appIcon && <div className={cn(appIconStyles)}>{appIcon}</div>}
         </div>
       </div>
@@ -221,15 +207,10 @@ const Toast = ({
             aria-expanded={isExpanded}
             aria-label={isExpanded ? 'Hide details' : 'View details'}
           >
-            <span className={cn(viewDetailTextStyles)}>
-              {isExpanded ? 'Hide' : 'View'} Detail
-            </span>
+            <span className={cn(viewDetailTextStyles)}>{isExpanded ? 'Hide' : 'View'} Detail</span>
             <ChevronDownIcon
               size={12}
-              className={cn(
-                expandIconStyles({ expanded: isExpanded }),
-                'text-text-subtle'
-              )}
+              className={cn(expandIconStyles({ expanded: isExpanded }), 'text-text-subtle')}
             />
           </button>
           {isExpanded && (

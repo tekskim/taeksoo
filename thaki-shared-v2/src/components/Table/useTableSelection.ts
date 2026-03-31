@@ -51,15 +51,11 @@ export const useTableSelection = <TData extends Record<string, unknown>>({
   }, [rows, getResolvedRowId, isRowDisabled]);
 
   // Set version for O(1) lookup
-  const currentPageIdSet = useMemo(
-    () => new Set(currentPageIds),
-    [currentPageIds]
-  );
+  const currentPageIdSet = useMemo(() => new Set(currentPageIds), [currentPageIds]);
 
   // isAllSelected: true only when all enabled rows on current page are selected
   const isAllSelected =
-    currentPageIds.length > 0 &&
-    currentPageIds.every(id => selectedRowsSet.has(id));
+    currentPageIds.length > 0 && currentPageIds.every((id) => selectedRowsSet.has(id));
 
   // Radio group name generation
   const generatedRadioGroupName = useId();
@@ -76,12 +72,7 @@ export const useTableSelection = <TData extends Record<string, unknown>>({
   }, [selectedRows]);
 
   const handleRowSelection = useCallback(
-    (
-      rowId: string | number,
-      selected: boolean,
-      row?: TData,
-      index?: number
-    ) => {
+    (rowId: string | number, selected: boolean, row?: TData, index?: number) => {
       if (!onRowSelectionChange) return;
 
       // disabled check
@@ -113,9 +104,7 @@ export const useTableSelection = <TData extends Record<string, unknown>>({
       if (!onRowSelectionChange || selectionType !== 'checkbox') return;
 
       // Keep selections from other pages, only modify current page
-      const otherPageSelections = selectedRowsRef.current.filter(
-        id => !currentPageIdSet.has(id)
-      );
+      const otherPageSelections = selectedRowsRef.current.filter((id) => !currentPageIdSet.has(id));
 
       const newSelection = selected
         ? [...otherPageSelections, ...currentPageIds]

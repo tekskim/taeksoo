@@ -49,9 +49,8 @@ const getValueFromRatio = (ratio: number, min: number, max: number): number =>
 /**
  * data 속성에서 ThumbType 선호값을 안전하게 파싱합니다.
  */
-const parseThumbPreference = (
-  attributeValue: string | null
-): ThumbType | null => (isThumbType(attributeValue) ? attributeValue : null);
+const parseThumbPreference = (attributeValue: string | null): ThumbType | null =>
+  isThumbType(attributeValue) ? attributeValue : null;
 
 /**
  * 포인터에 가장 가까운 ThumbType을 계산해 어떤 핸들을 이동할지 결정합니다.
@@ -100,9 +99,7 @@ const getClosestThumbFromEvent = (
   maxValue: number
 ): ThumbType => {
   const element = target instanceof HTMLElement ? target : null;
-  const preferredThumb = parseThumbPreference(
-    element?.getAttribute('data-thumb-type') ?? null
-  );
+  const preferredThumb = parseThumbPreference(element?.getAttribute('data-thumb-type') ?? null);
 
   return pickClosestThumb(pointerValue, minValue, maxValue, preferredThumb);
 };
@@ -110,9 +107,7 @@ const getClosestThumbFromEvent = (
 /**
  * input 요소의 step 속성을 숫자로 변환하고 유효하지 않은 값은 null로 처리합니다.
  */
-const parseStepAttribute = (
-  stepAttr: string | null | undefined
-): number | null => {
+const parseStepAttribute = (stepAttr: string | null | undefined): number | null => {
   if (stepAttr === 'any') {
     return null;
   }

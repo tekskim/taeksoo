@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -127,6 +127,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -134,6 +135,7 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
@@ -166,7 +168,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -188,6 +190,7 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -200,6 +203,7 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -218,6 +222,7 @@ function BasicInfoSection({
                   if (pvNameError) onNamespaceNameErrorChange(null);
                 }}
                 fullWidth
+                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{pvNameError}</FormField.ErrorMessage>
@@ -745,6 +750,10 @@ function LabelsAnnotationsSection({
 
 export function CreatePersistentVolumePage() {
   const navigate = useNavigate();
+  const { pvName: pvNameParam } = useParams();
+  const isEditMode = !!pvNameParam;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -780,8 +789,16 @@ export function CreatePersistentVolumePage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create persistent volume');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `Persistent volume: ${nameFromQuery || pvNameParam}` : 'Create persistent volume'
+    );
+  }, [updateActiveTabLabel, isEditMode, pvNameParam]);
+
+  useEffect(() => {
+    if (isEditMode && pvNameParam) {
+      setNamespaceName(nameFromQuery || pvNameParam);
+    }
+  }, [isEditMode, pvNameParam]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -796,27 +813,14 @@ export function CreatePersistentVolumePage() {
   const getSectionStatus = useCallback(
     (section: SectionStep): 'done' | 'active' | 'pending' => {
       if (section === 'basic-info') {
+        // capacity (default=1) and accessModes have defaults → some required always filled
+        // → 'active' until name is also filled
         return pvName.trim() ? 'done' : 'active';
       }
-      if (section === 'storage-config') {
-        // Consider active if any storage config is set
-        return storageClassName || mountOptions.length > 0 || nodeSelectors.length > 0
-          ? 'done'
-          : 'pending';
-      }
-      if (section === 'labels-annotations') {
-        return labels.length > 0 || annotations.length > 0 ? 'done' : 'pending';
-      }
-      return 'pending';
+      // storage-config, labels-annotations are optional → always done
+      return 'done';
     },
-    [
-      pvName,
-      storageClassName,
-      mountOptions.length,
-      nodeSelectors.length,
-      labels.length,
-      annotations.length,
-    ]
+    [pvName]
   );
 
   const sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'> = {
@@ -936,7 +940,15 @@ export function CreatePersistentVolumePage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
-                { label: 'Create persistent volume' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || pvNameParam!,
+                        href: `/container/persistent-volumes/${pvNameParam}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create persistent volume' }]),
               ]}
             />
           }
@@ -982,7 +994,9 @@ export function CreatePersistentVolumePage() {
         <VStack gap={6}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create persistent volume
+              {isEditMode
+                ? `Persistent volume: ${nameFromQuery || pvNameParam}`
+                : 'Create persistent volume'}
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -1006,6 +1020,7 @@ export function CreatePersistentVolumePage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
+              isEditMode={isEditMode}
             />
 
             {/* Storage Configuration Section */}
@@ -1039,6 +1054,7 @@ export function CreatePersistentVolumePage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

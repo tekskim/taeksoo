@@ -55,11 +55,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     // hasRestored prop이 true로 변경되면 에러 상태를 초기화합니다.
-    if (
-      !prevProps.hasRestored &&
-      this.props.hasRestored &&
-      this.state.hasError
-    ) {
+    if (!prevProps.hasRestored && this.props.hasRestored && this.state.hasError) {
       this.setState({ hasError: false });
     }
   }

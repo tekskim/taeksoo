@@ -1,15 +1,11 @@
 import React, { createContext, ReactNode, useMemo } from 'react';
-import {
-  createNotificationHistoryStore,
-  NotificationHistoryStoreApi,
-} from '../../stores';
+import { createNotificationHistoryStore, NotificationHistoryStoreApi } from '../../stores';
 
 /**
  * Context for NotificationHistoryStore
  * Similar to overlay store pattern, this allows each app to have its own notification history
  */
-export const NotificationHistoryContext =
-  createContext<NotificationHistoryStoreApi | null>(null);
+export const NotificationHistoryContext = createContext<NotificationHistoryStoreApi | null>(null);
 
 interface NotificationHistoryProviderProps {
   children: ReactNode;
@@ -20,9 +16,7 @@ interface NotificationHistoryProviderProps {
  * Each app (IAM, Compute, etc.) should wrap its content with this provider to maintain
  * separate notification history contexts.
  */
-const NotificationHistoryProvider: React.FC<
-  NotificationHistoryProviderProps
-> = ({ children }) => {
+const NotificationHistoryProvider: React.FC<NotificationHistoryProviderProps> = ({ children }) => {
   const value = useMemo(createNotificationHistoryStore, []);
 
   return (

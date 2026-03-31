@@ -24,11 +24,7 @@ import {
   weekStyles,
   weeksStyles,
 } from './DatePicker.styles';
-import type {
-  DatePickerProps,
-  DatePickerValue,
-  DateRange,
-} from './DatePicker.types';
+import type { DatePickerProps, DatePickerValue, DateRange } from './DatePicker.types';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -59,16 +55,8 @@ const isInRange = (date: Date, from?: Date, to?: Date): boolean => {
 };
 
 /** 날짜가 disabled인지 확인 (minDate 이전 또는 maxDate 이후) */
-const isDateDisabled = (
-  date: Date,
-  minDate?: Date,
-  maxDate?: Date
-): boolean => {
-  const dateTime = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
-  ).getTime();
+const isDateDisabled = (date: Date, minDate?: Date, maxDate?: Date): boolean => {
+  const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 
   if (minDate) {
     const minDateTime = new Date(
@@ -92,10 +80,7 @@ const isDateDisabled = (
 };
 
 /** 해당 월의 캘린더 데이터 생성 */
-const getCalendarDays = (
-  year: number,
-  month: number
-): { date: Date; isOutside: boolean }[] => {
+const getCalendarDays = (year: number, month: number): { date: Date; isOutside: boolean }[] => {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const startDayOfWeek = firstDay.getDay();
@@ -155,7 +140,7 @@ const groupByWeek = <T,>(items: T[], size: number): T[][] => {
  * @param className - 추가 CSS 클래스
  * @param numberOfMonths - 표시할 월 개수
  */
-const DatePicker: React.FC<DatePickerProps> = props => {
+const DatePicker: React.FC<DatePickerProps> = (props) => {
   const {
     mode = 'range',
     value,
@@ -246,7 +231,7 @@ const DatePicker: React.FC<DatePickerProps> = props => {
   };
 
   const handlePreviousMonth = (): void => {
-    setCurrentMonth(prev => {
+    setCurrentMonth((prev) => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() - 1);
       return newDate;
@@ -254,7 +239,7 @@ const DatePicker: React.FC<DatePickerProps> = props => {
   };
 
   const handleNextMonth = (): void => {
-    setCurrentMonth(prev => {
+    setCurrentMonth((prev) => {
       const newDate = new Date(prev);
       newDate.setMonth(prev.getMonth() + 1);
       return newDate;
@@ -269,15 +254,8 @@ const DatePicker: React.FC<DatePickerProps> = props => {
     }[] = [];
 
     for (let i = 0; i < numberOfMonths; i++) {
-      const monthDate = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth() + i,
-        1
-      );
-      const days = getCalendarDays(
-        monthDate.getFullYear(),
-        monthDate.getMonth()
-      );
+      const monthDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + i, 1);
+      const days = getCalendarDays(monthDate.getFullYear(), monthDate.getMonth());
       months.push({
         month: monthDate,
         weeks: groupByWeek(days, 7),
@@ -369,9 +347,7 @@ const DatePicker: React.FC<DatePickerProps> = props => {
         >
           <ChevronLeftIcon size="sm" />
         </button>
-        <span className={cn(monthLabelStyles)}>
-          {formatMonthYear(currentMonth)}
-        </span>
+        <span className={cn(monthLabelStyles)}>{formatMonthYear(currentMonth)}</span>
         <button
           type="button"
           className={cn(navButtonStyles)}
@@ -387,7 +363,7 @@ const DatePicker: React.FC<DatePickerProps> = props => {
         <div key={monthIndex} className={cn(monthStyles, 'dp-month')}>
           {/* Weekday Headers */}
           <div className={cn(weekdaysStyles, 'dp-weekdays')}>
-            {WEEKDAYS.map(day => (
+            {WEEKDAYS.map((day) => (
               <div key={day} className={cn(weekdayStyles, 'dp-weekday')}>
                 {day}
               </div>
@@ -405,9 +381,7 @@ const DatePicker: React.FC<DatePickerProps> = props => {
                     state.isRangeMiddle && dayRangeMiddleStyles,
                     state.isRangeStart && dayRangeStartStyles,
                     state.isRangeEnd && dayRangeEndStyles,
-                    state.isRangeStart &&
-                      state.isRangeEnd &&
-                      dayRangeSameStyles,
+                    state.isRangeStart && state.isRangeEnd && dayRangeSameStyles,
                     'dp-day',
                     state.isSelected && 'dp-selected',
                     state.isRangeStart && 'dp-range-start',
@@ -431,11 +405,7 @@ const DatePicker: React.FC<DatePickerProps> = props => {
                       <button
                         type="button"
                         className={dayButtonClasses}
-                        onClick={
-                          state.isDisabled
-                            ? undefined
-                            : () => handleDayClick(dayData.date)
-                        }
+                        onClick={state.isDisabled ? undefined : () => handleDayClick(dayData.date)}
                         disabled={state.isDisabled}
                         aria-disabled={state.isDisabled}
                       >

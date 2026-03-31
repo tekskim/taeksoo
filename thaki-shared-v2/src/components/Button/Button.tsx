@@ -63,10 +63,7 @@ const isIconLikeElement = (element: React.ReactElement | null): boolean => {
   };
   const displayName = elementType?.displayName || elementType?.name;
 
-  if (
-    typeof displayName === 'string' &&
-    displayName.toLowerCase().includes('icon')
-  ) {
+  if (typeof displayName === 'string' && displayName.toLowerCase().includes('icon')) {
     return true;
   }
 
@@ -86,10 +83,7 @@ const isIconLikeElement = (element: React.ReactElement | null): boolean => {
 
     if (
       element.type === 'span' &&
-      Object.prototype.hasOwnProperty.call(
-        element.props ?? {},
-        'dangerouslySetInnerHTML'
-      )
+      Object.prototype.hasOwnProperty.call(element.props ?? {}, 'dangerouslySetInnerHTML')
     ) {
       return true;
     }
@@ -122,20 +116,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const content = isLoading ? loadingElement : children;
 
-    const renderableChildren =
-      React.Children.toArray(content).filter(isRenderableChild);
+    const renderableChildren = React.Children.toArray(content).filter(isRenderableChild);
     const hasTextContent = renderableChildren.some(isTextChild);
 
     const soleElementChild =
-      renderableChildren.length === 1 &&
-      React.isValidElement(renderableChildren[0])
+      renderableChildren.length === 1 && React.isValidElement(renderableChildren[0])
         ? (renderableChildren[0] as React.ReactElement)
         : null;
 
     const isIconOnly =
-      Boolean(soleElementChild) &&
-      !hasTextContent &&
-      isIconLikeElement(soleElementChild);
+      Boolean(soleElementChild) && !hasTextContent && isIconLikeElement(soleElementChild);
 
     return (
       <button

@@ -31,9 +31,4 @@ const formatSegmentLabel = (segment: string): string => {
   return decoded.charAt(0).toUpperCase() + decoded.slice(1);
 };
 
-export {
-  buildCumulativePaths,
-  formatSegmentLabel,
-  getPathSegments,
-  isHomePath,
-};
+export { buildCumulativePaths, formatSegmentLabel, getPathSegments, isHomePath };

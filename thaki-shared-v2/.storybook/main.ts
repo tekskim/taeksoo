@@ -11,11 +11,7 @@ const config: StorybookConfig = {
     // PostCSS with Tailwind support
     config.tools.postcss = {
       postcssOptions: {
-        plugins: [
-          require('postcss-import'),
-          require('tailwindcss'),
-          require('autoprefixer'),
-        ],
+        plugins: [require('postcss-import'), require('tailwindcss'), require('autoprefixer')],
       },
     };
 

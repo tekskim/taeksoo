@@ -1,19 +1,14 @@
-import type {
-  AppliedFilterMap,
-  FilterKeyWithValue,
-} from './FilterSearch.types';
+import type { AppliedFilterMap, FilterKeyWithValue } from './FilterSearch.types';
 import { formatDateToISO } from '../../services/utils/dateUtils';
 
 /**
  * 선택된 필터 키들을 API 파라미터로 변환
  * @returns API 요청에 사용할 파라미터 맵
  */
-export const convertFiltersToApiParams = (
-  selectedKeys: FilterKeyWithValue[]
-): AppliedFilterMap => {
+export const convertFiltersToApiParams = (selectedKeys: FilterKeyWithValue[]): AppliedFilterMap => {
   const result: AppliedFilterMap = {};
 
-  selectedKeys.forEach(key => {
+  selectedKeys.forEach((key) => {
     if (key.type === 'dateRange') {
       handleDateRangeFilter(key, result);
       return;
@@ -37,10 +32,7 @@ export const convertFiltersToApiParams = (
   return result;
 };
 
-const handleDateRangeFilter = (
-  key: FilterKeyWithValue,
-  result: AppliedFilterMap
-): void => {
+const handleDateRangeFilter = (key: FilterKeyWithValue, result: AppliedFilterMap): void => {
   const today = new Date();
   const startDate = key.startDate;
   const endDate = key.endDate;
@@ -54,11 +46,7 @@ const handleDateRangeFilter = (
   result[endKey] = formatDateToISO(endDate || today);
 };
 
-const appendMultiValue = (
-  result: AppliedFilterMap,
-  key: string,
-  value: string
-): void => {
+const appendMultiValue = (result: AppliedFilterMap, key: string, value: string): void => {
   result[key] = result[key] ? `${result[key]},${value}` : value;
 };
 
@@ -66,14 +54,10 @@ const appendMultiValue = (
  * 날짜 범위를 사용자에게 표시할 형식으로 변환
  * @returns "yyyy/mm/dd ~ yyyy/mm/dd" 형식의 문자열
  */
-export const formatDateRangeDisplay = (
-  startDate?: Date,
-  endDate?: Date
-): string => {
+export const formatDateRangeDisplay = (startDate?: Date, endDate?: Date): string => {
   if (!startDate && !endDate) return '';
 
-  const formatWithSlash = (date: Date) =>
-    formatDateToISO(date).replace(/-/g, '/');
+  const formatWithSlash = (date: Date) => formatDateToISO(date).replace(/-/g, '/');
 
   if (startDate && endDate) {
     return `${formatWithSlash(startDate)} ~ ${formatWithSlash(endDate)}`;

@@ -6,11 +6,10 @@ import {
   textareaVariants,
 } from './Textarea.styles';
 
-export interface TextareaProps
-  extends Omit<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    'size' | 'children'
-  > {
+export interface TextareaProps extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'size' | 'children'
+> {
   error?: boolean;
   success?: boolean;
   size?: 'sm' | 'md' | 'lg';
@@ -92,9 +91,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     ref
   ) => {
     // 내부 state (uncontrolled 모드용)
-    const [internalValue, setInternalValue] = useState(
-      defaultValue?.toString() || ''
-    );
+    const [internalValue, setInternalValue] = useState(defaultValue?.toString() || '');
 
     // 현재 값 계산 (controlled vs uncontrolled)
     const currentValue = value !== undefined ? value.toString() : internalValue;
@@ -179,9 +176,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
 
         {showCharacterCount && maxLength && (
-          <div
-            className={characterCountVariants({ near: isNear, over: isOver })}
-          >
+          <div className={characterCountVariants({ near: isNear, over: isOver })}>
             {currentLength}/{maxLength}
           </div>
         )}

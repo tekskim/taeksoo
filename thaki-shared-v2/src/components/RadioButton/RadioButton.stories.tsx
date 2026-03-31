@@ -93,19 +93,19 @@ export const Default: Story = {
     await step('옵션 1 클릭', async () => {
       const option1 = canvas.getByLabelText('옵션 1');
       await userEvent.click(option1);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
 
     await step('옵션 2 클릭', async () => {
       const option2 = canvas.getByLabelText('옵션 2');
       await userEvent.click(option2);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
 
     await step('옵션 3 클릭', async () => {
       const option3 = canvas.getByLabelText('옵션 3');
       await userEvent.click(option3);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
   },
 };
@@ -139,12 +139,7 @@ export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <RadioButton value="disabled1" label="Disabled Radio Button" disabled />
-      <RadioButton
-        value="disabled2"
-        label="Disabled Checked Radio Button"
-        disabled
-        checked
-      />
+      <RadioButton value="disabled2" label="Disabled Checked Radio Button" disabled checked />
     </div>
   ),
 };

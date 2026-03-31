@@ -57,9 +57,7 @@ export const FrameProvider: React.FC<FrameProviderProps> = ({
     [frameId, orgId, dragHandleClassName]
   );
 
-  return (
-    <FrameContext.Provider value={value}>{children}</FrameContext.Provider>
-  );
+  return <FrameContext.Provider value={value}>{children}</FrameContext.Provider>;
 };
 
 /**

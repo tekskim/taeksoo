@@ -1,12 +1,4 @@
-import {
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { Direction } from '../../types';
 
@@ -28,10 +20,8 @@ interface PortalProps {
 
 /* ── Feature detection (evaluated once at module load) ───── */
 
-const canUsePopover =
-  typeof HTMLElement !== 'undefined' && 'popover' in HTMLElement.prototype;
-const canUseAnchor =
-  typeof CSS !== 'undefined' && CSS.supports('anchor-name: --a');
+const canUsePopover = typeof HTMLElement !== 'undefined' && 'popover' in HTMLElement.prototype;
+const canUseAnchor = typeof CSS !== 'undefined' && CSS.supports('anchor-name: --a');
 const useNative = canUsePopover && canUseAnchor;
 
 /* ── Shared helpers ──────────────────────────────────────── */
@@ -49,9 +39,7 @@ function computeOffsets(pos?: PortalProps['position']): {
   return { top, left };
 }
 
-function resolvePortalScope(
-  triggerEl: HTMLElement | null,
-): string | undefined {
+function resolvePortalScope(triggerEl: HTMLElement | null): string | undefined {
   if (!triggerEl) return undefined;
   const rootEl = triggerEl.closest<HTMLElement>('[data-portal-root]');
   if (rootEl?.id) return rootEl.id;
@@ -156,9 +144,7 @@ interface ResolvedBounds {
  * its `getBoundingClientRect()` may exceed the visible clipped area.
  * We walk up to find clipping ancestors and intersect their rects.
  */
-function resolveBounds(
-  triggerEl: HTMLElement | null | undefined,
-): ResolvedBounds {
+function resolveBounds(triggerEl: HTMLElement | null | undefined): ResolvedBounds {
   const viewport: Bounds = {
     top: 0,
     left: 0,
@@ -189,7 +175,7 @@ function computeOptimalDirection(
   triggerEl: HTMLElement | null | undefined,
   preferred: Direction,
   gap: number,
-  bounds: Bounds,
+  bounds: Bounds
 ): Direction {
   if (!triggerEl) return preferred;
 
@@ -204,29 +190,13 @@ function computeOptimalDirection(
   const MIN_W = 80;
   const MIN_H = 40;
 
-  if (
-    preferred.startsWith('right') &&
-    space.right < MIN_W &&
-    space.left > space.right
-  )
+  if (preferred.startsWith('right') && space.right < MIN_W && space.left > space.right)
     return flipPrimaryAxis(preferred);
-  if (
-    preferred.startsWith('left') &&
-    space.left < MIN_W &&
-    space.right > space.left
-  )
+  if (preferred.startsWith('left') && space.left < MIN_W && space.right > space.left)
     return flipPrimaryAxis(preferred);
-  if (
-    preferred.startsWith('bottom') &&
-    space.bottom < MIN_H &&
-    space.top > space.bottom
-  )
+  if (preferred.startsWith('bottom') && space.bottom < MIN_H && space.top > space.bottom)
     return flipPrimaryAxis(preferred);
-  if (
-    preferred.startsWith('top') &&
-    space.top < MIN_H &&
-    space.bottom > space.top
-  )
+  if (preferred.startsWith('top') && space.top < MIN_H && space.bottom > space.top)
     return flipPrimaryAxis(preferred);
 
   return preferred;
@@ -240,7 +210,7 @@ function buildAnchorCSS(
   gap: number,
   matchWidth: boolean,
   offsets: { top: number; left: number },
-  useCSSTryFallbacks: boolean,
+  useCSSTryFallbacks: boolean
 ): string {
   const r: string[] = [
     'position:fixed',
@@ -253,9 +223,7 @@ function buildAnchorCSS(
     `position-anchor:${anchorName}`,
   ];
   if (useCSSTryFallbacks) {
-    r.push(
-      'position-try-fallbacks:flip-block,flip-inline,flip-block flip-inline',
-    );
+    r.push('position-try-fallbacks:flip-block,flip-inline,flip-block flip-inline');
   }
   if (matchWidth) r.push('width:anchor-size(width)');
 
@@ -323,16 +291,10 @@ const ModernPortal = ({
   matchWidth = true,
 }: Omit<PortalProps, 'container'>) => {
   const reactId = useId();
-  const anchorName = useMemo(
-    () => `--portal-${reactId.replace(/[^a-zA-Z0-9]/g, '')}`,
-    [reactId],
-  );
+  const anchorName = useMemo(() => `--portal-${reactId.replace(/[^a-zA-Z0-9]/g, '')}`, [reactId]);
   const portalRef = useRef<HTMLDivElement>(null);
   const offsets = useMemo(() => computeOffsets(position), [position]);
-  const portalScope = useMemo(
-    () => resolvePortalScope(triggerRef?.current ?? null),
-    [triggerRef],
-  );
+  const portalScope = useMemo(() => resolvePortalScope(triggerRef?.current ?? null), [triggerRef]);
 
   // Set anchor-name on the trigger element
   useEffect(() => {
@@ -360,7 +322,7 @@ const ModernPortal = ({
         gap,
         matchWidth,
         offsets,
-        !isFrameConstrained,
+        !isFrameConstrained
       );
       el.dataset.direction = dir;
     };
@@ -527,12 +489,9 @@ const LegacyPortal = ({
     let topOffset = 0;
     let leftOffset = 0;
     if (memoizedPosition.top !== undefined) topOffset += memoizedPosition.top;
-    if (memoizedPosition.bottom !== undefined)
-      topOffset -= memoizedPosition.bottom;
-    if (memoizedPosition.left !== undefined)
-      leftOffset += memoizedPosition.left;
-    if (memoizedPosition.right !== undefined)
-      leftOffset -= memoizedPosition.right;
+    if (memoizedPosition.bottom !== undefined) topOffset -= memoizedPosition.bottom;
+    if (memoizedPosition.left !== undefined) leftOffset += memoizedPosition.left;
+    if (memoizedPosition.right !== undefined) leftOffset -= memoizedPosition.right;
 
     if (topOffset !== 0) top = `${parseFloat(top) + topOffset}px`;
     if (leftOffset !== 0) left = `${parseFloat(left) + leftOffset}px`;
@@ -559,27 +518,19 @@ const LegacyPortal = ({
     }
   }, [direction, gap, memoizedPosition, matchWidth, calculatePosition]);
 
-  const findScrollContainers = useCallback(
-    (element: HTMLElement): HTMLElement[] => {
-      const containers: HTMLElement[] = [];
-      let parent = element.parentElement;
-      while (parent) {
-        const { overflow, overflowX, overflowY } =
-          window.getComputedStyle(parent);
-        if (
-          [overflow, overflowX, overflowY].some(
-            v => v === 'auto' || v === 'scroll',
-          )
-        ) {
-          containers.push(parent);
-        }
-        if (parent === document.body) break;
-        parent = parent.parentElement;
+  const findScrollContainers = useCallback((element: HTMLElement): HTMLElement[] => {
+    const containers: HTMLElement[] = [];
+    let parent = element.parentElement;
+    while (parent) {
+      const { overflow, overflowX, overflowY } = window.getComputedStyle(parent);
+      if ([overflow, overflowX, overflowY].some((v) => v === 'auto' || v === 'scroll')) {
+        containers.push(parent);
       }
-      return containers;
-    },
-    [],
-  );
+      if (parent === document.body) break;
+      parent = parent.parentElement;
+    }
+    return containers;
+  }, []);
 
   useEffect(() => {
     if (!triggerRef?.current) return;
@@ -590,17 +541,13 @@ const LegacyPortal = ({
       rafId = requestAnimationFrame(updatePosition);
     };
     window.addEventListener('resize', updatePosition);
-    scrollContainers.forEach(c =>
-      c.addEventListener('scroll', throttled, { passive: true }),
-    );
+    scrollContainers.forEach((c) => c.addEventListener('scroll', throttled, { passive: true }));
     window.addEventListener('scroll', throttled, { passive: true });
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', throttled);
-      scrollContainers.forEach(c =>
-        c.removeEventListener('scroll', throttled),
-      );
+      scrollContainers.forEach((c) => c.removeEventListener('scroll', throttled));
     };
   }, [updatePosition, findScrollContainers, triggerRef]);
 
@@ -611,10 +558,7 @@ const LegacyPortal = ({
     return () => observer.disconnect();
   }, [updatePosition, triggerRef]);
 
-  const portalScope = useMemo(
-    () => resolvePortalScope(triggerRef?.current ?? null),
-    [triggerRef],
-  );
+  const portalScope = useMemo(() => resolvePortalScope(triggerRef?.current ?? null), [triggerRef]);
 
   if (!portalStyles) return null;
 
@@ -627,7 +571,7 @@ const LegacyPortal = ({
     >
       {children}
     </div>,
-    container,
+    container
   );
 };
 

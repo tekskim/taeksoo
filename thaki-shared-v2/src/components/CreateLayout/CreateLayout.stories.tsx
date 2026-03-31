@@ -13,10 +13,8 @@ const meta: Meta<typeof CreateLayout> = {
   },
   tags: ['autodocs'],
   decorators: [
-    Story => (
-      <div
-        style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
-      >
+    (Story) => (
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Story />
       </div>
     ),
@@ -85,9 +83,7 @@ export const Default: Story = {
         </SectionCard>
         <SectionCard title="Network">
           <Layout.VStack gap="sm">
-            <Typography.Text color="secondary">
-              Configure network settings.
-            </Typography.Text>
+            <Typography.Text color="secondary">Configure network settings.</Typography.Text>
             <div className="h-24 bg-surface-subtle rounded border border-border" />
           </Layout.VStack>
         </SectionCard>
@@ -140,9 +136,7 @@ export const WithHeaderActions: Story = {
       <Layout.VStack gap="md">
         <SectionCard title="Volume Configuration" isActive>
           <Layout.VStack gap="sm">
-            <Typography.Text color="secondary">
-              Configure the volume settings.
-            </Typography.Text>
+            <Typography.Text color="secondary">Configure the volume settings.</Typography.Text>
             <div className="h-32 bg-surface-subtle rounded border border-border" />
           </Layout.VStack>
         </SectionCard>
@@ -219,8 +213,7 @@ export const ScrollBehavior: Story = {
           <SectionCard key={i} title={`Section ${i + 1}`} isActive={i === 0}>
             <Layout.VStack gap="sm">
               <Typography.Text color="secondary">
-                This is section {i + 1} content. Scroll down to see the sticky
-                sidebar behavior.
+                This is section {i + 1} content. Scroll down to see the sticky sidebar behavior.
               </Typography.Text>
               <div className="h-40 bg-surface-subtle rounded border border-border" />
             </Layout.VStack>

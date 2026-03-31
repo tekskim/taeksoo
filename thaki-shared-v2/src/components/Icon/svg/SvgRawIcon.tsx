@@ -56,9 +56,7 @@ export default function SvgRawIcon(props: SvgRawIconProps): ReactElement {
     finalStyle.transform = existingTransform;
   }
 
-  const combinedClassName = [styles.root, className]
-    .filter(Boolean)
-    .join(' ');
+  const combinedClassName = [styles.root, className].filter(Boolean).join(' ');
 
   return (
     <Component

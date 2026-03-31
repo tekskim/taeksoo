@@ -69,8 +69,7 @@ interface IOverlay<T extends FunctionComponent<PropsOf<T>>> {
 /**
  * IOverlay 함수를 확장하여 내부적으로 Promise의 resolve, reject 핸들러를 추가한 타입
  */
-interface IOverlayPrivate<T extends FunctionComponent<PropsOf<T>>>
-  extends IOverlay<T> {
+interface IOverlayPrivate<T extends FunctionComponent<PropsOf<T>>> extends IOverlay<T> {
   id: string;
   resolve: (result: unknown) => void;
   reject: () => void;
@@ -79,9 +78,7 @@ interface IOverlayPrivate<T extends FunctionComponent<PropsOf<T>>>
 /**
  * 스토어의 addOverlay 메소드 타입
  */
-type AddOverlay = <T extends FunctionComponent<PropsOf<T>>>(
-  overlay: IOverlayPrivate<T>
-) => void;
+type AddOverlay = <T extends FunctionComponent<PropsOf<T>>>(overlay: IOverlayPrivate<T>) => void;
 
 /**
  * 스토어의 closeOverlay 메소드 타입
@@ -104,16 +101,16 @@ type OverlayStoreApi = StoreApi<OverlayStore>;
  */
 const createOverlayStore = (): OverlayStoreApi => {
   const overlayStore: OverlayStoreApi = create<OverlayStore>()(
-    subscribeWithSelector(set => ({
+    subscribeWithSelector((set) => ({
       overlays: [],
-      addOverlay: overlay => {
-        set(state => ({
+      addOverlay: (overlay) => {
+        set((state) => ({
           overlays: [...state.overlays, overlay],
         }));
       },
       closeOverlayById: (overlayId: string) => {
-        set(state => ({
-          overlays: state.overlays.filter(overlay => overlay.id !== overlayId),
+        set((state) => ({
+          overlays: state.overlays.filter((overlay) => overlay.id !== overlayId),
         }));
       },
     }))
@@ -123,11 +120,4 @@ const createOverlayStore = (): OverlayStoreApi => {
 };
 
 export default createOverlayStore;
-export type {
-  IOverlay,
-  IOverlayPrivate,
-  OverlayOptions,
-  OverlayStore,
-  OverlayStoreApi,
-  PropsOf,
-};
+export type { IOverlay, IOverlayPrivate, OverlayOptions, OverlayStore, OverlayStoreApi, PropsOf };

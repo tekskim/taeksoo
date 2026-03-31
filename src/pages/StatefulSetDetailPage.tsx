@@ -908,7 +908,10 @@ export function StatefulSetDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/statefulsets/${statefulset.id}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/statefulsets/${statefulset.id}/edit?name=${encodeURIComponent(statefulset.name)}`
+        ),
     },
     {
       id: 'edit-yaml',

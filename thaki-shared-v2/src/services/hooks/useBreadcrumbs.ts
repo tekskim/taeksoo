@@ -40,10 +40,7 @@ interface DynamicBreadcrumbLabelContext {
  * 동적 라우트 세그먼트에서 파라미터 이름 추출
  * 예: '/load-balancers/:loadBalancerId' -> 'loadBalancerId'
  */
-const getParamNameFromSegment = (
-  path: string,
-  routePath: string
-): string | null => {
+const getParamNameFromSegment = (path: string, routePath: string): string | null => {
   const params = extractParams(path, routePath);
   const paramNames = Object.keys(params);
   // 마지막 파라미터가 일반적으로 현재 세그먼트의 파라미터

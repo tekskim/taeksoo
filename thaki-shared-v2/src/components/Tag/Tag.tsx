@@ -88,14 +88,7 @@ const Tag = ({
         <span className={tagTextStyles}>{label}</span>
         {value && (
           <>
-            <span
-              className={cn(
-                tagSeparatorBase,
-                isMultiSelect && 'text-border'
-              )}
-            >
-              |
-            </span>
+            <span className={cn(tagSeparatorBase, isMultiSelect && 'text-border')}>|</span>
             <span className={tagTextStyles}>{value}</span>
           </>
         )}

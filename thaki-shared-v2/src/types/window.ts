@@ -1,6 +1,1 @@
-export type SnapMode =
-  | 'leftHalf'
-  | 'rightHalf'
-  | 'topHalf'
-  | 'bottomHalf'
-  | 'full';
+export type SnapMode = 'leftHalf' | 'rightHalf' | 'topHalf' | 'bottomHalf' | 'full';

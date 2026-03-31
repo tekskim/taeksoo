@@ -15,10 +15,7 @@ export const breadcrumbLinkStyles = [
 
 // Breadcrumb text
 export const breadcrumbTextStyles = cva(
-  [
-    'font-sans text-11 font-medium leading-16 whitespace-nowrap',
-    'breadcrumb-text',
-  ],
+  ['font-sans text-11 font-medium leading-16 whitespace-nowrap', 'breadcrumb-text'],
   {
     variants: {
       current: {

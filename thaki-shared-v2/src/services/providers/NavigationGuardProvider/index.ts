@@ -1,8 +1,5 @@
 export { NavigationGuardProvider } from './NavigationGuardProvider';
-export {
-  useNavigationGuardContext,
-  useNavigationGuardContextOptional,
-} from './useNavigationGuard';
+export { useNavigationGuardContext, useNavigationGuardContextOptional } from './useNavigationGuard';
 export type {
   GuardEntry,
   NavigationGuardContextType,

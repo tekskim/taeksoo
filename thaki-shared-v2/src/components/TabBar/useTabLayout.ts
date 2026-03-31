@@ -18,13 +18,9 @@ interface UseTabLayoutReturn {
   needsScroll: boolean;
 }
 
-export const useTabLayout = ({
-  containerRef,
-  tabs,
-}: UseTabLayoutParams): UseTabLayoutReturn => {
+export const useTabLayout = ({ containerRef, tabs }: UseTabLayoutParams): UseTabLayoutReturn => {
   const [activeTabWidth, setActiveTabWidth] = useState<number>(MIN_TAB_WIDTH);
-  const [inactiveTabWidth, setInactiveTabWidth] =
-    useState<number>(MIN_TAB_WIDTH);
+  const [inactiveTabWidth, setInactiveTabWidth] = useState<number>(MIN_TAB_WIDTH);
   const [needsScroll, setNeedsScroll] = useState(false);
   const lastMeasuredWidthRef = useRef<number | null>(null);
 
@@ -114,11 +110,9 @@ export const useTabLayout = ({
     // NOTE:
     // ResizeObserver → setState → layout change → ResizeObserver 루프를 끊기 위해
     // 실제 값이 변할 때만 state를 갱신합니다.
-    setActiveTabWidth(prev => (prev === layout.activeWidth ? prev : layout.activeWidth));
-    setInactiveTabWidth(prev =>
-      prev === layout.inactiveWidth ? prev : layout.inactiveWidth
-    );
-    setNeedsScroll(prev => (prev === layout.needsScroll ? prev : layout.needsScroll));
+    setActiveTabWidth((prev) => (prev === layout.activeWidth ? prev : layout.activeWidth));
+    setInactiveTabWidth((prev) => (prev === layout.inactiveWidth ? prev : layout.inactiveWidth));
+    setNeedsScroll((prev) => (prev === layout.needsScroll ? prev : layout.needsScroll));
   }, [containerRef, calculateLayout]);
 
   useEffect(() => {

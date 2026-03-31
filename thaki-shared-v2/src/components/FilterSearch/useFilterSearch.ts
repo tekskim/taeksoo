@@ -1,8 +1,5 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import type {
-  FilterKeyWithValue,
-  AppliedFilterMap,
-} from './FilterSearch.types';
+import type { FilterKeyWithValue, AppliedFilterMap } from './FilterSearch.types';
 import { convertFiltersToApiParams } from './filterUtils';
 
 export interface UseFilterSearchReturn {
@@ -26,10 +23,7 @@ export const useFilterSearch = (
   onFiltersChange?: (filters: AppliedFilterMap) => void
 ): UseFilterSearchReturn => {
   const [filters, setFilters] = useState<FilterKeyWithValue[]>([]);
-  const appliedFilters = useMemo(
-    () => convertFiltersToApiParams(filters),
-    [filters]
-  );
+  const appliedFilters = useMemo(() => convertFiltersToApiParams(filters), [filters]);
 
   // Store callback in ref to avoid re-triggering useEffect on callback change
   const onFiltersChangeRef = useRef(onFiltersChange);
@@ -37,12 +31,12 @@ export const useFilterSearch = (
 
   // 필터 추가
   const addFilter = useCallback((filter: FilterKeyWithValue): void => {
-    setFilters(prev => [...prev, filter]);
+    setFilters((prev) => [...prev, filter]);
   }, []);
 
   // 필터 제거
   const removeFilter = useCallback((id: string): void => {
-    setFilters(prev => prev.filter(f => f.id !== id));
+    setFilters((prev) => prev.filter((f) => f.id !== id));
   }, []);
 
   // 모든 필터 제거

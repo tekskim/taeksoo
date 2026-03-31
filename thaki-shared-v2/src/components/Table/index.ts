@@ -1,10 +1,7 @@
 export { Table as default, Table } from './Table';
 export { SelectableTable } from './SelectableTable';
 export { ExpandableTable } from './ExpandableTable';
-export {
-  TABLE_COLUMN_MIN_WIDTH,
-  TABLE_SELECTION_COLUMN_WIDTH,
-} from './Table.constants';
+export { TABLE_COLUMN_MIN_WIDTH, TABLE_SELECTION_COLUMN_WIDTH } from './Table.constants';
 export type {
   TableProps,
   TableColumn,

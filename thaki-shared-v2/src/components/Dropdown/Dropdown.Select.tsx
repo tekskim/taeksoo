@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Option, { isOptionPlaceholder } from './Dropdown.Option';
 import { DropdownProps, OptionProps, OptionValue } from './Dropdown.types';
 
@@ -169,9 +162,7 @@ const Select = (
     (nextValue: OptionValue, index: number) => {
       onSelect?.(nextValue);
 
-      const resolvedSelected: OptionValue = isValueControlled
-        ? (value ?? '')
-        : selected;
+      const resolvedSelected: OptionValue = isValueControlled ? (value ?? '') : selected;
 
       if (resolvedSelected !== nextValue) {
         onChange?.(nextValue);
@@ -204,7 +195,7 @@ const Select = (
   /** 유효한 옵션 목록 */
   const validOptions = useMemo(
     () =>
-      React.Children.toArray(children).filter(child => {
+      React.Children.toArray(children).filter((child) => {
         // OptionPlaceholder 컴포넌트인지 확인 (Module Federation 호환을 위해 displayName 체크)
         if (!React.isValidElement(child) || !isOptionPlaceholder(child.type)) {
           throw new Error('Dropdown.Option 컴포넌트가 아닙니다.');
@@ -269,8 +260,7 @@ const Select = (
   const { hasNoOptions, isActive } = useMemo(
     () => ({
       hasNoOptions: !isLoading && optionElements.length === 0,
-      isActive:
-        !isLoading && !disabled && isOpened && optionElements.length > 0,
+      isActive: !isLoading && !disabled && isOpened && optionElements.length > 0,
     }),
     [isLoading, disabled, isOpened, optionElements.length]
   );
@@ -298,7 +288,7 @@ const Select = (
 
       switch (e.key) {
         case 'ArrowDown':
-          setFocusedIndex(prevFocusedIndex => {
+          setFocusedIndex((prevFocusedIndex) => {
             /** 키보드 화살표 아래를 눌렀을 때, 포커스되는 옵션의 index 계산 */
             const newlyFocusedIndex = calculateNewlyFocusedIndex(
               prevFocusedIndex,
@@ -315,16 +305,14 @@ const Select = (
             );
 
             // 키보드 화살표 아래를 눌렀을 때, 한 바퀴를 돌아서 처음으로 돌아가는 경우, prevFocusedIndexRef를 -1로 설정
-            prevFocusedIndexRef.current = hasFullyRotated
-              ? -1
-              : prevFocusedIndex;
+            prevFocusedIndexRef.current = hasFullyRotated ? -1 : prevFocusedIndex;
 
             return newlyFocusedIndex;
           });
 
           break;
         case 'ArrowUp':
-          setFocusedIndex(prevFocusedIndex => {
+          setFocusedIndex((prevFocusedIndex) => {
             /** 키보드 화살표 위를 눌렀을 때, 포커스되는 옵션의 index 계산 */
             const newlyFocusedIndex = calculateNewlyFocusedIndex(
               prevFocusedIndex,
@@ -341,9 +329,7 @@ const Select = (
             );
 
             // 키보드 화살표 위를 눌렀을 때, 한 바퀴를 돌아서 마지막으로 돌아가는 경우, prevFocusedIndexRef를 -1로 설정
-            prevFocusedIndexRef.current = hasFullyRotated
-              ? -1
-              : prevFocusedIndex;
+            prevFocusedIndexRef.current = hasFullyRotated ? -1 : prevFocusedIndex;
 
             return newlyFocusedIndex;
           });
@@ -352,8 +338,7 @@ const Select = (
         case 'Enter':
           if (focusedIndex >= 0) {
             /** 엔터를 쳐서 키보드 포커스된 옵션을 선택 */
-            const { props: focusedOptionProp } =
-              optionElements[focusedIndex] ?? {};
+            const { props: focusedOptionProp } = optionElements[focusedIndex] ?? {};
 
             if (!focusedOptionProp || focusedOptionProp.disabled) {
               return;
@@ -378,8 +363,7 @@ const Select = (
       if (!onScrollEnd) return;
 
       const target = event.currentTarget;
-      const remaining =
-        target.scrollHeight - target.scrollTop - target.clientHeight;
+      const remaining = target.scrollHeight - target.scrollTop - target.clientHeight;
 
       const isNearEnd = remaining <= scrollEndThreshold;
 
@@ -409,10 +393,8 @@ const Select = (
       return;
     }
 
-    const nextFocusedIndex = Number.isInteger(indexOnSelectedOption)
-      ? indexOnSelectedOption
-      : -1;
-    setFocusedIndex(prev => (prev === nextFocusedIndex ? prev : nextFocusedIndex));
+    const nextFocusedIndex = Number.isInteger(indexOnSelectedOption) ? indexOnSelectedOption : -1;
+    setFocusedIndex((prev) => (prev === nextFocusedIndex ? prev : nextFocusedIndex));
   }, [isOpened, indexOnSelectedOption]);
 
   // <-------- 드롭다운의 옵션리스트 높이를 계산하는 effect -------->
@@ -420,16 +402,10 @@ const Select = (
     if (!isOpened || !optionElements.length) return;
 
     setTimeout(() => {
-      const singleOptionElement =
-        dropdownListRef.current?.querySelector('.dropdown-option');
-      const optionHeight =
-        (singleOptionElement as HTMLElement)?.offsetHeight || 40;
+      const singleOptionElement = dropdownListRef.current?.querySelector('.dropdown-option');
+      const optionHeight = (singleOptionElement as HTMLElement)?.offsetHeight || 40;
       setOptionListHeight(
-        calculateOptionListHeight(
-          optionElements.length,
-          optionHeight,
-          numbersOfOptionsInView,
-        ),
+        calculateOptionListHeight(optionElements.length, optionHeight, numbersOfOptionsInView)
       );
     }, 50);
   }, [isOpened, optionElements.length, numbersOfOptionsInView]);
@@ -486,7 +462,7 @@ const Select = (
 
   // <-------- 외부 클릭 시 드롭다운 닫히는 effect -------->
   useClickOutside(containerRef, {
-    onClickOutside: event => {
+    onClickOutside: (event) => {
       // 포탈 영역(옵션 리스트) 내부 클릭인지 확인
       const portalElement = dropdownListRef.current;
 
@@ -522,10 +498,7 @@ const Select = (
   return (
     <div
       ref={containerRef}
-      className={cn(
-        dropdownContainerStyles({ loading: isLoading }),
-        className
-      )}
+      className={cn(dropdownContainerStyles({ loading: isLoading }), className)}
     >
       <label className={cn(dropdownTriggerStyles)}>
         <button
@@ -561,11 +534,7 @@ const Select = (
         </button>
 
         {isActive && (
-          <Portal
-            triggerRef={triggerButtonRef}
-            direction="bottom"
-            gap={4}
-          >
+          <Portal triggerRef={triggerButtonRef} direction="bottom" gap={4}>
             <ul
               id={dropdownListId}
               ref={dropdownListRef}
@@ -573,14 +542,10 @@ const Select = (
               role="listbox"
               aria-label="선택 가능한 옵션 목록"
               onScroll={handleOptionsScroll}
-              aria-activedescendant={
-                focusedIndex >= 0 ? getOptionDomId(focusedIndex) : undefined
-              }
+              aria-activedescendant={focusedIndex >= 0 ? getOptionDomId(focusedIndex) : undefined}
               style={{
                 height:
-                  optionElements.length > numbersOfOptionsInView
-                    ? `${optionListHeight}px`
-                    : 'auto',
+                  optionElements.length > numbersOfOptionsInView ? `${optionListHeight}px` : 'auto',
               }}
             >
               {optionElements}

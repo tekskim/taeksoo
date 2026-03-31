@@ -54,9 +54,4 @@ const unlockElementScroll = (el: HTMLElement) => {
   delete el.dataset.scrollLocked;
 };
 
-export {
-  lockGlobalScroll,
-  unlockGlobalScroll,
-  lockElementScroll,
-  unlockElementScroll,
-};
+export { lockGlobalScroll, unlockGlobalScroll, lockElementScroll, unlockElementScroll };

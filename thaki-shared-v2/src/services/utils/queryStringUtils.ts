@@ -11,9 +11,7 @@ export type QueryParamValue =
  * - 중복 키는 string[]로 누적합니다. (예: a=1&a=2 → { a: ['1','2'] })
  * - 선행 '?'가 있어도 처리합니다.
  */
-export const parseQueryString = (
-  queryString?: string
-): Record<string, string | string[]> => {
+export const parseQueryString = (queryString?: string): Record<string, string | string[]> => {
   if (!queryString) {
     return {};
   }
@@ -52,11 +50,11 @@ export const serializeQuery = (query: Record<string, unknown>): string => {
   const keys = Object.keys(query).sort((a, b) => a.localeCompare(b));
   const searchParams = new URLSearchParams();
 
-  keys.forEach(key => {
+  keys.forEach((key) => {
     const value = query[key];
 
     if (Array.isArray(value)) {
-      value.forEach(item => {
+      value.forEach((item) => {
         if (item === undefined || item === null) return;
         searchParams.append(key, String(item));
       });

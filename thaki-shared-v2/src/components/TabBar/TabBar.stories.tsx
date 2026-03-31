@@ -10,8 +10,7 @@ const meta: Meta<typeof TabBar> = {
     layout: 'padded',
     docs: {
       description: {
-        component:
-          'A tabbed interface component with drag and drop reordering support.',
+        component: 'A tabbed interface component with drag and drop reordering support.',
       },
     },
   },
@@ -35,7 +34,7 @@ const TabBarWithState = () => {
   };
 
   const handleTabClose = (tabId: string): void => {
-    const newTabs = tabs.filter(tab => tab.id !== tabId);
+    const newTabs = tabs.filter((tab) => tab.id !== tabId);
     setTabs(newTabs);
 
     if (activeTab === tabId && newTabs.length > 0) {

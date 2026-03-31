@@ -1,12 +1,6 @@
 import React from 'react';
 
-export type IconWeight =
-  | 'thin'
-  | 'light'
-  | 'regular'
-  | 'bold'
-  | 'fill'
-  | 'duotone';
+export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
 // Icon size presets or custom numbers
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;

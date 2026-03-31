@@ -41,12 +41,12 @@ export const Default: Story = {
       <Layout.VStack gap="sm">
         <Checkbox
           label="체크되지 않은 상태로 시작"
-          onChange={checked => console.log('첫 번째 체크박스:', checked)}
+          onChange={(checked) => console.log('첫 번째 체크박스:', checked)}
         />
         <Checkbox
           label="체크된 상태로 시작"
           defaultChecked={true}
-          onChange={checked => console.log('두 번째 체크박스:', checked)}
+          onChange={(checked) => console.log('두 번째 체크박스:', checked)}
         />
       </Layout.VStack>
     </Layout.VStack>
@@ -90,13 +90,13 @@ const CheckboxGroupExample = () => {
     if (checked) {
       setSelectedItems([...selectedItems, itemId]);
     } else {
-      setSelectedItems(selectedItems.filter(id => id !== itemId));
+      setSelectedItems(selectedItems.filter((id) => id !== itemId));
     }
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedItems(items.map(item => item.id));
+      setSelectedItems(items.map((item) => item.id));
     } else {
       setSelectedItems([]);
     }
@@ -108,23 +108,16 @@ const CheckboxGroupExample = () => {
     <Layout.VStack gap="md">
       <Layout.VStack gap="sm">
         <Typography.Text>선택된 항목: {selectedItems.length}개</Typography.Text>
-        <Checkbox
-          label="전체 선택"
-          checked={isAllSelected}
-          onChange={handleSelectAll}
-        />
+        <Checkbox label="전체 선택" checked={isAllSelected} onChange={handleSelectAll} />
       </Layout.VStack>
 
-      <Layout.VStack
-        gap="sm"
-        style={{ paddingLeft: 'var(--semantic-space-md)' }}
-      >
-        {items.map(item => (
+      <Layout.VStack gap="sm" style={{ paddingLeft: 'var(--semantic-space-md)' }}>
+        {items.map((item) => (
           <Checkbox
             key={item.id}
             label={item.label}
             checked={selectedItems.includes(item.id)}
-            onChange={checked => handleItemChange(item.id, checked)}
+            onChange={(checked) => handleItemChange(item.id, checked)}
           />
         ))}
       </Layout.VStack>
@@ -145,11 +138,7 @@ const ControlledExample = () => {
       <Typography.Text variant="caption">
         현재 상태: {checked ? '선택됨' : '선택안됨'}
       </Typography.Text>
-      <Checkbox
-        label="제어된 체크박스"
-        checked={checked}
-        onChange={setChecked}
-      />
+      <Checkbox label="제어된 체크박스" checked={checked} onChange={setChecked} />
     </Layout.VStack>
   );
 };

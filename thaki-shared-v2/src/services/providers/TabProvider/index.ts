@@ -9,4 +9,3 @@ export type {
   TabHistoryEntry,
   TabHistoryState,
 } from './types';
-

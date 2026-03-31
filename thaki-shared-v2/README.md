@@ -31,11 +31,7 @@ import '@thaki/shared/tokens-only.css';
 
 ```tsx
 import { Button, Overlay, Typography } from '@thaki/shared';
-import {
-  ChartToggle,
-  ChartTooltip,
-  chartTooltipHtml,
-} from '@thaki/shared/charts';
+import { ChartToggle, ChartTooltip, chartTooltipHtml } from '@thaki/shared/charts';
 ```
 
 ## Release Flow

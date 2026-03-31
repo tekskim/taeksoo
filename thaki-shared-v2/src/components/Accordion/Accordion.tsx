@@ -1,11 +1,4 @@
-import React, {
-  Children,
-  isValidElement,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { Children, isValidElement, memo, useCallback, useMemo, useState } from 'react';
 import { cn } from '../../services/utils/cn';
 import {
   accordionContentStyles,
@@ -112,9 +105,7 @@ const AccordionRoot: React.FC<AccordionRootProps> = ({
 
       if (isControlled) {
         // Controlled 모드
-        const currentOpenItems = new Set(
-          typeof value === 'string' ? [value] : value || []
-        );
+        const currentOpenItems = new Set(typeof value === 'string' ? [value] : value || []);
         const newOpenItems = new Set(currentOpenItems);
 
         if (newOpenItems.has(itemId)) {
@@ -132,14 +123,12 @@ const AccordionRoot: React.FC<AccordionRootProps> = ({
         }
 
         const newValue =
-          type === 'single'
-            ? Array.from(newOpenItems)[0] || ''
-            : Array.from(newOpenItems);
+          type === 'single' ? Array.from(newOpenItems)[0] || '' : Array.from(newOpenItems);
 
         onChange?.(newValue);
       } else {
         // Uncontrolled 모드
-        setInternalValue(prevItems => {
+        setInternalValue((prevItems) => {
           const newOpenItems = new Set(prevItems);
 
           if (newOpenItems.has(itemId)) {
@@ -157,9 +146,7 @@ const AccordionRoot: React.FC<AccordionRootProps> = ({
           }
 
           const newValue =
-            type === 'single'
-              ? Array.from(newOpenItems)[0] || ''
-              : Array.from(newOpenItems);
+            type === 'single' ? Array.from(newOpenItems)[0] || '' : Array.from(newOpenItems);
 
           onChange?.(newValue);
 
@@ -174,7 +161,7 @@ const AccordionRoot: React.FC<AccordionRootProps> = ({
   const toggleHandlers = useMemo(() => {
     const handlers = new Map<string, () => void>();
 
-    Children.forEach(children, child => {
+    Children.forEach(children, (child) => {
       if (isValidElement(child) && child.type === AccordionItem) {
         const childProps = child.props as AccordionItemProps;
         const itemId = childProps.id;
@@ -190,14 +177,11 @@ const AccordionRoot: React.FC<AccordionRootProps> = ({
 
   // 각 아이템별 메모이제이션된 컴포넌트 생성
   const renderedChildren = useMemo(() => {
-    return Children.map(children, child => {
+    return Children.map(children, (child) => {
       if (!isValidElement(child)) return child;
 
       // AccordionItem인 경우에만 props 주입
-      if (
-        child.type === AccordionItem ||
-        child.type === MemoizedAccordionItem
-      ) {
+      if (child.type === AccordionItem || child.type === MemoizedAccordionItem) {
         const childProps = child.props as AccordionItemProps;
         const itemId = childProps.id;
         const isOpen = openItems.has(itemId);
@@ -216,11 +200,7 @@ const AccordionRoot: React.FC<AccordionRootProps> = ({
     });
   }, [children, openItems, toggleHandlers, disabled]);
 
-  return (
-    <div className={cn(accordionGroupStyles, className)}>
-      {renderedChildren}
-    </div>
-  );
+  return <div className={cn(accordionGroupStyles, className)}>{renderedChildren}</div>;
 };
 
 interface AccordionItemProps {
@@ -301,9 +281,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
         {header}
       </div>
       {/* 애니메이션을 위해 content div는 항상 렌더링, children만 조건부 렌더링 */}
-      <div className={accordionContentStyles}>
-        {(keepMounted || isOpen) && children}
-      </div>
+      <div className={accordionContentStyles}>{(keepMounted || isOpen) && children}</div>
     </div>
   );
 };

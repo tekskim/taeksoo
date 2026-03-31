@@ -91,9 +91,7 @@ const Range = (props: Props) => {
   } = props;
 
   // 싱글 모드 상태 (dual=true일 때는 사용되지 않지만 Hook 규칙을 위해 항상 호출)
-  const [internalValue, setInternalValue] = useState(
-    !dual ? (defaultValue ?? 0) : 0
-  );
+  const [internalValue, setInternalValue] = useState(!dual ? (defaultValue ?? 0) : 0);
 
   const handleSingleChange = useCallback(
     (newValue: number) => {
@@ -137,10 +135,7 @@ const Range = (props: Props) => {
   const currentValue = (isControlled ? value : internalValue) as number;
 
   return (
-    <div
-      className={cn(rangeContainerStyles({ disabled }), className)}
-      style={{ width }}
-    >
+    <div className={cn(rangeContainerStyles({ disabled }), className)} style={{ width }}>
       <SingleRangeInput
         min={min}
         max={max}
@@ -275,8 +270,7 @@ const DualRangeMode = ({
   disabled: boolean;
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [internalValue, setInternalValue] =
-    useState<[number, number]>(defaultValue);
+  const [internalValue, setInternalValue] = useState<[number, number]>(defaultValue);
 
   const isControlled = value !== undefined;
   const currentValue = isControlled ? value : internalValue;
@@ -367,11 +361,7 @@ const DualRangeMode = ({
     const container = containerRef.current;
     const pointerId = pointerIdRef.current;
 
-    if (
-      container &&
-      pointerId !== null &&
-      typeof container.releasePointerCapture === 'function'
-    ) {
+    if (container && pointerId !== null && typeof container.releasePointerCapture === 'function') {
       try {
         if (container.hasPointerCapture?.(pointerId)) {
           container.releasePointerCapture(pointerId);
@@ -471,23 +461,13 @@ const DualRangeMode = ({
 
       const rect = container.getBoundingClientRect();
       rectRef.current = rect;
-      const pointerValue = getPointerValueFromRect(
-        rect,
-        event.clientX,
-        min,
-        max
-      );
+      const pointerValue = getPointerValueFromRect(rect, event.clientX, min, max);
 
       if (pointerValue === null) {
         return;
       }
 
-      const closestThumb = getClosestThumbFromEvent(
-        event.target,
-        pointerValue,
-        minValue,
-        maxValue
-      );
+      const closestThumb = getClosestThumbFromEvent(event.target, pointerValue, minValue, maxValue);
 
       event.preventDefault();
       event.stopPropagation();
@@ -517,11 +497,7 @@ const DualRangeMode = ({
 
   const handlePointerMove = useCallback(
     (event: PointerEvent<HTMLDivElement>) => {
-      if (
-        disabled ||
-        pointerIdRef.current !== event.pointerId ||
-        !activeThumb
-      ) {
+      if (disabled || pointerIdRef.current !== event.pointerId || !activeThumb) {
         return;
       }
 

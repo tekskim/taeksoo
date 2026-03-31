@@ -61,8 +61,7 @@ const ItemPrivate = ({
   const triggerRef = useRef<HTMLLIElement>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
-  const hasTooltip =
-    disabled && typeof disabled === 'object' && 'reason' in disabled;
+  const hasTooltip = disabled && typeof disabled === 'object' && 'reason' in disabled;
   const preferredDirection: Direction =
     (typeof disabled === 'object' && disabled.direction) || 'left';
 
@@ -79,10 +78,7 @@ const ItemPrivate = ({
     <>
       <li
         ref={triggerRef}
-        className={cn(
-          menuItemStyles({ focused, disabled: Boolean(disabled), danger }),
-          className
-        )}
+        className={cn(menuItemStyles({ focused, disabled: Boolean(disabled), danger }), className)}
         role="menuitem"
         onClick={async () => {
           if (disabled) {
@@ -123,12 +119,7 @@ const ItemPrivate = ({
           gap={TOOLTIP_GAP_PX}
           matchWidth={false}
         >
-          <div
-            id={tooltipId}
-            className={tooltipContentStyles}
-            role="tooltip"
-            aria-live="polite"
-          >
+          <div id={tooltipId} className={tooltipContentStyles} role="tooltip" aria-live="polite">
             {disabled.reason}
           </div>
         </Portal>

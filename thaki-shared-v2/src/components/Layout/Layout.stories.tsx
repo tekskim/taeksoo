@@ -32,31 +32,29 @@ export const Overview: Story = {
           padding="lg"
         >
           <p>
-            This layout system provides a set of flexible and composable
-            components to build modern and consistent user interfaces.
+            This layout system provides a set of flexible and composable components to build modern
+            and consistent user interfaces.
           </p>
         </Layout.Block>
         <Layout.HStack gap="lg" align="start">
           <Layout.Block title="Container" flex={1}>
             <p>
-              <code>Layout.Container</code> sets the max-width and centers the
-              content. It is the outermost shell for your page or a large
-              section.
+              <code>Layout.Container</code> sets the max-width and centers the content. It is the
+              outermost shell for your page or a large section.
             </p>
           </Layout.Block>
           <Layout.Block title="Block" flex={1}>
             <p>
-              <code>Layout.Block</code> is used to group related content. It can
-              have a title, subtitle, and different visual variants.
+              <code>Layout.Block</code> is used to group related content. It can have a title,
+              subtitle, and different visual variants.
             </p>
           </Layout.Block>
         </Layout.HStack>
         <Layout.Block title="Stacks (HStack/VStack)">
           <Layout.VStack gap="md">
             <p>
-              <code>Layout.HStack</code> and <code>Layout.VStack</code> are used
-              for arranging items in a horizontal or vertical line with
-              consistent spacing.
+              <code>Layout.HStack</code> and <code>Layout.VStack</code> are used for arranging items
+              in a horizontal or vertical line with consistent spacing.
             </p>
             <Layout.HStack gap="md" align="center">
               <Layout.Block padding="md">Item 1</Layout.Block>
@@ -67,15 +65,10 @@ export const Overview: Story = {
         </Layout.Block>
         <Layout.Block title="Grid">
           <p>
-            <code>Layout.Grid.Container</code> and <code>Layout.Grid.Item</code>{' '}
-            create a grid layout. The container sets the number of columns, and
-            items can span multiple columns.
+            <code>Layout.Grid.Container</code> and <code>Layout.Grid.Item</code> create a grid
+            layout. The container sets the number of columns, and items can span multiple columns.
           </p>
-          <Layout.Grid.Container
-            columns={3}
-            gap="md"
-            style={{ marginTop: '1rem' }}
-          >
+          <Layout.Grid.Container columns={3} gap="md" style={{ marginTop: '1rem' }}>
             <Layout.Grid.Item>
               <Layout.Block padding="md">Column 1</Layout.Block>
             </Layout.Grid.Item>
@@ -95,8 +88,8 @@ export const Overview: Story = {
         </Layout.Block>
         <Layout.Block title="Divider">
           <p>
-            <code>Layout.Divider</code> visually separates content, either
-            horizontally or vertically.
+            <code>Layout.Divider</code> visually separates content, either horizontally or
+            vertically.
           </p>
           <Layout.VStack gap="md" style={{ marginTop: '1rem' }}>
             <div>Content above</div>
@@ -119,7 +112,7 @@ export const Container: Story = {
       </Layout.Block>
     ),
   },
-  render: args => (
+  render: (args) => (
     <div
       style={{
         background: 'var(--semantic-color-surfaceMuted)',
@@ -142,7 +135,7 @@ export const Block: Story = {
     borderRadius: 'md',
     children: 'This is the main content of the block.',
   },
-  render: args => <Layout.Block {...args} />,
+  render: (args) => <Layout.Block {...args} />,
 };
 
 export const HStack: Story = {
@@ -159,7 +152,7 @@ export const HStack: Story = {
       </>
     ),
   },
-  render: args => (
+  render: (args) => (
     <Layout.HStack
       {...args}
       style={{
@@ -177,17 +170,13 @@ export const VStack: Story = {
     align: 'stretch',
     children: (
       <>
-        <Input
-          name="sample"
-          placeholder="Full width item"
-          onChange={() => {}}
-        />
+        <Input name="sample" placeholder="Full width item" onChange={() => {}} />
         <Layout.Block padding="md">Item 2</Layout.Block>
         <Layout.Block padding="md">Item 3</Layout.Block>
       </>
     ),
   },
-  render: args => (
+  render: (args) => (
     <Layout.VStack
       {...args}
       style={{
@@ -213,18 +202,12 @@ export const Grid: Story = {
   render: ({ columns, gap, item1Span, item2Span, ...args }) => (
     <Layout.Grid.Container {...args} columns={columns} gap={gap}>
       <Layout.Grid.Item colSpan={item1Span}>
-        <Layout.Block
-          padding="md"
-          style={{ background: 'var(--semantic-color-infoLight)' }}
-        >
+        <Layout.Block padding="md" style={{ background: 'var(--semantic-color-infoLight)' }}>
           Item 1 (span={item1Span})
         </Layout.Block>
       </Layout.Grid.Item>
       <Layout.Grid.Item colSpan={item2Span}>
-        <Layout.Block
-          padding="md"
-          style={{ background: 'var(--semantic-color-warningLight)' }}
-        >
+        <Layout.Block padding="md" style={{ background: 'var(--semantic-color-warningLight)' }}>
           Item 2 (span={item2Span})
         </Layout.Block>
       </Layout.Grid.Item>
@@ -250,7 +233,7 @@ export const Divider: Story = {
     direction: 'horizontal',
     spacing: 'lg',
   },
-  render: args => (
+  render: (args) => (
     <Layout.Block padding="lg">
       <Layout.VStack gap="md">
         <span>Top Content</span>

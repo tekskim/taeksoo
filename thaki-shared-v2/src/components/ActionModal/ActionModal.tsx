@@ -4,11 +4,7 @@ import { cn } from '../../services';
 import { Button } from '../Button';
 import type { OverlayProps } from '../Overlay';
 import { Overlay } from '../Overlay';
-import {
-  actionModalStyles,
-  footerContainerStyles,
-  modalContentStyles,
-} from './ActionModal.styles';
+import { actionModalStyles, footerContainerStyles, modalContentStyles } from './ActionModal.styles';
 
 /**
  * 액션 설정 인터페이스
@@ -26,8 +22,7 @@ export interface ActionConfig {
   cancelButtonText?: string;
 }
 
-export interface ActionModalProps
-  extends Omit<OverlayProps, 'title' | 'description' | 'children'> {
+export interface ActionModalProps extends Omit<OverlayProps, 'title' | 'description' | 'children'> {
   /** 액션 설정 */
   actionConfig: ActionConfig;
   /** 확인 버튼 클릭 시 호출되는 콜백 */
@@ -93,12 +88,7 @@ const ActionModal = ({
       description={actionConfig.subtitle}
       footer={
         <div className={footerContainerStyles}>
-          <Button
-            variant="secondary"
-            appearance="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button variant="secondary" appearance="outline" onClick={onCancel} disabled={isLoading}>
             {actionConfig.cancelButtonText ?? 'Cancel'}
           </Button>
           <Button

@@ -9,8 +9,4 @@ export type {
   FilterType,
   FilterKeyWithValue,
 } from './FilterSearch.types';
-export {
-  convertFiltersToApiParams,
-  formatDateRangeDisplay,
-  generateFilterId,
-} from './filterUtils';
+export { convertFiltersToApiParams, formatDateRangeDisplay, generateFilterId } from './filterUtils';

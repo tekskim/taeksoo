@@ -15,4 +15,4 @@ export interface RTLProviderProps {
   /** Auto-detect RTL from document direction */
   autoDetect?: boolean;
   children: React.ReactNode;
-} 
+}

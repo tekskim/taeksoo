@@ -19,12 +19,7 @@ export * from './queryClientUtils';
 export * from './queryStringUtils';
 export * from './routingUtils';
 export * from './styleUtils';
-export {
-  validateTags,
-  getTagErrorKey,
-  reindexTouchedTags,
-  MAX_TAG_LENGTH,
-} from './tagValidation';
+export { validateTags, getTagErrorKey, reindexTouchedTags, MAX_TAG_LENGTH } from './tagValidation';
 export type {
   Tag as TagEntry,
   TagFieldError,

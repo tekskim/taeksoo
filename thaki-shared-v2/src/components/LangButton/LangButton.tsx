@@ -30,11 +30,7 @@ interface Props {
  * @param className - 추가 CSS 클래스명
  * @returns LangButton 컴포넌트
  */
-const LangButton = ({
-  onLanguageChange,
-  className,
-  variant = 'secondary',
-}: Props) => {
+const LangButton = ({ onLanguageChange, className, variant = 'secondary' }: Props) => {
   const handleLanguageSelect = (lang: 'en' | 'ko') => {
     onLanguageChange(lang);
     window.dispatchEvent(new CustomEvent('locale-change', { detail: lang }));
@@ -56,12 +52,8 @@ const LangButton = ({
       )}
       direction="bottom-end"
     >
-      <ContextMenu.Item action={() => handleLanguageSelect('en')}>
-        English
-      </ContextMenu.Item>
-      <ContextMenu.Item action={() => handleLanguageSelect('ko')}>
-        한국어 (Korean)
-      </ContextMenu.Item>
+      <ContextMenu.Item action={() => handleLanguageSelect('en')}>English</ContextMenu.Item>
+      <ContextMenu.Item action={() => handleLanguageSelect('ko')}>한국어 (Korean)</ContextMenu.Item>
     </ContextMenu.Root>
   );
 };

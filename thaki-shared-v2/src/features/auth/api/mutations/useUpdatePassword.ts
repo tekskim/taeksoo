@@ -18,9 +18,7 @@ const updatePassword = async ({ newPassword, xSessionId, token }: Request) => {
     URL,
     { newPassword },
     {
-      ...(token
-        ? { params: { token } }
-        : { headers: { 'X-Session-ID': xSessionId } }),
+      ...(token ? { params: { token } } : { headers: { 'X-Session-ID': xSessionId } }),
     }
   );
 
@@ -34,7 +32,4 @@ const useUpdatePassword = () => {
 };
 
 export default useUpdatePassword;
-export type {
-  Request as UpdatePasswordRequest,
-  Response as UpdatePasswordResponse,
-};
+export type { Request as UpdatePasswordRequest, Response as UpdatePasswordResponse };

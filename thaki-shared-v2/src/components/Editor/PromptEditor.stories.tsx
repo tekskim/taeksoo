@@ -29,9 +29,7 @@ const PromptEditorTemplate = (args: any) => {
   };
 
   const handleGetValue = () => {
-    window.alert(
-      `현재 프롬프트 에디터의 값: ${promptEditorRef.current?.getValue()}`
-    );
+    window.alert(`현재 프롬프트 에디터의 값: ${promptEditorRef.current?.getValue()}`);
   };
 
   return (

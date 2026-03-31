@@ -1,8 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  useDragAndDrop,
-  type DragAndDropItem,
-} from '../../services/hooks/useDragAndDrop';
+import { useDragAndDrop, type DragAndDropItem } from '../../services/hooks/useDragAndDrop';
 import { cn } from '../../services/utils/cn';
 import { Button } from '../Button';
 import { Dropdown } from '../Dropdown';
@@ -134,7 +131,7 @@ export const TableSettingDrawer: React.FC<TableSettingDrawerProps> = ({
 
   // Column reorder handler
   const handleColumnReorder = (fromIndex: number, toIndex: number): void => {
-    setSettings(prev => {
+    setSettings((prev) => {
       const newColumns = [...prev.columns];
       const [movedColumn] = newColumns.splice(fromIndex, 1);
       newColumns.splice(toIndex, 0, movedColumn);
@@ -187,48 +184,30 @@ export const TableSettingDrawer: React.FC<TableSettingDrawerProps> = ({
       <Layout.VStack gap="lg" className={styles.drawerContent}>
         {/* Rows per page setting */}
         <Layout.VStack gap="sm" className={styles.labelSection}>
-          <Typography.Text className={styles.labelText}>
-            Rows per page
-          </Typography.Text>
+          <Typography.Text className={styles.labelText}>Rows per page</Typography.Text>
           <Dropdown.Select
             value={settings.rowsPerPage}
-            onChange={value =>
-              setSettings(prev => ({
+            onChange={(value) =>
+              setSettings((prev) => ({
                 ...prev,
                 rowsPerPage: Number(value),
               }))
             }
             size="sm"
           >
-            {rowsPerPageOptions.map(option => (
-              <Dropdown.Option
-                key={option.value}
-                value={option.value}
-                label={option.label}
-              />
+            {rowsPerPageOptions.map((option) => (
+              <Dropdown.Option key={option.value} value={option.value} label={option.label} />
             ))}
           </Dropdown.Select>
         </Layout.VStack>
 
         {/* Attribute Columns setting */}
         <Layout.VStack gap="md" className={styles.columnsSection}>
-          <Layout.HStack
-            align="center"
-            justify="between"
-            className={styles.columnsHeader}
-          >
-            <Typography.Text className={styles.labelText}>
-              Attribute Columns
-            </Typography.Text>
-            <button
-              onClick={resetToDefault}
-              className={styles.resetButton}
-              type="button"
-            >
+          <Layout.HStack align="center" justify="between" className={styles.columnsHeader}>
+            <Typography.Text className={styles.labelText}>Attribute Columns</Typography.Text>
+            <button onClick={resetToDefault} className={styles.resetButton} type="button">
               <RefreshIcon variant="primary" size="xs" />
-              <Typography.Text className={styles.resetText}>
-                Reset to default
-              </Typography.Text>
+              <Typography.Text className={styles.resetText}>Reset to default</Typography.Text>
             </button>
           </Layout.HStack>
 
@@ -237,9 +216,9 @@ export const TableSettingDrawer: React.FC<TableSettingDrawerProps> = ({
               <div
                 key={column.key}
                 draggable={dragAndDrop.canDragItem(index)}
-                onDragStart={e => dragAndDrop.handleDragStart(e, index)}
-                onDragOver={e => dragAndDrop.handleDragOver(e, index)}
-                onDragLeave={e => {
+                onDragStart={(e) => dragAndDrop.handleDragStart(e, index)}
+                onDragOver={(e) => dragAndDrop.handleDragOver(e, index)}
+                onDragLeave={(e) => {
                   // Check if actually left the element (ignore child element movements)
                   if (
                     e.currentTarget === e.target ||
@@ -248,7 +227,7 @@ export const TableSettingDrawer: React.FC<TableSettingDrawerProps> = ({
                     dragAndDrop.handleDragLeave();
                   }
                 }}
-                onDrop={e => dragAndDrop.handleDrop(e, index)}
+                onDrop={(e) => dragAndDrop.handleDrop(e, index)}
                 onDragEnd={dragAndDrop.handleDragEnd}
                 className={cn(
                   styles.columnRow,
@@ -274,11 +253,8 @@ export const TableSettingDrawer: React.FC<TableSettingDrawerProps> = ({
                   )}
 
                   {/* Column name */}
-                  <Typography.Text className={styles.columnLabel}>
-                    {column.label}
-                  </Typography.Text>
+                  <Typography.Text className={styles.columnLabel}>{column.label}</Typography.Text>
                 </div>
-
               </div>
             ))}
           </Layout.VStack>

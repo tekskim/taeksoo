@@ -8,9 +8,7 @@ import useFetchUserData from '../../../api/queries/useFetchUserData';
 
 /** Toast callback - handles UI rendering */
 const showToast = (content: ToastType): void => {
-  toast.custom(id => (
-    <Toast {...content} handleDismiss={() => toast.dismiss(id)} />
-  ));
+  toast.custom((id) => <Toast {...content} handleDismiss={() => toast.dismiss(id)} />);
 };
 
 /**
@@ -32,9 +30,7 @@ const queryClient = new QueryClient(
  * 인증 컨텍스트
  * - 현재 로그인한 사용자 데이터를 제공
  */
-const AuthContext = createContext<ReturnType<typeof useFetchUserData> | null>(
-  null
-);
+const AuthContext = createContext<ReturnType<typeof useFetchUserData> | null>(null);
 
 /**
  * 사용자 데이터 Provider 내부 컴포넌트

@@ -40,10 +40,7 @@ const InfoContainer = ({
     <div className={cn(infoContainerStyles.root, className)}>
       <span className={infoContainerStyles.label}>{label}</span>
       <div
-        className={cn(
-          infoContainerStyles.values,
-          needsScroll && infoContainerStyles.valuesScroll
-        )}
+        className={cn(infoContainerStyles.values, needsScroll && infoContainerStyles.valuesScroll)}
       >
         {showBullets ? (
           <ul className={infoContainerStyles.list}>

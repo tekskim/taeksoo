@@ -70,7 +70,7 @@ const Default: Story = {
       height: '100vh',
     },
   },
-  render: args => {
+  render: (args) => {
     return <Dim {...args} appeared />;
   },
 };
@@ -85,7 +85,7 @@ const InContainer: Story = {
       bottom: 0,
     },
   },
-  render: args => {
+  render: (args) => {
     return (
       <div
         style={{

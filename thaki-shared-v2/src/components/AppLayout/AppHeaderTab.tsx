@@ -82,11 +82,10 @@ const AppHeaderTab = ({
   appId,
 }: AppHeaderTabProps): React.ReactElement => {
   const tabManager = useTabManager() as TabManagerHook;
-  const { tabs, activeTabId, switchTab, closeTab, addTab, reorderTabs } =
-    tabManager;
+  const { tabs, activeTabId, switchTab, closeTab, addTab, reorderTabs } = tabManager;
   const { frameId } = useFrame();
   const tabMapById = new Map<string, TabInfo>();
-  tabs.forEach(t => tabMapById.set(t.id, t));
+  tabs.forEach((t) => tabMapById.set(t.id, t));
   const isSingleTab = tabs.length === 1;
 
   const handleTabClick = (tabId: string): void => {
@@ -139,7 +138,7 @@ const AppHeaderTab = ({
   return (
     <div className={cn(appHeaderContainerStyles, className)}>
       <TabBar
-        tabs={tabs.map(tab => ({
+        tabs={tabs.map((tab) => ({
           id: tab.id,
           title: tab.title,
           draggable: true,

@@ -5,11 +5,7 @@ import { TABLE_COLUMN_MIN_WIDTH } from './Table.constants';
 export interface UseColumnResizeProps {
   column: TableColumn;
   onColumnResize?: (columnKey: string, newWidth: number) => void;
-  onResizeStart?: (
-    columnKey: string,
-    startX: number,
-    tableElement: HTMLTableElement
-  ) => void;
+  onResizeStart?: (columnKey: string, startX: number, tableElement: HTMLTableElement) => void;
   onResizeEnd?: (columnKey: string) => void;
 }
 

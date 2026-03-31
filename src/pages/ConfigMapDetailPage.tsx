@@ -210,7 +210,10 @@ export function ConfigMapDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/configmaps/${configMapId}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/configmaps/${configMapId}/edit?name=${encodeURIComponent(configMapData?.name ?? configMapId)}`
+        ),
     },
     {
       id: 'edit-yaml',

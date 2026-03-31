@@ -169,7 +169,8 @@ export function PodDisruptionBudgetsPage() {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => console.log('Edit Config:', row.id),
+        onClick: () =>
+          navigate(`/container/pdb/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
       },
       {
         id: 'edit-yaml',

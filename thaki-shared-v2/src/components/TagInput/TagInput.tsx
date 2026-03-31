@@ -48,11 +48,7 @@ interface TagInputContextValue {
   disabled: boolean;
   readOnly: boolean;
   labels: Required<TagInputLabels>;
-  handleTagChange: (
-    index: number,
-    field: 'key' | 'value',
-    value: string
-  ) => void;
+  handleTagChange: (index: number, field: 'key' | 'value', value: string) => void;
   handleTagBlur: (index: number, field: 'key' | 'value') => void;
   handleAddTag: () => void;
   handleRemoveTag: (index: number) => void;
@@ -74,9 +70,7 @@ const TagInputContext = createContext<TagInputContextValue | null>(null);
 const useTagInputContext = (): TagInputContextValue => {
   const context = useContext(TagInputContext);
   if (!context) {
-    throw new Error(
-      'TagInput compound components must be used within <TagInput>'
-    );
+    throw new Error('TagInput compound components must be used within <TagInput>');
   }
   return context;
 };
@@ -132,15 +126,13 @@ const TagInputRoot: React.FC<TagInputProps> = ({
     () => ({ ...DEFAULT_LABELS, ...labelsProp }),
     [labelsProp]
   );
-  const [touchedTags, setTouchedTags] = useState<
-    Record<number, TouchedTagFields>
-  >({});
+  const [touchedTags, setTouchedTags] = useState<Record<number, TouchedTagFields>>({});
 
   const validation = useMemo(() => validate(tags), [tags, validate]);
 
   // touched 필터링된 에러만 외부에 전달 (untouched 필드의 에러는 제외)
   const touchedValidation = useMemo((): TagValidationResult => {
-    const filteredErrors: Record<number, typeof validation.errors[number]> = {};
+    const filteredErrors: Record<number, (typeof validation.errors)[number]> = {};
     for (const [key, tagErrors] of Object.entries(validation.errors)) {
       const idx = Number(key);
       const touched = touchedTags[idx];
@@ -172,7 +164,7 @@ const TagInputRoot: React.FC<TagInputProps> = ({
     (index: number): void => {
       if (disabled || readOnly) return;
       onTagsChange(tags.filter((_, i) => i !== index));
-      setTouchedTags(prev => reindexTouchedTags(prev, index));
+      setTouchedTags((prev) => reindexTouchedTags(prev, index));
     },
     [tags, onTagsChange, disabled, readOnly]
   );
@@ -180,22 +172,17 @@ const TagInputRoot: React.FC<TagInputProps> = ({
   const handleTagChange = useCallback(
     (index: number, field: 'key' | 'value', value: string): void => {
       if (disabled || readOnly) return;
-      onTagsChange(
-        tags.map((tag, i) => (i === index ? { ...tag, [field]: value } : tag))
-      );
+      onTagsChange(tags.map((tag, i) => (i === index ? { ...tag, [field]: value } : tag)));
     },
     [tags, onTagsChange, disabled, readOnly]
   );
 
-  const handleTagBlur = useCallback(
-    (index: number, field: 'key' | 'value'): void => {
-      setTouchedTags(prev => ({
-        ...prev,
-        [index]: { ...prev[index], [field]: true },
-      }));
-    },
-    []
-  );
+  const handleTagBlur = useCallback((index: number, field: 'key' | 'value'): void => {
+    setTouchedTags((prev) => ({
+      ...prev,
+      [index]: { ...prev[index], [field]: true },
+    }));
+  }, []);
 
   const touchAll = useCallback((): void => {
     const allTouched: Record<number, TouchedTagFields> = {};
@@ -241,11 +228,7 @@ const TagInputRoot: React.FC<TagInputProps> = ({
     ]
   );
 
-  return (
-    <TagInputContext.Provider value={contextValue}>
-      {children}
-    </TagInputContext.Provider>
-  );
+  return <TagInputContext.Provider value={contextValue}>{children}</TagInputContext.Provider>;
 };
 
 // ---------------------------------------------------------------------------
@@ -290,7 +273,10 @@ export interface TagInputFormProps {
   /** Value placeholder */
   valuePlaceholder?: string;
   /** 에러 메시지 렌더링 함수. tagErrors와 touched를 받아 ReactNode를 반환합니다. */
-  renderError?: (tagErrors: TagErrors | undefined, touched: TouchedTagFields | undefined) => React.ReactNode;
+  renderError?: (
+    tagErrors: TagErrors | undefined,
+    touched: TouchedTagFields | undefined
+  ) => React.ReactNode;
 }
 
 const TagInputForm: React.FC<TagInputFormProps> = ({
@@ -337,9 +323,7 @@ const TagInputForm: React.FC<TagInputFormProps> = ({
                 <div className="flex-1 min-w-[80px]">
                   <Input
                     value={tag.key}
-                    onChange={e =>
-                      handleTagChange(index, 'key', e.target.value)
-                    }
+                    onChange={(e) => handleTagChange(index, 'key', e.target.value)}
                     onBlur={() => handleTagBlur(index, 'key')}
                     placeholder={keyPlaceholder}
                     error={hasKeyError}
@@ -356,9 +340,7 @@ const TagInputForm: React.FC<TagInputFormProps> = ({
                 <div className="flex-1 min-w-[80px]">
                   <Input
                     value={tag.value}
-                    onChange={e =>
-                      handleTagChange(index, 'value', e.target.value)
-                    }
+                    onChange={(e) => handleTagChange(index, 'value', e.target.value)}
                     onBlur={() => handleTagBlur(index, 'value')}
                     placeholder={valuePlaceholder}
                     error={hasValueError}

@@ -1,8 +1,4 @@
-import {
-  MutationCache,
-  QueryCache,
-  type QueryClientConfig,
-} from '@tanstack/react-query';
+import { MutationCache, QueryCache, type QueryClientConfig } from '@tanstack/react-query';
 
 import {
   checkIsForbiddenError,
@@ -25,11 +21,7 @@ type SuccessToastFn<TData = unknown> = (
   context: unknown
 ) => ToastType | undefined;
 
-type ErrorToastFn = (
-  error: Error,
-  variables: unknown,
-  context: unknown
-) => ToastType | undefined;
+type ErrorToastFn = (error: Error, variables: unknown, context: unknown) => ToastType | undefined;
 
 type NavigateFn = (data: unknown) => void;
 
@@ -90,10 +82,7 @@ type CacheFactoryOptions = {
  * - Success toasts via query.meta.success
  * - Error toasts (unless query.meta.silentOnError is true)
  */
-export const createQueryCache = ({
-  showToast,
-  getRemoteAppRef,
-}: CacheFactoryOptions): QueryCache =>
+export const createQueryCache = ({ showToast, getRemoteAppRef }: CacheFactoryOptions): QueryCache =>
   new QueryCache({
     onSuccess: (_data, query) => {
       const successToast = query.meta?.success as ToastType | undefined;
@@ -172,12 +161,7 @@ export const createMutationCache = ({
   new MutationCache({
     onSuccess: (data, variables, context, mutation) => {
       showToastWithNotification({
-        toastContent: extractSuccessToast(
-          mutation.meta,
-          data,
-          variables,
-          context
-        ),
+        toastContent: extractSuccessToast(mutation.meta, data, variables, context),
         isSuccess: true,
         remoteAppRef: getRemoteAppRef(),
         showToast,
@@ -189,12 +173,7 @@ export const createMutationCache = ({
       }
 
       showToastWithNotification({
-        toastContent: extractErrorToast(
-          mutation.meta,
-          error,
-          variables,
-          context
-        ),
+        toastContent: extractErrorToast(mutation.meta, error, variables, context),
         httpMethod: extractHttpMethod(error),
         isSuccess: false,
         errorDescription: extractErrorDescription(error),
@@ -206,13 +185,9 @@ export const createMutationCache = ({
 
 type QueryClientConfigOptions = CacheFactoryOptions & {
   /** Override default query options */
-  defaultQueryOptions?: Partial<
-    NonNullable<QueryClientConfig['defaultOptions']>['queries']
-  >;
+  defaultQueryOptions?: Partial<NonNullable<QueryClientConfig['defaultOptions']>['queries']>;
   /** Override default mutation options */
-  defaultMutationOptions?: Partial<
-    NonNullable<QueryClientConfig['defaultOptions']>['mutations']
-  >;
+  defaultMutationOptions?: Partial<NonNullable<QueryClientConfig['defaultOptions']>['mutations']>;
 };
 
 /**
@@ -260,7 +235,7 @@ export const createQueryClientConfig = ({
       refetchOnWindowFocus: false,
       refetchOnReconnect: 'always',
       retryOnMount: true,
-      throwOnError: error =>
+      throwOnError: (error) =>
         checkIsUnauthorizedError(error) ||
         checkIsForbiddenError(error) ||
         checkIsNotFoundError(error),
@@ -274,7 +249,7 @@ export const createQueryClientConfig = ({
       ...defaultQueryOptions,
     },
     mutations: {
-      throwOnError: error => checkIsUnauthorizedError(error),
+      throwOnError: (error) => checkIsUnauthorizedError(error),
       ...defaultMutationOptions,
     },
   },

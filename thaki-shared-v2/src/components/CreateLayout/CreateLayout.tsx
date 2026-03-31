@@ -14,8 +14,7 @@ import {
 /**
  * CreateLayout 공통 Props
  */
-interface CreateLayoutBaseProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+interface CreateLayoutBaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /**
    * 메인 콘텐츠 영역 (좌측)
    */
@@ -87,9 +86,7 @@ interface CreateLayoutWithDefaultHeader extends CreateLayoutBaseProps {
  * CreateLayout Props
  * header와 title/headerActions는 함께 사용할 수 없습니다.
  */
-export type CreateLayoutProps =
-  | CreateLayoutWithCustomHeader
-  | CreateLayoutWithDefaultHeader;
+export type CreateLayoutProps = CreateLayoutWithCustomHeader | CreateLayoutWithDefaultHeader;
 
 /**
  * [Design System] CreateLayout 컴포넌트
@@ -153,12 +150,7 @@ const CreateLayout = forwardRef<HTMLDivElement, CreateLayoutProps>(
       // 기본 헤더 (title, headerActions)
       if (title || headerActions) {
         return (
-          <header
-            className={cn(
-              createLayoutHeaderStyles(),
-              'flex items-center justify-between'
-            )}
-          >
+          <header className={cn(createLayoutHeaderStyles(), 'flex items-center justify-between')}>
             {typeof title === 'string' ? (
               <Typography.Title level={4} className="font-semibold">
                 {title}
@@ -175,11 +167,7 @@ const CreateLayout = forwardRef<HTMLDivElement, CreateLayoutProps>(
     };
 
     return (
-      <div
-        ref={ref}
-        className={cn(createLayoutContainerStyles(), className)}
-        {...props}
-      >
+      <div ref={ref} className={cn(createLayoutContainerStyles(), className)} {...props}>
         <div className={createLayoutInnerStyles({ minWidth })}>
           {/* Header */}
           {renderHeader()}
@@ -191,12 +179,8 @@ const CreateLayout = forwardRef<HTMLDivElement, CreateLayoutProps>(
 
             {/* Sidebar / FloatingCard (Right) - sticky */}
             {sidebar ? (
-              <aside
-                className={createLayoutSidebarStyles({ width: sidebarWidth })}
-              >
-                <div className={createLayoutSidebarInnerStyles()}>
-                  {sidebar}
-                </div>
+              <aside className={createLayoutSidebarStyles({ width: sidebarWidth })}>
+                <div className={createLayoutSidebarInnerStyles()}>{sidebar}</div>
               </aside>
             ) : null}
           </div>

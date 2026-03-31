@@ -86,30 +86,30 @@ const ControlButton: React.FC<ControlButtonProps> = ({
 }) => (
   <button
     className={cn(controlButtonStyles({ size, pressed }))}
-    onPointerDown={event => {
+    onPointerDown={(event) => {
       event.stopPropagation();
       if (event.button !== 0) return;
       onPressStart();
     }}
-    onPointerUp={event => {
+    onPointerUp={(event) => {
       event.stopPropagation();
       if (event.button !== 0) return;
       onPressEnd();
       onActivate();
     }}
-    onPointerCancel={event => {
+    onPointerCancel={(event) => {
       event.stopPropagation();
       onPressEnd();
     }}
-    onPointerLeave={event => {
+    onPointerLeave={(event) => {
       if ((event.buttons & 1) !== 0) return;
       onPressEnd();
     }}
-    onDoubleClick={event => {
+    onDoubleClick={(event) => {
       // Prevent bubbling to the AppLayout header double-click maximize toggle.
       event.stopPropagation();
     }}
-    onClick={event => {
+    onClick={(event) => {
       event.stopPropagation();
       // Keyboard activation dispatches click(detail=0); pointer input is handled via pointerup.
       if (event.detail !== 0) return;
@@ -138,12 +138,7 @@ const SnapLayoutPanel: React.FC<SnapLayoutPanelProps> = ({
   }
 
   return (
-    <Portal
-      triggerRef={triggerRef}
-      direction="bottom"
-      gap={8}
-      matchWidth={false}
-    >
+    <Portal triggerRef={triggerRef} direction="bottom" gap={8} matchWidth={false}>
       <div
         className={cn(snapPanelStyles({ size }))}
         role="listbox"

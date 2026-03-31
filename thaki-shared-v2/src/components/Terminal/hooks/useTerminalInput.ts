@@ -184,14 +184,7 @@ export function useTerminalInput({
           break;
       }
     },
-    [
-      handleEnter,
-      handleBackspace,
-      handleCtrlC,
-      handleArrowLeft,
-      handleArrowRight,
-      handleCharacter,
-    ]
+    [handleEnter, handleBackspace, handleCtrlC, handleArrowLeft, handleArrowRight, handleCharacter]
   );
 
   /**
@@ -206,7 +199,7 @@ export function useTerminalInput({
     // 환영 메시지 출력 (최초 1회)
     if (!welcomeMessageShown.current) {
       welcomeMessageShown.current = true;
-      welcomeMessages.forEach(msg => {
+      welcomeMessages.forEach((msg) => {
         term.writeln(`${ANSI.GRAY}${msg}${ANSI.RESET}`);
       });
       term.write(prompt);

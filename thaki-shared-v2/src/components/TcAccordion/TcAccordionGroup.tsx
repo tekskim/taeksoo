@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState } from 'react';
 
-import type { TcAccordionGroupProps } from "./TcAccordion.types";
-import { TcAccordionContext } from "./TcAccordion.context";
-import { cn } from "../../services";
-import { tcAccordionGroupClassnames } from "./TcAccordion.styles";
+import type { TcAccordionGroupProps } from './TcAccordion.types';
+import { TcAccordionContext } from './TcAccordion.context';
+import { cn } from '../../services';
+import { tcAccordionGroupClassnames } from './TcAccordion.styles';
 
 /**
  * TcAccordionGroup은 여러 TcAccordion 항목들을 그룹화하여 상태를 관리합니다.
@@ -20,16 +20,20 @@ import { tcAccordionGroupClassnames } from "./TcAccordion.styles";
  * </TcAccordion.Group>
  * ```
  */
-export const TcAccordionGroup = ({ className, children, multiple = true }: TcAccordionGroupProps) => {
+export const TcAccordionGroup = ({
+  className,
+  children,
+  multiple = true,
+}: TcAccordionGroupProps) => {
   /** 현재 열려있는 아코디언 항목 id들을 관리하는 상태 */
   const [openedAccordionIds, setOpenedAccordionIds] = useState<Set<string | number>>(
-    () => new Set(),
+    () => new Set()
   );
 
   /** Context에 제공될 값을 메모이제이션합니다. multiple 값 변경 시에만 재계산됩니다. */
   const value = useMemo(
     () => ({ openedAccordionIds, setOpenedAccordionIds, multiple, isGrouped: true }),
-    [openedAccordionIds, multiple],
+    [openedAccordionIds, multiple]
   );
 
   return (

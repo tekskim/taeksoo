@@ -1,15 +1,12 @@
 import { cva } from 'class-variance-authority';
 
-export const dropdownContainerStyles = cva(
-  'relative inline-block w-full min-w-[80px]',
-  {
-    variants: {
-      loading: {
-        true: 'opacity-50 pointer-events-none',
-      },
+export const dropdownContainerStyles = cva('relative inline-block w-full min-w-[80px]', {
+  variants: {
+    loading: {
+      true: 'opacity-50 pointer-events-none',
     },
-  }
-);
+  },
+});
 
 export const dropdownTriggerStyles = 'relative flex items-center w-full';
 
@@ -46,8 +43,7 @@ export const dropdownTriggerButtonStyles = cva(
   }
 );
 
-export const dropdownValueStyles =
-  'text-left overflow-hidden text-ellipsis whitespace-nowrap';
+export const dropdownValueStyles = 'text-left overflow-hidden text-ellipsis whitespace-nowrap';
 
 export const dropdownArrowStyles = cva(
   [

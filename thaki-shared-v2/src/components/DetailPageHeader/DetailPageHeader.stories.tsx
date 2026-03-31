@@ -10,7 +10,7 @@ const meta: Meta<typeof DetailPageHeader> = {
   },
   tags: ['autodocs'],
   decorators: [
-    Story => (
+    (Story) => (
       <div style={{ width: '1024px', margin: '0 auto' }}>
         <Story />
       </div>

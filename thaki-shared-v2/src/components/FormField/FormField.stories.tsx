@@ -54,10 +54,7 @@ export const Default: Story = {
     hint: '실명을 입력해주세요',
   },
   render: (args) => (
-    <FormField 
-      label={args.label}
-      hint={args.hint}
-    >
+    <FormField label={args.label} hint={args.hint}>
       <Input placeholder="홍길동" />
     </FormField>
   ),
@@ -70,11 +67,7 @@ export const Required: Story = {
     hint: '유효한 이메일 주소를 입력해주세요',
   },
   render: (args) => (
-    <FormField 
-      label={args.label}
-      required={args.required}
-      hint={args.hint}
-    >
+    <FormField label={args.label} required={args.required} hint={args.hint}>
       <Input type="email" placeholder="example@email.com" />
     </FormField>
   ),
@@ -87,11 +80,7 @@ export const WithError: Story = {
     error: '비밀번호는 최소 8자 이상이어야 합니다',
   },
   render: (args) => (
-    <FormField 
-      label={args.label}
-      required={args.required}
-      error={args.error}
-    >
+    <FormField label={args.label} required={args.required} error={args.error}>
       <Input type="password" placeholder="비밀번호 입력" error />
     </FormField>
   ),
@@ -104,11 +93,7 @@ export const WithSuccess: Story = {
     success: '사용 가능한 사용자명입니다',
   },
   render: (args) => (
-    <FormField 
-      label={args.label}
-      required={args.required}
-      success={args.success}
-    >
+    <FormField label={args.label} required={args.required} success={args.success}>
       <Input placeholder="username" success />
     </FormField>
   ),
@@ -121,11 +106,7 @@ export const Disabled: Story = {
     disabled: true,
   },
   render: (args) => (
-    <FormField 
-      label={args.label}
-      hint={args.hint}
-      disabled={args.disabled}
-    >
+    <FormField label={args.label} hint={args.hint} disabled={args.disabled}>
       <Input value="USER_12345" disabled />
     </FormField>
   ),
@@ -138,11 +119,7 @@ export const WithCheckbox: Story = {
     hint: '서비스 이용을 위해 필수로 동의해주세요',
   },
   render: (args) => (
-    <FormField 
-      label={args.label}
-      required={args.required}
-      hint={args.hint}
-    >
+    <FormField label={args.label} required={args.required} hint={args.hint}>
       <Checkbox label="개인정보 처리방침 및 이용약관에 동의합니다" />
     </FormField>
   ),
@@ -153,23 +130,23 @@ export const AllStates: Story = {
     <Layout.VStack gap="lg">
       <Layout.VStack gap="md">
         <Typography.Text>다양한 FormField 상태</Typography.Text>
-        
+
         <FormField label="기본 필드" hint="일반적인 입력 필드입니다">
           <Input placeholder="기본 입력" />
         </FormField>
-        
+
         <FormField label="필수 필드" required hint="필수로 입력해야 하는 필드입니다">
           <Input placeholder="필수 입력" />
         </FormField>
-        
+
         <FormField label="에러 상태" error="잘못된 값이 입력되었습니다">
           <Input placeholder="에러 입력" error />
         </FormField>
-        
+
         <FormField label="성공 상태" success="올바르게 입력되었습니다">
           <Input placeholder="성공 입력" success />
         </FormField>
-        
+
         <FormField label="비활성화 상태" hint="현재 수정할 수 없습니다" disabled>
           <Input value="비활성화된 값" disabled />
         </FormField>

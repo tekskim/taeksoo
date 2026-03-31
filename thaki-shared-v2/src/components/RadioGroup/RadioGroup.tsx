@@ -88,17 +88,14 @@ export const RadioGroup = ({
   renderOption,
 }: RadioGroupProps) => {
   return (
-    <fieldset
-      className={cn(radioGroupStyles({ direction, disabled }))}
-      disabled={disabled}
-    >
+    <fieldset className={cn(radioGroupStyles({ direction, disabled }))} disabled={disabled}>
       {legend && (
         <legend className={radioGroupLegendStyles}>
           {required && <span className={radioGroupRequiredStyles}> *</span>}
           {legend}
         </legend>
       )}
-      {options.map(option => {
+      {options.map((option) => {
         const isSelected = selectedValue === option.value;
 
         // renderOption이 제공되면 커스텀 렌더링 사용
@@ -119,9 +116,7 @@ export const RadioGroup = ({
           />
         );
       })}
-      {errorMessage && (
-        <div className={radioGroupErrorStyles}>{errorMessage}</div>
-      )}
+      {errorMessage && <div className={radioGroupErrorStyles}>{errorMessage}</div>}
     </fieldset>
   );
 };

@@ -138,20 +138,13 @@ export const Basic: Story = {
 // Loading State
 export const Loading: Story = {
   render: () => (
-    <Table<User>
-      rows={sampleData}
-      columns={basicColumns}
-      isLoading={true}
-      loadingRowCount={5}
-    />
+    <Table<User> rows={sampleData} columns={basicColumns} isLoading={true} loadingRowCount={5} />
   ),
 };
 
 // Empty State
 export const Empty: Story = {
-  render: () => (
-    <Table<User> rows={[]} columns={basicColumns} isLoading={false} />
-  ),
+  render: () => <Table<User> rows={[]} columns={basicColumns} isLoading={false} />,
 };
 
 // Custom Body
@@ -167,11 +160,7 @@ const CustomBodyComponent = () => {
   return (
     <Table<User> rows={sampleData} columns={customColumns}>
       {sampleData.map((user, _index) => (
-        <Table.Tr
-          key={user.id}
-          rowData={user}
-          isError={user.status === 'error'}
-        >
+        <Table.Tr key={user.id} rowData={user} isError={user.status === 'error'}>
           <Table.Td rowData={user} column={customColumns[0]}>
             <Layout.HStack gap="sm" align="center">
               <div
@@ -197,11 +186,7 @@ const CustomBodyComponent = () => {
           <Table.Td rowData={user} column={customColumns[3]}>
             <strong>{user.cpu} Core</strong>
           </Table.Td>
-          <Table.Td
-            rowData={user}
-            column={customColumns[4]}
-            preventClickPropagation={true}
-          >
+          <Table.Td rowData={user} column={customColumns[4]} preventClickPropagation={true}>
             <Button
               size="sm"
               variant="primary"
@@ -228,7 +213,7 @@ const CheckboxSelectionComponent = () => {
   const handleCheckboxRowClick = (index: number) => {
     const isSelected = selectedRows.includes(index);
     if (isSelected) {
-      setSelectedRows(selectedRows.filter(id => id !== index));
+      setSelectedRows(selectedRows.filter((id) => id !== index));
     } else {
       setSelectedRows([...selectedRows, index]);
     }
@@ -244,12 +229,8 @@ const CheckboxSelectionComponent = () => {
       getRowId={(_row, index) => index}
     >
       {sampleData.map((user, index) => (
-        <Table.Tr
-          key={index}
-          rowData={user}
-          onClick={() => handleCheckboxRowClick(index)}
-        >
-          {basicColumns.map(column => (
+        <Table.Tr key={index} rowData={user} onClick={() => handleCheckboxRowClick(index)}>
+          {basicColumns.map((column) => (
             <Table.Td key={column.key} rowData={user} column={column}>
               {user[column.key as keyof User]}
             </Table.Td>
@@ -282,12 +263,8 @@ const RadioSelectionComponent = () => {
       getRowId={(_row, index) => index}
     >
       {sampleData.map((user, index) => (
-        <Table.Tr
-          key={index}
-          rowData={user}
-          onClick={() => handleRadioRowClick(index)}
-        >
-          {basicColumns.map(column => (
+        <Table.Tr key={index} rowData={user} onClick={() => handleRadioRowClick(index)}>
+          {basicColumns.map((column) => (
             <Table.Td key={column.key} rowData={user} column={column}>
               {user[column.key as keyof User]}
             </Table.Td>
@@ -321,10 +298,7 @@ const ApiSortableTableComponent = () => {
   ];
 
   // 정렬 변경 핸들러
-  const handleSortChange = (
-    newSort: string | null,
-    newOrder: 'asc' | 'desc'
-  ) => {
+  const handleSortChange = (newSort: string | null, newOrder: 'asc' | 'desc') => {
     setSort(newSort);
     setOrder(newOrder);
   };
@@ -377,11 +351,7 @@ const StickyLastColumnComponent = () => {
 
   return (
     <div style={{ width: '800px' }}>
-      <Table<User>
-        rows={sampleData}
-        columns={wideColumns}
-        stickyLastColumn={true}
-      />
+      <Table<User> rows={sampleData} columns={wideColumns} stickyLastColumn={true} />
     </div>
   );
 };
@@ -439,7 +409,7 @@ const ExpandableTableStoryComponent = () => {
       rows={sampleData}
       columns={basicColumns}
       expandedRowRender={expandedRowRender}
-      isRowDisabled={row => row.status === 'error'}
+      isRowDisabled={(row) => row.status === 'error'}
     />
   );
 };
@@ -514,7 +484,7 @@ const ExpandableCheckboxSelectionComponent = () => {
         selectionType="checkbox"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
-        getRowId={row => row.id}
+        getRowId={(row) => row.id}
         expandRowByClick={false}
       />
     </Layout.VStack>
@@ -542,13 +512,9 @@ const DisabledRowsComponent = () => {
       <div>
         <h3 style={{ marginBottom: '8px' }}>Basic Table</h3>
         <Table<User> columns={basicColumns} rows={sampleData}>
-          {sampleData.map(user => (
-            <Table.Tr
-              key={user.id}
-              rowData={user}
-              disabled={user.status === 'error'}
-            >
-              {basicColumns.map(column => (
+          {sampleData.map((user) => (
+            <Table.Tr key={user.id} rowData={user} disabled={user.status === 'error'}>
+              {basicColumns.map((column) => (
                 <Table.Td key={column.key} rowData={user} column={column}>
                   {user[column.key as keyof User]}
                 </Table.Td>
@@ -566,16 +532,12 @@ const DisabledRowsComponent = () => {
           selectionType="checkbox"
           selectedRows={selectedRows}
           onRowSelectionChange={setSelectedRows}
-          getRowId={row => row.id}
-          isRowDisabled={row => row.status === 'error'}
+          getRowId={(row) => row.id}
+          isRowDisabled={(row) => row.status === 'error'}
         >
-          {sampleData.map(user => (
-            <Table.Tr
-              key={user.id}
-              rowData={user}
-              disabled={user.status === 'error'}
-            >
-              {basicColumns.map(column => (
+          {sampleData.map((user) => (
+            <Table.Tr key={user.id} rowData={user} disabled={user.status === 'error'}>
+              {basicColumns.map((column) => (
                 <Table.Td key={column.key} rowData={user} column={column}>
                   {user[column.key as keyof User]}
                 </Table.Td>

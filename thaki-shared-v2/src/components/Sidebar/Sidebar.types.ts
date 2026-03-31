@@ -3,9 +3,7 @@ import type { IconProps } from '../Icon';
 /**
  * 아이콘 컴포넌트 타입
  */
-export type SidebarIconComponent = React.ComponentType<
-  Omit<IconProps, 'children'>
->;
+export type SidebarIconComponent = React.ComponentType<Omit<IconProps, 'children'>>;
 
 /**
  * 메뉴 아이템 인터페이스

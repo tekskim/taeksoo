@@ -74,8 +74,7 @@ html[data-theme='dark'] {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--shared-scrollbar-thumb-background)
-    var(--shared-scrollbar-track-background);
+  scrollbar-color: var(--shared-scrollbar-thumb-background) var(--shared-scrollbar-track-background);
 }
 
 *::-webkit-scrollbar {
@@ -244,8 +243,7 @@ a:hover {
   margin-bottom: 4px !important;
 }
 
-[data-sonner-toast].error-toast-with-action[data-styled='false']
-  [data-description] {
+[data-sonner-toast].error-toast-with-action[data-styled='false'] [data-description] {
   opacity: 0.9 !important;
   font-size: 14px !important;
   line-height: 1.4 !important;

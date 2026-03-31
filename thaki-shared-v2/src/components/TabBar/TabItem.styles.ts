@@ -32,7 +32,7 @@ export const tabItemStyles = cva(
         true: '',
       },
     },
-  },
+  }
 );
 
 // Tab title text
@@ -51,7 +51,7 @@ export const tabTitleStyles = cva(
         true: 'text-text [font-weight:var(--primitive-font-weightMedium)]',
       },
     },
-  },
+  }
 );
 
 // Close button
@@ -73,7 +73,7 @@ export const closeButtonStyles = cva(
         true: 'inline-flex',
       },
     },
-  },
+  }
 );
 
 // Title skeleton (로딩 중일 때)

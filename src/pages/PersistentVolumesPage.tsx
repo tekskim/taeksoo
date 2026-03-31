@@ -189,7 +189,10 @@ export function PersistentVolumesPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/persistent-volumes/${row.id}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/persistent-volumes/${row.id}/edit?name=${encodeURIComponent(row.name)}`
+        ),
     },
     {
       id: 'edit-yaml',

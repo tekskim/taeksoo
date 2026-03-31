@@ -190,7 +190,10 @@ export function StorageClassDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => navigate(`/container/storage-classes/${storageClassId}/edit`),
+      onClick: () =>
+        navigate(
+          `/container/storage-classes/${storageClassId}/edit?name=${encodeURIComponent(scData?.name ?? storageClassId)}`
+        ),
     },
     {
       id: 'edit-yaml',

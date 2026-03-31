@@ -27,10 +27,7 @@ interface PasswordRequirementsTooltipProps {
   labels?: Labels;
 }
 
-const ValidationItem: React.FC<{ isValid: boolean; text: string }> = ({
-  isValid,
-  text,
-}) => {
+const ValidationItem: React.FC<{ isValid: boolean; text: string }> = ({ isValid, text }) => {
   const textColor = isValid ? undefined : 'var(--semantic-color-textInverse)';
 
   return (
@@ -50,9 +47,11 @@ const ValidationItem: React.FC<{ isValid: boolean; text: string }> = ({
   );
 };
 
-const PasswordRequirementsTooltip: React.FC<
-  PasswordRequirementsTooltipProps
-> = ({ validation, policy, labels }) => {
+const PasswordRequirementsTooltip: React.FC<PasswordRequirementsTooltipProps> = ({
+  validation,
+  policy,
+  labels,
+}) => {
   const minLength = policy?.minLength ?? DEFAULT_MIN_PASSWORD_LENGTH;
   const maxLength = policy?.maxLength ?? DEFAULT_MAX_PASSWORD_LENGTH;
 
@@ -70,24 +69,16 @@ const PasswordRequirementsTooltip: React.FC<
 
   return (
     <Layout.VStack gap="sm" align="start" className="px-xs py-sm">
-      <ValidationItem
-        isValid={validation.hasMinLength}
-        text={l.minLength(minLength, maxLength)}
-      />
+      <ValidationItem isValid={validation.hasMinLength} text={l.minLength(minLength, maxLength)} />
       {policy?.requireUppercase && (
         <ValidationItem isValid={validation.hasUppercase} text={l.uppercase} />
       )}
       {policy?.requireLowercase && (
         <ValidationItem isValid={validation.hasLowercase} text={l.lowercase} />
       )}
-      {policy?.requireDigit && (
-        <ValidationItem isValid={validation.hasNumber} text={l.number} />
-      )}
+      {policy?.requireDigit && <ValidationItem isValid={validation.hasNumber} text={l.number} />}
       {policy?.requireSpecialChar && (
-        <ValidationItem
-          isValid={validation.hasSpecialChar}
-          text={l.specialChar}
-        />
+        <ValidationItem isValid={validation.hasSpecialChar} text={l.specialChar} />
       )}
     </Layout.VStack>
   );

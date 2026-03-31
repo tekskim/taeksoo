@@ -20,8 +20,16 @@ import {
   IconHistory,
 } from '@tabler/icons-react';
 
-function makeTablerIcon(TablerIcon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>): SidebarIconComponent {
-  const Wrapped: SidebarIconComponent = ({ variant, size }: { variant?: string; size?: number }) => {
+function makeTablerIcon(
+  TablerIcon: React.ComponentType<{ size?: number; stroke?: number; className?: string }>
+): SidebarIconComponent {
+  const Wrapped: SidebarIconComponent = ({
+    variant,
+    size,
+  }: {
+    variant?: string;
+    size?: number;
+  }) => {
     const colorClass = variant === 'primary' ? 'text-primary' : 'text-text-muted';
     return <TablerIcon size={size ?? 16} stroke={1.5} className={colorClass} />;
   };
@@ -69,8 +77,18 @@ const sections: SidebarSection[] = [
     id: 'session-management',
     label: 'Session management',
     children: [
-      { id: 'session-policies', label: 'Session policies', path: '/iam/session-policies', icon: ClockIconW },
-      { id: 'active-sessions', label: 'Active sessions', path: '/iam/active-sessions', icon: DeviceDesktopIconW },
+      {
+        id: 'session-policies',
+        label: 'Session policies',
+        path: '/iam/session-policies',
+        icon: ClockIconW,
+      },
+      {
+        id: 'active-sessions',
+        label: 'Active sessions',
+        path: '/iam/active-sessions',
+        icon: DeviceDesktopIconW,
+      },
     ],
   },
   {
@@ -78,9 +96,24 @@ const sections: SidebarSection[] = [
     label: 'Global administration',
     children: [
       { id: 'domains', label: 'Domains', path: '/iam/domains', icon: WorldIconW },
-      { id: 'system-administrators', label: 'System administrators', path: '/iam/system-administrators', icon: UserCogIconW },
-      { id: 'login-policies', label: 'Login policies', path: '/iam/login-policies', icon: LockIconW },
-      { id: 'token-policies', label: 'Token policies', path: '/iam/token-policies', icon: KeyIconW },
+      {
+        id: 'system-administrators',
+        label: 'System administrators',
+        path: '/iam/system-administrators',
+        icon: UserCogIconW,
+      },
+      {
+        id: 'login-policies',
+        label: 'Login policies',
+        path: '/iam/login-policies',
+        icon: LockIconW,
+      },
+      {
+        id: 'token-policies',
+        label: 'Token policies',
+        path: '/iam/token-policies',
+        icon: KeyIconW,
+      },
     ],
   },
   {
@@ -123,21 +156,19 @@ export function IAMSidebar({ isCollapsed, onToggle }: IAMSidebarProps) {
     <Sidebar isCollapsed={isCollapsed}>
       {/* AppSwitcher header — counteract parent py-2 to sit flush at top */}
       <div className="h-10 -mt-2 mb-2 flex items-center gap-2 flex-shrink-0">
-        <img
-          src={IAMIcon}
-          alt="IAM"
-          className="w-[24px] h-[24px] flex-shrink-0"
-        />
-        <span className="flex-1 text-[13px] font-medium leading-5 text-text truncate">
-          IAM
-        </span>
+        <img src={IAMIcon} alt="IAM" className="w-[24px] h-[24px] flex-shrink-0" />
+        <span className="flex-1 text-[13px] font-medium leading-5 text-text truncate">IAM</span>
         <button
           type="button"
           onClick={onToggle}
           className="p-1 hover:bg-surface-hover rounded transition-colors cursor-pointer flex-shrink-0 border-none bg-transparent"
           aria-label="Toggle sidebar"
         >
-          <IconLayoutSidebar size={14} className="text-text-muted pointer-events-none" stroke={1.5} />
+          <IconLayoutSidebar
+            size={14}
+            className="text-text-muted pointer-events-none"
+            stroke={1.5}
+          />
         </button>
       </div>
 

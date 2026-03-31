@@ -117,7 +117,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: args => <PortalDemo {...args} />,
+  render: (args) => <PortalDemo {...args} />,
   args: {
     direction: 'bottom',
     matchWidth: true,
@@ -166,21 +166,9 @@ export const WithPositionOffset: Story = {
   render: () => (
     <Layout.Container padding="lg">
       <Layout.HStack gap="lg" justify="center">
-        <PortalDemo
-          direction="bottom"
-          matchWidth={false}
-          position={{ top: 10 }}
-        />
-        <PortalDemo
-          direction="bottom"
-          matchWidth={false}
-          position={{ left: 20 }}
-        />
-        <PortalDemo
-          direction="bottom"
-          matchWidth={false}
-          position={{ top: 10, left: 20 }}
-        />
+        <PortalDemo direction="bottom" matchWidth={false} position={{ top: 10 }} />
+        <PortalDemo direction="bottom" matchWidth={false} position={{ left: 20 }} />
+        <PortalDemo direction="bottom" matchWidth={false} position={{ top: 10, left: 20 }} />
       </Layout.HStack>
     </Layout.Container>
   ),

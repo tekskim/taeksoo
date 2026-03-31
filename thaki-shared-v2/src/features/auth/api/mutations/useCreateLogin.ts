@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import authClient from "../clients/authClient";
-import { setToStorage } from "../../../..";
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import authClient from '../clients/authClient';
+import { setToStorage } from '../../../..';
 
 interface Response {
   accessToken: string;
@@ -13,7 +13,7 @@ interface Response {
   forcePasswordChange: boolean;
   mfaRequired: boolean;
   availableMfaMethods: {
-    type: "email" | "authenticator";
+    type: 'email' | 'authenticator';
     enrolled: boolean;
   }[];
   mfaSessionIdPending: string;
@@ -23,7 +23,7 @@ interface Params {
   password: string;
 }
 
-const URL = "/v1/iam/authn/login";
+const URL = '/v1/iam/authn/login';
 
 const login = async (params: Params) => {
   const { data } = await authClient.post<Response>(URL, params);
@@ -36,8 +36,8 @@ const useCreateLogin = () => {
     mutationFn: login,
     onSuccess: ({ accessToken, refreshTokenRef }) => {
       setToStorage(
-        { tokenType: "access_token", token: accessToken },
-        { tokenType: "refresh_token_ref", token: refreshTokenRef },
+        { tokenType: 'access_token', token: accessToken },
+        { tokenType: 'refresh_token_ref', token: refreshTokenRef }
       );
     },
     meta: {

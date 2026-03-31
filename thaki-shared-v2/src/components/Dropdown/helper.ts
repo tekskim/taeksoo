@@ -14,8 +14,7 @@ const calculateDropdownPosition = ({
 }) => {
   const spaceBelow = windowHeight - bottom;
 
-  const shouldShowAbove =
-    spaceBelow < optionListHeight && top > optionListHeight;
+  const shouldShowAbove = spaceBelow < optionListHeight && top > optionListHeight;
 
   return shouldShowAbove;
 };

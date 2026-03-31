@@ -68,10 +68,7 @@ const formatPacketsPerSec = (value: number): string => {
 /**
  * 바이트 단위(B/ KiB / MiB / GiB / TiB / PiB) 자동 변환
  */
-export const formatBytesFromUnit = (
-  value: number,
-  unit: string
-): string => {
+export const formatBytesFromUnit = (value: number, unit: string): string => {
   if (unit === 'B') {
     if (value >= 1024 ** 5) {
       return formatWithUnit(value / 1024 ** 5, 'PiB');
@@ -144,10 +141,7 @@ export const formatDataSize = (kib?: number | null): string => {
 /**
  * 퍼센트 값을 포맷팅 (0-100 또는 0-1)
  */
-export const formatPercentage = (
-  percent?: number | null,
-  asDecimal = false
-): string => {
+export const formatPercentage = (percent?: number | null, asDecimal = false): string => {
   if (percent === null || percent === undefined) return '-';
   const value = asDecimal ? percent * 100 : percent;
   return `${formatOneDecimal(value)}%`;
@@ -183,10 +177,7 @@ const normalizeChartUnit = (unit: string): string => {
   return trimmedUnit;
 };
 
-export const formatChartValueByUnit = (
-  value: number,
-  unit: string
-): string => {
+export const formatChartValueByUnit = (value: number, unit: string): string => {
   const trimmedUnit = normalizeChartUnit(unit);
   if (!trimmedUnit) {
     return formatNumberByScale(value);

@@ -134,7 +134,8 @@ export const lineChartCardStyles = {
   /** 범례 컨테이너 */
   legendContainer: 'flex flex-col items-start gap-xs mt-5 overflow-y-auto shrink-0',
   /** 범례 아이템 */
-  legendItem: 'flex items-center gap-1.5 text-11 text-text-muted cursor-pointer transition-opacity duration-normal hover:text-text whitespace-nowrap',
+  legendItem:
+    'flex items-center gap-1.5 text-11 text-text-muted cursor-pointer transition-opacity duration-normal hover:text-text whitespace-nowrap',
   /** 범례 도트 */
   legendDot: 'w-2 h-2 rounded-full shrink-0',
 } as const;
@@ -193,10 +194,7 @@ export const getPercentageVariant = (percent: number): PercentageVariant => {
  * - warning: orange100/orange500
  * - danger: red100/red500
  */
-export const PERCENTAGE_BADGE_COLORS: Record<
-  PercentageVariant,
-  { bg: string; fg: string }
-> = {
+export const PERCENTAGE_BADGE_COLORS: Record<PercentageVariant, { bg: string; fg: string }> = {
   success: {
     bg: 'var(--primitive-color-green100)',
     fg: 'var(--primitive-color-green500)',

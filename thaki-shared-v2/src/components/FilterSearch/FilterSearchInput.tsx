@@ -46,9 +46,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
   selectedFilters = [],
 }): React.ReactElement => {
   // 현재 입력 중인 필터 상태
-  const [activeFilterKey, setActiveFilterKey] = useState<FilterKey | null>(
-    null
-  );
+  const [activeFilterKey, setActiveFilterKey] = useState<FilterKey | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
@@ -89,20 +87,14 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
   );
 
   // 드롭다운 토글 핸들러
-  const toggleSelectDropdown = useCallback(
-    () => setIsSelectDropdownOpen(prev => !prev),
-    []
-  );
+  const toggleSelectDropdown = useCallback(() => setIsSelectDropdownOpen((prev) => !prev), []);
 
-  const toggleDatePicker = useCallback(
-    () => setIsDatePickerOpen(prev => !prev),
-    []
-  );
+  const toggleDatePicker = useCallback(() => setIsDatePickerOpen((prev) => !prev), []);
 
   // 필터 키 선택 핸들러
   const handleKeySelect = useCallback(
     (key: string): void => {
-      const filterKey = filterKeys.find(fk => fk.key === key);
+      const filterKey = filterKeys.find((fk) => fk.key === key);
       if (!filterKey) return;
 
       setIsDropdownOpen(false);
@@ -135,9 +127,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
     (value: string): void => {
       if (!activeFilterKey) return;
 
-      const selectedOption = activeFilterKey.options?.find(
-        opt => opt.value === value
-      );
+      const selectedOption = activeFilterKey.options?.find((opt) => opt.value === value);
       if (!selectedOption) return;
 
       addFilterKey({
@@ -150,10 +140,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
 
   // 선택 모드에서 이미 선택된 옵션 제외한 목록
   const availableOptions = activeFilterKey?.options?.filter(
-    opt =>
-      !selectedFilters.some(
-        sf => sf.key === activeFilterKey.key && sf.value === opt.value
-      )
+    (opt) => !selectedFilters.some((sf) => sf.key === activeFilterKey.key && sf.value === opt.value)
   );
 
   // 날짜 범위 Apply 핸들러 (버튼 클릭 시)
@@ -184,7 +171,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
 
     // 이미 동일한 key+value 조합이 있으면 무시
     const isDuplicate = selectedFilters.some(
-      sf => sf.key === activeFilterKey.key && sf.value === inputValue.trim()
+      (sf) => sf.key === activeFilterKey.key && sf.value === inputValue.trim()
     );
     if (isDuplicate) {
       resetInputState();
@@ -195,13 +182,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
     addFilterKey({
       value: inputValue.trim(),
     });
-  }, [
-    inputValue,
-    addFilterKey,
-    activeFilterKey,
-    selectedFilters,
-    resetInputState,
-  ]);
+  }, [inputValue, addFilterKey, activeFilterKey, selectedFilters, resetInputState]);
 
   // 입력 취소 핸들러 (Escape 키)
   const handleInputCancel = useCallback((): void => {
@@ -236,18 +217,18 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
     if (!trimmedValue) return;
 
     // defaultFilterKey가 filterKeys에 없으면 첫 번째 input 타입 필터 키 사용
-    let targetFilterKey = filterKeys.find(fk => fk.key === defaultFilterKey);
+    let targetFilterKey = filterKeys.find((fk) => fk.key === defaultFilterKey);
 
     // fallback: defaultFilterKey 매칭 실패 시 첫 번째 input 타입 필터 사용
     if (!targetFilterKey) {
-      targetFilterKey = filterKeys.find(fk => fk.type === 'input');
+      targetFilterKey = filterKeys.find((fk) => fk.type === 'input');
     }
 
     if (!targetFilterKey) return;
 
     // 이미 동일한 key+value 조합이 있으면 무시
     const isDuplicate = selectedFilters.some(
-      sf => sf.key === targetFilterKey.key && sf.value === trimmedValue
+      (sf) => sf.key === targetFilterKey.key && sf.value === trimmedValue
     );
     if (isDuplicate) {
       setInputValue('');
@@ -296,7 +277,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
                 ref={inputRef}
                 type="text"
                 value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
                 onFocus={() => setIsDropdownOpen(true)}
                 onKeyDown={handleSearchKeyDown}
                 placeholder={placeholder}
@@ -313,7 +294,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
         >
           {filterKeys.length > 0 && (
             <div className={shared.dropdownList}>
-              {filterKeys.map(key => (
+              {filterKeys.map((key) => (
                 <button
                   key={key.key}
                   type="button"
@@ -330,21 +311,18 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
 
       {/* 입력 모드일 때: 텍스트 또는 숫자 입력 */}
       {activeFilterKey &&
-        (activeFilterKey.type === 'input' ||
-          activeFilterKey.type === 'number') && (
+        (activeFilterKey.type === 'input' || activeFilterKey.type === 'number') && (
           <div className={shared.inputModeContainer}>
             <FilterLabel label={activeFilterKey.label} />
             <input
               ref={valueInputRef}
               type={activeFilterKey.type === 'number' ? 'number' : 'text'}
               value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
+              onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleInputKeyDown}
               placeholder={
                 activeFilterKey.placeholder ||
-                (activeFilterKey.type === 'number'
-                  ? 'Enter number...'
-                  : 'Enter value...')
+                (activeFilterKey.type === 'number' ? 'Enter number...' : 'Enter value...')
               }
               className={shared.valueInputInline}
               autoComplete="off"
@@ -360,11 +338,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
           trigger={
             <div className={shared.inputModeContainer}>
               <FilterLabel label={activeFilterKey.label} />
-              <button
-                type="button"
-                onClick={toggleSelectDropdown}
-                className={shared.selectTrigger}
-              >
+              <button type="button" onClick={toggleSelectDropdown} className={shared.selectTrigger}>
                 {activeFilterKey.placeholder || 'Select option...'}
               </button>
             </div>
@@ -373,7 +347,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
         >
           {availableOptions && availableOptions.length > 0 && (
             <div className={shared.dropdownList}>
-              {availableOptions.map(option => (
+              {availableOptions.map((option) => (
                 <button
                   key={option.value}
                   type="button"
@@ -396,11 +370,7 @@ const FilterSearchInput: React.FC<FilterSearchInputProps> = ({
           trigger={
             <div className={shared.inputModeContainer}>
               <FilterLabel label={activeFilterKey.label} />
-              <button
-                type="button"
-                onClick={toggleDatePicker}
-                className={shared.selectTrigger}
-              >
+              <button type="button" onClick={toggleDatePicker} className={shared.selectTrigger}>
                 {dateRange?.from || dateRange?.to
                   ? formatDateRangeDisplay(dateRange.from, dateRange.to)
                   : activeFilterKey.placeholder || 'Select date range...'}

@@ -1,8 +1,4 @@
-import type {
-  RouteRegistry,
-  TabInfo,
-  VirtualRoute,
-} from '../../../types/routing';
+import type { RouteRegistry, TabInfo, VirtualRoute } from '../../../types/routing';
 
 /**
  * 탭별 네비게이션 히스토리 엔트리

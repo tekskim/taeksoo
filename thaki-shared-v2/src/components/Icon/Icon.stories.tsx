@@ -76,14 +76,7 @@ const VARIANTS: Array<{ name: IconProps['variant']; dark?: boolean }> = [
 ];
 
 const SIZES: Array<IconProps['size']> = ['xs', 'sm', 'md', 'lg', 'xl', 48];
-const WEIGHTS: IconWeight[] = [
-  'thin',
-  'light',
-  'regular',
-  'bold',
-  'fill',
-  'duotone',
-];
+const WEIGHTS: IconWeight[] = ['thin', 'light', 'regular', 'bold', 'fill', 'duotone'];
 
 export const Default: Story = {
   render: () => (
@@ -124,14 +117,12 @@ export const Default: Story = {
       <div style={s.section}>
         <div style={s.title}>Size</div>
         <div style={s.row}>
-          {SIZES.map(size => (
+          {SIZES.map((size) => (
             <div key={String(size)} style={s.cell}>
               <Icon size={size}>
                 <IconHome />
               </Icon>
-              <div style={s.label}>
-                {typeof size === 'number' ? `${size}px` : size}
-              </div>
+              <div style={s.label}>{typeof size === 'number' ? `${size}px` : size}</div>
             </div>
           ))}
         </div>
@@ -141,7 +132,7 @@ export const Default: Story = {
       <div style={s.section}>
         <div style={s.title}>Weight</div>
         <div style={s.row}>
-          {WEIGHTS.map(weight => (
+          {WEIGHTS.map((weight) => (
             <div key={weight} style={s.cell}>
               <Icon variant="primary" weight={weight} size="xl">
                 <IconHome />

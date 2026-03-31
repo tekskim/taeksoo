@@ -195,9 +195,11 @@ export function CreateNamespacePage() {
   // Section states for summary
   const getSectionStates = (): Record<NamespaceSectionStep, WizardSectionState> => {
     return {
-      'basic-info': namespaceName ? 'done' : 'active',
-      'pod-security': enforceEnabled || auditEnabled || warnEnabled ? 'done' : 'pending',
-      'labels-annotations': labels.length > 0 || annotations.length > 0 ? 'done' : 'pending',
+      // Namespace IS the resource being named; no namespace field, name has no default → 'pre' when empty
+      'basic-info': namespaceName.trim() ? 'done' : 'pre',
+      // pod-security, labels-annotations are optional → always done
+      'pod-security': 'done',
+      'labels-annotations': 'done',
     };
   };
 

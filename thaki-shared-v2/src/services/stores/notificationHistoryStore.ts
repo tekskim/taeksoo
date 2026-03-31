@@ -30,9 +30,7 @@ interface NotificationHistoryStore {
   /** Array of all notification history items */
   notifications: NotificationHistoryItem[];
   /** Add a new notification to history */
-  addNotification: (
-    notification: Omit<NotificationHistoryItem, 'id' | 'timestamp'>
-  ) => void;
+  addNotification: (notification: Omit<NotificationHistoryItem, 'id' | 'timestamp'>) => void;
   /** Remove a notification by ID */
   removeNotification: (id: string) => void;
   /** Clear all notifications */
@@ -49,47 +47,40 @@ type NotificationHistoryStoreApi = StoreApi<NotificationHistoryStore>;
  * @returns Notification history store
  */
 const createNotificationHistoryStore = (): NotificationHistoryStoreApi => {
-  const notificationHistoryStore: NotificationHistoryStoreApi =
-    create<NotificationHistoryStore>()(
-      subscribeWithSelector((set, get) => ({
-        notifications: [],
+  const notificationHistoryStore: NotificationHistoryStoreApi = create<NotificationHistoryStore>()(
+    subscribeWithSelector((set, get) => ({
+      notifications: [],
 
-        addNotification: notification => {
-          const newNotification: NotificationHistoryItem = {
-            ...notification,
-            id: `notification-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-            timestamp: new Date(),
-          };
+      addNotification: (notification) => {
+        const newNotification: NotificationHistoryItem = {
+          ...notification,
+          id: `notification-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+          timestamp: new Date(),
+        };
 
-          set(state => ({
-            notifications: [newNotification, ...state.notifications],
-          }));
-        },
+        set((state) => ({
+          notifications: [newNotification, ...state.notifications],
+        }));
+      },
 
-        removeNotification: (id: string) => {
-          set(state => ({
-            notifications: state.notifications.filter(
-              notification => notification.id !== id
-            ),
-          }));
-        },
+      removeNotification: (id: string) => {
+        set((state) => ({
+          notifications: state.notifications.filter((notification) => notification.id !== id),
+        }));
+      },
 
-        clearAll: () => {
-          set({ notifications: [] });
-        },
+      clearAll: () => {
+        set({ notifications: [] });
+      },
 
-        getUnreadCount: () => {
-          return get().notifications.length;
-        },
-      }))
-    );
+      getUnreadCount: () => {
+        return get().notifications.length;
+      },
+    }))
+  );
 
   return notificationHistoryStore;
 };
 
 export default createNotificationHistoryStore;
-export type {
-  NotificationHistoryItem,
-  NotificationHistoryStore,
-  NotificationHistoryStoreApi,
-};
+export type { NotificationHistoryItem, NotificationHistoryStore, NotificationHistoryStoreApi };

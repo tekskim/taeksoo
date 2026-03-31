@@ -14,10 +14,7 @@ export {
 } from './useDragAndDrop';
 export { default as useOverlay } from './useOverlay';
 export { default as createUseSyncBreadcrumbTitle } from './useSyncBreadcrumbTitle';
-export {
-  default as createUseTabQuery,
-  type TabQueryOptions,
-} from './useTabQuery';
+export { default as createUseTabQuery, type TabQueryOptions } from './useTabQuery';
 export {
   useUnsavedChangesGuard,
   type UseUnsavedChangesGuardOptions,

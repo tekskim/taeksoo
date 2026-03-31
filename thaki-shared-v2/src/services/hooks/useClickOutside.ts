@@ -13,11 +13,7 @@ const useClickOutside = <T extends HTMLElement>(
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
-      if (
-        enabled &&
-        ref.current &&
-        !ref.current.contains(event.target as Node)
-      ) {
+      if (enabled && ref.current && !ref.current.contains(event.target as Node)) {
         onClickOutside(event);
       }
     },

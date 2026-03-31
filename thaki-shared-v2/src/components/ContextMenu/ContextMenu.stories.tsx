@@ -73,19 +73,12 @@ export const Default: Story = {
       gap={8}
       trigger={({ toggle }) => <Button onClick={toggle}>사용자 메뉴</Button>}
     >
-      <ContextMenu.Item action={() => console.log('프로필 보기')}>
-        프로필 보기
-      </ContextMenu.Item>
+      <ContextMenu.Item action={() => console.log('프로필 보기')}>프로필 보기</ContextMenu.Item>
       <ContextMenu.SubItems label={'설정'} subContextMenuDirection="right-top">
-        <ContextMenu.Item
-          action={() => console.log('계정 설정')}
-          preventCloseAfterAction
-        >
+        <ContextMenu.Item action={() => console.log('계정 설정')} preventCloseAfterAction>
           계정 설정
         </ContextMenu.Item>
-        <ContextMenu.Item action={() => console.log('알림 설정')}>
-          알림 설정
-        </ContextMenu.Item>
+        <ContextMenu.Item action={() => console.log('알림 설정')}>알림 설정</ContextMenu.Item>
         <ContextMenu.SubItems label={'고급 설정'}>
           <ContextMenu.Item action={() => console.log('계정 삭제')} danger>
             계정 삭제
@@ -97,9 +90,7 @@ export const Default: Story = {
             데이터 내보내기
           </ContextMenu.Item>
         </ContextMenu.SubItems>
-        <ContextMenu.Item action={() => console.log('도움말')}>
-          도움말
-        </ContextMenu.Item>
+        <ContextMenu.Item action={() => console.log('도움말')}>도움말</ContextMenu.Item>
       </ContextMenu.SubItems>
     </ContextMenu.Root>
   ),
@@ -111,7 +102,7 @@ export const AllDirections: Story = {
     direction: 'bottom',
     gap: 8,
   },
-  render: args => (
+  render: (args) => (
     <div>
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
         <ContextMenu.Root
@@ -126,13 +117,9 @@ export const AllDirections: Story = {
           <ContextMenu.Root
             direction="top-start"
             gap={args.gap}
-            trigger={({ toggle }) => (
-              <Button onClick={toggle}>Top-Start</Button>
-            )}
+            trigger={({ toggle }) => <Button onClick={toggle}>Top-Start</Button>}
           >
-            <div style={{ padding: '12px', minWidth: '150px' }}>
-              Top-Start 방향
-            </div>
+            <div style={{ padding: '12px', minWidth: '150px' }}>Top-Start 방향</div>
           </ContextMenu.Root>
 
           <ContextMenu.Root
@@ -148,9 +135,7 @@ export const AllDirections: Story = {
             gap={args.gap}
             trigger={({ toggle }) => <Button onClick={toggle}>Top-End</Button>}
           >
-            <div style={{ padding: '12px', minWidth: '150px' }}>
-              Top-End 방향
-            </div>
+            <div style={{ padding: '12px', minWidth: '150px' }}>Top-End 방향</div>
           </ContextMenu.Root>
         </div>
 
@@ -167,13 +152,9 @@ export const AllDirections: Story = {
         <ContextMenu.Root
           direction="bottom-start"
           gap={args.gap}
-          trigger={({ toggle }) => (
-            <Button onClick={toggle}>Bottom-Start</Button>
-          )}
+          trigger={({ toggle }) => <Button onClick={toggle}>Bottom-Start</Button>}
         >
-          <div style={{ padding: '12px', minWidth: '150px' }}>
-            Bottom-Start 방향
-          </div>
+          <div style={{ padding: '12px', minWidth: '150px' }}>Bottom-Start 방향</div>
         </ContextMenu.Root>
 
         <ContextMenu.Root
@@ -189,9 +170,7 @@ export const AllDirections: Story = {
           gap={args.gap}
           trigger={({ toggle }) => <Button onClick={toggle}>Bottom-End</Button>}
         >
-          <div style={{ padding: '12px', minWidth: '150px' }}>
-            Bottom-End 방향
-          </div>
+          <div style={{ padding: '12px', minWidth: '150px' }}>Bottom-End 방향</div>
         </ContextMenu.Root>
       </div>
     </div>

@@ -1,10 +1,4 @@
-import React, {
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { cn } from '../../services/utils/cn';
 
 import { ErrorBoundary } from '../ErrorBoundary';
@@ -55,9 +49,7 @@ const CardList = <T,>({
   numbersOfSkeleton = 5,
   skeletonUI = null,
   emptyUI = <div aria-label="데이터가 없습니다" />,
-  errorCardUI = (
-    <div className={cn(cardErrorStyles)} aria-label="오류가 발생했습니다" />
-  ),
+  errorCardUI = <div className={cn(cardErrorStyles)} aria-label="오류가 발생했습니다" />,
   children,
 }: Props<T>) => {
   /** 카드 리스트의 상태 */
@@ -95,10 +87,7 @@ const CardList = <T,>({
   /** 카드 리스트 렌더링 함수 */
   const renderContentCards = useCallback(() => {
     return list!.map((item, index) => (
-      <ErrorBoundary
-        key={(item as { id: string })?.id ?? index}
-        fallback={errorCardUI}
-      >
+      <ErrorBoundary key={(item as { id: string })?.id ?? index} fallback={errorCardUI}>
         <div className={cn(cardStyles)}>{children(item, index)}</div>
       </ErrorBoundary>
     ));

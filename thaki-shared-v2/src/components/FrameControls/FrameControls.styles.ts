@@ -1,7 +1,6 @@
 import { cva } from 'class-variance-authority';
 
-export const windowControlsStyles =
-  'flex items-center gap-xs select-none flex-shrink-0 pr-2';
+export const windowControlsStyles = 'flex items-center gap-xs select-none flex-shrink-0 pr-2';
 
 export const controlButtonStyles = cva(
   [

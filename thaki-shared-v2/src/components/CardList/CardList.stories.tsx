@@ -141,7 +141,7 @@ const Skeleton = () => {
  * 일반적인 사용 예시입니다.
  */
 const Default: Story = {
-  render: args => {
+  render: (args) => {
     return (
       <main style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <CardList
@@ -152,11 +152,7 @@ const Default: Story = {
               카드 리스트 전역 에러가 발생했습니다.
             </div>
           }
-          emptyUI={
-            <div style={{ color: 'var(--semantic-color-info)' }}>
-              데이터가 없습니다.
-            </div>
-          }
+          emptyUI={<div style={{ color: 'var(--semantic-color-info)' }}>데이터가 없습니다.</div>}
           skeletonUI={<Skeleton />}
         >
           {(item, _index) => {
@@ -178,7 +174,7 @@ const Default: Story = {
  * 스켈레톤 요소를 주입하지 않으면서, 데이터 페칭 시의 리스트 사용 예시입니다.
  */
 const CardListWithSkeletonStyle: Story = {
-  render: _args => {
+  render: (_args) => {
     const [list, setList] = useState<typeof TEST_LIST | null>(null);
 
     const [isLoading, setIsLoading] = useState(true);
@@ -206,11 +202,7 @@ const CardListWithSkeletonStyle: Story = {
               카드 리스트 전역 에러가 발생했습니다.
             </div>
           }
-          emptyUI={
-            <div style={{ color: 'var(--semantic-color-info)' }}>
-              데이터가 없습니다.
-            </div>
-          }
+          emptyUI={<div style={{ color: 'var(--semantic-color-info)' }}>데이터가 없습니다.</div>}
           numbersOfSkeleton={5}
           // skeletonUI={<Skeleton />} <-- 이렇게 주입 안해도 아래처럼 isLoading 같은 플래그값으로 스켈레톤 스타일 설정 가능합니다.
         >

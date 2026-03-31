@@ -9,10 +9,7 @@ import {
   CloseSmallIcon,
   InfoIcon,
 } from '../Icon/svg/wrapped';
-import {
-  inlineMessageStyles,
-  inlineMessageVariants,
-} from './InlineMessage.styles';
+import { inlineMessageStyles, inlineMessageVariants } from './InlineMessage.styles';
 
 /**
  * InlineMessage 타입
@@ -76,34 +73,15 @@ const InlineMessage = ({
 
     switch (type) {
       case 'success':
-        return (
-          <CheckCircleIcon
-            size={iconSize}
-            color="var(--semantic-color-success)"
-          />
-        );
+        return <CheckCircleIcon size={iconSize} color="var(--semantic-color-success)" />;
       case 'info':
-        return (
-          <InfoIcon size={iconSize} color="var(--semantic-color-info)" />
-        );
+        return <InfoIcon size={iconSize} color="var(--semantic-color-info)" />;
       case 'warning':
-        return (
-          <AlertIcon
-            size={iconSize}
-            color="var(--semantic-color-warning)"
-          />
-        );
+        return <AlertIcon size={iconSize} color="var(--semantic-color-warning)" />;
       case 'error':
-        return (
-          <AlertCircleIcon
-            size={iconSize}
-            color="var(--semantic-color-error)"
-          />
-        );
+        return <AlertCircleIcon size={iconSize} color="var(--semantic-color-error)" />;
       default:
-        return (
-          <InfoIcon size={iconSize} color="var(--semantic-color-info)" />
-        );
+        return <InfoIcon size={iconSize} color="var(--semantic-color-info)" />;
     }
   };
 
@@ -130,9 +108,7 @@ const InlineMessage = ({
             className={inlineMessageStyles.button}
             onClick={toggleExpand}
             aria-expanded={isExpanded}
-            aria-label={
-              isExpanded ? 'Collapse message details' : 'Expand message details'
-            }
+            aria-label={isExpanded ? 'Collapse message details' : 'Expand message details'}
           >
             <div className={inlineMessageStyles.expandableContent}>
               {getIcon()}

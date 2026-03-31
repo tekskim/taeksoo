@@ -5,4 +5,3 @@ import { createContext } from 'react';
  * 각 탭 내부의 컴포넌트가 자신의 탭 ID를 알 수 있게 합니다.
  */
 export const CurrentTabIdContext = createContext<string | null>(null);
-

@@ -87,14 +87,9 @@ const TabItem: React.FC<TabItemProps> = ({
       onDragEnd={onDragEnd}
       onMouseDown={onMouseDown}
     >
-      {isActive && (
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary z-20" />
-      )}
+      {isActive && <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary z-20" />}
       {title ? (
-        <Typography.Text
-          variant="detail"
-          className={cn(tabTitleStyles({ active: isActive }))}
-        >
+        <Typography.Text variant="detail" className={cn(tabTitleStyles({ active: isActive }))}>
           {title}
         </Typography.Text>
       ) : (

@@ -16,9 +16,7 @@ const OptionPlaceholder = (_props: BasicOptionProps): null => null;
 OptionPlaceholder.displayName = 'Dropdown.Option';
 
 /** Type guard to check if a component is OptionPlaceholder */
-export const isOptionPlaceholder = (
-  type: unknown
-): type is typeof OptionPlaceholder => {
+export const isOptionPlaceholder = (type: unknown): type is typeof OptionPlaceholder => {
   return (
     typeof type === 'function' &&
     (type as { displayName?: string }).displayName === 'Dropdown.Option'
@@ -43,16 +41,7 @@ export const isOptionPlaceholder = (
  * @param onClick - 옵션 클릭 시 호출되는 콜백 함수
  * @returns 드롭다운 옵션 컴포넌트
  */
-const Option = ({
-  id,
-  index,
-  value,
-  label,
-  selected,
-  focused,
-  disabled,
-  onClick,
-}: OptionProps) => {
+const Option = ({ id, index, value, label, selected, focused, disabled, onClick }: OptionProps) => {
   return (
     <li
       id={id}
@@ -63,7 +52,7 @@ const Option = ({
         focused && 'focused',
         disabled && 'disabled'
       )}
-      onClick={e => {
+      onClick={(e) => {
         if (disabled) {
           e.preventDefault();
           e.stopPropagation();

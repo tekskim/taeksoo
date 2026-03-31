@@ -77,7 +77,7 @@ export const Default: Story = {
     content: '이것은 툴팁 내용입니다',
     direction: 'top',
   },
-  render: args => (
+  render: (args) => (
     <Tooltip content={args.content} direction={args.direction}>
       <Button variant="primary">마우스를 올려보세요</Button>
     </Tooltip>

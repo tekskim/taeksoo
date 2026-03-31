@@ -1,9 +1,9 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from 'react';
 
-import type { TcAccordionProps } from "./TcAccordion.types";
-import { useTcAccordionContext } from "./TcAccordion.context";
-import { TcAccordionGroup } from "./TcAccordionGroup";
-import { cn } from "../../services";
+import type { TcAccordionProps } from './TcAccordion.types';
+import { useTcAccordionContext } from './TcAccordion.context';
+import { TcAccordionGroup } from './TcAccordionGroup';
+import { cn } from '../../services';
 import {
   tcAccordionClosedClassnames,
   tcAccordionContentClassnames,
@@ -13,7 +13,7 @@ import {
   tcAccordionHeaderClassnames,
   tcAccordionItemClassnames,
   tcAccordionOpenClassnames,
-} from "./TcAccordion.styles";
+} from './TcAccordion.styles';
 
 /**
  * TcAccordion의 기본 구현 컴포넌트.
@@ -36,10 +36,10 @@ const TcAccordionBase = ({
   const { isGrouped, multiple, openedAccordionIds, setOpenedAccordionIds } =
     useTcAccordionContext();
 
-  if (process.env.NODE_ENV !== "production" && isGrouped && !id) {
+  if (process.env.NODE_ENV !== 'production' && isGrouped && !id) {
     console.error(
-      "[TcAccordion] TcAccordionGroup 안에서 사용할 때는 id prop이 필요합니다.\n" +
-        '예시: <TcAccordion id="accordion-1" ...>',
+      '[TcAccordion] TcAccordionGroup 안에서 사용할 때는 id prop이 필요합니다.\n' +
+        '예시: <TcAccordion id="accordion-1" ...>'
     );
   }
 
@@ -62,9 +62,7 @@ const TcAccordionBase = ({
     }
 
     if (isGrouped && id && !multiple) {
-      setOpenedAccordionIds((prev) =>
-        prev.has(id) ? new Set() : new Set([id]),
-      );
+      setOpenedAccordionIds((prev) => (prev.has(id) ? new Set() : new Set([id])));
     } else {
       setIsOpen(!isOpen);
     }
@@ -82,14 +80,14 @@ const TcAccordionBase = ({
       return;
     }
 
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       event.preventDefault();
       handleToggle();
     }
   };
 
   useEffect(() => {
-    if (!isMounted.current || typeof controlledIsOpen !== "boolean") {
+    if (!isMounted.current || typeof controlledIsOpen !== 'boolean') {
       isMounted.current = true;
       return;
     }
@@ -148,7 +146,7 @@ const TcAccordionBase = ({
         role="button"
         tabIndex={disabled ? -1 : 0}
         className={cn(tcAccordionHeaderClassnames, {
-          "cursor-not-allowed": disabled,
+          'cursor-not-allowed': disabled,
         })}
         onClick={handleToggle}
         onKeyDown={handleHeaderKeyDown}
@@ -160,16 +158,14 @@ const TcAccordionBase = ({
         role="region"
         className={cn(
           tcAccordionContentClassnames,
-          isOpen ? tcAccordionOpenClassnames : tcAccordionClosedClassnames,
+          isOpen ? tcAccordionOpenClassnames : tcAccordionClosedClassnames
         )}
       >
         <div className="overflow-hidden">
           <div className={cn(tcAccordionDividerWrapperClassnames)}>
             <div className={cn(tcAccordionDividerClassnames)} />
           </div>
-          <div className={cn(tcAccordionContentPaddingClassnames)}>
-            {children}
-          </div>
+          <div className={cn(tcAccordionContentPaddingClassnames)}>{children}</div>
         </div>
       </div>
     </div>

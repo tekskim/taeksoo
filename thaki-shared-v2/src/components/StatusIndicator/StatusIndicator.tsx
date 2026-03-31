@@ -51,12 +51,7 @@ export type StatusVariant =
  * - muted: gray (inactive/paused states)
  * - info: blue (building/progress states)
  */
-export type StatusColorScheme =
-  | 'success'
-  | 'danger'
-  | 'warning'
-  | 'muted'
-  | 'info';
+export type StatusColorScheme = 'success' | 'danger' | 'warning' | 'muted' | 'info';
 
 export type StatusIndicatorProps = {
   /**
@@ -177,16 +172,10 @@ export function StatusIndicator({
 }: StatusIndicatorProps): React.ReactElement {
   // Resolve icon: customIcon > variant's icon > default building icon
   const resolvedIcon =
-    customIcon ??
-    (variant ? (
-      variantToIcon[variant]
-    ) : (
-      <BuildingIcon color="white" size="sm" />
-    ));
+    customIcon ?? (variant ? variantToIcon[variant] : <BuildingIcon color="white" size="sm" />);
 
   // Resolve color: colorScheme > variant's color > default muted
-  const resolvedColorScheme =
-    colorScheme ?? (variant ? variantToColorScheme[variant] : 'muted');
+  const resolvedColorScheme = colorScheme ?? (variant ? variantToColorScheme[variant] : 'muted');
 
   const isIconOnly = layout === 'iconOnly' || !label;
   const showLabel = layout === 'leftIcon' && Boolean(label);

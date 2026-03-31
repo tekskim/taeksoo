@@ -42,19 +42,14 @@ const resolveCssVar = (value: string, root: CSSStyleDeclaration): string => {
   return resolved || value;
 };
 
-export const resolveTerminalTheme = (
-  theme: TerminalTheme = DEFAULT_THEME
-): TerminalTheme => {
+export const resolveTerminalTheme = (theme: TerminalTheme = DEFAULT_THEME): TerminalTheme => {
   if (typeof window === 'undefined') {
     return theme;
   }
 
   const root = getComputedStyle(document.documentElement);
   return Object.fromEntries(
-    Object.entries(theme).map(([key, value]) => [
-      key,
-      resolveCssVar(value, root),
-    ])
+    Object.entries(theme).map(([key, value]) => [key, resolveCssVar(value, root)])
   ) as TerminalTheme;
 };
 

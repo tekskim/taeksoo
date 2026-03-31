@@ -83,10 +83,7 @@ const ResourceActionModal = ({
             {infoItems.map((item, index) => {
               const isLast = index === infoItems.length - 1;
               return (
-                <div
-                  key={index}
-                  className="flex flex-col items-center gap-sm w-full"
-                >
+                <div key={index} className="flex flex-col items-center gap-sm w-full">
                   <InfoContainer
                     label={item.label}
                     values={item.values}
@@ -116,12 +113,7 @@ const ResourceActionModal = ({
           </Layout.VStack>
         )}
         {children}
-        {content && (
-          <InlineMessage
-            type={content.type ?? 'error'}
-            message={content.message}
-          />
-        )}
+        {content && <InlineMessage type={content.type ?? 'error'} message={content.message} />}
       </Layout.VStack>
     </ActionModal>
   );

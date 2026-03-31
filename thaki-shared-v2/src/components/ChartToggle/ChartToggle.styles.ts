@@ -56,4 +56,3 @@ export const chartToggleKnobStyles = ({ isActive }: { isActive: boolean }) =>
  * 토글 라벨 스타일
  */
 export const chartToggleLabelStyles = cn('');
-

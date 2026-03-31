@@ -1,8 +1,4 @@
-type TokenType =
-  | 'access_token'
-  | 'refresh_token_ref'
-  | 'scoped_token'
-  | 'project_id';
+type TokenType = 'access_token' | 'refresh_token_ref' | 'scoped_token' | 'project_id';
 
 const getFromStorage = (tokenType: TokenType) => {
   return localStorage.getItem(tokenType);
@@ -50,16 +46,13 @@ const getComputeAuthHeadersFromStorage = () => {
 const LOGOUT_INTENT_KEY = 'platform:logout-intent';
 
 /** 로그아웃 의도 플래그 설정 — LoginPage 자동 리다이렉트 방지용 */
-const setLogoutIntent = () =>
-  sessionStorage.setItem(LOGOUT_INTENT_KEY, 'true');
+const setLogoutIntent = () => sessionStorage.setItem(LOGOUT_INTENT_KEY, 'true');
 
 /** 로그아웃 의도 플래그 확인 */
-const hasLogoutIntent = () =>
-  sessionStorage.getItem(LOGOUT_INTENT_KEY) === 'true';
+const hasLogoutIntent = () => sessionStorage.getItem(LOGOUT_INTENT_KEY) === 'true';
 
 /** 로그아웃 의도 플래그 제거 */
-const clearLogoutIntent = () =>
-  sessionStorage.removeItem(LOGOUT_INTENT_KEY);
+const clearLogoutIntent = () => sessionStorage.removeItem(LOGOUT_INTENT_KEY);
 
 export {
   clearLogoutIntent,

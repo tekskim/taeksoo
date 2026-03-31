@@ -27,8 +27,7 @@ import type {
 } from './types';
 
 /** 히스토리 포함 세션 타입 */
-interface TabSessionWithHistory<TComponentName = string>
-  extends TabSession<TComponentName> {
+interface TabSessionWithHistory<TComponentName = string> extends TabSession<TComponentName> {
   tabHistories?: Record<string, TabHistoryState>;
 }
 
@@ -55,8 +54,8 @@ function createTabReducer<TComponentName = string>() {
 
       case 'CLOSE_TAB': {
         const tabId = action.payload;
-        const currentIndex = state.tabs.findIndex(t => t.id === tabId);
-        const remainingTabs = state.tabs.filter(t => t.id !== tabId);
+        const currentIndex = state.tabs.findIndex((t) => t.id === tabId);
+        const remainingTabs = state.tabs.filter((t) => t.id !== tabId);
 
         // 탭이 모두 제거되면 빈 상태 반환 (onAllTabsClosed가 별도 호출됨)
         if (remainingTabs.length === 0) {
@@ -83,7 +82,7 @@ function createTabReducer<TComponentName = string>() {
       case 'SWITCH_TAB': {
         const tabId = action.payload;
         // 탭 존재 여부 확인
-        if (!state.tabs.find(t => t.id === tabId)) {
+        if (!state.tabs.find((t) => t.id === tabId)) {
           return state;
         }
 
@@ -94,11 +93,10 @@ function createTabReducer<TComponentName = string>() {
       }
 
       case 'UPDATE_TAB_PATH': {
-        const { tabId, path, title, componentName, params, query } =
-          action.payload;
+        const { tabId, path, title, componentName, params, query } = action.payload;
         let hasChanged = false;
 
-        const updatedTabs = state.tabs.map(tab => {
+        const updatedTabs = state.tabs.map((tab) => {
           // 대상 탭이 아니면 그대로 반환
           if (tab.id !== tabId) return tab;
 
@@ -137,7 +135,7 @@ function createTabReducer<TComponentName = string>() {
         const { tabId, query } = action.payload;
         let hasChanged = false;
 
-        const updatedTabs = state.tabs.map(tab => {
+        const updatedTabs = state.tabs.map((tab) => {
           // 대상 탭이 아니면 그대로 반환
           if (tab.id !== tabId) return tab;
 
@@ -164,9 +162,7 @@ function createTabReducer<TComponentName = string>() {
           // 5. 새로운 virtualPath 생성
           // 쿼리 있으면: /images?tab=private&filter=active
           // 쿼리 없으면: /images
-          const newPath = queryString
-            ? `${pathWithoutQuery}?${queryString}`
-            : pathWithoutQuery;
+          const newPath = queryString ? `${pathWithoutQuery}?${queryString}` : pathWithoutQuery;
 
           hasChanged = true;
           return {
@@ -195,7 +191,7 @@ function createTabReducer<TComponentName = string>() {
         const { tabId, title } = action.payload;
         let hasChanged = false;
 
-        const updatedTabs = state.tabs.map(tab => {
+        const updatedTabs = state.tabs.map((tab) => {
           if (tab.id !== tabId) return tab;
 
           // 제목이 동일하면 변경 없음
@@ -217,16 +213,14 @@ function createTabReducer<TComponentName = string>() {
         const { tabId, ancestorNames, loadingAncestors } = action.payload;
         let hasChanged = false;
 
-        const updatedTabs = state.tabs.map(tab => {
+        const updatedTabs = state.tabs.map((tab) => {
           if (tab.id !== tabId) return tab;
 
           // 변경 여부 확인
           const isSameAncestorNames =
-            JSON.stringify(tab.ancestorNames) ===
-            JSON.stringify(ancestorNames);
+            JSON.stringify(tab.ancestorNames) === JSON.stringify(ancestorNames);
           const isSameLoadingAncestors =
-            JSON.stringify(tab.loadingAncestors) ===
-            JSON.stringify(loadingAncestors);
+            JSON.stringify(tab.loadingAncestors) === JSON.stringify(loadingAncestors);
 
           if (isSameAncestorNames && isSameLoadingAncestors) {
             return tab;
@@ -255,9 +249,7 @@ function createTabReducer<TComponentName = string>() {
  * 가상 탭 시스템을 생성합니다. 각 앱은 자신의 라우트와 컴포넌트 타입을 주입하여 사용합니다.
  * 브라우저 탭처럼 동작하는 가상 탭을 관리하며, sessionStorage로 상태를 영속화합니다.
  */
-const createTabProvider = <TComponentName = string,>(
-  config: TabProviderConfig<TComponentName>
-) => {
+const createTabProvider = <TComponentName = string,>(config: TabProviderConfig<TComponentName>) => {
   const {
     routes,
     sessionKey = 'app-tab-session',
@@ -267,8 +259,7 @@ const createTabProvider = <TComponentName = string,>(
     maxHistorySize = DEFAULT_MAX_HISTORY_SIZE,
   } = config;
 
-  const TabManagerContext =
-    createContext<TabManagerContextType<TComponentName> | null>(null);
+  const TabManagerContext = createContext<TabManagerContextType<TComponentName> | null>(null);
 
   const tabReducer = createTabReducer<TComponentName>();
 
@@ -283,9 +274,7 @@ const createTabProvider = <TComponentName = string,>(
     const [isInitialized, setIsInitialized] = useState(false);
 
     // 탭별 히스토리 상태 관리
-    const [tabHistories, setTabHistories] = useState<
-      Map<string, TabHistoryState>
-    >(new Map());
+    const [tabHistories, setTabHistories] = useState<Map<string, TabHistoryState>>(new Map());
 
     // goBack/goForward 중인지 추적 (히스토리 중복 push 방지)
     const isNavigatingRef = useRef(false);
@@ -321,7 +310,7 @@ const createTabProvider = <TComponentName = string,>(
         params: {},
         query: {},
       };
-      setTabHistories(prev => {
+      setTabHistories((prev) => {
         const next = new Map(prev);
         next.set(tabId, { stack: [initialHistoryEntry], pointer: 0 });
         return next;
@@ -339,8 +328,7 @@ const createTabProvider = <TComponentName = string,>(
       if (!savedSession) return false;
 
       try {
-        const session: TabSessionWithHistory<TComponentName> =
-          JSON.parse(savedSession);
+        const session: TabSessionWithHistory<TComponentName> = JSON.parse(savedSession);
         dispatch({
           type: 'SET_TABS',
           payload: { tabs: session.tabs, activeTabId: session.activeTabId },
@@ -367,7 +355,7 @@ const createTabProvider = <TComponentName = string,>(
       if (tabs.length === 0) return;
 
       // 현재 존재하는 탭 ID Set 생성
-      const existingTabIds = new Set(tabs.map(t => t.id));
+      const existingTabIds = new Set(tabs.map((t) => t.id));
 
       // 히스토리를 직렬화 가능한 형태로 변환 (현재 존재하는 탭만)
       const tabHistoriesObj: Record<string, TabHistoryState> = {};
@@ -391,7 +379,7 @@ const createTabProvider = <TComponentName = string,>(
         return '';
       }
 
-      const activeTab = tabs.find(tab => tab.id === activeTabId) ?? tabs[0];
+      const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
       return activeTab?.virtualPath ?? '';
     }, [tabs, activeTabId]);
 
@@ -470,10 +458,7 @@ const createTabProvider = <TComponentName = string,>(
         const [pathWithoutQuery, rawQueryString] = route.path.split('?');
 
         // virtualPath에 포함된 query를 기본으로 하고, 명시적으로 전달된 query 인자를 우선 적용
-        const queryFromPath = parseQueryString(rawQueryString) as Record<
-          string,
-          unknown
-        >;
+        const queryFromPath = parseQueryString(rawQueryString) as Record<string, unknown>;
         const mergedQuery: Record<string, unknown> = {
           ...queryFromPath,
           ...(query || {}),
@@ -481,15 +466,11 @@ const createTabProvider = <TComponentName = string,>(
 
         // 라우트 매칭/params 추출은 반드시 "query 제거된 path" 기준으로 수행
         const matchedRoute =
-          routes[pathWithoutQuery] ||
-          matchVirtualRoute(pathWithoutQuery, routes);
+          routes[pathWithoutQuery] || matchVirtualRoute(pathWithoutQuery, routes);
 
         const extractedParams: Record<string, unknown> =
           matchedRoute && matchedRoute.path.includes(':')
-            ? (extractParams(pathWithoutQuery, matchedRoute.path) as Record<
-                string,
-                unknown
-              >)
+            ? (extractParams(pathWithoutQuery, matchedRoute.path) as Record<string, unknown>)
             : {};
 
         // 명시적으로 전달된 params 인자를 우선 적용 (override)
@@ -505,19 +486,14 @@ const createTabProvider = <TComponentName = string,>(
         if (pathWithoutQuery.includes(':')) {
           resolvedPath = pathWithoutQuery;
           Object.entries(mergedParams).forEach(([key, value]) => {
-            resolvedPath = resolvedPath.replace(
-              `:${key}`,
-              encodeURIComponent(String(value ?? ''))
-            );
+            resolvedPath = resolvedPath.replace(`:${key}`, encodeURIComponent(String(value ?? '')));
           });
         } else {
           resolvedPath = pathWithoutQuery;
         }
 
         const queryString = serializeQuery(mergedQuery);
-        const fullPath = queryString
-          ? `${resolvedPath}?${queryString}`
-          : resolvedPath;
+        const fullPath = queryString ? `${resolvedPath}?${queryString}` : resolvedPath;
 
         const newTab: TabInfo<TComponentName> = {
           id: tabId,
@@ -536,7 +512,7 @@ const createTabProvider = <TComponentName = string,>(
           params: mergedParams,
           query: mergedQuery,
         };
-        setTabHistories(prev => {
+        setTabHistories((prev) => {
           const next = new Map(prev);
           next.set(tabId, { stack: [initialHistoryEntry], pointer: 0 });
           return next;
@@ -556,7 +532,7 @@ const createTabProvider = <TComponentName = string,>(
      */
     const closeTab = useCallback((tabId: string): void => {
       // 히스토리 정리
-      setTabHistories(prev => {
+      setTabHistories((prev) => {
         const next = new Map(prev);
         next.delete(tabId);
         return next;
@@ -574,37 +550,34 @@ const createTabProvider = <TComponentName = string,>(
       dispatch({ type: 'SWITCH_TAB', payload: tabId });
     }, []);
 
-    const pushTabHistoryEntry = useCallback(
-      (tabId: string, entry: TabHistoryEntry): void => {
-        // 히스토리 중복 push 방지 (goBack/goForward 중)
-        if (isNavigatingRef.current) return;
+    const pushTabHistoryEntry = useCallback((tabId: string, entry: TabHistoryEntry): void => {
+      // 히스토리 중복 push 방지 (goBack/goForward 중)
+      if (isNavigatingRef.current) return;
 
-        setTabHistories(prev => {
-          const history = prev.get(tabId);
-          if (!history) return prev;
+      setTabHistories((prev) => {
+        const history = prev.get(tabId);
+        if (!history) return prev;
 
-          const currentEntry = history.stack[history.pointer];
-          // 현재 위치와 동일한 경로면 스킵
-          if (currentEntry && currentEntry.path === entry.path) {
-            return prev;
-          }
+        const currentEntry = history.stack[history.pointer];
+        // 현재 위치와 동일한 경로면 스킵
+        if (currentEntry && currentEntry.path === entry.path) {
+          return prev;
+        }
 
-          // 앞으로가기 히스토리 제거 (포인터 앞의 항목들)
-          const newStack = history.stack.slice(history.pointer);
-          newStack.unshift(entry);
+        // 앞으로가기 히스토리 제거 (포인터 앞의 항목들)
+        const newStack = history.stack.slice(history.pointer);
+        newStack.unshift(entry);
 
-          // 최대 크기 제한
-          if (newStack.length > maxHistorySize) {
-            newStack.pop();
-          }
+        // 최대 크기 제한
+        if (newStack.length > maxHistorySize) {
+          newStack.pop();
+        }
 
-          const next = new Map(prev);
-          next.set(tabId, { stack: newStack, pointer: 0 });
-          return next;
-        });
-      },
-      []
-    );
+        const next = new Map(prev);
+        next.set(tabId, { stack: newStack, pointer: 0 });
+        return next;
+      });
+    }, []);
 
     /**
      * 현재 활성 탭의 경로 변경 (탭 내 네비게이션)
@@ -621,15 +594,10 @@ const createTabProvider = <TComponentName = string,>(
 
         // 1. 쿼리 파라미터 파싱
         const [pathWithoutQuery, queryString] = path.split('?');
-        const parsedQuery = parseQueryString(queryString) as Record<
-          string,
-          unknown
-        >;
+        const parsedQuery = parseQueryString(queryString) as Record<string, unknown>;
 
         // 2. 라우트 매칭
-        const route =
-          routes[pathWithoutQuery] ||
-          matchVirtualRoute(pathWithoutQuery, routes);
+        const route = routes[pathWithoutQuery] || matchVirtualRoute(pathWithoutQuery, routes);
 
         if (!route) {
           console.error(`Route not found for path: ${pathWithoutQuery}`);
@@ -661,10 +629,7 @@ const createTabProvider = <TComponentName = string,>(
           // 예: '/instances/:id' → '/instances/123'
           resolvedPath = pathWithoutQuery;
           Object.entries(mergedParams).forEach(([key, value]) => {
-            resolvedPath = resolvedPath.replace(
-              `:${key}`,
-              encodeURIComponent(String(value ?? ''))
-            );
+            resolvedPath = resolvedPath.replace(`:${key}`, encodeURIComponent(String(value ?? '')));
           });
         } else {
           // 입력 path가 이미 실제 경로면 그대로 사용
@@ -716,7 +681,7 @@ const createTabProvider = <TComponentName = string,>(
         if (!activeTabId) return;
 
         // 현재 활성 탭 정보 가져오기
-        const currentTab = tabs.find(t => t.id === activeTabId);
+        const currentTab = tabs.find((t) => t.id === activeTabId);
         if (!currentTab) return;
 
         // 기존 쿼리와 새 쿼리 병합
@@ -730,9 +695,7 @@ const createTabProvider = <TComponentName = string,>(
         // 새로운 경로 생성 (쿼리 포함)
         const pathWithoutQuery = currentTab.virtualPath.split('?')[0];
         const queryString = serializeQuery(mergedQuery);
-        const newPath = queryString
-          ? `${pathWithoutQuery}?${queryString}`
-          : pathWithoutQuery;
+        const newPath = queryString ? `${pathWithoutQuery}?${queryString}` : pathWithoutQuery;
 
         pushTabHistoryEntry(activeTabId, {
           path: newPath,
@@ -753,15 +716,12 @@ const createTabProvider = <TComponentName = string,>(
     /**
      * 탭 순서 변경 (드래그 앤 드롭)
      */
-    const reorderTabs = useCallback(
-      (fromIndex: number, toIndex: number): void => {
-        dispatch({
-          type: 'REORDER_TABS',
-          payload: { fromIndex, toIndex },
-        });
-      },
-      []
-    );
+    const reorderTabs = useCallback((fromIndex: number, toIndex: number): void => {
+      dispatch({
+        type: 'REORDER_TABS',
+        payload: { fromIndex, toIndex },
+      });
+    }, []);
 
     /**
      * 현재 활성 탭의 제목 업데이트 (브레드크럼 동기화용)
@@ -852,7 +812,7 @@ const createTabProvider = <TComponentName = string,>(
       if (!targetEntry) return;
 
       // 히스토리 포인터 업데이트
-      setTabHistories(prev => {
+      setTabHistories((prev) => {
         const next = new Map(prev);
         next.set(activeTabId, { ...history, pointer: newPointer });
         return next;
@@ -895,7 +855,7 @@ const createTabProvider = <TComponentName = string,>(
       if (!targetEntry) return;
 
       // 히스토리 포인터 업데이트
-      setTabHistories(prev => {
+      setTabHistories((prev) => {
         const next = new Map(prev);
         next.set(activeTabId, { ...history, pointer: newPointer });
         return next;
@@ -925,7 +885,7 @@ const createTabProvider = <TComponentName = string,>(
 
     // 현재 활성화된 탭 정보 (useMemo로 캐싱)
     const activeTab = useMemo(
-      () => tabs.find(tab => tab.id === activeTabId) || null,
+      () => tabs.find((tab) => tab.id === activeTabId) || null,
       [tabs, activeTabId]
     );
 

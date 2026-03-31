@@ -86,7 +86,7 @@ const ControlledExample = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Toggle
         checked={isOn}
-        onChange={e => setIsOn(e.target.checked)}
+        onChange={(e) => setIsOn(e.target.checked)}
         checkedLabel="Enabled"
         uncheckedLabel="Disabled"
         name="controlled-toggle"

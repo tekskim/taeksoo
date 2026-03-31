@@ -58,11 +58,7 @@ export interface EmptyUIProps {
  * </EmptyUI>
  * ```
  */
-export const EmptyUI = ({
-  content,
-  className,
-  children,
-}: EmptyUIProps): ReactElement => {
+export const EmptyUI = ({ content, className, children }: EmptyUIProps): ReactElement => {
   return (
     <Layout.VStack
       align="center"
@@ -73,13 +69,9 @@ export const EmptyUI = ({
     >
       {/* 텍스트 영역 - gap 5px = gap-1 (4px) */}
       <div className="flex flex-col items-center gap-1 text-center">
-        <p className="text-sm font-medium leading-5 text-text">
-          {content.title}
-        </p>
+        <p className="text-sm font-medium leading-5 text-text">{content.title}</p>
         {content.description && (
-          <p className="text-xs leading-4 text-text-muted">
-            {content.description}
-          </p>
+          <p className="text-xs leading-4 text-text-muted">{content.description}</p>
         )}
       </div>
       {children}

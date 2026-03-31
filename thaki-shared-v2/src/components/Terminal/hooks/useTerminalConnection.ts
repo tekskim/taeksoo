@@ -391,4 +391,3 @@ export function useTerminalConnection({
     isConnected: connectionStatus === 'connected',
   };
 }
-

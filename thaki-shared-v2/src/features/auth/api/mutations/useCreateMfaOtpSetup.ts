@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import authClient from "../clients/authClient";
+import { useMutation } from '@tanstack/react-query';
+import authClient from '../clients/authClient';
 
 type Response = {
   qrCodeBase64: string;
@@ -7,12 +7,12 @@ type Response = {
   provisioningUri: string;
 };
 
-const URL = "/v1/iam/authn/pre-auth/mfa/totp/setup";
+const URL = '/v1/iam/authn/pre-auth/mfa/totp/setup';
 
 const createMfaOtpSetup = async (xSessionId: string) => {
   const { data } = await authClient.post<Response>(URL, undefined, {
     headers: {
-      "X-Session-ID": xSessionId,
+      'X-Session-ID': xSessionId,
     },
   });
 

@@ -11,11 +11,7 @@ import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 
 import type { TerminalTheme } from '../types';
-import {
-  DEFAULT_TERMINAL_CONFIG,
-  DEFAULT_THEME,
-  resolveTerminalTheme,
-} from '../constants';
+import { DEFAULT_TERMINAL_CONFIG, DEFAULT_THEME, resolveTerminalTheme } from '../constants';
 
 interface UseTerminalInstanceOptions {
   /** 터미널이 마운트될 컨테이너 ref */
@@ -180,15 +176,7 @@ export function useTerminalInstance({
         }
       }
     };
-  }, [
-    isContainerReady,
-    containerRef,
-    cursorBlink,
-    fontSize,
-    fontFamily,
-    theme,
-    debug,
-  ]);
+  }, [isContainerReady, containerRef, cursorBlink, fontSize, fontFamily, theme, debug]);
 
   return {
     terminal,

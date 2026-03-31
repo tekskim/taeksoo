@@ -178,21 +178,13 @@ const renderTree = (node: unknown, path: string[] = []): ReactElement => {
   return (
     <li key={path.join('.') || 'root'}>
       {path.length > 0 && <code>{path[path.length - 1]}</code>}
-      <ul>
-        {Object.entries(node).map(([key, value]) =>
-          renderTree(value, [...path, key])
-        )}
-      </ul>
+      <ul>{Object.entries(node).map(([key, value]) => renderTree(value, [...path, key]))}</ul>
     </li>
   );
 };
 
 const formatValue = (value: unknown): string => {
-  if (
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean'
-  ) {
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
     return String(value);
   }
 
@@ -201,15 +193,13 @@ const formatValue = (value: unknown): string => {
 
 export const TokenStudioShowcase: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>('');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryKey | 'all'>(
-    'all'
-  );
+  const [categoryFilter, setCategoryFilter] = useState<CategoryKey | 'all'>('all');
 
   const fallbackThemeName = docsPayload.themes[0]?.name ?? 'dark';
   const [selectedTheme, setSelectedTheme] = useState<string>(fallbackThemeName);
 
   const currentThemeDoc = useMemo<TokenDocTheme | undefined>(
-    () => docsPayload.themes.find(item => item.name === selectedTheme),
+    () => docsPayload.themes.find((item) => item.name === selectedTheme),
     [selectedTheme]
   );
 
@@ -220,10 +210,9 @@ export const TokenStudioShowcase: React.FC = () => {
       return [];
     }
 
-    return currentThemeDoc.entries.filter(entry => {
+    return currentThemeDoc.entries.filter((entry) => {
       const matchesCategory =
-        categoryFilter === 'all' ||
-        normalizeCategory(entry.category) === categoryFilter;
+        categoryFilter === 'all' || normalizeCategory(entry.category) === categoryFilter;
       const matchesSearch =
         searchTerm.length === 0 ||
         entry.path.toLowerCase().includes(searchTerm) ||
@@ -254,7 +243,7 @@ export const TokenStudioShowcase: React.FC = () => {
   }, [currentThemeDoc]);
 
   const colorEntries = useMemo(
-    () => filteredEntries.filter(entry => (entry.type ?? '').includes('color')),
+    () => filteredEntries.filter((entry) => (entry.type ?? '').includes('color')),
     [filteredEntries]
   );
 
@@ -276,8 +265,8 @@ export const TokenStudioShowcase: React.FC = () => {
       <section style={styles.container}>
         <div style={styles.warning}>
           <strong>Token documentation unavailable.</strong> Run{' '}
-          <code>pnpm --filter @thaki/shared run generate:token-docs</code> after
-          exporting tokens from Figma.
+          <code>pnpm --filter @thaki/shared run generate:token-docs</code> after exporting tokens
+          from Figma.
         </div>
       </section>
     );
@@ -296,12 +285,8 @@ export const TokenStudioShowcase: React.FC = () => {
         <div style={styles.controlsRow}>
           <label style={styles.control}>
             <span style={styles.label}>Theme</span>
-            <select
-              value={selectedTheme}
-              onChange={handleThemeChange}
-              style={styles.select}
-            >
-              {docsPayload.themes.map(theme => (
+            <select value={selectedTheme} onChange={handleThemeChange} style={styles.select}>
+              {docsPayload.themes.map((theme) => (
                 <option key={theme.name} value={theme.name}>
                   {theme.name}
                 </option>
@@ -311,21 +296,11 @@ export const TokenStudioShowcase: React.FC = () => {
 
           <label style={styles.control}>
             <span style={styles.label}>Category</span>
-            <select
-              value={categoryFilter}
-              onChange={handleCategoryChange}
-              style={styles.select}
-            >
+            <select value={categoryFilter} onChange={handleCategoryChange} style={styles.select}>
               <option value="all">All tokens</option>
-              <option value="component">
-                Component • {categorySummary.component}
-              </option>
-              <option value="semantic">
-                Semantic • {categorySummary.semantic}
-              </option>
-              <option value="primitive">
-                Primitive • {categorySummary.primitive}
-              </option>
+              <option value="component">Component • {categorySummary.component}</option>
+              <option value="semantic">Semantic • {categorySummary.semantic}</option>
+              <option value="primitive">Primitive • {categorySummary.primitive}</option>
               <option value="other">Other • {categorySummary.other}</option>
             </select>
           </label>
@@ -346,9 +321,7 @@ export const TokenStudioShowcase: React.FC = () => {
       <section style={styles.summaryCard}>
         <div style={styles.summaryItem}>
           <p style={styles.summaryTitle}>Total tokens</p>
-          <p style={styles.summaryValue}>
-            {currentThemeDoc?.entries.length ?? 0}
-          </p>
+          <p style={styles.summaryValue}>{currentThemeDoc?.entries.length ?? 0}</p>
         </div>
         <div style={styles.summaryItem}>
           <p style={styles.summaryTitle}>Component</p>
@@ -368,7 +341,7 @@ export const TokenStudioShowcase: React.FC = () => {
         <section>
           <h2 style={styles.title}>Color Palette</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-            {colorEntries.slice(0, 36).map(entry => (
+            {colorEntries.slice(0, 36).map((entry) => (
               <div
                 key={entry.path}
                 style={{
@@ -412,7 +385,7 @@ export const TokenStudioShowcase: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredEntries.map(entry => (
+              {filteredEntries.map((entry) => (
                 <tr key={entry.path}>
                   <td style={styles.tableCell}>
                     <code>{entry.path}</code>
@@ -423,11 +396,7 @@ export const TokenStudioShowcase: React.FC = () => {
                     <code>{formatValue(entry.value)}</code>
                   </td>
                   <td style={styles.tableCell}>
-                    <code>
-                      {entry.originalValue
-                        ? formatValue(entry.originalValue)
-                        : '—'}
-                    </code>
+                    <code>{entry.originalValue ? formatValue(entry.originalValue) : '—'}</code>
                   </td>
                 </tr>
               ))}

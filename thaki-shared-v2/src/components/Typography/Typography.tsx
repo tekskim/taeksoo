@@ -34,10 +34,7 @@ const Title = <C extends ElementType = 'h1'>({
   const Component = as || h;
 
   return (
-    <Component
-      className={cn(titleVariants({ level, color }), className)}
-      {...props}
-    >
+    <Component className={cn(titleVariants({ level, color }), className)} {...props}>
       {children}
     </Component>
   );
@@ -74,10 +71,7 @@ const Text = <C extends ElementType = 'p'>({
   const Component = as || (variant === 'caption' ? 'span' : 'p');
 
   return (
-    <Component
-      className={cn(textVariants({ variant, color }), className)}
-      {...props}
-    >
+    <Component className={cn(textVariants({ variant, color }), className)} {...props}>
       {children}
     </Component>
   );

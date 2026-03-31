@@ -1,10 +1,10 @@
-import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 
-import { Stepper } from "./Stepper";
+import { Stepper } from './Stepper';
 
 const meta: Meta<typeof Stepper> = {
-  title: "Components/Stepper",
+  title: 'Components/Stepper',
   component: Stepper,
 };
 
@@ -15,9 +15,7 @@ type Story = StoryObj<typeof Stepper>;
 
 const FormUI = ({ label }: { label: string }) => (
   <div className="flex flex-col gap-3 min-h-[300px]">
-    <p className="text-sm text-gray-600">
-      {label} — fill in the form fields here.
-    </p>
+    <p className="text-sm text-gray-600">{label} — fill in the form fields here.</p>
     <div className="flex-1 bg-gray-50 border border-dashed border-gray-200 rounded p-4">
       {/* Mock form fields to simulate large height */}
       <div className="space-y-4">
@@ -36,41 +34,41 @@ const DoneUI = ({ label }: { label: string }) => (
 // ─── Stories ─────────────────────────────────────────────────────────────────
 
 export const SkipCompleted: Story = {
-  name: "Default (skip behavior)",
+  name: 'Default (skip behavior)',
   render: () => (
     <div className="max-w-2xl p-6">
       <p className="mb-4 text-sm text-gray-500">
-        Stepper advances to the first incomplete step, skipping already-done
-        ones. Editing a step clears only that step.
+        Stepper advances to the first incomplete step, skipping already-done ones. Editing a step
+        clears only that step.
       </p>
       <Stepper
-        stepIds={["basic", "source", "network", "advanced"]}
+        stepIds={['basic', 'source', 'network', 'advanced']}
         defaultOpenedId="basic"
-        onAllStepsCompleted={() => alert("All steps completed!")}
+        onAllStepsCompleted={() => alert('All steps completed!')}
       >
         {[
           {
-            id: "basic",
-            label: "Basic Information",
+            id: 'basic',
+            label: 'Basic Information',
             editUI: <FormUI label="Basic" />,
             doneUI: <DoneUI label="Basic" />,
           },
           {
-            id: "source",
-            label: "Source Selection",
+            id: 'source',
+            label: 'Source Selection',
             editUI: <FormUI label="Source" />,
             doneUI: <DoneUI label="Source" />,
             skippable: true,
           },
           {
-            id: "network",
-            label: "Network Configuration",
+            id: 'network',
+            label: 'Network Configuration',
             editUI: <FormUI label="Network" />,
             doneUI: <DoneUI label="Network" />,
           },
           {
-            id: "advanced",
-            label: "Advanced Settings",
+            id: 'advanced',
+            label: 'Advanced Settings',
             skippable: true,
             editUI: <FormUI label="Advanced" />,
             doneUI: <DoneUI label="Advanced" />,
@@ -82,40 +80,40 @@ export const SkipCompleted: Story = {
 };
 
 export const SkipCompletedMode: Story = {
-  name: "Edit keeps skip behavior",
+  name: 'Edit keeps skip behavior',
   render: () => (
     <div className="max-w-2xl p-6">
       <p className="mb-4 text-sm text-gray-500">
-        Editing clears only that step; subsequent completed steps are kept so
-        the next forward pass skips them.
+        Editing clears only that step; subsequent completed steps are kept so the next forward pass
+        skips them.
       </p>
       <Stepper
-        stepIds={["basic", "source", "network", "advanced"]}
+        stepIds={['basic', 'source', 'network', 'advanced']}
         defaultOpenedId="basic"
-        onAllStepsCompleted={() => alert("All steps completed!")}
+        onAllStepsCompleted={() => alert('All steps completed!')}
       >
         {[
           {
-            id: "basic",
-            label: "Basic Information",
+            id: 'basic',
+            label: 'Basic Information',
             editUI: <FormUI label="Basic" />,
             doneUI: <DoneUI label="Basic" />,
           },
           {
-            id: "source",
-            label: "Source Selection",
+            id: 'source',
+            label: 'Source Selection',
             editUI: <FormUI label="Source" />,
             doneUI: <DoneUI label="Source" />,
           },
           {
-            id: "network",
-            label: "Network Configuration",
+            id: 'network',
+            label: 'Network Configuration',
             editUI: <FormUI label="Network" />,
             doneUI: <DoneUI label="Network" />,
           },
           {
-            id: "advanced",
-            label: "Advanced Settings",
+            id: 'advanced',
+            label: 'Advanced Settings',
             skippable: true,
             editUI: <FormUI label="Advanced" />,
             doneUI: <DoneUI label="Advanced" />,
@@ -127,40 +125,40 @@ export const SkipCompletedMode: Story = {
 };
 
 export const WithDefaultOpenedId: Story = {
-  name: "defaultOpenedId auto-completes previous steps",
+  name: 'defaultOpenedId auto-completes previous steps',
   render: () => (
     <div className="max-w-2xl p-6">
       <p className="mb-4 text-sm text-gray-500">
-        <code>defaultOpenedId="network"</code> — Basic and Source are
-        automatically marked as completed on mount. Network opens immediately.
+        <code>defaultOpenedId="network"</code> — Basic and Source are automatically marked as
+        completed on mount. Network opens immediately.
       </p>
       <Stepper
-        stepIds={["basic", "source", "network", "advanced"]}
+        stepIds={['basic', 'source', 'network', 'advanced']}
         defaultOpenedId="network"
-        onAllStepsCompleted={() => alert("All steps completed!")}
+        onAllStepsCompleted={() => alert('All steps completed!')}
       >
         {[
           {
-            id: "basic",
-            label: "Basic Information",
+            id: 'basic',
+            label: 'Basic Information',
             editUI: <FormUI label="Basic" />,
             doneUI: <DoneUI label="Basic" />,
           },
           {
-            id: "source",
-            label: "Source Selection",
+            id: 'source',
+            label: 'Source Selection',
             editUI: <FormUI label="Source" />,
             doneUI: <DoneUI label="Source" />,
           },
           {
-            id: "network",
-            label: "Network Configuration",
+            id: 'network',
+            label: 'Network Configuration',
             editUI: <FormUI label="Network" />,
             doneUI: <DoneUI label="Network" />,
           },
           {
-            id: "advanced",
-            label: "Advanced Settings",
+            id: 'advanced',
+            label: 'Advanced Settings',
             skippable: true,
             editUI: <FormUI label="Advanced" />,
             doneUI: <DoneUI label="Advanced" />,
@@ -172,41 +170,41 @@ export const WithDefaultOpenedId: Story = {
 };
 
 export const SkipModeWithDefaultOpenedId: Story = {
-  name: "defaultOpenedId + skip behavior",
+  name: 'defaultOpenedId + skip behavior',
   render: () => (
     <div className="max-w-2xl p-6">
       <p className="mb-4 text-sm text-gray-500">
-        <code>defaultOpenedId="advanced"</code> — Basic, Source, and Network are
-        automatically marked as completed on mount. Advanced opens immediately.
-        Editing a step clears only that step.
+        <code>defaultOpenedId="advanced"</code> — Basic, Source, and Network are automatically
+        marked as completed on mount. Advanced opens immediately. Editing a step clears only that
+        step.
       </p>
       <Stepper
-        stepIds={["basic", "source", "network", "advanced"]}
+        stepIds={['basic', 'source', 'network', 'advanced']}
         defaultOpenedId="advanced"
-        onAllStepsCompleted={() => alert("All steps completed!")}
+        onAllStepsCompleted={() => alert('All steps completed!')}
       >
         {[
           {
-            id: "basic",
-            label: "Basic Information",
+            id: 'basic',
+            label: 'Basic Information',
             editUI: <FormUI label="Basic" />,
             doneUI: <DoneUI label="Basic" />,
           },
           {
-            id: "source",
-            label: "Source Selection",
+            id: 'source',
+            label: 'Source Selection',
             editUI: <FormUI label="Source" />,
             doneUI: <DoneUI label="Source" />,
           },
           {
-            id: "network",
-            label: "Network Configuration",
+            id: 'network',
+            label: 'Network Configuration',
             editUI: <FormUI label="Network" />,
             doneUI: <DoneUI label="Network" />,
           },
           {
-            id: "advanced",
-            label: "Advanced Settings",
+            id: 'advanced',
+            label: 'Advanced Settings',
             skippable: true,
             editUI: <FormUI label="Advanced" />,
             doneUI: <DoneUI label="Advanced" />,
@@ -218,41 +216,41 @@ export const SkipModeWithDefaultOpenedId: Story = {
 };
 
 export const WithAutoFilledSteps: Story = {
-  name: "autoFilled steps initialize as doneUI",
+  name: 'autoFilled steps initialize as doneUI',
   render: () => (
     <div className="max-w-2xl p-6">
       <p className="mb-4 text-sm text-gray-500">
-        Steps with <code>autoFilled</code> start completed, render doneUI, and
-        are opened by default.
+        Steps with <code>autoFilled</code> start completed, render doneUI, and are opened by
+        default.
       </p>
       <Stepper
-        stepIds={["basic", "source", "network", "advanced"]}
-        onAllStepsCompleted={() => alert("All steps completed!")}
+        stepIds={['basic', 'source', 'network', 'advanced']}
+        onAllStepsCompleted={() => alert('All steps completed!')}
       >
         {[
           {
-            id: "basic",
-            label: "Basic Information",
+            id: 'basic',
+            label: 'Basic Information',
             autoFilled: true,
             editUI: <FormUI label="Basic" />,
             doneUI: <DoneUI label="Basic" />,
           },
           {
-            id: "source",
-            label: "Source Selection",
+            id: 'source',
+            label: 'Source Selection',
             autoFilled: true,
             editUI: <FormUI label="Source" />,
             doneUI: <DoneUI label="Source" />,
           },
           {
-            id: "network",
-            label: "Network Configuration",
+            id: 'network',
+            label: 'Network Configuration',
             editUI: <FormUI label="Network" />,
             doneUI: <DoneUI label="Network" />,
           },
           {
-            id: "advanced",
-            label: "Advanced Settings",
+            id: 'advanced',
+            label: 'Advanced Settings',
             skippable: true,
             editUI: <FormUI label="Advanced" />,
             doneUI: <DoneUI label="Advanced" />,
@@ -264,43 +262,42 @@ export const WithAutoFilledSteps: Story = {
 };
 
 export const DependsOnInvalidation: Story = {
-  name: "dependsOn invalidation",
+  name: 'dependsOn invalidation',
   render: () => (
     <div className="max-w-2xl p-6">
       <p className="mb-4 text-sm text-gray-500">
-        Complete all steps, then click <code>Edit</code> on Basic. Source and
-        Network depend on Basic, so they are cleared and become{" "}
-        <code>writing...</code>.
+        Complete all steps, then click <code>Edit</code> on Basic. Source and Network depend on
+        Basic, so they are cleared and become <code>writing...</code>.
       </p>
       <Stepper
-        stepIds={["basic", "source", "network", "advanced"]}
+        stepIds={['basic', 'source', 'network', 'advanced']}
         defaultOpenedId="basic"
-        onAllStepsCompleted={() => alert("All steps completed!")}
+        onAllStepsCompleted={() => alert('All steps completed!')}
       >
         {[
           {
-            id: "basic",
-            label: "Basic Information",
+            id: 'basic',
+            label: 'Basic Information',
             editUI: <FormUI label="Basic" />,
             doneUI: <DoneUI label="Basic" />,
           },
           {
-            id: "source",
-            label: "Source Selection",
-            dependsOn: ["basic"],
+            id: 'source',
+            label: 'Source Selection',
+            dependsOn: ['basic'],
             editUI: <FormUI label="Source" />,
             doneUI: <DoneUI label="Source" />,
           },
           {
-            id: "network",
-            label: "Network Configuration",
-            dependsOn: ["basic", "source"],
+            id: 'network',
+            label: 'Network Configuration',
+            dependsOn: ['basic', 'source'],
             editUI: <FormUI label="Network" />,
             doneUI: <DoneUI label="Network" />,
           },
           {
-            id: "advanced",
-            label: "Advanced Settings",
+            id: 'advanced',
+            label: 'Advanced Settings',
             skippable: true,
             editUI: <FormUI label="Advanced" />,
             doneUI: <DoneUI label="Advanced" />,

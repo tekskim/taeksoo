@@ -16,12 +16,7 @@ export type TabQueryOptions<
   'queryKey' | 'refetchInterval'
 > & {
   queryKey: TQueryKey;
-  refetchInterval?: UseQueryOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryKey
-  >['refetchInterval'];
+  refetchInterval?: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>['refetchInterval'];
 };
 
 /**
@@ -58,12 +53,7 @@ export type TabQueryOptions<
  */
 export const createUseTabQuery = (
   useTabManager: () => { activeTabId: string }
-): (<
-  TQueryFnData,
-  TError = Error,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
->(
+): (<TQueryFnData, TError = Error, TData = TQueryFnData, TQueryKey extends QueryKey = QueryKey>(
   options: TabQueryOptions<TQueryFnData, TError, TData, TQueryKey>
 ) => UseQueryResult<TData, TError>) => {
   return function useTabQuery<

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
 export type StepId = string | number;
 
@@ -50,9 +50,7 @@ export interface StepperLocaleText {
   edit?: string;
 }
 
-export interface StepperProps<
-  TStepIds extends readonly StepId[] = readonly StepId[],
-> {
+export interface StepperProps<TStepIds extends readonly StepId[] = readonly StepId[]> {
   /** Stepper 전환/포커스 계산에 사용하는 순서 있는 id 목록. */
   stepIds: TStepIds;
   /**
@@ -68,13 +66,7 @@ export interface StepperProps<
    * 이전 활성 스텝을 특정하기 어려운 경계 상황에서는
    * `prev`가 `current`로 정규화될 수 있다.
    */
-  onStepChange?: ({
-    prev,
-    current,
-  }: {
-    prev: TStepIds[number];
-    current: TStepIds[number];
-  }) => void;
+  onStepChange?: ({ prev, current }: { prev: TStepIds[number]; current: TStepIds[number] }) => void;
   /** Localized text for Stepper UI elements. */
   localeText?: StepperLocaleText;
   children: StepperStepConfig<TStepIds[number]>[];

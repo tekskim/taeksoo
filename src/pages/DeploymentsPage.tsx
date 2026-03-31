@@ -327,7 +327,10 @@ export function DeploymentsPage() {
           {
             id: 'edit-config',
             label: 'Edit config',
-            onClick: () => navigate(`/container/deployments/${row.id}/edit`),
+            onClick: () =>
+              navigate(
+                `/container/deployments/${row.id}/edit?name=${encodeURIComponent(row.name)}`
+              ),
           },
           {
             id: 'edit-yaml',

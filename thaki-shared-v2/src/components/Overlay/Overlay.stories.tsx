@@ -50,13 +50,7 @@ interface TestOverlayProps extends OverlayProps {
  */
 
 // 테스트용 오버레이 컴포넌트
-const TestOverlay = ({
-  content,
-  testNumber,
-  onConfirm,
-  onCancel,
-  ...props
-}: TestOverlayProps) => {
+const TestOverlay = ({ content, testNumber, onConfirm, onCancel, ...props }: TestOverlayProps) => {
   return (
     /**
      * @example
@@ -67,11 +61,7 @@ const TestOverlay = ({
      *
      * 오버레이 렌더링을 위한 세팅으로는 Overlay.Container 컴포넌트를 앱의 레이아웃 등에서 사용해주세요. (스토리북 기준 preview.tsx에 적용되어 있음)
      */
-    <Overlay.Template
-      {...props}
-      onConfirm={() => onConfirm(true)}
-      onCancel={onCancel}
-    >
+    <Overlay.Template {...props} onConfirm={() => onConfirm(true)} onCancel={onCancel}>
       <div>{content}</div>
       <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
         <div>testNumber: {testNumber}</div>
@@ -223,8 +213,7 @@ const MyComponent = () => {
     },
     rejectOnCancel: {
       control: 'boolean',
-      description:
-        '취소 버튼 클릭 시 Promise를 실패시켜 함수 실행을 중단시키는 옵션',
+      description: '취소 버튼 클릭 시 Promise를 실패시켜 함수 실행을 중단시키는 옵션',
     },
   },
 };
@@ -271,9 +260,7 @@ const Modal: Story = {
     duration: 300,
     rejectOnCancel: true, // <-- 취소 버튼 클릭 시 Promise를 아예 실패시켜 openOverlay를 호출한 함수의 실행을 중단시키는 옵션
   },
-  render: args => (
-    <StoryWrapper args={args} content="모달 내용입니다." testNumber={0} />
-  ),
+  render: (args) => <StoryWrapper args={args} content="모달 내용입니다." testNumber={0} />,
 };
 
 const Horizontal: Story = {
@@ -293,7 +280,7 @@ const Horizontal: Story = {
     // Docs 탭에서 이 스토리는 숨기고, 개별 페이지(Canvas)에서만 보이도록 설정
     docs: { disable: true },
   },
-  render: args => (
+  render: (args) => (
     <StoryWrapper
       args={{ ...args, type: 'drawer-horizontal' }}
       content="수평 드로어 내용입니다."
@@ -319,13 +306,7 @@ const Vertical: Story = {
     // Docs 탭에서 이 스토리는 숨기고, 개별 페이지(Canvas)에서만 보이도록 설정
     docs: { disable: true },
   },
-  render: args => (
-    <StoryWrapper
-      args={args}
-      content="수직 드로어 내용입니다."
-      testNumber={2}
-    />
-  ),
+  render: (args) => <StoryWrapper args={args} content="수직 드로어 내용입니다." testNumber={2} />,
 };
 
 export default meta;

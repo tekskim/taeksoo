@@ -5,4 +5,3 @@
  */
 
 export { TerminalHeader } from './TerminalHeader';
-

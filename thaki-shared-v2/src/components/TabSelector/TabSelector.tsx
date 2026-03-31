@@ -53,7 +53,7 @@ export const TabSelector: React.FC<TabSelectorProps> = ({
   useEffect(() => {
     if (value !== undefined) return;
     const current = internalValue;
-    if (current && options.some(option => option.id === current)) return;
+    if (current && options.some((option) => option.id === current)) return;
     const fallback = defaultValue ?? options[0]?.id;
     setInternalValue(fallback);
   }, [options, value, defaultValue, internalValue]);
@@ -80,7 +80,7 @@ export const TabSelector: React.FC<TabSelectorProps> = ({
       aria-labelledby={ariaLabelledBy}
       className={cn(tabSelectorStyles({ variant, layout }), className)}
     >
-      {options.map(option => {
+      {options.map((option) => {
         const isActive = option.id === selectedId;
         return (
           <button
@@ -88,9 +88,7 @@ export const TabSelector: React.FC<TabSelectorProps> = ({
             type="button"
             onClick={() => handleSelect(option.id, option.disabled)}
             disabled={option.disabled}
-            className={cn(
-              tabButtonStyles({ variant, active: isActive, layout })
-            )}
+            className={cn(tabButtonStyles({ variant, active: isActive, layout }))}
             aria-pressed={isActive}
           >
             {option.label}

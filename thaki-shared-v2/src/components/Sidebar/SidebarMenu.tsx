@@ -49,15 +49,14 @@ export const SidebarMenu = ({
   accordionType = 'multiple',
 }: SidebarMenuProps): React.ReactElement => {
   const handleItemClick = (path: string, event?: React.MouseEvent): void => {
-    const shouldOpenNewTab =
-      event && (event.ctrlKey || event.metaKey || event.button === 1);
+    const shouldOpenNewTab = event && (event.ctrlKey || event.metaKey || event.button === 1);
 
     onNavigate(path, { newTab: Boolean(shouldOpenNewTab) });
   };
 
   return (
     <TcAccordion.Group multiple={accordionType === 'multiple'} className={'gap-4 w-[175px]'}>
-      {sections.map(section => {
+      {sections.map((section) => {
         // 고정 메뉴 항목 (children이 없는 경우)
         if (!section.children && section.path) {
           const isActive = isItemActive(section.path);
@@ -94,7 +93,7 @@ export const SidebarMenu = ({
               }
             >
               <div className={accordionContentStyles}>
-                {section.children.map(item => {
+                {section.children.map((item) => {
                   const isActive = isItemActive(item.path);
                   return (
                     <SidebarMenuItem

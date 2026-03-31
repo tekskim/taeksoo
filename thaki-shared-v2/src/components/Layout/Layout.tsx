@@ -66,11 +66,7 @@ type ContainerProps = {
 const Container = forwardRef<HTMLDivElement, ContainerProps>(
   ({ maxWidth, padding, className, children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn(containerStyles({ maxWidth, padding }), className)}
-        {...props}
-      >
+      <div ref={ref} className={cn(containerStyles({ maxWidth, padding }), className)} {...props}>
         {children}
       </div>
     );
@@ -109,10 +105,7 @@ const Block = forwardRef<HTMLDivElement, BlockProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          blockStyles({ variant, padding, borderRadius }),
-          className
-        )}
+        className={cn(blockStyles({ variant, padding, borderRadius }), className)}
         style={style}
         {...props}
       >
@@ -145,25 +138,13 @@ type StackProps = {
 
 const Stack = forwardRef<HTMLDivElement, StackProps>(
   (
-    {
-      direction = 'vertical',
-      gap,
-      align,
-      justify,
-      wrap = false,
-      className,
-      children,
-      ...props
-    },
+    { direction = 'vertical', gap, align, justify, wrap = false, className, children, ...props },
     ref
   ) => {
     return (
       <div
         ref={ref}
-        className={cn(
-          stackStyles({ direction, gap, align, justify, wrap }),
-          className
-        )}
+        className={cn(stackStyles({ direction, gap, align, justify, wrap }), className)}
         {...props}
         data-layout="stack"
         data-direction={direction}
@@ -175,14 +156,14 @@ const Stack = forwardRef<HTMLDivElement, StackProps>(
 );
 Stack.displayName = 'Layout.Stack';
 
-const HStack = forwardRef<HTMLDivElement, Omit<StackProps, 'direction'>>(
-  (props, ref) => <Stack {...props} direction="horizontal" ref={ref} />
-);
+const HStack = forwardRef<HTMLDivElement, Omit<StackProps, 'direction'>>((props, ref) => (
+  <Stack {...props} direction="horizontal" ref={ref} />
+));
 HStack.displayName = 'Layout.HStack';
 
-const VStack = forwardRef<HTMLDivElement, Omit<StackProps, 'direction'>>(
-  (props, ref) => <Stack {...props} direction="vertical" ref={ref} />
-);
+const VStack = forwardRef<HTMLDivElement, Omit<StackProps, 'direction'>>((props, ref) => (
+  <Stack {...props} direction="vertical" ref={ref} />
+));
 VStack.displayName = 'Layout.VStack';
 
 type GridContainerProps = {
@@ -193,11 +174,7 @@ type GridContainerProps = {
 const GridContainer = forwardRef<HTMLDivElement, GridContainerProps>(
   ({ columns = 12, gap, className, children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn(gridContainerStyles({ columns, gap }), className)}
-        {...props}
-      >
+      <div ref={ref} className={cn(gridContainerStyles({ columns, gap }), className)} {...props}>
         {children}
       </div>
     );
@@ -213,11 +190,7 @@ type GridItemProps = {
 const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
   ({ colSpan, colStart, className, children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn(gridItemStyles({ colSpan, colStart }), className)}
-        {...props}
-      >
+      <div ref={ref} className={cn(gridItemStyles({ colSpan, colStart }), className)} {...props}>
         {children}
       </div>
     );
@@ -233,18 +206,9 @@ type DividerProps = {
 
 const Divider = forwardRef<HTMLHRElement, DividerProps>(
   ({ direction = 'horizontal', spacing, className, ...props }, ref) => {
-    const dividerClassName = cn(
-      dividerStyles({ direction, spacing }),
-      className
-    );
+    const dividerClassName = cn(dividerStyles({ direction, spacing }), className);
     if (direction === 'vertical') {
-      return (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          className={dividerClassName}
-          {...props}
-        />
-      );
+      return <div ref={ref as React.Ref<HTMLDivElement>} className={dividerClassName} {...props} />;
     }
     return <hr ref={ref} className={dividerClassName} {...props} />;
   }
@@ -266,16 +230,7 @@ export default {
 };
 
 // Named exports for individual imports (optional)
-export {
-  Block,
-  Container,
-  Divider,
-  GridContainer,
-  GridItem,
-  HStack,
-  Stack,
-  VStack,
-};
+export { Block, Container, Divider, GridContainer, GridItem, HStack, Stack, VStack };
 
 export type {
   BlockProps,

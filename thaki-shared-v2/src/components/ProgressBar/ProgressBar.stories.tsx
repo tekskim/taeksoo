@@ -40,13 +40,11 @@ const meta: Meta<typeof ProgressBar> = {
     },
     pendingValue: {
       control: { type: 'range', min: 0, max: 100, step: 1 },
-      description:
-        '추가 예정 값 (0-100 또는 절대값). 현재 값에 더해져서 표시됩니다.',
+      description: '추가 예정 값 (0-100 또는 절대값). 현재 값에 더해져서 표시됩니다.',
     },
     max: {
       control: { type: 'number', min: 1, max: 1000, step: 1 },
-      description:
-        '최대값 (기본값: 100). 100이면 백분율 모드, 100 초과면 절대값 모드',
+      description: '최대값 (기본값: 100). 100이면 백분율 모드, 100 초과면 절대값 모드',
     },
     variant: {
       control: { type: 'select' },
@@ -56,8 +54,7 @@ const meta: Meta<typeof ProgressBar> = {
     showValue: {
       control: { type: 'select' },
       options: ['percentage', 'absolute', false],
-      description:
-        '값 표시 형식 (percentage: 백분율, absolute: 절댓값, false: 숨김)',
+      description: '값 표시 형식 (percentage: 백분율, absolute: 절댓값, false: 숨김)',
     },
     color: {
       control: { type: 'color' },
@@ -65,8 +62,7 @@ const meta: Meta<typeof ProgressBar> = {
     },
     pendingColor: {
       control: { type: 'color' },
-      description:
-        '추가 예정 값 바의 커스텀 색상. 없으면 color와 동일하게 적용됩니다.',
+      description: '추가 예정 값 바의 커스텀 색상. 없으면 color와 동일하게 적용됩니다.',
     },
     label: {
       control: { type: 'text' },
@@ -86,7 +82,7 @@ export const Default: Story = {
     variant: 'success',
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div style={{ width: '400px', maxWidth: '100%' }}>
         <Story />
       </div>
@@ -105,30 +101,10 @@ export const Variants: Story = {
         maxWidth: '100%',
       }}
     >
-      <ProgressBar
-        value={25}
-        label="Primary"
-        variant="primary"
-        showValue="percentage"
-      />
-      <ProgressBar
-        value={50}
-        label="Success"
-        variant="success"
-        showValue="percentage"
-      />
-      <ProgressBar
-        value={75}
-        label="Warning"
-        variant="warning"
-        showValue="percentage"
-      />
-      <ProgressBar
-        value={90}
-        label="Danger"
-        variant="danger"
-        showValue="percentage"
-      />
+      <ProgressBar value={25} label="Primary" variant="primary" showValue="percentage" />
+      <ProgressBar value={50} label="Success" variant="success" showValue="percentage" />
+      <ProgressBar value={75} label="Warning" variant="warning" showValue="percentage" />
+      <ProgressBar value={90} label="Danger" variant="danger" showValue="percentage" />
     </div>
   ),
 };
@@ -164,9 +140,7 @@ const AbsoluteValueDemo = () => {
       </div>
 
       <div>
-        <label
-          style={{ fontSize: '14px', marginBottom: '0.5rem', display: 'block' }}
-        >
+        <label style={{ fontSize: '14px', marginBottom: '0.5rem', display: 'block' }}>
           Pending Memory: {pendingMemory}GB
         </label>
         <input
@@ -174,7 +148,7 @@ const AbsoluteValueDemo = () => {
           min="0"
           max="8"
           value={pendingMemory}
-          onChange={e => setPendingMemory(Number(e.target.value))}
+          onChange={(e) => setPendingMemory(Number(e.target.value))}
           style={{ width: '100%' }}
         />
       </div>

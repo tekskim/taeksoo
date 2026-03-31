@@ -44,12 +44,7 @@ const DefaultTerminalIcon = (): React.ReactElement => (
  */
 const CloseIcon = (): React.ReactElement => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path
-      d="M4 4L12 12M12 4L4 12"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
+    <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
 
@@ -98,12 +93,7 @@ export const TerminalHeader = ({
       )}
     >
       {/* 드래그 핸들 영역 */}
-      <div
-        className={clsx(
-          'flex flex-1 items-center gap-2',
-          dragHandleClassName
-        )}
-      >
+      <div className={clsx('flex flex-1 items-center gap-2', dragHandleClassName)}>
         {/* 탭 */}
         <div className="flex items-center gap-2 rounded-md border-r border-border bg-surface px-3 py-2">
           <div className="flex h-4 w-4 items-center justify-center text-[var(--semantic-color-text)]">
@@ -142,4 +132,3 @@ export const TerminalHeader = ({
 };
 
 TerminalHeader.displayName = 'TerminalHeader';
-

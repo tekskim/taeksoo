@@ -92,9 +92,7 @@ export function ManageUserGroupsDrawer({
     setSelectedRows((prev) => prev.filter((r) => r !== id));
   };
 
-  const selectedItems = defaultUserGroups.filter((g) =>
-    selectedRows.includes(g.id)
-  );
+  const selectedItems = defaultUserGroups.filter((g) => selectedRows.includes(g.id));
 
   const columns: TableColumn[] = [
     { key: 'name', header: 'Name', sortable: true },
@@ -127,9 +125,7 @@ export function ManageUserGroupsDrawer({
         <div className="flex flex-col gap-3 w-full pb-5">
           <div className="flex flex-col gap-1">
             <div className="flex items-start gap-[3px]">
-              <span className="text-13 font-medium text-text leading-5">
-                User groups
-              </span>
+              <span className="text-13 font-medium text-text leading-5">User groups</span>
               <span className="text-13 font-medium text-danger leading-5">*</span>
             </div>
             <p className="text-12 text-text-muted">
@@ -172,9 +168,15 @@ export function ManageUserGroupsDrawer({
                   <Table.Td rowData={row} column={columns[0]}>
                     <span className="text-primary font-medium">{row.name}</span>
                   </Table.Td>
-                  <Table.Td rowData={row} column={columns[1]}>{row.type}</Table.Td>
-                  <Table.Td rowData={row} column={columns[2]}>{row.roles}</Table.Td>
-                  <Table.Td rowData={row} column={columns[3]}>{row.userCount}</Table.Td>
+                  <Table.Td rowData={row} column={columns[1]}>
+                    {row.type}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={columns[2]}>
+                    {row.roles}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={columns[3]}>
+                    {row.userCount}
+                  </Table.Td>
                   <Table.Td rowData={row} column={columns[4]}>
                     {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
                   </Table.Td>

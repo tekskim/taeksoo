@@ -28,9 +28,7 @@ export const Controlled: Story = {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <Range width="312px" value={value} onChange={setValue} />
-        <div
-          style={{ fontSize: '14px', color: 'var(--semantic-color-textMuted)' }}
-        >
+        <div style={{ fontSize: '14px', color: 'var(--semantic-color-textMuted)' }}>
           Value: {value}
         </div>
       </div>
@@ -61,9 +59,7 @@ export const DualControlled: Story = {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <Range dual width="312px" value={value} onChange={setValue} />
-        <div
-          style={{ fontSize: '14px', color: 'var(--semantic-color-textMuted)' }}
-        >
+        <div style={{ fontSize: '14px', color: 'var(--semantic-color-textMuted)' }}>
           Range: {value[0]} - {value[1]}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import type { StepId, StepperStepConfig } from "./Stepper.types";
+import type { StepId, StepperStepConfig } from './Stepper.types';
 
 /** Step id를 Set/Map 비교용 문자열 키로 변환한다. (id: 원본 스텝 식별자) */
 export const toStepKey = (id: StepId): string => String(id);
@@ -11,7 +11,7 @@ type OpenedStepId = string | number;
  */
 export const getInitialCompletedStepIds = (
   steps: readonly StepId[],
-  defaultOpenedId?: StepId,
+  defaultOpenedId?: StepId
 ): Set<StepId> => {
   // 기본 오픈 step이 없으면 edit 화면으로 간주해 모든 step을 완료 상태로 시작한다.
   if (defaultOpenedId === undefined) {
@@ -34,20 +34,15 @@ export const getInitialCompletedStepIds = (
  */
 export const filterStepSetByValidKeys = (
   prev: Set<StepId>,
-  validStepKeys: Set<string>,
+  validStepKeys: Set<string>
 ): Set<StepId> => {
-  const filtered = Array.from(prev).filter((id) =>
-    validStepKeys.has(toStepKey(id)),
-  );
+  const filtered = Array.from(prev).filter((id) => validStepKeys.has(toStepKey(id)));
   if (filtered.length === prev.size) return prev;
   return new Set(filtered);
 };
 
 /** Set에 여러 id를 추가한다. (prev: 기존 Set, ids: 추가할 스텝 id 목록) */
-export const addManyToSet = (
-  prev: Set<StepId>,
-  ids: readonly StepId[],
-): Set<StepId> => {
+export const addManyToSet = (prev: Set<StepId>, ids: readonly StepId[]): Set<StepId> => {
   if (ids.length === 0) return prev;
   const next = new Set(prev);
   ids.forEach((id) => next.add(id));
@@ -55,10 +50,7 @@ export const addManyToSet = (
 };
 
 /** Set에서 여러 id를 제거한다. (prev: 기존 Set, ids: 제거할 스텝 id 목록) */
-export const removeManyFromSet = (
-  prev: Set<StepId>,
-  ids: readonly StepId[],
-): Set<StepId> => {
+export const removeManyFromSet = (prev: Set<StepId>, ids: readonly StepId[]): Set<StepId> => {
   if (ids.length === 0) return prev;
   const next = new Set(prev);
   ids.forEach((id) => next.delete(id));
@@ -74,12 +66,9 @@ export const removeManyFromSet = (
 export const findCurrentEditingStepId = (
   steps: readonly StepId[],
   openedStepIds: Set<OpenedStepId>,
-  completedStepIds: Set<StepId>,
+  completedStepIds: Set<StepId>
 ): StepId | undefined =>
-  steps.find(
-    (stepId) =>
-      openedStepIds.has(toStepKey(stepId)) && !completedStepIds.has(stepId),
-  );
+  steps.find((stepId) => openedStepIds.has(toStepKey(stepId)) && !completedStepIds.has(stepId));
 
 /**
  * editedId를 dependsOn으로 참조하는 완료 스텝 id 목록을 반환한다.
@@ -90,14 +79,12 @@ export const findCurrentEditingStepId = (
 export const getDependentClearedIds = (
   steps: StepperStepConfig[],
   editedId: StepId,
-  completedStepIds: Set<StepId>,
+  completedStepIds: Set<StepId>
 ): StepId[] => {
   return steps
     .filter(
       (step) =>
-        step.id !== editedId &&
-        completedStepIds.has(step.id) &&
-        step.dependsOn?.includes(editedId),
+        step.id !== editedId && completedStepIds.has(step.id) && step.dependsOn?.includes(editedId)
     )
     .map((step) => step.id);
 };
@@ -112,11 +99,9 @@ export const getCancelFocusStepId = (
   steps: readonly StepId[],
   currentId: StepId,
   writingStepIds: Set<StepId>,
-  completedStepIds: Set<StepId>,
+  completedStepIds: Set<StepId>
 ): StepId | undefined => {
-  const writingFirst = steps.find(
-    (stepId) => stepId !== currentId && writingStepIds.has(stepId),
-  );
+  const writingFirst = steps.find((stepId) => stepId !== currentId && writingStepIds.has(stepId));
   if (writingFirst !== undefined) return writingFirst;
 
   const currentIndex = steps.indexOf(currentId);
@@ -124,9 +109,7 @@ export const getCancelFocusStepId = (
 
   return steps
     .slice(currentIndex + 1)
-    .find(
-      (stepId) => !completedStepIds.has(stepId) && !writingStepIds.has(stepId),
-    );
+    .find((stepId) => !completedStepIds.has(stepId) && !writingStepIds.has(stepId));
 };
 
 /**
@@ -136,16 +119,13 @@ export const getCancelFocusStepId = (
 export const createOpenedStateForFocus = (
   currentOpened: Set<OpenedStepId>,
   completedStepIds: Set<StepId>,
-  focusId?: StepId,
+  focusId?: StepId
 ): Set<OpenedStepId> => {
   const allowedOpenId = focusId !== undefined ? toStepKey(focusId) : undefined;
   const completedKeys = new Set(Array.from(completedStepIds).map(toStepKey));
   const nextOpened = new Set(currentOpened);
   for (const openId of Array.from(nextOpened)) {
-    if (
-      !completedKeys.has(toStepKey(openId)) &&
-      toStepKey(openId) !== allowedOpenId
-    ) {
+    if (!completedKeys.has(toStepKey(openId)) && toStepKey(openId) !== allowedOpenId) {
       nextOpened.delete(openId);
     }
   }
@@ -165,7 +145,7 @@ export const isStepAccessible = (
   stepId: StepId,
   index: number,
   steps: readonly StepId[],
-  completedStepIds: Set<StepId>,
+  completedStepIds: Set<StepId>
 ): boolean => {
   // 접근 가능 조건:
   // 1) 이미 완료된 스텝
@@ -178,9 +158,7 @@ export const isStepAccessible = (
   }
 
   // 뒤쪽 스텝 중 완료된 항목이 있으면 현재 스텝도 접근 가능으로 본다.
-  const hasLaterCompletedStep = steps
-    .slice(index + 1)
-    .some((id) => completedStepIds.has(id));
+  const hasLaterCompletedStep = steps.slice(index + 1).some((id) => completedStepIds.has(id));
   if (hasLaterCompletedStep) {
     return true;
   }

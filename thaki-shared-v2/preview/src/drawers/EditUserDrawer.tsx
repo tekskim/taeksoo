@@ -59,9 +59,7 @@ export function EditUserDrawer({
     >
       <div className="flex flex-col gap-6 pb-6">
         <div className="flex flex-col gap-3">
-          <p className="text-12 leading-16 text-text-muted">
-            Edit the user's basic information.
-          </p>
+          <p className="text-12 leading-16 text-text-muted">Edit the user's basic information.</p>
           <InfoContainer label="Username" values={[userName]} />
         </div>
 
@@ -96,13 +94,8 @@ export function EditUserDrawer({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Toggle
-              checked={enabled}
-              onChange={(e) => setEnabled(e.target.checked)}
-            />
-            <span className="text-12 text-text">
-              {enabled ? 'Enabled' : 'Disabled'}
-            </span>
+            <Toggle checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
+            <span className="text-12 text-text">{enabled ? 'Enabled' : 'Disabled'}</span>
           </div>
         </div>
       </div>

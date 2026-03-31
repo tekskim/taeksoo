@@ -71,7 +71,7 @@ export const SelectCell = ({
     <td
       className={cn(tdClassnames, selectCellClassnames)}
       data-select
-      onClick={e => e.stopPropagation()} // 행 클릭 이벤트 전파 방지
+      onClick={(e) => e.stopPropagation()} // 행 클릭 이벤트 전파 방지
     >
       <div className={selectInnerClassnames}>
         {/* type에 따라 체크박스 또는 라디오 렌더링 */}

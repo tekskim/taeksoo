@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -109,6 +109,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -119,27 +120,16 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   // Determine section status based on form data
   const getSectionStatus = (section: SectionStep): 'done' | 'active' | 'pending' => {
     if (section === 'basic-info') {
+      // namespace has default → 'active' until name is typed
       return configMapName.trim() ? 'done' : 'active';
     }
-    if (section === 'data') {
-      return dataEntries.length > 0 && dataEntries.some((e) => e.key.trim() || e.value.trim())
-        ? 'done'
-        : 'pending';
-    }
-    if (section === 'binary-data') {
-      return binaryDataEntries.length > 0 &&
-        binaryDataEntries.some((e) => e.key.trim() || e.value.trim())
-        ? 'done'
-        : 'pending';
-    }
-    if (section === 'labels-annotations') {
-      return hasLabelsOrAnnotations ? 'done' : 'pending';
-    }
-    return 'pending';
+    // data, binary-data, labels-annotations are all optional → always done
+    return 'done';
   };
 
   return (
@@ -173,7 +163,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -195,6 +185,7 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -207,6 +198,7 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -220,6 +212,7 @@ function BasicInfoSection({
               value={namespace}
               onChange={(e) => onNamespaceChange(e.target.value)}
               fullWidth
+              disabled={isEditMode}
             />
           </FormField>
 
@@ -239,6 +232,7 @@ function BasicInfoSection({
               }}
               error={!!configMapNameError}
               fullWidth
+              disabled={isEditMode}
             />
           </FormField>
 
@@ -629,6 +623,10 @@ function LabelsAnnotationsSection({
 
 export function CreateConfigMapPage() {
   const navigate = useNavigate();
+  const { configMapName: configMapNameParam } = useParams();
+  const isEditMode = !!configMapNameParam;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -660,8 +658,16 @@ export function CreateConfigMapPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create ConfigMap');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode ? `ConfigMap: ${nameFromQuery || configMapNameParam}` : 'Create ConfigMap'
+    );
+  }, [updateActiveTabLabel, isEditMode, configMapNameParam]);
+
+  useEffect(() => {
+    if (isEditMode && configMapNameParam) {
+      setConfigMapName(nameFromQuery || configMapNameParam);
+    }
+  }, [isEditMode, configMapNameParam]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -794,7 +800,15 @@ export function CreateConfigMapPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'ConfigMaps', href: '/container/configmaps' },
-                { label: 'Create ConfigMap' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || configMapNameParam!,
+                        href: `/container/configmaps/{configMapNameParam}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create ConfigMap' }]),
               ]}
             />
           }
@@ -839,7 +853,11 @@ export function CreateConfigMapPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create ConfigMap</h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              {isEditMode
+                ? `ConfigMap: ${nameFromQuery || configMapNameParam}`
+                : 'Create ConfigMap'}
+            </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             ConfigMap provide configuration data as key–value pairs so applications can load
@@ -862,6 +880,7 @@ export function CreateConfigMapPage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
+              isEditMode={isEditMode}
             />
 
             {/* Data Section */}
@@ -895,6 +914,7 @@ export function CreateConfigMapPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

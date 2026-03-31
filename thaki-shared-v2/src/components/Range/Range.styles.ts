@@ -22,25 +22,21 @@ export const trackStyles =
 export const trackActiveStyles =
   'absolute h-full bg-primary rounded-full transition-[left,right] duration-100 ease-out';
 
-export const inputWrapperStyles = cva(
-  'absolute top-0 left-0 w-full h-full flex items-center',
-  {
-    variants: {
-      type: {
-        min: 'z-[1]',
-        max: 'z-[2]',
-      },
+export const inputWrapperStyles = cva('absolute top-0 left-0 w-full h-full flex items-center', {
+  variants: {
+    type: {
+      min: 'z-[1]',
+      max: 'z-[2]',
     },
-  }
-);
+  },
+});
 
 /**
  * Range input base styles with browser pseudo-element styling via Tailwind arbitrary variants
  */
 
 // Base input styles
-const rangeInputBase =
-  'w-full h-4 appearance-none bg-transparent cursor-pointer outline-none';
+const rangeInputBase = 'w-full h-4 appearance-none bg-transparent cursor-pointer outline-none';
 
 // Webkit track styling (uses CSS variable --range-progress for gradient)
 const webkitTrack = [

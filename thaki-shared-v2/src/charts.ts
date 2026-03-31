@@ -2,10 +2,7 @@ export { ChartToggle } from './components/ChartToggle';
 export type { ChartToggleProps } from './components/ChartToggle';
 
 export { ChartTooltip } from './components/ChartTooltip';
-export type {
-  ChartTooltipItem,
-  ChartTooltipProps,
-} from './components/ChartTooltip';
+export type { ChartTooltipItem, ChartTooltipProps } from './components/ChartTooltip';
 export { chartTooltipHtml } from './components/ChartTooltip';
 
 export {

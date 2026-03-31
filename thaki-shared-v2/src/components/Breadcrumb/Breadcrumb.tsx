@@ -58,10 +58,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = memo(({ items, className }) => {
                 <span className={breadcrumbTextStyles()}>{item.label}</span>
               </button>
             ) : (
-              <span
-                className={breadcrumbTextStyles({ current: true })}
-                aria-current="page"
-              >
+              <span className={breadcrumbTextStyles({ current: true })} aria-current="page">
                 {item.label}
               </span>
             )}

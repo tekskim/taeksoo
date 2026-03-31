@@ -122,9 +122,7 @@ export function ManageRolesDrawer({
         <div className="flex flex-col gap-3 w-full pb-5">
           <div className="flex flex-col gap-1">
             <div className="flex items-start gap-[3px]">
-              <span className="text-13 font-medium text-text leading-5">
-                Roles
-              </span>
+              <span className="text-13 font-medium text-text leading-5">Roles</span>
               <span className="text-13 font-medium text-danger leading-5">*</span>
             </div>
             <p className="text-12 text-text-muted">
@@ -167,8 +165,12 @@ export function ManageRolesDrawer({
                   <Table.Td rowData={row} column={columns[0]}>
                     <span className="text-primary font-medium">{row.name}</span>
                   </Table.Td>
-                  <Table.Td rowData={row} column={columns[1]}>{row.type}</Table.Td>
-                  <Table.Td rowData={row} column={columns[2]}>{row.policies}</Table.Td>
+                  <Table.Td rowData={row} column={columns[1]}>
+                    {row.type}
+                  </Table.Td>
+                  <Table.Td rowData={row} column={columns[2]}>
+                    {row.policies}
+                  </Table.Td>
                   <Table.Td rowData={row} column={columns[3]}>
                     {row.createdAt.replace(/\s+\d{2}:\d{2}:\d{2}$/, '')}
                   </Table.Td>

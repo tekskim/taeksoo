@@ -1,7 +1,7 @@
 export const notificationPanelContainerStyles = [
   'fixed top-14 right-4 z-10',
   'flex flex-col gap-2',
-  'backdrop-blur-sm', 
+  'backdrop-blur-sm',
   'rounded-lg',
   'p-3',
 ].join(' ');
@@ -14,20 +14,11 @@ export const notificationPanelBackgroundStyles = [
   'blur-[20px]',
 ].join(' ');
 
-export const notificationPanelInnerStyles = [
-  'flex flex-col gap-2',
-  'max-h-[300px]',
-].join(' ');
+export const notificationPanelInnerStyles = ['flex flex-col gap-2', 'max-h-[300px]'].join(' ');
 
-export const notificationPanelHeaderStyles = [
-  'flex items-center gap-2',
-  'mb-2',
-].join(' ');
+export const notificationPanelHeaderStyles = ['flex items-center gap-2', 'mb-2'].join(' ');
 
-export const notificationPanelContentStyles = [
-  'flex flex-col gap-2',
-  'overflow-y-auto',
-].join(' ');
+export const notificationPanelContentStyles = ['flex flex-col gap-2', 'overflow-y-auto'].join(' ');
 
 export const notificationPanelEmptyStyles = [
   'flex items-center justify-center',
@@ -41,9 +32,7 @@ export const notificationPanelEmptyStyles = [
  * Wrapper styles for NotificationItem component.
  * Wraps the Toast component with additional styling for the notification panel context.
  */
-export const notificationItemWrapperStyles = ['relative', 'flex flex-col'].join(
-  ' '
-);
+export const notificationItemWrapperStyles = ['relative', 'flex flex-col'].join(' ');
 
 /**
  * Timestamp display styles shown below the Toast content.

@@ -251,7 +251,10 @@ export function ContainerIngressDetailPage() {
     {
       id: 'edit-config',
       label: 'Edit config',
-      onClick: () => console.log('Edit Config'),
+      onClick: () =>
+        navigate(
+          `/container/ingresses/${ingressId}/edit?name=${encodeURIComponent(ingress?.name ?? ingressId)}`
+        ),
     },
     {
       id: 'edit-yaml',

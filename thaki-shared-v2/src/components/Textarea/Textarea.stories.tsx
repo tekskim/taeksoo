@@ -115,36 +115,20 @@ export const ResizeOptions: Story = {
   render: () => (
     <Layout.VStack gap="md" style={{ width: '400px' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          None (리사이즈 불가)
-        </Typography.Text>
+        <Typography.Text variant="caption">None (리사이즈 불가)</Typography.Text>
         <Textarea resize="none" placeholder="리사이즈할 수 없습니다" rows={3} />
       </Layout.VStack>
       <Layout.VStack gap="sm">
         <Typography.Text variant="caption">Vertical (세로만)</Typography.Text>
-        <Textarea
-          resize="vertical"
-          placeholder="세로로만 리사이즈 가능"
-          rows={3}
-        />
+        <Textarea resize="vertical" placeholder="세로로만 리사이즈 가능" rows={3} />
       </Layout.VStack>
       <Layout.VStack gap="sm">
         <Typography.Text variant="caption">Horizontal (가로만)</Typography.Text>
-        <Textarea
-          resize="horizontal"
-          placeholder="가로로만 리사이즈 가능"
-          rows={3}
-        />
+        <Textarea resize="horizontal" placeholder="가로로만 리사이즈 가능" rows={3} />
       </Layout.VStack>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          Both (가로/세로 모두)
-        </Typography.Text>
-        <Textarea
-          resize="both"
-          placeholder="모든 방향으로 리사이즈 가능"
-          rows={3}
-        />
+        <Typography.Text variant="caption">Both (가로/세로 모두)</Typography.Text>
+        <Textarea resize="both" placeholder="모든 방향으로 리사이즈 가능" rows={3} />
       </Layout.VStack>
     </Layout.VStack>
   ),
@@ -155,10 +139,7 @@ export const AutoResize: Story = {
     <Layout.VStack gap="md" style={{ width: '400px' }}>
       <Layout.VStack gap="sm">
         <Typography.Text variant="caption">일반 Textarea</Typography.Text>
-        <Textarea
-          placeholder="일반 textarea입니다. 내용이 늘어나도 높이가 고정됩니다."
-          rows={2}
-        />
+        <Textarea placeholder="일반 textarea입니다. 내용이 늘어나도 높이가 고정됩니다." rows={2} />
       </Layout.VStack>
       <Layout.VStack gap="sm">
         <Typography.Text variant="caption">자동 리사이즈</Typography.Text>
@@ -176,9 +157,7 @@ export const CharacterCount: Story = {
   render: () => (
     <Layout.VStack gap="md" style={{ width: '400px' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          글자 수 제한 (100자)
-        </Typography.Text>
+        <Typography.Text variant="caption">글자 수 제한 (100자)</Typography.Text>
         <Textarea
           placeholder="최대 100자까지 입력 가능합니다"
           maxLength={100}
@@ -203,9 +182,7 @@ export const CodeInput: Story = {
   render: () => (
     <Layout.VStack gap="md" style={{ width: '500px' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          코드 입력 (모노스페이스 폰트)
-        </Typography.Text>
+        <Typography.Text variant="caption">코드 입력 (모노스페이스 폰트)</Typography.Text>
         <Textarea
           placeholder={`function example() {
   console.log("Hello, World!");
@@ -242,21 +219,19 @@ const ControlledTextareaExample = () => {
   return (
     <Layout.VStack gap="md" style={{ width: '400px' }}>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          입력된 글자 수: {value.length}
-        </Typography.Text>
+        <Typography.Text variant="caption">입력된 글자 수: {value.length}</Typography.Text>
         <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <input
             type="checkbox"
             checked={autoResize}
-            onChange={e => setAutoResize(e.target.checked)}
+            onChange={(e) => setAutoResize(e.target.checked)}
           />
           <Typography.Text variant="caption">자동 리사이즈</Typography.Text>
         </label>
       </Layout.VStack>
       <Textarea
         value={value}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         placeholder="제어된 textarea 필드"
         rows={3}
         autoResize={autoResize}

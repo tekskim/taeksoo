@@ -9,10 +9,7 @@ export function createStaticAppIcon(
   src: string,
   appName: string
 ): ComponentType<StaticAppIconProps> {
-  const StaticAppIcon = ({
-    size = 24,
-    className,
-  }: StaticAppIconProps): React.ReactElement => (
+  const StaticAppIcon = ({ size = 24, className }: StaticAppIconProps): React.ReactElement => (
     <img
       src={src}
       alt={`${appName} icon`}

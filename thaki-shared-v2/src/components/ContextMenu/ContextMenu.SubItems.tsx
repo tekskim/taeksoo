@@ -8,10 +8,7 @@ import {
   subitemTriggerStyles,
   chevronHoverStyles,
 } from './ContextMenu.styles';
-import {
-  RootPrivate as ContextMenu,
-  SubContextMenuDirection,
-} from './ContextMenu.Root';
+import { RootPrivate as ContextMenu, SubContextMenuDirection } from './ContextMenu.Root';
 
 /**
  * @type
@@ -25,9 +22,7 @@ type ContextMenuItemElement = ReactElement<React.ComponentProps<typeof Item>>;
  *
  * ContextMenu.SubItems 컴포넌트 타입 정의
  */
-type ContextMenuSubItemsElement = ReactElement<
-  React.ComponentProps<typeof SubItems>
->;
+type ContextMenuSubItemsElement = ReactElement<React.ComponentProps<typeof SubItems>>;
 
 interface OffsetPosition {
   top?: number;
@@ -177,7 +172,7 @@ const SubItemsPrivate = ({
         </button>
       )}
     >
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (!isContextMenuItem(child)) {
           throw Error(
             '컨텍스트 메뉴 서브아이템의 children은 컨텍스트 메뉴 아이템 컴포넌트이어야만합니다!'
@@ -190,9 +185,7 @@ const SubItemsPrivate = ({
   );
 };
 
-const SubItems = (props: Props): React.ReactElement => (
-  <SubItemsPrivate {...props} />
-);
+const SubItems = (props: Props): React.ReactElement => <SubItemsPrivate {...props} />;
 
 SubItems.displayName = 'ContextMenuSubItems' as const;
 

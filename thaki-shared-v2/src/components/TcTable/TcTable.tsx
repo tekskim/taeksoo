@@ -7,19 +7,15 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react';
 // 유틸 및 컴포넌트 임포트
-import { cn } from "../../services/utils";
-import { ErrorBoundary } from "../ErrorBoundary/ErrorBoundary";
-import { ChevronRightIcon } from "../Icon";
-import { SelectCell, TableBody } from "./TableBody";
-import { TableFooter } from "./TableFooter";
-import { TableHeader } from "./TableHeader";
-import {
-  DefaultEmptyRow,
-  DefaultErrorRow,
-  TableSkeleton,
-} from "./TableSkeleton";
+import { cn } from '../../services/utils';
+import { ErrorBoundary } from '../ErrorBoundary/ErrorBoundary';
+import { ChevronRightIcon } from '../Icon';
+import { SelectCell, TableBody } from './TableBody';
+import { TableFooter } from './TableFooter';
+import { TableHeader } from './TableHeader';
+import { DefaultEmptyRow, DefaultErrorRow, TableSkeleton } from './TableSkeleton';
 // 테이블 스타일 클래스명 임포트
 import {
   bodyTrClassnames,
@@ -35,17 +31,11 @@ import {
   tdContentClassnames,
   trClassnames,
   trClickableClassnames,
-} from "./TcTable.styles";
+} from './TcTable.styles';
 // 타입 정의 임포트
-import {
-  BodyProps,
-  SelectValue,
-  TdProps,
-  TrProps,
-  TYPE,
-} from "./TcTable.types";
+import { BodyProps, SelectValue, TdProps, TrProps, TYPE } from './TcTable.types';
 // 컬럼 리사이즈 기능 훅 임포트
-import { useColumnResizing } from "./useColumnResizing";
+import { useColumnResizing } from './useColumnResizing';
 
 // 행 클릭 및 비활성화 상태를 전달하는 컨텍스트
 const RowContext = createContext<{
@@ -85,7 +75,7 @@ const Tr = ({ children, className, onClick }: TrProps) => {
         stickyLastColumn && stickyLastColumnClassnames,
         bodyTrClassnames,
         isClickable && trClickableClassnames,
-        className,
+        className
       )}
       onClick={handleClick}
       aria-disabled={disabled || undefined}
@@ -154,22 +144,9 @@ const ColumnWidths = ({
  * @param {boolean} [props.iconColumn] - 아이콘 컬럼 여부
  * @returns {React.ReactElement} <td> 엘리먼트
  */
-const Td = ({
-  children,
-  className,
-  align,
-  colspan,
-  rowspan,
-  suffix,
-  iconColumn,
-}: TdProps) => (
+const Td = ({ children, className, align, colspan, rowspan, suffix, iconColumn }: TdProps) => (
   <td
-    className={cn(
-      tdClassnames,
-      align,
-      iconColumn && iconColumnClassnames,
-      className,
-    )}
+    className={cn(tdClassnames, align, iconColumn && iconColumnClassnames, className)}
     colSpan={colspan}
     rowSpan={rowspan}
   >
@@ -272,13 +249,11 @@ const Table = <T,>({
 
   // 선택된 행의 값들 (Set으로 중복 제거)
   const [checkedRowValues, setCheckedRowValues] = useState<Set<SelectValue>>(
-    () => new Set(selectedValues ?? []),
+    () => new Set(selectedValues ?? [])
   );
 
   // 확장된 행의 키들
-  const [expandedKeys, setExpandedKeys] = useState<Set<SelectValue>>(
-    () => new Set(),
-  );
+  const [expandedKeys, setExpandedKeys] = useState<Set<SelectValue>>(() => new Set());
 
   // 라디오/체크박스 그룹명 생성 (중복 방지)
   const groupName = useId();
@@ -386,14 +361,11 @@ const Table = <T,>({
                   toggleExpand(rowKey);
                 }}
                 aria-expanded={isExpanded}
-                aria-label={isExpanded ? "Collapse row" : "Expand row"}
+                aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
               >
                 <ChevronRightIcon
                   size={16}
-                  className={cn(
-                    expandIconClassnames,
-                    isExpanded && expandIconExpandedClassnames,
-                  )}
+                  className={cn(expandIconClassnames, isExpanded && expandIconExpandedClassnames)}
                 />
               </button>
             ),
@@ -419,7 +391,7 @@ const Table = <T,>({
             <td className={expandedTdClassnames} colSpan={fullColspan}>
               {expandableUI(row)}
             </td>
-          </tr>,
+          </tr>
         );
       }
     });

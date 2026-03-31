@@ -115,8 +115,7 @@
     flex-direction: column;
     gap: var(--primitive-space-6);
     padding: var(--primitive-space-4) var(--primitive-space-6);
-    border-top: var(--primitive-border-sm) solid
-      var(--semantic-color-borderMuted);
+    border-top: var(--primitive-border-sm) solid var(--semantic-color-borderMuted);
   }
 
   .drawer-action-buttons {
@@ -125,8 +124,7 @@
     align-items: center;
     padding: var(--primitive-space-4) var(--primitive-space-6);
     gap: var(--primitive-space-2);
-    border-top: var(--primitive-border-sm) solid
-      var(--semantic-color-borderMuted);
+    border-top: var(--primitive-border-sm) solid var(--semantic-color-borderMuted);
   }
 
   .drawer-divider {

@@ -152,7 +152,8 @@ export function LimitRangesPage() {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => navigate(`/container/limit-ranges/${row.id}/edit`),
+        onClick: () =>
+          navigate(`/container/limit-ranges/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
       },
       {
         id: 'edit-yaml',

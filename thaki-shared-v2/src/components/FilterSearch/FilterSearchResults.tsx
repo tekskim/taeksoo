@@ -37,7 +37,7 @@ const FilterSearchResults: React.FC<FilterSearchResultsProps> = ({
     <div className={cn(styles.root, className)}>
       <Layout.HStack gap="sm" className={styles.content}>
         <div className={styles.tagsWrapper}>
-          {filters.map(filter => (
+          {filters.map((filter) => (
             <Tag
               key={filter.id}
               label={filter.label}
@@ -48,12 +48,7 @@ const FilterSearchResults: React.FC<FilterSearchResultsProps> = ({
           ))}
         </div>
 
-        <Button
-          size="sm"
-          appearance="ghost"
-          onClick={onClearAll}
-          className={styles.clearButton}
-        >
+        <Button size="sm" appearance="ghost" onClick={onClearAll} className={styles.clearButton}>
           Clear Filters
         </Button>
       </Layout.HStack>

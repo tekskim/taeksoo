@@ -43,9 +43,7 @@ interface WindowControlBridge {
   restore: () => void;
   close: () => void;
   destroy: () => void;
-  snap: (
-    mode: 'leftHalf' | 'rightHalf' | 'topHalf' | 'bottomHalf' | 'full'
-  ) => void;
+  snap: (mode: 'leftHalf' | 'rightHalf' | 'topHalf' | 'bottomHalf' | 'full') => void;
   onStateChange: (
     callback: (payload: {
       frameId: string;
@@ -129,10 +127,7 @@ interface AppLayoutConfig<TComponentName extends string = string> {
   toolBarRightActions?: ReactNode;
 
   // Window Control Bridge Factory (injected from consumer)
-  createWindowControlBridge: (config: {
-    frameId: string;
-    appName: string;
-  }) => WindowControlBridge;
+  createWindowControlBridge: (config: { frameId: string; appName: string }) => WindowControlBridge;
 
   // Styles (optional custom styles)
   customStyles?: {
@@ -205,16 +200,10 @@ const HeaderSection = memo(
     onSnap,
   }: HeaderSectionProps): React.ReactElement => (
     <header
-      className={cn(
-        customStyles?.appHeader ?? appHeaderStyles,
-        dragHandleClassName
-      )}
+      className={cn(customStyles?.appHeader ?? appHeaderStyles, dragHandleClassName)}
       onDoubleClick={onHeaderDoubleClick}
     >
-      <Layout.HStack
-        align="stretch"
-        className={customStyles?.headerContent ?? headerContentStyles}
-      >
+      <Layout.HStack align="stretch" className={customStyles?.headerContent ?? headerContentStyles}>
         {/* empty div for backward compatibility space-between */}
         {AppHeaderTab ? <AppHeaderTab /> : <div />}
 
@@ -236,10 +225,7 @@ HeaderSection.displayName = 'HeaderSection';
 
 const ContentArea = memo(
   ({ children, className }: ContentAreaProps): React.ReactElement => (
-    <main
-      className={cn('flex min-w-0 min-h-0', className)}
-      data-app-content="true"
-    >
+    <main className={cn('flex min-w-0 min-h-0', className)} data-app-content="true">
       {children}
     </main>
   )
@@ -276,9 +262,7 @@ const AppLayoutContentInner = <TComponentName extends string>({
   // Get breadcrumb items from the hook
   const breadcrumbItems = useBreadcrumbItems();
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
-    initialSidebarCollapsed
-  );
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(initialSidebarCollapsed);
 
   const {
     tabs,
@@ -339,7 +323,7 @@ const AppLayoutContentInner = <TComponentName extends string>({
 
   // 사이드바 토글 핸들러
   const handleToggleSidebar = useCallback(() => {
-    setIsSidebarCollapsed(prev => !prev);
+    setIsSidebarCollapsed((prev) => !prev);
   }, []);
 
   // TabContainer 설정
@@ -387,9 +371,7 @@ const AppLayoutContentInner = <TComponentName extends string>({
   );
 
   return (
-    <Layout.Container
-      className={customStyles?.layoutContainer ?? layoutContainerStyles}
-    >
+    <Layout.Container className={customStyles?.layoutContainer ?? layoutContainerStyles}>
       {/* 메인 콘텐츠 영역 */}
       <Layout.VStack className={customStyles?.mainContent ?? mainContentStyles}>
         <div className={cn(sideContentStyles, dragHandleClassName)}>
@@ -435,7 +417,7 @@ const AppLayoutContentInner = <TComponentName extends string>({
                     size="sm"
                     onClick={handleToggleSidebar}
                     title="Hide Sidebar"
-                    onMouseDown={e => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     <SidebarIcon variant="secondary" size={16} />
                   </Button>
@@ -502,9 +484,7 @@ const AppLayoutContentInner = <TComponentName extends string>({
   );
 };
 
-const AppLayoutContent = memo(
-  AppLayoutContentInner
-) as typeof AppLayoutContentInner & {
+const AppLayoutContent = memo(AppLayoutContentInner) as typeof AppLayoutContentInner & {
   displayName?: string;
 };
 

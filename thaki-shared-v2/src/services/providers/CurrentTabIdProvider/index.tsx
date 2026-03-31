@@ -8,13 +8,6 @@ interface CurrentTabIdProviderProps {
   children: React.ReactNode;
 }
 
-export const CurrentTabIdProvider: React.FC<CurrentTabIdProviderProps> = ({
-  tabId,
-  children,
-}) => {
-  return (
-    <CurrentTabIdContext.Provider value={tabId}>
-      {children}
-    </CurrentTabIdContext.Provider>
-  );
+export const CurrentTabIdProvider: React.FC<CurrentTabIdProviderProps> = ({ tabId, children }) => {
+  return <CurrentTabIdContext.Provider value={tabId}>{children}</CurrentTabIdContext.Provider>;
 };

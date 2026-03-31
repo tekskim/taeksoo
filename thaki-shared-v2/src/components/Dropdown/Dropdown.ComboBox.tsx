@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Option, { isOptionPlaceholder } from './Dropdown.Option';
 import { DropdownProps, OptionProps, OptionValue } from './Dropdown.types';
 
@@ -119,7 +112,7 @@ const ComboBox = ({
   /** 유효한 옵션 목록 */
   const validOptions = useMemo(
     () =>
-      React.Children.toArray(children).filter(child => {
+      React.Children.toArray(children).filter((child) => {
         // OptionPlaceholder 컴포넌트인지 확인 (Module Federation 호환을 위해 displayName 체크)
         if (!React.isValidElement(child) || !isOptionPlaceholder(child.type)) {
           throw new Error('Dropdown.Option 컴포넌트가 아닙니다.');
@@ -163,12 +156,11 @@ const ComboBox = ({
       setFocusedIndex(index);
 
       // 선택된 옵션에 대한 라벨
-      const { label: selectedOptionLabel = '' } =
-        optionMap[String(value)] ?? {};
+      const { label: selectedOptionLabel = '' } = optionMap[String(value)] ?? {};
 
       setInputValue(selectedOptionLabel);
 
-      setIsOpened(current => !current);
+      setIsOpened((current) => !current);
     },
     [selected, onChange, onSelect, optionMap]
   );
@@ -176,7 +168,7 @@ const ComboBox = ({
   /** 필터링된 옵션 목록 */
   const filteredOptions = useMemo(
     () =>
-      validOptions.filter(child => {
+      validOptions.filter((child) => {
         const {
           props: { label },
         } = child as React.ReactElement<OptionProps>;
@@ -247,8 +239,7 @@ const ComboBox = ({
       if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
         if (focusedIndex >= 0) {
           /** 엔터를 쳐서 키보드 포커스된 옵션을 선택 */
-          const { props: focusedOptionProp } =
-            optionElements[focusedIndex] ?? {};
+          const { props: focusedOptionProp } = optionElements[focusedIndex] ?? {};
 
           if (!focusedOptionProp || focusedOptionProp.disabled) {
             return;
@@ -261,7 +252,7 @@ const ComboBox = ({
       if (e.key === 'ArrowUp') {
         e.preventDefault(); // <-- 의도하지 않은 인풋 커서 움직임 방지
 
-        setFocusedIndex(prevFocusedIndex => {
+        setFocusedIndex((prevFocusedIndex) => {
           /** 키보드 화살표 위를 눌렀을 때, 포커스되는 옵션의 index 계산 */
           const newlyFocusedIndex = calculateNewlyFocusedIndex(
             prevFocusedIndex,
@@ -287,7 +278,7 @@ const ComboBox = ({
       if (e.key === 'ArrowDown') {
         e.preventDefault(); // <-- 의도하지 않은 인풋 커서 움직임 방지
 
-        setFocusedIndex(prevFocusedIndex => {
+        setFocusedIndex((prevFocusedIndex) => {
           /** 키보드 화살표 아래를 눌렀을 때, 포커스되는 옵션의 index 계산 */
           const newlyFocusedIndex = calculateNewlyFocusedIndex(
             prevFocusedIndex,
@@ -319,14 +310,11 @@ const ComboBox = ({
   );
 
   /** 인풋 변경 핸들러 */
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value);
-      setFocusedIndex(0);
-      setIsOpened(true);
-    },
-    []
-  );
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    setFocusedIndex(0);
+    setIsOpened(true);
+  }, []);
 
   // <-------- 비활성화 또는 로딩 상태일 때 드롭다운 닫히는 effect -------->
   useEffect(() => {
@@ -340,11 +328,11 @@ const ComboBox = ({
   useEffect(() => {
     // 라벨이 있다면 그에 해당하는 옵션이 있다는 뜻이므로, 그 옵션의 value로 선택상태 변경
     const nextSelected: OptionValue = labelOnValueProp ? (value ?? '') : '';
-    setSelected(prev => (prev === nextSelected ? prev : nextSelected));
+    setSelected((prev) => (prev === nextSelected ? prev : nextSelected));
 
     // 위의 옵션에 해당하는 라벨로 인풋값 상태 변경
     const nextInputValue = labelOnValueProp ?? '';
-    setInputValue(prev => (prev === nextInputValue ? prev : nextInputValue));
+    setInputValue((prev) => (prev === nextInputValue ? prev : nextInputValue));
   }, [value, labelOnValueProp, indexOnValueProp]);
 
   // <-------- 로딩이 끝났는데, 유효한 옵션의 갯수가 0이면 노데이터 처리 -------->
@@ -359,16 +347,10 @@ const ComboBox = ({
     if (!isOpened) return;
 
     setTimeout(() => {
-      const singleOptionElement =
-        dropdownListRef.current?.querySelector('.dropdown-option');
-      const optionHeight =
-        (singleOptionElement as HTMLElement)?.offsetHeight || 40;
+      const singleOptionElement = dropdownListRef.current?.querySelector('.dropdown-option');
+      const optionHeight = (singleOptionElement as HTMLElement)?.offsetHeight || 40;
       setOptionListHeight(
-        calculateOptionListHeight(
-          optionElements.length,
-          optionHeight,
-          numbersOfOptionsInView,
-        ),
+        calculateOptionListHeight(optionElements.length, optionHeight, numbersOfOptionsInView)
       );
     }, 50);
   }, [isOpened, optionElements.length, numbersOfOptionsInView]);
@@ -398,7 +380,7 @@ const ComboBox = ({
 
   // <-------- 외부 클릭 시 드롭다운 닫히는 effect -------->
   useClickOutside(containerRef, {
-    onClickOutside: event => {
+    onClickOutside: (event) => {
       // 포탈 영역(옵션 리스트) 내부 클릭인지 확인
       const portalElement = dropdownListRef.current;
 
@@ -414,10 +396,7 @@ const ComboBox = ({
   return (
     <div
       ref={containerRef}
-      className={cn(
-        dropdownContainerStyles({ loading: isLoading }),
-        className
-      )}
+      className={cn(dropdownContainerStyles({ loading: isLoading }), className)}
     >
       <label className={cn(dropdownTriggerStyles)}>
         <input
@@ -443,20 +422,14 @@ const ComboBox = ({
         />
 
         {isActive && (
-          <Portal
-            triggerRef={triggerInputRef}
-            direction="bottom"
-            gap={4}
-          >
+          <Portal triggerRef={triggerInputRef} direction="bottom" gap={4}>
             <ul
               id={dropdownListId}
               ref={dropdownListRef}
               className={cn(dropdownOptionsStyles({ size }), 'dropdown-options')}
               role="listbox"
               aria-label="선택 가능한 옵션 목록"
-              aria-activedescendant={
-                focusedIndex >= 0 ? getOptionDomId(focusedIndex) : undefined
-              }
+              aria-activedescendant={focusedIndex >= 0 ? getOptionDomId(focusedIndex) : undefined}
               style={{ height: `${optionListHeight}px` }}
             >
               {hasNoOptions ? (

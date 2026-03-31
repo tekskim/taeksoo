@@ -2,13 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Accordion from './Accordion';
 import { Typography } from '../Typography';
 import Layout from '../Layout';
-import {
-  ChevronRightIcon,
-  HomeIcon,
-  ChartIcon,
-  SettingIcon,
-  DashboardIcon,
-} from '../Icon';
+import { ChevronRightIcon, HomeIcon, ChartIcon, SettingIcon, DashboardIcon } from '../Icon';
 import { useState } from 'react';
 
 const expandingCardStyle = {
@@ -115,8 +109,7 @@ export const Default: Story = {
                 padding: 'var(--semantic-space-md)',
                 background: 'var(--semantic-color-surface)',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Typography.Text>Section 1</Typography.Text>
@@ -124,8 +117,7 @@ export const Default: Story = {
                 variant="muted"
                 size="sm"
                 style={{
-                  transition:
-                    'transform var(--semantic-transition-normal) ease',
+                  transition: 'transform var(--semantic-transition-normal) ease',
                 }}
               />
             </Layout.HStack>
@@ -161,8 +153,7 @@ export const Default: Story = {
                 padding: 'var(--semantic-space-md)',
                 background: 'var(--semantic-color-surface)',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Typography.Text>Section 2</Typography.Text>
@@ -170,8 +161,7 @@ export const Default: Story = {
                 variant="muted"
                 size="sm"
                 style={{
-                  transition:
-                    'transform var(--semantic-transition-normal) ease',
+                  transition: 'transform var(--semantic-transition-normal) ease',
                 }}
               />
             </Layout.HStack>
@@ -185,8 +175,7 @@ export const Default: Story = {
             }}
           >
             <Typography.Text>
-              This is the content for Section 2. Standard accordion design with
-              arrow indicators.
+              This is the content for Section 2. Standard accordion design with arrow indicators.
             </Typography.Text>
           </div>
         </Accordion.Item>
@@ -208,8 +197,7 @@ export const Default: Story = {
                 padding: 'var(--semantic-space-md)',
                 background: 'var(--semantic-color-surface)',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Typography.Text>Section 3</Typography.Text>
@@ -217,8 +205,7 @@ export const Default: Story = {
                 variant="muted"
                 size="sm"
                 style={{
-                  transition:
-                    'transform var(--semantic-transition-normal) ease',
+                  transition: 'transform var(--semantic-transition-normal) ease',
                 }}
               />
             </Layout.HStack>
@@ -232,8 +219,7 @@ export const Default: Story = {
             }}
           >
             <Typography.Text>
-              This is the content for Section 3. Click the arrow to expand and
-              collapse.
+              This is the content for Section 3. Click the arrow to expand and collapse.
             </Typography.Text>
           </div>
         </Accordion.Item>
@@ -391,8 +377,7 @@ export const Sidebar: Story = {
               style={{
                 padding: 'var(--semantic-space-sm) var(--semantic-space-md)',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <HomeIcon variant="muted" size="sm" />
@@ -417,18 +402,14 @@ export const Sidebar: Story = {
             <div
               style={{
                 padding: 'var(--semantic-space-xs) var(--semantic-space-md)',
-                paddingLeft:
-                  'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
+                paddingLeft: 'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Layout.HStack gap="sm" align="center">
                 <ChartIcon variant="muted" size="xs" />
-                <Typography.Text
-                  style={{ fontSize: 'var(--semantic-font-sizeSm)' }}
-                >
+                <Typography.Text style={{ fontSize: 'var(--semantic-font-sizeSm)' }}>
                   Overview
                 </Typography.Text>
               </Layout.HStack>
@@ -436,18 +417,14 @@ export const Sidebar: Story = {
             <div
               style={{
                 padding: 'var(--semantic-space-xs) var(--semantic-space-md)',
-                paddingLeft:
-                  'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
+                paddingLeft: 'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Layout.HStack gap="sm" align="center">
                 <ChartIcon variant="muted" size="xs" />
-                <Typography.Text
-                  style={{ fontSize: 'var(--semantic-font-sizeSm)' }}
-                >
+                <Typography.Text style={{ fontSize: 'var(--semantic-font-sizeSm)' }}>
                   Analytics
                 </Typography.Text>
               </Layout.HStack>
@@ -465,8 +442,7 @@ export const Sidebar: Story = {
               style={{
                 padding: 'var(--semantic-space-sm) var(--semantic-space-md)',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
                 borderTop: '1px solid var(--semantic-color-border)',
               }}
             >
@@ -492,18 +468,14 @@ export const Sidebar: Story = {
             <div
               style={{
                 padding: 'var(--semantic-space-xs) var(--semantic-space-md)',
-                paddingLeft:
-                  'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
+                paddingLeft: 'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Layout.HStack gap="sm" align="center">
                 <DashboardIcon variant="muted" size="xs" />
-                <Typography.Text
-                  style={{ fontSize: 'var(--semantic-font-sizeSm)' }}
-                >
+                <Typography.Text style={{ fontSize: 'var(--semantic-font-sizeSm)' }}>
                   Profile
                 </Typography.Text>
               </Layout.HStack>
@@ -511,18 +483,14 @@ export const Sidebar: Story = {
             <div
               style={{
                 padding: 'var(--semantic-space-xs) var(--semantic-space-md)',
-                paddingLeft:
-                  'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
+                paddingLeft: 'calc(var(--semantic-space-md) + var(--semantic-space-lg))',
                 cursor: 'pointer',
-                transition:
-                  'background-color var(--semantic-transition-normal) ease',
+                transition: 'background-color var(--semantic-transition-normal) ease',
               }}
             >
               <Layout.HStack gap="sm" align="center">
                 <SettingIcon variant="muted" size="xs" />
-                <Typography.Text
-                  style={{ fontSize: 'var(--semantic-font-sizeSm)' }}
-                >
+                <Typography.Text style={{ fontSize: 'var(--semantic-font-sizeSm)' }}>
                   Preferences
                 </Typography.Text>
               </Layout.HStack>
@@ -537,11 +505,8 @@ export const Sidebar: Story = {
 export const Collapsible: Story = {
   render: () => (
     <Layout.Container maxWidth="md" padding="md">
-      <Typography.Text
-        style={{ marginBottom: 'var(--semantic-space-md)', display: 'block' }}
-      >
-        📌 <strong>collapsible=false</strong>: Single 모드에서 항상 하나는
-        열려있어야 함
+      <Typography.Text style={{ marginBottom: 'var(--semantic-space-md)', display: 'block' }}>
+        📌 <strong>collapsible=false</strong>: Single 모드에서 항상 하나는 열려있어야 함
       </Typography.Text>
 
       <Accordion.Group type="single" collapsible={false} defaultValue="faq1">
@@ -553,12 +518,8 @@ export const Collapsible: Story = {
             marginBottom: 'var(--semantic-space-xs)',
           }}
           header={
-            <div
-              style={{ padding: 'var(--semantic-space-md)', cursor: 'pointer' }}
-            >
-              <Typography.Text>
-                FAQ 1 - 마지막 열린 아이템은 닫을 수 없음
-              </Typography.Text>
+            <div style={{ padding: 'var(--semantic-space-md)', cursor: 'pointer' }}>
+              <Typography.Text>FAQ 1 - 마지막 열린 아이템은 닫을 수 없음</Typography.Text>
             </div>
           }
         >
@@ -582,9 +543,7 @@ export const Collapsible: Story = {
             marginBottom: 'var(--semantic-space-xs)',
           }}
           header={
-            <div
-              style={{ padding: 'var(--semantic-space-md)', cursor: 'pointer' }}
-            >
+            <div style={{ padding: 'var(--semantic-space-md)', cursor: 'pointer' }}>
               <Typography.Text>FAQ 2</Typography.Text>
             </div>
           }
@@ -608,11 +567,8 @@ export const Collapsible: Story = {
 export const Disabled: Story = {
   render: () => (
     <Layout.Container maxWidth="md" padding="md">
-      <Typography.Text
-        style={{ marginBottom: 'var(--semantic-space-md)', display: 'block' }}
-      >
-        📌 <strong>disabled=true</strong>: 모든 상호작용이 차단되고 시각적으로
-        비활성화됨
+      <Typography.Text style={{ marginBottom: 'var(--semantic-space-md)', display: 'block' }}>
+        📌 <strong>disabled=true</strong>: 모든 상호작용이 차단되고 시각적으로 비활성화됨
       </Typography.Text>
 
       <Accordion.Group type="single" disabled={true}>
@@ -660,11 +616,8 @@ const KeepMountedComponent = () => {
 
   return (
     <Layout.Container maxWidth="md" padding="md">
-      <Typography.Text
-        style={{ marginBottom: 'var(--semantic-space-md)', display: 'block' }}
-      >
-        📌 <strong>keepMounted=true</strong>: 닫혀도 DOM과 상태가 유지됨 (폼
-        테스트)
+      <Typography.Text style={{ marginBottom: 'var(--semantic-space-md)', display: 'block' }}>
+        📌 <strong>keepMounted=true</strong>: 닫혀도 DOM과 상태가 유지됨 (폼 테스트)
       </Typography.Text>
 
       <Accordion.Group type="single">
@@ -704,7 +657,7 @@ const KeepMountedComponent = () => {
             <input
               type="text"
               value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
+              onChange={(e) => setInputValue(e.target.value)}
               placeholder="여기에 입력하세요..."
               style={{
                 width: '100%',
@@ -752,8 +705,7 @@ const KeepMountedComponent = () => {
             }}
           >
             <Typography.Text>
-              이 섹션을 닫으면 DOM에서 완전히 제거됩니다. 위 폼 섹션과
-              비교해보세요!
+              이 섹션을 닫으면 DOM에서 완전히 제거됩니다. 위 폼 섹션과 비교해보세요!
             </Typography.Text>
           </div>
         </Accordion.Item>

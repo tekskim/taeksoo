@@ -9,7 +9,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: '텍스트 표시를 위한 Typography 컴포넌트입니다.'
+        component: '텍스트 표시를 위한 Typography 컴포넌트입니다.',
       },
     },
   },

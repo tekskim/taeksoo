@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -18,6 +18,12 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
+import {
+  formCpuToYaml,
+  formMemoryToYaml,
+  parseCpuSafe,
+  parseMemorySafe,
+} from '@/utils/k8sResourceUnits';
 import {
   IconBell,
   IconTerminal2,
@@ -104,6 +110,7 @@ interface SummarySidebarProps {
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -111,6 +118,7 @@ function SummarySidebar({
   onCancel,
   onCreate,
   isCreateDisabled,
+  isEditMode = false,
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
@@ -143,7 +151,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -165,6 +173,7 @@ interface BasicInfoSectionProps {
   description: string;
   onDescriptionChange: (value: string) => void;
   isV2: boolean;
+  isEditMode?: boolean;
 }
 
 function BasicInfoSection({
@@ -177,6 +186,7 @@ function BasicInfoSection({
   description,
   onDescriptionChange,
   isV2,
+  isEditMode = false,
 }: BasicInfoSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -208,6 +218,7 @@ function BasicInfoSection({
                   if (resourceQuotaNameError) onResourceQuotaNameErrorChange(null);
                 }}
                 fullWidth
+                disabled={isEditMode}
               />
             </FormField.Control>
             <FormField.ErrorMessage>{resourceQuotaNameError}</FormField.ErrorMessage>
@@ -265,6 +276,7 @@ const getResourceUnit = (resourceType: string): string | null => {
       return 'mCPUs';
     case 'memory-limit':
     case 'memory-reservation':
+      return 'MiB';
     case 'storage-reservation':
       return 'MiB';
     default:
@@ -277,12 +289,12 @@ const getResourcePlaceholder = (resourceType: string): string => {
   switch (resourceType) {
     case 'cpu-limit':
     case 'cpu-reservation':
-      return 'e.g. 1000';
+      return 'e.g. 500';
     case 'memory-limit':
     case 'memory-reservation':
-      return 'e.g. 128';
-    case 'storage-reservation':
       return 'e.g. 512';
+    case 'storage-reservation':
+      return 'e.g. 10240';
     default:
       return 'e.g. 50';
   }
@@ -568,6 +580,10 @@ function LabelsAnnotationsSection({
 
 export function CreateResourceQuotaPage() {
   const navigate = useNavigate();
+  const { resourceQuotaName: resourceQuotaNameParam } = useParams();
+  const isEditMode = !!resourceQuotaNameParam;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -600,8 +616,40 @@ export function CreateResourceQuotaPage() {
 
   // Update tab label
   useEffect(() => {
-    updateActiveTabLabel('Create resource quota');
-  }, [updateActiveTabLabel]);
+    updateActiveTabLabel(
+      isEditMode
+        ? `Resource quota: ${nameFromQuery || resourceQuotaNameParam}`
+        : 'Create resource quota'
+    );
+  }, [updateActiveTabLabel, isEditMode, resourceQuotaNameParam]);
+
+  useEffect(() => {
+    if (isEditMode && resourceQuotaNameParam) {
+      setResourceQuotaName(nameFromQuery || resourceQuotaNameParam);
+
+      // Mock YAML quota items — in a real app these would be fetched from the cluster.
+      // Demonstrates YAML → Form parsing: "500m" → 500, "1Gi" → 1024.
+      const mockYamlQuotas: Array<{ resourceType: string; limit: string }> = [
+        { resourceType: 'cpu-limit', limit: '2000m' },
+        { resourceType: 'memory-limit', limit: '4Gi' },
+        { resourceType: 'cpu-reservation', limit: '1' },
+        { resourceType: 'memory-reservation', limit: '512Mi' },
+        { resourceType: 'pods', limit: '100' },
+      ];
+
+      setQuotaItems(
+        mockYamlQuotas.map((q, i) => {
+          let formLimit = q.limit;
+          if (q.resourceType === 'cpu-limit' || q.resourceType === 'cpu-reservation') {
+            formLimit = String(parseCpuSafe(q.limit, 0));
+          } else if (q.resourceType === 'memory-limit' || q.resourceType === 'memory-reservation') {
+            formLimit = String(parseMemorySafe(q.limit, 0));
+          }
+          return { id: `quota-edit-${i}`, resourceType: q.resourceType, limit: formLimit };
+        })
+      );
+    }
+  }, [isEditMode, resourceQuotaNameParam]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -620,17 +668,12 @@ export function CreateResourceQuotaPage() {
     const labelsAnnotationsDone = labels.length > 0 || annotations.length > 0;
 
     return {
-      'basic-info': basicInfoDone
-        ? 'done'
-        : resourceQuotaName.trim().length > 0
-          ? 'active'
-          : 'pending',
-      data: dataDone ? 'done' : quotaItems.length > 0 ? 'active' : 'pending',
-      'labels-annotations': labelsAnnotationsDone
-        ? 'done'
-        : labels.length > 0 || annotations.length > 0
-          ? 'active'
-          : 'pending',
+      // namespace has default → 'active' until name is typed
+      'basic-info': resourceQuotaName.trim() ? 'done' : 'active',
+      // quota items are optional → always done
+      data: 'done',
+      // labels & annotations have no required fields → always done
+      'labels-annotations': 'done',
     };
   };
 
@@ -641,17 +684,29 @@ export function CreateResourceQuotaPage() {
   }, [navigate]);
 
   const handleCreate = useCallback(() => {
-    // Validate basic info first
     if (!resourceQuotaName.trim()) {
-      setResourceQuotaNameError('Limit range name is required.');
+      setResourceQuotaNameError('Resource quota name is required.');
       return;
     }
 
-    console.log('Creating resource quota:', {
+    // Form → YAML conversion for CPU/Memory quota items
+    const yamlQuotaItems = quotaItems.map((item) => {
+      if (!item.limit) return item;
+      const resourceType = item.resourceType;
+      let yamlLimit = item.limit;
+      if (resourceType === 'cpu-limit' || resourceType === 'cpu-reservation') {
+        yamlLimit = formCpuToYaml(item.limit);
+      } else if (resourceType === 'memory-limit' || resourceType === 'memory-reservation') {
+        yamlLimit = formMemoryToYaml(item.limit);
+      }
+      return { ...item, limit: yamlLimit };
+    });
+
+    console.log('Creating resource quota (YAML values):', {
       resourceQuotaName,
       namespace,
       description,
-      quotaItems,
+      quotaItems: yamlQuotaItems,
       labels,
       annotations,
     });
@@ -731,7 +786,15 @@ export function CreateResourceQuotaPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Resource Quotas', href: '/container/resource-quotas' },
-                { label: 'Create resource quota' },
+                ...(isEditMode
+                  ? [
+                      {
+                        label: nameFromQuery || resourceQuotaNameParam!,
+                        href: `/container/resource-quotas/{resourceQuotaNameParam}`,
+                      },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create resource quota' }]),
               ]}
             />
           }
@@ -777,7 +840,9 @@ export function CreateResourceQuotaPage() {
         <VStack gap={2}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create resource quota
+              {isEditMode
+                ? `Resource quota: ${nameFromQuery || resourceQuotaNameParam}`
+                : 'Create resource quota'}
             </h1>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -801,6 +866,7 @@ export function CreateResourceQuotaPage() {
               description={description}
               onDescriptionChange={setDescription}
               isV2={isV2}
+              isEditMode={isEditMode}
             />
 
             {/* Resource Quotas Section */}
@@ -825,6 +891,7 @@ export function CreateResourceQuotaPage() {
             onCancel={handleCancel}
             onCreate={handleCreate}
             isCreateDisabled={isCreateDisabled}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

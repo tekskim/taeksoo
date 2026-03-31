@@ -1,8 +1,4 @@
-import {
-  ComponentVariant,
-  ComponentAppearance,
-  ComponentSize,
-} from '../../types';
+import { ComponentVariant, ComponentAppearance, ComponentSize } from '../../types';
 
 type ButtonVariant = ComponentVariant;
 type ButtonAppearance = ComponentAppearance;

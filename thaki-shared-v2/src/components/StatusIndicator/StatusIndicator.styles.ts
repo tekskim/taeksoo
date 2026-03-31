@@ -39,6 +39,4 @@ export const statusIndicatorVariants = cva(
 
 export const statusLabelStyles = 'text-center';
 
-export type StatusIndicatorVariants = VariantProps<
-  typeof statusIndicatorVariants
->;
+export type StatusIndicatorVariants = VariantProps<typeof statusIndicatorVariants>;

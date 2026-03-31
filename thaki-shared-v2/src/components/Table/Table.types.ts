@@ -47,10 +47,7 @@ export interface TableProps<TData> {
   emptyUI?: React.ReactNode;
   onClickRow?: (row: TData, e: React.MouseEvent<HTMLTableRowElement>) => void;
   children?: React.ReactNode;
-  renderHeaderCell?: (
-    column: TableColumn,
-    index: number
-  ) => React.ReactElement | null;
+  renderHeaderCell?: (column: TableColumn, index: number) => React.ReactElement | null;
   onColumnResize?: (columnKey: string, newWidth: number) => void;
   columnWidths?: Record<string, number>;
   sort?: string; // 현재 정렬 필드 (API 표준)
@@ -64,8 +61,7 @@ export interface TableProps<TData> {
 /**
  * 확장 가능한 테이블 Props
  */
-export interface ExpandableTableProps<TData>
-  extends Omit<TableProps<TData>, 'children'> {
+export interface ExpandableTableProps<TData> extends Omit<TableProps<TData>, 'children'> {
   expandedRowRender: (row: TData) => React.ReactNode; // 확장 영역 렌더 함수
   onExpandedRowsChange?: (expandedRowIds: string[]) => void; // 확장 상태 변경 콜백
   expandRowByClick?: boolean; // 행 클릭 시 확장 여부
@@ -95,11 +91,7 @@ export interface ThProps {
   children?: React.ReactNode;
   preventClickPropagation?: boolean;
   onColumnResize?: (columnKey: string, deltaX: number) => void;
-  onResizeStart?: (
-    columnKey: string,
-    startX: number,
-    tableElement: HTMLTableElement
-  ) => void;
+  onResizeStart?: (columnKey: string, startX: number, tableElement: HTMLTableElement) => void;
   onResizeEnd?: (columnKey: string) => void;
   currentSort?: string; // 현재 정렬 필드
   currentOrder?: SortOrder; // 현재 정렬 방향

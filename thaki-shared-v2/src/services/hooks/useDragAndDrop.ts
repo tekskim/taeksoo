@@ -158,7 +158,7 @@ export function useDragAndDrop<T extends DragAndDropItem>({
       }
 
       // 드래그 중인 아이템의 인덱스를 상태에 저장
-      setState(prev => ({ ...prev, draggedIndex: index }));
+      setState((prev) => ({ ...prev, draggedIndex: index }));
 
       // 드래그 효과를 'move'로 설정 (이동 커서 표시)
       e.dataTransfer.effectAllowed = 'move';
@@ -179,16 +179,12 @@ export function useDragAndDrop<T extends DragAndDropItem>({
       // 1. 드롭 불가능한 위치
       // 2. 드래그 중인 아이템이 없음
       // 3. 자기 자신 위에 드래그 오버
-      if (
-        !canDropItem(index) ||
-        state.draggedIndex === null ||
-        state.draggedIndex === index
-      ) {
+      if (!canDropItem(index) || state.draggedIndex === null || state.draggedIndex === index) {
         return;
       }
 
       // 드래그 오버 중인 아이템의 인덱스를 상태에 저장
-      setState(prev => ({ ...prev, dragOverIndex: index }));
+      setState((prev) => ({ ...prev, dragOverIndex: index }));
     },
     [canDropItem, state.draggedIndex]
   );
@@ -196,7 +192,7 @@ export function useDragAndDrop<T extends DragAndDropItem>({
   // 드래그 리브 이벤트 핸들러 (드래그 중인 아이템이 요소를 벗어날 때)
   const handleDragLeave = useCallback((): void => {
     // 드래그 오버 상태를 초기화
-    setState(prev => ({ ...prev, dragOverIndex: null }));
+    setState((prev) => ({ ...prev, dragOverIndex: null }));
   }, []);
 
   // 드롭 이벤트 핸들러 (실제 드롭이 발생했을 때)
@@ -209,11 +205,7 @@ export function useDragAndDrop<T extends DragAndDropItem>({
       // 1. 드래그 중인 아이템이 없음
       // 2. 드롭 불가능한 위치
       // 3. 자기 자신에게 드롭
-      if (
-        state.draggedIndex === null ||
-        !canDropItem(index) ||
-        state.draggedIndex === index
-      ) {
+      if (state.draggedIndex === null || !canDropItem(index) || state.draggedIndex === index) {
         return;
       }
 

@@ -225,8 +225,7 @@ export const FullFeatured: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          '리소스 이름, 상세 설명, 타임스탬프, 앱 아이콘이 모두 포함된 토스트입니다.',
+        story: '리소스 이름, 상세 설명, 타임스탬프, 앱 아이콘이 모두 포함된 토스트입니다.',
       },
     },
   },

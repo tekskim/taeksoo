@@ -1,30 +1,27 @@
 import { cva } from 'class-variance-authority';
 
 // Tab selector container
-export const tabSelectorStyles = cva(
-  'flex items-center border-b border-border',
-  {
-    variants: {
-      variant: {
-        small: 'gap-4', // 16px - Figma TabMenuSmall
-        medium: 'gap-6', // 24px - Figma Tab/Medium
-        pill: [
-          'gap-2 bg-surface-muted border-0', // gap-2 = 8px (Figma: spacing-xs)
-          'border border-border-muted rounded-md', // rounded-md = 6px (Figma)
-          'p-xxs w-fit', // p-xxs = 4px (Figma: spacing-xxs)
-        ],
-      },
-      layout: {
-        horizontal: '',
-        vertical: 'flex-col items-stretch border-b-0 border-r border-border',
-      },
+export const tabSelectorStyles = cva('flex items-center border-b border-border', {
+  variants: {
+    variant: {
+      small: 'gap-4', // 16px - Figma TabMenuSmall
+      medium: 'gap-6', // 24px - Figma Tab/Medium
+      pill: [
+        'gap-2 bg-surface-muted border-0', // gap-2 = 8px (Figma: spacing-xs)
+        'border border-border-muted rounded-md', // rounded-md = 6px (Figma)
+        'p-xxs w-fit', // p-xxs = 4px (Figma: spacing-xxs)
+      ],
     },
-    defaultVariants: {
-      variant: 'medium',
-      layout: 'horizontal',
+    layout: {
+      horizontal: '',
+      vertical: 'flex-col items-stretch border-b-0 border-r border-border',
     },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'medium',
+    layout: 'horizontal',
+  },
+});
 
 // Tab button
 export const tabButtonStyles = cva(
@@ -56,8 +53,7 @@ export const tabButtonStyles = cva(
       },
       layout: {
         horizontal: '',
-        vertical:
-          'text-left border-b-transparent border-r-2 border-r-transparent',
+        vertical: 'text-left border-b-transparent border-r-2 border-r-transparent',
       },
     },
     compoundVariants: [

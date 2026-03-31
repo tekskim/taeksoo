@@ -11,8 +11,7 @@ const meta: Meta<typeof AppHeaderTab> = {
     layout: 'padded',
     docs: {
       description: {
-        component:
-          'AppHeaderTab combines a home button and tab bar for application navigation.',
+        component: 'AppHeaderTab combines a home button and tab bar for application navigation.',
       },
     },
   },
@@ -43,9 +42,7 @@ interface MockTabContextValue {
 
 const MockTabContext = createContext<MockTabContextValue | null>(null);
 
-const MockTabProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const MockTabProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [tabs, setTabs] = useState<TabInfo[]>([
     {
       id: '1',
@@ -77,10 +74,10 @@ const MockTabProvider: React.FC<{ children: React.ReactNode }> = ({
   const value: MockTabContextValue = {
     tabs,
     activeTabId,
-    activeTab: tabs.find(tab => tab.id === activeTabId) || null,
+    activeTab: tabs.find((tab) => tab.id === activeTabId) || null,
     switchTab: setActiveTabId,
     closeTab: (id: string) => {
-      const newTabs = tabs.filter(t => t.id !== id);
+      const newTabs = tabs.filter((t) => t.id !== id);
       setTabs(newTabs);
       if (activeTabId === id && newTabs.length > 0) {
         setActiveTabId(newTabs[0].id);
@@ -96,12 +93,12 @@ const MockTabProvider: React.FC<{ children: React.ReactNode }> = ({
         params: {},
         query: {},
       };
-      setTabs(prev => [...prev, newTab]);
+      setTabs((prev) => [...prev, newTab]);
       setActiveTabId(id);
       return id;
     },
     switchTabToPath: (path: string) => {
-      const tab = tabs.find(t => t.virtualPath === path);
+      const tab = tabs.find((t) => t.virtualPath === path);
       if (tab) setActiveTabId(tab.id);
     },
     reorderTabs: (fromIndex: number, toIndex: number) => {
@@ -116,15 +113,12 @@ const MockTabProvider: React.FC<{ children: React.ReactNode }> = ({
     goForward: () => {},
   };
 
-  return (
-    <MockTabContext.Provider value={value}>{children}</MockTabContext.Provider>
-  );
+  return <MockTabContext.Provider value={value}>{children}</MockTabContext.Provider>;
 };
 
 const useMockTabManager = () => {
   const context = useContext(MockTabContext);
-  if (!context)
-    throw new Error('useMockTabManager must be used within MockTabProvider');
+  if (!context) throw new Error('useMockTabManager must be used within MockTabProvider');
   return context;
 };
 

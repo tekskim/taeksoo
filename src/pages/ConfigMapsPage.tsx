@@ -146,7 +146,8 @@ export function ConfigMapsPage() {
       {
         id: 'edit-config',
         label: 'Edit config',
-        onClick: () => navigate(`/container/configmaps/${row.id}/edit`),
+        onClick: () =>
+          navigate(`/container/configmaps/${row.id}/edit?name=${encodeURIComponent(row.name)}`),
       },
       {
         id: 'edit-yaml',

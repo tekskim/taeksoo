@@ -11,8 +11,7 @@ const meta: Meta<typeof Tag> = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          '태그/뱃지 컴포넌트입니다. 키-값 쌍을 표시하거나 제거 가능한 라벨로 사용됩니다.',
+        component: '태그/뱃지 컴포넌트입니다. 키-값 쌍을 표시하거나 제거 가능한 라벨로 사용됩니다.',
       },
     },
   },
@@ -81,9 +80,7 @@ export const Variants: Story = {
         </Layout.HStack>
       </Layout.VStack>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          Read-only (No Close Button)
-        </Typography.Text>
+        <Typography.Text variant="caption">Read-only (No Close Button)</Typography.Text>
         <Layout.HStack gap="sm">
           <Tag label="Status" value="Active" />
           <Tag label="Priority" value="High" />
@@ -102,21 +99,15 @@ const DynamicTagsExample = () => {
   ]);
 
   const handleRemoveTag = (id: string) => {
-    setTags(prev => prev.filter(tag => tag.id !== id));
+    setTags((prev) => prev.filter((tag) => tag.id !== id));
   };
 
   return (
     <Layout.VStack gap="sm">
-      <Typography.Text variant="caption">
-        클릭하여 태그 제거 ({tags.length}개)
-      </Typography.Text>
+      <Typography.Text variant="caption">클릭하여 태그 제거 ({tags.length}개)</Typography.Text>
       <Layout.HStack gap="sm" style={{ flexWrap: 'wrap' }}>
-        {tags.map(tag => (
-          <Tag
-            key={tag.id}
-            label={tag.label}
-            onClose={() => handleRemoveTag(tag.id)}
-          />
+        {tags.map((tag) => (
+          <Tag key={tag.id} label={tag.label} onClose={() => handleRemoveTag(tag.id)} />
         ))}
       </Layout.HStack>
     </Layout.VStack>
@@ -135,16 +126,14 @@ const KeyValueTagsExample = () => {
   ]);
 
   const handleRemoveFilter = (id: string) => {
-    setFilters(prev => prev.filter(filter => filter.id !== id));
+    setFilters((prev) => prev.filter((filter) => filter.id !== id));
   };
 
   return (
     <Layout.VStack gap="sm">
-      <Typography.Text variant="caption">
-        필터 태그 ({filters.length}개)
-      </Typography.Text>
+      <Typography.Text variant="caption">필터 태그 ({filters.length}개)</Typography.Text>
       <Layout.HStack gap="sm" style={{ flexWrap: 'wrap' }}>
-        {filters.map(filter => (
+        {filters.map((filter) => (
           <Tag
             key={filter.id}
             label={filter.label}

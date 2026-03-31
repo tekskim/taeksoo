@@ -3,8 +3,7 @@
 export const rootStyles =
   'bg-surface border border-solid border-border rounded-base8 p-3 w-fit flex flex-col gap-3';
 
-export const customHeaderStyles =
-  'flex items-center justify-start gap-2 h-6 m-0 p-0';
+export const customHeaderStyles = 'flex items-center justify-start gap-2 h-6 m-0 p-0';
 
 export const navButtonStyles = [
   'w-6 h-6 p-0 m-0',
@@ -61,8 +60,7 @@ export const dayButtonStyles = [
   'disabled:text-text-light disabled:bg-transparent disabled:cursor-not-allowed disabled:opacity-40 disabled:pointer-events-none',
 ].join(' ');
 
-export const dayButtonSelectedStyles =
-  'bg-primary text-on-primary hover:enabled:bg-primary-hover';
+export const dayButtonSelectedStyles = 'bg-primary text-on-primary hover:enabled:bg-primary-hover';
 
 export const dayButtonRangeMiddleStyles =
   'bg-transparent text-text rounded-none hover:enabled:bg-info-weak-bg hover:enabled:rounded-full';

@@ -23,10 +23,7 @@ export const useTableResize = ({
   onColumnResize,
 }: UseTableResizeProps) => {
   const [isResizing, setIsResizing] = useState(false);
-  const [internalWidths, setInternalWidths] = useState<Record<
-    string,
-    number
-  > | null>(null);
+  const [internalWidths, setInternalWidths] = useState<Record<string, number> | null>(null);
   const tableRef = useRef<HTMLTableElement>(null);
   const startWidthsRef = useRef<Record<string, number>>({});
 
@@ -53,9 +50,7 @@ export const useTableResize = ({
                 ? Number.parseFloat(col.width)
                 : undefined);
           acc[col.key] =
-            widthValue != null && !Number.isNaN(widthValue)
-              ? widthValue
-              : TABLE_COLUMN_MIN_WIDTH;
+            widthValue != null && !Number.isNaN(widthValue) ? widthValue : TABLE_COLUMN_MIN_WIDTH;
           return acc;
         },
         {} as Record<string, number>
@@ -68,12 +63,12 @@ export const useTableResize = ({
         const header = headers[index] as HTMLElement;
         acc[col.key] = header
           ? header.getBoundingClientRect().width
-          : columnWidths?.[col.key] ??
-              (typeof col.width === 'number'
-                ? col.width
-                : typeof col.width === 'string'
-                  ? Number.parseFloat(col.width)
-                  : TABLE_COLUMN_MIN_WIDTH);
+          : (columnWidths?.[col.key] ??
+            (typeof col.width === 'number'
+              ? col.width
+              : typeof col.width === 'string'
+                ? Number.parseFloat(col.width)
+                : TABLE_COLUMN_MIN_WIDTH));
         return acc;
       },
       {} as Record<string, number>
@@ -114,15 +109,12 @@ export const useTableResize = ({
 
       // maxWidth 제약이 있는 경우: 한 컬럼이 커지면 오른쪽 컬럼들을 축소
       if (maxWidth) {
-        const columnIndex = columns.findIndex(col => col.key === columnKey);
+        const columnIndex = columns.findIndex((col) => col.key === columnKey);
         const rightColumns = columns.filter((_, idx) => idx > columnIndex);
 
         if (rightColumns.length > 0) {
           // 오른쪽 컬럼들의 총 너비 계산
-          const totalRightWidth = rightColumns.reduce(
-            (sum, col) => sum + startWidths[col.key],
-            0
-          );
+          const totalRightWidth = rightColumns.reduce((sum, col) => sum + startWidths[col.key], 0);
 
           // 각 오른쪽 컬럼을 너비 비율에 맞게 축소
           // 예: A컬럼 +100px 증가 → B(200px), C(100px)가 있다면
@@ -136,10 +128,7 @@ export const useTableResize = ({
                 ? remaining // 마지막 컬럼: 남은 차이를 모두 적용 (반올림 오차 보정)
                 : Math.round((newWidth - startWidths[columnKey]) * ratio);
 
-            newWidths[col.key] = Math.max(
-              TABLE_COLUMN_MIN_WIDTH,
-              startWidth - reduction
-            );
+            newWidths[col.key] = Math.max(TABLE_COLUMN_MIN_WIDTH, startWidth - reduction);
             remaining -= startWidth - newWidths[col.key];
           });
         }
@@ -192,11 +181,7 @@ export const useTableResize = ({
   // internalWidths (리사이징 상태) → columnWidths (외부 props) → column.width (기본값)
   const getColumnWidth = useCallback(
     (column: TableColumn) => {
-      return (
-        internalWidths?.[column.key] ??
-        columnWidths?.[column.key] ??
-        column.width
-      );
+      return internalWidths?.[column.key] ?? columnWidths?.[column.key] ?? column.width;
     },
     [internalWidths, columnWidths]
   );

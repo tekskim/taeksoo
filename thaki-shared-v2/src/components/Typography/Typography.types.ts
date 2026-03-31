@@ -14,10 +14,9 @@ type AsProp<C extends ElementType> = {
   as?: C;
 };
 type PropsToOmit<C extends ElementType, P> = keyof (AsProp<C> & P);
-type PolymorphicComponentProp<
-  C extends ElementType,
-  Props = {},
-> = React.PropsWithChildren<Props & AsProp<C>> &
+type PolymorphicComponentProp<C extends ElementType, Props = {}> = React.PropsWithChildren<
+  Props & AsProp<C>
+> &
   Omit<React.ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>;
 
 export const TITLE_LEVELS = [1, 2, 3, 4] as const;
@@ -42,11 +41,10 @@ export type TextProps<C extends ElementType = 'p'> = PolymorphicComponentProp<
   }
 >;
 
-export type LabelProps<C extends ElementType = 'label'> =
-  PolymorphicComponentProp<
-    C,
-    {
-      color?: TypographyColor;
-      className?: string;
-    }
-  >;
+export type LabelProps<C extends ElementType = 'label'> = PolymorphicComponentProp<
+  C,
+  {
+    color?: TypographyColor;
+    className?: string;
+  }
+>;

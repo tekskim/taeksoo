@@ -1,4 +1,3 @@
-
 import { useContext, useState } from 'react';
 import { useCreateLogin, useCreateLogout } from '../../api/mutations';
 import { LoginParams, LoginResponse } from '../../api/mutations/useCreateLogin';
@@ -47,9 +46,7 @@ const useAuth = (xSessionId: string = '', options?: UseAuthOptions) => {
   // --- Login Flow State ---
 
   /** Response from initial login attempt (contains MFA requirements) */
-  const [loginResponse, setLoginResponse] = useState<LoginResponse | null>(
-    null
-  );
+  const [loginResponse, setLoginResponse] = useState<LoginResponse | null>(null);
 
   /** Current step in login flow */
   const [loginStep, setLoginStep] = useState<LoginStep>('login');
@@ -60,17 +57,13 @@ const useAuth = (xSessionId: string = '', options?: UseAuthOptions) => {
   // --- MFA Method Detection ---
 
   const availableMfaMethods = loginResponse?.availableMfaMethods ?? [];
-  const availableMfaMethodTypes = new Set(
-    availableMfaMethods.map(method => method.type)
-  );
+  const availableMfaMethodTypes = new Set(availableMfaMethods.map((method) => method.type));
 
   /** User can choose between multiple MFA methods */
   const hasMultipleMfaMethods = availableMfaMethodTypes.size > 1;
 
   /** OTP (Authenticator) method details and enrollment status */
-  const otpMethod = availableMfaMethods.find(
-    method => method.type === 'authenticator'
-  );
+  const otpMethod = availableMfaMethods.find((method) => method.type === 'authenticator');
 
   const isOtpAndEnrolled = Boolean(otpMethod?.enrolled);
 
@@ -82,10 +75,7 @@ const useAuth = (xSessionId: string = '', options?: UseAuthOptions) => {
   };
 
   /** Routes login flow based on MFA requirements and available methods */
-  const proceedLoginProcess = ({
-    mfaRequired,
-    availableMfaMethods: methods,
-  }: LoginResponse) => {
+  const proceedLoginProcess = ({ mfaRequired, availableMfaMethods: methods }: LoginResponse) => {
     // If MFA not required, login succeeds immediately
     if (!mfaRequired) {
       options?.onLoginSuccess?.();
@@ -99,7 +89,7 @@ const useAuth = (xSessionId: string = '', options?: UseAuthOptions) => {
       return;
     }
 
-    const methodTypes = new Set(methods.map(method => method.type));
+    const methodTypes = new Set(methods.map((method) => method.type));
     const preferredMethod = methodTypes.has('authenticator') ? 'otp' : 'email';
 
     setLoginMfaMethod(preferredMethod);
@@ -129,7 +119,7 @@ const useAuth = (xSessionId: string = '', options?: UseAuthOptions) => {
   const onLoginSubmit = (data: LoginParams): void => {
     // Submit credentials and handle response based on MFA requirements
     login.mutate(data, {
-      onSuccess: response => {
+      onSuccess: (response) => {
         setLoginResponse(response);
         proceedLoginProcess(response);
       },
@@ -172,8 +162,7 @@ const useAuth = (xSessionId: string = '', options?: UseAuthOptions) => {
     options?.onLoginSuccess?.();
   };
 
-  const mfaSessionId =
-    loginResponse?.mfaSessionIdPending ?? loginResponse?.sessionId ?? '';
+  const mfaSessionId = loginResponse?.mfaSessionIdPending ?? loginResponse?.sessionId ?? '';
 
   return {
     login,

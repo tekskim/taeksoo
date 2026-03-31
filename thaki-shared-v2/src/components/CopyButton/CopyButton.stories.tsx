@@ -24,7 +24,7 @@ export const Default: Story = {
   args: {
     text: 'Hello, World!',
   },
-  render: args => (
+  render: (args) => (
     <Layout.HStack gap="sm" align="center">
       <Typography.Text>Hello, World!</Typography.Text>
       <CopyButton {...args} />

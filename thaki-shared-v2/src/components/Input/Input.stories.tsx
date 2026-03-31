@@ -110,14 +110,8 @@ export const Types: Story = {
         <Input type="password" placeholder="비밀번호" />
       </Layout.VStack>
       <Layout.VStack gap="sm">
-        <Typography.Text variant="caption">
-          Password with Toggle
-        </Typography.Text>
-        <Input
-          type="password"
-          placeholder="토글 가능한 비밀번호"
-          showPasswordToggle
-        />
+        <Typography.Text variant="caption">Password with Toggle</Typography.Text>
+        <Input type="password" placeholder="토글 가능한 비밀번호" showPasswordToggle />
       </Layout.VStack>
     </Layout.VStack>
   ),
@@ -132,7 +126,7 @@ const ControlledInputExample = () => {
       <Typography.Text variant="caption">입력된 값: "{value}"</Typography.Text>
       <Input
         value={value}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         placeholder="제어된 입력 필드"
       />
     </Layout.VStack>

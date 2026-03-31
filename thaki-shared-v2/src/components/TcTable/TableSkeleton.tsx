@@ -11,14 +11,10 @@ import {
 const DefaultSkeletonContent = () => <div className={skeletonClassnames} />;
 
 /** 기본 빈 상태 UI */
-export const DefaultEmptyRow = () => (
-  <div className={emptyTextClassnames}>No data</div>
-);
+export const DefaultEmptyRow = () => <div className={emptyTextClassnames}>No data</div>;
 
 /** 기본 에러 UI */
-export const DefaultErrorRow = () => (
-  <div className={emptyTextClassnames}>Failed to load data</div>
-);
+export const DefaultErrorRow = () => <div className={emptyTextClassnames}>Failed to load data</div>;
 
 /**
  * count 있으면 반복 모드 (skeleton), 없으면 단일 full-width row (empty/error)

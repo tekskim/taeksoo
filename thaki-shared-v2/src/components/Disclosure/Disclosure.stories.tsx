@@ -49,8 +49,8 @@ export const Default: Story = {
             color: 'var(--semantic-color-textMuted)',
           }}
         >
-          This is the collapsible content that appears when you expand the
-          section. You can put any React component or HTML here.
+          This is the collapsible content that appears when you expand the section. You can put any
+          React component or HTML here.
         </p>
       </div>
     ),

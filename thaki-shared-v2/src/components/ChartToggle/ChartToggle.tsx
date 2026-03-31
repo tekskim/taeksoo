@@ -86,13 +86,10 @@ const ChartToggle: React.FC<ChartToggleProps> = ({
         />
       </span>
       {/* Label */}
-      <span className={chartToggleLabelStyles}>
-        {isActive ? activeLabel : inactiveLabel}
-      </span>
+      <span className={chartToggleLabelStyles}>{isActive ? activeLabel : inactiveLabel}</span>
     </button>
   );
 };
 
 export { ChartToggle };
 export default ChartToggle;
-

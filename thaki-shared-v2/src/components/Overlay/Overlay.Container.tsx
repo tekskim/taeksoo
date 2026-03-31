@@ -1,10 +1,4 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useStore } from 'zustand';
 import {
@@ -86,8 +80,7 @@ const OverlayElement = <T extends FunctionComponent<PropsOf<T>>>({
       /** 쉘 오버레이 컨테이너에 자식 노드가 있는지 여부 */
       const hasChildInShellOverlay =
         Number(
-          document.querySelector<HTMLDivElement>('[data-shell-overlay="true"]')
-            ?.dataset.childCount
+          document.querySelector<HTMLDivElement>('[data-shell-overlay="true"]')?.dataset.childCount
         ) > 0;
 
       /** 이 오버레이 컨테이너가 포커스된 앱 프레임인지 여부 */
@@ -131,21 +124,18 @@ const OverlayElement = <T extends FunctionComponent<PropsOf<T>>>({
     };
   }, []);
 
-  return React.createElement(
-    overlay.component as unknown as FunctionComponent<object>,
-    {
-      ...(overlay.props || {}),
-      ...(overlay.options || {}),
-      portalScope,
-      appeared,
-      onConfirm: (result: unknown) => {
-        setAppeared(false);
-        resolve(result);
-        setTimeout(() => closeOverlayById(id), duration);
-      },
-      onCancel: () => handleCancelAction(),
-    }
-  );
+  return React.createElement(overlay.component as unknown as FunctionComponent<object>, {
+    ...(overlay.props || {}),
+    ...(overlay.options || {}),
+    portalScope,
+    appeared,
+    onConfirm: (result: unknown) => {
+      setAppeared(false);
+      resolve(result);
+      setTimeout(() => closeOverlayById(id), duration);
+    },
+    onCancel: () => handleCancelAction(),
+  });
 };
 
 /**
@@ -175,7 +165,7 @@ const OverlayContainer = ({
   const overlayContainerRef = useRef<HTMLDivElement>(null);
 
   /** 현재 열린 오버레이 목록 */
-  const overlays = useStore(overlayStore, state => state.overlays);
+  const overlays = useStore(overlayStore, (state) => state.overlays);
 
   /** 컨테이너 마운트 시 앱 프레임 상태 및 포탈 스코프 초기화 */
   const handleContainerRef = useCallback((node: HTMLDivElement | null) => {
@@ -186,11 +176,11 @@ const OverlayContainer = ({
     }
 
     const nextValue = checkIsFocusedAppFrame(node);
-    setIsFocusedAppFrame(prev => (prev === nextValue ? prev : nextValue));
+    setIsFocusedAppFrame((prev) => (prev === nextValue ? prev : nextValue));
 
     const rootEl = node.closest<HTMLElement>('[data-portal-root]');
     const nextScope = rootEl?.id;
-    setPortalScope(prev => (prev === nextScope ? prev : nextScope));
+    setPortalScope((prev) => (prev === nextScope ? prev : nextScope));
   }, []);
 
   /** 스크롤 잠금 및 포탈 대상으로 사용되는 콘텐츠 루트 */
@@ -211,9 +201,8 @@ const OverlayContainer = ({
 
     // AppFrame: lock the active tab scroll area inside the frame
     const activeTab =
-      contentRoot?.querySelector<HTMLDivElement>(
-        '[data-tab-content="true"][data-active="true"]'
-      ) ?? null;
+      contentRoot?.querySelector<HTMLDivElement>('[data-tab-content="true"][data-active="true"]') ??
+      null;
 
     if (activeTab) {
       if (isActiveTab && overlays.length === 1) {
@@ -240,10 +229,7 @@ const OverlayContainer = ({
         const optionsWithOverrides: OverlayOptions = {
           ...overlayOptions,
           ...(shouldDisableDimClick ? { closeOnDimClick: false } : {}),
-          isGlobal:
-            isFocusedAppFrame === 'not-in-appframe'
-              ? true
-              : overlayOptions.isGlobal,
+          isGlobal: isFocusedAppFrame === 'not-in-appframe' ? true : overlayOptions.isGlobal,
         };
 
         return (
@@ -270,8 +256,7 @@ const OverlayContainer = ({
   );
 
   // In AppFrame, mount overlays at the Frame content root to avoid clipping by tab paddings
-  const shouldPortalIntoFrame =
-    isFocusedAppFrame !== 'not-in-appframe' && Boolean(contentRoot);
+  const shouldPortalIntoFrame = isFocusedAppFrame !== 'not-in-appframe' && Boolean(contentRoot);
 
   return shouldPortalIntoFrame && contentRoot
     ? createPortal(containerEl, contentRoot)

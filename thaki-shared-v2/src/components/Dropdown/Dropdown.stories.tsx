@@ -100,7 +100,7 @@ const Default: Story = {
     numbersOfOptionsInView: 5,
     size: 'md',
   },
-  render: args => {
+  render: (args) => {
     const [selectedValue, setSelectedValue] = useState<string>('');
 
     return (
@@ -119,13 +119,9 @@ const Default: Story = {
         <Dropdown.Select
           {...args}
           value={selectedValue}
-          onSelect={value => setSelectedValue(String(value))}
+          onSelect={(value) => setSelectedValue(String(value))}
         >
-          <Dropdown.Option
-            value="coffee"
-            label="☕ 커피"
-            onClick={value => console.log(value)}
-          />
+          <Dropdown.Option value="coffee" label="☕ 커피" onClick={(value) => console.log(value)} />
           <Dropdown.Option value="tea" label="🍵 차" disabled />
           <Dropdown.Option value="juice" label="🥤 주스" />
           <Dropdown.Option value="water" label="💧 물" />
@@ -147,7 +143,7 @@ const ComboBox: Story = {
     numbersOfOptionsInView: 5,
     size: 'md',
   },
-  render: args => {
+  render: (args) => {
     const [selectedValue, setSelectedValue] = useState<string>('water');
 
     return (
@@ -166,13 +162,9 @@ const ComboBox: Story = {
         <Dropdown.ComboBox
           {...args}
           value={selectedValue}
-          onSelect={value => setSelectedValue(String(value))}
+          onSelect={(value) => setSelectedValue(String(value))}
         >
-          <Dropdown.Option
-            value="coffee"
-            label="☕ 커피"
-            onClick={value => console.log(value)}
-          />
+          <Dropdown.Option value="coffee" label="☕ 커피" onClick={(value) => console.log(value)} />
           <Dropdown.Option value="tea" label="🍵 차" disabled />
           <Dropdown.Option value="juice" label="🥤 주스" />
           <Dropdown.Option value="water" label="💧 물" />

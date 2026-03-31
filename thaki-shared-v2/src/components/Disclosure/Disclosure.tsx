@@ -116,10 +116,7 @@ const Disclosure = ({
                 const [, mainText, optionalText] = optionalMatch;
                 return (
                   <>
-                    {mainText}{' '}
-                    <span className={disclosureOptionalTextStyles}>
-                      {optionalText}
-                    </span>
+                    {mainText} <span className={disclosureOptionalTextStyles}>{optionalText}</span>
                   </>
                 );
               }
@@ -129,10 +126,7 @@ const Disclosure = ({
         )}
       </button>
       {children && (
-        <div
-          className={disclosureContentStyles}
-          style={{ display: isExpanded ? 'block' : 'none' }}
-        >
+        <div className={disclosureContentStyles} style={{ display: isExpanded ? 'block' : 'none' }}>
           {(keepMounted || isExpanded) && children}
         </div>
       )}

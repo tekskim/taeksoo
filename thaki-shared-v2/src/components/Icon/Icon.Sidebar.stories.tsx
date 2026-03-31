@@ -29,10 +29,10 @@ const ALL_ICONS = Object.entries(Icons)
     Comp: Comp as React.ComponentType<any>,
   }));
 
-const iconsByName = new Map(ALL_ICONS.map(i => [i.name, i]));
+const iconsByName = new Map(ALL_ICONS.map((i) => [i.name, i]));
 
 const resolve = (names: string[]): IconEntry[] =>
-  names.map(n => iconsByName.get(n)).filter((e): e is IconEntry => e !== undefined);
+  names.map((n) => iconsByName.get(n)).filter((e): e is IconEntry => e !== undefined);
 
 type SidebarItem = { icon: string; label: string };
 type SidebarSection = { title: string; items: SidebarItem[] };
@@ -290,9 +290,7 @@ const SIDEBARS: SidebarDef[] = [
       },
       {
         title: 'ML Studio',
-        items: [
-          { icon: 'MessageCircleIcon', label: 'Text generation' },
-        ],
+        items: [{ icon: 'MessageCircleIcon', label: 'Text generation' }],
       },
       {
         title: 'MLOps',
@@ -365,10 +363,29 @@ const SIDEBARS: SidebarDef[] = [
 const s = {
   page: { width: '100%', padding: 24, display: 'flex', flexDirection: 'column' as const, gap: 40 },
   app: { display: 'flex', flexDirection: 'column' as const, gap: 16 },
-  appName: { fontSize: 16, fontWeight: 700, color: 'var(--semantic-color-text)', borderBottom: '2px solid var(--semantic-color-border)', paddingBottom: 6 },
+  appName: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: 'var(--semantic-color-text)',
+    borderBottom: '2px solid var(--semantic-color-border)',
+    paddingBottom: 6,
+  },
   section: { display: 'flex', flexDirection: 'column' as const, gap: 4, marginLeft: 8 },
-  sectionTitle: { fontSize: 11, fontWeight: 600, color: 'var(--semantic-color-textMuted)', textTransform: 'uppercase' as const, letterSpacing: 0.5, marginBottom: 2 },
-  item: { display: 'flex', alignItems: 'center' as const, gap: 8, padding: '4px 8px', borderRadius: 6 },
+  sectionTitle: {
+    fontSize: 11,
+    fontWeight: 600,
+    color: 'var(--semantic-color-textMuted)',
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  item: {
+    display: 'flex',
+    alignItems: 'center' as const,
+    gap: 8,
+    padding: '4px 8px',
+    borderRadius: 6,
+  },
   label: { fontSize: 12, color: 'var(--semantic-color-text)' },
   iconName: { fontSize: 10, color: 'var(--semantic-color-textMuted)', marginLeft: 'auto' as const },
 };
@@ -376,21 +393,23 @@ const s = {
 export const Sidebar: Story = {
   render: () => (
     <div style={s.page}>
-      {SIDEBARS.map(sidebar => (
+      {SIDEBARS.map((sidebar) => (
         <div key={sidebar.name} style={s.app}>
           <div style={s.appName}>{sidebar.name}</div>
-          {sidebar.sections.map(section => {
+          {sidebar.sections.map((section) => {
             const items = section.items
-              .map(item => {
+              .map((item) => {
                 const entry = iconsByName.get(item.icon);
                 return entry ? { ...item, Comp: entry.Comp } : null;
               })
-              .filter(Boolean) as (SidebarItem & { Comp: React.ComponentType<Record<string, unknown>> })[];
+              .filter(Boolean) as (SidebarItem & {
+              Comp: React.ComponentType<Record<string, unknown>>;
+            })[];
 
             return (
               <div key={section.title} style={s.section}>
                 <div style={s.sectionTitle}>{section.title}</div>
-                {items.map(item => (
+                {items.map((item) => (
                   <div key={item.label} style={s.item}>
                     <item.Comp size="sm" />
                     <span style={s.label}>{item.label}</span>

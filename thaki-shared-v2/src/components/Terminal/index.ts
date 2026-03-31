@@ -26,4 +26,3 @@ export {
 
 // Sub-components (for composition)
 export { TerminalHeader } from './components';
-

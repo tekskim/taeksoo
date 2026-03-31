@@ -21,24 +21,17 @@ interface NotificationPanelProps {
  * Displays notification history next to the notification icon in the ToolBar.
  * Shows all recorded notifications with ability to mark as read or dismiss.
  */
-const NotificationPanel: React.FC<NotificationPanelProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const NotificationPanel: React.FC<NotificationPanelProps> = ({ isOpen, onClose }) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState<'all' | 'positive' | 'negative'>('all');
 
   // Close panel when clicking outside
   useClickOutside(panelRef, {
-    onClickOutside: event => {
+    onClickOutside: (event) => {
       // Check if click is inside a dropdown portal (e.g., filter dropdown options)
-      const isDropdownPortal = (event.target as HTMLElement).closest(
-        '.dropdown-options'
-      );
+      const isDropdownPortal = (event.target as HTMLElement).closest('.dropdown-options');
 
-      const isNotificationButton = (event.target as HTMLElement).closest(
-        '.notification-button'
-      );
+      const isNotificationButton = (event.target as HTMLElement).closest('.notification-button');
 
       if (isDropdownPortal || isNotificationButton) {
         return; // Don't close if clicking inside dropdown portal or notification button
@@ -80,9 +73,7 @@ const NotificationPanel: React.FC<NotificationPanelProps> = ({
             <div className={notificationPanelHeaderStyles}>
               <Dropdown.Select
                 value={filter}
-                onChange={value =>
-                  setFilter(value as 'all' | 'positive' | 'negative')
-                }
+                onChange={(value) => setFilter(value as 'all' | 'positive' | 'negative')}
                 size="sm"
               >
                 <Dropdown.Option value="all" label="All" />

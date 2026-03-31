@@ -1,7 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-export interface RadioButtonProps
-  extends Omit<HTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface RadioButtonProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onChange'> {
   name?: string;
   value: string | number;
   checked?: boolean;

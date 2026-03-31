@@ -55,7 +55,7 @@ const OverlayProvider = ({
 }) => {
   /** 오버레이 열기: ID 생성 → Promise로 감싸서 스토어에 추가 */
   const openOverlay: OpenOverlay = useCallback(
-    overlay => {
+    (overlay) => {
       return new Promise((resolve, reject) => {
         overlayStore.getState().addOverlay({
           ...overlay,
@@ -85,9 +85,7 @@ const OverlayProvider = ({
     [overlayStore, openOverlay, closeOverlayById]
   );
 
-  return (
-    <OverlayContext.Provider value={value}>{children}</OverlayContext.Provider>
-  );
+  return <OverlayContext.Provider value={value}>{children}</OverlayContext.Provider>;
 };
 
 export { OverlayContext, OverlayProvider };

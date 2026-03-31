@@ -57,10 +57,7 @@ export const Default: Story = {
           success
         </span>
         <div style={{ flex: 1 }}>
-          <InlineMessage
-            type="success"
-            message="Used for completed or normal operations."
-          />
+          <InlineMessage type="success" message="Used for completed or normal operations." />
         </div>
       </div>
 
@@ -77,10 +74,7 @@ export const Default: Story = {
           warning
         </span>
         <div style={{ flex: 1 }}>
-          <InlineMessage
-            type="warning"
-            message="Used when attention is needed but not critical."
-          />
+          <InlineMessage type="warning" message="Used when attention is needed but not critical." />
         </div>
       </div>
 
@@ -97,10 +91,7 @@ export const Default: Story = {
           error
         </span>
         <div style={{ flex: 1 }}>
-          <InlineMessage
-            type="error"
-            message="Used for failed actions or system issues."
-          />
+          <InlineMessage type="error" message="Used for failed actions or system issues." />
         </div>
       </div>
 
@@ -117,10 +108,7 @@ export const Default: Story = {
           info
         </span>
         <div style={{ flex: 1 }}>
-          <InlineMessage
-            type="info"
-            message="Used for general or non-critical updates."
-          />
+          <InlineMessage type="info" message="Used for general or non-critical updates." />
         </div>
       </div>
     </div>
@@ -133,22 +121,10 @@ export const Default: Story = {
 export const Types: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <InlineMessage
-        type="success"
-        message="Used for completed or normal operations."
-      />
-      <InlineMessage
-        type="info"
-        message="Used for general or non-critical updates."
-      />
-      <InlineMessage
-        type="warning"
-        message="Used when attention is needed but not critical."
-      />
-      <InlineMessage
-        type="error"
-        message="Used for failed actions or system issues."
-      />
+      <InlineMessage type="success" message="Used for completed or normal operations." />
+      <InlineMessage type="info" message="Used for general or non-critical updates." />
+      <InlineMessage type="warning" message="Used when attention is needed but not critical." />
+      <InlineMessage type="error" message="Used for failed actions or system issues." />
     </div>
   ),
 };

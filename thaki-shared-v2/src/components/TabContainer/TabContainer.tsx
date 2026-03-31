@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CurrentTabIdProvider } from '../../services/providers/CurrentTabIdProvider';
 import { OverlayProvider } from '../../services/providers/OverlayProvider';
-import createOverlayStore, {
-  type OverlayStoreApi,
-} from '../../services/stores/overlayStore';
+import createOverlayStore, { type OverlayStoreApi } from '../../services/stores/overlayStore';
 import {
   checkIsForbiddenError,
   checkIsInternalServerError,
@@ -73,7 +71,7 @@ const TabContent = <TComponentName extends string>({
   // 오버레이 클린업 함수
   const closeAllOverlays = useCallback(() => {
     const state = overlayStore.getState();
-    state.overlays.forEach(overlay => {
+    state.overlays.forEach((overlay) => {
       overlay.reject();
       state.closeOverlayById(overlay.id);
     });
@@ -131,7 +129,7 @@ const TabContent = <TComponentName extends string>({
   const initErrorStatus = useCallback(() => {
     // 중요: 쿼리클라이언트에 저장된 에러 상태를 초기화하여 다시 로드 가능하게 합니다.
     queryClient.removeQueries({
-      predicate: query => query.state.status === 'error',
+      predicate: (query) => query.state.status === 'error',
     });
 
     setError(null);
@@ -194,12 +192,7 @@ const TabContent = <TComponentName extends string>({
     }
 
     await fetchAndRenderComponent(loader, resolvedRoute);
-  }, [
-    resolvedRoute,
-    config.componentLoaders,
-    handleRouteNotFound,
-    fetchAndRenderComponent,
-  ]);
+  }, [resolvedRoute, config.componentLoaders, handleRouteNotFound, fetchAndRenderComponent]);
 
   useEffect(() => {
     loadComponent();
@@ -226,10 +219,7 @@ const TabContent = <TComponentName extends string>({
         >
           <div className={tabContainerRootStyles}>
             {error && (
-              <ErrorComponent
-                onGoBack={goBack}
-                onGoHome={() => switchTabToPath('/home')}
-              />
+              <ErrorComponent onGoBack={goBack} onGoHome={() => switchTabToPath('/home')} />
             )}
 
             {!error && Component && (
@@ -240,7 +230,7 @@ const TabContent = <TComponentName extends string>({
                   </div>
                 }
                 hasRestored={!failedPath}
-                onError={error => {
+                onError={(error) => {
                   if (checkIsUnauthorizedError(error)) {
                     throw error;
                   }
@@ -265,10 +255,7 @@ const TabContent = <TComponentName extends string>({
                   {...renderedContent.params}
                   {...renderedContent.query}
                 />
-                <OverlayContainer
-                  overlayStore={overlayStore}
-                  isActiveTab={isActive}
-                />
+                <OverlayContainer overlayStore={overlayStore} isActiveTab={isActive} />
               </ErrorBoundary>
             )}
           </div>
@@ -313,12 +300,12 @@ const TabContainer = <TComponentName extends string = string>({
   });
 
   useEffect(() => {
-    setMountedTabIds(prev => {
-      const currentTabIds = new Set(tabs.map(tab => tab.id));
+    setMountedTabIds((prev) => {
+      const currentTabIds = new Set(tabs.map((tab) => tab.id));
       const next = new Set<string>();
 
       // 기존에 마운트된 탭 중 아직 존재하는 탭만 유지
-      prev.forEach(id => {
+      prev.forEach((id) => {
         if (currentTabIds.has(id)) {
           next.add(id);
         }
@@ -330,8 +317,7 @@ const TabContainer = <TComponentName extends string = string>({
       }
 
       // 내용이 동일하면 state 업데이트 스킵(불필요한 리렌더 방지)
-      const isSame =
-        next.size === prev.size && Array.from(next).every(id => prev.has(id));
+      const isSame = next.size === prev.size && Array.from(next).every((id) => prev.has(id));
 
       return isSame ? prev : next;
     });
@@ -339,7 +325,7 @@ const TabContainer = <TComponentName extends string = string>({
 
   return (
     <div className={cn(tabContainerStyles, className)}>
-      {tabs.map(tab => {
+      {tabs.map((tab) => {
         if (!mountedTabIds.has(tab.id)) {
           return null;
         }

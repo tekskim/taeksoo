@@ -10,10 +10,7 @@ import { cva } from 'class-variance-authority';
  * - gap: var(--space-1) = 4px
  * - border-radius: 6px
  */
-export const navigationContainerStyles = [
-  'inline-flex items-center',
-  'gap-0.5',
-].join(' ');
+export const navigationContainerStyles = ['inline-flex items-center', 'gap-0.5'].join(' ');
 
 /**
  * 네비게이션 버튼 스타일

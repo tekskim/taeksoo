@@ -13,10 +13,7 @@ interface FilterLabelProps {
  * 필터 키를 표시하는 작은 태그 형태의 컴포넌트
  * Figma 디자인: 흰색 배경, 테두리, 라벨 + | 구분자
  */
-const FilterLabel: React.FC<FilterLabelProps> = ({
-  label,
-  className,
-}): React.ReactElement => {
+const FilterLabel: React.FC<FilterLabelProps> = ({ label, className }): React.ReactElement => {
   return (
     <div className={cn(styles.filterLabel, className)}>
       <span className={styles.labelText}>{label}</span>

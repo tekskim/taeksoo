@@ -18,15 +18,7 @@ import {
   theadTrClassnames,
   trClassnames,
 } from './TcTable.styles';
-import {
-  Align,
-  OnSortChange,
-  SORT,
-  SelectValue,
-  TYPE,
-  TdProps,
-  Type,
-} from './TcTable.types';
+import { Align, OnSortChange, SORT, SelectValue, TYPE, TdProps, Type } from './TcTable.types';
 
 /**
  * 개별 헤더 셀(Th) 컴포넌트
@@ -118,15 +110,14 @@ export const SelectAllCell = ({
   const selectableValues = rowValues.filter((v): v is SelectValue => v != null);
   // 활성 행 전부가 체크돼 있으면 전체 선택 상태
   const isAllChecked =
-    selectableValues.length > 0 &&
-    selectableValues.every(v => checkedRowValues.has(v));
+    selectableValues.length > 0 && selectableValues.every((v) => checkedRowValues.has(v));
 
   const toggle = () => {
     if (disabled) return;
 
     const selectableSet = new Set(selectableValues);
     // 비활성 행의 기존 선택값 보존
-    const preserved = [...checkedRowValues].filter(v => !selectableSet.has(v));
+    const preserved = [...checkedRowValues].filter((v) => !selectableSet.has(v));
 
     const newCheckedRowValues = isAllChecked
       ? new Set<SelectValue>(preserved) // 전체 해제: 비활성 행만 유지
@@ -182,15 +173,13 @@ export const TableHeader = ({
   // firstRow가 유효하지 않으면 columnNames만으로 구성
   const columns = useMemo(() => {
     if (!React.isValidElement<{ children?: React.ReactNode }>(firstRow)) {
-      return columnNames.map(columnName => ({ columnName }));
+      return columnNames.map((columnName) => ({ columnName }));
     }
 
-    return React.Children.toArray(firstRow.props.children).map(
-      (child, index) => ({
-        ...(React.isValidElement<TdProps>(child) ? child.props : {}),
-        columnName: columnNames[index],
-      })
-    );
+    return React.Children.toArray(firstRow.props.children).map((child, index) => ({
+      ...(React.isValidElement<TdProps>(child) ? child.props : {}),
+      columnName: columnNames[index],
+    }));
   }, [firstRow, columnNames]);
 
   return (
@@ -199,7 +188,7 @@ export const TableHeader = ({
         className={cn(
           trClassnames,
           stickyLastColumn && stickyLastColumnClassnames,
-          theadTrClassnames,
+          theadTrClassnames
         )}
       >
         {/* CHECKBOX: 전체 선택 셀 / RADIO: 빈 플레이스홀더 셀 */}

@@ -8,8 +8,7 @@
   stroke: currentColor !important;
 }
 
-.root[data-thaki-svg-mode='fill']
-  :where(path, circle, rect, ellipse, line, polyline, polygon, g) {
+.root[data-thaki-svg-mode='fill'] :where(path, circle, rect, ellipse, line, polyline, polygon, g) {
   fill: currentColor !important;
   stroke: none !important;
 }

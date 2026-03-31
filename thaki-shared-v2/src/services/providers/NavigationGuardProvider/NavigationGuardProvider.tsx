@@ -1,14 +1,5 @@
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import type {
-  GuardEntry,
-  NavigationGuardFn,
-  ShowConfirmModalFn,
-} from './types';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import type { GuardEntry, NavigationGuardFn, ShowConfirmModalFn } from './types';
 import { NavigationGuardContext } from './NavigationGuardContext';
 
 /**
@@ -84,19 +75,10 @@ export const NavigationGuardProvider: React.FC<{
       setActiveTabId,
       isModalOpen,
     }),
-    [
-      registerGuard,
-      unregisterGuard,
-      checkGuards,
-      confirmNavigation,
-      setActiveTabId,
-      isModalOpen,
-    ]
+    [registerGuard, unregisterGuard, checkGuards, confirmNavigation, setActiveTabId, isModalOpen]
   );
 
   return (
-    <NavigationGuardContext.Provider value={value}>
-      {children}
-    </NavigationGuardContext.Provider>
+    <NavigationGuardContext.Provider value={value}>{children}</NavigationGuardContext.Provider>
   );
 };

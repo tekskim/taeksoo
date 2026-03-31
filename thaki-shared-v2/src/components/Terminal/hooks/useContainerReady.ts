@@ -74,9 +74,7 @@ export function useContainerReady(
     // 새 창 모드: 크기 확보 대기
     const checkContainerSize = (): boolean => {
       const rect = container.getBoundingClientRect();
-      return (
-        rect.width >= MIN_CONTAINER_SIZE && rect.height >= MIN_CONTAINER_SIZE
-      );
+      return rect.width >= MIN_CONTAINER_SIZE && rect.height >= MIN_CONTAINER_SIZE;
     };
 
     if (checkContainerSize()) {

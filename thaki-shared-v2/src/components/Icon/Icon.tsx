@@ -1,17 +1,6 @@
-import React, {
-  cloneElement,
-  isValidElement,
-  type CSSProperties,
-  type ReactElement,
-} from 'react';
+import React, { cloneElement, isValidElement, type CSSProperties, type ReactElement } from 'react';
 import { useRTL } from '../../services';
-import {
-  DEFAULT_COLOR,
-  DEFAULT_SIZE,
-  DEFAULT_WEIGHT,
-  ICON_SIZES,
-  ICON_VARIANTS,
-} from './consts';
+import { DEFAULT_COLOR, DEFAULT_SIZE, DEFAULT_WEIGHT, ICON_SIZES, ICON_VARIANTS } from './consts';
 import type { DuotoneColors, IconProps, IconVariant, IconWeight } from './types';
 
 const WEIGHT_TO_STROKE: Record<IconWeight, number> = {
@@ -61,9 +50,7 @@ export const Icon = ({
   }
 
   // Get variant configuration
-  const variantConfig = variant
-    ? ICON_VARIANTS[variant as IconVariant]
-    : undefined;
+  const variantConfig = variant ? ICON_VARIANTS[variant as IconVariant] : undefined;
 
   // Resolve final props with priority: explicit props > variant > defaults
   const finalSize = typeof size === 'number' ? size : ICON_SIZES[size];
@@ -119,9 +106,7 @@ export const Icon = ({
     style?: CSSProperties;
     ['data-thaki-icon']?: string;
   };
-  const mergedClassName = [childProps.className, className]
-    .filter(Boolean)
-    .join(' ');
+  const mergedClassName = [childProps.className, className].filter(Boolean).join(' ');
   const mergedStyle: CSSProperties | undefined = childProps.style
     ? { ...childProps.style, ...finalStyle }
     : finalStyle;

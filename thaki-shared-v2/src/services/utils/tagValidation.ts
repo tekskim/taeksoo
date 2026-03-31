@@ -61,7 +61,9 @@ const validateKeyField = (value: string): FieldErrorType | null => {
 };
 
 /** Value 필드 유효성 검사 (선택, 0~256자, 빈 값/null 허용) */
-const validateValueField = (value: string | null | undefined): Exclude<FieldErrorType, 'required'> | null => {
+const validateValueField = (
+  value: string | null | undefined
+): Exclude<FieldErrorType, 'required'> | null => {
   if (!value || !value.trim()) return null; // 빈 값/null 허용
   if (value.length > MAX_TAG_LENGTH) return 'tooLong';
   if (!SAFE_TAG_PATTERN.test(value)) return 'invalidChars';
@@ -147,7 +149,7 @@ export const validateTags = (tags: Tag[]): TagValidationResult => {
   }
 
   // 중복 Key 마킹
-  keyIndices.forEach(indices => {
+  keyIndices.forEach((indices) => {
     if (indices.length > 1) {
       for (const i of indices) {
         duplicateIndices.add(i);
@@ -185,15 +187,12 @@ export const reindexTouchedTags = (
   prev: Record<number, TouchedTagFields>,
   removedIndex: number
 ): Record<number, TouchedTagFields> =>
-  Object.entries(prev).reduce<Record<number, TouchedTagFields>>(
-    (acc, [key, value]) => {
-      const idx = Number(key);
-      if (idx < removedIndex) {
-        acc[idx] = value;
-      } else if (idx > removedIndex) {
-        acc[idx - 1] = value;
-      }
-      return acc;
-    },
-    {}
-  );
+  Object.entries(prev).reduce<Record<number, TouchedTagFields>>((acc, [key, value]) => {
+    const idx = Number(key);
+    if (idx < removedIndex) {
+      acc[idx] = value;
+    } else if (idx > removedIndex) {
+      acc[idx - 1] = value;
+    }
+    return acc;
+  }, {});

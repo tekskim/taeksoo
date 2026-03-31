@@ -24,9 +24,7 @@ export interface DomainSwitchingEventDetail {
  * dispatchDomainSwitch({ orgId: 'org-123', name: 'My Organization' });
  * ```
  */
-export const dispatchDomainSwitch = (
-  detail: DomainSwitchingEventDetail
-): void => {
+export const dispatchDomainSwitch = (detail: DomainSwitchingEventDetail): void => {
   const event = new CustomEvent(DOMAIN_EVENTS.SWITCHING, { detail });
   window.dispatchEvent(event);
 };
@@ -76,9 +74,7 @@ export interface DomainChangedEventDetail {
  * dispatchDomainChanged({ action: 'delete', orgId: 'org-123' });
  * ```
  */
-export const dispatchDomainChanged = (
-  detail: DomainChangedEventDetail
-): void => {
+export const dispatchDomainChanged = (detail: DomainChangedEventDetail): void => {
   const event = new CustomEvent(DOMAIN_EVENTS.CHANGED, { detail });
   window.dispatchEvent(event);
 };

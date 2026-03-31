@@ -54,14 +54,7 @@ const ROW_DATA = [
 ];
 
 const COLUMN_NAMES = ['Age', 'Name', 'Address', 'Phone'];
-const STICKY_COLUMN_NAMES = [
-  'Age',
-  'Name',
-  'Address',
-  'Phone',
-  'Department',
-  'Action',
-];
+const STICKY_COLUMN_NAMES = ['Age', 'Name', 'Address', 'Phone', 'Department', 'Action'];
 
 const renderRow = (
   { id, name, age, address, phone }: (typeof ROW_DATA)[number],
@@ -92,7 +85,7 @@ export const Default: StoryFn = () => (
     rowData={ROW_DATA}
     columnNames={COLUMN_NAMES}
     type="checkbox"
-    getSelectValue={row => row.id}
+    getSelectValue={(row) => row.id}
     selectedValues={[1, 2]}
     onChange={console.log}
     onSortChange={console.log}
@@ -177,7 +170,7 @@ export const RadioSelection: StoryFn = () => (
     rowData={ROW_DATA}
     columnNames={COLUMN_NAMES}
     type="radio"
-    getSelectValue={row => row.id}
+    getSelectValue={(row) => row.id}
     onChange={console.log}
   >
     {renderRow}
@@ -191,7 +184,7 @@ export const SelectOnRowClick: StoryFn = () => (
     rowData={ROW_DATA}
     columnNames={COLUMN_NAMES}
     type="checkbox"
-    getSelectValue={row => row.id}
+    getSelectValue={(row) => row.id}
     onChange={console.log}
     selectOnRowClick
   >
@@ -239,7 +232,7 @@ export const SelectAndExpandOnRowClick: StoryFn = () => (
     rowData={ROW_DATA}
     columnNames={COLUMN_NAMES}
     type="checkbox"
-    getSelectValue={row => row.id}
+    getSelectValue={(row) => row.id}
     onChange={console.log}
     canMultipleExpand
     selectOnRowClick
@@ -270,8 +263,8 @@ export const DisabledRow: StoryFn = () => (
     rowData={ROW_DATA}
     columnNames={COLUMN_NAMES}
     type="checkbox"
-    getSelectValue={row => row.id}
-    getDisabled={row => row.id % 2 === 0}
+    getSelectValue={(row) => row.id}
+    getDisabled={(row) => row.id % 2 === 0}
     onChange={console.log}
     selectedValues={[2]}
     selectOnRowClick
@@ -324,7 +317,7 @@ export const AsyncFetch: StoryFn = () => {
       rowData={rowData}
       columnNames={COLUMN_NAMES}
       type="checkbox"
-      getSelectValue={row => row.id}
+      getSelectValue={(row) => row.id}
       selectedValues={defaultSelected}
       onChange={console.log}
       selectOnRowClick
@@ -352,11 +345,7 @@ export const AsyncError: StoryFn = () => {
   }, []);
 
   return (
-    <TcTable.Body
-      isLoading={isLoading}
-      rowData={null}
-      columnNames={COLUMN_NAMES}
-    >
+    <TcTable.Body isLoading={isLoading} rowData={null} columnNames={COLUMN_NAMES}>
       {renderRow}
     </TcTable.Body>
   );
@@ -389,7 +378,7 @@ export const ResizableWithCheckbox: StoryFn = () => (
     rowData={ROW_DATA}
     columnNames={COLUMN_NAMES}
     type="checkbox"
-    getSelectValue={row => row.id}
+    getSelectValue={(row) => row.id}
     onChange={console.log}
     resizable
   >
@@ -444,11 +433,7 @@ export const AsyncEmpty: StoryFn = () => {
   }, []);
 
   return (
-    <TcTable.Body
-      isLoading={isLoading}
-      rowData={rowData}
-      columnNames={COLUMN_NAMES}
-    >
+    <TcTable.Body isLoading={isLoading} rowData={rowData} columnNames={COLUMN_NAMES}>
       {renderRow}
     </TcTable.Body>
   );

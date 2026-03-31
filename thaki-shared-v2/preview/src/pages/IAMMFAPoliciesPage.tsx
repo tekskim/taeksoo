@@ -42,8 +42,8 @@ export function IAMMFAPoliciesPage() {
 
                 <div className="py-6">
                   <p className="text-12 leading-18 text-text-muted mb-3">
-                    Choose whether to make Multi-Factor Authentication (MFA) mandatory for all users,
-                    or let them enable it voluntarily.
+                    Choose whether to make Multi-Factor Authentication (MFA) mandatory for all
+                    users, or let them enable it voluntarily.
                   </p>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-1.5">
@@ -78,8 +78,12 @@ export function IAMMFAPoliciesPage() {
                     <IconRefresh size={12} stroke={1.5} />
                     Reset to default
                   </button>
-                  <Button variant="secondary" appearance="outline" size="sm">Reload</Button>
-                  <Button variant="primary" size="sm">Save</Button>
+                  <Button variant="secondary" appearance="outline" size="sm">
+                    Reload
+                  </Button>
+                  <Button variant="primary" size="sm">
+                    Save
+                  </Button>
                 </div>
               </div>
             </div>
@@ -89,7 +93,10 @@ export function IAMMFAPoliciesPage() {
         <Tab id="methods" label="MFA methods">
           <div className="flex flex-col gap-4 pt-4">
             <TabSelector
-              options={[{ id: 'otp', label: 'OTP' }, { id: 'email', label: 'Email' }]}
+              options={[
+                { id: 'otp', label: 'OTP' },
+                { id: 'email', label: 'Email' },
+              ]}
               value={activeMethodTab}
               onChange={(id) => setActiveMethodTab(id as 'otp' | 'email')}
               variant="small"
@@ -156,10 +163,20 @@ export function IAMMFAPoliciesPage() {
                       hint="Recommended authenticator apps that support this policy."
                     >
                       <div className="flex gap-1.5">
-                        <Badge theme="gry" size="sm" layout="left-icon" icon={<IconDeviceMobile size={12} stroke={1.5} />}>
+                        <Badge
+                          theme="gry"
+                          size="sm"
+                          layout="left-icon"
+                          icon={<IconDeviceMobile size={12} stroke={1.5} />}
+                        >
                           Google auth
                         </Badge>
-                        <Badge theme="gry" size="sm" layout="left-icon" icon={<IconDeviceMobile size={12} stroke={1.5} />}>
+                        <Badge
+                          theme="gry"
+                          size="sm"
+                          layout="left-icon"
+                          icon={<IconDeviceMobile size={12} stroke={1.5} />}
+                        >
                           MS Auth
                         </Badge>
                       </div>
@@ -176,8 +193,12 @@ export function IAMMFAPoliciesPage() {
                       <IconRefresh size={12} stroke={1.5} />
                       Reset to default
                     </button>
-                    <Button variant="secondary" appearance="outline" size="sm">Reload</Button>
-                    <Button variant="primary" size="sm">Save</Button>
+                    <Button variant="secondary" appearance="outline" size="sm">
+                      Reload
+                    </Button>
+                    <Button variant="primary" size="sm">
+                      Save
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -298,8 +319,12 @@ export function IAMMFAPoliciesPage() {
                       <IconRefresh size={12} stroke={1.5} />
                       Reset to default
                     </button>
-                    <Button variant="secondary" appearance="outline" size="sm">Reload</Button>
-                    <Button variant="primary" size="sm">Save</Button>
+                    <Button variant="secondary" appearance="outline" size="sm">
+                      Reload
+                    </Button>
+                    <Button variant="primary" size="sm">
+                      Save
+                    </Button>
                   </div>
                 </div>
               </div>

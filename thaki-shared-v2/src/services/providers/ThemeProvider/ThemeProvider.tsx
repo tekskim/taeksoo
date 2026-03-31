@@ -33,9 +33,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const savedTheme = localStorage.getItem('theme') as Theme;
     const initialTheme = savedTheme || defaultTheme;
 
-    const validTheme = includes(availableThemes, initialTheme)
-      ? initialTheme
-      : defaultTheme;
+    const validTheme = includes(availableThemes, initialTheme) ? initialTheme : defaultTheme;
 
     setThemeState(validTheme);
     applyTheme(validTheme, mediaQuery.matches);
@@ -47,8 +45,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     };
 
     mediaQuery.addEventListener('change', handleSystemThemeChange);
-    return () =>
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
   }, [availableThemes, defaultTheme]);
 
   useEffect(() => {
@@ -99,9 +96,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     availableThemes,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = () => {

@@ -62,7 +62,7 @@ const meta: Meta<typeof Tabs> = {
       },
     },
   },
-  decorators: [Story => <Story />],
+  decorators: [(Story) => <Story />],
   tags: ['autodocs'],
   argTypes: {
     size: {
@@ -175,10 +175,7 @@ export const ManyTabs: Story = {
         <Tab id="load-balancers" label="Load Balancers">
           <div>
             <h3>로드 밸런서</h3>
-            <p>
-              트래픽을 여러 인스턴스로 분산하는 로드 밸런서를 구성할 수
-              있습니다.
-            </p>
+            <p>트래픽을 여러 인스턴스로 분산하는 로드 밸런서를 구성할 수 있습니다.</p>
           </div>
         </Tab>
         <Tab id="containers" label="Containers">

@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   args: {
-    onLanguageChange: lang => {
+    onLanguageChange: (lang) => {
       console.log('Language changed to:', lang);
     },
   },
@@ -32,17 +32,16 @@ export const Default: Story = {
  */
 export const OnDarkBackground: Story = {
   args: {
-    onLanguageChange: lang => {
+    onLanguageChange: (lang) => {
       console.log('Language changed to:', lang);
     },
   },
   decorators: [
-    Story => (
+    (Story) => (
       <div
         style={{
           padding: '2rem',
-          backgroundColor:
-            'color-mix(in srgb, var(--semantic-color-text) 70%, transparent)',
+          backgroundColor: 'color-mix(in srgb, var(--semantic-color-text) 70%, transparent)',
           borderRadius: '8px',
         }}
       >

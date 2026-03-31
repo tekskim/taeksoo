@@ -1,12 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import {
-  HomeIcon,
-  InstancesIcon,
-  NetworksIcon,
-  SettingIcon,
-  StorageIcon,
-} from '../Icon/svg';
+import { HomeIcon, InstancesIcon, NetworksIcon, SettingIcon, StorageIcon } from '../Icon/svg';
 import { Sidebar } from './Sidebar';
 import { SidebarMenu } from './SidebarMenu';
 import { SidebarMenuItem } from './SidebarMenuItem';
@@ -81,8 +75,7 @@ export const Default: Story = {
     };
 
     const handleItemClick = (path: string, event?: React.MouseEvent) => {
-      const shouldOpenNewTab =
-        event && (event.ctrlKey || event.metaKey || event.button === 1);
+      const shouldOpenNewTab = event && (event.ctrlKey || event.metaKey || event.button === 1);
       handleNavigate(path, { newTab: Boolean(shouldOpenNewTab) });
     };
 
@@ -98,7 +91,7 @@ export const Default: Story = {
           onClick={handleItemClick}
         />
         <SidebarMenu
-          sections={sampleSections.filter(s => s.children)}
+          sections={sampleSections.filter((s) => s.children)}
           defaultOpenSections={['compute', 'network']}
           onNavigate={handleNavigate}
           isItemActive={isItemActive}

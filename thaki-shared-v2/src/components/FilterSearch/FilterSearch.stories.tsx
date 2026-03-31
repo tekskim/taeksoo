@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import type { FilterKey } from './FilterSearch.types';
-import {
-  FilterSearchInput,
-  FilterSearchResults,
-  useFilterSearch,
-} from './index';
+import { FilterSearchInput, FilterSearchResults, useFilterSearch } from './index';
 
 const meta = {
   title: 'Form/FilterSearch',
@@ -117,10 +113,11 @@ const FILTER_KEYS: FilterKey[] = [
 
 // 분리된 컴포넌트 사용 (검색창과 결과 분리)
 const SeparatedComponent = () => {
-  const { filters, appliedFilters, addFilter, removeFilter, clearFilters } =
-    useFilterSearch(newFilters => {
+  const { filters, appliedFilters, addFilter, removeFilter, clearFilters } = useFilterSearch(
+    (newFilters) => {
       console.log('Filters changed:', newFilters);
-    });
+    }
+  );
 
   return (
     <div style={{ maxWidth: '800px' }}>

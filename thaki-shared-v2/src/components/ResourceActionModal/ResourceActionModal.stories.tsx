@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useOverlay } from '../../services/hooks';
 import { Button } from '../Button';
-import ResourceActionModal, {
-  ResourceActionModalProps,
-} from './ResourceActionModal';
+import ResourceActionModal, { ResourceActionModalProps } from './ResourceActionModal';
 
 /**
  * ResourceActionModal 컴포넌트
@@ -135,12 +133,7 @@ export const MultipleResources: Story = {
       infoItems={[
         {
           label: 'Instances that can be deleted',
-          values: [
-            'web-server-01',
-            'web-server-02',
-            'web-server-03',
-            'web-server-05',
-          ],
+          values: ['web-server-01', 'web-server-02', 'web-server-03', 'web-server-05'],
         },
         {
           label: 'Instances that cannot be deleted',
@@ -168,8 +161,7 @@ export const SubjectObjectRelation: Story = {
     <StoryWrapper
       actionConfig={{
         title: 'Disassociate Floating IP',
-        subtitle:
-          'Are you sure you want to disassociate this floating IP from the instance?',
+        subtitle: 'Are you sure you want to disassociate this floating IP from the instance?',
         actionButtonText: 'Confirm',
         actionButtonVariant: 'primary',
         cancelButtonText: 'Cancel',
@@ -179,8 +171,7 @@ export const SubjectObjectRelation: Story = {
         { label: 'Floating IP', values: ['10.168.100.2'] },
       ]}
       content={{
-        message:
-          'The instance will lose external network access once this floating IP is removed.',
+        message: 'The instance will lose external network access once this floating IP is removed.',
       }}
     />
   ),

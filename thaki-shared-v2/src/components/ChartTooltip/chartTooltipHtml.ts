@@ -21,8 +21,7 @@ const inlineStyles = {
     'backdrop-filter: blur(68px);',
     'background: rgba(246, 246, 246, 0.36);',
   ].join(' '),
-  title:
-    'font-size: 12px; font-weight: 500; line-height: 16px; color: #475569; margin: 0;',
+  title: 'font-size: 12px; font-weight: 500; line-height: 16px; color: #475569; margin: 0;',
   row: 'display: flex; align-items: center; gap: 8px;',
   dot: 'width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0;',
   text: 'font-size: 14px; font-weight: 400; line-height: 20px; color: #0f172a;',
@@ -37,17 +36,12 @@ const inlineStyles = {
  * @see https://www.figma.com/design/VjoRXmpHtZqY5tvtbXcvGH/TDS-Guide?node-id=1992-283
  * @see https://www.figma.com/design/VjoRXmpHtZqY5tvtbXcvGH/TDS-Guide?node-id=1992-106
  */
-export const chartTooltipHtml = (
-  title: string | undefined,
-  items: ChartTooltipItem[]
-): string => {
-  const titleHtml = title
-    ? `<div style="${inlineStyles.title}">${escapeHtml(title)}</div>`
-    : '';
+export const chartTooltipHtml = (title: string | undefined, items: ChartTooltipItem[]): string => {
+  const titleHtml = title ? `<div style="${inlineStyles.title}">${escapeHtml(title)}</div>` : '';
 
   const rowsHtml = items
     .map(
-      item =>
+      (item) =>
         `<div style="${inlineStyles.row}">` +
         `<span style="${inlineStyles.dot} background-color: ${escapeHtml(item.color)};"></span>` +
         `<span style="${inlineStyles.text}">${escapeHtml(item.label)}: ${escapeHtml(item.value)}</span>` +

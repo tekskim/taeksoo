@@ -757,6 +757,7 @@ function AppRoutes() {
       <Route path="/container/services/create-v2" element={<CreateServicePage />} />
       <Route path="/container/services/create-yaml" element={<CreateServiceYamlPage />} />
       <Route path="/container/services/create-yaml-v2" element={<CreateServiceYamlPage />} />
+      <Route path="/container/services/:serviceId/edit" element={<CreateServicePage />} />
       <Route path="/container/services/:serviceId/edit-yaml" element={<EditServiceYamlPage />} />
       <Route path="/container/services/:serviceId" element={<ContainerServiceDetailPage />} />
       <Route path="/container/ingresses" element={<ContainerIngressesPage />} />
@@ -764,6 +765,7 @@ function AppRoutes() {
       <Route path="/container/ingresses/create-v2" element={<CreateIngressPage />} />
       <Route path="/container/ingresses/create-yaml" element={<CreateIngressYamlPage />} />
       <Route path="/container/ingresses/create-yaml-v2" element={<CreateIngressYamlPage />} />
+      <Route path="/container/ingresses/:ingressId/edit" element={<CreateIngressPage />} />
       <Route path="/container/ingresses/:ingressId/edit-yaml" element={<EditIngressYamlPage />} />
       <Route path="/container/ingresses/:ingressId" element={<ContainerIngressDetailPage />} />
       <Route path="/container/hpa" element={<ContainerHPAPage />} />
@@ -771,6 +773,7 @@ function AppRoutes() {
       <Route path="/container/hpa/create-v2" element={<CreateHPAPage />} />
       <Route path="/container/hpa/create-yaml" element={<CreateHPAYamlPage />} />
       <Route path="/container/hpa/create-yaml-v2" element={<CreateHPAYamlPage />} />
+      <Route path="/container/hpa/:hpaId/edit" element={<CreateHPAPage />} />
       <Route path="/container/hpa/:hpaId" element={<ContainerHPADetailPage />} />
       <Route path="/container/hpa/:hpaId/edit-yaml" element={<EditHPAYamlPage />} />
       <Route path="/container/console/:instanceId" element={<ContainerConsolePage />} />
@@ -782,6 +785,10 @@ function AppRoutes() {
       <Route
         path="/container/deployments/:deploymentName/edit-yaml"
         element={<EditDeploymentYamlPage />}
+      />
+      <Route
+        path="/container/deployments/:deploymentName/edit"
+        element={<CreateDeploymentPage />}
       />
       <Route path="/container/deployments/:deploymentId" element={<DeploymentDetailPage />} />
       <Route path="/container/statefulsets" element={<StatefulSetsPage />} />
@@ -796,6 +803,10 @@ function AppRoutes() {
         path="/container/statefulsets/:statefulSetName/edit-yaml"
         element={<EditStatefulSetYamlPage />}
       />
+      <Route
+        path="/container/statefulsets/:statefulSetName/edit"
+        element={<CreateStatefulSetPage />}
+      />
       <Route path="/container/statefulsets/:statefulsetId" element={<StatefulSetDetailPage />} />
       <Route path="/container/daemonsets" element={<DaemonSetsPage />} />
       <Route path="/container/daemonsets/create" element={<CreateDaemonSetPage />} />
@@ -806,6 +817,7 @@ function AppRoutes() {
         path="/container/daemonsets/:daemonSetName/edit-yaml"
         element={<EditDaemonSetYamlPage />}
       />
+      <Route path="/container/daemonsets/:daemonSetName/edit" element={<CreateDaemonSetPage />} />
       <Route path="/container/daemonsets/:daemonsetId" element={<DaemonSetDetailPage />} />
       <Route path="/container/jobs" element={<JobsPage />} />
       <Route path="/container/jobs/create" element={<CreateJobPage />} />
@@ -813,6 +825,7 @@ function AppRoutes() {
       <Route path="/container/jobs/create-yaml" element={<CreateJobYamlPage />} />
       <Route path="/container/jobs/create-yaml-v2" element={<CreateJobYamlPage />} />
       <Route path="/container/jobs/:jobName/edit-yaml" element={<EditJobYamlPage />} />
+      <Route path="/container/jobs/:jobName/edit" element={<CreateJobPage />} />
       <Route path="/container/jobs/:jobId" element={<JobDetailPage />} />
       <Route path="/container/cronjobs" element={<CronJobsPage />} />
       <Route path="/container/cronjobs/create" element={<CreateCronJobPage />} />
@@ -820,6 +833,7 @@ function AppRoutes() {
       <Route path="/container/cronjobs/create-yaml" element={<CreateCronJobYamlPage />} />
       <Route path="/container/cronjobs/create-yaml-v2" element={<CreateCronJobYamlPage />} />
       <Route path="/container/cronjobs/:cronJobName/edit-yaml" element={<EditCronJobYamlPage />} />
+      <Route path="/container/cronjobs/:cronJobName/edit" element={<CreateCronJobPage />} />
       <Route path="/container/cronjobs/:cronjobId" element={<CronJobDetailPage />} />
       <Route path="/container/pods" element={<PodsPage />} />
       <Route path="/container/pods/create" element={<CreatePodPage />} />
@@ -827,6 +841,7 @@ function AppRoutes() {
       <Route path="/container/pods/create-yaml" element={<CreatePodYamlPage />} />
       <Route path="/container/pods/create-yaml-v2" element={<CreatePodYamlPage />} />
       <Route path="/container/pods/:podName/edit-yaml" element={<EditPodYamlPage />} />
+      <Route path="/container/pods/:podName/edit" element={<CreatePodPage />} />
       <Route path="/container/pods/:podId" element={<PodDetailPage />} />
       <Route path="/container/persistent-volumes" element={<PersistentVolumesPage />} />
       <Route path="/container/persistent-volumes/create" element={<CreatePersistentVolumePage />} />
@@ -846,6 +861,10 @@ function AppRoutes() {
         path="/container/persistent-volumes/:pvName/edit-yaml"
         element={<EditPersistentVolumeYamlPage />}
       />
+      <Route
+        path="/container/persistent-volumes/:pvName/edit"
+        element={<CreatePersistentVolumePage />}
+      />
       <Route path="/container/persistent-volumes/:pvId" element={<PersistentVolumeDetailPage />} />
       <Route path="/container/pvc" element={<PersistentVolumeClaimsPage />} />
       <Route path="/container/pvc/create" element={<CreatePersistentVolumeClaimPage />} />
@@ -859,6 +878,7 @@ function AppRoutes() {
         path="/container/pvc/:pvcName/edit-yaml"
         element={<EditPersistentVolumeClaimYamlPage />}
       />
+      <Route path="/container/pvc/:pvcName/edit" element={<CreatePersistentVolumeClaimPage />} />
       <Route path="/container/pvc/:pvcId" element={<PersistentVolumeClaimDetailPage />} />
       <Route path="/container/storage-classes" element={<StorageClassesPage />} />
       <Route path="/container/storage-classes/create" element={<CreateStorageClassPage />} />
@@ -876,6 +896,10 @@ function AppRoutes() {
         element={<EditStorageClassYamlPage />}
       />
       <Route
+        path="/container/storage-classes/:storageClassName/edit"
+        element={<CreateStorageClassPage />}
+      />
+      <Route
         path="/container/storage-classes/:storageClassId"
         element={<StorageClassDetailPage />}
       />
@@ -888,6 +912,7 @@ function AppRoutes() {
         path="/container/configmaps/:configMapName/edit-yaml"
         element={<EditConfigMapYamlPage />}
       />
+      <Route path="/container/configmaps/:configMapName/edit" element={<CreateConfigMapPage />} />
       <Route path="/container/configmaps/:configMapId" element={<ConfigMapDetailPage />} />
       <Route path="/container/secrets" element={<SecretsPage />} />
       <Route path="/container/secrets/create" element={<CreateSecretPage />} />
@@ -895,6 +920,7 @@ function AppRoutes() {
       <Route path="/container/secrets/create-yaml" element={<CreateSecretYamlPage />} />
       <Route path="/container/secrets/create-yaml-v2" element={<CreateSecretYamlPage />} />
       <Route path="/container/secrets/:secretName/edit-yaml" element={<EditSecretYamlPage />} />
+      <Route path="/container/secrets/:secretName/edit" element={<CreateSecretPage />} />
       <Route path="/container/secrets/:secretId" element={<SecretDetailPage />} />
       <Route path="/container/limit-ranges" element={<LimitRangesPage />} />
       <Route path="/container/limit-ranges/create" element={<CreateLimitRangePage />} />
@@ -904,6 +930,10 @@ function AppRoutes() {
       <Route
         path="/container/limit-ranges/:limitRangeName/edit-yaml"
         element={<EditLimitRangeYamlPage />}
+      />
+      <Route
+        path="/container/limit-ranges/:limitRangeName/edit"
+        element={<CreateLimitRangePage />}
       />
       <Route path="/container/resource-quotas" element={<ResourceQuotasPage />} />
       <Route path="/container/resource-quotas/create" element={<CreateResourceQuotaPage />} />
@@ -919,6 +949,10 @@ function AppRoutes() {
       <Route
         path="/container/resource-quotas/:resourceQuotaName/edit-yaml"
         element={<EditResourceQuotaYamlPage />}
+      />
+      <Route
+        path="/container/resource-quotas/:resourceQuotaName/edit"
+        element={<CreateResourceQuotaPage />}
       />
       <Route path="/container/network-policies" element={<NetworkPoliciesPage />} />
       <Route path="/container/network-policies/create" element={<CreateNetworkPolicyPage />} />
@@ -936,6 +970,10 @@ function AppRoutes() {
         element={<EditNetworkPolicyYamlPage />}
       />
       <Route
+        path="/container/network-policies/:networkPolicyName/edit"
+        element={<CreateNetworkPolicyPage />}
+      />
+      <Route
         path="/container/network-policies/:networkPolicyId"
         element={<NetworkPolicyDetailPage />}
       />
@@ -948,6 +986,7 @@ function AppRoutes() {
         path="/container/pdb/:pdbName/edit-yaml"
         element={<EditPodDisruptionBudgetYamlPage />}
       />
+      <Route path="/container/pdb/:pdbName/edit" element={<CreatePodDisruptionBudgetPage />} />
       <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
       <Route path="/container/catalog" element={<CatalogPage />} />
       <Route path="/container/catalog/:appId/install" element={<CatalogInstallPage />} />

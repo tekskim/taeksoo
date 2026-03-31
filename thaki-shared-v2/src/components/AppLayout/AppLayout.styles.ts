@@ -32,8 +32,7 @@ export const sideHeaderStyles = cva(
     variants: {
       collapsed: {
         true: 'w-0 min-w-0 px-0 border-r-0 border-b-0 opacity-0',
-        false:
-          'w-[200px] min-w-[200px] pr-[12px] opacity-100 border-r border-b border-border',
+        false: 'w-[200px] min-w-[200px] pr-[12px] opacity-100 border-r border-b border-border',
       },
       // Container app: show only icon when collapsed (40px wide)
       collapsedWithIcon: {
@@ -82,8 +81,7 @@ export const collapsedToggleContainerStyles =
 export const headerSidebarToggleStyles = 'flex-shrink-0 ml-1';
 
 // Sidebar logo
-export const sidebarLogoStyles =
-  'w-auto max-w-[129px] object-contain flex-shrink-0';
+export const sidebarLogoStyles = 'w-auto max-w-[129px] object-contain flex-shrink-0';
 
 // App icon wrapper - Figma: px-8 py-4, shrink-0
 export const appIconWrapperStyles = 'flex items-center px-[8px] py-[4px] shrink-0';
@@ -97,8 +95,7 @@ export const appNameStyles =
   'text-[14px] font-medium text-text-default truncate leading-[20px] flex-1 min-w-0';
 
 // Content area (contains sidebar + main panel)
-export const contentStyles =
-  'flex-1 overflow-hidden bg-background';
+export const contentStyles = 'flex-1 overflow-hidden bg-background';
 
 // Main panel (scroll handled by TabContent inside)
 export const mainPanelStyles = 'flex-1 flex flex-col min-w-0 overflow-hidden';

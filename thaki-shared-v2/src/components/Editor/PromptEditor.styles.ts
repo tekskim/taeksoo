@@ -1,10 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const promptEditorStyles = cva(
-  [
-    'p-3 box-border',
-    'border border-solid border-border rounded-control',
-  ],
+  ['p-3 box-border', 'border border-solid border-border rounded-control'],
   {
     variants: {
       size: {
@@ -17,7 +14,7 @@ export const promptEditorStyles = cva(
     defaultVariants: {
       size: 'md',
     },
-  },
+  }
 );
 
 export type PromptEditorStyleVariants = VariantProps<typeof promptEditorStyles>;

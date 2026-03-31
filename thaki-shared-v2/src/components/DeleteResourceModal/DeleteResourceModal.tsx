@@ -74,7 +74,7 @@ const DeleteResourceModal = ({
       return [
         {
           label: listLabel,
-          values: targets.map(target => target.name || target.id),
+          values: targets.map((target) => target.name || target.id),
           showBullets: true,
         },
       ];
@@ -85,20 +85,12 @@ const DeleteResourceModal = ({
         values: [targets[0]?.name || targets[0]?.id || '-'],
       },
     ];
-  }, [
-    infoItemsOverride,
-    labels?.listLabel,
-    labels?.singleLabel,
-    showBulkView,
-    targets,
-  ]);
+  }, [infoItemsOverride, labels?.listLabel, labels?.singleLabel, showBulkView, targets]);
 
   const resolvedContent =
     content === undefined
       ? (() => {
-          const message = showBulkView
-            ? labels?.warningBulk
-            : labels?.warningSingle;
+          const message = showBulkView ? labels?.warningBulk : labels?.warningSingle;
           if (!message) {
             return null;
           }
@@ -111,11 +103,9 @@ const DeleteResourceModal = ({
       {...rest}
       actionConfig={{
         title: showBulkView
-          ? labels?.titleBulk ?? DEFAULT_BULK_TITLE
-          : labels?.titleSingle ?? DEFAULT_SINGLE_TITLE,
-        subtitle: showBulkView
-          ? labels?.descriptionBulk
-          : labels?.descriptionSingle,
+          ? (labels?.titleBulk ?? DEFAULT_BULK_TITLE)
+          : (labels?.titleSingle ?? DEFAULT_SINGLE_TITLE),
+        subtitle: showBulkView ? labels?.descriptionBulk : labels?.descriptionSingle,
         actionButtonText: labels?.actionButtonText ?? DEFAULT_ACTION_TEXT,
         actionButtonVariant: 'error',
         cancelButtonText: labels?.cancelButtonText ?? DEFAULT_CANCEL_TEXT,
@@ -128,9 +118,7 @@ const DeleteResourceModal = ({
       onAction={onAction}
     >
       {children}
-      {errorMessage ? (
-        <Typography.Text color="error">{errorMessage}</Typography.Text>
-      ) : null}
+      {errorMessage ? <Typography.Text color="error">{errorMessage}</Typography.Text> : null}
     </ResourceActionModal>
   );
 };

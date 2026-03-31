@@ -1,8 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { ComponentSize } from '../../types';
 
-export interface CheckboxProps
-  extends Omit<HTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface CheckboxProps extends Omit<HTMLAttributes<HTMLInputElement>, 'onChange'> {
   name?: string;
   label?: string;
   value?: string | number;

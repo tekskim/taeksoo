@@ -30,9 +30,7 @@ import { useEffect } from 'react';
 const createUseSyncBreadcrumbTitle = (
   useTabManager: () => { updateActiveTabTitle: (title: string) => void }
 ): ((resourceName: string | undefined) => void) => {
-  return function useSyncBreadcrumbTitle(
-    resourceName: string | undefined
-  ): void {
+  return function useSyncBreadcrumbTitle(resourceName: string | undefined): void {
     const { updateActiveTabTitle } = useTabManager();
 
     useEffect(() => {

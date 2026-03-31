@@ -10,10 +10,10 @@ const bindClsx = (styles: Record<string, string>) => {
   return (...args: Parameters<typeof clsx>) => {
     return clsx(...args)
       .split(' ') // 공백 기준으로 나눔
-      .map(c => c.trim()) // 앞뒤 공백 제거
+      .map((c) => c.trim()) // 앞뒤 공백 제거
       .filter(Boolean) // falsy 값 제거 (e.g. '')
-      .map(cls => `${styles[cls] || ''} ${cls || ''}`) // 해시가 붙어 있는 클래스네임과 원래 클래스네임을 모두 반환
-      .map(c => c.trim()) // 앞뒤 공백 제거
+      .map((cls) => `${styles[cls] || ''} ${cls || ''}`) // 해시가 붙어 있는 클래스네임과 원래 클래스네임을 모두 반환
+      .map((c) => c.trim()) // 앞뒤 공백 제거
       .join(' ');
   };
 };

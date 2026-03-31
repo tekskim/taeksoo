@@ -1,7 +1,4 @@
-export {
-  AppIcon,
-  createAppIcon,
-} from './AppIcon';
+export { AppIcon, createAppIcon } from './AppIcon';
 export type { AppIconName, AppIconProps } from './AppIcon';
 export { AgentAppIcon } from './AgentAppIcon';
 export { AiAppIcon } from './AiAppIcon';

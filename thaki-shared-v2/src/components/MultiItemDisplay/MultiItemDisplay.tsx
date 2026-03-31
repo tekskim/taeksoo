@@ -22,10 +22,7 @@ export interface MultiItemDisplayProps {
  * // Key-value object (labels, annotations)
  * <MultiItemDisplay items={{ key1: 'value1', key2: 'value2' }} />
  */
-const MultiItemDisplay: React.FC<MultiItemDisplayProps> = ({
-  items,
-  emptyText = '-',
-}) => {
+const MultiItemDisplay: React.FC<MultiItemDisplayProps> = ({ items, emptyText = '-' }) => {
   // Convert Record to string array if needed
   const itemArray: string[] = Array.isArray(items)
     ? items
@@ -47,9 +44,7 @@ const MultiItemDisplay: React.FC<MultiItemDisplayProps> = ({
   const remainingCount = itemArray.length - 1;
 
   // 전체 항목을 줄바꿈으로 구분하여 툴팁 컨텐츠 생성
-  const tooltipContent = (
-    <div style={{ whiteSpace: 'pre-line' }}>{itemArray.join('\n')}</div>
-  );
+  const tooltipContent = <div style={{ whiteSpace: 'pre-line' }}>{itemArray.join('\n')}</div>;
 
   return (
     <span className="inline-flex items-center gap-1 text-xs min-w-0">
@@ -57,9 +52,7 @@ const MultiItemDisplay: React.FC<MultiItemDisplayProps> = ({
         {firstItem}
       </span>
       <Tooltip content={tooltipContent} direction="top">
-        <span className="text-text-muted cursor-pointer shrink-0">
-          (+{remainingCount})
-        </span>
+        <span className="text-text-muted cursor-pointer shrink-0">(+{remainingCount})</span>
       </Tooltip>
     </span>
   );

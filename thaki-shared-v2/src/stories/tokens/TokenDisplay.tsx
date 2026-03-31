@@ -54,15 +54,13 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding:
-      'calc(var(--semantic-space-inline) + 2px) calc(var(--semantic-space-block) + 2px)',
+    padding: 'calc(var(--semantic-space-inline) + 2px) calc(var(--semantic-space-block) + 2px)',
     backgroundColor: 'var(--semantic-color-surfaceMuted)',
     border: '1px solid var(--semantic-color-border)',
     borderRadius: 'var(--semantic-radius-card)',
     transition: 'all 0.2s ease-in-out',
     width: '100%',
-    minHeight:
-      'calc(var(--semantic-space-section) * 2 + var(--semantic-space-block))',
+    minHeight: 'calc(var(--semantic-space-section) * 2 + var(--semantic-space-block))',
     boxSizing: 'border-box',
     margin: '2px',
   },
@@ -220,18 +218,12 @@ const detectTokenType = (name: string, value: string): Token['type'] => {
   if (name.startsWith('--component-')) {
     if (name.includes('padding') || name.includes('margin')) return 'space';
     if (name.includes('radius')) return 'radius';
-    if (value.startsWith('#') && /^#[0-9a-fA-F]{3,8}$/.test(value))
-      return 'color';
-    if (name.includes('bg') || name.includes('color') || name.includes('text'))
-      return 'color';
+    if (value.startsWith('#') && /^#[0-9a-fA-F]{3,8}$/.test(value)) return 'color';
+    if (name.includes('bg') || name.includes('color') || name.includes('text')) return 'color';
   }
 
   if (name.includes('-color-')) return 'color';
-  if (
-    name.includes('-font-') ||
-    name.includes('-weight') ||
-    name.includes('-lineHeight')
-  )
+  if (name.includes('-font-') || name.includes('-weight') || name.includes('-lineHeight'))
     return 'font';
   if (name.includes('-space-')) return 'space';
   if (name.includes('-radius-')) return 'radius';
@@ -396,7 +388,7 @@ const useTokens = (filterType?: Token['type']) => {
               for (const property of Array.from(rule.style)) {
                 if (
                   property.startsWith('--') &&
-                  tokenPatterns.some(pattern => property.includes(pattern))
+                  tokenPatterns.some((pattern) => property.includes(pattern))
                 ) {
                   const value = computedStyle.getPropertyValue(property).trim();
                   if (value) {
@@ -420,7 +412,7 @@ const useTokens = (filterType?: Token['type']) => {
       // 토큰들을 그룹별로 분류
       const groups: Record<string, TokenGroup> = {};
 
-      allTokens.forEach(token => {
+      allTokens.forEach((token) => {
         let groupName = 'Other';
 
         if (token.name.startsWith('--primitive-')) {
@@ -439,17 +431,12 @@ const useTokens = (filterType?: Token['type']) => {
       });
 
       // 각 그룹 내에서 토큰 정렬
-      Object.values(groups).forEach(group => {
+      Object.values(groups).forEach((group) => {
         group.tokens.sort((a, b) => a.name.localeCompare(b.name));
       });
 
       // 우선순위 순서로 정렬 (Component > Semantic > Primitive)
-      const priorityOrder = [
-        'Component Tokens',
-        'Semantic Tokens',
-        'Primitive Tokens',
-        'Other',
-      ];
+      const priorityOrder = ['Component Tokens', 'Semantic Tokens', 'Primitive Tokens', 'Other'];
       return Object.values(groups).sort((a, b) => {
         const aIndex = priorityOrder.indexOf(a.name);
         const bIndex = priorityOrder.indexOf(b.name);
@@ -476,13 +463,13 @@ export const TokenDisplay: React.FC<{
         <h1 style={styles.title}>{title}</h1>
       </div>
 
-      {tokenGroups.map(group => (
+      {tokenGroups.map((group) => (
         <div key={group.name} style={styles.groupSection}>
           <h2 style={styles.groupTitle}>
             {group.name} ({group.tokens.length})
           </h2>
           <div style={styles.tokenGrid}>
-            {group.tokens.map(token => (
+            {group.tokens.map((token) => (
               <TokenCard key={token.name} token={token} />
             ))}
           </div>
@@ -497,10 +484,7 @@ export const TokenDisplay: React.FC<{
             CSS에서: <code style={styles.codeExample}>var(--token-name)</code>
           </p>
           <p style={{ margin: '0' }}>
-            예시:{' '}
-            <code style={styles.codeExample}>
-              color: var(--semantic-color-primary);
-            </code>
+            예시: <code style={styles.codeExample}>color: var(--semantic-color-primary);</code>
           </p>
         </div>
       )}

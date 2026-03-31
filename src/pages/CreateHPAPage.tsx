@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
@@ -196,6 +196,7 @@ interface SummarySidebarProps {
   sectionStates: Record<HPASectionStep, WizardSectionState>;
   onCancel: () => void;
   onSubmit: () => void;
+  isEditMode?: boolean;
 }
 
 function SummarySidebar({
@@ -204,6 +205,7 @@ function SummarySidebar({
   sectionStates,
   onCancel,
   onSubmit,
+  isEditMode = false,
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
@@ -242,7 +244,7 @@ function SummarySidebar({
             Cancel
           </Button>
           <Button variant="primary" onClick={onSubmit} className="flex-1">
-            Create
+            {isEditMode ? 'Save' : 'Create'}
           </Button>
         </HStack>
       </div>
@@ -255,6 +257,10 @@ function SummarySidebar({
    ---------------------------------------- */
 export default function CreateHPAPage() {
   const navigate = useNavigate();
+  const { hpaId } = useParams();
+  const isEditMode = !!hpaId;
+  const [searchParams] = useSearchParams();
+  const nameFromQuery = searchParams.get('name');
   const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
 
@@ -356,11 +362,14 @@ export default function CreateHPAPage() {
   // Section states for summary
   const getSectionStates = (): Record<HPASectionStep, WizardSectionState> => {
     return {
-      'basic-info': namespace && name ? 'done' : 'active',
+      // namespace has default → 'active' until name is typed
+      'basic-info': name.trim() ? 'done' : 'active',
+      // target is required but has no default; nothing else in this section has a default → 'pre' when empty
       target: targetReference ? 'done' : 'pre',
-      behavior: 'pre',
-      metrics: metrics.length > 0 ? 'done' : 'pre',
-      'labels-annotations': 'pre',
+      // behavior, metrics, labels-annotations are optional → always done
+      behavior: 'done',
+      metrics: 'done',
+      'labels-annotations': 'done',
     };
   };
 
@@ -499,6 +508,12 @@ export default function CreateHPAPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
+  useEffect(() => {
+    if (isEditMode && hpaId) {
+      setName(nameFromQuery || hpaId);
+    }
+  }, [isEditMode, hpaId]);
+
   const handleCancel = () => {
     navigate('/container/hpa');
   };
@@ -550,7 +565,12 @@ export default function CreateHPAPage() {
               items={[
                 { label: 'Service Discovery', href: '/container' },
                 { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
-                { label: 'Create horizontal pod autoscaler', href: '/container/hpa/create' },
+                ...(isEditMode
+                  ? [
+                      { label: nameFromQuery || hpaId!, href: `/container/hpa/${hpaId}` },
+                      { label: 'Edit config' },
+                    ]
+                  : [{ label: 'Create horizontal pod autoscaler' }]),
               ]}
             />
           }
@@ -589,7 +609,9 @@ export default function CreateHPAPage() {
         {/* Page Header */}
         <VStack gap={2}>
           <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-            Create horizontal pod autoscaler
+            {isEditMode
+              ? `Horizontal pod autoscaler: ${nameFromQuery || hpaId}`
+              : 'Create horizontal pod autoscaler'}
           </h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
@@ -615,6 +637,7 @@ export default function CreateHPAPage() {
                         value={namespace}
                         onChange={setNamespace}
                         fullWidth
+                        disabled={isEditMode}
                       />
                     </FormField.Control>
                   </FormField>
@@ -627,6 +650,7 @@ export default function CreateHPAPage() {
                         placeholder="Enter a unique name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        disabled={isEditMode}
                         fullWidth
                       />
                     </FormField.Control>
@@ -1328,7 +1352,8 @@ export default function CreateHPAPage() {
             sectionLabels={HPA_SECTION_LABELS}
             sectionStates={getSectionStates()}
             onCancel={handleCancel}
-            onSubmit={handleSubmit}
+            onSubmit={handleCreate}
+            isEditMode={isEditMode}
           />
         </HStack>
       </VStack>

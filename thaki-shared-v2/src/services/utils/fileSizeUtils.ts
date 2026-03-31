@@ -5,10 +5,7 @@
  * @param unit - 기본 단위 ('MB' | 'GB')
  * @returns 포맷팅된 크기 문자열
  */
-export const formatDataSize = (
-  bytes: number,
-  unit: 'MB' | 'GB' = 'GB'
-): string => {
+export const formatDataSize = (bytes: number, unit: 'MB' | 'GB' = 'GB'): string => {
   if (bytes === 0) return '0 ' + unit;
 
   const k = 1024;

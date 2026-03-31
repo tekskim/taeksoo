@@ -1,9 +1,4 @@
-type StringFormat =
-  | 'lowercamelcase'
-  | 'uppercamelcase'
-  | 'snakecase'
-  | 'normal'
-  | 'titlecase';
+type StringFormat = 'lowercamelcase' | 'uppercamelcase' | 'snakecase' | 'normal' | 'titlecase';
 
 /**
  * @description
@@ -34,14 +29,12 @@ export const formatStringCase = ({
       .replace(/[_-]/g, ' ') // snake_case, kebab-case -> 띄어쓰기
       .replace(/\s+/g, ' ') // 여러 공백 -> 하나로
       .trim()
-      .replace(/^./, s => s.toUpperCase()); // 첫글자 대문자
+      .replace(/^./, (s) => s.toUpperCase()); // 첫글자 대문자
   }
 
   if (format === 'titlecase') {
     // 구분자를 유지하면서 각 단어의 첫 글자만 대문자로 변환
-    return value
-      .toLocaleLowerCase()
-      .replace(/\b\p{L}/gu, ch => ch.toLocaleUpperCase());
+    return value.toLocaleLowerCase().replace(/\b\p{L}/gu, (ch) => ch.toLocaleUpperCase());
   }
 
   if (format === 'snakecase') {
@@ -58,14 +51,14 @@ export const formatStringCase = ({
     // snake_case, kebab-case, 띄어쓰기 -> lowerCamelCase
     return value
       .replace(/[_\-\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
-      .replace(/^([A-Z])/, m => m.toLowerCase());
+      .replace(/^([A-Z])/, (m) => m.toLowerCase());
   }
 
   if (format === 'uppercamelcase') {
     // snake_case, kebab-case, 띄어쓰기 -> UpperCamelCase
     return value
       .replace(/[_\-\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
-      .replace(/^./, m => m.toUpperCase());
+      .replace(/^./, (m) => m.toUpperCase());
   }
 
   // 지원하지 않는 포맷이면 원본 반환
