@@ -5,10 +5,14 @@ import {
   Button,
   ConfirmModal,
   ContextMenu,
+  Drawer,
+  FormField,
+  HStack,
   ListToolbar,
   Modal,
   Pagination,
   SearchInput,
+  Select,
   Table,
   Tabs,
   TabList,
@@ -224,6 +228,16 @@ export function CloudBuilderConsolePage() {
     null
   );
 
+  const [allocateOpen, setAllocateOpen] = useState(false);
+  const [allocateRow, setAllocateRow] = useState<(Record<string, string> & { id: string }) | null>(
+    null
+  );
+  const [allocateRole, setAllocateRole] = useState('');
+  const [allocateDomain, setAllocateDomain] = useState('');
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [editLocation, setEditLocation] = useState('');
+
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [statusModal, setStatusModal] = useState<null | {
     rowId: string;
@@ -319,7 +333,23 @@ export function CloudBuilderConsolePage() {
       setStatusModalOpen(true);
       return;
     }
-    // 나머지는 페이지 확장하면서 실제 라우트/폼으로 연결
+    if (actionId === 'allocate') {
+      setAllocateRow(row);
+      setAllocateRole('');
+      setAllocateDomain('');
+      setAllocateOpen(true);
+      return;
+    }
+    if (actionId === 'edit') {
+      setEditLocation('dc1-rack-a');
+      setEditOpen(true);
+      return;
+    }
+    if (actionId === 'delete') {
+      setRowToRemove(row);
+      setConfirmRemoveOpen(true);
+      return;
+    }
     window.alert(`${actionId}: Coming Soon`);
   };
 
@@ -579,18 +609,112 @@ export function CloudBuilderConsolePage() {
     </VStack>
   );
 
+  const handleAllocateSave = () => {
+    setAllocateOpen(false);
+    setAllocateRow(null);
+  };
+
   const modals = (
     <>
+      <Drawer
+        isOpen={allocateOpen}
+        onClose={() => setAllocateOpen(false)}
+        title="Allocate server"
+        description="Assign a role and domain to the selected server."
+        width={360}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={() => setAllocateOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleAllocateSave}
+              disabled={!allocateDomain}
+              className="flex-1"
+            >
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={6}>
+          <FormField label="Role" required>
+            <Select
+              value="baremetal-node"
+              options={[{ value: 'baremetal-node', label: 'Baremetal Node' }]}
+              disabled
+              fullWidth
+            />
+          </FormField>
+
+          <FormField label="Domain" required>
+            <Select
+              value={allocateDomain}
+              onChange={setAllocateDomain}
+              placeholder="Select domain"
+              options={[
+                { value: 'thaki-prod', label: 'thaki-prod' },
+                { value: 'thaki-stage', label: 'thaki-stage' },
+                { value: 'thaki-dev', label: 'thaki-dev' },
+                { value: 'thaki-lab', label: 'thaki-lab' },
+              ]}
+              fullWidth
+            />
+          </FormField>
+        </VStack>
+      </Drawer>
+
+      <Drawer
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        title="Edit server"
+        description="Change the location of the selected server."
+        width={360}
+        footer={
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={() => setEditOpen(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setEditOpen(false)}
+              disabled={!editLocation}
+              className="flex-1"
+            >
+              Save
+            </Button>
+          </HStack>
+        }
+      >
+        <VStack gap={6}>
+          <FormField label="Location" required>
+            <Select
+              value={editLocation}
+              onChange={setEditLocation}
+              placeholder="Select location"
+              options={[
+                { value: 'dc1-rack-a', label: 'DC-1 Rack A' },
+                { value: 'dc1-rack-b', label: 'DC-1 Rack B' },
+                { value: 'dc2-rack-a', label: 'DC-2 Rack A' },
+                { value: 'dc2-rack-b', label: 'DC-2 Rack B' },
+              ]}
+              fullWidth
+            />
+          </FormField>
+        </VStack>
+      </Drawer>
+
       <ConfirmModal
         isOpen={confirmRemoveOpen}
         onClose={handleRemoveCancel}
         onConfirm={handleRemoveConfirm}
-        title="Remove item"
-        description="선택한 항목을 삭제할까요?"
-        confirmText="Confirm"
+        title="Delete server"
+        description="This action cannot be undone. The server will be permanently removed from the inventory."
+        confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
-        infoLabel="ID"
+        infoLabel="Server"
         infoValue={rowToRemove?.id}
         data-figma-name="[TDS] ActionModal"
         aria-label="[TDS] ActionModal"
