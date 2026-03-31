@@ -8,7 +8,6 @@ import {
   Modal,
   ProgressBar,
   StatusIndicator,
-  Table,
   Tabs,
   TabList,
   Tab,
@@ -553,52 +552,48 @@ export function CloudBuilderDetailPage() {
             aria-label="[TDS] DetailPageHeader.InfoGrid"
           >
             <DetailHeader.InfoCard
-              label="ID"
+              label={isServer ? 'Serial' : 'ID'}
               value={isServer ? (serverDerived?.serverId ?? row?.id ?? id) : (row?.id ?? id)}
               copyable
               data-figma-name="[TDS] DetailPageHeader.InfoField-ID"
               aria-label="[TDS] DetailPageHeader.InfoField-ID"
             />
-            {isServer ? (
-              <>
-                <DetailHeader.InfoCard
-                  label="Observed health"
-                  data-figma-name="[TDS] DetailPageHeader.InfoField-ObservedHealth"
-                  aria-label="[TDS] DetailPageHeader.InfoField-ObservedHealth"
-                  value={renderStatusBadge(
-                    columns,
-                    'observedHealth',
-                    String((row as any)?.observedHealth ?? '-') || '-'
-                  )}
-                />
-                <DetailHeader.InfoCard
-                  label="Provision status"
-                  data-figma-name="[TDS] DetailPageHeader.InfoField-ProvisionStatus"
-                  aria-label="[TDS] DetailPageHeader.InfoField-ProvisionStatus"
-                  value={renderStatusBadge(
-                    columns,
-                    'provisionStatus',
-                    String((row as any)?.provisionStatus ?? '-') || '-'
-                  )}
-                />
-                <DetailHeader.InfoCard
-                  label="Role"
-                  data-figma-name="[TDS] DetailPageHeader.InfoField-Role"
-                  aria-label="[TDS] DetailPageHeader.InfoField-Role"
-                  value={renderStatusBadge(
-                    columns,
-                    'role',
-                    String((row as any)?.role ?? '-') || '-'
-                  )}
-                />
-                <DetailHeader.InfoCard
-                  label="Power state"
-                  data-figma-name="[TDS] DetailPageHeader.InfoField-PowerState"
-                  aria-label="[TDS] DetailPageHeader.InfoField-PowerState"
-                  value={renderPowerStateBadge(serverDerived?.bmc.powerState ?? '-')}
-                />
-              </>
-            ) : null}
+            {isServer && (
+              <DetailHeader.InfoCard
+                label="Role"
+                data-figma-name="[TDS] DetailPageHeader.InfoField-Role"
+                aria-label="[TDS] DetailPageHeader.InfoField-Role"
+                value={renderStatusBadge(columns, 'role', String((row as any)?.role ?? '-') || '-')}
+              />
+            )}
+            {isServer && (
+              <DetailHeader.InfoCard
+                label="Power"
+                data-figma-name="[TDS] DetailPageHeader.InfoField-PowerState"
+                aria-label="[TDS] DetailPageHeader.InfoField-PowerState"
+                value={renderPowerStateBadge(serverDerived?.bmc.powerState ?? '-')}
+              />
+            )}
+            {isServer && (
+              <DetailHeader.InfoCard
+                label="Status"
+                data-figma-name="[TDS] DetailPageHeader.InfoField-Status"
+                aria-label="[TDS] DetailPageHeader.InfoField-Status"
+                value={renderStatusBadge(
+                  columns,
+                  'status',
+                  String((row as any)?.status ?? '-') || '-'
+                )}
+              />
+            )}
+            {isServer && (
+              <DetailHeader.InfoCard
+                label="Domain"
+                data-figma-name="[TDS] DetailPageHeader.InfoField-Domain"
+                aria-label="[TDS] DetailPageHeader.InfoField-Domain"
+                value={String((row as any)?.domain ?? '-')}
+              />
+            )}
           </DetailHeader.InfoGrid>
         </DetailHeader>
       )}
@@ -825,24 +820,6 @@ export function CloudBuilderDetailPage() {
             >
               Details
             </Tab>
-            {isServer ? (
-              <Tab
-                value="disk"
-                data-figma-name="[TDS] Tabs.Tab-Disk"
-                aria-label="[TDS] Tabs.Tab-Disk"
-              >
-                Disk
-              </Tab>
-            ) : null}
-            {isServer ? (
-              <Tab
-                value="bmc-info"
-                data-figma-name="[TDS] Tabs.Tab-BMCInfo"
-                aria-label="[TDS] Tabs.Tab-BMCInfo"
-              >
-                BMC info
-              </Tab>
-            ) : null}
           </TabList>
 
           <TabPanel
@@ -859,7 +836,7 @@ export function CloudBuilderDetailPage() {
                   aria-label="[TDS] DetailCard-BasicInfo"
                 >
                   <SectionCard.Header
-                    title="Basic info"
+                    title="Basic Information"
                     data-figma-name="[TDS] DetailCard.Header-BasicInfo"
                     aria-label="[TDS] DetailCard.Header-BasicInfo"
                   />
@@ -868,60 +845,53 @@ export function CloudBuilderDetailPage() {
                     aria-label="[TDS] DetailCard.Content-BasicInfo"
                   >
                     <SectionCard.DataRow
-                      label="Type"
-                      value={serverDerived?.type ?? '-'}
+                      label="Product name"
+                      value={serverDerived?.productName ?? 'ThinkSystem SR646 V3'}
                       showDivider={false}
-                      data-figma-name="[TDS] DetailCard.Field-Type"
-                      aria-label="[TDS] DetailCard.Field-Type"
                     />
                     <SectionCard.DataRow
-                      label="MAC (Primary)"
-                      value={String((row as any)?.macPrimary ?? '-') || '-'}
-                      data-figma-name="[TDS] DetailCard.Field-MACPrimary"
-                      aria-label="[TDS] DetailCard.Field-MACPrimary"
+                      label="Manufacturer"
+                      value={serverDerived?.manufacturer ?? 'Lenovo'}
                     />
                     <SectionCard.DataRow
-                      label="NIC (primary name)"
-                      value={String((row as any)?.nicPrimaryName ?? '-') || '-'}
-                      data-figma-name="[TDS] DetailCard.Field-NICPrimaryName"
-                      aria-label="[TDS] DetailCard.Field-NICPrimaryName"
+                      label="BIOS version"
+                      value={serverDerived?.biosVersion ?? 'KAE194D'}
+                    />
+                    <SectionCard.DataRow
+                      label="BMC IP"
+                      value={String((row as any)?.bmcIp ?? '10.0.0.151')}
                     />
                     <SectionCard.DataRow
                       label="Location"
-                      value={String((row as any)?.location ?? '-') || '-'}
-                      data-figma-name="[TDS] DetailCard.Field-Location"
-                      aria-label="[TDS] DetailCard.Field-Location"
-                    />
-                    <SectionCard.DataRow
-                      label="Provider network"
-                      value={serverDerived?.providerNetwork ?? '-'}
-                      data-figma-name="[TDS] DetailCard.Field-ProviderNetwork"
-                      aria-label="[TDS] DetailCard.Field-ProviderNetwork"
-                    />
-                    <SectionCard.DataRow
-                      label="Mgmt IP"
-                      value={String((row as any)?.mgmtIp ?? '-') || '-'}
-                      data-figma-name="[TDS] DetailCard.Field-MgmtIP"
-                      aria-label="[TDS] DetailCard.Field-MgmtIP"
+                      value={serverDerived?.location ?? 'Rack1-1 / Rack1-1 / U40'}
                     />
                     <SectionCard.DataRow
                       label="Created at"
-                      value={serverDerived?.createdAt ?? '-'}
-                      data-figma-name="[TDS] DetailCard.Field-CreatedAt"
-                      aria-label="[TDS] DetailCard.Field-CreatedAt"
+                      value={serverDerived?.createdAt ?? 'Oct 06, 2025 09:05:45'}
                     />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                <SectionCard
+                  id="tds-SectionCard-Hardware"
+                  data-figma-name="[TDS] DetailCard-Hardware"
+                  aria-label="[TDS] DetailCard-Hardware"
+                >
+                  <SectionCard.Header
+                    title="Hardware"
+                    data-figma-name="[TDS] DetailCard.Header-Hardware"
+                    aria-label="[TDS] DetailCard.Header-Hardware"
+                  />
+                  <SectionCard.Content
+                    data-figma-name="[TDS] DetailCard.Content-Hardware"
+                    aria-label="[TDS] DetailCard.Content-Hardware"
+                  >
                     <SectionCard.DataRow
-                      label="Updated at"
-                      value={serverDerived?.updatedAt ?? '-'}
-                      data-figma-name="[TDS] DetailCard.Field-UpdatedAt"
-                      aria-label="[TDS] DetailCard.Field-UpdatedAt"
+                      label="CPU"
+                      value={serverDerived?.cpu ?? 'AMD EPYC 9124 16-Core Processor (2 sockets)'}
+                      showDivider={false}
                     />
-                    <SectionCard.DataRow
-                      label="Domain"
-                      value={serverDerived?.domain ?? '-'}
-                      data-figma-name="[TDS] DetailCard.Field-Domain"
-                      aria-label="[TDS] DetailCard.Field-Domain"
-                    />
+                    <SectionCard.DataRow label="Memory" value={serverDerived?.memory ?? '32 GB'} />
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
@@ -993,139 +963,6 @@ export function CloudBuilderDetailPage() {
               </SectionCard>
             )}
           </TabPanel>
-
-          {isServer ? (
-            <TabPanel
-              value="disk"
-              className="pt-4"
-              data-figma-name="[TDS] Tabs.Panel-Disk"
-              aria-label="[TDS] Tabs.Panel-Disk"
-            >
-              <VStack gap={6}>
-                <SectionCard
-                  id="tds-SectionCard-Storage"
-                  data-figma-name="[TDS] DetailCard-Storage"
-                  aria-label="[TDS] DetailCard-Storage"
-                >
-                  <SectionCard.Header
-                    title="Storage detail"
-                    data-figma-name="[TDS] DetailCard.Header-Storage"
-                    aria-label="[TDS] DetailCard.Header-Storage"
-                  />
-                  <SectionCard.Content
-                    gap={3}
-                    data-figma-name="[TDS] DetailCard.Content-Storage"
-                    aria-label="[TDS] DetailCard.Content-Storage"
-                  >
-                    <div className="text-[13px] font-medium text-[var(--color-text-default)]">
-                      Controller 1: ThinkSystem RAID 9350-8i 2GB Flash PCIe 12Gb Adapter (PCI Slot
-                      1)
-                    </div>
-                    <Table<DiskRow>
-                      id="tds-Table"
-                      data-figma-name="[TDS] Table"
-                      aria-label="[TDS] Table"
-                      columns={diskColumns}
-                      data={diskRows}
-                      rowKey="id"
-                      emptyMessage="No disks found"
-                    />
-                  </SectionCard.Content>
-                </SectionCard>
-              </VStack>
-            </TabPanel>
-          ) : null}
-
-          {isServer ? (
-            <TabPanel
-              value="bmc-info"
-              className="pt-4"
-              data-figma-name="[TDS] Tabs.Panel-BMCInfo"
-              aria-label="[TDS] Tabs.Panel-BMCInfo"
-            >
-              <div className="grid grid-cols-12 gap-6 items-start">
-                <div className="col-span-12 lg:col-span-4">
-                  <SectionCard
-                    id="tds-SectionCard-BMC"
-                    data-figma-name="[TDS] DetailCard-BMC"
-                    aria-label="[TDS] DetailCard-BMC"
-                  >
-                    <SectionCard.Header
-                      title="BMC"
-                      data-figma-name="[TDS] DetailCard.Header-BMC"
-                      aria-label="[TDS] DetailCard.Header-BMC"
-                    />
-                    <SectionCard.Content
-                      data-figma-name="[TDS] DetailCard.Content-BMC"
-                      aria-label="[TDS] DetailCard.Content-BMC"
-                    >
-                      <SectionCard.DataRow
-                        label="Hostname"
-                        value={serverDerived?.bmc.hostname ?? '-'}
-                        showDivider={false}
-                        data-figma-name="[TDS] DetailCard.Field-Hostname"
-                        aria-label="[TDS] DetailCard.Field-Hostname"
-                      />
-                      <SectionCard.DataRow
-                        label="Machine type"
-                        value={serverDerived?.bmc.machineType ?? '-'}
-                        data-figma-name="[TDS] DetailCard.Field-MachineType"
-                        aria-label="[TDS] DetailCard.Field-MachineType"
-                      />
-                      <SectionCard.DataRow
-                        label="Power state"
-                        value={serverDerived?.bmc.powerState ?? '-'}
-                        data-figma-name="[TDS] DetailCard.Field-PowerState"
-                        aria-label="[TDS] DetailCard.Field-PowerState"
-                      />
-                      <SectionCard.DataRow
-                        label="BMC IP"
-                        value={serverDerived?.bmc.bmcIp ?? '-'}
-                        data-figma-name="[TDS] DetailCard.Field-BMCIP"
-                        aria-label="[TDS] DetailCard.Field-BMCIP"
-                      />
-                      <SectionCard.DataRow
-                        label="Manager ethernet interface"
-                        value={serverDerived?.bmc.managerEthernetInterface ?? '-'}
-                        data-figma-name="[TDS] DetailCard.Field-ManagerEthernetInterface"
-                        aria-label="[TDS] DetailCard.Field-ManagerEthernetInterface"
-                      />
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-                <div className="col-span-12 lg:col-span-8">
-                  <SectionCard
-                    id="tds-SectionCard-ServerInfo"
-                    data-figma-name="[TDS] DetailCard-ServerInfo"
-                    aria-label="[TDS] DetailCard-ServerInfo"
-                  >
-                    <SectionCard.Header
-                      title="server_info.json"
-                      actions={
-                        <CopyButton
-                          value={serverInfoJsonText}
-                          size="sm"
-                          label="Copy"
-                          successLabel="Copied"
-                        />
-                      }
-                      data-figma-name="[TDS] DetailCard.Header-ServerInfo"
-                      aria-label="[TDS] DetailCard.Header-ServerInfo"
-                    />
-                    <SectionCard.Content
-                      gap={3}
-                      data-figma-name="[TDS] DetailCard.Content-ServerInfo"
-                      aria-label="[TDS] DetailCard.Content-ServerInfo"
-                    >
-                      <pre className="max-h-[520px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
-                        {serverInfoJsonText}
-                      </pre>
-                    </SectionCard.Content>
-                  </SectionCard>
-                </div>
-              </div>
-            </TabPanel>
-          ) : null}
         </Tabs>
       ) : (
         <SectionCard
