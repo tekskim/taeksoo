@@ -33,6 +33,7 @@ import {
   IconBell,
   IconHelpCircle,
   IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -396,28 +397,73 @@ export function ContainerDashboardPage() {
           }
           actions={
             <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
+              <Tooltip content="Customize appearance" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
+                  aria-label="Customize cluster appearance"
+                >
+                  <IconPencilCog
+                    size={16}
+                    className="text-[var(--color-text-muted)]"
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Access Token" position="bottom">
+                <button
+                  type="button"
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                  aria-label="Access Token"
+                >
+                  <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="kubectl Shell" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="kubectl Shell"
+                >
+                  <IconTerminal2
+                    size={16}
+                    className="text-[var(--color-text-muted)]"
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Download kubeconfig" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Download kubeconfig"
+                >
+                  <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Copy kubeconfig" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Copy kubeconfig"
+                >
+                  <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Search resource types" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Search resource types"
+                >
+                  <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
+              <Tooltip content="Notifications" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  aria-label="Notifications"
+                >
+                  <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
             </>
           }
         />

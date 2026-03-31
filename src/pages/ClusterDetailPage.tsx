@@ -30,6 +30,8 @@ import {
   IconFile,
   IconSearch,
   IconChevronDown,
+  IconPencilCog,
+  IconKey,
 } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -67,6 +69,67 @@ interface ClusterDetail {
     nodeCount: number;
   };
 }
+
+/* ----------------------------------------
+   Status Policy Helpers
+   ---------------------------------------- */
+
+// Progress Bar: Provisioning, Processing, Deleting 상태에서만 표시
+const PROGRESS_BAR_STATUSES = new Set(['Provisioning', 'Processing', 'Deleting']);
+
+const getProgressBarLabel = (status: string): string => {
+  switch (status) {
+    case 'Provisioning':
+      return 'Control plane initializing';
+    case 'Processing':
+      return 'Processing operation';
+    case 'Deleting':
+      return 'Removing worker nodes';
+    default:
+      return '';
+  }
+};
+
+// Inline Message: 상태별 variant 및 문구 정의
+interface InlineMessageConfig {
+  variant: 'info' | 'error' | 'warning' | 'success';
+  message: string;
+}
+
+const getInlineMessageConfig = (status: string): InlineMessageConfig | null => {
+  switch (status) {
+    case 'Provisioning':
+      return {
+        variant: 'info',
+        message:
+          "Cluster provisioning is in progress. This typically takes a few minutes. Status will become 'Provisioned' when provisioning is complete.",
+      };
+    case 'Deleting':
+      return {
+        variant: 'info',
+        message: 'Cluster deletion is in progress. All resources will be cleaned up automatically.',
+      };
+    case 'Processing':
+      return {
+        variant: 'info',
+        message:
+          "A cluster operation is in progress. Some actions may be temporarily unavailable. Status will return to 'Provisioned' once the operation is complete.",
+      };
+    case 'Failed':
+      return {
+        variant: 'error',
+        message:
+          'Cluster provisioning failed at Control plane initializing. View error logs in Logs for details.',
+      };
+    default:
+      return null;
+  }
+};
+
+// Section Card 표시 정책: Provisioned 이외 상태에서는 모든 값을 —(em dash)로 표시
+const getDisplayValue = (value: string, status: string): string => {
+  return status === 'Provisioned' ? value : '\u2014';
+};
 
 /* ----------------------------------------
    Mock Data
@@ -138,6 +201,60 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
       externalNetwork: 'extnet-03',
       tenantNetwork: 'net-03',
       subnet: 'subnet-03 (10.62.3.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      nodeCount: 3,
+      etcd: 'External (20GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      nodeCount: 3,
+    },
+  },
+  'cluster-004': {
+    id: 'cluster-004',
+    name: 'Cluster4',
+    status: 'Processing',
+    kubernetesVersion: 'v1.33.4',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Oct 4, 2025 09:00:00',
+    networking: {
+      externalNetwork: 'extnet-04',
+      tenantNetwork: 'net-04',
+      subnet: 'subnet-04 (10.62.4.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      nodeCount: 3,
+      etcd: 'External (20GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.small (2vCPU, 4.00 GiB RAM, 20.00 GiB Disk)',
+      nodeCount: 2,
+    },
+  },
+  'cluster-005': {
+    id: 'cluster-005',
+    name: 'Cluster5',
+    status: 'Deleting',
+    kubernetesVersion: 'v1.33.4',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Oct 3, 2025 16:45:00',
+    networking: {
+      externalNetwork: 'extnet-05',
+      tenantNetwork: 'net-05',
+      subnet: 'subnet-05 (10.62.5.0/28)',
     },
     nodeConfiguration: {
       nodeType: 'Instance',
@@ -265,6 +382,9 @@ export function ClusterDetailPage() {
     },
   ];
 
+  const showProgressBar = PROGRESS_BAR_STATUSES.has(clusterData.status);
+  const inlineMessageConfig = getInlineMessageConfig(clusterData.status);
+
   return (
     <PageShell
       sidebar={
@@ -299,6 +419,32 @@ export function ClusterDetailPage() {
           }
           actions={
             <>
+              <Tooltip content="Customize appearance" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() =>
+                    window.dispatchEvent(
+                      new CustomEvent('open-cluster-appearance', { detail: clusterData.id })
+                    )
+                  }
+                  aria-label="Customize cluster appearance"
+                >
+                  <IconPencilCog
+                    size={16}
+                    className="text-[var(--color-text-muted)]"
+                    stroke={1.5}
+                  />
+                </button>
+              </Tooltip>
+              <Tooltip content="Access Token" position="bottom">
+                <button
+                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
+                  aria-label="Access Token"
+                >
+                  <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
+              </Tooltip>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -348,10 +494,10 @@ export function ClusterDetailPage() {
                     </Badge>
                   </span>
                 </Tooltip>
-                {clusterData.status === 'Provisioning' && (
+                {showProgressBar && (
                   <span className="flex-1 min-w-0 flex flex-col gap-1">
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      Control plane initializing
+                      {getProgressBarLabel(clusterData.status)}
                     </span>
                     <ProgressBar value={65} max={100} size="sm" showValue={false} />
                   </span>
@@ -367,10 +513,9 @@ export function ClusterDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        {clusterData.status === 'Provisioning' && (
-          <InlineMessage variant="info">
-            Cluster provisioning is in progress. Some features may be unavailable until the process
-            is complete.
+        {inlineMessageConfig && (
+          <InlineMessage variant={inlineMessageConfig.variant}>
+            {inlineMessageConfig.message}
           </InlineMessage>
         )}
 
@@ -388,13 +533,22 @@ export function ClusterDetailPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="External network"
-                    value={clusterData.networking.externalNetwork}
+                    value={getDisplayValue(
+                      clusterData.networking.externalNetwork,
+                      clusterData.status
+                    )}
                   />
                   <SectionCard.DataRow
                     label="Tenant network"
-                    value={clusterData.networking.tenantNetwork}
+                    value={getDisplayValue(
+                      clusterData.networking.tenantNetwork,
+                      clusterData.status
+                    )}
                   />
-                  <SectionCard.DataRow label="Subnet" value={clusterData.networking.subnet} />
+                  <SectionCard.DataRow
+                    label="Subnet"
+                    value={getDisplayValue(clusterData.networking.subnet, clusterData.status)}
+                  />
                 </SectionCard.Content>
               </SectionCard>
             </div>
@@ -408,7 +562,10 @@ export function ClusterDetailPage() {
                 <SectionCard.Content>
                   <SectionCard.DataRow
                     label="Node type"
-                    value={clusterData.nodeConfiguration.nodeType}
+                    value={getDisplayValue(
+                      clusterData.nodeConfiguration.nodeType,
+                      clusterData.status
+                    )}
                   />
                 </SectionCard.Content>
               </SectionCard>
@@ -417,13 +574,25 @@ export function ClusterDetailPage() {
               <SectionCard>
                 <SectionCard.Header title="Control planes" />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Image" value={clusterData.controlPlanes.image} />
-                  <SectionCard.DataRow label="Flavor" value={clusterData.controlPlanes.flavor} />
+                  <SectionCard.DataRow
+                    label="Image"
+                    value={getDisplayValue(clusterData.controlPlanes.image, clusterData.status)}
+                  />
+                  <SectionCard.DataRow
+                    label="Flavor"
+                    value={getDisplayValue(clusterData.controlPlanes.flavor, clusterData.status)}
+                  />
                   <SectionCard.DataRow
                     label="Node count"
-                    value={clusterData.controlPlanes.nodeCount.toString()}
+                    value={getDisplayValue(
+                      clusterData.controlPlanes.nodeCount.toString(),
+                      clusterData.status
+                    )}
                   />
-                  <SectionCard.DataRow label="etcd" value={clusterData.controlPlanes.etcd} />
+                  <SectionCard.DataRow
+                    label="etcd"
+                    value={getDisplayValue(clusterData.controlPlanes.etcd, clusterData.status)}
+                  />
                 </SectionCard.Content>
               </SectionCard>
 
@@ -431,11 +600,20 @@ export function ClusterDetailPage() {
               <SectionCard>
                 <SectionCard.Header title="Nodes" />
                 <SectionCard.Content>
-                  <SectionCard.DataRow label="Image" value={clusterData.nodes.image} />
-                  <SectionCard.DataRow label="Flavor" value={clusterData.nodes.flavor} />
+                  <SectionCard.DataRow
+                    label="Image"
+                    value={getDisplayValue(clusterData.nodes.image, clusterData.status)}
+                  />
+                  <SectionCard.DataRow
+                    label="Flavor"
+                    value={getDisplayValue(clusterData.nodes.flavor, clusterData.status)}
+                  />
                   <SectionCard.DataRow
                     label="Node count"
-                    value={clusterData.nodes.nodeCount.toString()}
+                    value={getDisplayValue(
+                      clusterData.nodes.nodeCount.toString(),
+                      clusterData.status
+                    )}
                   />
                 </SectionCard.Content>
               </SectionCard>
