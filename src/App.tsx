@@ -997,11 +997,6 @@ function AppRoutes() {
       <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
-      <Route path="/container/apps/catalog" element={<AppCatalogPage />} />
-      <Route path="/container/apps/catalog/:chartName/install" element={<AppInstallPage />} />
-      <Route path="/container/apps/installed-apps" element={<InstalledAppsPage />} />
-      <Route path="/container/apps/installed-apps/:appId/edit" element={<AppEditPage />} />
-      <Route path="/container/apps/installed-apps/:appId" element={<InstalledAppDetailPage />} />
       <Route path="/container/*" element={<ContainerDashboardPage />} />
 
       {/* IAM Routes */}
