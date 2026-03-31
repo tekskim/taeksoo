@@ -170,6 +170,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         ],
       },
       columns: [
+        {
+          key: 'status',
+          label: 'Status',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: { Available: 'success', Used: 'neutral', Error: 'danger' },
+        },
         { key: 'serial', label: 'Serial', sortable: true },
         {
           key: 'bmcIp',
@@ -189,13 +196,6 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           badgeTones: { On: 'success', Off: 'neutral' },
         },
         {
-          key: 'status',
-          label: 'Status',
-          sortable: true,
-          kind: 'badge',
-          badgeTones: { Available: 'success', Used: 'neutral' },
-        },
-        {
           key: 'updatedAt',
           label: 'Updated at',
           sortable: true,
@@ -205,7 +205,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       rows: makeRows(COUNT, (i) => {
         const models = ['PowerEdge R750', 'PowerEdge R650', 'ProLiant DL380', 'ThinkSystem SR650'];
         const domains = ['infra-zone-1', 'infra-zone-2', 'compute-zone-1', 'storage-zone-1'];
-        const statuses = ['Available', 'Used'];
+        const statuses = ['Available', 'Used', 'Error'];
 
         return {
           serial: `SN${String(1000 + i).padStart(4, '0')}`,
@@ -214,7 +214,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           role: 'Baremetal node',
           domain: domains[(i - 1) % domains.length],
           power: i % 7 === 0 ? 'Off' : 'On',
-          status: statuses[(i - 1) % statuses.length],
+          status: i === 3 || i === 7 || i % 11 === 0 ? 'Error' : statuses[(i - 1) % 2],
           updatedAt: dateTime(i),
         };
       }),

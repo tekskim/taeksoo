@@ -8,6 +8,7 @@ import {
   Drawer,
   FormField,
   HStack,
+  Input,
   ListToolbar,
   Modal,
   Pagination,
@@ -688,17 +689,11 @@ export function CloudBuilderConsolePage() {
         }
       >
         <VStack gap={6}>
-          <FormField label="Location" required>
-            <Select
+          <FormField label="Location" required helperText="Building, rack and unit position">
+            <Input
               value={editLocation}
-              onChange={setEditLocation}
-              placeholder="Select location"
-              options={[
-                { value: 'dc1-rack-a', label: 'DC-1 Rack A' },
-                { value: 'dc1-rack-b', label: 'DC-1 Rack B' },
-                { value: 'dc2-rack-a', label: 'DC-2 Rack A' },
-                { value: 'dc2-rack-b', label: 'DC-2 Rack B' },
-              ]}
+              onChange={(e) => setEditLocation(e.target.value)}
+              placeholder="e.g. DC-1 / Rack-1 / U18"
               fullWidth
             />
           </FormField>
