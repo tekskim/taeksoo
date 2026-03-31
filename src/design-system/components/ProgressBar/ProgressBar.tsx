@@ -15,7 +15,7 @@ export type ProgressBarStatus = 'success' | 'warning' | 'danger' | 'info' | 'neu
 export interface StatusThresholds {
   /** Percentage at which to show warning color (default: 70) */
   warning: number;
-  /** Percentage at which to show danger color (default: 100) */
+  /** Percentage at which to show danger color (default: 90) */
   danger: number;
 }
 
@@ -53,8 +53,7 @@ export interface ProgressBarProps extends Omit<
   /** Size variant */
   size?: 'sm' | 'md';
   /** Custom thresholds for status color transitions.
-   *  Default: { warning: 70, danger: 100 }
-   *  Compute: { warning: 70, danger: 90 } */
+   *  Default: { warning: 70, danger: 90 } */
   thresholds?: StatusThresholds;
   /** @deprecated thaki-ui compatibility - use status instead */
   thakiVariant?: ThakiProgressBarVariant;
@@ -68,19 +67,14 @@ export interface ProgressBarProps extends Omit<
    Helpers
    ---------------------------------------- */
 
-const DEFAULT_THRESHOLDS: StatusThresholds = { warning: 70, danger: 95 };
+const DEFAULT_THRESHOLDS: StatusThresholds = { warning: 70, danger: 90 };
 
-/** Preset thresholds per app */
+/** Preset thresholds per app — all share the same default */
 export const STATUS_THRESHOLDS = {
-  /** Compute: 0-69% Normal, 70-89% Warning, 90%+ Danger */
-  compute: { warning: 70, danger: 90 } as StatusThresholds,
-  /** Compute Admin: 0-69% Normal, 70-99% Warning, 100%+ Danger */
-  computeAdmin: { warning: 70, danger: 100 } as StatusThresholds,
-  /** Storage: 0-84% Normal, 85-94% Warning, 95%+ Danger */
-  storage: { warning: 85, danger: 95 } as StatusThresholds,
-  /** Container: 0-69% Normal, 70-94% Warning, 95%+ Danger */
-  container: { warning: 70, danger: 95 } as StatusThresholds,
-  /** Default: 0-69% Normal, 70-94% Warning, 95%+ Danger */
+  compute: DEFAULT_THRESHOLDS,
+  computeAdmin: DEFAULT_THRESHOLDS,
+  storage: DEFAULT_THRESHOLDS,
+  container: DEFAULT_THRESHOLDS,
   default: DEFAULT_THRESHOLDS,
 };
 

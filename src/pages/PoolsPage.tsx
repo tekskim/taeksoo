@@ -129,7 +129,7 @@ interface UsageCellProps {
 }
 
 function UsageCell({ percent }: UsageCellProps) {
-  // Determine color based on storage thresholds (85 warning, 95 danger)
+  // Determine color based on default thresholds (70 warning, 90 danger)
   const getStatusColor = (value: number): string => {
     const { warning, danger } = STATUS_THRESHOLDS.storage;
     if (value >= danger) return 'var(--color-state-danger)';

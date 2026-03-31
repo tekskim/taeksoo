@@ -6,7 +6,6 @@ import {
   HStack,
   VStack,
   Input,
-  Select,
   SectionCard,
   FormField,
   PageShell,
@@ -18,7 +17,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell } from '@tabler/icons-react';
+import { IconBell, IconEye, IconEyeOff } from '@tabler/icons-react';
 import {
   CLOUD_BUILDER_SLUGS,
   getCloudBuilderListConfig,
@@ -29,35 +28,9 @@ function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
 }
 
-const ROLE_OPTIONS = [
-  { value: 'controller', label: 'controller' },
-  ...Array.from({ length: 24 }, (_, idx) => ({
-    value: `compute${idx + 1}`,
-    label: `compute${idx + 1}`,
-  })),
-  { value: 'master1', label: 'master1' },
-  { value: 'master2', label: 'master2' },
-  { value: 'master3', label: 'master3' },
-  ...Array.from({ length: 24 }, (_, idx) => ({
-    value: `worker${idx + 1}`,
-    label: `worker${idx + 1}`,
-  })),
-  { value: 'ceph-mon', label: 'ceph-mon' },
-  { value: 'ceph-mgr', label: 'ceph-mgr' },
-  { value: 'ceph-mds', label: 'ceph-mds' },
-  { value: 'ceph-osd', label: 'ceph-osd' },
-];
-
-const DOMAIN_OPTIONS = [
-  { value: 'thaki-prod', label: 'thaki-prod' },
-  { value: 'thaki-stage', label: 'thaki-stage' },
-  { value: 'thaki-dev', label: 'thaki-dev' },
-  { value: 'thaki-lab', label: 'thaki-lab' },
-];
-
 interface SummarySidebarProps {
   bmcComplete: boolean;
-  basicInfoComplete: boolean;
+  discoveredComplete: boolean;
   allocationComplete: boolean;
   onCancel: () => void;
   onRegister: () => void;
@@ -66,7 +39,7 @@ interface SummarySidebarProps {
 
 function SummarySidebar({
   bmcComplete,
-  basicInfoComplete,
+  discoveredComplete,
   allocationComplete,
   onCancel,
   onRegister,
@@ -86,9 +59,12 @@ function SummarySidebar({
                 </span>
               </HStack>
               <HStack gap={2} align="center">
-                <WizardSectionStatusIcon status={basicInfoComplete ? 'done' : 'active'} size="sm" />
+                <WizardSectionStatusIcon
+                  status={discoveredComplete ? 'done' : 'active'}
+                  size="sm"
+                />
                 <span className="text-body-md text-[var(--color-text-default)]">
-                  Basic information
+                  Discovered information
                 </span>
               </HStack>
               <HStack gap={2} align="center">
@@ -96,7 +72,9 @@ function SummarySidebar({
                   status={allocationComplete ? 'done' : 'active'}
                   size="sm"
                 />
-                <span className="text-body-md text-[var(--color-text-default)]">Allocation</span>
+                <span className="text-body-md text-[var(--color-text-default)]">
+                  Basic information
+                </span>
               </HStack>
             </VStack>
           </VStack>
@@ -133,15 +111,27 @@ export function CloudBuilderCreatePage() {
   const [bmcPassword, setBmcPassword] = useState('');
 
   const [serial, setSerial] = useState('');
-  const [macPrimary, setMacPrimary] = useState('');
-  const [nicPrimaryName, setNicPrimaryName] = useState('');
-  const [location, setLocation] = useState('');
+  const [productModel, setProductModel] = useState('');
+  const [vendor, setVendor] = useState('');
+  const [biosVersion, setBiosVersion] = useState('');
+  const [cpu, setCpu] = useState('');
+  const [memory, setMemory] = useState('');
+  const [fetched, setFetched] = useState(false);
 
   const [providerNetwork, setProviderNetwork] = useState('');
-  const [role, setRole] = useState('');
-  const [domain, setDomain] = useState('');
 
+  const [showPassword, setShowPassword] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+
+  const handleFetch = () => {
+    setSerial('SN-2025-00483');
+    setProductModel('PowerEdge R750');
+    setVendor('Dell Inc.');
+    setBiosVersion('2.18.1');
+    setCpu('2x Intel Xeon Gold 6338 (64C/128T)');
+    setMemory('512 GB DDR4-3200');
+    setFetched(true);
+  };
 
   const isValidMac = (v: string) => /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(v.trim());
 
@@ -162,50 +152,24 @@ export function CloudBuilderCreatePage() {
 
   const errors = useMemo(() => {
     const errs: Record<string, string> = {};
-    if (!bmcHost.trim()) errs.bmcHost = 'Please enter a BMC host address.';
+    if (!bmcHost.trim()) errs.bmcHost = 'Please enter a BMC endpoint.';
     if (!bmcUsername.trim()) errs.bmcUsername = 'Please enter a BMC username.';
     if (!bmcPassword.trim()) errs.bmcPassword = 'Please enter a BMC password.';
-    if (!serial.trim()) errs.serial = 'Please enter a serial number.';
-    if (!macPrimary.trim()) errs.mac = 'Please enter a MAC address.';
-    else if (!isValidMac(macPrimary)) errs.mac = 'Invalid MAC format. Example: 00:1A:2B:3C:4D:5E';
-    if (!nicPrimaryName.trim()) errs.nic = 'Please enter a NIC name.';
-    if (!location.trim()) errs.location = 'Please enter a location.';
     if (!providerNetwork.trim()) errs.providerNetwork = 'Please enter a provider network.';
     else if (!isValidProviderNetwork(providerNetwork))
       errs.providerNetwork = 'Invalid format. Example: VLAN 120 / 10.0.20.12/24';
-    if (!role) errs.role = 'Please select a role.';
-    if (!domain) errs.domain = 'Please select a domain.';
     return errs;
-  }, [
-    bmcHost,
-    bmcUsername,
-    bmcPassword,
-    serial,
-    macPrimary,
-    nicPrimaryName,
-    location,
-    providerNetwork,
-    role,
-    domain,
-  ]);
+  }, [bmcHost, bmcUsername, bmcPassword, providerNetwork]);
 
   const bmcComplete =
     bmcHost.trim().length > 0 && bmcUsername.trim().length > 0 && bmcPassword.trim().length > 0;
 
-  const basicInfoComplete =
-    serial.trim().length > 0 &&
-    macPrimary.trim().length > 0 &&
-    isValidMac(macPrimary) &&
-    nicPrimaryName.trim().length > 0 &&
-    location.trim().length > 0;
+  const discoveredComplete = fetched;
 
   const allocationComplete =
-    providerNetwork.trim().length > 0 &&
-    isValidProviderNetwork(providerNetwork) &&
-    role.length > 0 &&
-    domain.length > 0;
+    providerNetwork.trim().length > 0 && isValidProviderNetwork(providerNetwork);
 
-  const canSubmit = bmcComplete && basicInfoComplete && allocationComplete;
+  const canSubmit = bmcComplete && discoveredComplete && allocationComplete;
 
   const handleCancel = () => navigate(`/cloudbuilder/${slug}`);
   const handleRegister = () => {
@@ -263,13 +227,15 @@ export function CloudBuilderCreatePage() {
           <VStack gap={4} className="flex-1">
             {/* BMC connection */}
             <SectionCard className="pb-4">
-              <SectionCard.Header title="BMC connection" />
+              <SectionCard.Header
+                title="BMC connection"
+                description="Enter the BMC (Redfish) endpoint and credentials, then click fetch to auto-discover server information."
+              />
               <SectionCard.Content>
                 <VStack gap={6}>
                   <FormField
-                    label="Host"
+                    label="Endpoint"
                     required
-                    helperText="BMC/IPMI endpoint address"
                     error={hasAttemptedSubmit && !!errors.bmcHost}
                     errorMessage={hasAttemptedSubmit ? errors.bmcHost : undefined}
                   >
@@ -303,12 +269,97 @@ export function CloudBuilderCreatePage() {
                     error={hasAttemptedSubmit && !!errors.bmcPassword}
                     errorMessage={hasAttemptedSubmit ? errors.bmcPassword : undefined}
                   >
+                    <div className="relative w-full">
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        value={bmcPassword}
+                        onChange={(e) => setBmcPassword(e.target.value)}
+                        placeholder="Enter BMC password"
+                        error={hasAttemptedSubmit && !!errors.bmcPassword}
+                        fullWidth
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showPassword ? (
+                          <IconEyeOff size={14} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconEye size={14} className="text-[var(--color-text-subtle)]" />
+                        )}
+                      </button>
+                    </div>
+                  </FormField>
+
+                  <HStack justify="end" className="w-full">
+                    <Button variant="primary" size="md" onClick={handleFetch}>
+                      Fetch
+                    </Button>
+                  </HStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Discovered information */}
+            <SectionCard className="pb-4">
+              <SectionCard.Header
+                title="Discovered information"
+                description="Click fetch to auto-discover server hardware information."
+              />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  <FormField label="Serial number">
                     <Input
-                      type="password"
-                      value={bmcPassword}
-                      onChange={(e) => setBmcPassword(e.target.value)}
-                      placeholder="Enter BMC password"
-                      error={hasAttemptedSubmit && !!errors.bmcPassword}
+                      value={serial}
+                      placeholder="Auto-populated after fetch"
+                      disabled
+                      fullWidth
+                    />
+                  </FormField>
+
+                  <FormField label="Product model">
+                    <Input
+                      value={productModel}
+                      placeholder="Auto-populated after fetch"
+                      disabled
+                      fullWidth
+                    />
+                  </FormField>
+
+                  <FormField label="Vendor">
+                    <Input
+                      value={vendor}
+                      placeholder="Auto-populated after fetch"
+                      disabled
+                      fullWidth
+                    />
+                  </FormField>
+
+                  <FormField label="BIOS version">
+                    <Input
+                      value={biosVersion}
+                      placeholder="Auto-populated after fetch"
+                      disabled
+                      fullWidth
+                    />
+                  </FormField>
+
+                  <FormField label="CPU">
+                    <Input
+                      value={cpu}
+                      placeholder="Auto-populated after fetch"
+                      disabled
+                      fullWidth
+                    />
+                  </FormField>
+
+                  <FormField label="Memory">
+                    <Input
+                      value={memory}
+                      placeholder="Auto-populated after fetch"
+                      disabled
                       fullWidth
                     />
                   </FormField>
@@ -318,122 +369,23 @@ export function CloudBuilderCreatePage() {
 
             {/* Basic information */}
             <SectionCard className="pb-4">
-              <SectionCard.Header title="Basic information" />
-              <SectionCard.Content>
-                <VStack gap={6}>
-                  <FormField
-                    label="Serial number"
-                    required
-                    error={hasAttemptedSubmit && !!errors.serial}
-                    errorMessage={hasAttemptedSubmit ? errors.serial : undefined}
-                  >
-                    <Input
-                      value={serial}
-                      onChange={(e) => setSerial(e.target.value)}
-                      placeholder="e.g. SN1234"
-                      error={hasAttemptedSubmit && !!errors.serial}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  <FormField
-                    label="MAC (Primary)"
-                    required
-                    helperText="Asset identification key"
-                    error={hasAttemptedSubmit && !!errors.mac}
-                    errorMessage={hasAttemptedSubmit ? errors.mac : undefined}
-                  >
-                    <Input
-                      value={macPrimary}
-                      onChange={(e) => setMacPrimary(e.target.value)}
-                      placeholder="e.g. 00:1A:2B:3C:4D:5E"
-                      error={hasAttemptedSubmit && !!errors.mac}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  <FormField
-                    label="NIC (primary name)"
-                    required
-                    error={hasAttemptedSubmit && !!errors.nic}
-                    errorMessage={hasAttemptedSubmit ? errors.nic : undefined}
-                  >
-                    <Input
-                      value={nicPrimaryName}
-                      onChange={(e) => setNicPrimaryName(e.target.value)}
-                      placeholder="e.g. eno1"
-                      error={hasAttemptedSubmit && !!errors.nic}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  <FormField
-                    label="Location"
-                    required
-                    helperText="Maps to placement: { rack, rack_offset_u }"
-                    error={hasAttemptedSubmit && !!errors.location}
-                    errorMessage={hasAttemptedSubmit ? errors.location : undefined}
-                  >
-                    <Input
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      placeholder="e.g. R1-U18"
-                      error={hasAttemptedSubmit && !!errors.location}
-                      fullWidth
-                    />
-                  </FormField>
-                </VStack>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Allocation */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header title="Allocation" />
+              <SectionCard.Header
+                title="Basic information"
+                description="Provide additional details for the server inventory."
+              />
               <SectionCard.Content>
                 <VStack gap={6}>
                   <FormField
                     label="Provider network"
-                    required
-                    helperText="Format: VLAN ID + IP or IP/CIDR"
+                    helperText="Building, rack and unit position"
                     error={hasAttemptedSubmit && !!errors.providerNetwork}
                     errorMessage={hasAttemptedSubmit ? errors.providerNetwork : undefined}
                   >
                     <Input
                       value={providerNetwork}
                       onChange={(e) => setProviderNetwork(e.target.value)}
-                      placeholder="e.g. VLAN 120 / 10.0.20.12/24"
+                      placeholder="e.g. DC-1 / Rack-1 / U18"
                       error={hasAttemptedSubmit && !!errors.providerNetwork}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  <FormField
-                    label="Role"
-                    required
-                    error={hasAttemptedSubmit && !!errors.role}
-                    errorMessage={hasAttemptedSubmit ? errors.role : undefined}
-                  >
-                    <Select
-                      value={role}
-                      onChange={setRole}
-                      placeholder="Select role"
-                      options={ROLE_OPTIONS}
-                      fullWidth
-                    />
-                  </FormField>
-
-                  <FormField
-                    label="Domain"
-                    required
-                    helperText="Select a domain from the thaki suite"
-                    error={hasAttemptedSubmit && !!errors.domain}
-                    errorMessage={hasAttemptedSubmit ? errors.domain : undefined}
-                  >
-                    <Select
-                      value={domain}
-                      onChange={setDomain}
-                      placeholder="Select domain"
-                      options={DOMAIN_OPTIONS}
                       fullWidth
                     />
                   </FormField>
@@ -444,7 +396,7 @@ export function CloudBuilderCreatePage() {
 
           <SummarySidebar
             bmcComplete={bmcComplete}
-            basicInfoComplete={basicInfoComplete}
+            discoveredComplete={discoveredComplete}
             allocationComplete={allocationComplete}
             onCancel={handleCancel}
             onRegister={handleRegister}
