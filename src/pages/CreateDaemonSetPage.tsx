@@ -30,6 +30,7 @@ import {
   fixedColumns,
   columnMinWidths,
   Badge,
+  InlineMessage,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -47,7 +48,6 @@ import {
   IconInfoCircle,
   IconPencilCog,
   IconKey,
-  IconLock,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -753,28 +753,36 @@ function SelectorSection({
 }: SelectorSectionProps) {
   return (
     <SectionCard className="pb-4">
-      <SectionCard.Header title="Selector" />
+      <SectionCard.Header title="Selector Labels" />
       <SectionCard.Content>
         <VStack gap={4}>
           <VStack gap={1}>
             <span className="text-label-lg text-[var(--color-text-default)]">
-              matchLabels
-              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+              Match Labels<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
             <p className="text-body-md text-[var(--color-text-subtle)]">
-              Define label selectors to identify which Pods belong to this workload. Entries are
-              automatically synced to Pod Labels as read-only. This setting cannot be changed after
-              creation.
+              These labels are written to{' '}
+              <code className="font-mono text-body-md">spec.selector.matchLabels</code> and are
+              always merged into the Pod template labels when you save.
             </p>
           </VStack>
 
           <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
             <VStack gap={1.5}>
-              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
-                <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
-                <span className="block text-label-sm text-[var(--color-text-default)]">Value</span>
-                <div className="w-5" />
-              </div>
+              {matchLabels.length === 0 && (
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  No selector labels configured.
+                </p>
+              )}
+              {matchLabels.length > 0 && (
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <span className="block text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="block text-label-sm text-[var(--color-text-default)]">
+                    Value
+                  </span>
+                  <div className="w-5" />
+                </div>
+              )}
               {matchLabels.map((label, index) => (
                 <div
                   key={index}
@@ -792,16 +800,12 @@ function SelectorSection({
                     onChange={(e) => onUpdateMatchLabel(index, 'value', e.target.value)}
                     fullWidth
                   />
-                  {matchLabels.length > 1 ? (
-                    <button
-                      onClick={() => onRemoveMatchLabel(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  ) : (
-                    <div className="w-5" />
-                  )}
+                  <button
+                    onClick={() => onRemoveMatchLabel(index)}
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  >
+                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </button>
                 </div>
               ))}
               <div className="w-fit">
@@ -811,7 +815,7 @@ function SelectorSection({
                   leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                   onClick={onAddMatchLabel}
                 >
-                  Add matchLabel
+                  Add Selector
                 </Button>
               </div>
             </VStack>
@@ -2046,20 +2050,26 @@ export function CreateDaemonSetPage() {
                     <VStack gap={6}>
                       {/* Labels */}
                       <VStack gap={2}>
+                        <InlineMessage variant="info">
+                          Selector labels are managed on the workload tab.
+                          <br />
+                          When you save, selector labels are always merged back into the Pod
+                          template labels.
+                        </InlineMessage>
+
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
                           </span>
                           <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Specify the labels for the Pod. Entries synced from matchLabels are
-                            read-only and cannot be modified or removed.
+                            Specify the labels used to identify and categorize the Pod.
                           </p>
                         </VStack>
 
                         {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
-                            {(matchLabels.some((ml) => ml.key.trim()) || podLabels.length > 0) && (
+                            {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
@@ -2070,43 +2080,9 @@ export function CreateDaemonSetPage() {
                                 <div className="w-5" />
                               </div>
                             )}
-
-                            {/* Read-only matchLabels entries synced from Selector */}
-                            {matchLabels
-                              .filter((ml) => ml.key.trim())
-                              .map((label, index) => (
-                                <div
-                                  key={`ml-${index}`}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="label key"
-                                    value={label.key}
-                                    disabled
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="label value"
-                                    value={label.value}
-                                    disabled
-                                    fullWidth
-                                  />
-                                  <div className="size-5 flex items-center justify-center">
-                                    <Tooltip content="Synced from matchLabels. Read-only.">
-                                      <IconLock
-                                        size={14}
-                                        className="text-[var(--color-text-disabled)]"
-                                        stroke={1.5}
-                                      />
-                                    </Tooltip>
-                                  </div>
-                                </div>
-                              ))}
-
-                            {/* Editable additional Pod labels */}
                             {podLabels.map((label, index) => (
                               <div
-                                key={`pl-${index}`}
+                                key={index}
                                 className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
                               >
                                 <Input
