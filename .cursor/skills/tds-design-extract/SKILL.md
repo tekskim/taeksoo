@@ -183,6 +183,52 @@ TDS와 thaki-shared의 아이콘 구현 방식이 다를 수 있으므로 반드
 | --color-action-primary | #2563eb  | --component-button-solid-primary-bg | exact |
 ```
 
+## 필수 체크리스트 (Extract 완료 전 검증)
+
+### A. Props 기본값 비교
+
+TDS와 thaki-shared의 **모든 props default value**를 비교합니다. 기본값이 다르면 "theme 미지정 시 다르게 보이는" 문제가 발생합니다.
+
+```
+예: TDS default theme='white' vs shared default theme='gry' → 기본 상태 시각적 차이
+```
+
+### B. TDS 전용 variant/theme 시각적 중요도 판단
+
+TDS에만 있는 variant/theme/size가 **기본 상태나 주요 사용 시나리오에 관여하는지** 확인합니다:
+
+- 기본값으로 사용되는 variant → **API Changes Required**로 분류 (시각적으로 중요)
+- 드물게 사용되는 추가 옵션 → 스펙에 기록만 (미적용)
+
+### C. 색상 토큰 분류 — 글로벌 vs 컴포넌트 전용
+
+"토큰 레이어 차이"로 넘기기 전에, 해당 토큰이 **컴포넌트에서 직접 참조하는 primitive 토큰**인지 확인합니다:
+
+- `primitive-blue-50` 등 **primitive 토큰을 직접 참조** → 컴포넌트 레벨에서 shade 변경 가능 (Apply 대상)
+- `--semantic-color-success` 등 **semantic 토큰 참조** → 토큰 레이어에서 해결 (미적용)
+
+### D. 사용처 기반 deprecated 후보 식별
+
+TDS에서 제거된 variant/type이 있으면 thaki-shared에서의 실제 사용처를 검색합니다:
+
+```bash
+# feature 코드에서 사용하는지 확인 (스토리/테스트 제외)
+grep -r 'type="solid"' src/features/ src/pages/
+```
+
+- 사용처 0건 → **API Changes Required** (deprecated 권장)
+- 사용처 있음 → 스펙에 기록만
+
+### E. 스펙 출력 시 분류
+
+스펙 파일의 "주요 디자인 차이" 테이블에 **변경 유형** 컬럼을 추가합니다:
+
+| 유형           | 설명                                               |
+| -------------- | -------------------------------------------------- |
+| `style`        | 스타일만 변경 (디자인 싱크 범위)                   |
+| `api-required` | API 변경 필요 (PR의 API Changes Required 섹션으로) |
+| `token-global` | 글로벌 토큰 정렬 시 해결 (미적용)                  |
+
 ## 주의사항
 
 - CSS 변수는 반드시 **최종값까지 resolve** (체인 따라가기)
