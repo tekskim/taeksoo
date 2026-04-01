@@ -198,6 +198,120 @@ thaki-shared Storybook에서 해당 컴포넌트의 모든 stories가 정상 렌
 ### 최종 판정: ✅ PASS / ❌ FAIL
 ```
 
+---
+
+## 배치 모드 (통합 Evaluate)
+
+오케스트레이터의 Phase 4에서 여러 컴포넌트를 한번에 검증할 때 사용합니다.
+단일 컴포넌트 모드의 Step 1A~Step 3을 반복 실행하되, Canvas와 리포트를 통합합니다.
+
+### 배치 Computed Style 비교
+
+각 컴포넌트에 대해 Step 1A를 순차 실행합니다 (browser MCP 공유 자원).
+결과를 컴포넌트별로 수집하여 통합 리포트에 합산합니다.
+
+### 배치 금지 변경 검증
+
+전체 git diff에 대해 Step 2를 **1회** 실행합니다.
+변경 파일을 컴포넌트별로 분류하여 각 컴포넌트의 금지 변경 여부를 판정합니다.
+
+### 배치 기능 검증
+
+Step 3(tsc + build)을 **1회만** 실행합니다.
+오케스트레이터 Phase 3에서 이미 빌드를 통과한 경우, 이 단계는 건너뛸 수 있습니다.
+
+### 통합 Canvas 생성
+
+모든 컴포넌트의 비교 결과를 **하나의 Canvas HTML 페이지**에 합산합니다.
+
+**Canvas 구조:**
+
+```html
+<!-- 상단: 요약 대시보드 -->
+<header>
+  컴포넌트별 일치율 카드 (Button 100%, Badge 95%, Checkbox 100%, ...) 전체 PASS/FAIL 카운트
+</header>
+
+<!-- 탭 네비게이션 -->
+<nav>[Button] [Badge] [Checkbox] [Toggle] ...</nav>
+
+<!-- 각 탭 콘텐츠 -->
+<section id="button">
+  <!-- variant/size 조합별 비교 -->
+  <div class="comparison">
+    좌: TDS 스크린샷 (Base64 인라인) 우: thaki-shared Storybook 스크린샷 (Base64 인라인)
+  </div>
+  <!-- Computed Style 비교 테이블 -->
+  <table>
+    variant/size | 속성 | TDS | shared | 일치
+  </table>
+  <!-- 상태별 비교 -->
+  <table>
+    상태 | 속성 | TDS | shared | 일치
+  </table>
+</section>
+```
+
+**Canvas 디자인 가이드:**
+
+- 대시보드: 각 컴포넌트를 카드로 표시, PASS=초록 테두리, minor=노랑 테두리, FAIL=빨강 테두리
+- 탭: 컴포넌트명 + 일치율 뱃지 (예: "Badge 95%")
+- 비교 영역: 좌우 나란히, 동일 크기로 정규화
+- 테이블: 불일치 행만 하이라이트 (빨강 배경)
+- 스크린샷은 browser MCP `browser_take_screenshot`으로 캡처 후 Base64 인라인
+
+### 통합 Evaluate 리포트
+
+```markdown
+## Batch Evaluate Report
+
+### 요약
+
+| #   | 컴포넌트 | Computed Style 일치율 | 금지 변경 | 기능 검증 | 판정     |
+| --- | -------- | --------------------- | --------- | --------- | -------- |
+| 1   | Button   | 100% (42/42)          | ✅ Pass   | ✅ Pass   | ✅ PASS  |
+| 2   | Badge    | 95% (38/40)           | ✅ Pass   | ✅ Pass   | ⚠️ minor |
+| 3   | Checkbox | 100% (28/28)          | ✅ Pass   | ✅ Pass   | ✅ PASS  |
+
+### 통합 Canvas
+
+[통합 비교 화면](canvas-link)
+
+### 불일치 항목 (있는 경우)
+
+#### Badge
+
+| variant/size  | 속성       | TDS     | thaki-shared | 심각도 |
+| ------------- | ---------- | ------- | ------------ | ------ |
+| md/subtle/red | background | #fee2e2 | #fecaca      | minor  |
+| md/subtle/red | color      | #dc2626 | #ef4444      | minor  |
+
+### 금지 변경 검증 (전체)
+
+| 항목              | 결과    |
+| ----------------- | ------- |
+| .styles.ts 변경만 | ✅ Pass |
+| 토큰 이름 유지    | ✅ Pass |
+| .tsx 허용 범위 내 | ✅ Pass |
+| .tsx 로직 미변경  | ✅ Pass |
+| props 삭제 없음   | ✅ Pass |
+
+### 기능 검증 (1회)
+
+| 항목              | 결과    |
+| ----------------- | ------- |
+| 타입 체크 (tsc)   | ✅ Pass |
+| 빌드 (pnpm build) | ✅ Pass |
+
+### 최종 판정
+
+- ✅ PASS: {N}개
+- ⚠️ minor: {M}개
+- ❌ FAIL: {K}개
+```
+
+---
+
 ## 판정 기준
 
 ### PASS 조건 (모두 충족)
