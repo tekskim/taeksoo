@@ -20,20 +20,47 @@
 
 ## 브랜치 전략
 
-**고정 브랜치 `design-sync`**를 사용합니다.
+**고정 브랜치 `design-sync`**에 커밋을 누적하고, PR 요청 시 **3개 이하**로 분할합니다.
 
-- 브랜치명은 항상 `design-sync` (고정)
+- 브랜치명은 항상 `design-sync` (고정) — 작업용 누적 브랜치
 - 최초 싱크 시 `main`에서 브랜치 생성, 이후에는 동일 브랜치에 커밋 누적
 - 컴포넌트를 싱크할 때마다 개별 커밋 추가 (git log에서 추적 용이)
-- PR은 원하는 시점에 생성 (1개 컴포넌트 후든, 10개 후든 자유)
-- PR 머지 후 `design-sync` 브랜치 삭제 → 다음 싱크 시 main 최신 기준으로 재생성
+
+### PR 분할 정책 (3개 제한)
+
+- **1 PR당 최대 3개 컴포넌트** — 3개를 초과하면 반드시 분할
+- PR 요청 시점에 `design-sync` 브랜치의 커밋을 3개씩 묶어 배치 브랜치 생성
+- 배치 브랜치명: `ds-batch-{N}` (예: `ds-batch-1`, `ds-batch-2`, ...)
+- 각 배치 브랜치는 `main`에서 생성 후 해당 컴포넌트의 커밋만 `cherry-pick`
+- 관련 토큰/공유 파일은 첫 번째 배치에 포함
+- 모든 배치 PR 머지 후 `design-sync` 브랜치 삭제
+
+### 배치 생성 절차
+
+```bash
+# 1. main 최신화
+git checkout main && git pull
+
+# 2. design-sync의 디자인 싱크 커밋 확인
+git log main..design-sync --oneline --no-merges
+
+# 3. 컴포넌트별 커밋 그룹핑 (최대 3개씩)
+# 4. 각 배치 브랜치 생성 + cherry-pick
+git checkout -b ds-batch-1 main
+git cherry-pick <commit1> <commit2> <commit3> ...
+git push -u origin ds-batch-1
+
+# 5. cherry-pick 충돌 시: design-sync에서 해당 파일 checkout 후 continue
+git checkout design-sync -- <conflicted-file>
+git add . && git cherry-pick --continue --no-edit
+```
 
 ```
-main ──●──●──●──●──●──●──────────────────── (머지) ──●──
-        \                                    /          \
-         design-sync ──A──B──C──D──E── (PR) ─┘           design-sync ──F──G── ...
-                       │  │  │  │  │
-                  CopyBtn Badge Chip Toggle Input
+main ──●──●──●── (batch-1 머지) ── (batch-2 머지) ── (batch-3 머지) ──●──
+        \              /                  /                  /
+         ds-batch-1 ──A──B──C            /                  /
+         ds-batch-2 ──D──E──F ──────────┘                  /
+         ds-batch-3 ──G──H ───────────────────────────────┘
 ```
 
 ## 동작 절차
@@ -107,10 +134,33 @@ EOF
 )"
 ```
 
-### Step 5: PR 본문 생성
+### Step 4.5: 배치 분할 (3개 제한 정책)
 
-아래 템플릿에 따라 PR 본문을 조립합니다. **모든 섹션은 필수**입니다.
-`git log main..design-sync`의 커밋 목록에서 포함된 컴포넌트를 자동 파악합니다.
+커밋 후, `design-sync` 브랜치의 미반영 커밋을 3개 컴포넌트씩 배치로 분할합니다.
+
+```bash
+# 미반영 커밋 확인
+cd /Users/pobae/thaki-shared && git log main..design-sync --oneline --no-merges
+```
+
+1. 커밋을 컴포넌트별로 그룹핑
+2. **3개 이하**면 단일 배치로 진행 → Step 5A
+3. **4개 이상**이면 3개씩 분할하여 배치 브랜치 생성:
+
+```bash
+git checkout main && git pull
+git checkout -b ds-batch-1 main
+git cherry-pick <commits for batch 1>
+git push -u origin ds-batch-1
+# 반복...
+```
+
+4. cherry-pick 충돌 시: `git checkout design-sync -- <file> && git add . && git cherry-pick --continue --no-edit`
+5. 각 배치별로 Step 5A 실행 (배치당 1개 PR 생성)
+
+### Step 5A: PR 본문 생성 — CREATE 모드
+
+열려 있는 PR이 없을 때, **현재 싱크한 컴포넌트(들)만으로** 전체 PR 본문을 새로 작성합니다.
 
 **언어 규칙**: PR 본문은 반드시 **한국어**로 작성합니다. 섹션 헤더(Summary, Design Sync Details 등)와 테이블 컬럼명은 템플릿 원문(영어) 유지, 설명/비고/항목명은 한국어로 작성합니다.
 
@@ -123,6 +173,7 @@ EOF
 
 - {Component1}, {Component2}, ... 컴포넌트의 디자인을 TDS(THAKI Design System)에 맞춰 싱크
 - 로직/이벤트/상태 관리 변경 없이 **스타일만 변경**
+- {API 변경이 있는 컴포넌트가 있으면 한 줄로 요약: 예) "NumberInput: size `sm` deprecated (`md` 고정), 아이콘 Tabler로 교체"}
 
 ## Design Sync Details
 
@@ -137,15 +188,26 @@ EOF
 | 1   | {차이점 1 항목} | `{이전 값}`           | `{변경 값}`      |
 | 2   | {차이점 2 항목} | `{이전 값}`           | `{변경 값}`      |
 
-> 위 테이블은 디자인 스펙(`specs/{ComponentName}.md`)의 "주요 디자인 차이"에서 추출합니다.
+> 위 테이블은 디자인 스펙(`specs/{ComponentName}.md`)의 "주요 디자인 차이"에서 **빠짐없이** 추출합니다.
+> API 변경이 있으면 별도 테이블로 분리합니다 (예: "주요 변경점 — API").
 
 #### 변경 코드 요약
 
 ```diff
 // 실제 git diff에서 핵심 변경 부분만 발췌
+// 파일명과 변경 의도를 주석으로 표시
+// {Name}.styles.ts — {변경 요약}
+- 이전 코드
++ 변경된 코드
+
+// {Name}.tsx — {변경 요약}
 - 이전 코드
 + 변경된 코드
 ```
+
+> **필수**: `.styles.ts`만 변경된 경우에도 diff를 포함합니다.
+> **생략 금지**: 이 섹션이 비어있으면 리뷰어가 변경 범위를 파악할 수 없습니다.
+> **파일별 구분**: 여러 파일이 변경된 경우 `// {FileName} — {설명}` 주석으로 구분합니다.
 
 #### Safety Checklist
 
@@ -157,31 +219,30 @@ EOF
 | 토큰 이름 미변경          | ✅   | JSON key 변경 없음 (값만 변경)                       |
 | 렌더 구조 미변경          | ✅   | JSX 트리 구조, 조건부 렌더링 변경 없음               |
 
+> **⚠️ 표기**: 변경이 있지만 허용 범위인 경우 ⚠️ + 비고로 설명 (예: `⚠️ | indeterminate?: boolean 추가 (non-breaking)`)
+> **빌드 통과**: API/로직 변경이 있는 컴포넌트는 `pnpm build 통과 | ✅`, `tsc --noEmit 통과 | ✅` 행을 추가
+
 ### {ComponentName2}
 
-(위와 동일 형식 반복: 주요 변경점 → 변경 코드 요약 → Safety Checklist)
+(위와 동일 형식 반복: 주요 변경점 → 변경 코드 요약 → Safety Checklist — **3가지 모두 필수**)
 
 ---
 
-## Commits
-
-| #   | Commit                                            | Component  |
-| --- | ------------------------------------------------- | ---------- |
-| 1   | `abc1234` style(CopyButton): sync design with TDS | CopyButton |
-| 2   | `def5678` style(Badge): sync design with TDS      | Badge      |
-
-> `git log main..design-sync --oneline`에서 자동 추출
-
 ## Changed Files
 
-| Category                | Files                                    |
-| ----------------------- | ---------------------------------------- |
-| Styles                  | `src/components/{Name}/{Name}.styles.ts` |
-| Component (design only) | `src/components/{Name}/{Name}.tsx`       |
-| Tokens                  | `tokens/light.json`, `tokens/dark.json`  |
-| Generated               | `tailwind.preset.js`                     |
+| Category                | Files                                                      |
+| ----------------------- | ---------------------------------------------------------- |
+| Styles                  | `{Name}.styles.ts`, `{Name2}.styles.ts`                    |
+| Component (design only) | `{Name}.tsx`                                               |
+| Types                   | `{Name}.types.ts`                                          |
+| Stories                 | `{Name}.stories.tsx`                                       |
+| Tokens                  | `tokens/light.json`, `tokens-light.css`, `token-docs.json` |
+| Generated               | `tailwind.preset.js`, `shared-utilities.css`               |
+| Icons                   | `{Icon}.svg`                                               |
 
 > 카테고리별로 변경된 파일만 나열합니다. 변경 없는 카테고리는 생략.
+> 파일명은 경로 없이 **파일명만** 기재합니다 (간결성).
+> `git diff main..{branch} --name-only`의 결과를 카테고리별로 분류합니다.
 
 ## API Changes Required
 
@@ -211,22 +272,98 @@ EOF
 
 ---
 
+### Step 5B: PR 본문 업데이트 — APPEND 모드
+
+이미 열려 있는 PR이 있을 때, **기존 PR 본문을 그대로 보존**하고 현재 컴포넌트 섹션만 추가합니다.
+
+> **핵심 원칙**: 기존 본문의 다른 컴포넌트 상세 내용을 절대 덮어쓰거나 축약하지 않습니다. 이전 채팅 세션에서 작성된 내용이 PR 본문에 그대로 남아야 합니다.
+
+#### 5B-1. 기존 PR 본문 가져오기
+
+```bash
+cd /Users/pobae/thaki-shared && gh pr view {number} --json body --jq '.body' > /tmp/pr_body.md
+```
+
+`/tmp/pr_body.md` 파일을 Read 도구로 읽어 현재 본문 내용을 파악합니다.
+
+#### 5B-2. 중복 확인
+
+기존 본문에 `### {ComponentName}\n` 패턴이 이미 존재하는지 확인합니다.
+
+- **이미 존재** → 사용자에게 "이미 {ComponentName} 섹션이 PR에 있습니다. 교체할까요?" 확인
+  - 교체 승인 → 기존 섹션을 새 내용으로 대체
+  - 거부 → 스킵
+- **존재하지 않음** → 5B-3으로 진행
+
+#### 5B-3. 새 컴포넌트 섹션 작성
+
+현재 컴포넌트의 상세 블록을 Step 5A의 컴포넌트 섹션 템플릿과 동일한 형식으로 작성합니다:
+
+```markdown
+### {ComponentName}
+
+**스펙 출처**: `tds/src/design-system/components/{ComponentName}/`
+
+#### 주요 변경점
+
+| #   | 항목 | Before (thaki-shared) | After (TDS 기준) |
+| --- | ---- | --------------------- | ---------------- |
+| 1   | ...  | `...`                 | `...`            |
+
+#### 변경 코드 요약
+
+(diff 발췌)
+
+#### Safety Checklist
+
+(테이블)
+```
+
+#### 5B-4. 기존 본문에 삽입
+
+StrReplace 도구로 `/tmp/pr_body.md` 파일을 편집합니다. 편집 순서:
+
+1. **Summary 라인 업데이트**: 기존 컴포넌트 목록 뒤에 새 컴포넌트명 추가
+   - Before: `"- Disclosure, Checkbox, ... 컴포넌트의 디자인을"`
+   - After: `"- Disclosure, Checkbox, ..., {NewComponent} 컴포넌트의 디자인을"`
+
+2. **Design Sync Details에 새 컴포넌트 블록 삽입**: `\n---\n\n## Changed Files` 앵커를 찾아 그 **바로 위**에 새 컴포넌트 블록을 삽입합니다.
+   - 앵커를 못 찾으면 `## Review Guide` 앞에 삽입 (fallback)
+
+3. **Changed Files 테이블 업데이트**: 카테고리별로 새 파일명 추가
+   - Styles 행에 새 `.styles.ts` 파일 추가
+   - Component 행에 새 `.tsx` 파일 추가 (해당하는 경우)
+
+4. **PR 타이틀 업데이트**: 총 컴포넌트 수 반영
+
+#### 5B-5. 사용자에게 변경된 부분만 보여주기
+
+APPEND 모드에서는 전체 본문이 아닌, **추가된 컴포넌트 섹션**과 **변경된 Summary/Changed Files** 부분만 사용자에게 보여주고 확인을 요청합니다.
+
+---
+
 ### Step 6: 사용자 확인
 
-PR 본문 전체를 사용자에게 보여주고 승인을 기다립니다:
+PR 본문 전체(CREATE) 또는 변경된 부분(APPEND)을 사용자에게 보여주고 승인을 기다립니다:
 
 - "확인" / "진행" → Step 7로
 - 수정 요청 → 본문 수정 후 재확인
 - "취소" → 중단
 
-### Step 7: PR 생성
+### Step 7: PR 생성 또는 업데이트
+
+#### CREATE 모드
 
 ```bash
-cd /path/to/thaki-shared && git push -u origin design-sync
-cd /path/to/thaki-shared && gh pr create --title "{title}" --body "$(cat <<'EOF'
-{PR 본문}
-EOF
-)"
+cd /Users/pobae/thaki-shared && git push -u origin design-sync
+cd /Users/pobae/thaki-shared && gh pr create --title "{title}" --body-file /tmp/pr_body.md
+```
+
+#### APPEND 모드
+
+```bash
+cd /Users/pobae/thaki-shared && git push origin design-sync
+cd /Users/pobae/thaki-shared && gh pr edit {number} --title "{new_title}" --body-file /tmp/pr_body.md
 ```
 
 **기존 PR이 있는 경우 (동일 `design-sync` 브랜치)**:
@@ -249,8 +386,8 @@ EOF
 **PR 타이틀 규칙**:
 
 - 컴포넌트 1개: `style({Component}): sync design with TDS`
-- 컴포넌트 2-4개: `style(design-sync): sync {Component1}, {Component2}, ... with TDS`
-- 컴포넌트 5개+: `style(design-sync): sync {N} components with TDS`
+- 컴포넌트 2-3개: `style(design-sync): batch {N} — {Component1}, {Component2}, {Component3}`
+- **4개 이상은 존재하지 않음** (3개 제한 정책에 의해 분할됨)
 
 **라벨**: `design-sync` 라벨이 존재하면 `--label design-sync` 추가. 없으면 생략.
 
@@ -352,11 +489,61 @@ PR 본문을 반드시 사용자에게 보여주고 승인을 받습니다. 자�
 
 ## 본문 작성 규칙
 
+### 필수 포함 섹션 (누락 금지)
+
+각 컴포넌트 블록은 **반드시 아래 3가지 서브섹션을 모두 포함**해야 합니다:
+
+1. **`#### 주요 변경점`** — Before/After 테이블 (스펙의 "주요 디자인 차이" **전체** 항목)
+2. **`#### 변경 코드 요약`** — `git diff`에서 핵심 변경만 발췌한 diff 블록
+3. **`#### Safety Checklist`** — `.tsx` 로직/props/토큰/렌더 구조 변경 여부 테이블
+
+> **주의**: `변경 코드 요약`이나 `Safety Checklist`를 생략하면 리뷰어가 변경 범위를 파악할 수 없습니다. 스타일 전용 변경(`.styles.ts`만 변경)이더라도 반드시 포함하세요. diff가 매우 짧은 경우에도 생략하지 않습니다.
+
+### Changed Files 카테고리
+
+Changed Files 테이블은 아래 카테고리로 분류합니다 (해당 없는 카테고리는 생략):
+
+| Category                | 포함 파일                                                                      |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| Styles                  | `*.styles.ts`                                                                  |
+| Component (design only) | `*.tsx` (디자인 변경만 포함된 컴포넌트)                                        |
+| Types                   | `*.types.ts`                                                                   |
+| Stories                 | `*.stories.tsx`                                                                |
+| Tokens                  | `tokens/light.json`, `tokens/dark.json`, `tokens-light.css`, `token-docs.json` |
+| Generated               | `tailwind.preset.js`, `shared-utilities.css`                                   |
+| Icons                   | `*.svg`                                                                        |
+| CSS                     | `shared-utilities.css` (토큰/유틸리티 외 직접 CSS 변경)                        |
+
+### Review Guide 커스터마이징
+
+Review Guide의 체크 항목은 배치 내용에 맞게 **구체적으로** 작성합니다:
+
+- 토큰 변경이 있으면: "토큰 값 변경이 다른 컴포넌트에 영향을 주는지"
+- API 변경이 있으면: "props 기본값 변경이 기존 사용처에 breaking change가 아닌지"
+- SVG 변경이 있으면: "SVG viewBox 변경이 올바른지"
+- 색상 매핑 변경이 있으면: "상태별 색상 매핑이 시각적으로 적절한지"
+
+### 데이터 소스 우선순위
+
+1. **스펙 파일**: `specs/{ComponentName}.md`의 "주요 디자인 차이" → 주요 변경점 테이블
+2. **git diff**: `git diff main..{branch} -- src/components/{Name}/` → 변경 코드 요약
+3. **Evaluate 리포트**: 금지 변경 검증 결과 → Safety Checklist
+4. **git diff --name-only**: 변경된 파일 목록 → Changed Files 테이블
+
+### 상세 규칙
+
 1. **Before/After 테이블은 스펙 기반**: `specs/{ComponentName}.md`의 "주요 디자인 차이" 항목을 **빠짐없이** 나열
-2. **diff는 핵심만 발췌**: 전체 diff가 아닌 리뷰어가 판단에 필요한 핵심 변경만 포함
+2. **diff는 핵심만 발췌**: 전체 diff가 아닌 리뷰어가 판단에 필요한 핵심 변경만 포함. 단, 생략하지 않음
 3. **Safety Checklist는 Evaluate 결과 반영**: Evaluate 리포트의 금지 변경 검증 결과를 그대로 반영
-4. **Changed Files는 git diff 기반**: `git diff main..design-sync --name-only`에서 자동 추출
-5. **Commits 테이블은 git log 기반**: `git log main..design-sync --oneline`에서 자동 추출
+4. **Changed Files는 git diff 기반**: `git diff main..{branch} --name-only`에서 자동 추출
+5. **Commits 테이블은 git log 기반**: `git log main..{branch} --oneline`에서 자동 추출
+
+### APPEND 모드 추가 규칙
+
+6. **기존 본문 보존 필수**: APPEND 모드에서 기존 컴포넌트 섹션의 내용을 절대 수정/축약/재생성하지 않음. 이전 세션에서 작성된 상세 내용(테이블, diff, Safety Checklist)이 그대로 유지되어야 함
+7. **삽입 위치 규칙**: 새 컴포넌트 블록은 `---` + `## Changed Files` 앵커 바로 위에 삽입. 앵커를 못 찾으면 `## Review Guide` 앞에 삽입
+8. **중복 방지**: `### {ComponentName}` 패턴으로 기존 본문에 동일 컴포넌트 섹션이 있는지 반드시 확인. 이미 존재하면 사용자에게 교체 여부 확인
+9. **파일 기반 편집**: `/tmp/pr_body.md`에 기존 본문을 저장한 후 StrReplace 도구로 정밀 편집. 전체를 재생성하지 않음
 
 ## 출력
 

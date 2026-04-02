@@ -210,15 +210,43 @@ Phase 1에서 생성된 모든 스펙을 읽고, 각 컴포넌트의 Pre-flight 
 ### Checkbox — Pre-flight Details
 
 (동일 형식)
+
+### API Changes 상세 (디자인 반영 필수)
+
+> API 변경이 있는 컴포넌트가 1개 이상일 때만 표시합니다.
+> 없으면 이 섹션을 생략합니다.
+
+| #   | 컴포넌트 | 변경 유형    | 변경 내용            | 영향 범위      | 마이그레이션       |
+| --- | -------- | ------------ | -------------------- | -------------- | ------------------ |
+| 1   | Badge    | default 변경 | theme: 'gry' → 'wht' | 미지정 시 흰색 | `theme="gry"` 명시 |
+| 2   | Badge    | @deprecated  | solid type           | 사용처 경고    | subtle로 전환      |
+
+> 이 테이블은 각 컴포넌트 Pre-flight의 "8. API Changes" 섹션을 통합 정리한 것입니다.
+> PR 본문의 "API Changes" 섹션에 그대로 반영됩니다.
 ```
 
 #### 2-B: 사용자 일괄 확인
 
-통합 Pre-flight 리포트를 사용자에게 보여주고 **1회 확인**을 받습니다.
+통합 Pre-flight 리포트(스타일 + API 변경 포함)를 사용자에게 보여주고 **1회 확인**을 받습니다.
 
-- **"전체 승인"**: 모든 컴포넌트 Apply 진행
+- **"전체 승인"**: 모든 컴포넌트의 스타일 + API 변경 Apply 진행
 - **"일부 제외"**: 제외할 컴포넌트를 지정 → 해당 컴포넌트 SKIP
 - **"취소"**: 전체 중단
+
+#### 2-B.5: thaki-shared 최신화
+
+Apply 전에 thaki-shared의 main을 최신 상태로 업데이트합니다:
+
+```bash
+cd /Users/pobae/thaki-shared
+git checkout main && git pull origin main
+git checkout design-sync 2>/dev/null || git checkout -b design-sync
+git merge main --no-edit
+```
+
+- design-sync 브랜치가 있으면 main 머지 (기존 커밋 유지)
+- 없으면 main 최신에서 새로 생성
+- 머지 충돌 시 사용자에게 알리고 해결 후 진행
 
 #### 2-C: 순차 적용
 
@@ -347,10 +375,17 @@ PR은 자동 생성하지 않으며, 사용자가 디자인을 확인하고 명�
 
 1. `.cursor/skills/tds-design-pr/SKILL.md` 절차에 따라 실행
 2. PASS된 컴포넌트의 변경사항을 `design-sync` 브랜치에 커밋
-3. 상세 PR 본문 생성 (스펙 기반 Before/After + Safety Checklist + Changed Files)
-4. 사용자 PR 본문 확인 대기
-5. 승인 시 `gh pr create`로 PR 생성
-6. PR URL 반환
+3. **상세 PR 본문 생성** — 컴포넌트별 3가지 필수 섹션:
+   - `주요 변경점` Before/After 테이블 (스펙 전체 항목)
+   - `변경 코드 요약` diff 블록 (핵심 변경 발췌)
+   - `Safety Checklist` 테이블 (로직/타입/토큰/구조 검증)
+4. Changed Files 테이블 (카테고리별: Styles, Component, Types, Stories, Tokens, Icons 등)
+5. Review Guide (배치 내용에 맞게 구체적 체크 항목)
+6. 사용자 PR 본문 확인 대기
+7. 승인 시 `gh pr create`로 PR 생성
+8. PR URL 반환
+
+> **주의**: PR 본문에 `변경 코드 요약`이나 `Safety Checklist`가 누락되면 리뷰어가 변경 범위를 파악할 수 없습니다. `tds-design-pr` 스킬의 "필수 포함 섹션" 규칙을 반드시 따르세요.
 
 ---
 

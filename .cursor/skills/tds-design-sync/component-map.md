@@ -10,121 +10,122 @@
 - **미대응 (TDS에 없음)**: 12개 — thaki-shared 고유, 디자인 토큰 정렬만
 - **미대응 (shared에 없음)**: 추후 신규 생성 대상
 
+### 결정 사항 요약
+
+- **부분 대응 16개**: 전부 `keep-sync` — shared 유지, 구조/API 차이 허용, TDS 디자인 토큰만 싱크
+- **shared 고유 12개**: 전부 `skip` — 싱크 대상 제외
+- **TDS 고유 11개**:
+  - `shared 신규 생성`: NotificationCenter (1개)
+  - `TDS 구현`: MetricCard (1개, shared에는 생성 안 함)
+  - `보류`: Chip (1개, Tag와의 관계 재검토 필요)
+  - `skip`: 나머지 8개 (Drawer, InfoBox, ListToolbar, Menu, PageHeader, SectionCard, SelectionIndicator, Wizard)
+
 ## 1:1 대응 (38개)
 
-| #   | thaki-shared       | 경로                                 | TDS               | 경로                                                 | 비고                                                       |
-| --- | ------------------ | ------------------------------------ | ----------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
-| 1   | Badge              | `src/components/Badge/`              | Badge             | `src/design-system/components/Badge/`                |                                                            |
-| 2   | Breadcrumb         | `src/components/Breadcrumb/`         | Breadcrumb        | `src/design-system/components/Breadcrumb/`           |                                                            |
-| 3   | Button             | `src/components/Button/`             | Button            | `src/design-system/components/Button/`               |                                                            |
-| 4   | Checkbox           | `src/components/Checkbox/`           | Checkbox          | `src/design-system/components/Checkbox/`             |                                                            |
-| 5   | ContextMenu        | `src/components/ContextMenu/`        | ContextMenu       | `src/design-system/components/ContextMenu/`          |                                                            |
-| 6   | CopyButton         | `src/components/CopyButton/`         | CopyButton        | `src/design-system/components/CopyButton/`           |                                                            |
-| 7   | DatePicker         | `src/components/DatePicker/`         | DatePicker        | `src/design-system/components/DatePicker/`           |                                                            |
-| 8   | Disclosure         | `src/components/Disclosure/`         | Disclosure        | `src/design-system/components/Disclosure/`           |                                                            |
-| 9   | FloatingCard       | `src/components/FloatingCard/`       | FloatingCard      | `src/design-system/components/FloatingCard/`         |                                                            |
-| 10  | FormField          | `src/components/FormField/`          | FormField         | `src/design-system/components/FormField/`            |                                                            |
-| 11  | InlineMessage      | `src/components/InlineMessage/`      | InlineMessage     | `src/design-system/components/InlineMessage/`        |                                                            |
-| 12  | Input              | `src/components/Input/`              | Input             | `src/design-system/components/Input/`                | TDS는 Input 폴더에 Textarea, NumberInput, SearchInput 포함 |
-| 13  | MonitoringToolbar  | `src/components/MonitoringToolbar/`  | MonitoringToolbar | `src/design-system/components/MonitoringToolbar/`    |                                                            |
-| 14  | Pagination         | `src/components/Pagination/`         | Pagination        | `src/design-system/components/Pagination/`           |                                                            |
-| 15  | Password           | `src/components/Password/`           | Password          | `src/design-system/components/Password/`             |                                                            |
-| 16  | ProgressBar        | `src/components/ProgressBar/`        | ProgressBar       | `src/design-system/components/ProgressBar/`          |                                                            |
-| 17  | Skeleton           | `src/components/Skeleton/`           | Skeleton          | `src/design-system/components/Skeleton/`             |                                                            |
-| 18  | StatusIndicator    | `src/components/StatusIndicator/`    | StatusIndicator   | `src/design-system/components/StatusIndicator/`      |                                                            |
-| 19  | TabBar             | `src/components/TabBar/`             | TabBar            | `src/design-system/components/TabBar/`               |                                                            |
-| 20  | Table              | `src/components/Table/`              | Table             | `src/design-system/components/Table/`                |                                                            |
-| 21  | Toast              | `src/components/Toast/`              | Toast             | `src/design-system/components/Toast/`                |                                                            |
-| 22  | Toggle             | `src/components/Toggle/`             | Toggle            | `src/design-system/components/Toggle/`               |                                                            |
-| 23  | Tooltip            | `src/components/Tooltip/`            | Tooltip           | `src/design-system/components/Tooltip/`              |                                                            |
-| 24  | Accordion          | `src/components/Accordion/`          | Accordion         | `src/design-system/components/Accordion/`            |                                                            |
-| 25  | Tag                | `src/components/Tag/`                | Tag               | `src/design-system/components/Tag/`                  |                                                            |
-| 26  | Textarea           | `src/components/Textarea/`           | Textarea          | `src/design-system/components/Input/Textarea.tsx`    | TDS는 Input 폴더 내                                        |
-| 27  | Tabs               | `src/components/Tabs/`               | Tabs              | `src/design-system/components/Tabs/`                 |                                                            |
-| 28  | Popover            | —                                    | Popover           | `src/design-system/components/Popover/`              | shared에 별도 Popover 없음, Tooltip에 통합 가능            |
-| 29  | RadioButton        | `src/components/RadioButton/`        | Radio             | `src/design-system/components/Radio/`                | 이름 차이                                                  |
-| 30  | RadioGroup         | `src/components/RadioGroup/`         | RadioGroup        | `src/design-system/components/Radio/RadioGroup.tsx`  | TDS는 Radio 폴더 내                                        |
-| 31  | Dropdown           | `src/components/Dropdown/`           | Select + Dropdown | `src/design-system/components/Select/` + `Dropdown/` | TDS Select가 주 대응                                       |
-| 32  | Sidebar            | `src/components/Sidebar/`            | SNBMenuItem       | `src/design-system/components/SNBMenuItem/`          | partial, 사이드바 메뉴 아이템                              |
-| 33  | LoadingSpinner     | `src/components/LoadingSpinner/`     | Loading           | `src/design-system/components/Loading/`              | 이름 차이                                                  |
-| 34  | Range              | `src/components/Range/`              | Slider            | `src/design-system/components/Slider/`               | 이름 차이                                                  |
-| 35  | Fieldset           | `src/components/Fieldset/`           | SectionCard       | `src/design-system/components/SectionCard/`          | 역할 유사                                                  |
-| 36  | FrameControls      | `src/components/FrameControls/`      | WindowControl     | `src/design-system/components/WindowControl/`        | 이름 차이                                                  |
-| 37  | NavigationControls | `src/components/NavigationControls/` | TopBar            | `src/design-system/components/TopBar/`               | 네비게이션 부분                                            |
-| 38  | ToolBar            | `src/components/ToolBar/`            | TopBar            | `src/design-system/components/TopBar/`               | TDS TopBar가 대응                                          |
+> 싱크 상태: `머지` = 컴포넌트 레벨 PR 머지됨 | `PR #N` = 배치 PR 오픈 | `—` = 미진행
+
+| #   | thaki-shared       | TDS               | 비고                                                       | 싱크                |
+| --- | ------------------ | ----------------- | ---------------------------------------------------------- | ------------------- |
+| 1   | Badge              | Badge             |                                                            | 머지 #54/#56        |
+| 2   | Breadcrumb         | Breadcrumb        |                                                            | PR #126             |
+| 3   | Button             | Button            |                                                            | 머지 #105 + PR #131 |
+| 4   | Checkbox           | Checkbox          |                                                            | PR #124             |
+| 5   | ContextMenu        | ContextMenu       |                                                            | 머지 #133           |
+| 6   | CopyButton         | CopyButton        |                                                            | 머지 #54/#57        |
+| 7   | DatePicker         | DatePicker        |                                                            | PR #131             |
+| 8   | Disclosure         | Disclosure        |                                                            | PR #124             |
+| 9   | FloatingCard       | FloatingCard      |                                                            | —                   |
+| 10  | FormField          | FormField         |                                                            | 머지 #99            |
+| 11  | InlineMessage      | InlineMessage     |                                                            | 머지 #104           |
+| 12  | Input              | Input             | TDS는 Input 폴더에 Textarea, NumberInput, SearchInput 포함 | 머지 #99 + PR #127  |
+| 13  | MonitoringToolbar  | MonitoringToolbar |                                                            | —                   |
+| 14  | Pagination         | Pagination        |                                                            | PR #131             |
+| 15  | Password           | Password          |                                                            | PR #125             |
+| 16  | ProgressBar        | ProgressBar       |                                                            | 머지 #119           |
+| 17  | Skeleton           | Skeleton          |                                                            | —                   |
+| 18  | StatusIndicator    | StatusIndicator   |                                                            | PR #130             |
+| 19  | TabBar             | TabBar            |                                                            | PR #125             |
+| 20  | Table              | Table             |                                                            | —                   |
+| 21  | Toast              | Toast             |                                                            | —                   |
+| 22  | Toggle             | Toggle            |                                                            | 머지 #99            |
+| 23  | Tooltip            | Tooltip           |                                                            | PR #130             |
+| 24  | Accordion          | Accordion         |                                                            | 머지 #52/#120       |
+| 25  | Tag                | Tag               |                                                            | —                   |
+| 26  | Textarea           | Textarea          | TDS는 Input 폴더 내                                        | PR #130             |
+| 27  | Tabs               | Tabs              |                                                            | PR #125             |
+| 28  | Popover            | Popover           | shared에 별도 Popover 없음, Tooltip에 통합 가능            | —                   |
+| 29  | RadioButton        | Radio             | 이름 차이                                                  | —                   |
+| 30  | RadioGroup         | RadioGroup        | TDS는 Radio 폴더 내                                        | —                   |
+| 31  | Dropdown           | Select + Dropdown | TDS Select가 주 대응                                       | PR #129             |
+| 32  | Sidebar            | SNBMenuItem       | partial, 사이드바 메뉴 아이템                              | PR #127             |
+| 33  | LoadingSpinner     | Loading           | 이름 차이                                                  | —                   |
+| 34  | Range              | Slider            | 이름 차이                                                  | —                   |
+| 35  | Fieldset           | SectionCard       | 역할 유사                                                  | —                   |
+| 36  | FrameControls      | WindowControl     | 이름 차이                                                  | PR #126             |
+| 37  | NavigationControls | TopBar            | 네비게이션 부분                                            | PR #126             |
+| 38  | ToolBar            | TopBar            | TDS TopBar가 대응                                          | PR #126             |
 
 ## 부분 대응 (16개)
 
-| #   | thaki-shared                 | TDS 대응                | 비고                               |
-| --- | ---------------------------- | ----------------------- | ---------------------------------- |
-| 1   | ActionModal                  | Modal + ConfirmModal    | shared는 단일 컴포넌트, TDS는 분리 |
-| 2   | DeleteResourceModal          | ConfirmModal            | TDS ConfirmModal의 danger variant  |
-| 3   | ResourceActionModal          | ConfirmModal            | TDS ConfirmModal의 variant         |
-| 4   | AppLayout                    | PageShell               | 전체 레이아웃 구조 차이            |
-| 5   | CreateLayout                 | Wizard (SectionCard)    | TDS는 SectionCard + Wizard 패턴    |
-| 6   | DetailCard                   | SectionCard.DataRow     | TDS는 SectionCard 내 DataRow       |
-| 7   | DetailPageHeader             | DetailHeader            | 구조 차이 (compound vs flat)       |
-| 8   | EmptyUI                      | EmptyState              | 이름+API 차이                      |
-| 9   | Error (403/404/500)          | ErrorState              | TDS는 범용 ErrorState              |
-| 10  | FilterSearch                 | FilterSearchInput       | TDS Input 폴더 내 포함             |
-| 11  | InfoContainer                | InfoBox                 | 이름+API 차이                      |
-| 12  | Layout (Stack/VStack/HStack) | VStack/HStack/Container | TDS는 개별 컴포넌트                |
-| 13  | MultiItemDisplay             | BadgeList               | 역할 동일, API 차이                |
-| 14  | TabContainer                 | Tabs (TabPanel)         | TDS Tabs의 일부                    |
-| 15  | TabSelector                  | Tabs (variant)          | TDS Tabs의 boxed variant           |
-| 16  | Title                        | PageHeader              | 역할 유사                          |
+> **결정**: 전부 `keep-sync` — shared 컴포넌트 유지, 구조/API 차이 허용, TDS 디자인 토큰(색상, 간격, radius, 타이포그래피)만 싱크
+
+| #   | thaki-shared                 | TDS 대응                | 비고                               | 결정       | 싱크                     |
+| --- | ---------------------------- | ----------------------- | ---------------------------------- | ---------- | ------------------------ |
+| 1   | ActionModal                  | Modal + ConfirmModal    | shared는 단일 컴포넌트, TDS는 분리 | keep-as-is | —                        |
+| 2   | DeleteResourceModal          | ConfirmModal            | TDS ConfirmModal의 danger variant  | keep-sync  | —                        |
+| 3   | ResourceActionModal          | ConfirmModal            | TDS ConfirmModal의 variant         | keep-sync  | —                        |
+| 4   | AppLayout                    | PageShell               | 전체 레이아웃 구조 차이            | keep-sync  | PR #127                  |
+| 5   | CreateLayout                 | Wizard (SectionCard)    | TDS는 SectionCard + Wizard 패턴    | keep-sync  | —                        |
+| 6   | DetailCard                   | SectionCard.DataRow     | TDS는 SectionCard 내 DataRow       | keep-sync  | PR #128                  |
+| 7   | DetailPageHeader             | DetailHeader            | 구조 차이 (compound vs flat)       | keep-sync  | PR #128                  |
+| 8   | EmptyUI                      | EmptyState              | 이름+API 차이                      | keep-sync  | —                        |
+| 9   | Error (403/404/500)          | ErrorState              | TDS는 범용 ErrorState              | keep-sync  | —                        |
+| 10  | FilterSearch                 | FilterSearchInput       | TDS Input 폴더 내 포함             | keep-sync  | 머지 #121/#123 + PR #128 |
+| 11  | InfoContainer                | InfoBox                 | 이름+API 차이                      | keep-sync  | —                        |
+| 12  | Layout (Stack/VStack/HStack) | VStack/HStack/Container | TDS는 개별 컴포넌트                | keep-sync  | —                        |
+| 13  | MultiItemDisplay             | BadgeList               | 역할 동일, API 차이                | keep-sync  | —                        |
+| 14  | TabContainer                 | Tabs (TabPanel)         | TDS Tabs의 일부                    | keep-sync  | —                        |
+| 15  | TabSelector                  | Tabs (variant)          | TDS Tabs의 boxed variant           | keep-sync  | —                        |
+| 16  | Title                        | PageHeader              | 역할 유사                          | keep-sync  | —                        |
 
 ## 미대응 — thaki-shared 고유 (12개)
 
-| #   | thaki-shared          | 비고                                              |
-| --- | --------------------- | ------------------------------------------------- |
-| 1   | AppIcon               | 앱별 아이콘 (Compute, IAM 등), 디자인 토큰 정렬만 |
-| 2   | CardList              | 카드 리스트 뷰, TDS에 대응 없음                   |
-| 3   | ChartToggle           | 차트 토글, 모니터링 전용                          |
-| 4   | ChartTooltip          | 차트 툴팁, 모니터링 전용                          |
-| 5   | Dim                   | 오버레이 딤, TDS Modal/Drawer 내장                |
-| 6   | Editor (PromptEditor) | 프롬프트 에디터, AI 전용                          |
-| 7   | ErrorBoundary         | 유틸리티 컴포넌트, 스타일 없음                    |
-| 8   | Icon                  | SVG 아이콘 시스템, TDS는 Tabler Icons 사용        |
-| 9   | LangButton            | 언어 전환 버튼                                    |
-| 10  | Portal                | 유틸리티 컴포넌트, 스타일 없음                    |
-| 11  | RefreshButton         | 새로고침 버튼                                     |
-| 12  | Terminal              | 터미널 컴포넌트, 전용                             |
+> **결정**: 전부 `skip` — 싱크 대상에서 제외, 현상 유지
+
+| #   | thaki-shared          | 비고                                              | 결정 |
+| --- | --------------------- | ------------------------------------------------- | ---- |
+| 1   | AppIcon               | 앱별 아이콘 (Compute, IAM 등), 디자인 토큰 정렬만 | skip |
+| 2   | CardList              | 카드 리스트 뷰, TDS에 대응 없음                   | skip |
+| 3   | ChartToggle           | 차트 토글, 모니터링 전용                          | skip |
+| 4   | ChartTooltip          | 차트 툴팁, 모니터링 전용                          | skip |
+| 5   | Dim                   | 오버레이 딤, TDS Modal/Drawer 내장                | skip |
+| 6   | Editor (PromptEditor) | 프롬프트 에디터, AI 전용                          | skip |
+| 7   | ErrorBoundary         | 유틸리티 컴포넌트, 스타일 없음                    | skip |
+| 8   | Icon                  | SVG 아이콘 시스템, TDS는 Tabler Icons 사용        | skip |
+| 9   | LangButton            | 언어 전환 버튼                                    | skip |
+| 10  | Portal                | 유틸리티 컴포넌트, 스타일 없음                    | skip |
+| 11  | RefreshButton         | 새로고침 버튼                                     | skip |
+| 12  | Terminal              | 터미널 컴포넌트, 전용                             | skip |
 
 ## 미대응 — TDS 고유 (shared에 없음)
 
-| #   | TDS                         | 비고                                      |
-| --- | --------------------------- | ----------------------------------------- |
-| 1   | Chip                        | shared Tag로 대응 가능                    |
-| 2   | Drawer                      | shared TableSettingDrawer가 유일한 Drawer |
-| 3   | InfoBox                     | shared InfoContainer가 부분 대응          |
-| 4   | ListToolbar                 | shared에 대응 없음                        |
-| 5   | Menu (MenuItem/MenuSection) | shared ContextMenu 내 포함                |
-| 6   | MetricCard                  | shared에 대응 없음                        |
-| 7   | NotificationCenter          | shared에 대응 없음                        |
-| 8   | PageHeader                  | shared Title이 부분 대응                  |
-| 9   | SectionCard                 | shared Fieldset + DetailCard가 부분 대응  |
-| 10  | SelectionIndicator          | shared에 대응 없음                        |
-| 11  | Wizard                      | shared CreateLayout이 부분 대응           |
+| #   | TDS                         | 비고                                      | 결정              |
+| --- | --------------------------- | ----------------------------------------- | ----------------- |
+| 1   | Chip                        | shared Tag로 대응 가능                    | **보류** (재검토) |
+| 2   | Drawer                      | shared Overlay.Template drawer-horizontal | skip              |
+| 3   | InfoBox                     | shared InfoContainer가 부분 대응          | skip              |
+| 4   | ListToolbar                 | shared에 대응 없음                        | skip              |
+| 5   | Menu (MenuItem/MenuSection) | shared ContextMenu 내 포함                | skip              |
+| 6   | MetricCard                  | shared에 대응 없음                        | **TDS 구현**      |
+| 7   | NotificationCenter          | shared에 대응 없음                        | **shared 신규**   |
+| 8   | PageHeader                  | shared Title이 부분 대응                  | skip              |
+| 9   | SectionCard                 | shared Fieldset + DetailCard가 부분 대응  | skip              |
+| 10  | SelectionIndicator          | shared에 대응 없음                        | skip              |
+| 11  | Wizard                      | shared CreateLayout이 부분 대응           | skip              |
 
-## 디자인 싱크 우선순위
+## 싱크 진행 현황
 
-### Phase 1: 핵심 폼 컨트롤 (10개)
-
-Button, Input, Textarea, Checkbox, RadioButton, RadioGroup, Toggle, Dropdown (→Select), Range (→Slider), DatePicker
-
-### Phase 2: 데이터 표시 (10개)
-
-Badge, Table, Pagination, StatusIndicator, Tag, ProgressBar, Skeleton, Toast, InlineMessage, Tooltip
-
-### Phase 3: 레이아웃/네비게이션 (10개)
-
-TabBar, Tabs, TabContainer, TabSelector, Breadcrumb, Sidebar, NavigationControls, ToolBar, Accordion, Disclosure
-
-### Phase 4: 오버레이/모달 (8개)
-
-ActionModal, DeleteResourceModal, ResourceActionModal, Overlay (→Dim), FloatingCard, ContextMenu, CopyButton, Password
-
-### Phase 5: 복합/페이지 (나머지)
-
-AppLayout, CreateLayout, DetailCard, DetailPageHeader, EmptyUI, Error, Fieldset, FilterSearch, FormField, InfoContainer, Layout, LoadingSpinner, MultiItemDisplay, Title, Typography, MonitoringToolbar, FrameControls
+- **1:1 대응**: 머지 9개 + PR 오픈 13개 = 22/38 진행, 16개 미진행
+- **부분 대응**: 머지 1개 + PR 오픈 3개 = 4/16 진행, 12개 미진행
+- **배치 PR**: thaki-shared repo #124~#131 (전부 OPEN, 미머지)
+- **머지된 컴포넌트 PR**: #52/#99/#104/#105/#119/#120/#121/#123/#133
