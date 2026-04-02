@@ -68,7 +68,7 @@ export const WithFooter: Story = {
   },
 };
 
-export const WithFooter: Story = {
+export const WithFooterDisabledAction: Story = {
   args: {
     summaryTitle: 'Create user',
     sections: [

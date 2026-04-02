@@ -177,11 +177,14 @@ TDS와 thaki-shared의 아이콘 구현 방식이 다를 수 있으므로 반드
 
 ## Token Mapping (참조)
 
-| TDS Token              | Resolved | thaki-shared Token                  | Match |
-| ---------------------- | -------- | ----------------------------------- | ----- |
-| --button-height-sm     | 28px     | --semantic-control-height-sm        | exact |
-| --color-action-primary | #2563eb  | --component-button-solid-primary-bg | exact |
+| TDS Token              | TDS Resolved | thaki-shared Token                  | shared Resolved | Match   |
+| ---------------------- | ------------ | ----------------------------------- | --------------- | ------- |
+| --button-height-sm     | 28px         | --semantic-control-height-sm        | 28px            | exact   |
+| --color-action-primary | #2563eb      | --component-button-solid-primary-bg | #2563eb         | exact   |
+| --color-text-muted     | #475569      | --semantic-color-textMuted          | #737373         | ❌ DIFF |
 ```
+
+> ⚠️ **Token value 검증 필수**: `token-map.md`의 "exact" 매핑은 **이름 매핑**만 의미합니다. 실제 **resolve된 CSS 값(hex)**이 일치하는지 반드시 확인하세요. 이름은 매핑되어 있어도 참조하는 primitive가 달라 다른 색상으로 렌더링될 수 있습니다.
 
 ## 필수 체크리스트 (Extract 완료 전 검증)
 
@@ -206,6 +209,28 @@ TDS에만 있는 variant/theme/size가 **기본 상태나 주요 사용 시나�
 
 - `primitive-blue-50` 등 **primitive 토큰을 직접 참조** → 컴포넌트 레벨에서 shade 변경 가능 (Apply 대상)
 - `--semantic-color-success` 등 **semantic 토큰 참조** → 토큰 레이어에서 해결 (미적용)
+
+### C-1. 시맨틱 토큰의 실제 값(hex) 비교 (**Critical**)
+
+`token-map.md`에서 "exact"로 표기된 시맨틱 토큰이라도, **참조하는 primitive가 다를 수 있습니다**. 반드시 실제 CSS 출력값을 비교하세요.
+
+**비교 방법**:
+
+1. TDS 값: `src/index.css` 또는 `src/styles/tokens/compatibility.css`에서 최종 hex 값 확인
+2. thaki-shared 값: `src/styles/tokens/tokens-light.css`에서 같은 이름의 토큰 값 확인
+3. 값이 다르면: `tokens/light.json`에서 참조하는 `{primitive.color.*}` 경로를 확인하고, 스펙의 Token Mapping 테이블에 `❌ DIFF`로 기록
+
+**특히 주의할 시맨틱 토큰**:
+
+- `textMuted`, `textSubtle`, `textLight` — gray 계열 palette 불일치가 빈번
+- `border`, `borderStrong` — blueGray vs trueGray 차이
+- `surfaceSubtle`, `surfaceMuted` — 배경색 미세 차이
+
+```
+예: thaki-shared textMuted → {primitive.color.trueGray500} (#737373)
+    TDS --color-text-muted → blueGray600 (#475569)
+    → token-map에선 "exact"이지만 실제로는 완전히 다른 색상
+```
 
 ### D. 사용처 기반 deprecated 후보 식별
 

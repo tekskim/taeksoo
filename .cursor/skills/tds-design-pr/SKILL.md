@@ -43,7 +43,7 @@ main ──●──●──●──●──●──●───────
 1. **커밋 목록 확인**:
 
    ```bash
-   cd /Users/pobae/thaki-shared && git log main..design-sync --oneline
+   cd /path/to/thaki-shared && git log main..design-sync --oneline
    ```
 
    → 포함된 컴포넌트 목록 자동 추출 (커밋 메시지에서 컴포넌트명 파싱)
@@ -53,8 +53,8 @@ main ──●──●──●──●──●──●───────
 3. **전체 diff 수집**:
 
    ```bash
-   cd /Users/pobae/thaki-shared && git diff main..design-sync --stat
-   cd /Users/pobae/thaki-shared && git diff main..design-sync
+   cd /path/to/thaki-shared && git diff main..design-sync --stat
+   cd /path/to/thaki-shared && git diff main..design-sync
    ```
 
 4. **Evaluate 리포트 참조**: 이전 대화에서 출력된 Evaluate Report의 판정 결과, 시각적 비교 결과, Safety 검증 결과
@@ -64,9 +64,9 @@ main ──●──●──●──●──●──●───────
 PR 생성 직전 빌드 무결성을 한번 더 검증합니다:
 
 ```bash
-cd /Users/pobae/thaki-shared && git checkout design-sync
-cd /Users/pobae/thaki-shared && npx tsc --noEmit
-cd /Users/pobae/thaki-shared && pnpm build
+cd /path/to/thaki-shared && git checkout design-sync
+cd /path/to/thaki-shared && npx tsc --noEmit
+cd /path/to/thaki-shared && pnpm build
 ```
 
 - 둘 다 성공해야 다음 단계 진행
@@ -75,7 +75,7 @@ cd /Users/pobae/thaki-shared && pnpm build
 ### Step 3: 브랜치 확인/생성
 
 ```bash
-cd /Users/pobae/thaki-shared
+cd /path/to/thaki-shared
 
 # design-sync 브랜치가 이미 있으면 checkout
 git checkout design-sync 2>/dev/null || git checkout -b design-sync
@@ -90,7 +90,7 @@ git checkout design-sync 2>/dev/null || git checkout -b design-sync
 **항상 컴포넌트별 개별 커밋**으로 기록합니다.
 
 ```bash
-cd /Users/pobae/thaki-shared && git add src/components/{Name}/ && git commit -m "$(cat <<'EOF'
+cd /path/to/thaki-shared && git add src/components/{Name}/ && git commit -m "$(cat <<'EOF'
 style({Component}): sync design with TDS
 
 EOF
@@ -222,12 +222,29 @@ PR 본문 전체를 사용자에게 보여주고 승인을 기다립니다:
 ### Step 7: PR 생성
 
 ```bash
-cd /Users/pobae/thaki-shared && git push -u origin design-sync
-cd /Users/pobae/thaki-shared && gh pr create --title "{title}" --body "$(cat <<'EOF'
+cd /path/to/thaki-shared && git push -u origin design-sync
+cd /path/to/thaki-shared && gh pr create --title "{title}" --body "$(cat <<'EOF'
 {PR 본문}
 EOF
 )"
 ```
+
+**기존 PR이 있는 경우 (동일 `design-sync` 브랜치)**:
+
+```bash
+# push만 실행 (PR은 이미 존재)
+cd /path/to/thaki-shared && git push -u origin design-sync --force-with-lease
+
+# PR 타이틀/본문 업데이트 — gh api 사용 (gh pr edit는 GraphQL 경고로 실패할 수 있음)
+cd /path/to/thaki-shared && gh api repos/{owner}/{repo}/pulls/{pr_number} -X PATCH \
+  -f title="{new title}" \
+  -f body="$(cat <<'EOF'
+{updated PR body}
+EOF
+)"
+```
+
+> ⚠️ `gh pr edit`는 "Projects (classic) is being deprecated" GraphQL 경고로 실패할 수 있습니다. `gh api` REST 호출을 사용하세요.
 
 **PR 타이틀 규칙**:
 
@@ -264,15 +281,17 @@ notion-search:
 
 #### 속성 업데이트
 
-`notion-update-page`로 `프론트엔드_Status`를 업데이트합니다:
+`notion-update-page`로 `디자인_Status`를 업데이트합니다:
 
 ```
 notion-update-page:
   page_id: "{찾은 page_id}"
   command: "update_properties"
   properties:
-    프론트엔드_Status: "In Progress"
+    디자인_Status: "In Progress"
 ```
+
+> ⚠️ **주의**: `프론트엔드_Status`가 아닌 `디자인_Status`를 사용합니다. 디자인 싱크는 디자인 작업이므로 디자인 상태를 업데이트합니다.
 
 #### 내용 업데이트
 
@@ -300,8 +319,8 @@ notion-update-page:
 PR이 머지되면:
 
 ```bash
-cd /Users/pobae/thaki-shared && git checkout main && git pull
-cd /Users/pobae/thaki-shared && git branch -d design-sync
+cd /path/to/thaki-shared && git checkout main && git pull
+cd /path/to/thaki-shared && git branch -d design-sync
 ```
 
 다음 싱크 시 Step 3에서 `design-sync` 브랜치가 새로 생성됩니다 (main 최신 기준).
@@ -326,6 +345,10 @@ PR 본문을 반드시 사용자에게 보여주고 승인을 받습니다. 자�
 ### Guard 4: main 직접 푸시 금지
 
 반드시 `design-sync` 브랜치에서 PR을 통해 머지합니다. main에 직접 커밋/푸시하지 않습니다.
+
+### Guard 5: 사용자 명시적 push 승인 필수
+
+`git push` 및 `gh pr create/edit` 실행 전에 반드시 사용자에게 "push 해도 될까요?" 또는 "PR 생성/업데이트 해도 될까요?"를 확인합니다. 사용자가 "don't push unless I tell you"라고 한 경우 로컬 커밋까지만 진행하고 push는 대기합니다.
 
 ## 본문 작성 규칙
 

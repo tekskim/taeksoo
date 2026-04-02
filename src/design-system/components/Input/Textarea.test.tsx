@@ -121,9 +121,9 @@ describe('Textarea', () => {
       expect(screen.getByRole('textbox')).toHaveClass('custom-class');
     });
 
-    it('has resizable style by default', () => {
+    it('has resize-none style by default', () => {
       render(<Textarea />);
-      expect(screen.getByRole('textbox')).toHaveClass('resize-y');
+      expect(screen.getByRole('textbox')).toHaveClass('resize-none');
     });
 
     it('disables resize when disabled', () => {

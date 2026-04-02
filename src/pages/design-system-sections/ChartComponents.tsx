@@ -380,11 +380,25 @@ export function LineChart({
 
   // Calculate y-axis bounds for exactly 5 labels using nice-number algorithm
   const visibleData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
-  const dataMax = visibleData.length > 0 ? Math.max(...visibleData) : 100;
+  const hasData = visibleData.length > 0;
+  const dataMax = hasData ? Math.max(...visibleData) : 100;
   const { max: niceMax, interval: yInterval } = getNiceScale(dataMax);
 
   const option = {
     animation: false,
+    graphic: !hasData
+      ? {
+          type: 'text' as const,
+          left: 'center',
+          top: 'middle',
+          style: {
+            text: 'No data available',
+            fontSize: 12,
+            fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+            fill: chartColors.slate400,
+          },
+        }
+      : undefined,
     grid: {
       left: '0',
       right: '16px',

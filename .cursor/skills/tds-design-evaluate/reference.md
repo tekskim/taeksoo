@@ -34,7 +34,7 @@ http://localhost:6006/iframe.html?id=components-button--default
 ### 변경 파일 범위 확인
 
 ```bash
-cd /Users/pobae/thaki-shared
+cd /path/to/thaki-shared
 git diff --name-only
 ```
 
@@ -59,7 +59,7 @@ src/components/{Name}/index.ts          ❌ (export 구조)
 
 ```bash
 # light.json의 키 변경 감지
-cd /Users/pobae/thaki-shared
+cd /path/to/thaki-shared
 git diff tokens/light.json | grep '^[-+]' | grep -v '[-+][-+][-+]' | grep '"[^"]*":'
 ```
 

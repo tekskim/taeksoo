@@ -1,174 +1,228 @@
 # Button Design Spec
 
-> Extracted from TDS `src/design-system/components/Button/Button.tsx`
-> thaki-shared target: `src/components/Button/`
-> Mapping: 1:1 대응
-
-## 구조 차이
-
-| 항목          | TDS                                                                      | thaki-shared                                                                                                    |
-| ------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| variant 체계  | flat: `primary, secondary, outline, ghost, muted, danger, warning, link` | compound: `appearance(solid,outline,ghost)` x `variant(primary,secondary,tertiary,success,error,warning,muted)` |
-| disabled 처리 | 개별 색상 지정                                                           | `opacity-50`                                                                                                    |
-| focus ring    | `focus-visible:ring-1 ring-[--color-border-focus] ring-offset-1`         | 없음                                                                                                            |
-| border-radius | base: `rounded-[var(--button-radius)]` (6px)                             | per-size: `rounded-md` (sm/md/lg), `rounded-full` (xs)                                                          |
-| border 기본   | variant별 (`border border-[--color-border-strong]`)                      | `border-none` (base), appearance=outline시 `border border-solid`                                                |
+> Extracted from TDS `src/design-system/components/Button/Button.tsx`  
+> thaki-shared target: `src/components/Button/` (매핑: **1:1**, `component-map.md`)
 
 ## Base Styles
 
-| Property      | TDS Value                               | TDS Token                      | thaki-shared Current    |
-| ------------- | --------------------------------------- | ------------------------------ | ----------------------- |
-| display       | inline-flex items-center justify-center | —                              | 동일                    |
-| font-weight   | 500 (medium)                            | font-medium                    | 동일 (font-medium)      |
-| transition    | colors 150ms                            | --duration-fast                | duration-normal (200ms) |
-| cursor        | pointer / not-allowed(disabled)         | —                              | 동일                    |
-| border-radius | 6px (모든 size 공통)                    | --button-radius → --radius-md  | per-size rounded-md     |
-| focus-visible | ring-1 ring-blue500 ring-offset-1       | --color-border-focus (#3b82f6) | 없음                    |
-| disabled      | 개별 color 지정                         | —                              | opacity-50              |
+| Property      | Value                 | TDS Token / Class                                                    |
+| ------------- | --------------------- | -------------------------------------------------------------------- |
+| border-radius | 6px                   | `rounded-[var(--button-radius)]` → `--radius-button` → `--radius-md` |
+| transition    | color 150ms           | `transition-colors duration-[var(--duration-fast)]`                  |
+| font-weight   | 500                   | `font-medium`                                                        |
+| focus-visible | ring 1px, offset 1px  | `ring-[var(--color-border-focus)]` → `#3b82f6`                       |
+| cursor        | pointer / not-allowed | `cursor-pointer`, `disabled:cursor-not-allowed`                      |
+| layout        | inline-flex, centered | `inline-flex items-center justify-center`                            |
 
-## Variants — Solid (appearance="solid")
+**thaki-shared Base (대비)**
 
-### primary (TDS variant="primary")
+| Property      | thaki-shared                                                             |
+| ------------- | ------------------------------------------------------------------------ |
+| border-radius | `rounded-md` → `--semantic-radius-md` → `0.375rem` (**6px** @ 16px root) |
+| transition    | `transition-colors duration-normal ease-in-out` → **200ms**              |
+| focus-visible | `ring-1 ring-blue-500 ring-offset-1` (Tailwind `blue-500` ≈ `#3b82f6`)   |
+| outline       | `outline-none` (TDS도 `focus-visible:outline-none`)                      |
 
-| State    | Property   | TDS Value | TDS Token                     |
-| -------- | ---------- | --------- | ----------------------------- |
-| default  | background | #2563eb   | --color-action-primary        |
-| default  | text       | #ffffff   | --color-text-on-primary       |
-| hover    | background | #1d4ed8   | --color-action-primary-hover  |
-| active   | background | #1e40af   | --color-action-primary-active |
-| disabled | background | #e2e8f0   | --color-border-default        |
-| disabled | text       | #64748b   | --color-text-subtle           |
+## Variants
 
-### secondary (TDS variant="secondary")
+### variant="primary"
 
-| State    | Property   | TDS Value         | TDS Token                                       |
-| -------- | ---------- | ----------------- | ----------------------------------------------- |
-| default  | background | #ffffff           | --color-surface-default                         |
-| default  | text       | #0f172a           | --color-text-default                            |
-| default  | border     | 1px solid #cbd5e1 | --color-border-strong                           |
-| hover    | background | #f1f5f9           | --button-secondary-hover-bg → --color-slate-100 |
-| active   | background | #ffffff           | --color-surface-default                         |
-| disabled | background | #f8fafc           | --color-surface-subtle                          |
-| disabled | text       | #94a3b8           | --color-text-disabled                           |
-| disabled | border     | #e2e8f0           | --color-border-default                          |
+| State    | Background                           | Text                              | Border |
+| -------- | ------------------------------------ | --------------------------------- | ------ |
+| default  | `#2563eb`                            | `#ffffff`                         | —      |
+| hover    | `#1d4ed8`                            | `#ffffff`                         | —      |
+| active   | `#1e40af`                            | `#ffffff`                         | —      |
+| disabled | `#e2e8f0` (`--color-border-default`) | `#64748b` (`--color-text-subtle`) | —      |
 
-### danger (TDS variant="danger")
+**thaki-shared primary**: `bg` / `hover` / text는 `--component-button-solid-primary-*`로 TDS와 **동일 hex**. 비활성은 **전역 `state: disabled` → `opacity-60`**로 처리되어, TDS와 **시각적으로 불일치**(회색 솔리드 vs 투명도).
 
-| State    | Property   | TDS Value   | TDS Token                   |
-| -------- | ---------- | ----------- | --------------------------- |
-| default  | background | #ef4444     | --color-state-danger        |
-| default  | text       | #ffffff     | --color-text-on-primary     |
-| hover    | background | #dc2626     | --color-state-danger-hover  |
-| active   | background | #b91c1c     | --color-state-danger-active |
-| disabled | —          | opacity 50% | —                           |
+### variant="secondary"
 
-### warning (TDS variant="warning")
+| State    | Background | Text      | Border        |
+| -------- | ---------- | --------- | ------------- |
+| default  | `#ffffff`  | `#0f172a` | 1px `#cbd5e1` |
+| hover    | `#f1f5f9`  | `#0f172a` | `#cbd5e1`     |
+| active   | `#ffffff`  | `#0f172a` | (동일)        |
+| disabled | `#f8fafc`  | `#94a3b8` | `#e2e8f0`     |
 
-| State    | Property   | TDS Value   | TDS Token               |
-| -------- | ---------- | ----------- | ----------------------- |
-| default  | background | #f97316     | --color-state-warning   |
-| default  | text       | #ffffff     | --color-text-on-primary |
-| hover    | background | #ea580c     | --color-orange-600      |
-| active   | background | #c2410c     | --color-orange-700      |
-| disabled | —          | opacity 50% | —                       |
+**thaki-shared secondary**: `bg-surface`, `border-slate-300`, `text` slate900, hover `bg-slate-100` — 팔레트는 동일 계열. 비활성은 **opacity-60** (TDS는 배경/텍스트/보더 개별 토큰).
 
-### ghost (TDS variant="ghost")
+### variant="outline"
 
-| State    | Property   | TDS Value   | TDS Token                                   |
-| -------- | ---------- | ----------- | ------------------------------------------- |
-| default  | background | transparent | —                                           |
-| default  | text       | #475569     | --color-text-muted                          |
-| hover    | background | #f1f5f9     | --button-ghost-hover-bg → --color-slate-100 |
-| active   | background | #e2e8f0     | --color-border-default                      |
-| disabled | text       | #94a3b8     | --color-text-disabled                       |
+| State    | Background  | Text      | Border        |
+| -------- | ----------- | --------- | ------------- |
+| default  | transparent | `#0f172a` | 1px `#cbd5e1` |
+| hover    | `#f1f5f9`   | `#0f172a` | `#cbd5e1`     |
+| active   | `#ffffff`   | `#0f172a` | —             |
+| disabled | —           | `#94a3b8` | `#e2e8f0`     |
 
-### muted (TDS variant="muted")
+**thaki-shared outline**: hover `bg-slate-100`, 비활성 **opacity-60**.
 
-| State    | Property   | TDS Value         | TDS Token               |
-| -------- | ---------- | ----------------- | ----------------------- |
-| default  | background | #ffffff           | --color-surface-default |
-| default  | text       | #475569           | --color-text-muted      |
-| default  | border     | 1px solid #cbd5e1 | --color-border-strong   |
-| hover    | background | #f8fafc           | --color-surface-subtle  |
-| hover    | text       | #0f172a           | --color-text-default    |
-| hover    | border     | #cbd5e1           | --color-border-strong   |
-| active   | background | #ffffff           | --color-surface-default |
-| disabled | text       | #94a3b8           | --color-text-disabled   |
-| disabled | border     | #e2e8f0           | --color-border-default  |
+### variant="ghost"
 
-### outline (TDS variant="outline")
+| State    | Background  | Text      | Border |
+| -------- | ----------- | --------- | ------ |
+| default  | transparent | `#475569` | —      |
+| hover    | `#f1f5f9`   | `#475569` | —      |
+| active   | `#e2e8f0`   | `#475569` | —      |
+| disabled | —           | `#94a3b8` | —      |
 
-| State    | Property   | TDS Value         | TDS Token                   |
-| -------- | ---------- | ----------------- | --------------------------- |
-| default  | background | transparent       | —                           |
-| default  | text       | #0f172a           | --color-text-default        |
-| default  | border     | 1px solid #cbd5e1 | --color-border-strong       |
-| hover    | background | #f1f5f9           | --button-secondary-hover-bg |
-| active   | background | #ffffff           | --color-surface-default     |
-| disabled | text       | #94a3b8           | --color-text-disabled       |
-| disabled | border     | #e2e8f0           | --color-border-default      |
+**thaki-shared ghost**: hover `bg-slate-100`, **active 배경 없음**(TDS는 `active:bg` border-default).
 
-### link (TDS variant="link") — thaki-shared에 대응 없음
+### variant="muted"
 
-| State    | Property        | TDS Value                               |
-| -------- | --------------- | --------------------------------------- |
-| default  | background      | transparent                             |
-| default  | text            | #2563eb (--color-action-primary)        |
-| default  | padding         | 0, height auto, radius none             |
-| hover    | text-decoration | underline, offset 4                     |
-| active   | text            | #1e40af (--color-action-primary-active) |
-| disabled | text            | #94a3b8, no-underline                   |
+| State    | Background | Text      | Border        |
+| -------- | ---------- | --------- | ------------- |
+| default  | `#ffffff`  | `#475569` | 1px `#cbd5e1` |
+| hover    | `#f8fafc`  | `#0f172a` | `#cbd5e1`     |
+| active   | `#ffffff`  | `#475569` | —             |
+| disabled | `#ffffff`  | `#94a3b8` | `#e2e8f0`     |
+
+**thaki-shared muted**: hover `bg-slate-50` + 텍스트 slate900 — TDS `surface-subtle`(`#f8fafc`)과 동일 계열.
+
+### variant="danger"
+
+| State    | Background              | Text            | Border |
+| -------- | ----------------------- | --------------- | ------ |
+| default  | `#ef4444`               | `#ffffff`       | —      |
+| hover    | `#dc2626`               | `#ffffff`       | —      |
+| active   | `#b91c1c`               | `#ffffff`       | —      |
+| disabled | `#ef4444` @ 50% opacity | `#ffffff` @ 50% | —      |
+
+**thaki-shared danger**: `bg-red-500` / hover `red-600` — **red-500/600**는 TDS `--color-state-danger` 체인과 **동일 hex**. 비활성: shared는 **opacity-60** 전역, TDS는 **opacity-50**만 danger 블록.
+
+### variant="warning"
+
+| State    | Background      | Text            | Border |
+| -------- | --------------- | --------------- | ------ |
+| default  | `#f97316`       | `#ffffff`       | —      |
+| hover    | `#ea580c`       | `#ffffff`       | —      |
+| active   | `#c2410c`       | `#ffffff`       | —      |
+| disabled | `#f97316` @ 50% | `#ffffff` @ 50% | —      |
+
+**thaki-shared**: `Button.styles.ts`의 **variant 목록에 `warning` 없음** (`Button.types`에도 없음). → **TDS 전용 variant**.
+
+### variant="link"
+
+| State    | 스타일                                                                   |
+| -------- | ------------------------------------------------------------------------ |
+| default  | 투명 배경, `text` primary `#2563eb`, `min-w-0`, `h-auto`, `rounded-none` |
+| hover    | underline, `underline-offset-4`                                          |
+| active   | 텍스트 `#1e40af`                                                         |
+| disabled | `#94a3b8`, 밑줄 없음                                                     |
+
+**thaki-shared link**: `underline-offset-0`, `decoration-2`, `pb-px`, primary 텍스트 `primitive blue600` — hover/오프셋이 TDS와 다름.
 
 ## Sizes
 
-| Size | Height | Padding X | Padding Y | Gap | Min Width | Font Size | Line Height |
-| ---- | ------ | --------- | --------- | --- | --------- | --------- | ----------- |
-| xs   | 24px   | 8px       | 4px       | 4px | 48px      | 11px      | 16px        |
-| sm   | 28px   | 10px      | 6px       | 6px | 60px      | 11px      | 16px        |
-| md   | 32px   | 12px      | 8px       | 6px | 80px      | 11px      | 16px        |
-| lg   | 36px   | 16px      | 10px      | 8px | 80px      | 12px      | 18px        |
+### TDS
 
-### thaki-shared 현재 Sizes 비교
+| Size | Height       | Padding X | Padding Y | Font Size             | Line Height    | Gap | Min width |
+| ---- | ------------ | --------- | --------- | --------------------- | -------------- | --- | --------- |
+| xs   | 24px (`h-6`) | 8px       | 4px       | 11px (`text-body-sm`) | 16px (body-sm) | 4px | 48px      |
+| sm   | 28px         | 10px      | 6px       | 11px                  | 16px           | 6px | 60px      |
+| md   | 32px         | 12px      | 8px       | 11px                  | 16px           | 6px | 80px      |
+| lg   | 36px         | 16px      | 10px      | 12px                  | 18px           | 8px | 80px      |
 
-| Size | shared Height       | shared Padding          | shared Font | 차이                                               |
-| ---- | ------------------- | ----------------------- | ----------- | -------------------------------------------------- |
-| xs   | 24px (w-6 h-6)      | 0 (p-0, rounded-full)   | 11px        | TDS: 직사각, shared: 원형                          |
-| sm   | 28px (h-control-sm) | pl-2(8px) pr-2.5(10px)  | 11px        | TDS: px 10px 균등, shared: 비대칭                  |
-| md   | 32px (h-control-md) | pl-3(12px) pr-3.5(14px) | 12px        | TDS: px 12px, font 11px, shared: 비대칭, font 12px |
-| lg   | 36px (h-control-lg) | pl-4(16px) pr-4(16px)   | 14px        | TDS: font 12px, shared: font 14px                  |
+아이콘-only: sm/md/lg는 각 높이와 동일한 **정사각형**, 패딩 0. xs는 `24×24`.
 
-## Icon-Only
+### thaki-shared
 
-| Size | TDS Width                      | TDS Config           |
-| ---- | ------------------------------ | -------------------- |
-| xs   | 24px (!w-6)                    | !min-w-0 !px-0 !py-0 |
-| sm   | 28px (!w-[--button-height-sm]) | !min-w-0 !px-0 !py-0 |
-| md   | 32px (!w-[--button-height-md]) | !min-w-0 !px-0 !py-0 |
-| lg   | 36px (!w-[--button-height-lg]) | !min-w-0 !px-0 !py-0 |
+| Size        | Height                  | Padding (approx)  | Font                 | Gap | Min width |
+| ----------- | ----------------------- | ----------------- | -------------------- | --- | --------- |
+| sm          | 28px (`h-control-sm`)   | pl 8px / pr 10px  | 11px, `leading-none` | 6px | **42px**  |
+| md          | 32px                    | pl 12px / pr 14px | **12px**             | 6px | 80px      |
+| lg          | 36px                    | pl 16px / pr 16px | **14px**             | 8px | 80px      |
+| half / full | (md와 동일 높이·타이포) | —                 | —                    | —   | —         |
+| icon-only   | 28px 정사각형           | 0                 | —                    | 0   | —         |
 
-thaki-shared:
+**차이 요약**: shared **sm 최소 너비 42px vs TDS 60px**; **md/lg 폰트 크기**(shared 12px/14px vs TDS 11px/12px); shared는 **`leading-none`**, TDS는 **고정 line-height 토큰**.
 
-- sm/md/lg: `w-[var(--semantic-control-height-*)] px-0` — 동일
+## States (정적)
 
-## Token Mapping (TDS → thaki-shared)
+### disabled
 
-| TDS Token                     | Resolved | thaki-shared Token                       | Match                |
-| ----------------------------- | -------- | ---------------------------------------- | -------------------- |
-| --button-height-sm            | 28px     | --semantic-control-height-sm             | exact                |
-| --button-height-md            | 32px     | --semantic-control-height-md             | exact                |
-| --button-height-lg            | 36px     | --semantic-control-height-lg             | exact                |
-| --button-radius (--radius-md) | 6px      | rounded-md (6px)                         | exact                |
-| --duration-fast               | 150ms    | duration-normal (200ms)                  | manual               |
-| --color-action-primary        | #2563eb  | --component-button-solid-primary-bg      | exact (값 확인 필요) |
-| --color-text-on-primary       | #ffffff  | --component-button-solid-primary-text    | exact                |
-| --color-action-primary-hover  | #1d4ed8  | --component-button-solid-primary-bgHover | exact (값 확인 필요) |
+|         | TDS                        | thaki-shared                        |
+| ------- | -------------------------- | ----------------------------------- |
+| primary | 배경/텍스트 토큰 교체      | `opacity-60` + `cursor-not-allowed` |
+| 기타    | variant별 배경·텍스트·보더 | 동일 `opacity-60`                   |
+| cursor  | `not-allowed`              | `not-allowed`                       |
 
-## 주요 디자인 차이 요약
+### loading
 
-1. **transition duration**: TDS 150ms vs shared 200ms → `.styles.ts`에서 `duration-normal` → `duration-150` 변경 또는 토큰값 조정
-2. **padding 비대칭**: shared sm `pl-2 pr-2.5`, md `pl-3 pr-3.5` → TDS는 좌우 대칭 `px-*`
-3. **font-size**: md에서 TDS 11px vs shared 12px, lg에서 TDS 12px vs shared 14px
-4. **focus ring**: TDS에는 있고 shared에는 없음 → base에 추가 필요
-5. **disabled 처리**: TDS는 개별 색상, shared는 opacity-50 → `.styles.ts` compoundVariant로 disabled 색상 추가 가능
-6. **xs size**: TDS는 직사각형, shared는 원형(rounded-full)
-7. **link variant**: TDS에만 존재
+|        | TDS                                                               | thaki-shared                                      |
+| ------ | ----------------------------------------------------------------- | ------------------------------------------------- |
+| 표시   | 기본 콘텐츠 대체 → **인라인 SVG** 스피너 + `sr-only` "Loading..." | `loadingElement`(기본 `LoadingSpinner size="sm"`) |
+| 스타일 | 스피너만 표시, 버튼 색은 variant 유지                             | **`opacity-60` + `cursor-wait`** (전체 버튼)      |
+| aria   | `aria-busy`                                                       | (코드상 미설정)                                   |
+
+**로딩 스피너**: TDS는 **24×24 viewBox** SVG, 크기는 `size-2.5`~`size-4`. shared는 **LoadingSpinner** — `sm` = `size-4` border 링 스피너(구현 상이).
+
+### focus-visible
+
+- TDS: `ring` semantic focus 색 (`--color-border-focus` `#3b82f6`)
+- shared: `ring-blue-500` — 실질적으로 동일 톤
+
+## Interactive States (동적)
+
+| State             | 조건        | TDS              | thaki-shared               |
+| ----------------- | ----------- | ---------------- | -------------------------- |
+| loading           | `isLoading` | 콘텐츠 → Spinner | `state: loading` + opacity |
+| copied/success 등 | —           | **없음**         | **없음**                   |
+
+## 아이콘 비교
+
+| 용도         | TDS                                                | thaki-shared                               |
+| ------------ | -------------------------------------------------- | ------------------------------------------ |
+| 좌/우 아이콘 | `leftIcon` / `rightIcon` (소비자가 Tabler 등 전달) | `frontIcon` / `rearIcon`                   |
+| 아이콘 전용  | `icon` + `aria-label` 필수                         | 단일 자식 아이콘 패턴(스토리) — API는 다름 |
+| 로딩         | 인라인 SVG (animate-spin)                          | `LoadingSpinner` (div + border 애니메이션) |
+
+## Props 기본값 비교
+
+| Prop          | TDS 기본                    | thaki-shared 기본 |
+| ------------- | --------------------------- | ----------------- |
+| variant       | `primary`                   | `primary`         |
+| size          | `md`                        | `md`              |
+| isLoading     | `false`                     | `false`           |
+| type (button) | `'button'` (button 요소 시) | `'button'`        |
+
+**API 차이 (디자인 영향)**
+
+- TDS: `as` 폴리모픽, `fullWidth`, `iconOnly`, `appearance`(호환), `leftIcon`/`rightIcon`/`icon`
+- shared: `<button>` 고정, `size`: `half` | `full` | `icon-only`, **`warning` variant 없음**, **`xs` size 없음**
+
+## Token Mapping (참조)
+
+| TDS Token                                  | TDS Resolved | thaki-shared Token                         | shared Resolved    | Match                                       |
+| ------------------------------------------ | ------------ | ------------------------------------------ | ------------------ | ------------------------------------------- |
+| `--button-height-sm`                       | 28px         | `--semantic-control-height-sm`             | 1.75rem → **28px** | exact                                       |
+| `--button-height-md`                       | 32px         | `--semantic-control-height-md`             | 2rem → **32px**    | exact                                       |
+| `--button-height-lg`                       | 36px         | `--semantic-control-height-lg`             | 2.25rem → **36px** | exact                                       |
+| `--button-radius`                          | 6px          | `rounded-md` → `--semantic-radius-md`      | 0.375rem → **6px** | exact                                       |
+| `--color-action-primary`                   | `#2563eb`    | `--component-button-solid-primary-bg`      | `#2563eb`          | exact                                       |
+| `--color-action-primary-hover`             | `#1d4ed8`    | `--component-button-solid-primary-bgHover` | `#1d4ed8`          | exact                                       |
+| `--duration-fast`                          | 150ms        | `duration-normal` 사용                     | **200ms**          | ❌ DIFF (구현)                              |
+| `--semantic-control-radius` (파일 내 별도) | —            | `--semantic-control-radius`                | `0.25rem` (4px)    | 버튼은 `rounded-md` 사용으로 **실사용 6px** |
+
+> `token-map.md`의 “exact”는 **이름 매핑**이며, **disabled/loading 표현**은 컴포넌트 구현 차이로 동일 토큰만으로는 맞지 않음.
+
+## 주요 디자인 차이
+
+| 항목                           | 변경 유형      | 요약                                                                   |
+| ------------------------------ | -------------- | ---------------------------------------------------------------------- |
+| Primary (및 공통) **disabled** | `style`        | TDS는 배경·텍스트 토큰 교체 / shared는 **전체 opacity 60%**            |
+| **Loading** 상태               | `style`        | TDS는 스피너만·색 유지 / shared는 **opacity 60% + cursor-wait**        |
+| **md/lg 타이포**               | `style`        | TDS 11px/12px + 고정 line-height / shared **12px/14px + leading-none** |
+| **sm min-width**               | `style`        | TDS 60px / shared **42px**                                             |
+| **warning** variant            | `api-required` | TDS만 존재 — shared에 **추가 또는 문서화된 미지원**                    |
+| **xs** size                    | `api-required` | TDS만 존재                                                             |
+| **half / full** size           | `api-required` | shared만 존재 (TDS는 `fullWidth` boolean)                              |
+| **Ghost active**               | `style`        | TDS `active:bg` border / shared **미정의**                             |
+| **Link** underline offset      | `style`        | TDS offset-4 / shared offset-0 + decoration-2                          |
+| **Transition** duration        | `style`        | TDS 150ms / shared 200ms                                               |
+| 폴리모픽 `as`                  | `api-required` | TDS만                                                                  |
+
+---
+
+_Generate with tds-design-extract — Button_

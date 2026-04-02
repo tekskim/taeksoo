@@ -150,11 +150,11 @@ Task 서브에이전트를 사용하여 모든 컴포넌트의 Extract를 **동�
 Task(subagent_type="generalPurpose", model="fast"):
   prompt: |
     tds-design-extract 스킬을 실행하세요.
-    - 스킬 파일: /Users/pobae/tds/tds/.cursor/skills/tds-design-extract/SKILL.md
+    - 스킬 파일: .cursor/skills/tds-design-extract/SKILL.md
     - 컴포넌트: {ComponentName}
-    - component-map: /Users/pobae/tds/tds/.cursor/skills/tds-design-sync/component-map.md
-    - token-map: /Users/pobae/tds/tds/.cursor/skills/tds-design-sync/token-map.md
-    - 출력: /Users/pobae/tds/tds/.cursor/skills/tds-design-sync/specs/{ComponentName}.md
+    - component-map: .cursor/skills/tds-design-sync/component-map.md
+    - token-map: .cursor/skills/tds-design-sync/token-map.md
+    - 출력: .cursor/skills/tds-design-sync/specs/{ComponentName}.md
 
     스킬 파일을 읽고 절차에 따라 실행하세요.
     완료 후 생성된 스펙 파일의 "주요 디자인 차이" 요약을 반환하세요.
@@ -246,8 +246,14 @@ Pre-flight(Step 3)와 사용자 확인(Step 4)은 Phase 2-A/2-B에서 이미 완
 모든 Apply 완료 후 빌드를 **1회만** 실행합니다:
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm build && npx tsc --noEmit
+cd /path/to/thaki-shared && pnpm build && npx tsc --noEmit
 ```
+
+> **토큰 변경이 있는 경우**, 빌드 전에 반드시 토큰 재생성을 실행합니다:
+>
+> ```bash
+> cd /path/to/thaki-shared && pnpm run generate:tokens && pnpm run generate:tailwind-preset && pnpm run generate:token-docs
+> ```
 
 #### 빌드 성공
 
@@ -286,7 +292,7 @@ Phase 4로 진행합니다.
 `tds-design-evaluate` 스킬의 Step 2를 **전체 diff에 대해 1회** 실행합니다:
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff --name-only
+cd /path/to/thaki-shared && git diff --name-only
 ```
 
 변경된 모든 파일을 스캔하여 금지 변경 여부를 일괄 검증합니다.

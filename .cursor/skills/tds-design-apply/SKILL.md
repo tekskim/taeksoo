@@ -29,7 +29,12 @@
 1. **`.styles.ts` 파일의 CVA classes 변경**: Tailwind 클래스, CSS 변수 참조 등
 2. **`tokens/light.json`, `tokens/dark.json`의 토큰 값(value) 변경**: 색상값, 크기값 등
 3. **props 추가**: 반드시 사용자 확인 후
-4. **`tailwind.preset.js` 재생성**: 토큰 값 변경 후 `pnpm generate:tailwind-preset`
+4. **토큰/프리셋 재생성**: 토큰 값 변경 후 반드시 아래 3개 명령 실행:
+   ```bash
+   pnpm run generate:tokens          # JSON → CSS 변환
+   pnpm run generate:tailwind-preset # Tailwind preset 재생성
+   pnpm run generate:token-docs      # 토큰 문서 재생성
+   ```
 5. **`.tsx` 파일의 조건부 스타일 클래스 변경/추가** (아래 조건 충족 시):
    - 기존 state 변수를 그대로 사용 (새 state 추가 금지)
    - `className` 합성 위치에서 조건부 클래스만 추가/변경
@@ -137,11 +142,13 @@ Pre-flight 리포트를 보여주고 사용자 승인을 기다립니다.
    - `tokens/light.json`에서 해당 토큰의 **값만** 변경
    - `tokens/dark.json`에서도 대응 값 변경
    - 이름/키는 절대 변경하지 않음
+   - ⚠️ **token-map.md에서 "exact"로 표기된 토큰도 실제 CSS 값이 다를 수 있음** — 반드시 `src/styles/tokens/tokens-light.css`에서 실제 resolve 값을 확인
 
-3. **Tailwind preset 재생성** (토큰 변경 시):
+3. **토큰/프리셋 재생성** (토큰 변경 시):
    ```bash
-   cd /Users/pobae/thaki-shared && pnpm generate:tailwind-preset
+   cd /path/to/thaki-shared && pnpm run generate:tokens && pnpm run generate:tailwind-preset && pnpm run generate:token-docs
    ```
+   → `tokens-light.css`, `tokens-dark.css`, `tailwind.preset.js`, `token-docs.json`이 자동 갱신됨
 
 ### Step 5.5: 스펙 대조 검증 (Critical)
 
@@ -178,7 +185,7 @@ Pre-flight 리포트를 보여주고 사용자 승인을 기다립니다.
 ### Step 6: 빌드 확인
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm build
+cd /path/to/thaki-shared && pnpm build
 ```
 
 빌드 실패 시:
@@ -225,3 +232,66 @@ cd /Users/pobae/thaki-shared && pnpm build
 - import 구조 변경 (신규 라이브러리 추가 등)
 - props destructuring 변경
 - API 호출, 비동기 로직 변경
+
+## Known Pitfalls
+
+### Pitfall 1: CVA `compoundVariants`에서 `false` vs `undefined` 불일치
+
+CVA의 `compoundVariants`는 **정확한 값 매칭**을 합니다. `error: false`로 조건을 걸면, `error` prop이 `undefined`일 때 매칭되지 않습니다.
+
+```typescript
+// ❌ 문제 — error가 undefined일 때 이 compoundVariant가 적용되지 않음
+compoundVariants: [
+  {
+    disabled: false,
+    error: false,
+    class: '[color:var(--semantic-color-textMuted)]',
+  },
+],
+
+// ✅ 해결 — 기본 스타일은 base 클래스에 넣고, 특수 상태만 variant로 override
+export const styles = cva(
+  '... [color:var(--semantic-color-textMuted)] hover:[color:var(--semantic-color-text)]',
+  {
+    variants: {
+      disabled: { true: 'pointer-events-none opacity-50' },
+      error: { true: '[color:var(--component-input-color-borderError)]' },
+    },
+  }
+);
+```
+
+**적용 원칙**: 기본 상태(normal)의 스타일은 CVA base 클래스에 넣고, `disabled`/`error` 같은 특수 상태만 variant로 override.
+
+### Pitfall 2: Icon 컴포넌트의 색상 상속 (`currentColor`)
+
+thaki-shared의 아이콘 컴포넌트(`ShowIcon`, `HideIcon` 등)는 `variant` prop으로 자체 색상을 결정하는 경우가 있습니다. 이 때 부모 버튼의 CSS `color` 속성이 무시됩니다.
+
+```tsx
+// ❌ 문제 — variant="muted"가 아이콘 내부에서 색상을 하드코딩
+showIcon = <ShowIcon variant={error ? 'error' : 'muted'} size="md" />;
+
+// ✅ 해결 — color="currentColor"로 부모의 color 속성을 상속
+showIcon = <ShowIcon size="md" color="currentColor" />;
+hideIcon = <HideIcon size="md" color="currentColor" />;
+```
+
+**적용 원칙**: 버튼/래퍼의 CVA 스타일에서 `[color:var(--semantic-color-textMuted)]`로 색상을 제어하고, 내부 아이콘은 `color="currentColor"`로 상속받게 합니다.
+
+### Pitfall 3: 토큰 값(value) 불일치 — "이름은 같지만 값이 다른" 케이스
+
+`token-map.md`에서 "exact" 매핑으로 표기된 토큰이라도, 실제 참조하는 primitive 값이 다를 수 있습니다:
+
+```json
+// ❌ thaki-shared (잘못된 값)
+"textMuted": "{primitive.color.trueGray500}"  // → #737373
+
+// ✅ TDS 기준 (올바른 값)
+"textMuted": "{primitive.color.blueGray600}"  // → #475569
+```
+
+**확인 방법**:
+
+1. TDS의 `src/index.css` 또는 `compatibility.css`에서 해당 시맨틱 토큰의 최종 hex 값 확인
+2. thaki-shared의 `src/styles/tokens/tokens-light.css`에서 같은 이름의 토큰 값 비교
+3. 값이 다르면 `tokens/light.json`에서 참조하는 primitive 토큰을 수정

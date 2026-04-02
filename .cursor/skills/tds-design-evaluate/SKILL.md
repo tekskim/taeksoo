@@ -18,6 +18,13 @@
 
 browser MCP로 양쪽 페이지에 접근하여 `getComputedStyle`을 JavaScript로 실행, 스펙에 정의된 속성을 정확한 px/hex 값으로 추출하여 비교합니다.
 
+> **Fallback**: browser MCP가 타임아웃되거나 사용 불가능한 경우, Step 1A와 Step 1B를 건너뛰고 **코드 레벨 검증**으로 대체합니다:
+>
+> 1. 스펙의 "주요 디자인 차이" 테이블의 각 항목을 `.styles.ts` / `.tsx` 코드에서 직접 확인
+> 2. CSS 변수 resolve chain을 따라가서 최종값이 TDS와 일치하는지 수동 검증
+> 3. Storybook 스크린샷 대신 사용자에게 Storybook URL을 제시하여 수동 확인 요청
+> 4. 리포트의 "Computed Style 비교" 섹션에 "browser MCP 불가 — 코드 레벨 검증으로 대체" 명시
+
 **추출 대상 속성:**
 
 - `height`, `padding`, `margin`
@@ -75,7 +82,7 @@ Computed Style이 PASS여도 사용자가 Canvas에서 문제를 발견하면 FA
 ### Step 2: 금지 변경 검증 (git diff 분석)
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff --name-only
+cd /path/to/thaki-shared && git diff --name-only
 ```
 
 **체크리스트**:
@@ -91,7 +98,7 @@ cd /Users/pobae/thaki-shared && git diff --name-only
 #### 2-2. 토큰 네이밍 검증
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff tokens/light.json | head -100
+cd /path/to/thaki-shared && git diff tokens/light.json | head -100
 ```
 
 - [ ] JSON 키(이름)가 변경되지 않았는가? (값만 변경 허용)
@@ -103,7 +110,7 @@ cd /Users/pobae/thaki-shared && git diff tokens/light.json | head -100
 만약 `.tsx` 파일이 변경되었다면, diff를 **허용/금지로 분류**하여 검증합니다:
 
 ```bash
-cd /Users/pobae/thaki-shared && git diff src/components/{Name}/{Name}.tsx
+cd /path/to/thaki-shared && git diff src/components/{Name}/{Name}.tsx
 ```
 
 **허용되는 변경** (순수 디자인 — PASS):
@@ -127,7 +134,7 @@ cd /Users/pobae/thaki-shared && git diff src/components/{Name}/{Name}.tsx
 #### 3-1. 타입 체크
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm tsc --noEmit
+cd /path/to/thaki-shared && pnpm tsc --noEmit
 ```
 
 → 타입 에러가 없어야 함
@@ -135,7 +142,7 @@ cd /Users/pobae/thaki-shared && pnpm tsc --noEmit
 #### 3-2. 빌드 체크
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm build
+cd /path/to/thaki-shared && pnpm build
 ```
 
 → 빌드 성공해야 함
