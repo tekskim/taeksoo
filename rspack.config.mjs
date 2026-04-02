@@ -104,6 +104,7 @@ export default defineConfig({
     port: 5173,
     hot: true,
     historyApiFallback: true,
+    allowedHosts: ['local.thakicloud.net'],
     static: {
       directory: path.join(__dirname, 'public'),
     },

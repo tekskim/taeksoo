@@ -3,7 +3,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { DatePicker, VStack } from '@/design-system';
+import { DatePicker, DateRangePicker, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -445,6 +445,25 @@ export function DatePickerPage() {
               </span>
             </VStack>
             <DatePicker firstDayOfWeek={1} value={mondayDate} onChange={setMondayDate} />
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Date Range Picker</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                START/END 날짜 헤더와 Cancel/Apply 버튼을 포함하는 래퍼. MonitoringToolbar 등에서
+                사용.
+              </span>
+            </VStack>
+            <DateRangePicker
+              value={{
+                start: new Date(2026, 2, 26),
+                end: new Date(2026, 3, 2),
+              }}
+              maxDate={new Date()}
+              onApply={(range) => console.log('Applied:', range)}
+              onCancel={() => console.log('Cancelled')}
+            />
           </VStack>
 
           <VStack gap={3}>

@@ -540,6 +540,56 @@ function LineChartGuidelines() {
   );
 }
 
+function LineChartNoDataDefaultDemo() {
+  const option = {
+    grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
+    graphic: {
+      type: 'text' as const,
+      left: 'center',
+      top: 'middle',
+      style: {
+        text: 'No data available',
+        fontSize: 12,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        fill: chartColors.slate400,
+      },
+    },
+    xAxis: {
+      type: 'category' as const,
+      data: [],
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+      boundaryGap: false,
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { lineStyle: { color: chartColors.slate100, opacity: 0.5 } },
+      axisLabel: { color: chartColors.slate400, fontSize: 10 },
+    },
+    series: [],
+  };
+
+  return (
+    <div className="chartCard">
+      <div className="chartHeader">
+        <span className="chartTitle">Network traffic</span>
+      </div>
+      <div className="chartBody">
+        <div className="chartWrapper">
+          <ReactECharts
+            option={option}
+            style={{ height: '100%', width: '100%' }}
+            opts={{ devicePixelRatio: window.devicePixelRatio }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LineChartLoadingDemo() {
   const option = {
     grid: { left: '0', right: '16px', top: '20px', bottom: '16px', containLabel: true },
@@ -709,12 +759,12 @@ export function LineChartPage() {
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>No Data</Label>
+              <Label>No Data (Default ECharts)</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                데이터가 없는 경우 "No data available" 표시.
+                Apache ECharts 기본 빈 차트 상태. 데이터와 축 라벨 없이 빈 그리드만 표시된다.
               </span>
             </VStack>
-            <AreaChartDemo variant="nodata" />
+            <LineChartNoDataDefaultDemo />
           </VStack>
         </VStack>
       }

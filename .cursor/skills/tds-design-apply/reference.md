@@ -102,7 +102,7 @@ duration-[var(--duration-fast)]     → duration-normal
 토큰 값 변경 전, 해당 토큰을 참조하는 다른 토큰 확인:
 
 ```bash
-cd /Users/pobae/thaki-shared
+cd /path/to/thaki-shared
 # semantic.color.text를 참조하는 다른 토큰 검색
 rg "semantic\.color\.text" tokens/light.json
 ```
@@ -112,7 +112,7 @@ rg "semantic\.color\.text" tokens/light.json
 토큰 값 변경 후 반드시 실행:
 
 ```bash
-cd /Users/pobae/thaki-shared && pnpm generate:tailwind-preset
+cd /path/to/thaki-shared && pnpm generate:tailwind-preset
 ```
 
 ## 금지 패턴
