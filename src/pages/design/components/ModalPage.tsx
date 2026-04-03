@@ -159,7 +159,7 @@ export function ModalPage() {
       tokens={
         <VStack gap={3}>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-            padding: 24px · gap: 16px · radius: 16px · backdrop: black/60
+            padding: 16px · gap: 16px · radius: 16px · backdrop: black/60
           </div>
           <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
             width: 344px
