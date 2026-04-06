@@ -379,7 +379,7 @@ import { chartColors, primaryChartColors, extendedChartColors } from '@/pages/de
 | lg | 640px |
 
 ```css
---modal-padding: 1.5rem;  /* 24px */
+--modal-padding: 1rem;    /* 16px */
 --modal-radius: 1rem;     /* 16px */
 --modal-gap: 1rem;        /* 16px */
 ```
