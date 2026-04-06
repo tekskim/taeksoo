@@ -656,6 +656,7 @@ html.theme-transition *::after {
   --table-empty-padding-y: var(--spacing-8);
   --table-row-selected-bg: var(--color-state-info-bg);
   --table-row-selected-border: var(--color-action-primary);
+  --table-expanded-row-height: 42px;
   --table-resize-handle-width: 4px;
   --table-resize-handle-hover-color: var(--color-action-primary);
 

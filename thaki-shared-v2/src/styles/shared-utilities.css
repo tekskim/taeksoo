@@ -323,6 +323,22 @@
   pointer-events: none;
 }
 
+/* Table - Expanded content connection bridge (fills the border-spacing gap) */
+.table-expanded-content-connected {
+  position: relative;
+}
+.table-expanded-content-connected::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--semantic-space-xs) - 1px);
+  left: -1px;
+  right: -1px;
+  height: calc(var(--semantic-space-xs) + 1px);
+  background: var(--semantic-color-surface);
+  border-left: 1px solid var(--semantic-color-border);
+  border-right: 1px solid var(--semantic-color-border);
+}
+
 /* Hide resize handle in selection cell (keep divider visible) */
 
 .table-selection-cell .resize-handle {

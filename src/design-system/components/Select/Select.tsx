@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, useId } from 'react';
+import { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
@@ -11,6 +11,8 @@ export interface SelectOption {
   value: string;
   label: string;
   disabled?: boolean;
+  /** Optional icon rendered before the label */
+  icon?: ReactNode;
 }
 
 export interface SelectProps {
@@ -332,11 +334,14 @@ export function Select({
       >
         <span
           className={twMerge(
-            'truncate',
+            'truncate flex items-center gap-1.5',
             selectedOption ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]',
             disabled && 'text-[var(--color-text-subtle)]'
           )}
         >
+          {selectedOption?.icon && (
+            <span className="shrink-0 flex items-center">{selectedOption.icon}</span>
+          )}
           {selectedOption?.label ?? placeholder}
         </span>
         <div className="flex items-center gap-1 shrink-0">
@@ -446,7 +451,12 @@ export function Select({
                             : 'text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)]'
                     )}
                   >
-                    <span>{option.label}</span>
+                    <span className="flex items-center gap-1.5">
+                      {option.icon && (
+                        <span className="shrink-0 flex items-center">{option.icon}</span>
+                      )}
+                      {option.label}
+                    </span>
                     {isSelected && (
                       <IconCheck
                         size={14}
