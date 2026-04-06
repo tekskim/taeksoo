@@ -682,7 +682,18 @@ export function ImageDetailPage() {
       sortable: true,
     },
     { key: 'key', label: 'Key', flex: 1, minWidth: columnMinWidths.owner, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, minWidth: columnMinWidths.status, sortable: true },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: columnMinWidths.status,
+      sortable: true,
+      render: (value) => (
+        <Badge theme="white" size="sm">
+          {value}
+        </Badge>
+      ),
+    },
     { key: 'value', label: 'Value', flex: 1, minWidth: columnMinWidths.status, sortable: true },
   ];
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack, Button, Badge, Tabs, TabList, Tab } from '@/design-system';
+import { VStack, Button, Badge, Tabs, TabList, Tab, Select } from '@/design-system';
 import {
   IconCircleCheck,
   IconAlertTriangle,
@@ -89,11 +89,6 @@ function StaticSnackbarCard({
               )}
             </div>
             <div className="shrink-0 flex flex-col items-end gap-1">
-              <div className="size-6 flex items-center justify-center">
-                {!isRead && (
-                  <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />
-                )}
-              </div>
               <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
                 {time}
               </span>
@@ -167,18 +162,19 @@ function GlobalPanelPreview() {
             <IconCheckbox size={16} stroke={1.5} />
           </button>
           <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
-            <TabList className="w-full px-4">
+            <TabList className="w-full px-4 justify-center">
               <Tab value="all">All</Tab>
               <Tab value="unread">
                 Unread
                 <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
               </Tab>
-              <Tab value="error">
-                Error
-                <span className="ml-1 text-[var(--color-text-muted)]">(1)</span>
-              </Tab>
             </TabList>
           </Tabs>
+        </div>
+
+        {/* App Filter */}
+        <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+          <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="sm" fullWidth />
         </div>
 
         <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
@@ -293,18 +289,32 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
 ];
 
+const appIcon = (src: string) => <img src={src} alt="" className="size-4 object-cover" />;
+
+const APP_OPTIONS = [
+  { value: 'all', label: 'All apps' },
+  { value: 'Compute', label: 'Compute', icon: appIcon(AppIconCompute) },
+  { value: 'IAM', label: 'IAM', icon: appIcon(AppIconIAM) },
+  { value: 'Container', label: 'Container', icon: appIcon(AppIconContainer) },
+  { value: 'Storage', label: 'Storage', icon: appIcon(AppIconStorage) },
+];
+
 function GlobalPanelDemo() {
   const [notifications, setNotifications] = useState<PanelNotification[]>(INITIAL_NOTIFICATIONS);
   const [activeTab, setActiveTab] = useState('all');
+  const [activeApp, setActiveApp] = useState('all');
 
   const filteredNotifications = notifications.filter((n) => {
-    if (activeTab === 'unread') return !n.isRead;
-    if (activeTab === 'error') return n.type === 'error';
+    if (activeTab === 'unread' && n.isRead) return false;
+    if (activeApp !== 'all' && n.app !== activeApp) return false;
     return true;
   });
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
-  const errorCount = notifications.filter((n) => n.type === 'error').length;
+
+  const availableAppOptions = APP_OPTIONS.filter(
+    (opt) => opt.value === 'all' || notifications.some((n) => n.app === opt.value)
+  );
 
   const handleMarkAsRead = (id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
@@ -317,6 +327,7 @@ function GlobalPanelDemo() {
   const handleReset = () => {
     setNotifications(INITIAL_NOTIFICATIONS);
     setActiveTab('all');
+    setActiveApp('all');
   };
 
   return (
@@ -355,7 +366,7 @@ function GlobalPanelDemo() {
               size="sm"
               className="w-full"
             >
-              <TabList className="w-full px-4">
+              <TabList className="w-full px-4 justify-center">
                 <Tab value="all">All</Tab>
                 <Tab value="unread">
                   Unread
@@ -363,14 +374,19 @@ function GlobalPanelDemo() {
                     <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>
                   )}
                 </Tab>
-                <Tab value="error">
-                  Error
-                  {errorCount > 0 && (
-                    <span className="ml-1 text-[var(--color-text-muted)]">({errorCount})</span>
-                  )}
-                </Tab>
               </TabList>
             </Tabs>
+          </div>
+
+          {/* App Filter */}
+          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+            <Select
+              options={availableAppOptions}
+              value={activeApp}
+              onChange={(v) => setActiveApp(v)}
+              size="sm"
+              fullWidth
+            />
           </div>
 
           {filteredNotifications.length === 0 ? (
@@ -433,11 +449,6 @@ function InteractiveNotificationCard({
           )}
         </div>
         <div className="shrink-0 flex flex-col items-end gap-1">
-          <div className="size-6 flex items-center justify-center">
-            {!notification.isRead && (
-              <div className="size-2 rounded-full bg-[var(--color-action-primary)]" />
-            )}
-          </div>
           <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
             {notification.time}
           </span>
@@ -693,6 +704,7 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | --- | --- |
 | Panel Icon | 패널 열기/닫기 |
 | Panel | 알림 목록 컨테이너 |
+| App Filter | 앱별 알림 필터링 |
 | App Header | 앱별 그룹 헤더 |
 | Show more / Show less | 알림 목록 확장 |
 | Mark all as read | 전체 읽음 처리 |
@@ -706,6 +718,12 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 ### Panel
 - 모든 앱의 안읽은 알림을 앱별 그룹으로 표시
 - 데스크탑 레벨 고정 위치
+
+### App Filter
+- 탭 아래에 위치하는 Select 드롭다운
+- 알림이 존재하는 앱만 옵션으로 노출
+- "All apps" 선택 시 전체 앱 알림 표시
+- 특정 앱 선택 시 해당 앱의 알림만 필터링
 
 ### App Header
 - 알림이 존재하는 앱만 노출
