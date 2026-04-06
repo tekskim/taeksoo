@@ -150,70 +150,153 @@ function StaticSnackbarCard({
 
 function GlobalPanelPreview() {
   return (
-    <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-      <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
-        {/* Tabs header */}
-        <div className="relative pt-3 pb-0">
-          <button
-            type="button"
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
-            aria-label="Mark all as read"
-          >
-            <IconCheckbox size={16} stroke={1.5} />
-          </button>
-          <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
-            <TabList className="w-full px-4 justify-center">
-              <Tab value="all">All</Tab>
-              <Tab value="unread">
-                Unread
-                <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
-              </Tab>
-            </TabList>
-          </Tabs>
-        </div>
+    <VStack gap={4}>
+      <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+          {/* Tabs header */}
+          <div className="relative pt-3 pb-0">
+            <button
+              type="button"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
+              aria-label="Mark all as read"
+            >
+              <IconCheckbox size={16} stroke={1.5} />
+            </button>
+            <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
+              <TabList className="w-full px-4 justify-center">
+                <Tab value="all">All</Tab>
+                <Tab value="unread">
+                  Unread
+                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
+                </Tab>
+              </TabList>
+            </Tabs>
+          </div>
 
-        {/* App Filter */}
-        <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-          <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="sm" fullWidth />
-        </div>
+          {/* App Filter */}
+          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="sm" fullWidth />
+          </div>
 
-        <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
-          <div className="flex flex-col gap-2">
-            <StaticSnackbarCard
-              type="success"
-              message='Instance "web-server-01" created successfully.'
-              time="10:23"
-              project="Proj-1"
-              isRead={false}
-              showAppIcon
-              appIcon={AppIconCompute}
-            />
-            <StaticSnackbarCard
-              type="error"
-              message='Failed to create volume "data-vol-02".'
-              time="09:30"
-              project="Proj-2"
-              isRead={false}
-              showAppIcon
-              appIcon={AppIconCompute}
-              detail={{
-                code: 400,
-                message:
-                  "Flavor's disk is smaller than the minimum size specified in image metadata.",
-              }}
-            />
-            <StaticSnackbarCard
-              type="warning"
-              message="API key expires in 3 days."
-              time="08:45"
-              isRead={false}
-              showAppIcon
-              appIcon={AppIconIAM}
-            />
+          <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
+            <div className="flex flex-col gap-2">
+              <StaticSnackbarCard
+                type="success"
+                message='Instance "web-server-01" created successfully.'
+                time="10:23"
+                project="Proj-1"
+                isRead={false}
+                showAppIcon
+                appIcon={AppIconCompute}
+              />
+              <StaticSnackbarCard
+                type="error"
+                message='Failed to create volume "data-vol-02".'
+                time="09:30"
+                project="Proj-2"
+                isRead={false}
+                showAppIcon
+                appIcon={AppIconCompute}
+                detail={{
+                  code: 400,
+                  message:
+                    "Flavor's disk is smaller than the minimum size specified in image metadata.",
+                }}
+              />
+              <StaticSnackbarCard
+                type="warning"
+                message="API key expires in 3 days."
+                time="08:45"
+                isRead={false}
+                showAppIcon
+                appIcon={AppIconIAM}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Preview with dropdown open */}
+      <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+          <div className="relative pt-3 pb-0">
+            <button
+              type="button"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
+              aria-label="Mark all as read"
+            >
+              <IconCheckbox size={16} stroke={1.5} />
+            </button>
+            <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
+              <TabList className="w-full px-4 justify-center">
+                <Tab value="all">All</Tab>
+                <Tab value="unread">
+                  Unread
+                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
+                </Tab>
+              </TabList>
+            </Tabs>
+          </div>
+
+          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="sm" fullWidth />
+          </div>
+
+          {/* Static open dropdown */}
+          <div className="mx-3 mb-2 border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] bg-[var(--select-menu-bg)] overflow-hidden">
+            {APP_OPTIONS.map((opt, i) => (
+              <div
+                key={opt.value}
+                className={`flex items-center gap-1.5 px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] ${
+                  i === 0
+                    ? 'bg-[var(--color-action-primary-subtle)] text-[var(--color-action-primary)] font-medium'
+                    : 'text-[var(--color-text-default)]'
+                }`}
+              >
+                {opt.icon && <span className="shrink-0 flex items-center">{opt.icon}</span>}
+                <span>{opt.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
+            <div className="flex flex-col gap-2">
+              <StaticSnackbarCard
+                type="success"
+                message='Instance "web-server-01" created successfully.'
+                time="10:23"
+                project="Proj-1"
+                isRead={false}
+                showAppIcon
+                appIcon={AppIconCompute}
+              />
+              <StaticSnackbarCard
+                type="error"
+                message='Failed to create volume "data-vol-02".'
+                time="09:30"
+                project="Proj-2"
+                isRead={false}
+                showAppIcon
+                appIcon={AppIconCompute}
+                detail={{
+                  code: 400,
+                  message:
+                    "Flavor's disk is smaller than the minimum size specified in image metadata.",
+                }}
+              />
+              <StaticSnackbarCard
+                type="warning"
+                message="API key expires in 3 days."
+                time="08:45"
+                isRead={false}
+                showAppIcon
+                appIcon={AppIconIAM}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </VStack>
   );
 }
 
