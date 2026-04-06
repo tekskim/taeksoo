@@ -1332,6 +1332,9 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-2 min-w-0">
+          <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+            <img src={containerIcon} alt="" className="size-4 object-contain" />
+          </div>
           <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute/instances/${row.id}`}

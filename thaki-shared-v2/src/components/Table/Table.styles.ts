@@ -90,6 +90,11 @@ export const tableStyles = {
   // Expandable table styles
   expandedRow: 'bg-surface',
   expandedContent: '!p-0 border-t border-border bg-surface',
+  expandedMainRowCell: '!border-b-0',
+  expandedMainRowCellFirst: '!rounded-bl-none',
+  expandedMainRowCellLast: '!rounded-br-none',
+  expandedContentConnected:
+    '!p-0 bg-surface !border-t border-border !rounded-bl-base6 !rounded-br-base6 !rounded-tl-none !rounded-tr-none !border-l !border-r !border-b !border-border overflow-hidden table-expanded-content-connected',
   expandCellWrapper: 'flex items-center gap-sm w-full',
   expandButton:
     'inline-flex items-center justify-center p-0 border-none bg-transparent cursor-pointer text-text-muted transition-colors duration-200 flex-shrink-0 hover:text-text focus:outline-2 focus:outline-primary focus:outline-offset-2 focus:rounded-sm',

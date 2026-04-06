@@ -16,19 +16,7 @@ Toast는 **알림센터나 글로벌 알림 패널에 기록되지 않는다.**
 
 | 요소 | 설명 |
 | --- | --- |
-| Icon (optional) | 상태를 보조적으로 표시하는 아이콘 |
 | Message | 사용자에게 전달되는 짧은 메시지 |
-
----
-
-## Variants
-
-| 유형 | 설명 |
-| --- | --- |
-| Success | 작업이 성공적으로 완료됨 |
-| Info | 일반적인 상태 알림 |
-
-> **Note**: Toast는 Success와 Info만 지원한다. Error/Warning 수준의 알림은 사용자의 확인이나 후속 액션이 필요하므로, Snackbar(기록형 알림) 또는 Inline Message(영속적 경고)를 사용한다.
 
 ---
 
@@ -92,14 +80,11 @@ export function ToastPage() {
         '입력 오류 안내 (→ Validation)',
       ]}
       preview={
-        <ComponentPreview
-          code={`toast.success('Instance created successfully.');
-toast.info('Snapshot scheduled.', { title: 'Snapshot' });`}
-        >
+        <ComponentPreview code={`toast('Instance created successfully.');`}>
           <VStack gap={3} className="items-center pointer-events-none">
             <Toast
               toast={{
-                id: 'preview-success',
+                id: 'preview-default',
                 variant: 'success',
                 message: 'Instance created successfully.',
                 duration: 0,
@@ -114,38 +99,17 @@ toast.info('Snapshot scheduled.', { title: 'Snapshot' });`}
         <VStack gap={8}>
           <VStack gap={3}>
             <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">SUCCESS</span>
+              <span className="text-label-md text-[var(--color-text-default)]">Default</span>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
-                작업이 성공적으로 완료되었을 때 사용.
+                작업 완료 또는 상태 변화를 짧은 메시지로 전달한다.
               </span>
             </VStack>
             <div className="pointer-events-none">
               <Toast
                 toast={{
-                  id: 'ex-success',
+                  id: 'ex-default',
                   variant: 'success',
                   message: 'Instance created successfully.',
-                  duration: 0,
-                  dismissible: false,
-                }}
-                onDismiss={NOOP}
-              />
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-label-md text-[var(--color-text-default)]">INFO</span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                일반적인 상태 알림에 사용.
-              </span>
-            </VStack>
-            <div className="pointer-events-none">
-              <Toast
-                toast={{
-                  id: 'ex-info',
-                  variant: 'info',
-                  message: 'Snapshot has been scheduled.',
                   duration: 0,
                   dismissible: false,
                 }}

@@ -234,7 +234,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
       role="alert"
       className={twMerge(
         'flex flex-col gap-[var(--primitive-spacing-2)]',
-        'w-[360px]',
+        'w-fit',
         'p-[var(--primitive-spacing-3)]',
         'rounded-[var(--primitive-radius-lg)]',
         'bg-[var(--color-surface-default)]',
@@ -252,9 +252,6 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
     >
       {/* Header Row */}
       <div className="flex items-start gap-[var(--primitive-spacing-2)]">
-        {/* Icon */}
-        <span className="shrink-0 -mt-px">{variantIcons[toast.variant]}</span>
-
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col gap-[var(--primitive-spacing-1)]">
           {/* Title */}
