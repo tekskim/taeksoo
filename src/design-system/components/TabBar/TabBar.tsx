@@ -333,8 +333,8 @@ export const TabBar: React.FC<TabBarProps> = ({
               rounded-[var(--radius-sm)]
               text-[var(--color-text-muted)]
               transition-colors duration-[var(--duration-fast)]
-              hover:bg-[var(--color-state-danger-bg)]
-              hover:text-[var(--color-state-danger-text)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
             "
             aria-label="Close window"
           >

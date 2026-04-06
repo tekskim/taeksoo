@@ -367,7 +367,7 @@ PR 본문 전체(CREATE) 또는 변경된 부분(APPEND)을 사용자에게 보�
 
 ```bash
 cd /Users/pobae/thaki-shared && git push -u origin design-sync
-cd /Users/pobae/thaki-shared && gh pr create --title "{title}" --body-file /tmp/pr_body.md
+cd /Users/pobae/thaki-shared && gh pr create --base dev --title "{title}" --body-file /tmp/pr_body.md
 ```
 
 #### APPEND 모드

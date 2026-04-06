@@ -235,17 +235,17 @@ Phase 1에서 생성된 모든 스펙을 읽고, 각 컴포넌트의 Pre-flight 
 
 #### 2-B.5: thaki-shared 최신화
 
-Apply 전에 thaki-shared의 main을 최신 상태로 업데이트합니다:
+Apply 전에 thaki-shared의 dev를 최신 상태로 업데이트합니다:
 
 ```bash
 cd /Users/pobae/thaki-shared
-git checkout main && git pull origin main
+git checkout dev && git pull origin dev
 git checkout design-sync 2>/dev/null || git checkout -b design-sync
-git merge main --no-edit
+git merge dev --no-edit
 ```
 
-- design-sync 브랜치가 있으면 main 머지 (기존 커밋 유지)
-- 없으면 main 최신에서 새로 생성
+- design-sync 브랜치가 있으면 dev 머지 (기존 커밋 유지)
+- 없으면 dev 최신에서 새로 생성
 - 머지 충돌 시 사용자에게 알리고 해결 후 진행
 
 #### 2-C: 순차 적용
