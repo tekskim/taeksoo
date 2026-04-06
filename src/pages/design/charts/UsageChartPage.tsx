@@ -552,26 +552,6 @@ export function UsageChartPage() {
 
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Gauge Bar Chart — Default Variant</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                수치 레이블만 표시. 공간이 제한적인 컨텍스트에서 사용.
-              </span>
-            </VStack>
-            <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]">
-              <GaugeHoverTooltip used={30} max={100} unit="MB">
-                <ProgressBar label="30 MB (30%)" value={30} max={100} showValue={false} />
-              </GaugeHoverTooltip>
-              <GaugeHoverTooltip used={75} max={100} unit="MB">
-                <ProgressBar label="60 MB (75%)" value={75} max={100} showValue={false} />
-              </GaugeHoverTooltip>
-              <GaugeHoverTooltip used={100} max={100} unit="MB">
-                <ProgressBar label="100 MB (100%)" value={100} max={100} showValue={false} />
-              </GaugeHoverTooltip>
-            </div>
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
               <Label>Gauge Bar Chart — Dashboard Variant</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 리소스 그룹 타이틀과 함께 항목별 이름, 사용량/총량, 퍼센트를 모두 표시. 대시보드

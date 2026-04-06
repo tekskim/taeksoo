@@ -431,6 +431,23 @@ export function PaginationPage() {
               selectedCount={3}
             />
           </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>No Items</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                테이블에 아이템이 없을때. 페이지 1만 표시되며 이전/다음 버튼이 비활성화된다.
+              </span>
+            </VStack>
+            <Pagination
+              currentPage={1}
+              totalPages={1}
+              onPageChange={() => {}}
+              showSettings
+              onSettingsClick={() => {}}
+              totalItems={0}
+            />
+          </VStack>
         </VStack>
       }
       guidelines={<PaginationGuidelines />}
