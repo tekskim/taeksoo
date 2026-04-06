@@ -20,47 +20,54 @@
 
 ## 브랜치 전략
 
-**고정 브랜치 `design-sync`**에 커밋을 누적하고, PR 요청 시 **3개 이하**로 분할합니다.
+**고정 브랜치 `design-sync`**에 커밋을 누적하고, PR 요청 시 컴포넌트 수에 따라 분할합니다.
 
 - 브랜치명은 항상 `design-sync` (고정) — 작업용 누적 브랜치
-- 최초 싱크 시 `main`에서 브랜치 생성, 이후에는 동일 브랜치에 커밋 누적
+- 최초 싱크 시 `dev`에서 브랜치 생성, 이후에는 동일 브랜치에 커밋 누적
 - 컴포넌트를 싱크할 때마다 개별 커밋 추가 (git log에서 추적 용이)
+- `design-sync` 브랜치는 모든 싱크 작업이 완료될 때까지 유지 (배치 머지와 무관)
 
-### PR 분할 정책 (3개 제한)
+### PR 분할 정책
 
-- **1 PR당 최대 3개 컴포넌트** — 3개를 초과하면 반드시 분할
-- PR 요청 시점에 `design-sync` 브랜치의 커밋을 3개씩 묶어 배치 브랜치 생성
+- **6개 이하**: design-sync → dev **단일 PR** (배치 분할 없음)
+- **7개 이상**: file-checkout 배치 브랜치로 분할 (**PR당 최대 5개**)
 - 배치 브랜치명: `ds-batch-{N}` (예: `ds-batch-1`, `ds-batch-2`, ...)
-- 각 배치 브랜치는 `main`에서 생성 후 해당 컴포넌트의 커밋만 `cherry-pick`
 - 관련 토큰/공유 파일은 첫 번째 배치에 포함
-- 모든 배치 PR 머지 후 `design-sync` 브랜치 삭제
 
-### 배치 생성 절차
+### 배치 생성 절차 (file-checkout 방식)
+
+cherry-pick이 아닌 **file-checkout**으로 배치 브랜치를 생성합니다.
+design-sync의 **최신 파일 상태**를 항상 가져오므로 후속 수정이 누락되지 않습니다.
 
 ```bash
-# 1. main 최신화
-git checkout main && git pull
+# 1. dev 최신화
+git checkout dev && git pull
 
-# 2. design-sync의 디자인 싱크 커밋 확인
-git log main..design-sync --oneline --no-merges
+# 2. design-sync에서 dev로 아직 안 간 변경 확인
+git diff dev..design-sync --name-only
 
-# 3. 컴포넌트별 커밋 그룹핑 (최대 3개씩)
-# 4. 각 배치 브랜치 생성 + cherry-pick
-git checkout -b ds-batch-1 main
-git cherry-pick <commit1> <commit2> <commit3> ...
+# 3. 배치 브랜치 생성 + file-checkout (컴포넌트 단위)
+git checkout -b ds-batch-1 dev
+git checkout design-sync -- src/components/Button/ src/components/DatePicker/ src/components/Pagination/
+# 토큰/공유 파일이 변경된 경우 함께 포함
+git checkout design-sync -- tokens/ tailwind.preset.js src/styles/
+git add . && git commit -m "style(design-sync): batch 1 — Button, DatePicker, Pagination"
 git push -u origin ds-batch-1
-
-# 5. cherry-pick 충돌 시: design-sync에서 해당 파일 checkout 후 continue
-git checkout design-sync -- <conflicted-file>
-git add . && git cherry-pick --continue --no-edit
 ```
 
+**cherry-pick 대비 장점**:
+
+- design-sync의 **최신 파일 상태**를 항상 가져오므로 후속 수정 누락 없음
+- cherry-pick 충돌 없음
+- 배치 브랜치는 PR 직전에 만들고, 머지 후 삭제 (일회용)
+
 ```
-main ──●──●──●── (batch-1 머지) ── (batch-2 머지) ── (batch-3 머지) ──●──
-        \              /                  /                  /
-         ds-batch-1 ──A──B──C            /                  /
-         ds-batch-2 ──D──E──F ──────────┘                  /
-         ds-batch-3 ──G──H ───────────────────────────────┘
+design-sync ──A──B──C──D──(후속수정)──E──F──
+                                       ↓ file-checkout (항상 최신)
+dev ──●──●──●── (batch-1 머지) ── (batch-2 머지) ──●──
+        \              /                  /
+         ds-batch-1 ──[Button,DatePicker,Pagination]
+         ds-batch-2 ──[Breadcrumb,FrameControls,TopBar]
 ```
 
 ## 동작 절차
@@ -70,7 +77,7 @@ main ──●──●──●── (batch-1 머지) ── (batch-2 머지) 
 1. **커밋 목록 확인**:
 
    ```bash
-   cd /path/to/thaki-shared && git log main..design-sync --oneline
+   cd /path/to/thaki-shared && git log dev..design-sync --oneline
    ```
 
    → 포함된 컴포넌트 목록 자동 추출 (커밋 메시지에서 컴포넌트명 파싱)
@@ -80,8 +87,8 @@ main ──●──●──●── (batch-1 머지) ── (batch-2 머지) 
 3. **전체 diff 수집**:
 
    ```bash
-   cd /path/to/thaki-shared && git diff main..design-sync --stat
-   cd /path/to/thaki-shared && git diff main..design-sync
+   cd /path/to/thaki-shared && git diff dev..design-sync --stat
+   cd /path/to/thaki-shared && git diff dev..design-sync
    ```
 
 4. **Evaluate 리포트 참조**: 이전 대화에서 출력된 Evaluate Report의 판정 결과, 시각적 비교 결과, Safety 검증 결과
@@ -108,7 +115,7 @@ cd /path/to/thaki-shared
 git checkout design-sync 2>/dev/null || git checkout -b design-sync
 ```
 
-- 브랜치가 **없으면**: `main` 최신에서 `design-sync` 생성
+- 브랜치가 **없으면**: `dev` 최신에서 `design-sync` 생성
 - 브랜치가 **있으면**: 그대로 checkout (기존 커밋 유지)
 
 ### Step 4: 커밋
@@ -134,29 +141,33 @@ EOF
 )"
 ```
 
-### Step 4.5: 배치 분할 (3개 제한 정책)
+### Step 4.5: 배치 분할 (file-checkout 방식)
 
-커밋 후, `design-sync` 브랜치의 미반영 커밋을 3개 컴포넌트씩 배치로 분할합니다.
+커밋 후, design-sync에서 dev로 아직 반영되지 않은 컴포넌트를 확인하고 분할 여부를 결정합니다.
 
 ```bash
-# 미반영 커밋 확인
-cd /Users/pobae/thaki-shared && git log main..design-sync --oneline --no-merges
+# 미반영 파일 확인
+cd /Users/pobae/thaki-shared && git diff dev..design-sync --name-only
 ```
 
-1. 커밋을 컴포넌트별로 그룹핑
-2. **3개 이하**면 단일 배치로 진행 → Step 5A
-3. **4개 이상**이면 3개씩 분할하여 배치 브랜치 생성:
+1. 변경된 파일에서 컴포넌트 목록 추출
+2. **6개 이하**면 design-sync → dev 직접 PR → Step 5A
+3. **7개 이상**이면 5개씩 분할하여 배치 브랜치 생성:
 
 ```bash
-git checkout main && git pull
-git checkout -b ds-batch-1 main
-git cherry-pick <commits for batch 1>
+git checkout dev && git pull
+git checkout -b ds-batch-1 dev
+# design-sync에서 해당 컴포넌트 파일을 직접 복사 (항상 최신 상태)
+git checkout design-sync -- src/components/Button/ src/components/DatePicker/ src/components/Pagination/
+# 토큰/공유 파일 변경이 있으면 첫 배치에 포함
+git checkout design-sync -- tokens/ tailwind.preset.js src/styles/
+git add . && git commit -m "style(design-sync): batch 1 — Button, DatePicker, Pagination"
 git push -u origin ds-batch-1
-# 반복...
+# 다음 배치 반복...
 ```
 
-4. cherry-pick 충돌 시: `git checkout design-sync -- <file> && git add . && git cherry-pick --continue --no-edit`
-5. 각 배치별로 Step 5A 실행 (배치당 1개 PR 생성)
+4. 각 배치별로 Step 5A 실행 (배치당 1개 PR 생성)
+5. 배치 브랜치는 머지 후 삭제 (일회용)
 
 ### Step 5A: PR 본문 생성 — CREATE 모드
 
@@ -242,7 +253,7 @@ git push -u origin ds-batch-1
 
 > 카테고리별로 변경된 파일만 나열합니다. 변경 없는 카테고리는 생략.
 > 파일명은 경로 없이 **파일명만** 기재합니다 (간결성).
-> `git diff main..{branch} --name-only`의 결과를 카테고리별로 분류합니다.
+> `git diff dev..{branch} --name-only`의 결과를 카테고리별로 분류합니다.
 
 ## API Changes Required
 
@@ -386,8 +397,9 @@ EOF
 **PR 타이틀 규칙**:
 
 - 컴포넌트 1개: `style({Component}): sync design with TDS`
-- 컴포넌트 2-3개: `style(design-sync): batch {N} — {Component1}, {Component2}, {Component3}`
-- **4개 이상은 존재하지 않음** (3개 제한 정책에 의해 분할됨)
+- 컴포넌트 2~5개: `style(design-sync): batch {N} — {Component1}, {Component2}, ...`
+- 컴포넌트 6개 이하 (배치 분할 없음): `style(design-sync): sync {N} components with TDS`
+- **6개 이상은 배치 분할** (PR당 최대 5개)
 
 **라벨**: `design-sync` 라벨이 존재하면 `--label design-sync` 추가. 없으면 생략.
 
@@ -453,14 +465,26 @@ notion-update-page:
 
 ### Step 9: 머지 후 정리
 
-PR이 머지되면:
+배치 PR이 머지되면:
 
 ```bash
-cd /path/to/thaki-shared && git checkout main && git pull
-cd /path/to/thaki-shared && git branch -d design-sync
+cd /path/to/thaki-shared && git checkout dev && git pull
+# 배치 브랜치만 삭제 (design-sync는 유지)
+git branch -d ds-batch-{N}
 ```
 
-다음 싱크 시 Step 3에서 `design-sync` 브랜치가 새로 생성됩니다 (main 최신 기준).
+- **배치 브랜치** (`ds-batch-*`): 머지 후 즉시 삭제
+- **design-sync 브랜치**: 모든 싱크 작업이 완료될 때까지 유지. 주기적으로 dev를 merge하여 최신 상태 유지
+- 모든 싱크가 완료되고 design-sync와 dev의 diff가 없을 때 비로소 삭제
+
+```bash
+# design-sync에 dev 최신 반영 (배치 머지 후)
+git checkout design-sync && git merge dev --no-edit
+
+# 모든 싱크 완료 후 최종 삭제
+git diff dev..design-sync --shortstat  # 차이 없으면 삭제 가능
+git branch -d design-sync
+```
 
 ## Safety Guards
 
@@ -479,9 +503,9 @@ Step 2에서 빌드가 실패하면 PR을 생성하지 않습니다.
 
 PR 본문을 반드시 사용자에게 보여주고 승인을 받습니다. 자동으로 PR을 생성하지 않습니다.
 
-### Guard 4: main 직접 푸시 금지
+### Guard 4: dev 직접 푸시 금지
 
-반드시 `design-sync` 브랜치에서 PR을 통해 머지합니다. main에 직접 커밋/푸시하지 않습니다.
+반드시 `design-sync` 브랜치에서 PR을 통해 머지합니다. dev에 직접 커밋/푸시하지 않습니다.
 
 ### Guard 5: 사용자 명시적 push 승인 필수
 
@@ -526,7 +550,7 @@ Review Guide의 체크 항목은 배치 내용에 맞게 **구체적으로** 작
 ### 데이터 소스 우선순위
 
 1. **스펙 파일**: `specs/{ComponentName}.md`의 "주요 디자인 차이" → 주요 변경점 테이블
-2. **git diff**: `git diff main..{branch} -- src/components/{Name}/` → 변경 코드 요약
+2. **git diff**: `git diff dev..{branch} -- src/components/{Name}/` → 변경 코드 요약
 3. **Evaluate 리포트**: 금지 변경 검증 결과 → Safety Checklist
 4. **git diff --name-only**: 변경된 파일 목록 → Changed Files 테이블
 
@@ -535,8 +559,8 @@ Review Guide의 체크 항목은 배치 내용에 맞게 **구체적으로** 작
 1. **Before/After 테이블은 스펙 기반**: `specs/{ComponentName}.md`의 "주요 디자인 차이" 항목을 **빠짐없이** 나열
 2. **diff는 핵심만 발췌**: 전체 diff가 아닌 리뷰어가 판단에 필요한 핵심 변경만 포함. 단, 생략하지 않음
 3. **Safety Checklist는 Evaluate 결과 반영**: Evaluate 리포트의 금지 변경 검증 결과를 그대로 반영
-4. **Changed Files는 git diff 기반**: `git diff main..{branch} --name-only`에서 자동 추출
-5. **Commits 테이블은 git log 기반**: `git log main..{branch} --oneline`에서 자동 추출
+4. **Changed Files는 git diff 기반**: `git diff dev..{branch} --name-only`에서 자동 추출
+5. **Commits 테이블은 git log 기반**: `git log dev..{branch} --oneline`에서 자동 추출
 
 ### APPEND 모드 추가 규칙
 

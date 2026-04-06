@@ -22,71 +22,71 @@
 
 ## 1:1 대응 (38개)
 
-> 싱크 상태: `머지` = 컴포넌트 레벨 PR 머지됨 | `PR #N` = 배치 PR 오픈 | `—` = 미진행
+> 싱크 상태: `머지` = dev에 머지됨 | `PR #N` = PR 오픈 (미머지) | `design-sync` = design-sync 브랜치에 잔여 후속 수정 있음 | `revert` = 머지 후 revert됨 | `—` = 미진행
 
-| #   | thaki-shared       | TDS               | 비고                                                       | 싱크                |
-| --- | ------------------ | ----------------- | ---------------------------------------------------------- | ------------------- |
-| 1   | Badge              | Badge             |                                                            | 머지 #54/#56        |
-| 2   | Breadcrumb         | Breadcrumb        |                                                            | PR #126             |
-| 3   | Button             | Button            |                                                            | 머지 #105 + PR #131 |
-| 4   | Checkbox           | Checkbox          |                                                            | PR #124             |
-| 5   | ContextMenu        | ContextMenu       |                                                            | 머지 #133           |
-| 6   | CopyButton         | CopyButton        |                                                            | 머지 #54/#57        |
-| 7   | DatePicker         | DatePicker        |                                                            | PR #131             |
-| 8   | Disclosure         | Disclosure        |                                                            | PR #124             |
-| 9   | FloatingCard       | FloatingCard      |                                                            | —                   |
-| 10  | FormField          | FormField         |                                                            | 머지 #99            |
-| 11  | InlineMessage      | InlineMessage     |                                                            | 머지 #104           |
-| 12  | Input              | Input             | TDS는 Input 폴더에 Textarea, NumberInput, SearchInput 포함 | 머지 #99 + PR #127  |
-| 13  | MonitoringToolbar  | MonitoringToolbar |                                                            | —                   |
-| 14  | Pagination         | Pagination        |                                                            | PR #131             |
-| 15  | Password           | Password          |                                                            | PR #125             |
-| 16  | ProgressBar        | ProgressBar       |                                                            | 머지 #119           |
-| 17  | Skeleton           | Skeleton          |                                                            | —                   |
-| 18  | StatusIndicator    | StatusIndicator   |                                                            | PR #130             |
-| 19  | TabBar             | TabBar            |                                                            | PR #125             |
-| 20  | Table              | Table             |                                                            | —                   |
-| 21  | Toast              | Toast             |                                                            | —                   |
-| 22  | Toggle             | Toggle            |                                                            | 머지 #99            |
-| 23  | Tooltip            | Tooltip           |                                                            | PR #130             |
-| 24  | Accordion          | Accordion         |                                                            | 머지 #52/#120       |
-| 25  | Tag                | Tag               |                                                            | —                   |
-| 26  | Textarea           | Textarea          | TDS는 Input 폴더 내                                        | PR #130             |
-| 27  | Tabs               | Tabs              |                                                            | PR #125             |
-| 28  | Popover            | Popover           | shared에 별도 Popover 없음, Tooltip에 통합 가능            | —                   |
-| 29  | RadioButton        | Radio             | 이름 차이                                                  | —                   |
-| 30  | RadioGroup         | RadioGroup        | TDS는 Radio 폴더 내                                        | —                   |
-| 31  | Dropdown           | Select + Dropdown | TDS Select가 주 대응                                       | PR #129             |
-| 32  | Sidebar            | SNBMenuItem       | partial, 사이드바 메뉴 아이템                              | PR #127             |
-| 33  | LoadingSpinner     | Loading           | 이름 차이                                                  | —                   |
-| 34  | Range              | Slider            | 이름 차이                                                  | —                   |
-| 35  | Fieldset           | SectionCard       | 역할 유사                                                  | —                   |
-| 36  | FrameControls      | WindowControl     | 이름 차이                                                  | PR #126             |
-| 37  | NavigationControls | TopBar            | 네비게이션 부분                                            | PR #126             |
-| 38  | ToolBar            | TopBar            | TDS TopBar가 대응                                          | PR #126             |
+| #   | thaki-shared       | TDS               | 비고                                                       | 싱크                        |
+| --- | ------------------ | ----------------- | ---------------------------------------------------------- | --------------------------- |
+| 1   | Badge              | Badge             |                                                            | 머지 #54/#56                |
+| 2   | Breadcrumb         | Breadcrumb        |                                                            | PR #155                     |
+| 3   | Button             | Button            |                                                            | 머지 #105 + PR #154         |
+| 4   | Checkbox           | Checkbox          |                                                            | revert (#124→#142), PR #154 |
+| 5   | ContextMenu        | ContextMenu       |                                                            | 머지 #133                   |
+| 6   | CopyButton         | CopyButton        |                                                            | 머지 #54/#57                |
+| 7   | DatePicker         | DatePicker        |                                                            | PR #156                     |
+| 8   | Disclosure         | Disclosure        |                                                            | revert (#124→#142), PR #154 |
+| 9   | FloatingCard       | FloatingCard      |                                                            | PR #156                     |
+| 10  | FormField          | FormField         |                                                            | 머지 #99/#146               |
+| 11  | InlineMessage      | InlineMessage     |                                                            | 머지 #104                   |
+| 12  | Input              | Input             | TDS는 Input 폴더에 Textarea, NumberInput, SearchInput 포함 | 머지 #99/#127 + PR #153     |
+| 13  | MonitoringToolbar  | MonitoringToolbar | 싱크 불필요                                                | skip                        |
+| 14  | Pagination         | Pagination        |                                                            | PR #156                     |
+| 15  | Password           | Password          |                                                            | 머지 #125                   |
+| 16  | ProgressBar        | ProgressBar       |                                                            | 머지 #119                   |
+| 17  | Skeleton           | Skeleton          | 싱크 불필요                                                | skip                        |
+| 18  | StatusIndicator    | StatusIndicator   |                                                            | 머지 #130                   |
+| 19  | TabBar             | TabBar            |                                                            | 머지 #125 + PR #153         |
+| 20  | Table              | Table             |                                                            | PR #157                     |
+| 21  | Toast              | Toast             |                                                            | —                           |
+| 22  | Toggle             | Toggle            |                                                            | 머지 #99                    |
+| 23  | Tooltip            | Tooltip           |                                                            | 머지 #130                   |
+| 24  | Accordion          | Accordion         |                                                            | 머지 #52/#120               |
+| 25  | Tag                | Tag               |                                                            | —                           |
+| 26  | Textarea           | Textarea          | TDS는 Input 폴더 내                                        | 머지 #130                   |
+| 27  | Tabs               | Tabs              |                                                            | 머지 #125 + PR #153         |
+| 28  | Popover            | Popover           | shared에 별도 Popover 없음, Tooltip에 통합 가능            | —                           |
+| 29  | RadioButton        | Radio             | RadioGroup에 포함                                          | skip                        |
+| 30  | RadioGroup         | RadioGroup        | TDS는 Radio 폴더 내                                        | PR #154                     |
+| 31  | Dropdown           | Select + Dropdown | TDS Select가 주 대응                                       | 머지 #129                   |
+| 32  | Sidebar            | SNBMenuItem       | partial, 사이드바 메뉴 아이템                              | 머지 #127                   |
+| 33  | LoadingSpinner     | Loading (Spinner) | 이름 차이, TDS SpinnerPage 참조                            | —                           |
+| 34  | Range              | Slider            | 이름 차이                                                  | —                           |
+| 35  | Fieldset           | SectionCard       | 역할 유사                                                  | —                           |
+| 36  | FrameControls      | WindowControl     | 이름 차이                                                  | PR #155                     |
+| 37  | NavigationControls | TopBar            | 네비게이션 부분                                            | PR #155                     |
+| 38  | ToolBar            | TopBar            | TDS TopBar가 대응                                          | PR #155                     |
 
 ## 부분 대응 (16개)
 
 > **결정**: 전부 `keep-sync` — shared 컴포넌트 유지, 구조/API 차이 허용, TDS 디자인 토큰(색상, 간격, radius, 타이포그래피)만 싱크
 
-| #   | thaki-shared                 | TDS 대응                | 비고                               | 결정       | 싱크                     |
-| --- | ---------------------------- | ----------------------- | ---------------------------------- | ---------- | ------------------------ |
-| 1   | ActionModal                  | Modal + ConfirmModal    | shared는 단일 컴포넌트, TDS는 분리 | keep-as-is | —                        |
-| 2   | DeleteResourceModal          | ConfirmModal            | TDS ConfirmModal의 danger variant  | keep-sync  | —                        |
-| 3   | ResourceActionModal          | ConfirmModal            | TDS ConfirmModal의 variant         | keep-sync  | —                        |
-| 4   | AppLayout                    | PageShell               | 전체 레이아웃 구조 차이            | keep-sync  | PR #127                  |
-| 5   | CreateLayout                 | Wizard (SectionCard)    | TDS는 SectionCard + Wizard 패턴    | keep-sync  | —                        |
-| 6   | DetailCard                   | SectionCard.DataRow     | TDS는 SectionCard 내 DataRow       | keep-sync  | PR #128                  |
-| 7   | DetailPageHeader             | DetailHeader            | 구조 차이 (compound vs flat)       | keep-sync  | PR #128                  |
-| 8   | EmptyUI                      | EmptyState              | 이름+API 차이                      | keep-sync  | —                        |
-| 9   | Error (403/404/500)          | ErrorState              | TDS는 범용 ErrorState              | keep-sync  | —                        |
-| 10  | FilterSearch                 | FilterSearchInput       | TDS Input 폴더 내 포함             | keep-sync  | 머지 #121/#123 + PR #128 |
-| 11  | InfoContainer                | InfoBox                 | 이름+API 차이                      | keep-sync  | —                        |
-| 12  | Layout (Stack/VStack/HStack) | VStack/HStack/Container | TDS는 개별 컴포넌트                | keep-sync  | —                        |
-| 13  | MultiItemDisplay             | BadgeList               | 역할 동일, API 차이                | keep-sync  | —                        |
-| 14  | TabContainer                 | Tabs (TabPanel)         | TDS Tabs의 일부                    | keep-sync  | —                        |
-| 15  | TabSelector                  | Tabs (variant)          | TDS Tabs의 boxed variant           | keep-sync  | —                        |
-| 16  | Title                        | PageHeader              | 역할 유사                          | keep-sync  | —                        |
+| #   | thaki-shared                 | TDS 대응                | 비고                               | 결정       | 싱크                          |
+| --- | ---------------------------- | ----------------------- | ---------------------------------- | ---------- | ----------------------------- |
+| 1   | ActionModal                  | Modal + ConfirmModal    | shared는 단일 컴포넌트, TDS는 분리 | keep-as-is | PR #157                       |
+| 2   | DeleteResourceModal          | ConfirmModal            | TDS ConfirmModal의 danger variant  | keep-sync  | ActionModal 반영으로 완료     |
+| 3   | ResourceActionModal          | ConfirmModal            | TDS ConfirmModal의 variant         | keep-sync  | ActionModal 반영으로 완료     |
+| 4   | AppLayout                    | PageShell               | 전체 레이아웃 구조 차이            | keep-sync  | 머지 #127                     |
+| 5   | CreateLayout                 | Wizard (SectionCard)    | TDS는 SectionCard + Wizard 패턴    | keep-sync  | PR #157                       |
+| 6   | DetailCard                   | SectionCard.DataRow     | TDS는 SectionCard 내 DataRow       | keep-sync  | 머지 #128                     |
+| 7   | DetailPageHeader             | DetailHeader            | 구조 차이 (compound vs flat)       | keep-sync  | 머지 #128 + PR #153           |
+| 8   | EmptyUI                      | EmptyState              | 이름+API 차이                      | keep-sync  | —                             |
+| 9   | Error (403/404/500)          | ErrorState              | TDS는 범용 ErrorState              | skip       | skip                          |
+| 10  | FilterSearch                 | FilterSearchInput       | TDS Input 폴더 내 포함             | keep-sync  | 머지 #121/#123/#128 + PR #153 |
+| 11  | InfoContainer                | InfoBox                 | 이름+API 차이                      | keep-sync  | —                             |
+| 12  | Layout (Stack/VStack/HStack) | VStack/HStack/Container | TDS는 개별 컴포넌트                | keep-sync  | —                             |
+| 13  | MultiItemDisplay             | BadgeList               | 역할 동일, API 차이                | keep-sync  | —                             |
+| 14  | TabContainer                 | Tabs (TabPanel)         | TDS Tabs의 일부                    | keep-sync  | —                             |
+| 15  | TabSelector                  | Tabs (variant)          | TDS Tabs의 boxed variant           | keep-sync  | —                             |
+| 16  | Title                        | PageHeader              | 역할 유사                          | keep-sync  | —                             |
 
 ## 미대응 — thaki-shared 고유 (12개)
 
@@ -125,7 +125,43 @@
 
 ## 싱크 진행 현황
 
-- **1:1 대응**: 머지 9개 + PR 오픈 13개 = 22/38 진행, 16개 미진행
-- **부분 대응**: 머지 1개 + PR 오픈 3개 = 4/16 진행, 12개 미진행
-- **배치 PR**: thaki-shared repo #124~#131 (전부 OPEN, 미머지)
-- **머지된 컴포넌트 PR**: #52/#99/#104/#105/#119/#120/#121/#123/#133
+### dev 머지 완료 (배치 PR)
+
+| PR   | 브랜치     | 컴포넌트                                                | 상태          |
+| ---- | ---------- | ------------------------------------------------------- | ------------- |
+| #124 | ds-batch-1 | Checkbox, Disclosure, Tokens                            | revert (#142) |
+| #125 | ds-batch-2 | Password, Tabs, TabBar                                  | 머지          |
+| #127 | ds-batch-4 | Sidebar, AppLayout, Input                               | 머지          |
+| #128 | ds-batch-5 | FilterSearch, SearchInput, DetailCard, DetailPageHeader | 머지          |
+| #129 | ds-batch-6 | NumberInput, Dropdown                                   | 머지          |
+| #130 | ds-batch-7 | Textarea, StatusIndicator, Tooltip                      | 머지          |
+| #135 | —          | Card 컴포넌트 + semantic 토큰 정렬                      | 머지          |
+| #137 | —          | 색상 토큰 싱크                                          | 머지          |
+| #146 | ds-batch-9 | FormField                                               | 머지          |
+
+### dev 미머지 — file-checkout 배치 (PR OPEN)
+
+> 기존 #126/#131/#139 닫고 file-checkout 방식으로 재생성 (4/6)
+
+| PR   | 브랜치     | 컴포넌트                                                    | 비고                     |
+| ---- | ---------- | ----------------------------------------------------------- | ------------------------ |
+| #153 | ds-batch-1 | Input, FilterSearch, Tabs, TabBar, DetailPageHeader + 토큰  | 4/6 OPEN (후속수정+토큰) |
+| #154 | ds-batch-2 | Checkbox, RadioGroup, Disclosure, Button + shared-utilities | 4/6 OPEN (Form Controls) |
+| #155 | ds-batch-3 | FrameControls, NavigationControls, ToolBar, Breadcrumb      | 4/6 OPEN (TopBar 영역)   |
+| #156 | ds-batch-4 | DatePicker, DateRangePicker, Pagination, FloatingCard       | 4/6 OPEN (날짜+유틸리티) |
+| #157 | ds-batch-5 | Table, TcTable, ActionModal, CreateLayout                   | 4/6 OPEN (테이블+기타)   |
+
+### 닫은 PR (재생성으로 대체)
+
+| PR   | 브랜치      | 컴포넌트                                                   | 사유                                          |
+| ---- | ----------- | ---------------------------------------------------------- | --------------------------------------------- |
+| #126 | ds-batch-3  | FrameControls, TopBar, Breadcrumb                          | cherry-pick 방식, 후속수정 누락 → #155로 대체 |
+| #131 | ds-batch-8  | Pagination, DatePicker, Button, FloatingCard, CreateLayout | 62파일 포함 (타이틀과 불일치) → 분할 대체     |
+| #139 | design-sync | RadioGroup, ActionModal, Table                             | 63파일 포함 (타이틀과 불일치) → 분할 대체     |
+
+### 요약
+
+- **1:1 대응 (38개)**: 머지 15개 + revert→PR복구 2개 + PR OPEN 12개 + skip 3개 = 32/38 진행, **6개 미진행** (Toast, Tag, Popover, LoadingSpinner, Range, Fieldset)
+- **부분 대응 (16개)**: 머지 4개 + PR OPEN 3개 + 완료 2개 + skip 1개 = 10/16 진행, **6개 미진행** (EmptyUI, InfoContainer, Layout, MultiItemDisplay, TabContainer, TabSelector, Title)
+- **머지된 컴포넌트 레벨 PR**: #52/#54/#56/#57/#99/#104/#105/#119/#120/#121/#123/#133
+- **design-sync 브랜치**: 유지 중 (모든 배치 머지 후 diff=0 확인 시 정리)

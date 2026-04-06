@@ -325,6 +325,8 @@ export function TopBarPage() {
           code={`<TopBar
   showSidebarToggle
   onSidebarToggle={() => {}}
+  canGoBack={false}     // disabled when no history
+  canGoForward={false}  // disabled when no forward history
   breadcrumb={<Breadcrumb items={[{ label: 'Home' }, { label: 'Settings' }]} />}
   actions={<TopBarAction icon={<IconBell size={16} />} aria-label="Notifications" />}
 />`}
@@ -409,6 +411,25 @@ export function TopBarPage() {
                     />
                   </>
                 }
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Disabled Navigation</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                히스토리가 없을 때 뒤로/앞으로 버튼이 비활성화된다. canGoBack, canGoForward prop으로
+                제어.
+              </span>
+            </VStack>
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+              <TopBar
+                showSidebarToggle
+                onSidebarToggle={() => {}}
+                canGoBack={false}
+                canGoForward={false}
+                breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
               />
             </div>
           </VStack>
