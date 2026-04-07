@@ -481,7 +481,6 @@ export function InlineMessagePage() {
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Toast', path: '/design/components/toast' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
       ]}
     />
   );

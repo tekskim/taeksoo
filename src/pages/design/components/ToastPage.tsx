@@ -80,8 +80,8 @@ export function ToastPage() {
         '입력 오류 안내 (→ Validation)',
       ]}
       preview={
-        <ComponentPreview code={`toast('Instance created successfully.');`}>
-          <VStack gap={3} className="items-center pointer-events-none">
+        <ComponentPreview code={`toast('Instance created successfully.');`} previewClassName="p-3">
+          <VStack gap={3} className="items-start pointer-events-none">
             <Toast
               toast={{
                 id: 'preview-default',

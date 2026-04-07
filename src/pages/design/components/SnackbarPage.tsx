@@ -50,10 +50,10 @@ function StaticNotificationCard({
 
   return (
     <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden">
-      <div className="flex gap-2 p-3">
-        <div className="shrink-0">{iconMap[type]}</div>
+      <div className="flex gap-2 p-3 items-start">
+        <div className="shrink-0 mt-px">{iconMap[type]}</div>
         <div className="flex-1 min-w-0">
-          <div className="flex gap-2 items-start">
+          <div className="flex gap-2 items-stretch">
             <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
               <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
               {project && (
@@ -62,18 +62,13 @@ function StaticNotificationCard({
                 </Badge>
               )}
             </div>
-            <div className="shrink-0 flex flex-col items-end gap-1">
-              <div className="flex flex-col items-end">
-                <button
-                  type="button"
-                  className="size-5 flex items-center justify-center text-[var(--color-text-muted)]"
-                >
-                  <IconX size={16} stroke={1.5} />
-                </button>
-                <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
-                  {time}
-                </span>
-              </div>
+            <div className="shrink-0 flex flex-col items-end justify-between">
+              <button
+                type="button"
+                className="size-5 flex items-center justify-center text-[var(--color-text-muted)]"
+              >
+                <IconX size={16} stroke={1.5} />
+              </button>
               {showAppIcon && (
                 <img
                   src={AppIconIAM}
@@ -81,6 +76,9 @@ function StaticNotificationCard({
                   className="size-5 object-cover pointer-events-none"
                 />
               )}
+              <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+                {time}
+              </span>
             </div>
           </div>
         </div>
@@ -93,7 +91,7 @@ function StaticNotificationCard({
               type="button"
               className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
             >
-              <span className="text-label-sm text-[var(--color-text-muted)]">View detail</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">View detail</span>
               {isExpanded ? (
                 <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
               ) : (
@@ -389,7 +387,6 @@ export function SnackbarPage() {
         { label: 'Toast', path: '/design/components/toast' },
         { label: 'Inline Message', path: '/design/components/inline-message' },
         { label: 'Modal', path: '/design/components/modal' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
         {
           label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',

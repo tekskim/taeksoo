@@ -79,7 +79,7 @@ function StaticSnackbarCard({
       <div className="flex gap-2 p-3">
         <div className="shrink-0 pt-0.5">{TYPE_ICONS[type]}</div>
         <div className="flex-1 min-w-0">
-          <div className="flex gap-2 items-start">
+          <div className="flex gap-2 items-stretch">
             <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
               <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
               {project && (
@@ -88,10 +88,7 @@ function StaticSnackbarCard({
                 </Badge>
               )}
             </div>
-            <div className="shrink-0 flex flex-col items-end gap-1">
-              <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
-                {time}
-              </span>
+            <div className="shrink-0 flex flex-col items-end justify-between">
               {showAppIcon && appIcon && (
                 <img
                   src={appIcon}
@@ -99,6 +96,9 @@ function StaticSnackbarCard({
                   className="size-5 object-cover pointer-events-none"
                 />
               )}
+              <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+                {time}
+              </span>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@ function StaticSnackbarCard({
               type="button"
               className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
             >
-              <span className="text-label-sm text-[var(--color-text-muted)]">View detail</span>
+              <span className="text-body-sm text-[var(--color-text-muted)]">View detail</span>
               {isExpanded ? (
                 <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
               ) : (
@@ -163,7 +163,7 @@ function GlobalPanelPreview() {
               <IconCheckbox size={16} stroke={1.5} />
             </button>
             <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
-              <TabList className="w-full px-4 justify-center">
+              <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
                 <Tab value="unread">
                   Unread
@@ -175,10 +175,10 @@ function GlobalPanelPreview() {
 
           {/* App Filter */}
           <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="sm" fullWidth />
+            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
+          <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
             <div className="flex flex-col gap-2">
               <StaticSnackbarCard
                 type="success"
@@ -228,7 +228,7 @@ function GlobalPanelPreview() {
               <IconCheckbox size={16} stroke={1.5} />
             </button>
             <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
-              <TabList className="w-full px-4 justify-center">
+              <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
                 <Tab value="unread">
                   Unread
@@ -239,7 +239,7 @@ function GlobalPanelPreview() {
           </div>
 
           <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="sm" fullWidth />
+            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
           </div>
 
           {/* Static open dropdown */}
@@ -259,7 +259,7 @@ function GlobalPanelPreview() {
             ))}
           </div>
 
-          <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
+          <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
             <div className="flex flex-col gap-2">
               <StaticSnackbarCard
                 type="success"
@@ -449,7 +449,7 @@ function GlobalPanelDemo() {
               size="sm"
               className="w-full"
             >
-              <TabList className="w-full px-4 justify-center">
+              <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
                 <Tab value="unread">
                   Unread
@@ -467,7 +467,7 @@ function GlobalPanelDemo() {
               options={availableAppOptions}
               value={activeApp}
               onChange={(v) => setActiveApp(v)}
-              size="sm"
+              size="md"
               fullWidth
             />
           </div>
@@ -477,7 +477,7 @@ function GlobalPanelDemo() {
               No notifications
             </div>
           ) : (
-            <div className="max-h-[420px] overflow-y-auto p-2 drawer-scroll">
+            <div className="max-h-[420px] overflow-y-auto px-3 py-2 drawer-scroll">
               <div className="flex flex-col gap-2">
                 {filteredNotifications.map((n) => (
                   <InteractiveNotificationCard
@@ -532,14 +532,14 @@ function InteractiveNotificationCard({
           )}
         </div>
         <div className="shrink-0 flex flex-col items-end gap-1">
-          <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
-            {notification.time}
-          </span>
           <img
             src={notification.appIcon}
             alt="App icon"
             className="size-5 object-cover pointer-events-none"
           />
+          <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
+            {notification.time}
+          </span>
         </div>
       </div>
 
@@ -927,7 +927,6 @@ export function GlobalNotificationPanelPage() {
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Toast', path: '/design/components/toast' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
         { label: 'Error & Alert', path: '/design/policies/error-alert' },
         { label: 'Desktop UI', path: '/design/patterns/desktop-grid' },
       ]}
