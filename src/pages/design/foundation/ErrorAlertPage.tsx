@@ -652,11 +652,9 @@ export function ErrorAlertPage() {
       guidelines={<ErrorAlertGuidelines />}
       relatedLinks={[
         { label: 'Toast', path: '/design/components/toast' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
         { label: 'Input Field', path: '/design/components/input' },
         { label: 'Modal', path: '/design/components/modal' },
         { label: 'Inline Message', path: '/design/components/inline-message' },
-        { label: 'Notification Center', path: '/design/components/notification-center' },
         {
           label: 'Global Notification Panel',
           path: '/design/components/global-notification-panel',

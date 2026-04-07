@@ -376,7 +376,6 @@ import { MenuPage } from '@/pages/design/components/MenuPage';
 import { ContextMenuPage } from '@/pages/design/components/ContextMenuPage';
 import { ModalPage } from '@/pages/design/components/ModalPage';
 import { DrawerSectionPage } from '@/pages/design/components/DrawerSectionPage';
-import { NotificationCenterPage } from '@/pages/design/components/NotificationCenterPage';
 import { SnackbarPage } from '@/pages/design/components/SnackbarPage';
 import { ToastPage } from '@/pages/design/components/ToastPage';
 import { GlobalNotificationPanelPage } from '@/pages/design/components/GlobalNotificationPanelPage';
@@ -1080,7 +1079,6 @@ function AppRoutes() {
         <Route path="components/context-menu" element={<ContextMenuPage />} />
         <Route path="components/modal" element={<ModalPage />} />
         <Route path="components/drawer" element={<DrawerSectionPage />} />
-        <Route path="components/notification-center" element={<NotificationCenterPage />} />
         <Route path="components/snackbar" element={<SnackbarPage />} />
         <Route path="components/toast" element={<ToastPage />} />
         <Route

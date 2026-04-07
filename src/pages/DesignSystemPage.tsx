@@ -354,7 +354,6 @@ const overlayItems = [
   { id: 'context-menu', label: 'Context menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'notification-center', label: 'Notification center', icon: IconBell },
   { id: 'toast', label: 'Toast', icon: IconBell },
   { id: 'global-notification-panel', label: 'Global notification panel', icon: IconBell },
   { id: 'floating-card', label: 'Floating card', icon: IconLayoutGrid },
@@ -1319,65 +1318,11 @@ const summaryItems: WizardSummaryItem[] = [
 }
 
 /* ----------------------------------------
-   Notification center Section
+   DatePicker Section (with state)
    ---------------------------------------- */
 
-const initialNotifications: NotificationItem[] = [
-  {
-    id: '1',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
-    time: '10:23',
-    project: 'Proj1',
-    isRead: false,
-    detail: {
-      code: 200,
-      message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
-    },
-  },
-  {
-    id: '2',
-    type: 'success',
-    message: 'Volume "data-vol-01" attached to instance.',
-    time: '10:15',
-    project: 'Proj1',
-    isRead: false,
-  },
-  {
-    id: '3',
-    type: 'error',
-    message: 'Failed to create volume "data-vol-02".',
-    time: '09:30',
-    project: 'Proj2',
-    isRead: false,
-    detail: {
-      code: 400,
-      message:
-        "Flavor's disk is smaller than the minimum size specified in image metadata. Flavor disk is 1073741824 bytes, minimum size is 10737418240 bytes.",
-    },
-  },
-  {
-    id: '4',
-    type: 'warning',
-    message: 'Instance "db-server" is running low on disk space.',
-    time: '09:15',
-    project: 'Proj1',
-    isRead: true,
-    detail: {
-      code: 'WARN_DISK_LOW',
-      message: 'Disk usage is at 92%. Consider expanding the volume or cleaning up unused files.',
-    },
-  },
-  {
-    id: '5',
-    type: 'info',
-    message: 'System maintenance scheduled for tomorrow.',
-    time: 'Yesterday',
-    isRead: true,
-  },
-];
-
 function NotificationCenterSection() {
+  const initialNotifications: NotificationItem[] = [];
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
 
   const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -13940,9 +13885,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   </VStack>
                 </VStack>
               </Section>
-
-              {/* Notification center */}
-              <NotificationCenterSection />
 
               {/* Toast Section */}
               <Section
