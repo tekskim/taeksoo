@@ -17,10 +17,10 @@ export const spinnerVariants = cva('inline-block relative', {
 export const spinnerInnerVariants = cva('rounded-full border-solid animate-spin', {
   variants: {
     size: {
-      xs: 'size-3 border-[1.5px]',
-      sm: 'size-4 border-2',
-      md: 'size-6 border-[3px]',
-      lg: 'size-8 border-4',
+      xs: 'size-3 border-[1px]',
+      sm: 'size-4 border-[1px]',
+      md: 'size-6 border-[1.5px]',
+      lg: 'size-8 border-2',
     },
     color: {
       primary: 'spinner-primary',

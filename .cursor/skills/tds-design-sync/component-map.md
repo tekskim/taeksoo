@@ -16,9 +16,7 @@
 - **shared 고유 12개**: 전부 `skip` — 싱크 대상 제외
 - **TDS 고유 11개**:
   - `shared 신규 생성`: NotificationCenter (1개)
-  - `TDS 구현`: MetricCard (1개, shared에는 생성 안 함)
-  - `보류`: Chip (1개, Tag와의 관계 재검토 필요)
-  - `skip`: 나머지 8개 (Drawer, InfoBox, ListToolbar, Menu, PageHeader, SectionCard, SelectionIndicator, Wizard)
+  - `skip`: 나머지 10개 (Chip→Tag 대응, MetricCard 미사용, Drawer, InfoBox, ListToolbar, Menu, PageHeader, SectionCard, SelectionIndicator, Wizard)
 
 ## 1:1 대응 (38개)
 
@@ -46,21 +44,21 @@
 | 18  | StatusIndicator    | StatusIndicator   |                                                            | 머지 #130                   |
 | 19  | TabBar             | TabBar            |                                                            | 머지 #125 + PR #153         |
 | 20  | Table              | Table             |                                                            | PR #157                     |
-| 21  | Toast              | Toast             |                                                            | —                           |
+| 21  | Toast              | Toast             |                                                            | 대기 (싱크 예정)            |
 | 22  | Toggle             | Toggle            |                                                            | 머지 #99                    |
 | 23  | Tooltip            | Tooltip           |                                                            | 머지 #130                   |
 | 24  | Accordion          | Accordion         |                                                            | 머지 #52/#120               |
-| 25  | Tag                | Tag               |                                                            | —                           |
+| 25  | Tag                | Tag               | multiSelect 스타일 수정 완료                               | 완료 (PR #158)              |
 | 26  | Textarea           | Textarea          | TDS는 Input 폴더 내                                        | 머지 #130                   |
 | 27  | Tabs               | Tabs              |                                                            | 머지 #125 + PR #153         |
-| 28  | Popover            | Popover           | shared에 별도 Popover 없음, Tooltip에 통합 가능            | —                           |
+| 28  | Popover            | Popover           | shared Portal이 저수준 대응 (스토리북: Overlay/Popover)    | skip                        |
 | 29  | RadioButton        | Radio             | RadioGroup에 포함                                          | skip                        |
 | 30  | RadioGroup         | RadioGroup        | TDS는 Radio 폴더 내                                        | PR #154                     |
 | 31  | Dropdown           | Select + Dropdown | TDS Select가 주 대응                                       | 머지 #129                   |
 | 32  | Sidebar            | SNBMenuItem       | partial, 사이드바 메뉴 아이템                              | 머지 #127                   |
-| 33  | LoadingSpinner     | Loading (Spinner) | 이름 차이, TDS SpinnerPage 참조                            | —                           |
-| 34  | Range              | Slider            | 이름 차이                                                  | —                           |
-| 35  | Fieldset           | SectionCard       | 역할 유사                                                  | —                           |
+| 33  | LoadingSpinner     | Loading (Spinner) | 이름 차이, TDS SpinnerPage 참조                            | 대기 (싱크 예정)            |
+| 34  | Range              | Slider            | 이름 차이                                                  | 보류                        |
+| 35  | Fieldset           | SectionCard       | 역할 유사, 토큰 정렬                                       | 대기 (싱크 예정)            |
 | 36  | FrameControls      | WindowControl     | 이름 차이                                                  | PR #155                     |
 | 37  | NavigationControls | TopBar            | 네비게이션 부분                                            | PR #155                     |
 | 38  | ToolBar            | TopBar            | TDS TopBar가 대응                                          | PR #155                     |
@@ -69,24 +67,24 @@
 
 > **결정**: 전부 `keep-sync` — shared 컴포넌트 유지, 구조/API 차이 허용, TDS 디자인 토큰(색상, 간격, radius, 타이포그래피)만 싱크
 
-| #   | thaki-shared                 | TDS 대응                | 비고                               | 결정       | 싱크                          |
-| --- | ---------------------------- | ----------------------- | ---------------------------------- | ---------- | ----------------------------- |
-| 1   | ActionModal                  | Modal + ConfirmModal    | shared는 단일 컴포넌트, TDS는 분리 | keep-as-is | PR #157                       |
-| 2   | DeleteResourceModal          | ConfirmModal            | TDS ConfirmModal의 danger variant  | keep-sync  | ActionModal 반영으로 완료     |
-| 3   | ResourceActionModal          | ConfirmModal            | TDS ConfirmModal의 variant         | keep-sync  | ActionModal 반영으로 완료     |
-| 4   | AppLayout                    | PageShell               | 전체 레이아웃 구조 차이            | keep-sync  | 머지 #127                     |
-| 5   | CreateLayout                 | Wizard (SectionCard)    | TDS는 SectionCard + Wizard 패턴    | keep-sync  | PR #157                       |
-| 6   | DetailCard                   | SectionCard.DataRow     | TDS는 SectionCard 내 DataRow       | keep-sync  | 머지 #128                     |
-| 7   | DetailPageHeader             | DetailHeader            | 구조 차이 (compound vs flat)       | keep-sync  | 머지 #128 + PR #153           |
-| 8   | EmptyUI                      | EmptyState              | 이름+API 차이                      | keep-sync  | —                             |
-| 9   | Error (403/404/500)          | ErrorState              | TDS는 범용 ErrorState              | skip       | skip                          |
-| 10  | FilterSearch                 | FilterSearchInput       | TDS Input 폴더 내 포함             | keep-sync  | 머지 #121/#123/#128 + PR #153 |
-| 11  | InfoContainer                | InfoBox                 | 이름+API 차이                      | keep-sync  | —                             |
-| 12  | Layout (Stack/VStack/HStack) | VStack/HStack/Container | TDS는 개별 컴포넌트                | keep-sync  | —                             |
-| 13  | MultiItemDisplay             | BadgeList               | 역할 동일, API 차이                | keep-sync  | —                             |
-| 14  | TabContainer                 | Tabs (TabPanel)         | TDS Tabs의 일부                    | keep-sync  | —                             |
-| 15  | TabSelector                  | Tabs (variant)          | TDS Tabs의 boxed variant           | keep-sync  | —                             |
-| 16  | Title                        | PageHeader              | 역할 유사                          | keep-sync  | —                             |
+| #   | thaki-shared                 | TDS 대응                | 비고                                 | 결정       | 싱크                          |
+| --- | ---------------------------- | ----------------------- | ------------------------------------ | ---------- | ----------------------------- |
+| 1   | ActionModal                  | Modal + ConfirmModal    | shared는 단일 컴포넌트, TDS는 분리   | keep-as-is | PR #157                       |
+| 2   | DeleteResourceModal          | ConfirmModal            | TDS ConfirmModal의 danger variant    | keep-sync  | ActionModal 반영으로 완료     |
+| 3   | ResourceActionModal          | ConfirmModal            | TDS ConfirmModal의 variant           | keep-sync  | ActionModal 반영으로 완료     |
+| 4   | AppLayout                    | PageShell               | 전체 레이아웃 구조 차이              | keep-sync  | 머지 #127                     |
+| 5   | CreateLayout                 | Wizard (SectionCard)    | TDS는 SectionCard + Wizard 패턴      | keep-sync  | PR #157                       |
+| 6   | DetailCard                   | SectionCard.DataRow     | TDS는 SectionCard 내 DataRow         | keep-sync  | 머지 #128                     |
+| 7   | DetailPageHeader             | DetailHeader            | 구조 차이 (compound vs flat)         | keep-sync  | 머지 #128 + PR #153           |
+| 8   | EmptyUI                      | EmptyState              | 이름+API 차이                        | skip       | skip                          |
+| 9   | Error (403/404/500)          | ErrorState              | TDS는 범용 ErrorState                | skip       | skip                          |
+| 10  | FilterSearch                 | FilterSearchInput       | TDS Input 폴더 내 포함               | keep-sync  | 머지 #121/#123/#128 + PR #153 |
+| 11  | InfoContainer                | InfoBox                 | 이름+API 차이, 토큰만 정렬           | keep-sync  | 대기 (싱크 예정)              |
+| 12  | Layout (Stack/VStack/HStack) | VStack/HStack/Container | TDS는 개별 컴포넌트, 토큰만 정렬     | keep-sync  | 대기 (싱크 예정)              |
+| 13  | MultiItemDisplay             | BadgeList               | 역할 동일, API 차이                  | keep-sync  | 대기 (싱크 예정)              |
+| 14  | TabContainer                 | Tabs (TabPanel)         | 탭 기반 라우팅 컨테이너, 싱크 불필요 | skip       | skip                          |
+| 15  | TabSelector                  | Tabs (variant)          | TDS Tabs의 boxed variant             | keep-sync  | 대기 (싱크 예정)              |
+| 16  | Title                        | PageHeader              | 단순 h2 래퍼, 구조 차이 큼           | skip       | skip                          |
 
 ## 미대응 — thaki-shared 고유 (12개)
 
@@ -109,19 +107,19 @@
 
 ## 미대응 — TDS 고유 (shared에 없음)
 
-| #   | TDS                         | 비고                                      | 결정              |
-| --- | --------------------------- | ----------------------------------------- | ----------------- |
-| 1   | Chip                        | shared Tag로 대응 가능                    | **보류** (재검토) |
-| 2   | Drawer                      | shared Overlay.Template drawer-horizontal | skip              |
-| 3   | InfoBox                     | shared InfoContainer가 부분 대응          | skip              |
-| 4   | ListToolbar                 | shared에 대응 없음                        | skip              |
-| 5   | Menu (MenuItem/MenuSection) | shared ContextMenu 내 포함                | skip              |
-| 6   | MetricCard                  | shared에 대응 없음                        | **TDS 구현**      |
-| 7   | NotificationCenter          | shared에 대응 없음                        | **shared 신규**   |
-| 8   | PageHeader                  | shared Title이 부분 대응                  | skip              |
-| 9   | SectionCard                 | shared Fieldset + DetailCard가 부분 대응  | skip              |
-| 10  | SelectionIndicator          | shared에 대응 없음                        | skip              |
-| 11  | Wizard                      | shared CreateLayout이 부분 대응           | skip              |
+| #   | TDS                         | 비고                                      | 결정            |
+| --- | --------------------------- | ----------------------------------------- | --------------- |
+| 1   | Chip                        | shared Tag로 대응 가능                    | skip (Tag 대응) |
+| 2   | Drawer                      | shared Overlay.Template drawer-horizontal | skip            |
+| 3   | InfoBox                     | shared InfoContainer가 부분 대응          | skip            |
+| 4   | ListToolbar                 | shared에 대응 없음                        | skip            |
+| 5   | Menu (MenuItem/MenuSection) | shared ContextMenu 내 포함                | skip            |
+| 6   | MetricCard                  | shared에 대응 없음                        | skip (미사용)   |
+| 7   | NotificationCenter          | shared에 대응 없음                        | **shared 신규** |
+| 8   | PageHeader                  | shared Title이 부분 대응                  | skip            |
+| 9   | SectionCard                 | shared Fieldset + DetailCard가 부분 대응  | skip            |
+| 10  | SelectionIndicator          | shared에 대응 없음                        | skip            |
+| 11  | Wizard                      | shared CreateLayout이 부분 대응           | skip            |
 
 ## 싱크 진행 현황
 
@@ -161,7 +159,8 @@
 
 ### 요약
 
-- **1:1 대응 (38개)**: 머지 15개 + revert→PR복구 2개 + PR OPEN 12개 + skip 3개 = 32/38 진행, **6개 미진행** (Toast, Tag, Popover, LoadingSpinner, Range, Fieldset)
-- **부분 대응 (16개)**: 머지 4개 + PR OPEN 3개 + 완료 2개 + skip 1개 = 10/16 진행, **6개 미진행** (EmptyUI, InfoContainer, Layout, MultiItemDisplay, TabContainer, TabSelector, Title)
+- **1:1 대응 (38개)**: 머지 15개 + revert→PR복구 2개 + PR OPEN 12개 + 완료 1개 + skip 4개 = 34/38 진행, **싱크 예정 3개** (Toast, LoadingSpinner, Fieldset) + **보류 1개** (Range)
+- **부분 대응 (16개)**: 머지 4개 + PR OPEN 3개 + 완료 2개 + skip 3개 = 12/16 진행, **싱크 예정 4개** (InfoContainer, Layout, MultiItemDisplay, TabSelector)
 - **머지된 컴포넌트 레벨 PR**: #52/#54/#56/#57/#99/#104/#105/#119/#120/#121/#123/#133
 - **design-sync 브랜치**: 유지 중 (모든 배치 머지 후 diff=0 확인 시 정리)
+- **남은 싱크 작업**: 7개 (Toast, LoadingSpinner, Fieldset, InfoContainer, Layout, MultiItemDisplay, TabSelector) + 보류 1개 (Range)

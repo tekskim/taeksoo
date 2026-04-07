@@ -248,9 +248,18 @@ git merge dev --no-edit
 - 없으면 dev 최신에서 새로 생성
 - 머지 충돌 시 사용자에게 알리고 해결 후 진행
 
-#### 2-C: 순차 적용
+#### 2-C: 순차 적용 (CVA base 상속 분석 포함)
 
-승인된 컴포넌트를 **순차**로 Apply합니다 (파일 충돌 방지):
+승인된 컴포넌트를 **순차**로 Apply합니다 (파일 충돌 방지).
+
+**각 컴포넌트 Apply 전 필수 확인** (tds-design-apply Pitfall 0 참조):
+
+1. 스펙에 "CVA Base 상속 분석" 섹션이 있는지 확인
+2. 있으면 리셋 필요한 base 클래스를 variant에 명시적으로 추가
+3. 스펙에 "CSS 구현 기법 차이" 섹션이 있는지 확인
+4. 있으면 TDS와 동일한 CSS property를 사용하도록 변환 (예: `border` → `inset box-shadow`)
+
+이 검증 없이 값만 맞추면 **base 상속으로 인한 시각적 불일치**가 발생합니다.
 
 ```
 [Phase 2] Apply: 1/{N} Button 적용 중...
