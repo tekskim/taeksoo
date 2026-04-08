@@ -1,7 +1,12 @@
 import ReactECharts from 'echarts-for-react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
-import { PieChartDemo, chartColors } from '../../design-system-sections/ChartComponents';
+import {
+  PieChartDemo,
+  MultiDonutChartDemo,
+  MultiHalfDonutChartDemo,
+  chartColors,
+} from '../../design-system-sections/ChartComponents';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { VStack } from '@/design-system';
 
@@ -485,6 +490,40 @@ export function PieChartPage() {
               </span>
             </VStack>
             <PieChartLoadingDemo />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Donut Chart (multi-value)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                중앙이 비어있는 도넛 형태. 총합을 중앙에 표시하며, 각 항목의 비율을 링 세그먼트로
+                나타낸다.
+              </span>
+            </VStack>
+            <MultiDonutChartDemo
+              title="Instance Status"
+              data={[
+                { name: 'Running', value: 42 },
+                { name: 'Stopped', value: 15 },
+                { name: 'Error', value: 8 },
+                { name: 'Building', value: 5 },
+              ]}
+            />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Half-Donut Chart (multi-value)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                반원(180°) 형태의 도넛 차트. 대시보드 카드처럼 세로 공간이 제한된 경우에 적합하다.
+              </span>
+            </VStack>
+            <MultiHalfDonutChartDemo
+              title="Storage Distribution"
+              data={[
+                { name: 'SSD', value: 480 },
+                { name: 'HDD', value: 320 },
+                { name: 'NVMe', value: 200 },
+              ]}
+            />
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>

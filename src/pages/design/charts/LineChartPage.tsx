@@ -749,6 +749,16 @@ export function LineChartPage() {
           </VStack>
           <VStack gap={3}>
             <VStack gap={1}>
+              <Label>With Dropdown Filter</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                헤더에 Select 드롭다운을 추가하여 데이터를 필터링할 수 있다. 노드, 디바이스,
+                인터페이스 등 리소스를 전환할 때 사용.
+              </span>
+            </VStack>
+            <AreaChartDemo variant="dropdown" />
+          </VStack>
+          <VStack gap={3}>
+            <VStack gap={1}>
               <Label>Loading State</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 데이터 로딩 중 ECharts 내장 스피너를 표시한다. showLoading prop을 사용하여 로딩
