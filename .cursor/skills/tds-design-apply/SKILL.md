@@ -166,9 +166,11 @@ Pre-flight 리포트를 보여주고 사용자 승인을 기다립니다.
    - ⚠️ **token-map.md에서 "exact"로 표기된 토큰도 실제 CSS 값이 다를 수 있음** — 반드시 `src/styles/tokens/tokens-light.css`에서 실제 resolve 값을 확인
 
 3. **토큰/프리셋 재생성** (토큰 변경 시):
+
    ```bash
    cd /path/to/thaki-shared && pnpm run generate:tokens && pnpm run generate:tailwind-preset && pnpm run generate:token-docs
    ```
+
    → `tokens-light.css`, `tokens-dark.css`, `tailwind.preset.js`, `token-docs.json`이 자동 갱신됨
 
 4. **API 변경 적용** (스펙에 `api-required` 항목이 있는 경우):
@@ -279,6 +281,83 @@ cd /path/to/thaki-shared && pnpm build
 - 기존 variant의 시맨틱 변경 (예: `primary`가 의미하는 색상 계열 변경)
 
 ## Known Pitfalls
+
+### Pitfall 0: CVA base 스타일 상속 — variant 적용 시 반드시 분석 (Critical)
+
+CVA(class-variance-authority)는 **base 스타일이 모든 variant에 무조건 상속**됩니다. variant에 새 클래스를 추가해도 base 클래스가 사라지지 않습니다.
+
+**문제 시나리오 (TabSelector 실제 사례)**:
+
+```typescript
+// base에 underline 탭용 스타일이 있음
+export const tabButtonStyles = cva(
+  [
+    'px-3 py-0 pb-2.5', // ← pb-2.5가 모든 variant에 상속
+    'border-0 border-b-2', // ← border-b-2가 모든 variant에 상속
+    'transition-all duration-normal', // ← transition-all이 상속
+  ],
+  {
+    variants: {
+      variant: {
+        pill: [
+          'h-8 rounded-md', // ← h-8을 추가해도 pb-2.5는 그대로
+          'text-[12px]', // ← 추가만 됨, base는 리셋 안 됨
+        ],
+      },
+    },
+  }
+);
+```
+
+pill variant는 `pb-2.5`, `border-b-2`, `transition-all`을 그대로 물려받아 의도하지 않은 렌더링이 됩니다.
+
+**필수 분석 절차 (Apply 시 매 컴포넌트)**:
+
+1. **CVA base 클래스 전수 검사**: `.styles.ts`의 CVA base 배열을 한 줄씩 읽고, 해당 variant에서 의미 없거나 충돌하는 속성을 리스트업
+2. **리셋 클래스 명시 추가**: pill/boxed 등 구조가 다른 variant에는 base를 명시적으로 오버라이드하는 클래스 추가
+   ```typescript
+   pill: [
+     'py-0 pb-0',           // ← base의 pb-2.5 리셋
+     'border-0 border-b-0', // ← base의 border-b-2 리셋
+     'transition-colors duration-fast', // ← transition-all 오버라이드
+   ],
+   ```
+3. **Tailwind 우선순위 주의**: 같은 속성의 Tailwind 클래스가 여러 개면 **마지막 클래스가 아니라 specificity 기준**으로 적용됨. `pb-0`이 `pb-2.5`를 확실히 덮으려면 variant 배열에서 명시해야 함
+
+**체크리스트**:
+
+| base 속성            | 확인 질문                                    | 리셋 필요 시                |
+| -------------------- | -------------------------------------------- | --------------------------- |
+| padding (pb, pt, py) | 이 variant에 동일한 padding이 필요한가?      | `py-0 pb-0` 등 명시         |
+| border (border-b-\*) | 이 variant에 bottom border가 필요한가?       | `border-b-0` 명시           |
+| transition           | 이 variant에 all 속성 transition이 필요한가? | `transition-colors` 등 명시 |
+| display (flex)       | inline-flex가 필요한가?                      | `inline-flex` 명시          |
+| text color           | base 색상이 이 variant와 맞는가?             | 해당 색상 클래스 덮기       |
+
+### Pitfall 0-B: CSS 구현 기법 차이 — border vs inset shadow (Critical)
+
+TDS와 thaki-shared가 **같은 시각 효과를 다른 CSS 기법**으로 구현하는 경우가 있습니다. 값만 맞춰서는 동일한 결과가 나오지 않습니다.
+
+**실제 사례 (Tabs boxed)**:
+
+```typescript
+// ❌ thaki-shared — CSS border 사용 (요소 크기에 1px 추가)
+'border border-border-subtle rounded-lg';
+
+// ✅ TDS — inset box-shadow 사용 (요소 크기 변화 없음)
+'shadow-[inset_0_0_0_1px_var(--color-border-subtle)]';
+```
+
+두 방식은 시각적으로 비슷하지만:
+
+- `border 1px` → 요소의 실제 크기가 2px 증가 (box-sizing: border-box면 내부 축소)
+- `inset box-shadow 1px` → 요소 크기 변화 없음, 내부에 렌더링
+
+**필수 확인 절차**:
+
+1. TDS 소스에서 `shadow-[inset_`, `border`, `outline` 등 테두리 구현 방식을 확인
+2. 동일한 기법을 thaki-shared에도 적용
+3. "같은 색상이니까 OK"가 아니라 "같은 CSS property인가?"를 체크
 
 ### Pitfall 1: CVA `compoundVariants`에서 `false` vs `undefined` 불일치
 

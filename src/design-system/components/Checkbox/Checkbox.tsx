@@ -121,6 +121,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         'w-[var(--checkbox-size)] h-[var(--checkbox-size)]',
         'rounded-[var(--checkbox-radius)]',
         'transition-all duration-[var(--duration-fast)]',
+        'peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-border-focus)] peer-focus-visible:ring-offset-2',
       ];
 
       if (disabled) {

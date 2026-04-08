@@ -96,7 +96,64 @@ JSX 내 상태 변수에 따라 조건부로 적용되는 스타일을 추출합
 예: className={twMerge(..., copied && successStyles)} → copied 상태에서 successStyles 적용
 ```
 
-#### 3-6. 아이콘 구현 비교
+#### 3-6. CSS 구현 기법 비교 (Critical)
+
+TDS와 thaki-shared가 **같은 시각 효과를 다른 CSS 기법으로 구현**하는 경우를 반드시 식별합니다.
+
+**비교 항목**:
+
+| 시각 효과    | 확인 사항                  | TDS 기법 예시                  | 주의            |
+| ------------ | -------------------------- | ------------------------------ | --------------- |
+| 테두리       | border vs inset box-shadow | `shadow-[inset_0_0_0_1px_...]` | 요소 크기 차이  |
+| 내부 그림자  | border vs inset shadow     | `shadow-[inset_0_0_0_1px_...]` | box-sizing 영향 |
+| 외부 그림자  | box-shadow vs border       | `shadow-[0_1px_2px_...]`       | stacking 차이   |
+| display 모드 | flex vs inline-flex        | `inline-flex`                  | 너비 계산 차이  |
+| 오버플로우   | overflow vs clip           | `overflow-hidden` vs `clip`    | 자식 렌더링     |
+
+**스펙 출력 예시**:
+
+```markdown
+## CSS 구현 기법 차이
+
+| 요소             | 시각 효과                   | TDS 기법                   | thaki-shared 기법    | 차이 영향              |
+| ---------------- | --------------------------- | -------------------------- | -------------------- | ---------------------- |
+| 컨테이너 테두리  | 1px subtle border           | inset box-shadow           | CSS border           | 요소 크기 2px 차이     |
+| 활성 탭 테두리   | 1px default border + shadow | inset shadow + drop shadow | border + shadow 중복 | shadow 이중 적용       |
+| 컨테이너 display | 콘텐츠 크기에 맞춤          | inline-flex                | flex + w-fit         | 레이아웃 컨텍스트 차이 |
+```
+
+> 이 섹션은 Apply 스킬의 "Pitfall 0-B: CSS 구현 기법 차이"와 직결됩니다. 기법 차이가 있으면 값만 맞추는 것이 아니라 **동일한 CSS property를 사용하도록** Apply에서 변경해야 합니다.
+
+#### 3-6-B. CVA base 스타일 상속 분석 (Critical)
+
+thaki-shared 컴포넌트가 CVA를 사용하는 경우, **base 스타일이 모든 variant에 상속**됩니다. 싱크 대상 variant에 영향을 주는 base 속성을 반드시 추출합니다.
+
+**추출 방법**:
+
+1. `.styles.ts`의 CVA base 배열 전체를 읽음
+2. 싱크 대상 variant(예: pill)에서 **충돌하거나 불필요한** base 속성을 리스트업
+3. 스펙의 "주요 디자인 차이"에 "base 상속 리셋 필요" 항목으로 추가
+
+**스펙 출력 예시**:
+
+```markdown
+## CVA Base 상속 분석
+
+싱크 대상 variant: `pill`
+
+| base 클래스                       | pill에서 필요 여부       | 리셋 필요 | 리셋 방법                         |
+| --------------------------------- | ------------------------ | --------- | --------------------------------- |
+| `pb-2.5`                          | ❌ (underline용)         | ✅        | `py-0 pb-0`                       |
+| `border-b-2 border-b-transparent` | ❌ (underline indicator) | ✅        | `border-0 border-b-0`             |
+| `transition-all duration-normal`  | 부분 (colors만 필요)     | ✅        | `transition-colors duration-fast` |
+| `text-text-subtle`                | ❌ (pill은 text-default) | ✅        | `text-text`                       |
+| `px-3`                            | ✅ (동일)                | —         | —                                 |
+| `font-medium font-sans`           | ✅ (동일)                | —         | —                                 |
+```
+
+> 이 분석이 없으면 Apply에서 "추가만 하고 리셋을 안 하는" 문제가 발생합니다.
+
+#### 3-7. 아이콘 구현 비교
 
 TDS와 thaki-shared의 아이콘 구현 방식이 다를 수 있으므로 반드시 비교합니다:
 

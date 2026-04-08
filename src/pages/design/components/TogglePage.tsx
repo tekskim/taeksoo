@@ -166,6 +166,22 @@ export function TogglePage() {
                 </span>
                 <Toggle label="Setting" defaultChecked disabled />
               </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focused Off
+                </span>
+                <div className="[&_input+span]:ring-2 [&_input+span]:ring-[var(--color-border-focus)] [&_input+span]:ring-offset-2">
+                  <Toggle label="Setting" checked={false} onChange={() => {}} />
+                </div>
+              </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focused On
+                </span>
+                <div className="[&_input+span]:ring-2 [&_input+span]:ring-[var(--color-border-focus)] [&_input+span]:ring-offset-2">
+                  <Toggle label="Setting" checked onChange={() => {}} />
+                </div>
+              </VStack>
             </div>
           </VStack>
 
