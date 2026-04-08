@@ -190,6 +190,22 @@ export function RadioPage() {
                   onChange={() => {}}
                 />
               </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focused
+                </span>
+                <div className="[&_input+span]:ring-2 [&_input+span]:ring-[var(--color-border-focus)] [&_input+span]:ring-offset-2">
+                  <Radio label="Label" value="focused" checked={false} onChange={() => {}} />
+                </div>
+              </VStack>
+              <VStack gap={2}>
+                <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                  Focused + Selected
+                </span>
+                <div className="[&_input+span]:ring-2 [&_input+span]:ring-[var(--color-border-focus)] [&_input+span]:ring-offset-2">
+                  <Radio label="Label" value="focused-selected" checked onChange={() => {}} />
+                </div>
+              </VStack>
             </div>
           </VStack>
 

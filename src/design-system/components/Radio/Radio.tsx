@@ -86,6 +86,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
               'w-[var(--radio-size)] h-[var(--radio-size)]',
               'rounded-full',
               'transition-all duration-[var(--duration-fast)]',
+              'peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-border-focus)] peer-focus-visible:ring-offset-2',
               // Border and background based on state
               disabled
                 ? 'bg-[var(--radio-disabled-bg)]'

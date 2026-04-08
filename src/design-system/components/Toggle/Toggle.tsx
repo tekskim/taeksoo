@@ -99,6 +99,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
               'w-[var(--toggle-width)] h-[var(--toggle-height)]',
               'rounded-[var(--toggle-radius)]',
               'transition-colors duration-[var(--duration-fast)]',
+              'peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-border-focus)] peer-focus-visible:ring-offset-2',
               // Background color based on state
               isChecked
                 ? disabled
