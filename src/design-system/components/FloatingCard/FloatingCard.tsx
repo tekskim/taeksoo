@@ -256,13 +256,13 @@ export function FloatingCard({
                         <div className="flex items-center gap-1">
                           {isExpanded ? (
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               stroke={1}
                               className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
                             />
                           ) : (
                             <IconChevronRight
-                              size={12}
+                              size={16}
                               stroke={1}
                               className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-default)] transition-colors"
                             />

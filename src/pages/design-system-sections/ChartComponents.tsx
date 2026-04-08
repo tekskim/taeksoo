@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import ReactECharts from 'echarts-for-react';
-import { Tooltip, MonitoringToolbar, type TimeRangeValue } from '@/design-system';
+import { Tooltip, MonitoringToolbar, Select, type TimeRangeValue } from '@/design-system';
 import {
   IconDotsCircleHorizontal,
   IconArrowsMinimize,
@@ -349,6 +349,7 @@ export function LineChart({
   isFullScreen = false,
   onExitFullScreen,
   timeControls,
+  headerExtra,
 }: {
   title: string;
   series: LineChartSeries[];
@@ -358,6 +359,7 @@ export function LineChart({
   isFullScreen?: boolean;
   onExitFullScreen?: () => void;
   timeControls?: React.ReactNode;
+  headerExtra?: React.ReactNode;
 }) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
     Object.fromEntries(series.map((s) => [s.name, true]))
@@ -485,7 +487,10 @@ export function LineChart({
     <div className={`chartCard ${isFullScreen ? 'chartCardFullScreen' : ''}`}>
       {/* Header */}
       <div className="chartHeader">
-        <span className="chartTitle">{title}</span>
+        <div className="flex items-center gap-3">
+          <span className="chartTitle">{title}</span>
+          {headerExtra && !isFullScreen && headerExtra}
+        </div>
         {isFullScreen && timeControls && <div className="chartHeaderCenter">{timeControls}</div>}
         <div className="chartControls">
           {/* Toggle Button - only show for multiple series */}
@@ -588,11 +593,13 @@ export function ChartWithFullScreen({
   series,
   yAxisFormatter = (v: number) => `${v}`,
   height = '100%',
+  headerExtra,
 }: {
   title: string;
   series: LineChartSeries[];
   yAxisFormatter?: (value: number) => string;
   height?: string;
+  headerExtra?: React.ReactNode;
 }) {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [fullScreenTimeRange, setFullScreenTimeRange] = useState<TimeRangeValue>('30m');
@@ -618,6 +625,7 @@ export function ChartWithFullScreen({
         yAxisFormatter={yAxisFormatter}
         height={height}
         onFullScreen={() => setIsFullScreen(true)}
+        headerExtra={headerExtra}
       />
 
       {/* Full Screen via Portal */}
@@ -729,7 +737,13 @@ export function QuotaBarDemo({
   );
 }
 
-export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nodata' }) {
+export function AreaChartDemo({
+  variant,
+}: {
+  variant: 'basic' | 'stacked' | 'nodata' | 'dropdown';
+}) {
+  const [selectedNode, setSelectedNode] = useState('node1');
+
   // Basic variant - Network Traffic (single series)
   const networkTrafficSeries: LineChartSeries[] = [
     { name: 'Traffic', data: [120, 180, 150, 220, 280, 240], color: chartColors.cyan400 },
@@ -757,6 +771,47 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
         series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"
+      />
+    );
+  }
+
+  // Dropdown variant - Disk IOPS with node selector
+  if (variant === 'dropdown') {
+    const nodeOptions = [
+      { value: 'node1', label: 'node1' },
+      { value: 'node2', label: 'node2' },
+      { value: 'node3', label: 'node3' },
+    ];
+
+    const diskIOPSByNode: Record<string, LineChartSeries[]> = {
+      node1: [
+        { name: 'Read', data: [300, 280, 350, 390, 320, 350], color: chartColors.cyan400 },
+        { name: 'Write', data: [200, 220, 280, 290, 230, 250], color: chartColors.emerald400 },
+      ],
+      node2: [
+        { name: 'Read', data: [150, 180, 200, 170, 190, 210], color: chartColors.cyan400 },
+        { name: 'Write', data: [100, 130, 140, 120, 150, 160], color: chartColors.emerald400 },
+      ],
+      node3: [
+        { name: 'Read', data: [400, 380, 420, 450, 410, 430], color: chartColors.cyan400 },
+        { name: 'Write', data: [250, 270, 300, 310, 280, 290], color: chartColors.emerald400 },
+      ],
+    };
+
+    return (
+      <ChartWithFullScreen
+        title="Disk IOPS"
+        series={diskIOPSByNode[selectedNode]}
+        yAxisFormatter={(v) => `${v}`}
+        height="200px"
+        headerExtra={
+          <Select
+            options={nodeOptions}
+            value={selectedNode}
+            onChange={(val) => setSelectedNode(val as string)}
+            size="md"
+          />
+        }
       />
     );
   }
@@ -995,6 +1050,216 @@ export function DoughnutChartDemo({
           style={{ height: '180px', width: '180px' }}
           opts={{ devicePixelRatio: window.devicePixelRatio }}
         />
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Multi-value Donut Chart Demo
+   ---------------------------------------- */
+
+export type DonutData = { name: string; value: number };
+
+export function MultiDonutChartDemo({ title, data }: { title: string; data: DonutData[] }) {
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+
+  const chartData = data.map((item, i) => ({
+    ...item,
+    itemStyle: { color: extendedChartColors[i % extendedChartColors.length] },
+  }));
+
+  const legendData = data.map((item, i) => ({
+    label: item.name,
+    value: item.value,
+    pct: Math.round((item.value / total) * 100),
+    color: extendedChartColors[i % extendedChartColors.length],
+  }));
+
+  const getOption = () => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      backgroundColor: getCSSColor('--color-surface-default', '#ffffff'),
+      borderColor: getCSSColor('--color-border-default', '#e2e8f0'),
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: getCSSColor('--color-text-default', '#1e293b'),
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (params: { name: string; value: number; percent: number; color: string }) =>
+        `<span style="display:inline-block;width:8px;height:8px;border-radius:9999px;background:${params.color};margin-right:6px;"></span>${params.name}<br/><span style="font-weight:500;margin-left:14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`,
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['55%', '80%'],
+        center: ['50%', '50%'],
+        avoidLabelOverlap: true,
+        itemStyle: { borderRadius: 3, borderWidth: 2, borderColor: '#fff' },
+        label: { show: false },
+        labelLine: { show: false },
+        emphasis: {
+          scale: true,
+          scaleSize: 4,
+          itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.15)' },
+        },
+        data: chartData,
+      },
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: 'middle',
+        style: {
+          text: `${total}`,
+          textAlign: 'center',
+          fill: getCSSColor('--color-text-default', '#0f172a'),
+          fontSize: 20,
+          fontWeight: 600,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        },
+      },
+    ],
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts
+          option={getOption()}
+          style={{ height: '180px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+        {legendData.map((item, i) => (
+          <div key={i} className="flex items-center gap-1.5">
+            <div
+              className="w-2.5 h-2.5 rounded-sm shrink-0"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-body-sm text-[var(--color-text-muted)]">
+              {item.label} ({item.pct}%)
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------
+   Multi-value Half-Donut Chart Demo
+   ---------------------------------------- */
+
+export function MultiHalfDonutChartDemo({ title, data }: { title: string; data: DonutData[] }) {
+  const total = data.reduce((sum, d) => sum + d.value, 0);
+
+  const chartData = data.map((item, i) => ({
+    ...item,
+    itemStyle: { color: extendedChartColors[i % extendedChartColors.length] },
+  }));
+
+  const legendData = data.map((item, i) => ({
+    label: item.name,
+    value: item.value,
+    pct: Math.round((item.value / total) * 100),
+    color: extendedChartColors[i % extendedChartColors.length],
+  }));
+
+  const getOption = () => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      backgroundColor: getCSSColor('--color-surface-default', '#ffffff'),
+      borderColor: getCSSColor('--color-border-default', '#e2e8f0'),
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: getCSSColor('--color-text-default', '#1e293b'),
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (params: { name: string; value: number; percent: number; color: string }) =>
+        `<span style="display:inline-block;width:8px;height:8px;border-radius:9999px;background:${params.color};margin-right:6px;"></span>${params.name}<br/><span style="font-weight:500;margin-left:14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`,
+    },
+    animation: false,
+    series: [
+      {
+        type: 'pie',
+        radius: ['55%', '85%'],
+        center: ['50%', '75%'],
+        startAngle: 180,
+        endAngle: 0,
+        avoidLabelOverlap: true,
+        itemStyle: { borderRadius: 3, borderWidth: 2, borderColor: '#fff' },
+        label: { show: false },
+        labelLine: { show: false },
+        emphasis: {
+          scale: true,
+          scaleSize: 4,
+          itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.15)' },
+        },
+        data: [
+          ...chartData,
+          {
+            value: total,
+            itemStyle: { color: 'none' },
+            label: { show: false },
+            labelLine: { show: false },
+            tooltip: { show: false },
+            emphasis: { scale: false },
+          },
+        ],
+      },
+    ],
+    graphic: [
+      {
+        type: 'text',
+        left: 'center',
+        top: '58%',
+        style: {
+          text: `${total}`,
+          textAlign: 'center',
+          fill: getCSSColor('--color-text-default', '#0f172a'),
+          fontSize: 20,
+          fontWeight: 600,
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        },
+      },
+    ],
+  });
+
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
+      <div className="flex justify-center">
+        <ReactECharts
+          option={getOption()}
+          style={{ height: '180px', width: '180px' }}
+          opts={{ devicePixelRatio: window.devicePixelRatio }}
+        />
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 justify-center max-h-[60px] overflow-y-auto legend-scroll">
+        {legendData.map((item, i) => (
+          <div key={i} className="flex items-center gap-1.5">
+            <div
+              className="w-2.5 h-2.5 rounded-sm shrink-0"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-body-sm text-[var(--color-text-muted)]">
+              {item.label} ({item.pct}%)
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,177 +1,171 @@
 # Tabs Design Spec
 
-> Extracted from TDS `src/design-system/components/Tabs/Tabs.tsx`
-> thaki-shared target: `src/components/Tabs/`
+> Extracted from TDS `src/design-system/components/Tabs/Tabs.tsx` + `src/index.css` (Component - Tabs)  
+> thaki-shared target: `src/components/Tabs/` (`Tabs.tsx`, `Tabs.styles.ts`)  
+> Design reference pages: `src/pages/design/components/TabsPage.tsx`, `SharedComponentsPage.tsx`, `foundation/SemanticColorsPage.tsx` (boxed preview)
 
-## 구조 차이
+## Mapping (component-map)
 
-| 항목            | TDS                                        | thaki-shared                          |
-| --------------- | ------------------------------------------ | ------------------------------------- |
-| 아키텍처        | Compound (Tabs + TabList + Tab + TabPanel) | Monolithic (Tabs + Tab children)      |
-| variant 이름    | `underline` / `boxed`                      | `line` / `button`                     |
-| size 기본값     | `sm`                                       | `md`                                  |
-| Tab 식별자      | `value` prop                               | `id` prop                             |
-| Content padding | `pt-6` (24px) via `--tabs-panel-padding`   | `pt-6` (24px)                         |
-| 스크롤 기능     | 없음                                       | 있음 (ChevronLeft/Right 버튼)         |
-| fullWidth       | 없음                                       | 있음 (`fullWidth` prop)               |
-| persistence     | 없음                                       | 있음 (`destroy` / `css` / `activity`) |
+| 항목         | 값                                                                                                          |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
+| 매핑         | Tabs ↔ Tabs (1:1, #27)                                                                                      |
+| Variant 이름 | TDS `underline` / `boxed` — thaki `line` / `button` (TDS는 `line`→`underline`, `button`→`boxed` alias 지원) |
 
-> 구조/API 차이는 디자인 싱크 범위 밖. **스타일만 비교**합니다.
+---
 
-## Base Styles
+## Base Styles (공통)
 
-| Property            | TDS                                | thaki-shared    | Match |
-| ------------------- | ---------------------------------- | --------------- | ----- |
-| Container           | `flex flex-col h-fit`              | `flex flex-col` | ~same |
-| Content padding-top | `var(--tabs-panel-padding)` = 24px | `pt-6` = 24px   | exact |
+| Property           | Value                                                | TDS Token / Class                 |
+| ------------------ | ---------------------------------------------------- | --------------------------------- |
+| Root layout        | `flex flex-col h-fit`                                | `Tabs` root                       |
+| Font weight (라벨) | 500                                                  | `font-medium`                     |
+| Transition (색)    | 150ms                                                | `duration-[var(--duration-fast)]` |
+| Cursor             | pointer (`not-allowed` + `opacity-50` when disabled) | Tab buttons                       |
+| Focus ring         | 없음 (별도 `focus-visible` 링 미정의)                | 양쪽 동일                         |
 
-## Underline (line) Variant
+---
 
-### TabList (Header)
+## Variants
 
-| Property      | TDS                                                                | thaki-shared                            | Match             |
-| ------------- | ------------------------------------------------------------------ | --------------------------------------- | ----------------- |
-| display       | `flex`                                                             | `inline-flex items-start`               | diff              |
-| gap           | `var(--tabs-gap)` = 8px                                            | `gap-lg` = 24px                         | **DIFF**          |
-| border-bottom | `after:h-px after:bg-[var(--color-border-default)]` (1px, #e2e8f0) | `border-b border-border` (1px, #e2e8f0) | ~same (구현 차이) |
+### variant=`underline` (thaki: `line`)
 
-### Tab Button (line)
+#### TabList (트랙)
 
-| Property    | TDS                                                        | thaki-shared                              | Match         |
-| ----------- | ---------------------------------------------------------- | ----------------------------------------- | ------------- |
-| layout      | `flex flex-col items-center`                               | `flex flex-col items-center`              | exact         |
-| padding     | `px-[var(--tabs-padding-x)] py-0` = `px-12px py-0` (label) | `px-3 pt-0 pb-3` = `px-12px pt-0 pb-12px` | **DIFF** (pb) |
-| min-width   | `var(--tabs-min-width)` = 80px                             | `min-w-[80px]` = 80px                     | exact         |
-| font-weight | `font-medium` (500)                                        | `font-medium` (500)                       | exact         |
-| cursor      | `cursor-pointer`                                           | `cursor-pointer`                          | exact         |
-| transition  | `duration-[var(--duration-fast)]` = 150ms                  | `duration-normal` = 200ms                 | **DIFF**      |
-| disabled    | `cursor-not-allowed opacity-50`                            | `opacity-disabled cursor-not-allowed`     | ~same         |
+| 항목            | 값                                                       |
+| --------------- | -------------------------------------------------------- |
+| Layout          | `flex` + `gap` 8px                                       |
+| 하단 베이스라인 | 전체 너비 1px, `var(--color-border-default)` (`#e2e8f0`) |
+| TDS 구현        | `after:absolute` pseudo (`h-px`, bottom)                 |
+| shared 구현     | `border-b border-border` (동일 역할)                     |
 
-### Tab Button (line) — 인디케이터
+#### Tab (라벨 + 인디케이터)
 
-| Property              | TDS                                       | thaki-shared                   | Match            |
-| --------------------- | ----------------------------------------- | ------------------------------ | ---------------- |
-| 위치                  | 별도 `<span>` 하단 (z-20)                 | `after` pseudo-element         | diff (구현 차이) |
-| height                | `var(--tabs-indicator-height)` = 2px      | `after:h-[2px]` = 2px          | exact            |
-| active color          | `var(--tabs-indicator-color)` = `#2563eb` | `after:bg-primary` = `#2563eb` | exact            |
-| inactive              | `bg-transparent`                          | `after:bg-transparent`         | exact            |
-| gap (label↔indicator) | `var(--tabs-indicator-gap)` = 10px        | 없음 (pb-3=12px가 간격 역할)   | **DIFF**         |
+| State          | Text                                                              | 인디케이터                             |
+| -------------- | ----------------------------------------------------------------- | -------------------------------------- |
+| inactive       | `var(--tabs-inactive-color)` → `#64748b` (`--color-text-subtle`)  | 투명                                   |
+| inactive hover | `var(--tabs-hover-color)` → `#0f172a` (`--color-text-default`)    | 투명                                   |
+| active         | `var(--tabs-active-color)` → `#2563eb` (`--color-action-primary`) | `var(--tabs-indicator-color)` 2px 높이 |
+| disabled       | 글자 50% opacity, `cursor-not-allowed`                            | —                                      |
 
-### Tab Button (line) — Typography
+**구조 차이 (시각 동등 목표)**
 
-| Size | Property    | TDS                                 | thaki-shared       | Match    |
-| ---- | ----------- | ----------------------------------- | ------------------ | -------- |
-| sm   | font-size   | `var(--tabs-font-size-sm)` = 12px   | `text-14` = 14px   | **DIFF** |
-| sm   | line-height | `var(--tabs-line-height-sm)` = 16px | `leading-5` = 20px | **DIFF** |
-| md   | font-size   | `var(--tabs-font-size-md)` = 14px   | `text-14` = 14px   | exact    |
-| md   | line-height | `var(--tabs-line-height-md)` = 20px | `leading-5` = 20px | exact    |
+- TDS: 라벨 `span` + 아래 별도 `span` 인디케이터, 라벨↔인디케이터 간격 `var(--tabs-indicator-gap)` = **10px** (`--spacing-2-5`).
+- shared: 단일 버튼 + `::after` 2px, `pb-2.5` (10px)로 여백. 인디케이터는 동일 2px primary.
 
-### Tab Button (line) — Colors
+---
 
-| State    | Property | TDS                                                     | thaki-shared                        | Match    |
-| -------- | -------- | ------------------------------------------------------- | ----------------------------------- | -------- |
-| inactive | text     | `var(--tabs-inactive-color)` = `#64748b` (text-subtle)  | `text-text-subtle` = `#64748b`      | exact    |
-| hover    | text     | `var(--tabs-hover-color)` = `#0f172a` (text-default)    | `hover:text-text-muted` = `#475569` | **DIFF** |
-| active   | text     | `var(--tabs-active-color)` = `#2563eb` (action-primary) | `text-primary` = `#2563eb`          | exact    |
+### variant=`boxed` (thaki: `button`)
 
-## Boxed (button) Variant
+#### TabList (세그먼트 컨트롤 배경)
 
-### TabList (Header) — boxed
+| 항목           | TDS 값                                       |
+| -------------- | -------------------------------------------- |
+| Height         | 40px (`h-10`)                                |
+| Padding        | 4px (`p-1`)                                  |
+| Gap (탭 간)    | 4px (`gap-1`)                                |
+| Background     | `var(--color-surface-subtle)` → `#f8fafc`    |
+| Border (inset) | `inset 0 0 0 1px var(--color-border-subtle)` |
+| Radius         | `rounded-lg` → **8px** (`--radius-lg`)       |
+| Width          | `w-fit` (콘텐츠 너비)                        |
 
-| Property      | TDS                                                  | thaki-shared                       | Match                        |
-| ------------- | ---------------------------------------------------- | ---------------------------------- | ---------------------------- |
-| display       | `inline-flex items-center`                           | `inline-flex items-start`          | diff (align)                 |
-| background    | `var(--color-surface-subtle)` = `#f8fafc`            | `bg-surface-subtle` = `#f8fafc`    | exact                        |
-| border        | `shadow: inset 0 0 0 1px var(--color-border-subtle)` | `border border-border` (`#e2e8f0`) | **DIFF** (subtle vs default) |
-| border-radius | `rounded-lg` = 8px                                   | `rounded-base6` = 6px              | **DIFF**                     |
-| padding       | `p-1` = 4px                                          | `p-1` = 4px                        | exact                        |
-| gap           | `gap-1` = 4px                                        | `gap-2` = 8px                      | **DIFF**                     |
-| height        | `h-10` = 40px                                        | auto (content-based)               | **DIFF**                     |
-| width         | `w-fit`                                              | `w-full`                           | **DIFF**                     |
+#### Tab (세그먼트 버튼)
 
-### Tab Button (button) — Base
+| State          | Background                        | Text                          | Border / shadow                                                              |
+| -------------- | --------------------------------- | ----------------------------- | ---------------------------------------------------------------------------- |
+| inactive       | transparent                       | `var(--color-text-default)`   | —                                                                            |
+| inactive hover | `var(--color-surface-default)`    | 동일                          | —                                                                            |
+| active         | `var(--color-surface-default)`    | `var(--color-action-primary)` | `inset 0 0 0 1px var(--color-border-default)` + `0 1px 2px rgba(0,0,0,0.05)` |
+| disabled       | opacity 50%, `cursor-not-allowed` | —                             | —                                                                            |
 
-| Property      | TDS                 | thaki-shared               | Match     |
-| ------------- | ------------------- | -------------------------- | --------- |
-| min-width     | `80px`              | `80px` (sm) / `100px` (md) | diff (md) |
-| border-radius | `rounded-md` = 6px  | `rounded-base6` = 6px      | exact     |
-| font-weight   | `font-medium` (500) | `font-medium` (500)        | exact     |
+| 항목      | 값                                     |
+| --------- | -------------------------------------- |
+| min-width | 80px                                   |
+| padding   | `px-3` (12px), `h-8` (32px)            |
+| radius    | `rounded-md` → **6px** (`--radius-md`) |
 
-### Tab Button (button) — Size
+---
 
-| Size | Property    | TDS                              | thaki-shared                                  | Match          |
-| ---- | ----------- | -------------------------------- | --------------------------------------------- | -------------- |
-| sm   | font-size   | 12px (via `--tabs-font-size-sm`) | `text-12` = 12px                              | exact          |
-| sm   | line-height | 16px                             | `leading-4` = 16px                            | exact          |
-| sm   | padding     | `px-3 h-8` (fixed h=32px)        | `py-[3px] px-2` → height=24px                 | **DIFF**       |
-| md   | font-size   | 14px (via `--tabs-font-size-md`) | `text-14` = 14px                              | exact          |
-| md   | line-height | 20px                             | `leading-5` = 20px                            | exact          |
-| md   | padding     | `px-3 h-8` (fixed h=32px)        | `py-[5px] px-2.5 min-w-[100px]` → height=32px | exact (height) |
+## Sizes
 
-### Tab Button (button) — Colors
+| Size | Font size | Line height | TDS 변수                                       |
+| ---- | --------- | ----------- | ---------------------------------------------- |
+| `sm` | 12px      | 16px        | `--tabs-font-size-sm`, `--tabs-line-height-sm` |
+| `md` | 14px      | 20px        | `--tabs-font-size-md`, `--tabs-line-height-md` |
 
-| State          | Property | TDS                                                                          | thaki-shared                         | Match               |
-| -------------- | -------- | ---------------------------------------------------------------------------- | ------------------------------------ | ------------------- |
-| inactive       | bg       | `bg-transparent`                                                             | `bg-surface-subtle`                  | **DIFF**            |
-| inactive       | text     | `var(--color-text-default)` = `#0f172a`                                      | `text-text` = `#0f172a`              | exact               |
-| inactive hover | bg       | `hover:bg-[var(--color-surface-default)]` = `#ffffff`                        | `hover:bg-border-subtle` = `#f1f5f9` | **DIFF**            |
-| active         | bg       | `var(--color-surface-default)` = `#ffffff`                                   | `bg-surface` = `#ffffff`             | exact               |
-| active         | text     | `var(--color-action-primary)` = `#2563eb`                                    | `text-primary` = `#2563eb`           | exact               |
-| active         | border   | `inset 0 0 0 1px var(--color-border-default)` + `0 1px 2px rgba(0,0,0,0.05)` | `border-border`                      | ~same (shadow 차이) |
+thaki-shared는 `size="md"`를 deprecated로 표기하나,라인 variant에서 `text-14 leading-5`로 유지.
 
-## 주요 디자인 차이 요약
+---
 
-| #   | 항목                          | TDS 값                           | thaki-shared 값         | 유형         | 우선순위            |
-| --- | ----------------------------- | -------------------------------- | ----------------------- | ------------ | ------------------- |
-| 1   | line variant gap (탭 간 간격) | 8px                              | 24px (`gap-lg`)         | style        | HIGH                |
-| 2   | line sm font-size             | 12px                             | 14px                    | style        | HIGH                |
-| 3   | line sm line-height           | 16px                             | 20px                    | style        | HIGH                |
-| 4   | line hover text color         | `#0f172a` (text-default)         | `#475569` (text-muted)  | style        | MED                 |
-| 5   | line transition duration      | 150ms                            | 200ms                   | style        | LOW                 |
-| 6   | line tab padding-bottom       | 0px (label) + indicator gap 10px | pb-3 (12px)             | style        | MED                 |
-| 7   | boxed container border-radius | 8px (rounded-lg)                 | 6px (rounded-base6)     | style        | MED                 |
-| 8   | boxed container gap           | 4px                              | 8px                     | style        | MED                 |
-| 9   | boxed container border color  | border-subtle (#f1f5f9)          | border (#e2e8f0)        | style        | LOW                 |
-| 10  | boxed container height        | 40px (h-10)                      | auto                    | style        | MED                 |
-| 11  | boxed container width         | w-fit                            | w-full                  | style        | MED                 |
-| 12  | boxed sm height               | 32px                             | 24px                    | style        | HIGH                |
-| 13  | boxed inactive bg             | transparent                      | surface-subtle          | style        | MED                 |
-| 14  | boxed inactive hover bg       | surface-default (#fff)           | border-subtle (#f1f5f9) | style        | MED                 |
-| 15  | size 기본값                   | sm                               | md                      | api-required | HIGH                |
-| 16  | variant 이름                  | underline/boxed                  | line/button             | api-required | — (alias 이미 존재) |
+## TabPanel / 콘텐츠 영역
 
-## Props 기본값 비교
+| 항목            | TDS                              | Resolved                 |
+| --------------- | -------------------------------- | ------------------------ |
+| Panel 상단 패딩 | `pt-[var(--tabs-panel-padding)]` | **24px** (`--spacing-6`) |
 
-| Prop      | TDS         | thaki-shared | 영향                                                   |
-| --------- | ----------- | ------------ | ------------------------------------------------------ |
-| size      | `sm`        | `md`         | 기본 상태에서 font-size 차이 (TDS: 12px, shared: 14px) |
-| variant   | `underline` | `line`       | 이름만 다름, TDS에 alias 존재                          |
-| fullWidth | N/A         | `true`       | 구조 차이, 디자인 싱크 범위 밖                         |
+---
+
+## Interactive States (동적)
+
+| State      | TDS                                                              | 비고                      |
+| ---------- | ---------------------------------------------------------------- | ------------------------- |
+| Selected   | `activeTab === value` → underline/boxed 스타일 위 참조           | 양쪽 동일 개념            |
+| thaki-only | 콘텐츠 래퍼 `opacity: 0.7` during `useTransition`                | TDS 없음 — 전환 시 흐림   |
+| thaki-only | 가로 오버플로 시 좌우 스크롤 버튼 + `opacity`로 스크롤 상태 표시 | TDS Tabs에 스크롤 UI 없음 |
+
+---
 
 ## 아이콘 비교
 
-| 아이콘            | TDS  | thaki-shared       | 비고                                |
-| ----------------- | ---- | ------------------ | ----------------------------------- |
-| ChevronLeft/Right | 없음 | 스크롤 버튼에 사용 | TDS에 스크롤 기능 없음, 변경 불필요 |
+| 영역    | TDS                    | thaki-shared                                                                                |
+| ------- | ---------------------- | ------------------------------------------------------------------------------------------- |
+| 탭 라벨 | 아이콘 없음 (텍스트만) | 동일 (라벨은 `ReactNode`이나 일반 텍스트)                                                   |
+| 스크롤  | 없음                   | `ChevronLeftIcon` / `ChevronRightIcon` (`Icon` 래퍼, Tabler `IconChevronLeft`/`Right` 계열) |
 
-## Token Mapping
+TDS Tabs.tsx 본문에는 Tabler 아이콘 import 없음. 스크롤 아이콘은 shared 전용 기능으로 디자인 스펙에서 “패턴 차이”로 분리.
 
-| TDS Token                 | Resolved               | thaki-shared 대응           | Match     |
-| ------------------------- | ---------------------- | --------------------------- | --------- |
-| `--tabs-gap`              | 8px (`--spacing-2`)    | `gap-lg` = 24px             | **DIFF**  |
-| `--tabs-padding-x`        | 12px (`--spacing-3`)   | `px-3` = 12px               | exact     |
-| `--tabs-indicator-gap`    | 10px (`--spacing-2-5`) | N/A (pb로 대체)             | 구현 차이 |
-| `--tabs-indicator-height` | 2px                    | `after:h-[2px]` = 2px       | exact     |
-| `--tabs-panel-padding`    | 24px (`--spacing-6`)   | `pt-6` = 24px               | exact     |
-| `--tabs-font-size-sm`     | 12px                   | 14px (`text-14`)            | **DIFF**  |
-| `--tabs-line-height-sm`   | 16px                   | 20px (`leading-5`)          | **DIFF**  |
-| `--tabs-font-size-md`     | 14px                   | 14px (`text-14`)            | exact     |
-| `--tabs-line-height-md`   | 20px                   | 20px (`leading-5`)          | exact     |
-| `--tabs-active-color`     | #2563eb                | `text-primary`              | exact     |
-| `--tabs-inactive-color`   | #64748b                | `text-text-subtle`          | exact     |
-| `--tabs-hover-color`      | #0f172a                | `text-text-muted` (#475569) | **DIFF**  |
-| `--tabs-indicator-color`  | #2563eb                | `after:bg-primary`          | exact     |
-| `--tabs-min-width`        | 80px                   | 80px                        | exact     |
-| `--color-border-default`  | #e2e8f0                | `border-border`             | exact     |
-| `--color-surface-subtle`  | #f8fafc                | `bg-surface-subtle`         | exact     |
-| `--radius-lg`             | 8px                    | N/A (boxed uses base6=6px)  | **DIFF**  |
+---
+
+## Token Mapping (참조)
+
+| TDS Token                                                   | TDS Resolved | thaki-shared (의미상 대응)       | Match |
+| ----------------------------------------------------------- | ------------ | -------------------------------- | ----- |
+| `--tabs-active-color`                                       | `#2563eb`    | `--semantic-color-primary`       | exact |
+| `--tabs-inactive-color`                                     | `#64748b`    | `--semantic-color-textSubtle`    | exact |
+| `--tabs-hover-color`                                        | `#0f172a`    | `--semantic-color-text`          | exact |
+| `--tabs-indicator-color`                                    | `#2563eb`    | `--semantic-color-primary`       | exact |
+| `--color-border-default` (underline baseline / boxed inset) | `#e2e8f0`    | `--semantic-color-border`        | exact |
+| `--color-border-subtle` (boxed container inset)             | `#f1f5f9`    | `--semantic-color-borderSubtle`  | exact |
+| `--color-surface-subtle` (boxed 트랙 배경)                  | `#f8fafc`    | `--semantic-color-surfaceSubtle` | exact |
+| `--duration-fast`                                           | 150ms        | `--primitive-duration-150`       | exact |
+
+---
+
+## Props 기본값 비교 (체크리스트 A)
+
+| Prop        | TDS default                                    | thaki-shared default | 시각 영향                                                                                                  |
+| ----------- | ---------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `size`      | `'sm'`                                         | `'sm'`               | 없음                                                                                                       |
+| `variant`   | `'underline'`                                  | `'line'`             | 없음 (동일 시각)                                                                                           |
+| `fullWidth` | (해당 prop 없음, boxed TabList는 항상 `w-fit`) | `true`               | **boxed**에서 탭 행이 컨테이너 전체 너비로 늘어나고 `grow`로 탭이 균등 분할될 수 있음 → TDS `w-fit`과 다름 |
+
+---
+
+## 주요 디자인 차이
+
+| #   | 항목                                      | TDS                                                 | thaki-shared                                                                   | 변경 유형      | 비고 / 마이그레이션                                                               |
+| --- | ----------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------ | -------------- | --------------------------------------------------------------------------------- |
+| 1   | Boxed 탭 행 너비                          | TabList `w-fit`, 탭에 `grow` 없음                   | 기본 `fullWidth={true}` + 버튼 variant에 `grow` → 넓은 레이아웃에서 균등 폭 탭 | `style`        | TDS와 동일: shared에서 `fullWidth={false}` 또는 레이아웃에 맞게 조정              |
+| 2   | 전환 시 콘텐츠                            | opacity 변화 없음                                   | `useTransition` 중 `opacity: 0.7`                                              | `style`        | 의도적 로딩 느낌 유지 vs 제거는 제품 결정                                         |
+| 3   | 가로 스크롤 UI                            | 없음                                                | 오버플로 시 좌우 화살표 + 스크롤                                               | `style`        | 기능 패턴 차이; 토큰 정렬과 무관                                                  |
+| 4   | Underline 베이스라인                      | `after` 1px (별도 레이어)                           | `border-b`                                                                     | `style`        | 동일 1px 구분선 목적, 구현만 상이                                                 |
+| 5   | 라벨–인디케이터 간격                      | 명시 `gap` 10px + 별도 인디케이터 블록              | `pb-2.5` + `::after`                                                           | `style`        | 픽셀 퍼펙트 필요 시 측정 후 미세 조정                                             |
+| 6   | 키보드 탐색                               | TabList `onKeyDown`: Arrow/Home/End                 | 구현 없음                                                                      | `api-required` | **A11y**: shared에 동일 키보드 패턴 적용 권장 (디자인 토큰과 별도)                |
+| 7   | `index.css` boxed 토큰 (`--tabs-boxed-*`) | 일부 정의, **Tabs.tsx는 직접 하드코딩 클래스 다수** | CVA + 시맨틱 유틸                                                              | `token-global` | 장기적으로 TDS boxed를 토큰만으로 정리 가능; 현재 스펙은 **실제 TSX 적용값** 기준 |
+
+---
+
+## API / 구조 (참고 — Apply 범위 밖)
+
+- TDS: compound `Tabs` / `TabList` / `Tab` / `TabPanel`, `value` / `onChange`, `defaultValue`.
+- shared: `Tab` 자식에 `id` + `label`, `activeTabId` / `defaultActiveTabId`, `persistence` / `destroyOnHidden`.
+- 디자인 싱크는 **스타일 토큰·클래스** 정렬이 핵심; 마크업/API는 부분 대응 유지 (component-map 결정).
