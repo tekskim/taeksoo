@@ -24,6 +24,8 @@
 3. **토큰 이름(key) 변경 금지**: `tokens/light.json`, `tokens/dark.json`의 키 이름 변경 불가
    - 예: `semantic.color.primary` → `semantic.color.actionPrimary` (금지)
 4. **props 삭제 금지**: 불필요한 props는 `@deprecated` JSDoc 처리
+5. **`@tabler/icons-react` 직접 import 금지**: 컴포넌트에서 Tabler 아이콘을 직접 import하지 않음. 반드시 `src/components/Icon`에서 래핑된 아이콘을 사용
+6. **`src/styles/shared-utilities.css` 수정 금지**: 이 파일은 Tailwind로 표현할 수 없거나 어려운 스타일만 선언하는 파일. 사이즈 변경, 색상 변경 등 Tailwind 클래스나 `.styles.ts` CVA로 해결할 수 있는 스타일은 절대 이 파일에 추가/수정하지 않음. 반드시 `.styles.ts`나 컴포넌트의 Tailwind 클래스에서 처리
 
 ### 허용
 
@@ -46,7 +48,8 @@
    - `path d` 속성 — 아이콘 형태 (TDS Tabler Icons path에 맞춤)
    - `strokeWidth`, `stroke`, `fill` — 아이콘 선 굵기/색상
    - 로직(이벤트, 조건부 렌더링 등)은 변경 불가
-7. **API 변경 (디자인 반영에 필수적인 경우)**:
+7. **`wrapped.tsx`에 신규 아이콘 등록**: TDS에서 사용하는 Tabler 아이콘이 `src/components/Icon/svg/wrapped.tsx`에 미등록된 경우 `wrapTablerIcon`으로 등록
+8. **API 변경 (디자인 반영에 필수적인 경우)**:
    - props 기본값 변경: `size='md'` → `size='sm'` (TDS 기본 스타일과 일치시키기 위해)
    - `@deprecated` JSDoc 추가: TDS에서 제거된 variant/type/size 표시
    - 새 variant/theme 값 추가: TDS에 존재하지만 shared에 없는 옵션
@@ -232,6 +235,7 @@ cd /path/to/thaki-shared && pnpm build
 - `tokens/light.json`, `tokens/dark.json` ✅ 허용 (값만)
 - `.tsx` ⚠️ 조건부 허용 (아래 Guard 3 참조)
 - `.types.ts` ⚠️ API 변경 시 허용 (아래 Guard 4 참조), 삭제 감지 시 즉시 중단
+- `src/styles/shared-utilities.css` ❌ 수정 금지 — Tailwind 불가능한 스타일 전용 파일
 - 기타 파일 ❌ 감지 시 경고
 
 ### Guard 2: 토큰 이름 변경 체크
@@ -419,3 +423,74 @@ hideIcon = <HideIcon size="md" color="currentColor" />;
 1. TDS의 `src/index.css` 또는 `compatibility.css`에서 해당 시맨틱 토큰의 최종 hex 값 확인
 2. thaki-shared의 `src/styles/tokens/tokens-light.css`에서 같은 이름의 토큰 값 비교
 3. 값이 다르면 `tokens/light.json`에서 참조하는 primitive 토큰을 수정
+
+### Pitfall 4: 아이콘 정책 — `@tabler/icons-react` 직접 import 금지
+
+thaki-shared는 자체 Icon 시스템(`src/components/Icon/svg/wrapped.tsx`)을 통해 Tabler 아이콘을 래핑하여 사용합니다. 컴포넌트에서 `@tabler/icons-react`를 직접 import하면 정책 위반입니다.
+
+**등록 패턴** (`wrapped.tsx`):
+
+```typescript
+import { IconBan } from '@tabler/icons-react';
+
+export const BanIcon: IconComponent = wrapTablerIcon(IconBan, 'BanIcon');
+```
+
+**컴포넌트에서 사용**:
+
+```tsx
+// ❌ 금지 — 직접 Tabler import
+import { IconBan } from '@tabler/icons-react';
+<IconBan size={14} strokeWidth={2} />;
+
+// ✅ 허용 — 래핑된 아이콘 import
+import { BanIcon } from '../Icon';
+<BanIcon color="white" size="sm" weight="bold" />;
+```
+
+**신규 아이콘이 필요한 경우**:
+
+1. `wrapped.tsx`의 Tabler import 목록에 아이콘 추가
+2. 해당 카테고리 섹션에 `wrapTablerIcon` 등록
+3. 컴포넌트에서 `../Icon`으로 import하여 사용
+
+**Icon props 매핑**:
+
+| 직접 import (금지)      | 래핑 아이콘 (허용)        | 설명        |
+| ----------------------- | ------------------------- | ----------- |
+| `size={12}`             | `size="xs"`               | 12px        |
+| `size={14}`             | `size="sm"`               | 14px        |
+| `size={16}`             | `size="md"`               | 16px (기본) |
+| `size={20}`             | `size="lg"`               | 20px        |
+| `size={24}`             | `size="xl"`               | 24px        |
+| `strokeWidth={1.5}`     | `weight="regular"` (기본) | stroke 1.5  |
+| `strokeWidth={2}`       | `weight="bold"`           | stroke 2    |
+| `className="animate-*"` | `className="animate-*"`   | 그대로 전달 |
+
+### Pitfall 5: `shared-utilities.css` 수정 유혹 — Tailwind/.styles.ts 우선
+
+`src/styles/shared-utilities.css`는 **Tailwind로 표현할 수 없거나 하기 어려운 스타일**만 선언하는 전용 파일입니다. 사이즈, 색상, 패딩 등 Tailwind 클래스로 해결 가능한 스타일은 이 파일에 추가하면 안 됩니다.
+
+```css
+/* ❌ 금지 — Tailwind로 충분히 표현 가능한 스타일 */
+.control-input {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+/* ✅ 허용 — Tailwind로 표현이 어려운 복합 스타일 */
+.control-input:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--semantic-color-surface),
+    0 0 0 4px var(--semantic-color-borderFocus);
+}
+```
+
+**스타일 수정 우선순위**:
+
+1. `.styles.ts` CVA 클래스 (최우선)
+2. 컴포넌트 `.tsx`의 Tailwind 클래스 문자열
+3. 토큰 값 변경 (`tokens/light.json`, `tokens/dark.json`)
+4. `shared-utilities.css` (Tailwind 불가능한 경우에만, 최후 수단)
