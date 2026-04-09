@@ -12,12 +12,12 @@ import {
   IconCircleDashedCheck,
   IconLivePhotoOff,
   IconTool,
-  IconAlertCircle,
   IconAlertHexagon,
   IconShieldExclamation,
   IconCircleMinus,
   IconLivePhoto,
   IconBan,
+  IconCircleX,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -129,8 +129,8 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   },
   down: {
     label: 'Down',
-    icon: <IconAlertCircle size={ICON_SIZE} strokeWidth={2} />,
-    bgColor: 'bg-[var(--status-warning-bg)]',
+    icon: <IconCircleX size={ICON_SIZE} strokeWidth={2} />,
+    bgColor: 'bg-[var(--status-muted-bg)]',
   },
   maintenance: {
     label: 'Maintenance',
