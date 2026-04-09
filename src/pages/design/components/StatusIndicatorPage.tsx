@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
@@ -280,14 +281,14 @@ export function StatusIndicatorPage() {
             </VStack>
             <HStack gap={2} className="flex-wrap">
               {APP_STATUS_LINKS.map(({ label: lbl, icon, path }) => (
-                <a
+                <Link
                   key={lbl}
-                  href={path}
+                  to={path}
                   className="inline-flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-hover)] transition-colors text-body-md text-[var(--color-text-default)]"
                 >
                   <img src={icon} alt="" className="size-5 object-contain" />
                   <span>{lbl}</span>
-                </a>
+                </Link>
               ))}
             </HStack>
           </VStack>
