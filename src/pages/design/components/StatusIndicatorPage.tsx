@@ -1,64 +1,72 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
-import { Badge, StatusIndicator, VStack } from '@/design-system';
+import { Badge, HStack, StatusIndicator, VStack } from '@/design-system';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
+import AppIconCompute from '@/assets/appIcon/compute.png';
+import AppIconComputeAdmin from '@/assets/appIcon/computeadmin.png';
+import AppIconContainer from '@/assets/appIcon/container.png';
+import AppIconStorage from '@/assets/appIcon/storage.png';
+import AppIconStorageAdmin from '@/assets/appIcon/storageadmin.png';
+import AppIconIAM from '@/assets/appIcon/iam.png';
+
+const APP_STATUS_LINKS = [
+  { label: 'Compute', icon: AppIconCompute, path: '/design/status/compute' },
+  { label: 'Compute Admin', icon: AppIconComputeAdmin, path: '/design/status/compute-admin' },
+  { label: 'Container', icon: AppIconContainer, path: '/design/status/container' },
+  { label: 'Storage', icon: AppIconStorage, path: '/design/status/storage' },
+  { label: 'Storage Admin', icon: AppIconStorageAdmin, path: '/design/status/storage-admin' },
+  { label: 'IAM', icon: AppIconIAM, path: '/design/status/iam' },
+];
 
 const STATUS_GUIDELINES = `## Overview
-리소스나 시스템의 현재 상태를 시각적으로 전달하는 컴포넌트다. 기본적으로 서버에서 응답받은 실제 상태값을 White Badge 형태로 표시한다.
+
+리소스나 시스템의 현재 상태를 카드, 표, 목록 또는 헤더에서 시각적으로 간결하게 전달하는 컴포넌트다.
 
 ---
 
 ## Variants
 
-### 1. Default
-서버 응답값을 그대로 표시하는 기본 형식이다. 특수 상태로 정의되지 않은 모든 상태값은 Default로 표시된다.
+Status의 두 Variant는 공통으로 \`displayType\`, \`icon\`, \`color\`, \`label\` 변수를 사용한다. **Default**는 이 변수들이 고정된 프리셋이고, **Defined**는 별도 정책 문서(리소스 상태 정의)에서 직접 정의한다.
 
-| 속성 | 값 |
-| --- | --- |
-| 배경색 | White |
-| 텍스트 색상 | 기본 검은색 |
-| 아이콘 | 없음 |
-| 표시 형식 | Label Only |
-| 테이블 내 최대 너비 | 80px (truncate + Tooltip) |
+### 1. Default
+
+특수 상태로 정의되지 않은 모든 상태값에 적용되는 프리셋 형식이다. 아래 변수가 자동 적용된다.
+
+| 변수 | 고정 값 | 비고 |
+| --- | --- | --- |
+| \`displayType\` | \`label-only\` | - |
+| \`icon\` | 없음 | - |
+| \`color\` | \`white\` | - |
+| \`label\` | API 응답 상태값 그대로 표시 | 가공 없이 그대로 사용 |
 
 ### 2. Defined
-사전에 정의된 특수 상태에 한해 아이콘·컬러·레이블 텍스트를 코딩하여 표시한다.
-어떤 상태를 특수 상태로 취급할지는 리소스별 별도 기획 문서에서 정의한다.
 
-특수 상태는 시맨틱 의미에 따라 아래 5가지 타입으로 코딩된다.
+사전에 정의된 특수 상태에 한해 **아이콘·컬러·레이블 텍스트**를 코딩하여 표시한다. 어떤 상태를 특수 상태로 취급할지는 **별도 정책 문서**(리소스 상태 정의)에서 정의한다.
 
-| 타입 | 색상 | 사용 상황 예시 |
+특수 상태는 아래 **4개 변수**로 정의한다.
+
+| 변수 | 설명 | 값 / 비고 |
 | --- | --- | --- |
-| Active (Success) | Green | active |
-| Error (Danger) | Red | error |
-| Processing | Blue | building · deleting · pending |
-| Warning | Orange | degraded · down · maintenance |
-| Muted | Gray | suspended · paused · draft · in-use |
-
-### 표시 형식 (Display Type)
-
-| 형식 | 구성 | 사용 상황 |
-| --- | --- | --- |
-| Icon + Label | 아이콘 + 텍스트 레이블 | Defined 상태의 기본 형식 |
-| Icon Only | 아이콘만 표시 | 테이블 Status 컬럼 등 공간이 제한적인 경우 |
-| Label Only | 텍스트 레이블만 표시 | Container 앱의 Default 상태 기본 형식. 테이블 내 최대 너비 80px, 초과 시 truncate + Tooltip |
+| \`displayType\` | 표시 형식. 미지정 시 Label이 기본 | \`icon-only\` / \`label-only\` |
+| \`icon\` | TDS Icons에서 사용할 아이콘. \`displayType\`이 \`label-only\`이면 미사용 | 리소스 상태 정의 문서에서 정함 |
+| \`color\` | 컬러. TDS Semantic Colors 기준을 따른다. | \`green\` / \`red\` / \`blue\` / \`orange\` / \`gray\` / \`white\` |
+| \`label\` | 레이블 텍스트. \`displayType\`이 \`icon-only\`이면 미표시 | 리소스 상태 정의 문서에서 정함 |
 
 ---
 
 ## Composition (구성 요소)
 
 \`\`\`
-+------------------------------------------+
-| [Icon?] Label                             |
-+------------------------------------------+
+[ label text ]   ← label-only
+[ 🟢 icon ]      ← icon-only
 \`\`\`
 
 | 요소 | 설명 | 필수 여부 |
 | --- | --- | --- |
-| Icon | 상태 타입을 시각적으로 나타내는 아이콘 | Defined만 해당 |
-| Label | 상태명을 텍스트로 표시 | 필수 (Icon Only 제외) |
+| Icon | 상태를 시각적으로 나타내는 아이콘. TDS Icons 기준. \`displayType\`이 \`icon-only\`일 때만 표시 | \`icon-only\`인 경우만 |
+| Label | 상태명을 텍스트로 표시 | \`label-only\`인 경우만 |
 | Container | Icon과 Label을 감싸는 Pill 형태의 래퍼 | 필수 |
 
 ### Design Tokens
@@ -69,46 +77,37 @@ const STATUS_GUIDELINES = `## Overview
 | Gap | 4px |
 | Border Radius | pill (16px) |
 | Font Size | 11px |
-| Icon Size | sm/md: 14px, lg: 16px (icon-only layout) |
-| Container Size | sm/md: 24px, lg: 28px (icon-only layout) |
+| Icon Size | 14px |
 
-### 시맨틱 컬러 토큰 (Defined 상태 전용)
+### 컬러별 시맨틱 토큰
 
-| 타입 | Background Token |
-| --- | --- |
-| Active | --status-success-bg |
-| Error | --status-danger-bg |
-| Processing | --status-info-bg |
-| Warning | --status-warning-bg |
-| Muted | --status-muted-bg |
+TDS Semantic Colors 기준을 따른다.
+
+| 컬러 | Token | 적용 Variant |
+| --- | --- | --- |
+| White | White | Default |
+| Green | Green 400 | Defined |
+| Red | Red 400 | Defined |
+| Blue | Blue 400 | Defined |
+| Orange | Orange 400 | Defined |
+| Gray | Slate 500 | Defined |
 
 ---
 
 ## Behavior
 
-### 1) 상태 업데이트
-- 상태는 서버의 실제 리소스 상태를 반영하며, 폴링 또는 실시간 이벤트를 통해 자동 업데이트된다.
-- 상태 전환 시 별도의 애니메이션 없이 즉시 교체된다.
+### 상태 업데이트
+- 상태는 실제 리소스 상태를 반영하며, 폴링(polling) 또는 실시간 이벤트를 통해 자동으로 업데이트된다.
 
-### 2) Defined 상태 렌더링 규칙
-- Action 타입(building, deleting, pending 등)의 아이콘은 스피너 형태로 회전하여 진행 중임을 시각적으로 표현한다.
+### Defined 상태 렌더링 규칙
+- 리소스 상태가 특수 상태 정의 목록의 조건에 부합하면 Defined로, 그렇지 않으면 Default로 렌더링한다.
+- 특수 상태로 정의된 경우 레이블 텍스트는 별도 정의된 값으로 대체할 수 있다.
+
+### 반응형 대응
 - 레이블 텍스트는 줄바꿈 없이 한 줄로 유지한다.
 
-### 3) Layout 형식
-
-| Layout | 설명 | 사용 시점 |
-| --- | --- | --- |
-| default | Icon + Label (pill) | 일반적인 상태 표시. 테이블, DetailHeader 등 |
-| icon-only | 아이콘만 표시 (호버 시 상태명 Tooltip 자동 표시) | 테이블 컬럼 너비가 좁은 경우 |
-| badge | Icon + Label (square, radius-sm) | 카드나 태그 스타일로 상태를 표시할 때 |
-
-### 4) 반응형 대응
-- 테이블 Status 컬럼 등 공간이 제한적인 경우 Display Type을 Icon Only로 전환할 수 있다.
-- Icon Only 사용 시 설계 시점에서 명시적으로 선택한다.
-
-### 5) 접근성
-- Icon Only 형식 사용 시 \`aria-label\` 또는 \`title\` 속성으로 상태명을 제공해야 한다.
-- 색상만으로 상태를 전달하지 않고 아이콘과 레이블을 함께 사용한다.
+### 접근성
+- Icon Only 형식을 사용할 경우 스크린 리더를 위해 \`aria-label\` 또는 \`title\` 속성으로 상태명을 제공해야 한다.
 
 ---
 
@@ -116,35 +115,23 @@ const STATUS_GUIDELINES = `## Overview
 
 ### 레이블 작성 원칙
 
-| 구분 | 원칙 |
+- **Default**: API 응답 상태값을 가공 없이 그대로 표시한다.
+- **Defined**: 리소스 상태 정의 문서에서 정의한 레이블 텍스트를 사용한다. 표기는 **Sentence case**를 적용한다. API 응답값과 다를 수 있으며, 이 경우 리소스 상태 정의 문서에 매핑 관계를 명시한다.
+- 명사 또는 형용사 형태로 작성하며, 동사형·문장형 표현은 사용하지 않는다.
+
+### 특수 상태 정의 문서 관리 권고 사항
+
+Defined 상태의 변수(displayType, icon, color, label)는 리소스 상태 정의 문서에서 아래 항목을 명시하여 관리한다.
+
+| 항목 | 설명 |
 | --- | --- |
-| Default | 서버 응답 상태값을 가공 없이 그대로 표시한다. |
-| Defined | 별도 기획 문서에서 정의한 레이블 텍스트를 사용한다. |
-
-### 전체 Defined 상태 매핑
-
-| 시맨틱 타입 | status 값 | 기본 레이블 | 설명 |
-| --- | --- | --- | --- |
-| Active (Green) | active | Active | 정상 동작 중 |
-| Error (Red) | error | Error | 오류 발생 |
-| Processing (Blue) | building | Building... | 생성 중 |
-| Processing (Blue) | deleting | Deleting... | 삭제 중 |
-| Processing (Blue) | pending | Pending | 대기 중 |
-| Warning (Orange) | degraded | Degraded | 성능 저하 |
-| Warning (Orange) | down | Down | 다운 상태 |
-| Warning (Orange) | maintenance | Maintenance | 유지보수 중 |
-| Muted (Gray) | suspended | Suspended | 일시 중지 |
-| Muted (Gray) | paused | Paused | 일시 정지 |
-| Muted (Gray) | draft | Draft | 초안 |
-| Muted (Gray) | in-use | In-use | 사용 중 |
-
-### 특수 상태 정의 문서 관리 원칙
-
-| 항목 | 규칙 |
-| --- | --- |
-| 정의 범위 | Active, Error, Processing, Warning, Muted 5가지 시맨틱 타입별로 매핑된 status 값 목록 |
-| 레이블 | API 응답값과 UI 표시 레이블이 다를 경우 기획 문서에서 명시 |
-| 추가/변경 | 신규 status 추가 시 문서 업데이트 후 개발 반영 |
+| displayType | 미지정 시 Label 기본. \`icon-only\` 지정 시 명시 |
+| color | \`green\` / \`red\` / \`blue\` / \`orange\` / \`gray\` / \`white\` |
+| label (status) | 화면에 표시할 텍스트. Sentence case 적용. API 응답값과 다를 경우 명시 |
+| icon | 사용할 TDS Icons 아이콘 이름 (\`label-only\`이면 생략) |
+| 조건 | API 응답값 등 특수 상태를 정의하기 위한 조건 |
+| 설명 | 해당 상태값이 의미하는 실제 상태 |
+| 비고 | 상태에 따라 가능한 액션 등 부가 정보 |
 
 ---
 
@@ -161,46 +148,46 @@ export function StatusIndicatorPage() {
   return (
     <ComponentPageTemplate
       title="Status indicator"
-      description="리소스나 시스템의 현재 상태를 시각적으로 전달하는 컴포넌트. 기본적으로 서버에서 응답받은 실제 상태값을 White Badge 형태로 표시한다."
+      description="리소스나 시스템의 현재 상태를 카드, 표, 목록 또는 헤더에서 시각적으로 간결하게 전달하는 컴포넌트."
       whenToUse={[
         '테이블의 Status 컬럼에서 리소스의 현재 상태를 표시할 때',
         'Detail Header의 InfoCard에서 리소스 상태를 표시할 때',
-        '상태가 복수의 의미 단계(정상·경고·오류 등)로 구분될 때',
       ]}
       whenNotToUse={[
-        '단순한 카테고리 분류나 태그 목적에는 Badge를 사용한다.',
         '사용자의 액션을 유도하는 목적에는 사용하지 않는다.',
         '상태가 아닌 수량·숫자 정보 표시에는 사용하지 않는다.',
       ]}
       preview={
         <ComponentPreview
-          code={`// Icon Only (테이블 Status 컬럼)
+          code={`// Default — Label Only (White Badge)
+<Badge theme="white" size="sm">Available</Badge>
+
+// Defined — Icon Only
 <StatusIndicator status="active" layout="icon-only" />
 <StatusIndicator status="error" layout="icon-only" />
-<StatusIndicator status="building" layout="icon-only" />
-
-// Default — Label Only (White Badge)
-<Badge theme="white" size="sm">Available</Badge>`}
+<StatusIndicator status="building" layout="icon-only" />`}
         >
           <div className="flex gap-3 items-center">
-            <StatusIndicator status="active" layout="icon-only" />
-            <StatusIndicator status="error" layout="icon-only" />
-            <StatusIndicator status="building" layout="icon-only" />
             <Badge theme="white" size="sm">
               Available
             </Badge>
+            <StatusIndicator status="active" layout="icon-only" />
+            <StatusIndicator status="error" layout="icon-only" />
+            <StatusIndicator status="building" layout="icon-only" />
           </div>
         </ComponentPreview>
       }
       examples={
         <VStack gap={8}>
-          {/* ── Variant: Default (Label Only / White Badge) ── */}
+          {/* ── Variant 1: Default (Label Only / White Badge) ── */}
           <VStack gap={3}>
-            <Label>Default — Label Only (White Badge)</Label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
-              특수 상태로 정의되지 않은 모든 상태값은 서버 응답값을 그대로 White Badge로 표시한다.
-              아이콘 없음.
-            </p>
+            <VStack gap={1}>
+              <Label>Default — Label Only (White Badge)</Label>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                특수 상태로 정의되지 않은 모든 상태값은 서버 응답값을 그대로 White Badge로 표시한다.
+                displayType은 label-only로 고정되며, 아이콘 없음.
+              </p>
+            </VStack>
             <div className="flex flex-wrap gap-3 items-center">
               <Badge theme="white" size="sm">
                 Available
@@ -225,137 +212,84 @@ export function StatusIndicatorPage() {
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* ── Display Type: Icon Only ── */}
+          {/* ── Variant 2: Defined — Icon Only ── */}
           <VStack gap={3}>
-            <Label>Display Type — Icon Only</Label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
-              공간이 제한적인 경우 설계 시점에서 명시적으로 선택. Tooltip으로 상태명을 제공해야
-              한다.
-            </p>
-            <VStack gap={4}>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Active</span>
-                <div className="flex flex-wrap gap-4 items-start">
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="active" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">active</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="enabled" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">enabled</span>
-                  </VStack>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Error</span>
-                <div className="flex flex-wrap gap-4 items-start">
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="error" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">error</span>
-                  </VStack>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Processing</span>
-                <div className="flex flex-wrap gap-4 items-start">
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="building" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">building</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="deleting" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">deleting</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="pending" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">pending</span>
-                  </VStack>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Warning</span>
-                <div className="flex flex-wrap gap-4 items-start">
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="degraded" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">degraded</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="down" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">down</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="maintenance" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">
-                      maintenance
-                    </span>
-                  </VStack>
-                </div>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-body-xs text-[var(--color-text-subtle)]">Muted</span>
-                <div className="flex flex-wrap gap-4 items-start">
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="suspended" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">suspended</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="paused" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">paused</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="draft" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">draft</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="in-use" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">in-use</span>
-                  </VStack>
-                  <VStack gap={1} align="center">
-                    <StatusIndicator status="disabled" layout="icon-only" />
-                    <span className="text-body-xs text-[var(--color-text-subtle)]">disabled</span>
-                  </VStack>
-                </div>
-              </VStack>
+            <VStack gap={1}>
+              <Label>Defined — Icon Only</Label>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                별도 정책 문서에서 정의한 특수 상태. displayType이 icon-only인 경우 아이콘만
+                표시하며, 호버 시 Tooltip으로 상태명을 제공한다. 각 앱별 상태 정의는 하단
+                &quot;리소스 상태 정의&quot; 링크를 참고한다.
+              </p>
             </VStack>
+            <HStack gap={4} align="center">
+              <StatusIndicator status="active" layout="icon-only" />
+              <VStack gap={0.5}>
+                <span className="text-body-sm text-[var(--color-text-default)]">
+                  Background:{' '}
+                  <code className="font-mono text-body-xs bg-[var(--color-surface-muted)] px-1 py-0.5 rounded-[var(--radius-sm)]">
+                    24 × 24px
+                  </code>
+                </span>
+                <span className="text-body-sm text-[var(--color-text-default)]">
+                  Icon:{' '}
+                  <code className="font-mono text-body-xs bg-[var(--color-surface-muted)] px-1 py-0.5 rounded-[var(--radius-sm)]">
+                    14 × 14px
+                  </code>
+                </span>
+              </VStack>
+            </HStack>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* ── Semantic Color Tokens ── */}
           <VStack gap={3}>
-            <Label>Semantic Color Tokens</Label>
-            <p className="text-body-sm text-[var(--color-text-subtle)]">
-              Defined 상태 전용. Default 상태는 White 배경 + 기본 텍스트 색상을 사용한다.
-            </p>
-            <div className="grid grid-cols-5 gap-3">
+            <VStack gap={1}>
+              <Label>Semantic Color Tokens</Label>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                컬러별 시맨틱 토큰. Default는 White, Defined는 정책 문서에서 지정한 컬러를 사용한다.
+              </p>
+            </VStack>
+            <div className="grid grid-cols-6 gap-3">
               {[
-                {
-                  token: '--status-success-bg',
-                  label: 'Active',
-                  bg: 'bg-[var(--status-success-bg)]',
-                },
-                { token: '--status-danger-bg', label: 'Error', bg: 'bg-[var(--status-danger-bg)]' },
-                {
-                  token: '--status-info-bg',
-                  label: 'Processing',
-                  bg: 'bg-[var(--status-info-bg)]',
-                },
-                {
-                  token: '--status-warning-bg',
-                  label: 'Warning',
-                  bg: 'bg-[var(--status-warning-bg)]',
-                },
-                { token: '--status-muted-bg', label: 'Muted', bg: 'bg-[var(--status-muted-bg)]' },
-              ].map(({ token, label: lbl, bg }) => (
-                <VStack key={token} gap={1} align="center">
+                { label: 'White', bg: 'bg-white border border-[var(--color-border-default)]' },
+                { label: 'Green', bg: 'bg-[var(--status-success-bg)]' },
+                { label: 'Red', bg: 'bg-[var(--status-danger-bg)]' },
+                { label: 'Blue', bg: 'bg-[var(--status-info-bg)]' },
+                { label: 'Orange', bg: 'bg-[var(--status-warning-bg)]' },
+                { label: 'Gray', bg: 'bg-[var(--status-muted-bg)]' },
+              ].map(({ label: lbl, bg }) => (
+                <VStack key={lbl} gap={1} align="center">
                   <span className={`w-8 h-8 rounded-full ${bg}`} />
                   <span className="text-body-xs text-[var(--color-text-default)]">{lbl}</span>
-                  <span className="font-mono text-body-xs text-[var(--color-text-subtle)]">
-                    {token}
-                  </span>
                 </VStack>
               ))}
             </div>
+          </VStack>
+
+          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+
+          {/* ── Per-App Status Definitions ── */}
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>리소스 상태 정의 (per App)</Label>
+              <p className="text-body-sm text-[var(--color-text-subtle)]">
+                각 앱별로 Defined 상태의 변수(displayType, icon, color, label)를 정의한 문서.
+              </p>
+            </VStack>
+            <HStack gap={2} className="flex-wrap">
+              {APP_STATUS_LINKS.map(({ label: lbl, icon, path }) => (
+                <a
+                  key={lbl}
+                  href={path}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-hover)] transition-colors text-body-md text-[var(--color-text-default)]"
+                >
+                  <img src={icon} alt="" className="size-5 object-contain" />
+                  <span>{lbl}</span>
+                </a>
+              ))}
+            </HStack>
           </VStack>
         </VStack>
       }
@@ -364,17 +298,17 @@ export function StatusIndicatorPage() {
           <NotionRenderer markdown={STATUS_GUIDELINES} />
           <DosDonts
             doItems={[
-              '테이블의 Status 컬럼에서 리소스 상태를 표시한다.',
-              'Detail Header의 InfoCard에서 리소스 상태를 표시한다.',
+              '테이블의 Status 컬럼에서 사용하며, 컬럼은 중앙 정렬한다.',
+              'Detail Header의 Info Card에서 리소스 상태 표시 시 사용한다.',
+              '특수 상태 정의는 반드시 별도 정책 문서(리소스 상태 정의)를 통해 관리한다.',
               '하나의 리소스에는 하나의 Status만 표시한다.',
-              'Status 컬럼은 중앙 정렬한다.',
-              '특수 상태는 기획 문서에 정의된 범위 내에서만 사용한다.',
+              '같은 화면 내에서 동일한 상태값은 항상 동일한 형식으로 표시한다.',
             ]}
             dontItems={[
               '특수 상태로 정의되지 않은 상태값에 임의로 아이콘이나 컬러를 적용하지 않는다.',
-              '시맨틱 타입을 의미와 맞지 않게 사용하지 않는다.',
+              '컬러의 시맨틱 의미와 맞지 않는 상태에 적용하지 않는다. (예: 오류 상황에 Gray 사용 금지)',
+              '배경색과 아이콘 색상을 시맨틱 토큰 외의 값으로 커스터마이징하지 않는다.',
               'Default 상태에 임의로 색상이나 아이콘을 추가하지 않는다.',
-              '상태가 아닌 수량·숫자 정보 표시에는 사용하지 않는다.',
             ]}
           />
         </VStack>
@@ -383,6 +317,11 @@ export function StatusIndicatorPage() {
         { label: 'Badge', path: '/design/components/badge' },
         { label: 'Table', path: '/design/components/table' },
         { label: 'Detail Header', path: '/design/patterns/detail-header' },
+        {
+          label: 'Semantic Colors',
+          path: '/design/foundation/semantic-colors',
+          description: '컬러 토큰 기준',
+        },
       ]}
     />
   );
