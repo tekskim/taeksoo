@@ -52,7 +52,7 @@ Status의 두 Variant는 공통으로 \`displayType\`, \`icon\`, \`color\`, \`la
 | --- | --- | --- |
 | \`displayType\` | 표시 형식. 미지정 시 Label이 기본 | \`icon-only\` / \`label-only\` |
 | \`icon\` | TDS Icons에서 사용할 아이콘. \`displayType\`이 \`label-only\`이면 미사용 | 리소스 상태 정의 문서에서 정함 |
-| \`color\` | 컬러. TDS Semantic Colors 기준을 따른다. | \`green\` / \`red\` / \`blue\` / \`orange\` / \`gray\` / \`white\` |
+| \`color\` | 컬러. TDS Primitive Colours 기준을 따른다. | \`green\` / \`red\` / \`blue\` / \`orange\` / \`gray\` / \`white\` |
 | \`label\` | 레이블 텍스트. \`displayType\`이 \`icon-only\`이면 미표시 | 리소스 상태 정의 문서에서 정함 |
 
 ---
@@ -82,7 +82,7 @@ Status의 두 Variant는 공통으로 \`displayType\`, \`icon\`, \`color\`, \`la
 
 ### 컬러별 시맨틱 토큰
 
-TDS Semantic Colors 기준을 따른다.
+TDS Primitive Colours 기준을 따른다.
 
 | 컬러 | Token | 적용 Variant |
 | --- | --- | --- |
@@ -244,10 +244,10 @@ export function StatusIndicatorPage() {
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* ── Semantic Color Tokens ── */}
+          {/* ── Primitive Colour Tokens ── */}
           <VStack gap={3}>
             <VStack gap={1}>
-              <Label>Semantic Color Tokens</Label>
+              <Label>Primitive Colour Tokens</Label>
               <p className="text-body-sm text-[var(--color-text-subtle)]">
                 컬러별 시맨틱 토큰. Default는 White, Defined는 정책 문서에서 지정한 컬러를 사용한다.
               </p>
@@ -319,7 +319,7 @@ export function StatusIndicatorPage() {
         { label: 'Table', path: '/design/components/table' },
         { label: 'Detail Header', path: '/design/patterns/detail-header' },
         {
-          label: 'Semantic Colors',
+          label: 'Primitive Colours',
           path: '/design/foundation/semantic-colors',
           description: '컬러 토큰 기준',
         },

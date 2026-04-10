@@ -7,7 +7,7 @@ import {
   DoughnutChartDemo,
   HalfDoughnutChartDemo,
 } from '../../design-system-sections/ChartComponents';
-import { ProgressBar, VStack } from '@/design-system';
+import { Loading, ProgressBar, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -547,6 +547,18 @@ export function UsageChartPage() {
               <GaugeHoverTooltip used={10} max={10}>
                 <ProgressBar variant="quota" label="Disk" value={10} max={10} />
               </GaugeHoverTooltip>
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Gauge Bar Chart — Loading State</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                데이터를 불러오는 동안 스피너를 중앙에 표시한다.
+              </span>
+            </VStack>
+            <div className="w-[280px] flex items-center justify-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)] h-[176px]">
+              <Loading size="md" text="" />
             </div>
           </VStack>
 
