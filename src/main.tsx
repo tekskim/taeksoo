@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/mona-sans';
 import './index.css';
+import '@thaki/shared/styles/tokens-only.css';
+import '@thaki/shared/styles/shared-utilities.css';
 // Initialize i18n
 import './i18n';
 import App from './App.tsx';

@@ -24,6 +24,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@thaki/shared/components': path.resolve(__dirname, './thaki-shared-v2/src/components'),
+      '@thaki/shared/styles': path.resolve(__dirname, './thaki-shared-v2/src/styles'),
     },
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },

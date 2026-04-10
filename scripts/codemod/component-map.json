@@ -1,0 +1,329 @@
+{
+  "meta": {
+    "description": "TDS (@/design-system) → thaki-shared (@thaki/shared) component mapping",
+    "version": "1.0.0",
+    "source": "@/design-system (tds_ssot)",
+    "target": "@thaki/shared (thaki-shared)"
+  },
+  "imports": {
+    "source": "@/design-system",
+    "target": "@thaki/shared"
+  },
+  "components": {
+    "Button": {
+      "target": "Button",
+      "props": {
+        "variant": {
+          "mapping": {
+            "primary": { "variant": "primary", "appearance": "solid" },
+            "secondary": { "variant": "secondary", "appearance": "solid" },
+            "outline": { "variant": "secondary", "appearance": "outline" },
+            "ghost": { "variant": "secondary", "appearance": "ghost" },
+            "muted": { "variant": "muted", "appearance": "solid" },
+            "danger": { "variant": "error", "appearance": "solid" },
+            "warning": { "variant": "warning", "appearance": "solid" },
+            "link": {
+              "variant": "secondary",
+              "appearance": "ghost",
+              "_comment": "no direct link variant"
+            }
+          }
+        },
+        "size": { "mapping": "identity" },
+        "leftIcon": { "rename": null, "_comment": "thaki-shared infers icon layout from children" },
+        "rightIcon": { "rename": null },
+        "icon": { "rename": null },
+        "isLoading": { "mapping": "identity" },
+        "fullWidth": { "mapping": "identity" }
+      }
+    },
+    "VStack": {
+      "target": "Layout.VStack",
+      "props": {
+        "gap": {
+          "mapping": {
+            "type": "numeric-to-token",
+            "map": {
+              "0": "0",
+              "0.5": "xs",
+              "1": "xs",
+              "2": "sm",
+              "3": "sm",
+              "4": "md",
+              "6": "lg",
+              "8": "lg"
+            }
+          }
+        },
+        "align": { "mapping": "identity" },
+        "justify": { "mapping": "identity" },
+        "wrap": { "mapping": "identity" }
+      }
+    },
+    "HStack": {
+      "target": "Layout.HStack",
+      "props": {
+        "gap": { "mapping": "same-as:VStack.gap" },
+        "align": { "mapping": "identity" },
+        "justify": { "mapping": "identity" },
+        "wrap": { "mapping": "identity" }
+      }
+    },
+    "Table": {
+      "target": "Table",
+      "props": {
+        "data": { "rename": "rows" },
+        "columns": {
+          "mapping": "column-transform",
+          "_comment": "TableColumn key mapping needed: label→header, render→custom, flex→width"
+        },
+        "rowKey": { "rename": null, "_comment": "no direct equivalent; handled via column key" },
+        "selectable": {
+          "rename": null,
+          "_comment": "thaki-shared Table has no built-in selection"
+        },
+        "selectedKeys": { "rename": null },
+        "onSelectionChange": { "rename": null },
+        "onRowClick": { "rename": "onClickRow" },
+        "emptyMessage": { "rename": null, "_comment": "use emptyUI prop with EmptyUI component" }
+      }
+    },
+    "Pagination": {
+      "target": "Pagination",
+      "props": {
+        "currentPage": { "rename": "currentAt" },
+        "totalPages": { "rename": null, "_comment": "use totalCount + size instead" },
+        "onPageChange": {
+          "mapping": "signature-change",
+          "_comment": "thaki-shared: onPageChange(page, info?) vs tds: onPageChange(page)"
+        },
+        "totalItems": { "rename": "totalCount" },
+        "selectedCount": { "mapping": "identity" },
+        "showSettings": { "rename": null, "_comment": "use onSettingClick presence instead" }
+      }
+    },
+    "SearchInput": {
+      "target": null,
+      "_comment": "No direct SearchInput in thaki-shared; use FilterSearch.FilterSearchInput or custom Input with search icon"
+    },
+    "FilterSearchInput": {
+      "target": "FilterSearchInput",
+      "props": {
+        "filters": {
+          "rename": "filterKeys",
+          "_comment": "FilterField[] → FilterKey[] type conversion needed"
+        },
+        "appliedFilters": { "rename": "selectedFilters" },
+        "onFiltersChange": { "rename": "onFilterAdd", "_comment": "different callback signature" },
+        "placeholder": { "mapping": "identity" },
+        "hideAppliedFilters": { "rename": null }
+      }
+    },
+    "Badge": {
+      "target": "Badge",
+      "props": {
+        "variant": {
+          "rename": "theme",
+          "mapping": {
+            "info": "blu",
+            "success": "gre",
+            "warning": "ylw",
+            "danger": "red",
+            "neutral": "gry"
+          }
+        },
+        "size": { "mapping": "identity" },
+        "theme": { "mapping": "identity", "_comment": "if already using theme prop" },
+        "type": { "mapping": "identity" }
+      }
+    },
+    "StatusIndicator": {
+      "target": "StatusIndicator",
+      "props": {
+        "status": { "rename": "variant" },
+        "layout": {
+          "mapping": {
+            "default": "leftIcon",
+            "icon-only": "iconOnly"
+          }
+        },
+        "label": { "mapping": "identity" },
+        "tooltip": { "mapping": "identity" }
+      }
+    },
+    "ContextMenu": {
+      "target": "ContextMenu",
+      "_comment": "API is fundamentally different. TDS uses declarative items[]; thaki-shared uses compound ContextMenu.Root + .Item",
+      "props": {
+        "items": { "rename": null, "_comment": "must be converted to ContextMenu.Item children" },
+        "trigger": { "rename": null, "_comment": "thaki-shared uses render-prop trigger" },
+        "children": {
+          "rename": null,
+          "_comment": "TDS children = trigger element; thaki-shared trigger = render prop"
+        }
+      }
+    },
+    "TabBar": {
+      "target": "TabBar",
+      "props": {
+        "tabs": {
+          "mapping": "tab-item-transform",
+          "_comment": "TabBarItem.label → TabItem.title"
+        },
+        "activeTab": { "mapping": "identity" },
+        "onTabChange": { "rename": "onTabClick" },
+        "onTabClose": { "mapping": "identity" },
+        "onTabAdd": { "rename": "onAddTab" },
+        "onTabReorder": { "mapping": "identity" },
+        "showAddButton": {
+          "rename": null,
+          "_comment": "thaki-shared always shows add when onAddTab provided"
+        },
+        "showWindowControls": { "mapping": "identity" }
+      }
+    },
+    "Breadcrumb": {
+      "target": "Breadcrumb",
+      "props": {
+        "items": {
+          "mapping": "breadcrumb-item-transform",
+          "_comment": "BreadcrumbItem.href → BreadcrumbItem.path"
+        }
+      }
+    },
+    "TopBar": {
+      "target": null,
+      "_comment": "No direct TopBar in thaki-shared; compose with NavigationControls + Breadcrumb + custom layout"
+    },
+    "TopBarAction": {
+      "target": null,
+      "_comment": "No equivalent; use Button with ghost variant"
+    },
+    "PageShell": {
+      "target": null,
+      "_comment": "No direct PageShell; use Sidebar + custom layout. thaki-shared has AppLayout for similar purpose"
+    },
+    "PageHeader": {
+      "target": null,
+      "_comment": "No direct PageHeader; compose with Typography.Title + Layout.HStack"
+    },
+    "Modal": {
+      "target": "Overlay.Template",
+      "props": {
+        "isOpen": { "rename": "appeared" },
+        "onClose": { "rename": "onCancel" },
+        "title": { "mapping": "identity" },
+        "description": { "mapping": "identity" },
+        "size": { "mapping": "identity" },
+        "_extra": { "type": "modal" }
+      }
+    },
+    "Drawer": {
+      "target": "Overlay.Template",
+      "props": {
+        "isOpen": { "rename": "appeared" },
+        "onClose": { "rename": "onCancel" },
+        "title": { "mapping": "identity" },
+        "description": { "mapping": "identity" },
+        "width": { "rename": "size", "_comment": "number → 'sm'|'md'" },
+        "footer": { "mapping": "identity" },
+        "_extra": { "type": "drawer-horizontal" }
+      }
+    },
+    "Tabs": {
+      "target": "TabSelector",
+      "props": {
+        "value": { "mapping": "identity" },
+        "onChange": { "mapping": "identity" },
+        "variant": {
+          "mapping": {
+            "underline": "medium",
+            "boxed": "pill"
+          }
+        },
+        "size": { "rename": null }
+      },
+      "_comment": "TDS Tabs is compound (TabList+Tab+TabPanel); thaki-shared TabSelector is flat options[]"
+    },
+    "DetailHeader": {
+      "target": "DetailPageHeader",
+      "props": {
+        "_comment": "TDS is compound (Title+Actions+InfoGrid+InfoCard); thaki-shared is flat props (title, actions, infoFields[])"
+      }
+    },
+    "SectionCard": {
+      "target": "Fieldset",
+      "props": {
+        "_comment": "TDS SectionCard (Header+Content+DataRow) → thaki-shared Fieldset (legend+children). Different abstraction level."
+      }
+    },
+    "EmptyState": {
+      "target": "EmptyUI",
+      "props": {
+        "title": { "rename": "content.title" },
+        "description": { "rename": "content.description" },
+        "icon": { "rename": null, "_comment": "EmptyUI has no icon prop" },
+        "action": { "rename": "children" }
+      }
+    },
+    "Tooltip": {
+      "target": "Tooltip",
+      "props": {
+        "content": { "mapping": "identity" },
+        "position": { "rename": "direction" },
+        "delay": { "rename": null },
+        "children": { "mapping": "identity" }
+      }
+    },
+    "FormField": {
+      "target": "FormField",
+      "props": {
+        "label": { "mapping": "identity" },
+        "required": { "mapping": "identity" },
+        "error": { "mapping": "identity" },
+        "helperText": { "rename": null, "_comment": "thaki-shared FormField has no helperText" },
+        "errorMessage": { "rename": "error" },
+        "spacing": { "rename": null }
+      }
+    },
+    "Input": {
+      "target": "Input",
+      "props": {
+        "size": { "mapping": "identity" },
+        "error": { "mapping": "identity" },
+        "fullWidth": { "rename": null, "_comment": "thaki-shared uses className for width" },
+        "placeholder": { "mapping": "identity" }
+      }
+    },
+    "Select": {
+      "target": "Dropdown.Select",
+      "props": {
+        "options": { "rename": null, "_comment": "TDS options[] → Dropdown.Option children" },
+        "value": { "mapping": "identity" },
+        "onChange": { "mapping": "identity" },
+        "placeholder": { "mapping": "identity" },
+        "fullWidth": { "rename": null }
+      }
+    },
+    "ListToolbar": {
+      "target": "ToolBar",
+      "_comment": "Different API; thaki-shared ToolBar is simpler"
+    },
+    "Toggle": {
+      "target": "Toggle",
+      "props": {
+        "checked": { "mapping": "identity" },
+        "disabled": { "mapping": "identity" },
+        "label": { "mapping": "identity" }
+      }
+    },
+    "Checkbox": {
+      "target": "Checkbox",
+      "props": {
+        "checked": { "mapping": "identity" },
+        "label": { "mapping": "identity" },
+        "disabled": { "mapping": "identity" }
+      }
+    }
+  }
+}
