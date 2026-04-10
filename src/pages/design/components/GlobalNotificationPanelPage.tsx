@@ -144,7 +144,7 @@ function GlobalPanelPreview() {
   return (
     <VStack gap={4}>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           <div className="relative pt-3 pb-0">
             <button
               type="button"
@@ -156,10 +156,7 @@ function GlobalPanelPreview() {
             <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
               <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
-                </Tab>
+                <Tab value="unread">Unread (3)</Tab>
               </TabList>
             </Tabs>
           </div>
@@ -172,7 +169,7 @@ function GlobalPanelPreview() {
             <div className="flex flex-col gap-2">
               <StaticPanelCard
                 appIcon={AppIconCompute}
-                message='Instance "web-server-01" created successfully.'
+                message='Instance "web-01" created.'
                 statusIcon={successIcon}
                 time="10:23"
                 project="proj-1"
@@ -180,7 +177,7 @@ function GlobalPanelPreview() {
               />
               <StaticPanelCard
                 appIcon={AppIconCompute}
-                message='Failed to create volume "data-vol-02".'
+                message='Volume "data-vol-02" create failed.'
                 statusIcon={errorIcon}
                 time="09:30"
                 project="proj-2"
@@ -213,7 +210,7 @@ function GlobalPanelPreview() {
 const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   {
     id: '1',
-    message: 'Instance "web-server-01" created successfully.',
+    message: 'Instance "web-01" created.',
     statusIcon: successIcon,
     time: '10:23',
     project: 'proj-1',
@@ -224,7 +221,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '2',
-    message: 'Failed to create volume "data-vol-02".',
+    message: 'Volume "data-vol-02" create failed.',
     statusIcon: errorIcon,
     time: '09:30',
     project: 'proj-2',
@@ -238,7 +235,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '3',
-    message: 'Volume "backup-01" snapshot completed.',
+    message: 'Volume "backup-01" snapshot done.',
     statusIcon: successIcon,
     time: '10:10',
     project: 'proj-1',
@@ -257,7 +254,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '5',
-    message: 'New policy "ReadOnly" attached to group.',
+    message: 'Policy "ReadOnly" attached.',
     statusIcon: successIcon,
     time: '08:30',
     project: 'proj-1',
@@ -267,7 +264,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '6',
-    message: 'Pod "api-gateway" CrashLoopBackOff.',
+    message: 'Pod "api-gateway" crash loop.',
     statusIcon: errorIcon,
     time: '09:55',
     project: 'default',
@@ -333,7 +330,7 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           {/* Tabs header */}
           <div className="relative pt-3 pb-0">
             <button
@@ -357,12 +354,7 @@ function GlobalPanelDemo() {
             >
               <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  {unreadCount > 0 && (
-                    <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>
-                  )}
-                </Tab>
+                <Tab value="unread">Unread{unreadCount > 0 && ` (${unreadCount})`}</Tab>
               </TabList>
             </Tabs>
           </div>
@@ -510,12 +502,12 @@ function NotificationTypeCards() {
         App icons identify which application generated the notification. Status icons appear inline
         after the message text when relevant (e.g. success check).
       </p>
-      <div className="grid grid-cols-2 gap-4 max-w-[760px]">
+      <div className="grid grid-cols-[320px_320px] gap-4">
         <VStack gap={2}>
           <span className="text-label-sm text-[var(--color-text-subtle)]">Compute</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message='Instance "web-server-01" created successfully.'
+            message='Instance "web-01" created.'
             statusIcon={successIcon}
             time="10:23"
             project="proj-1"
@@ -526,7 +518,7 @@ function NotificationTypeCards() {
           <span className="text-label-sm text-[var(--color-text-subtle)]">Storage</span>
           <StaticPanelCard
             appIcon={AppIconStorage}
-            message='Failed to create volume "data-vol-02".'
+            message='Volume "data-vol-02" create failed.'
             statusIcon={errorIcon}
             time="09:30"
             project="proj-2"
@@ -547,7 +539,7 @@ function NotificationTypeCards() {
           <span className="text-label-sm text-[var(--color-text-subtle)]">Container</span>
           <StaticPanelCard
             appIcon={AppIconContainer}
-            message='Pod "api-gateway" scaling to 3 replicas.'
+            message='Pod "api-gw" scaling to 3 replicas.'
             statusIcon={infoIcon}
             time="08:30"
             project="default"
@@ -573,12 +565,12 @@ function PanelCardStates() {
         All six visual states of a notification card: read/unread, with/without detail disclosure,
         and disclosure expanded.
       </p>
-      <div className="grid grid-cols-2 gap-6 max-w-[760px]">
+      <div className="grid grid-cols-[320px_320px] gap-6">
         <VStack gap={2}>
           <span className="text-label-sm text-[var(--color-text-subtle)]">Read — Simple</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message='Volume "backup-01" '
+            message='Volume "backup-01" created.'
             statusIcon={successIcon}
             time="10:33"
             project="proj-1"
@@ -590,7 +582,7 @@ function PanelCardStates() {
           <span className="text-label-sm text-[var(--color-text-subtle)]">Unread — Simple</span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message='Volume "backup-01" '
+            message='Volume "backup-01" created.'
             statusIcon={successIcon}
             time="10:33"
             project="proj-1"
@@ -640,7 +632,7 @@ function PanelCardStates() {
           </span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message='Volume "backup-01" snapshot completed.'
+            message='Volume "backup-01" snapshot done.'
             statusIcon={successIcon}
             time="10:33"
             project="proj-1"
@@ -659,7 +651,7 @@ function PanelCardStates() {
           </span>
           <StaticPanelCard
             appIcon={AppIconCompute}
-            message='Volume "backup-01" snapshot completed.'
+            message='Volume "backup-01" snapshot done.'
             statusIcon={successIcon}
             time="10:33"
             project="proj-1"
