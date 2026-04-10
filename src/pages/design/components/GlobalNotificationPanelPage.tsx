@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
-import { VStack, Button, Badge, Tabs, TabList, Tab, Select } from '@/design-system';
+import { VStack, Button, Tabs, TabList, Tab, Select } from '@/design-system';
 import {
   IconCircleCheck,
-  IconAlertTriangle,
   IconAlertCircle,
+  IconAlertTriangle,
   IconInfoCircle,
   IconChevronUp,
   IconChevronDown,
@@ -22,12 +22,10 @@ import AppIconStorage from '@/assets/appIcon/storage.png';
    Types
    ---------------------------------------- */
 
-type NotificationType = 'success' | 'error' | 'warning' | 'info';
-
 interface PanelNotification {
   id: string;
-  type: NotificationType;
   message: string;
+  statusIcon?: React.ReactNode;
   time: string;
   project?: string;
   app: string;
@@ -36,35 +34,39 @@ interface PanelNotification {
   detail?: { code?: string | number; message?: string };
 }
 
-const TYPE_ICONS: Record<NotificationType, React.ReactNode> = {
-  success: <IconCircleCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />,
-  error: <IconAlertTriangle size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />,
-  warning: <IconAlertCircle size={16} stroke={1.5} className="text-[var(--color-state-warning)]" />,
-  info: <IconInfoCircle size={16} stroke={1.5} className="text-[var(--color-state-info)]" />,
-};
+const successIcon = (
+  <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+);
+const errorIcon = (
+  <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+);
+const warningIcon = (
+  <IconAlertCircle size={14} stroke={1.5} className="text-[var(--color-state-warning)]" />
+);
+const infoIcon = (
+  <IconInfoCircle size={14} stroke={1.5} className="text-[var(--color-state-info)]" />
+);
 
 /* ----------------------------------------
-   StaticSnackbarCard
+   StaticPanelCard
    ---------------------------------------- */
 
-function StaticSnackbarCard({
-  type,
+function StaticPanelCard({
+  appIcon,
   message,
+  statusIcon,
   time,
   project,
   isRead = true,
-  showAppIcon = false,
-  appIcon,
   detail,
   isExpanded,
 }: {
-  type: NotificationType;
+  appIcon?: string;
   message: string;
+  statusIcon?: React.ReactNode;
   time: string;
   project?: string;
   isRead?: boolean;
-  showAppIcon?: boolean;
-  appIcon?: string;
   detail?: { code?: string | number; message?: string };
   isExpanded?: boolean;
 }) {
@@ -72,73 +74,63 @@ function StaticSnackbarCard({
 
   return (
     <div
-      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden ${
+      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] flex flex-col gap-4 p-3 ${
         !isRead ? 'bg-[var(--color-surface-subtle)]' : 'bg-[var(--color-surface-default)]'
       }`}
     >
-      <div className="flex gap-2 p-3">
-        <div className="shrink-0 pt-0.5">{TYPE_ICONS[type]}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex gap-2 items-stretch">
-            <div className="flex-1 min-w-0 flex flex-col items-start gap-2">
-              <p className="text-body-md text-[var(--color-text-muted)]">{message}</p>
-              {project && (
-                <Badge theme="white" size="sm">
+      <div className="flex gap-2 items-start">
+        {appIcon && <img src={appIcon} alt="" className="size-5 shrink-0 object-contain" />}
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
+          <span className="text-body-md text-[var(--color-text-default)]">
+            {message}
+            {statusIcon && <span className="inline-flex align-[-2px] ml-1">{statusIcon}</span>}
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
+              {time}
+            </span>
+            {project && (
+              <>
+                <div className="w-px h-[10px] bg-[var(--color-border-default)]" />
+                <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
                   {project}
-                </Badge>
-              )}
-            </div>
-            <div className="shrink-0 flex flex-col items-end justify-between">
-              {showAppIcon && appIcon && (
-                <img
-                  src={appIcon}
-                  alt="App icon"
-                  className="size-5 object-cover pointer-events-none"
-                />
-              )}
-              <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
-                {time}
-              </span>
-            </div>
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
 
       {hasDetail && (
-        <>
-          <div className="border-t border-[var(--color-border-subtle)]">
-            <button
-              type="button"
-              className="flex items-center justify-end gap-1.5 w-full px-3 pt-[9px] pb-2"
-            >
-              <span className="text-body-sm text-[var(--color-text-muted)]">View detail</span>
-              {isExpanded ? (
-                <IconChevronUp size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
-              ) : (
-                <IconChevronDown
-                  size={12}
-                  stroke={1.5}
-                  className="text-[var(--color-text-muted)]"
-                />
-              )}
-            </button>
-          </div>
+        <div className="flex flex-col gap-2">
+          <button type="button" className="flex items-center justify-end gap-1.5 w-full">
+            <span className="text-body-sm font-medium text-[var(--color-text-muted)]">
+              View detail
+            </span>
+            {isExpanded ? (
+              <IconChevronUp size={12} className="text-[var(--color-text-muted)]" />
+            ) : (
+              <IconChevronDown size={12} className="text-[var(--color-text-muted)]" />
+            )}
+          </button>
 
           {isExpanded && (
-            <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
-                {detail.code && (
-                  <p className="text-label-md text-[var(--color-text-default)]">
-                    code: {detail.code}
-                  </p>
-                )}
-                {detail.message && (
-                  <p className="text-body-md text-[var(--color-text-muted)]">{detail.message}</p>
-                )}
-              </div>
+            <div
+              className={`p-3 rounded-[var(--radius-md)] flex flex-col gap-1 ${
+                !isRead ? 'bg-[var(--color-surface-default)]' : 'bg-[var(--color-surface-subtle)]'
+              }`}
+            >
+              {detail.code !== undefined && (
+                <p className="text-label-sm text-[var(--color-text-default)]">
+                  code: {detail.code}
+                </p>
+              )}
+              {detail.message && (
+                <p className="text-body-sm text-[var(--color-text-muted)]">{detail.message}</p>
+              )}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
@@ -152,8 +144,7 @@ function GlobalPanelPreview() {
   return (
     <VStack gap={4}>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
-          {/* Tabs header */}
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           <div className="relative pt-3 pb-0">
             <button
               type="button"
@@ -165,75 +156,7 @@ function GlobalPanelPreview() {
             <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
               <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
-                </Tab>
-              </TabList>
-            </Tabs>
-          </div>
-
-          {/* App Filter */}
-          <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
-            <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
-          </div>
-
-          <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
-            <div className="flex flex-col gap-2">
-              <StaticSnackbarCard
-                type="success"
-                message='Instance "web-server-01" created successfully.'
-                time="10:23"
-                project="Proj-1"
-                isRead={false}
-                showAppIcon
-                appIcon={AppIconCompute}
-              />
-              <StaticSnackbarCard
-                type="error"
-                message='Failed to create volume "data-vol-02".'
-                time="09:30"
-                project="Proj-2"
-                isRead={false}
-                showAppIcon
-                appIcon={AppIconCompute}
-                detail={{
-                  code: 400,
-                  message:
-                    "Flavor's disk is smaller than the minimum size specified in image metadata.",
-                }}
-              />
-              <StaticSnackbarCard
-                type="warning"
-                message="API key expires in 3 days."
-                time="08:45"
-                isRead={false}
-                showAppIcon
-                appIcon={AppIconIAM}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Preview with dropdown open */}
-      <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
-          <div className="relative pt-3 pb-0">
-            <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)]"
-              aria-label="Mark all as read"
-            >
-              <IconCheckbox size={16} stroke={1.5} />
-            </button>
-            <Tabs value="all" onChange={() => {}} variant="underline" size="sm" className="w-full">
-              <TabList className="w-full px-4">
-                <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  <span className="ml-1 text-[var(--color-text-muted)]">(3)</span>
-                </Tab>
+                <Tab value="unread">Unread (3)</Tab>
               </TabList>
             </Tabs>
           </div>
@@ -242,55 +165,35 @@ function GlobalPanelPreview() {
             <Select options={APP_OPTIONS} value="all" onChange={() => {}} size="md" fullWidth />
           </div>
 
-          {/* Static open dropdown */}
-          <div className="mx-3 mb-2 border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] bg-[var(--select-menu-bg)] overflow-hidden">
-            {APP_OPTIONS.map((opt, i) => (
-              <div
-                key={opt.value}
-                className={`flex items-center gap-1.5 px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] ${
-                  i === 0
-                    ? 'bg-[var(--color-action-primary-subtle)] text-[var(--color-action-primary)] font-medium'
-                    : 'text-[var(--color-text-default)]'
-                }`}
-              >
-                {opt.icon && <span className="shrink-0 flex items-center">{opt.icon}</span>}
-                <span>{opt.label}</span>
-              </div>
-            ))}
-          </div>
-
           <div className="max-h-[400px] overflow-y-auto px-3 py-2 drawer-scroll">
             <div className="flex flex-col gap-2">
-              <StaticSnackbarCard
-                type="success"
-                message='Instance "web-server-01" created successfully.'
+              <StaticPanelCard
+                appIcon={AppIconCompute}
+                message='Instance "web-01" created.'
+                statusIcon={successIcon}
                 time="10:23"
-                project="Proj-1"
+                project="proj-1"
                 isRead={false}
-                showAppIcon
-                appIcon={AppIconCompute}
               />
-              <StaticSnackbarCard
-                type="error"
-                message='Failed to create volume "data-vol-02".'
-                time="09:30"
-                project="Proj-2"
-                isRead={false}
-                showAppIcon
+              <StaticPanelCard
                 appIcon={AppIconCompute}
+                message='Volume "data-vol-02" create failed.'
+                statusIcon={errorIcon}
+                time="09:30"
+                project="proj-2"
+                isRead={false}
                 detail={{
                   code: 400,
                   message:
                     "Flavor's disk is smaller than the minimum size specified in image metadata.",
                 }}
               />
-              <StaticSnackbarCard
-                type="warning"
+              <StaticPanelCard
+                appIcon={AppIconIAM}
                 message="API key expires in 3 days."
+                statusIcon={warningIcon}
                 time="08:45"
                 isRead={false}
-                showAppIcon
-                appIcon={AppIconIAM}
               />
             </div>
           </div>
@@ -307,10 +210,10 @@ function GlobalPanelPreview() {
 const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   {
     id: '1',
-    type: 'success',
-    message: 'Instance "web-server-01" created successfully.',
+    message: 'Instance "web-01" created.',
+    statusIcon: successIcon,
     time: '10:23',
-    project: 'Proj-1',
+    project: 'proj-1',
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: false,
@@ -318,10 +221,10 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '2',
-    type: 'error',
-    message: 'Failed to create volume "data-vol-02".',
+    message: 'Volume "data-vol-02" create failed.',
+    statusIcon: errorIcon,
     time: '09:30',
-    project: 'Proj-2',
+    project: 'proj-2',
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: false,
@@ -332,18 +235,18 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '3',
-    type: 'success',
-    message: 'Volume "backup-01" snapshot completed.',
+    message: 'Volume "backup-01" snapshot done.',
+    statusIcon: successIcon,
     time: '10:10',
-    project: 'Proj-1',
+    project: 'proj-1',
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: true,
   },
   {
     id: '4',
-    type: 'warning',
     message: 'API key expires in 3 days.',
+    statusIcon: warningIcon,
     time: '08:45',
     app: 'IAM',
     appIcon: AppIconIAM,
@@ -351,18 +254,18 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
   },
   {
     id: '5',
-    type: 'info',
-    message: 'New policy "ReadOnly" attached to group.',
+    message: 'Policy "ReadOnly" attached.',
+    statusIcon: successIcon,
     time: '08:30',
-    project: 'Proj-1',
+    project: 'proj-1',
     app: 'IAM',
     appIcon: AppIconIAM,
     isRead: true,
   },
   {
     id: '6',
-    type: 'error',
-    message: 'Pod "api-gateway" CrashLoopBackOff.',
+    message: 'Pod "api-gateway" crash loop.',
+    statusIcon: errorIcon,
     time: '09:55',
     project: 'default',
     app: 'Container',
@@ -427,7 +330,7 @@ function GlobalPanelDemo() {
         </Button>
       </div>
       <div className="flex justify-center p-6 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
-        <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+        <div className="w-[346px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
           {/* Tabs header */}
           <div className="relative pt-3 pb-0">
             <button
@@ -451,12 +354,7 @@ function GlobalPanelDemo() {
             >
               <TabList className="w-full px-4">
                 <Tab value="all">All</Tab>
-                <Tab value="unread">
-                  Unread
-                  {unreadCount > 0 && (
-                    <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>
-                  )}
-                </Tab>
+                <Tab value="unread">Unread{unreadCount > 0 && ` (${unreadCount})`}</Tab>
               </TabList>
             </Tabs>
           </div>
@@ -508,7 +406,7 @@ function InteractiveNotificationCard({
 
   return (
     <div
-      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] overflow-hidden ${
+      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] flex flex-col gap-4 p-3 ${
         !notification.isRead
           ? 'bg-[var(--color-surface-subtle)]'
           : 'bg-[var(--color-surface-default)]'
@@ -518,66 +416,73 @@ function InteractiveNotificationCard({
         onClick={() => {
           if (!notification.isRead) onMarkAsRead();
         }}
-        className="flex gap-3 p-3 cursor-pointer"
+        className="flex gap-2 items-start cursor-pointer"
       >
-        <div className="shrink-0 pt-0.5">{TYPE_ICONS[notification.type]}</div>
-        <div className="flex-1 min-w-0">
-          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">
+        <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
+          <span className="text-body-md text-[var(--color-text-default)]">
             {notification.message}
-          </p>
-          {notification.project && (
-            <Badge theme="white" size="sm">
-              {notification.project}
-            </Badge>
-          )}
-        </div>
-        <div className="shrink-0 flex flex-col items-end gap-1">
-          <img
-            src={notification.appIcon}
-            alt="App icon"
-            className="size-5 object-cover pointer-events-none"
-          />
-          <span className="text-body-sm text-[var(--color-text-muted)] whitespace-nowrap">
-            {notification.time}
+            {notification.statusIcon && (
+              <span className="inline-flex align-[-2px] ml-1">{notification.statusIcon}</span>
+            )}
           </span>
+          <div className="flex items-center gap-2">
+            <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
+              {notification.time}
+            </span>
+            {notification.project && (
+              <>
+                <div className="w-px h-[10px] bg-[var(--color-border-default)]" />
+                <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
+                  {notification.project}
+                </span>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
       {hasDetail && (
-        <>
+        <div className="flex flex-col gap-2">
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
-            className="flex items-center justify-end gap-1 w-full px-3 py-2 text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] border-t border-[var(--color-border-subtle)] transition-colors"
+            className="flex items-center justify-end gap-1.5 w-full"
           >
-            <span>View detail</span>
+            <span className="text-body-sm font-medium text-[var(--color-text-muted)]">
+              View detail
+            </span>
             {isExpanded ? (
-              <IconChevronUp size={14} stroke={1.5} />
+              <IconChevronUp size={12} className="text-[var(--color-text-muted)]" />
             ) : (
-              <IconChevronDown size={14} stroke={1.5} />
+              <IconChevronDown size={12} className="text-[var(--color-text-muted)]" />
             )}
           </button>
 
           {isExpanded && (
-            <div className="px-3 pb-3">
-              <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] flex flex-col gap-1">
-                {notification.detail?.code && (
-                  <p className="text-label-md text-[var(--color-text-default)]">
-                    code: {notification.detail.code}
-                  </p>
-                )}
-                {notification.detail?.message && (
-                  <p className="text-body-md text-[var(--color-text-muted)]">
-                    {notification.detail.message}
-                  </p>
-                )}
-              </div>
+            <div
+              className={`p-3 rounded-[var(--radius-md)] flex flex-col gap-1 ${
+                !notification.isRead
+                  ? 'bg-[var(--color-surface-default)]'
+                  : 'bg-[var(--color-surface-subtle)]'
+              }`}
+            >
+              {notification.detail?.code !== undefined && (
+                <p className="text-label-sm text-[var(--color-text-default)]">
+                  code: {notification.detail.code}
+                </p>
+              )}
+              {notification.detail?.message && (
+                <p className="text-body-sm text-[var(--color-text-muted)]">
+                  {notification.detail.message}
+                </p>
+              )}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
@@ -590,58 +495,55 @@ function InteractiveNotificationCard({
 function NotificationTypeCards() {
   return (
     <VStack gap={3}>
-      <span className="text-label-md text-[var(--color-text-default)]">Notification types</span>
+      <span className="text-label-md text-[var(--color-text-default)]">
+        Notification card examples
+      </span>
       <p className="text-body-sm text-[var(--color-text-subtle)]">
-        Each notification card uses a type icon to indicate the notification category. When
-        displayed in the global panel, app icons identify which application generated the
-        notification.
+        App icons identify which application generated the notification. Status icons appear inline
+        after the message text when relevant (e.g. success check).
       </p>
-      <div className="grid grid-cols-2 gap-4 max-w-[760px]">
+      <div className="grid grid-cols-[320px_320px] gap-4">
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Success</span>
-          <StaticSnackbarCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj-1"
-            isRead={false}
-            showAppIcon
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Compute</span>
+          <StaticPanelCard
             appIcon={AppIconCompute}
-          />
-        </VStack>
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Error</span>
-          <StaticSnackbarCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj-2"
+            message='Instance "web-01" created.'
+            statusIcon={successIcon}
+            time="10:23"
+            project="proj-1"
             isRead={false}
-            showAppIcon
-            appIcon={AppIconStorage}
           />
         </VStack>
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Warning</span>
-          <StaticSnackbarCard
-            type="warning"
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Storage</span>
+          <StaticPanelCard
+            appIcon={AppIconStorage}
+            message='Volume "data-vol-02" create failed.'
+            statusIcon={errorIcon}
+            time="09:30"
+            project="proj-2"
+            isRead={false}
+          />
+        </VStack>
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">IAM</span>
+          <StaticPanelCard
+            appIcon={AppIconIAM}
             message="API key expires in 3 days."
+            statusIcon={warningIcon}
             time="08:45"
             isRead={false}
-            showAppIcon
-            appIcon={AppIconIAM}
           />
         </VStack>
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Info</span>
-          <StaticSnackbarCard
-            type="info"
-            message='Pod "api-gateway" scaling to 3 replicas.'
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Container</span>
+          <StaticPanelCard
+            appIcon={AppIconContainer}
+            message='Pod "api-gw" scaling to 3 replicas.'
+            statusIcon={infoIcon}
             time="08:30"
             project="default"
             isRead={false}
-            showAppIcon
-            appIcon={AppIconContainer}
           />
         </VStack>
       </div>
@@ -650,10 +552,10 @@ function NotificationTypeCards() {
 }
 
 /* ----------------------------------------
-   SnackbarCardStates
+   PanelCardStates
    ---------------------------------------- */
 
-function SnackbarCardStates() {
+function PanelCardStates() {
   return (
     <VStack gap={3}>
       <span className="text-label-md text-[var(--color-text-default)]">
@@ -661,83 +563,80 @@ function SnackbarCardStates() {
       </span>
       <p className="text-body-sm text-[var(--color-text-subtle)]">
         All six visual states of a notification card: read/unread, with/without detail disclosure,
-        and disclosure open.
+        and disclosure expanded.
       </p>
-      <div className="grid grid-cols-2 gap-6 max-w-[760px]">
+      <div className="grid grid-cols-[320px_320px] gap-6">
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Read (app icon)</span>
-          <StaticSnackbarCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj-1"
-            isRead
-            showAppIcon
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Read — Simple</span>
+          <StaticPanelCard
             appIcon={AppIconCompute}
+            message='Volume "backup-01" created.'
+            statusIcon={successIcon}
+            time="10:33"
+            project="proj-1"
+            isRead
           />
         </VStack>
 
         <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread (app icon)</span>
-          <StaticSnackbarCard
-            type="success"
-            message='Volume "data-vol-01" attached to instance.'
-            time="10:15"
-            project="Proj-1"
-            isRead={false}
-            showAppIcon
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Unread — Simple</span>
+          <StaticPanelCard
             appIcon={AppIconCompute}
+            message='Volume "backup-01" created.'
+            statusIcon={successIcon}
+            time="10:33"
+            project="proj-1"
+            isRead={false}
           />
         </VStack>
 
         <VStack gap={2}>
           <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Read + Detail (collapsed)
+            Read — With detail (collapsed)
           </span>
-          <StaticSnackbarCard
-            type="warning"
-            message='Instance "db-server" is running low on disk space.'
-            time="09:15"
-            project="Proj-1"
-            isRead
-            showAppIcon
+          <StaticPanelCard
             appIcon={AppIconCompute}
-            detail={{ code: 'WARN_DISK_LOW', message: 'Disk usage is at 92%.' }}
-          />
-        </VStack>
-
-        <VStack gap={2}>
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (collapsed)
-          </span>
-          <StaticSnackbarCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj-2"
-            isRead={false}
-            showAppIcon
-            appIcon={AppIconStorage}
+            message='Instance "web-server-01-primary-production-environment-east-region-zone-a-application-stack-v3-deployment-id-20260409-alpha-omega-charli-0123456789" created successfully completed.'
+            statusIcon={successIcon}
+            time="10:33"
+            project="proj-1"
+            isRead
             detail={{
-              code: 400,
-              message:
-                "Flavor's disk is smaller than the minimum size specified in image metadata.",
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
             }}
           />
         </VStack>
 
         <VStack gap={2}>
           <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Read + Detail (expanded)
+            Unread — With detail (collapsed)
           </span>
-          <StaticSnackbarCard
-            type="success"
-            message='Instance "web-server-01" created successfully.'
-            time="10:23"
-            project="Proj-1"
-            isRead
-            showAppIcon
+          <StaticPanelCard
             appIcon={AppIconCompute}
+            message='Instance "web-server-01-primary-production-environment-east-region-zone-a-application-stack-v3-deployment-id-20260409-alpha-omega-charli-0123456789" created successfully completed.'
+            statusIcon={successIcon}
+            time="10:33"
+            project="proj-1"
+            isRead={false}
+            detail={{
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
+            }}
+          />
+        </VStack>
+
+        <VStack gap={2}>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            Read — With detail (expanded)
+          </span>
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message='Volume "backup-01" snapshot done.'
+            statusIcon={successIcon}
+            time="10:33"
+            project="proj-1"
+            isRead
             detail={{
               code: 200,
               message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
@@ -748,20 +647,18 @@ function SnackbarCardStates() {
 
         <VStack gap={2}>
           <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Unread + Detail (expanded)
+            Unread — With detail (expanded)
           </span>
-          <StaticSnackbarCard
-            type="error"
-            message='Failed to create volume "data-vol-02".'
-            time="09:30"
-            project="Proj-2"
+          <StaticPanelCard
+            appIcon={AppIconCompute}
+            message='Volume "backup-01" snapshot done.'
+            statusIcon={successIcon}
+            time="10:33"
+            project="proj-1"
             isRead={false}
-            showAppIcon
-            appIcon={AppIconStorage}
             detail={{
-              code: 400,
-              message:
-                "Flavor's disk is smaller than the minimum size specified in image metadata.",
+              code: 200,
+              message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.',
             }}
             isExpanded
           />
@@ -904,7 +801,7 @@ export function GlobalNotificationPanelPage() {
         <VStack gap={8}>
           <GlobalPanelDemo />
           <NotificationTypeCards />
-          <SnackbarCardStates />
+          <PanelCardStates />
         </VStack>
       }
       guidelines={

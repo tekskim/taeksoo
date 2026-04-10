@@ -270,55 +270,57 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           )}
         </div>
 
-        {/* Right Actions */}
-        <div className="shrink-0 flex flex-col items-end gap-[var(--primitive-spacing-1)]">
-          {/* Close Button */}
-          {dismissible && (
-            <button
-              type="button"
-              onClick={handleDismiss}
-              className={twMerge(
-                'p-[var(--primitive-spacing-1)] -m-[var(--primitive-spacing-1)]',
-                'rounded-[var(--primitive-radius-sm)]',
-                'text-[var(--color-text-subtle)]',
-                'hover:text-[var(--color-text-default)]',
-                'hover:bg-[var(--color-surface-hover)]',
-                'transition-colors duration-[var(--duration-fast)]',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]'
-              )}
-              aria-label="닫기"
-            >
-              <IconX size={16} strokeWidth={1.5} />
-            </button>
-          )}
+        {/* Right Actions — only rendered when at least one child is present */}
+        {(dismissible || timestamp || toast.action) && (
+          <div className="shrink-0 flex flex-col items-end gap-[var(--primitive-spacing-1)]">
+            {/* Close Button */}
+            {dismissible && (
+              <button
+                type="button"
+                onClick={handleDismiss}
+                className={twMerge(
+                  'p-[var(--primitive-spacing-1)] -m-[var(--primitive-spacing-1)]',
+                  'rounded-[var(--primitive-radius-sm)]',
+                  'text-[var(--color-text-subtle)]',
+                  'hover:text-[var(--color-text-default)]',
+                  'hover:bg-[var(--color-surface-hover)]',
+                  'transition-colors duration-[var(--duration-fast)]',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]'
+                )}
+                aria-label="닫기"
+              >
+                <IconX size={16} strokeWidth={1.5} />
+              </button>
+            )}
 
-          {/* Timestamp */}
-          {timestamp && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              {formatTime(timestamp)}
-            </span>
-          )}
+            {/* Timestamp */}
+            {timestamp && (
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                {formatTime(timestamp)}
+              </span>
+            )}
 
-          {/* Action Button */}
-          {toast.action && (
-            <button
-              type="button"
-              onClick={toast.action.onClick}
-              className={twMerge(
-                'p-[var(--primitive-spacing-1-5)]',
-                'rounded-[var(--primitive-radius-sm)]',
-                'text-[var(--color-text-muted)]',
-                'bg-[var(--color-surface-subtle)]',
-                'hover:bg-[var(--color-surface-hover)]',
-                'transition-colors duration-[var(--duration-fast)]',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]'
-              )}
-              aria-label={toast.action.label ?? '액션'}
-            >
-              {toast.action.icon ?? <IconExternalLink size={14} strokeWidth={1.5} />}
-            </button>
-          )}
-        </div>
+            {/* Action Button */}
+            {toast.action && (
+              <button
+                type="button"
+                onClick={toast.action.onClick}
+                className={twMerge(
+                  'p-[var(--primitive-spacing-1-5)]',
+                  'rounded-[var(--primitive-radius-sm)]',
+                  'text-[var(--color-text-muted)]',
+                  'bg-[var(--color-surface-subtle)]',
+                  'hover:bg-[var(--color-surface-hover)]',
+                  'transition-colors duration-[var(--duration-fast)]',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]'
+                )}
+                aria-label={toast.action.label ?? '액션'}
+              >
+                {toast.action.icon ?? <IconExternalLink size={14} strokeWidth={1.5} />}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Link Section */}
