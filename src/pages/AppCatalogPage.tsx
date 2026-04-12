@@ -125,7 +125,7 @@ export function AppCatalogPage() {
   }, [category, searchQuery]);
 
   const handleInstall = (chart: CatalogChart) => {
-    navigate(`/container/apps/catalog/${chart.name}/install`);
+    navigate(`/container/catalog/${chart.name}/install`);
   };
 
   return (
@@ -155,7 +155,7 @@ export function AppCatalogPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/apps/catalog' },
+                { label: 'Apps', href: '/container/catalog' },
                 { label: 'Catalog' },
               ]}
             />

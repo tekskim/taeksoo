@@ -411,7 +411,7 @@ export function AppInstallPage() {
           <p className="text-body-md text-[var(--color-text-muted)]">
             Chart not found: {chartName}
           </p>
-          <Button variant="secondary" size="sm" onClick={() => navigate('/container/apps/catalog')}>
+          <Button variant="secondary" size="sm" onClick={() => navigate('/container/catalog')}>
             Back to Catalog
           </Button>
         </VStack>
@@ -440,14 +440,14 @@ export function AppInstallPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation
-          onBack={() => navigate('/container/apps/catalog')}
+          onBack={() => navigate('/container/catalog')}
           onForward={() => {}}
           breadcrumb={
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/apps/catalog' },
-                { label: 'Catalog', href: '/container/apps/catalog' },
+                { label: 'Apps', href: '/container/catalog' },
+                { label: 'Catalog', href: '/container/catalog' },
                 { label: `Install ${toTitleCase(chart.name)}` },
               ]}
             />
@@ -656,7 +656,7 @@ export function AppInstallPage() {
           {/* Right: Summary Sidebar */}
           <SummarySidebar
             sectionStatus={sectionStatus}
-            onCancel={() => navigate('/container/apps/catalog')}
+            onCancel={() => navigate('/container/catalog')}
             onInstall={handleInstall}
             isInstallDisabled={isInstallDisabled}
             submitting={submitting}

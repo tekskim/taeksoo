@@ -276,10 +276,10 @@ import { PodDisruptionBudgetDetailPage } from '@/pages/PodDisruptionBudgetDetail
 import { ClusterManagementPage } from '@/pages/ClusterManagementPage';
 import { ClusterDetailPage } from '@/pages/ClusterDetailPage';
 import { CreateClusterPage } from '@/pages/CreateClusterPage';
-import CatalogPage from '@/pages/CatalogPage';
+import { AppCatalogPage } from '@/pages/AppCatalogPage';
 import InstalledAppsPage from '@/pages/InstalledAppsPage';
 import InstalledAppDetailPage from '@/pages/InstalledAppDetailPage';
-import CatalogInstallPage from '@/pages/CatalogInstallPage';
+import { AppInstallPage } from '@/pages/AppInstallPage';
 import InstalledAppEditPage from '@/pages/InstalledAppEditPage';
 
 // Pages - IAM
@@ -988,8 +988,8 @@ function AppRoutes() {
       />
       <Route path="/container/pdb/:pdbName/edit" element={<CreatePodDisruptionBudgetPage />} />
       <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
-      <Route path="/container/catalog" element={<CatalogPage />} />
-      <Route path="/container/catalog/:appId/install" element={<CatalogInstallPage />} />
+      <Route path="/container/catalog" element={<AppCatalogPage />} />
+      <Route path="/container/catalog/:chartName/install" element={<AppInstallPage />} />
       <Route path="/container/installed-apps" element={<InstalledAppsPage />} />
       <Route path="/container/installed-apps/:appId" element={<InstalledAppDetailPage />} />
       <Route path="/container/installed-apps/:appId/edit" element={<InstalledAppEditPage />} />
