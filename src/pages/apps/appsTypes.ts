@@ -2,17 +2,39 @@
  * Apps (Catalog / Installed Apps) 공통 타입
  * 기능명세서·정책서 기준 (v1.0 범위)
  *
- * v1.0 제공 앱 목록: PostgreSQL, nginx, Kafka, Valkey, Milvus
+ * v1.0 제공 앱 목록: PostgreSQL (CNPG), Valkey, Gitea, nginx, Kafka, Milvus
  * (Hadoop ecosystem은 제공 방식 미정으로 v1.0 제외)
  *
- * v0.4 변경: Chart Info 탭 추가 (FR-026, 정책서 4-3)
+ * v0.5 변경: Edit Options 정책서 부록 2 반영 (boolean toggle, select, resource-tier, conditional)
  */
 
 /** v1.0 카탈로그 카테고리 */
-export type AppCategory = 'All' | 'Database' | 'Data Processing' | 'Networking' | 'Vector DB';
+export type AppCategory =
+  | 'All'
+  | 'Database'
+  | 'Data Processing'
+  | 'Networking'
+  | 'Vector DB'
+  | 'Developer Tools';
 
-/** Required Option UI 타입 (정책서 3: password 마스킹, storageclass 드롭다운 등) */
-export type RequiredOptionType = 'string' | 'password' | 'int' | 'storageclass';
+/**
+ * Required Option UI 타입 (정책서 부록 2)
+ * - string: 일반 텍스트 입력
+ * - password: 마스킹 입력 (PasswordInput)
+ * - int: 정수 입력
+ * - storageclass: StorageClass 드롭다운
+ * - boolean: 토글 스위치 (true/false 문자열로 저장)
+ * - select: 커스텀 옵션 드롭다운 (options 필드 필수)
+ * - resource-tier: 리소스 티어 선택 (Small/Medium/Large/Custom) — UI 전용, tierPresets 자동 반영
+ */
+export type RequiredOptionType =
+  | 'string'
+  | 'password'
+  | 'int'
+  | 'storageclass'
+  | 'boolean'
+  | 'select'
+  | 'resource-tier';
 
 export interface RequiredOption {
   key: string;
@@ -24,6 +46,17 @@ export interface RequiredOption {
   unit?: string;
   /** 필수 입력 여부 (정책서 3: Required 항목 미입력 시 Install/Edit 요청 차단) */
   required?: boolean;
+  /** type='select' 일 때 드롭다운 옵션 목록 */
+  options?: { value: string; label: string }[];
+  /**
+   * 조건부 표시: 특정 필드가 특정 값일 때만 노출
+   * e.g. showWhen: { key: 'REPLICA_ENABLED', value: 'true' }
+   */
+  showWhen?: { key: string; value: string };
+  /** 폼 초기값 (설치 시 기본 선택/입력값) */
+  defaultValue?: string;
+  /** 설명 텍스트 (FormField.Description 으로 표시) */
+  description?: string;
 }
 
 /**
@@ -39,6 +72,15 @@ export interface ChartInfo {
   appVersion: string;
   /** 차트 설명 */
   description: string;
+}
+
+/**
+ * 리소스 티어 프리셋 (정책서 §1-2)
+ * 티어 선택 시 해당 values로 CPU/Memory/Storage 필드를 자동 채움
+ */
+export interface TierPreset {
+  /** 티어별 자동 채울 optionKey → value 맵 */
+  values: Record<string, string>;
 }
 
 /** Catalog에 노출되는 앱 (Helm Chart 기반) */
@@ -59,7 +101,7 @@ export interface CatalogChart {
    */
   allowMultiple?: boolean;
   /**
-   * Edit Options 항목 정의 (정책서 3)
+   * Edit Options 항목 정의 (정책서 부록 2)
    * 없으면 Install 시 편집 UI 없이 확인 다이얼로그만 표시
    */
   requiredOptions?: RequiredOption[];
@@ -67,6 +109,16 @@ export interface CatalogChart {
   defaultValuesYaml?: string;
   /** Chart.yaml 메타데이터 (Catalog 페이지 다운로드용, FR-004) */
   chartInfo?: ChartInfo;
+  /**
+   * 리소스 티어 프리셋 (정책서 §1-2)
+   * resource-tier 필드 선택 시 매핑된 optionKey들을 자동 채움
+   * key: 'Small' | 'Medium' | 'Large'
+   */
+  tierPresets?: Record<string, TierPreset>;
+  /** 설치 의존성: 먼저 설치되어야 하는 앱 이름 (정책서 §1-5) */
+  dependsOn?: string;
+  /** 설치 타입 표시 레이블 (예: "Operator 기반 (2단계)", "단일 앱") */
+  installType?: string;
 }
 
 /** Chart의 Required Option key 목록 */

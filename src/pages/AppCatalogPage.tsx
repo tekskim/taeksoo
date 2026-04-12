@@ -79,11 +79,18 @@ function CatalogChartCard({ chart, onInstall }: CatalogChartCardProps) {
         {chart.description}
       </p>
 
-      {/* Footer: category + install button */}
+      {/* Footer: category + install type + install button */}
       <HStack justify="between" align="center" className="w-full pt-1">
-        <Badge variant="default" size="sm">
-          {chart.category}
-        </Badge>
+        <HStack gap={1.5} align="center">
+          <Badge variant="default" size="sm">
+            {chart.category}
+          </Badge>
+          {chart.installType && (
+            <Badge variant="info" size="sm">
+              {chart.installType.split(' ')[0]}
+            </Badge>
+          )}
+        </HStack>
         <Button variant="primary" size="sm" onClick={() => onInstall(chart)}>
           Install
         </Button>

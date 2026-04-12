@@ -11,24 +11,26 @@ import {
   FormField,
   Input,
   Select,
+  Toggle,
   SectionCard,
   WizardSummary,
   PreSection,
   DoneSection,
   DoneSectionRow,
   InlineMessage,
+  Password,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell } from '@tabler/icons-react';
+import { IconBell, IconAlertTriangle } from '@tabler/icons-react';
 import {
   catalogCharts,
   installedAppsMock,
   namespaceOptions,
   clusterOptions,
 } from '@/pages/apps/appsMockData';
-import type { RequiredOptionType } from '@/pages/apps/appsTypes';
+import type { RequiredOption } from '@/pages/apps/appsTypes';
 
 const CURRENT_CLUSTER_ID = 'cluster-1';
 const STORAGECLASS_OPTIONS = [
@@ -36,6 +38,12 @@ const STORAGECLASS_OPTIONS = [
   { value: 'standard', label: 'standard' },
   { value: 'fast', label: 'fast' },
   { value: 'longhorn', label: 'longhorn' },
+];
+const RESOURCE_TIER_OPTIONS = [
+  { value: 'Small', label: 'Small' },
+  { value: 'Medium', label: 'Medium' },
+  { value: 'Large', label: 'Large' },
+  { value: 'Custom', label: 'Custom (직접 입력)' },
 ];
 
 type SectionStep = 'target' | 'version' | 'configuration';
@@ -97,7 +105,7 @@ function UnitInput({
    ---------------------------------------- */
 
 /* ----------------------------------------
-   Required Options Form
+   Required Options Form Field
    ---------------------------------------- */
 
 function OptionsFormField({
@@ -105,54 +113,103 @@ function OptionsFormField({
   value,
   onChange,
 }: {
-  opt: { key: string; label: string; type?: RequiredOptionType; unit?: string };
+  opt: RequiredOption;
   value: string;
   onChange: (key: string, val: string) => void;
 }) {
-  return (
-    <FormField required>
-      <FormField.Label>{opt.label}</FormField.Label>
-      <FormField.Control>
-        {opt.type === 'password' ? (
-          <Input
-            type="password"
+  const isRequired = opt.required && opt.type !== 'boolean' && opt.type !== 'resource-tier';
+
+  const control = (() => {
+    switch (opt.type) {
+      case 'password':
+        return (
+          <Password
             value={value}
             onChange={(e) => onChange(opt.key, e.target.value)}
             fullWidth
             placeholder="••••••••"
           />
-        ) : opt.type === 'int' ? (
+        );
+
+      case 'int':
+        return (
           <Input
             type="number"
             value={value}
             onChange={(e) => onChange(opt.key, e.target.value)}
             fullWidth
-            placeholder="e.g. 3"
+            placeholder="예: 3"
           />
-        ) : opt.type === 'storageclass' ? (
+        );
+
+      case 'storageclass':
+        return (
           <Select
             options={STORAGECLASS_OPTIONS}
-            value={value}
+            value={value || ''}
             onChange={(v) => onChange(opt.key, v ?? '')}
             fullWidth
           />
-        ) : opt.unit ? (
-          <UnitInput
-            value={value}
-            onChange={(e) => onChange(opt.key, e.target.value)}
-            unit={opt.unit}
-            placeholder="e.g. 8"
-            type="number"
+        );
+
+      case 'select':
+        return (
+          <Select
+            options={[{ value: '', label: '선택하세요' }, ...(opt.options ?? [])]}
+            value={value || ''}
+            onChange={(v) => onChange(opt.key, v ?? '')}
+            fullWidth
           />
-        ) : (
+        );
+
+      case 'resource-tier':
+        return (
+          <Select
+            options={RESOURCE_TIER_OPTIONS}
+            value={value || 'Medium'}
+            onChange={(v) => onChange(opt.key, v ?? 'Medium')}
+            fullWidth
+          />
+        );
+
+      case 'boolean':
+        return (
+          <div className="pt-1">
+            <Toggle
+              checked={value === 'true'}
+              onChange={(e) => onChange(opt.key, e.target.checked ? 'true' : 'false')}
+            />
+          </div>
+        );
+
+      default:
+        if (opt.unit) {
+          return (
+            <UnitInput
+              value={value}
+              onChange={(e) => onChange(opt.key, e.target.value)}
+              unit={opt.unit}
+              placeholder="예: 8"
+              type="number"
+            />
+          );
+        }
+        return (
           <Input
             value={value}
             onChange={(e) => onChange(opt.key, e.target.value)}
             fullWidth
-            placeholder={`Enter ${opt.label}`}
+            placeholder={`예: ${opt.defaultValue ?? opt.label}`}
           />
-        )}
-      </FormField.Control>
+        );
+    }
+  })();
+
+  return (
+    <FormField required={isRequired}>
+      <FormField.Label>{opt.label}</FormField.Label>
+      <FormField.Control>{control}</FormField.Control>
+      {opt.description && <FormField.Description>{opt.description}</FormField.Description>}
     </FormField>
   );
 }
@@ -162,40 +219,27 @@ function OptionsForm({
   values,
   onChange,
 }: {
-  opts: { key: string; label: string; type?: RequiredOptionType; group?: string; unit?: string }[];
+  opts: RequiredOption[];
   values: Record<string, string>;
   onChange: (key: string, val: string) => void;
 }) {
   if (opts.length === 0) {
-    return (
-      <InlineMessage variant="info">
-        This chart has no configurable options. You can edit values directly in the YAML tab.
-      </InlineMessage>
-    );
+    return <InlineMessage variant="info">This chart has no configurable options.</InlineMessage>;
   }
 
-  const hasGroups = opts.some((o) => o.group);
-
-  if (!hasGroups) {
-    return (
-      <VStack gap={4}>
-        {opts.map((opt) => (
-          <OptionsFormField
-            key={opt.key}
-            opt={opt}
-            value={values[opt.key] ?? ''}
-            onChange={onChange}
-          />
-        ))}
-      </VStack>
-    );
-  }
+  // Filter conditional fields: only show when showWhen condition is met
+  const isVisible = (opt: RequiredOption): boolean => {
+    if (!opt.showWhen) return true;
+    return values[opt.showWhen.key] === opt.showWhen.value;
+  };
 
   // Group-aware rendering: show group header when group changes
   const elements: React.ReactNode[] = [];
   let lastGroup: string | undefined = undefined;
 
   opts.forEach((opt) => {
+    if (!isVisible(opt)) return;
+
     if (opt.group && opt.group !== lastGroup) {
       elements.push(
         <div key={`group-${opt.group}`} className="pt-2 first:pt-0">
@@ -207,6 +251,7 @@ function OptionsForm({
       );
       lastGroup = opt.group;
     }
+
     elements.push(
       <OptionsFormField key={opt.key} opt={opt} value={values[opt.key] ?? ''} onChange={onChange} />
     );
@@ -275,6 +320,12 @@ export function AppInstallPage() {
   const versionOptions = versions.map((v) => ({ value: v, label: v }));
   const opts = chart?.requiredOptions ?? [];
 
+  // Check dependency is installed
+  const dependencyInstalled = useMemo(() => {
+    if (!chart?.dependsOn) return true;
+    return installedAppsMock.some((a) => a.name === chart.dependsOn);
+  }, [chart]);
+
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     target: 'active',
@@ -282,10 +333,20 @@ export function AppInstallPage() {
     configuration: 'pre',
   });
 
-  // Form values
+  // Form values: initialize with defaultValues from opts
   const [namespace, setNamespace] = useState(namespaceOptions[0]?.value ?? '');
   const [version, setVersion] = useState(versions[0] ?? '');
-  const [optionValues, setOptionValues] = useState<Record<string, string>>({});
+  const [optionValues, setOptionValues] = useState<Record<string, string>>(() => {
+    const defaults: Record<string, string> = {};
+    opts.forEach((o) => {
+      if (o.defaultValue !== undefined) defaults[o.key] = o.defaultValue;
+    });
+    // Apply Medium tier presets by default if chart has tierPresets
+    if (chart?.tierPresets?.Medium) {
+      Object.assign(defaults, chart.tierPresets.Medium.values);
+    }
+    return defaults;
+  });
   const [submitting, setSubmitting] = useState(false);
 
   const setStep = (updates: Partial<Record<SectionStep, WizardSectionState>>) =>
@@ -301,13 +362,33 @@ export function AppInstallPage() {
     return `${chart.name}-${existingCount + 1}`;
   }, [chart, namespace]);
 
-  const isConfigDone =
-    opts.length === 0 || opts.every((o) => (optionValues[o.key] ?? '').trim() !== '');
+  // Required fields validation — skip _tier (UI-only), boolean, resource-tier
+  const isConfigDone = useMemo(() => {
+    if (opts.length === 0) return true;
+    return opts.every((o) => {
+      if (o.type === 'resource-tier' || o.type === 'boolean') return true;
+      if (!o.required) return true;
+      // Skip conditional fields that are not visible
+      if (o.showWhen && optionValues[o.showWhen.key] !== o.showWhen.value) return true;
+      return (optionValues[o.key] ?? '').trim() !== '';
+    });
+  }, [opts, optionValues]);
+
   const isInstallDisabled = sectionStatus.configuration !== 'done' || submitting;
 
-  const handleOptionChange = useCallback((key: string, val: string) => {
-    setOptionValues((prev) => ({ ...prev, [key]: val }));
-  }, []);
+  const handleOptionChange = useCallback(
+    (key: string, val: string) => {
+      setOptionValues((prev) => {
+        const next = { ...prev, [key]: val };
+        // When tier changes (and not Custom), apply tier presets
+        if (key === '_tier' && val !== 'Custom' && chart?.tierPresets?.[val]) {
+          Object.assign(next, chart.tierPresets[val].values);
+        }
+        return next;
+      });
+    },
+    [chart]
+  );
 
   const handleInstall = async () => {
     if (isInstallDisabled) return;
@@ -503,6 +584,25 @@ export function AppInstallPage() {
               <SectionCard isActive>
                 <SectionCard.Header title={SECTION_LABELS.configuration} showDivider />
                 <SectionCard.Content gap={4}>
+                  {/* Dependency warning */}
+                  {!dependencyInstalled && chart?.dependsOn && (
+                    <InlineMessage
+                      variant="warning"
+                      icon={<IconAlertTriangle size={16} stroke={1.5} />}
+                    >
+                      <strong>{chart.dependsOn}</strong> Operator가 먼저 설치되어야 합니다. App
+                      Catalog에서 Operator를 먼저 설치하세요.
+                    </InlineMessage>
+                  )}
+                  {/* Install type badge */}
+                  {chart?.installType && (
+                    <p className="text-body-sm text-[var(--color-text-subtle)]">
+                      설치 유형:{' '}
+                      <span className="font-medium text-[var(--color-text-default)]">
+                        {chart.installType}
+                      </span>
+                    </p>
+                  )}
                   {/* App Name (Release Name) — 자동 생성, 수정 불가 */}
                   <FormField>
                     <FormField.Label>App name</FormField.Label>
@@ -529,13 +629,26 @@ export function AppInstallPage() {
                 onEdit={() => setStep({ configuration: 'active' })}
               >
                 <DoneSectionRow label="App name" value={autoReleaseName} />
-                {opts.map((opt) => (
-                  <DoneSectionRow
-                    key={opt.key}
-                    label={opt.label}
-                    value={opt.type === 'password' ? '••••••••' : optionValues[opt.key] || '—'}
-                  />
-                ))}
+                {opts
+                  .filter((opt) => opt.type !== 'resource-tier')
+                  .filter(
+                    (opt) => !opt.showWhen || optionValues[opt.showWhen.key] === opt.showWhen.value
+                  )
+                  .map((opt) => (
+                    <DoneSectionRow
+                      key={opt.key}
+                      label={opt.label}
+                      value={
+                        opt.type === 'password'
+                          ? '••••••••'
+                          : opt.type === 'boolean'
+                            ? optionValues[opt.key] === 'true'
+                              ? 'Enabled'
+                              : 'Disabled'
+                            : optionValues[opt.key] || '—'
+                      }
+                    />
+                  ))}
               </DoneSection>
             )}
           </VStack>
