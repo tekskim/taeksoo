@@ -1,14 +1,14 @@
 /**
- * Apps Catalog / Installed Apps 목 데이터
+ * Apps Catalog / Installed Apps mock data
  *
- * v1.0 제공 앱 목록 (정책서 부록 1 + 부록 2 Edit Options 반영):
- *   - Valkey            (Database)      단일 앱
- *   - CNPG Operator     (Database)      Operator 기반 1단계
- *   - CNPG Instance     (Database)      Operator 기반 2단계 (dependsOn: cnpg-operator)
- *   - Gitea             (Developer Tools) 단일 앱 (내장 PostgreSQL-HA + Valkey-Cluster)
- *   - nginx             (Networking)    chart 미작성 — 대표값 사용
- *   - Kafka             (Data Processing) chart 미작성 — 대표값 사용
- *   - Milvus            (Vector DB)     chart 미작성 — 대표값 사용
+ * v1.0 apps (Policy Appendix 1 + Appendix 2 Edit Options):
+ *   - Valkey            (Database)        standalone
+ *   - CNPG Operator     (Database)        Operator-based step 1
+ *   - CNPG Instance     (Database)        Operator-based step 2 (dependsOn: cnpg-operator)
+ *   - Gitea             (Developer Tools) standalone (embedded PostgreSQL-HA + Valkey-Cluster)
+ *   - nginx             (Networking)      chart pending — placeholder
+ *   - Kafka             (Data Processing) chart pending — placeholder
+ *   - Milvus            (Vector DB)       chart pending — placeholder
  *
  * Ref: https://www.notion.so/thakicloud/Edit-Options-33c9eddc34e68197a861e8047c9f05ae
  */
@@ -45,7 +45,7 @@ const IMAGE_PULL_POLICY_OPTIONS = [
 ];
 
 /* ──────────────────────────────────────────────────────────────
-   Catalog Charts — 정책서 부록 2 Edit Options 완전 반영
+   Catalog Charts — Policy Appendix 2 Edit Options
    Ref: https://www.notion.so/thakicloud/Edit-Options-33c9eddc34e68197a861e8047c9f05ae
    ────────────────────────────────────────────────────────────── */
 export const catalogCharts: CatalogChart[] = [
@@ -53,7 +53,7 @@ export const catalogCharts: CatalogChart[] = [
   {
     id: 'chart-valkey',
     name: 'valkey',
-    installType: '단일 앱',
+    installType: 'Standalone',
     description:
       'Valkey is an open source, high-performance key/value datastore. Supports standalone and Master-Replica HA mode. Drop-in replacement for Redis OSS.',
     version: '8.0.2',
@@ -99,27 +99,27 @@ export const catalogCharts: CatalogChart[] = [
     requiredOptions: [
       {
         key: 'FULLNAME_OVERRIDE',
-        label: '인스턴스 이름',
+        label: 'Instance Name',
         type: 'string',
         required: true,
         defaultValue: 'valkey',
-        description: 'K8s 리소스 전체 이름 (Namespace 내 고유)',
+        description: 'Kubernetes resource name (must be unique within the namespace)',
       },
       {
         key: 'IMAGE_REGISTRY',
-        label: '컨테이너 레지스트리',
+        label: 'Container Registry',
         type: 'string',
         required: false,
         defaultValue: 'docker.io',
-        description: 'Private registry 사용 시 변경',
+        description: 'Override when using a private registry',
       },
       {
         key: '_tier',
-        label: '리소스 티어',
+        label: 'Resource Tier',
         type: 'resource-tier',
         required: true,
         defaultValue: 'Medium',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_REQUEST_CPU',
@@ -127,7 +127,7 @@ export const catalogCharts: CatalogChart[] = [
         type: 'string',
         required: true,
         defaultValue: '250m',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_LIMIT_CPU',
@@ -135,7 +135,7 @@ export const catalogCharts: CatalogChart[] = [
         type: 'string',
         required: true,
         defaultValue: '500m',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_REQUEST_MEMORY',
@@ -143,7 +143,7 @@ export const catalogCharts: CatalogChart[] = [
         type: 'string',
         required: true,
         defaultValue: '256Mi',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_LIMIT_MEMORY',
@@ -151,24 +151,24 @@ export const catalogCharts: CatalogChart[] = [
         type: 'string',
         required: true,
         defaultValue: '512Mi',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'AUTH_DEFAULT_PASSWORD',
-        label: '인증 비밀번호',
+        label: 'Auth Password',
         type: 'password',
         required: true,
-        description: 'default 사용자 ACL 비밀번호. @, #, $ 등 특수문자 회피 권장',
-        group: '인증',
+        description: 'ACL password for the default user. Avoid special characters: @, #, $',
+        group: 'Authentication',
       },
       {
         key: 'STORAGE_SIZE',
-        label: '스토리지 크기',
+        label: 'Storage Size',
         type: 'string',
         required: true,
         defaultValue: '5Gi',
-        description: 'Standalone 모드 PVC 크기 (예: 5Gi)',
-        group: '스토리지',
+        description: 'PVC size for standalone mode (e.g. 5Gi)',
+        group: 'Storage',
       },
       {
         key: 'STORAGE_CLASS',
@@ -176,45 +176,45 @@ export const catalogCharts: CatalogChart[] = [
         type: 'select',
         required: true,
         options: STORAGECLASS_FIELD_OPTIONS,
-        description: 'kubectl get sc 결과 목록',
-        group: '스토리지',
+        description: 'Select from available StorageClasses (kubectl get sc)',
+        group: 'Storage',
       },
       {
         key: 'REPLICA_ENABLED',
-        label: '복제 모드 (HA)',
+        label: 'Replication Mode (HA)',
         type: 'boolean',
         required: true,
         defaultValue: 'false',
-        description: 'true: Master-Replica HA 모드 활성화',
-        group: 'HA 복제',
+        description: 'Enable Master-Replica HA mode',
+        group: 'HA Replication',
       },
       {
         key: 'REPLICA_COUNT',
-        label: '복제본 수',
+        label: 'Replica Count',
         type: 'int',
         required: false,
         defaultValue: '2',
-        description: 'Master 제외 Replica 수',
-        group: 'HA 복제',
+        description: 'Number of replicas (excluding master)',
+        group: 'HA Replication',
         showWhen: { key: 'REPLICA_ENABLED', value: 'true' },
       },
       {
         key: 'REPLICA_STORAGE_SIZE',
-        label: '복제본 스토리지 크기',
+        label: 'Replica Storage Size',
         type: 'string',
         required: false,
-        description: '각 Replica PVC 크기. STORAGE_SIZE와 동일 권장',
-        group: 'HA 복제',
+        description: 'PVC size for each replica. Recommended: same as Storage Size',
+        group: 'HA Replication',
         showWhen: { key: 'REPLICA_ENABLED', value: 'true' },
       },
       {
         key: 'REPLICA_STORAGE_CLASS',
-        label: '복제본 StorageClass',
+        label: 'Replica StorageClass',
         type: 'select',
         required: false,
         options: STORAGECLASS_FIELD_OPTIONS,
-        description: 'Replica PVC StorageClass. STORAGE_CLASS와 동일 권장',
-        group: 'HA 복제',
+        description: 'StorageClass for replica PVCs. Recommended: same as StorageClass',
+        group: 'HA Replication',
         showWhen: { key: 'REPLICA_ENABLED', value: 'true' },
       },
     ],
@@ -252,7 +252,7 @@ replica:
   {
     id: 'chart-cnpg-operator',
     name: 'cnpg-operator',
-    installType: 'Operator 기반 (1단계)',
+    installType: 'Operator (Step 1 of 2)',
     description:
       'CloudNativePG Operator for Kubernetes. Manages PostgreSQL clusters using the CNPG CRD. Install this first before creating PostgreSQL instances.',
     version: '1.29.0',
@@ -298,31 +298,31 @@ replica:
     requiredOptions: [
       {
         key: 'FULLNAME_OVERRIDE',
-        label: '인스턴스 이름',
+        label: 'Instance Name',
         type: 'string',
         required: true,
         defaultValue: 'cnpg-operator',
-        description: 'Operator K8s 리소스 이름',
+        description: 'Kubernetes resource name for the operator',
       },
       {
         key: 'IMAGE_REPOSITORY',
-        label: 'Operator 이미지 저장소',
+        label: 'Operator Image Repository',
         type: 'string',
         required: true,
         defaultValue: 'ghcr.io/cloudnative-pg/cloudnative-pg',
-        description: 'Private registry 시 변경',
+        description: 'Override for private registry',
       },
       {
         key: 'IMAGE_TAG',
-        label: 'Operator 이미지 태그',
+        label: 'Operator Image Tag',
         type: 'string',
         required: true,
         defaultValue: '1.29.0',
-        description: 'Operator 버전. 고정 권장',
+        description: 'Operator version — pin to a specific release',
       },
       {
         key: 'IMAGE_PULL_POLICY',
-        label: '이미지 Pull Policy',
+        label: 'Image Pull Policy',
         type: 'select',
         required: true,
         defaultValue: 'IfNotPresent',
@@ -330,36 +330,36 @@ replica:
       },
       {
         key: 'CRDS_CREATE',
-        label: 'CRD 생성 여부',
+        label: 'Create CRDs',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: '첫 설치 시 true. 기존 CRD 있으면 false',
+        description: 'Set to true on first install. Set to false if CRDs already exist',
       },
       {
         key: 'CLUSTER_WIDE',
-        label: '클러스터 전체 감시',
+        label: 'Cluster-wide Watch',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: 'false: 설치 Namespace만 감시',
+        description: 'false: watch only the install namespace',
       },
       {
         key: '_tier',
-        label: '리소스 티어',
+        label: 'Resource Tier',
         type: 'resource-tier',
         required: true,
         defaultValue: 'Medium',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'MAX_CONCURRENT_RECONCILES',
-        label: '동시 Reconcile 수',
+        label: 'Max Concurrent Reconciles',
         type: 'int',
         required: true,
         defaultValue: '10',
-        description: '클러스터 규모에 따라 조정',
-        group: '리소스',
+        description: 'Adjust based on cluster scale',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_REQUEST_CPU',
@@ -367,7 +367,7 @@ replica:
         type: 'string',
         required: true,
         defaultValue: '200m',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_LIMIT_CPU',
@@ -375,7 +375,7 @@ replica:
         type: 'string',
         required: true,
         defaultValue: '500m',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_REQUEST_MEMORY',
@@ -383,7 +383,7 @@ replica:
         type: 'string',
         required: true,
         defaultValue: '256Mi',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_LIMIT_MEMORY',
@@ -391,25 +391,25 @@ replica:
         type: 'string',
         required: true,
         defaultValue: '512Mi',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'PODMONITOR_ENABLED',
-        label: 'PodMonitor 생성',
+        label: 'Enable PodMonitor',
         type: 'boolean',
         required: true,
         defaultValue: 'false',
-        description: 'Prometheus Operator CRD 사전 설치 필요',
-        group: '모니터링',
+        description: 'Requires Prometheus Operator CRDs',
+        group: 'Monitoring',
       },
       {
         key: 'GRAFANA_DASHBOARD_CREATE',
-        label: 'Grafana Dashboard 생성',
+        label: 'Create Grafana Dashboard',
         type: 'boolean',
         required: true,
         defaultValue: 'false',
-        description: 'Grafana sidecar 별도 설정 필요',
-        group: '모니터링',
+        description: 'Requires Grafana sidecar configuration',
+        group: 'Monitoring',
       },
     ],
     defaultValuesYaml: `fullnameOverride: "\${FULLNAME_OVERRIDE}"
@@ -444,7 +444,7 @@ monitoring:
   {
     id: 'chart-cnpg-instance',
     name: 'cnpg-instance',
-    installType: 'Operator 기반 (2단계)',
+    installType: 'Operator (Step 2 of 2)',
     dependsOn: 'cnpg-operator',
     allowMultiple: false,
     description:
@@ -494,23 +494,23 @@ monitoring:
     requiredOptions: [
       {
         key: 'FULLNAME_OVERRIDE',
-        label: '인스턴스 이름',
+        label: 'Instance Name',
         type: 'string',
         required: true,
         defaultValue: 'postgres',
-        description: 'Cluster 리소스 이름 (Namespace 내 고유)',
+        description: 'Cluster resource name (must be unique within the namespace)',
       },
       {
         key: 'POSTGRES_IMAGE_NAME',
-        label: 'PostgreSQL 이미지',
+        label: 'PostgreSQL Image',
         type: 'string',
         required: true,
         defaultValue: 'ghcr.io/cloudnative-pg/postgresql:17.6-system-trixie',
-        description: 'CNPG 호환 operand 이미지',
+        description: 'CNPG-compatible operand image',
       },
       {
         key: 'IMAGE_PULL_POLICY',
-        label: '이미지 Pull Policy',
+        label: 'Image Pull Policy',
         type: 'select',
         required: true,
         defaultValue: 'IfNotPresent',
@@ -518,20 +518,20 @@ monitoring:
       },
       {
         key: '_tier',
-        label: '리소스 티어',
+        label: 'Resource Tier',
         type: 'resource-tier',
         required: true,
         defaultValue: 'Medium',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'INSTANCE_COUNT',
-        label: '인스턴스 수',
+        label: 'Instance Count',
         type: 'int',
         required: true,
         defaultValue: '3',
-        description: 'HA: 3 이상 권장. 개발: 1 가능',
-        group: '리소스',
+        description: 'Recommended ≥3 for HA. Development: 1 is acceptable',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_REQUEST_CPU',
@@ -539,7 +539,7 @@ monitoring:
         type: 'string',
         required: true,
         defaultValue: '500m',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_LIMIT_CPU',
@@ -547,7 +547,7 @@ monitoring:
         type: 'string',
         required: true,
         defaultValue: '1000m',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_REQUEST_MEMORY',
@@ -555,7 +555,7 @@ monitoring:
         type: 'string',
         required: true,
         defaultValue: '1Gi',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'RESOURCE_LIMIT_MEMORY',
@@ -563,40 +563,40 @@ monitoring:
         type: 'string',
         required: true,
         defaultValue: '2Gi',
-        group: '리소스',
+        group: 'Resources',
       },
       {
         key: 'PRIMARY_UPDATE_STRATEGY',
-        label: 'Primary 업데이트 전략',
+        label: 'Primary Update Strategy',
         type: 'select',
         required: true,
         defaultValue: 'unsupervised',
         options: [
-          { value: 'unsupervised', label: 'unsupervised (자동)' },
-          { value: 'supervised', label: 'supervised (수동 승인)' },
+          { value: 'unsupervised', label: 'unsupervised (automatic)' },
+          { value: 'supervised', label: 'supervised (manual approval)' },
         ],
-        group: '업데이트',
+        group: 'Update Policy',
       },
       {
         key: 'PRIMARY_UPDATE_METHOD',
-        label: 'Primary 업데이트 방식',
+        label: 'Primary Update Method',
         type: 'select',
         required: true,
         defaultValue: 'restart',
         options: [
-          { value: 'restart', label: 'restart (재시작)' },
-          { value: 'switchover', label: 'switchover (페일오버)' },
+          { value: 'restart', label: 'restart' },
+          { value: 'switchover', label: 'switchover (failover then update)' },
         ],
-        group: '업데이트',
+        group: 'Update Policy',
       },
       {
         key: 'STORAGE_SIZE',
-        label: '데이터 스토리지 크기',
+        label: 'Data Storage Size',
         type: 'string',
         required: true,
         defaultValue: '20Gi',
-        description: '각 인스턴스 PVC 크기 (예: 20Gi)',
-        group: '스토리지',
+        description: 'PVC size per instance (e.g. 20Gi)',
+        group: 'Storage',
       },
       {
         key: 'STORAGE_CLASS',
@@ -604,85 +604,85 @@ monitoring:
         type: 'select',
         required: true,
         options: STORAGECLASS_FIELD_OPTIONS,
-        group: '스토리지',
+        group: 'Storage',
       },
       {
         key: 'APP_DATABASE_NAME',
-        label: 'App DB 이름',
+        label: 'App Database Name',
         type: 'string',
         required: true,
         defaultValue: 'app',
-        description: '초기 생성 데이터베이스 이름',
-        group: '데이터베이스',
+        description: 'Initial database name created during bootstrap',
+        group: 'Database',
       },
       {
         key: 'APP_USER_NAME',
-        label: 'App DB 사용자명',
+        label: 'App DB Username',
         type: 'string',
         required: true,
         defaultValue: 'app',
-        group: '데이터베이스',
+        group: 'Database',
       },
       {
         key: 'APP_USER_PASSWORD',
-        label: 'App DB 비밀번호',
+        label: 'App DB Password',
         type: 'password',
         required: true,
-        group: '데이터베이스',
+        group: 'Database',
       },
       {
         key: 'ENABLE_SUPERUSER_ACCESS',
-        label: 'Superuser 접근 허용',
+        label: 'Enable Superuser Access',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: 'postgres 계정 Secret 생성 여부',
-        group: '데이터베이스',
+        description: 'Creates a Kubernetes Secret for the postgres superuser account',
+        group: 'Database',
       },
       {
         key: 'SUPERUSER_PASSWORD',
-        label: 'Superuser 비밀번호',
+        label: 'Superuser Password',
         type: 'password',
         required: false,
-        description: 'ENABLE_SUPERUSER_ACCESS=true 시 필수',
-        group: '데이터베이스',
+        description: 'Required when Superuser Access is enabled',
+        group: 'Database',
         showWhen: { key: 'ENABLE_SUPERUSER_ACCESS', value: 'true' },
       },
       {
         key: 'POOLER_ENABLED',
-        label: 'PgBouncer Pooler 사용',
+        label: 'Enable PgBouncer Pooler',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: 'PgBouncer 연결 풀러 활성화',
+        description: 'Activates PgBouncer connection pooler',
         group: 'PgBouncer',
       },
       {
         key: 'POOLER_TYPE',
-        label: 'Pooler 연결 타입',
+        label: 'Pooler Connection Type',
         type: 'select',
         required: false,
         defaultValue: 'rw',
         options: [
-          { value: 'rw', label: 'rw (읽기쓰기)' },
-          { value: 'ro', label: 'ro (읽기전용)' },
+          { value: 'rw', label: 'rw (read-write)' },
+          { value: 'ro', label: 'ro (read-only)' },
         ],
         group: 'PgBouncer',
         showWhen: { key: 'POOLER_ENABLED', value: 'true' },
       },
       {
         key: 'POOLER_INSTANCE_COUNT',
-        label: 'Pooler 인스턴스 수',
+        label: 'Pooler Instance Count',
         type: 'int',
         required: false,
         defaultValue: '2',
-        description: 'PgBouncer Replica 수',
+        description: 'Number of PgBouncer replicas',
         group: 'PgBouncer',
         showWhen: { key: 'POOLER_ENABLED', value: 'true' },
       },
       {
         key: 'POOLER_MODE',
-        label: 'Pool 모드',
+        label: 'Pool Mode',
         type: 'select',
         required: false,
         defaultValue: 'transaction',
@@ -695,21 +695,21 @@ monitoring:
       },
       {
         key: 'CLUSTER_PODMONITOR_ENABLED',
-        label: 'PodMonitor 생성',
+        label: 'Enable Cluster PodMonitor',
         type: 'boolean',
         required: true,
         defaultValue: 'false',
-        description: 'Prometheus Operator 필요',
-        group: '모니터링',
+        description: 'Requires Prometheus Operator',
+        group: 'Monitoring',
       },
       {
         key: 'POOLER_PODMONITOR_ENABLED',
-        label: 'Pooler PodMonitor',
+        label: 'Enable Pooler PodMonitor',
         type: 'boolean',
         required: true,
         defaultValue: 'false',
-        description: 'Prometheus Operator 필요',
-        group: '모니터링',
+        description: 'Requires Prometheus Operator',
+        group: 'Monitoring',
         showWhen: { key: 'POOLER_ENABLED', value: 'true' },
       },
     ],
@@ -763,7 +763,7 @@ pooler:
   {
     id: 'chart-gitea',
     name: 'gitea',
-    installType: '단일 앱 (내장 PostgreSQL-HA + Valkey-Cluster)',
+    installType: 'Standalone (embedded PostgreSQL-HA + Valkey-Cluster)',
     description:
       'Gitea is a lightweight self-hosted Git service. Includes embedded PostgreSQL-HA and Valkey-Cluster. No external dependencies required.',
     version: '10.6.0',
@@ -812,23 +812,23 @@ pooler:
       },
     },
     requiredOptions: [
-      /* 기본 설정 */
+      /* General */
       {
         key: 'FULLNAME_OVERRIDE',
-        label: '인스턴스 이름',
+        label: 'Instance Name',
         type: 'string',
         required: true,
         defaultValue: 'gitea',
-        description: 'K8s 리소스 전체 이름',
-        group: '기본 설정',
+        description: 'Kubernetes resource name',
+        group: 'General',
       },
       {
         key: 'IMAGE_REGISTRY',
-        label: '컨테이너 레지스트리',
+        label: 'Container Registry',
         type: 'string',
         required: false,
-        description: 'Private registry 사용 시 입력',
-        group: '기본 설정',
+        description: 'Override when using a private registry',
+        group: 'General',
       },
       {
         key: 'STORAGE_CLASS',
@@ -836,17 +836,17 @@ pooler:
         type: 'select',
         required: true,
         options: STORAGECLASS_FIELD_OPTIONS,
-        description: 'Gitea/PostgreSQL/Valkey PVC 공통 적용',
-        group: '기본 설정',
+        description: 'Applied to Gitea, PostgreSQL, and Valkey PVCs',
+        group: 'General',
       },
       /* Ingress */
       {
         key: 'INGRESS_ENABLED',
-        label: 'Ingress 활성화',
+        label: 'Enable Ingress',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: '외부 접속 Ingress 생성 여부',
+        description: 'Create an Ingress for external access',
         group: 'Ingress',
       },
       {
@@ -860,21 +860,21 @@ pooler:
       },
       {
         key: 'INGRESS_HOST',
-        label: '외부 접속 도메인',
+        label: 'External Domain',
         type: 'string',
         required: false,
-        description: '예: git.example.com',
+        description: 'e.g. git.example.com',
         showWhen: { key: 'INGRESS_ENABLED', value: 'true' },
         group: 'Ingress',
       },
-      /* 리소스 */
+      /* Resources */
       {
         key: '_tier',
-        label: '리소스 티어',
+        label: 'Resource Tier',
         type: 'resource-tier',
         required: true,
         defaultValue: 'Medium',
-        group: '리소스 (Gitea)',
+        group: 'Resources (Gitea)',
       },
       {
         key: 'RESOURCE_REQUEST_CPU',
@@ -882,7 +882,7 @@ pooler:
         type: 'string',
         required: true,
         defaultValue: '500m',
-        group: '리소스 (Gitea)',
+        group: 'Resources (Gitea)',
       },
       {
         key: 'RESOURCE_LIMIT_CPU',
@@ -890,7 +890,7 @@ pooler:
         type: 'string',
         required: true,
         defaultValue: '1000m',
-        group: '리소스 (Gitea)',
+        group: 'Resources (Gitea)',
       },
       {
         key: 'RESOURCE_REQUEST_MEMORY',
@@ -898,7 +898,7 @@ pooler:
         type: 'string',
         required: true,
         defaultValue: '1Gi',
-        group: '리소스 (Gitea)',
+        group: 'Resources (Gitea)',
       },
       {
         key: 'RESOURCE_LIMIT_MEMORY',
@@ -906,155 +906,155 @@ pooler:
         type: 'string',
         required: true,
         defaultValue: '2Gi',
-        group: '리소스 (Gitea)',
+        group: 'Resources (Gitea)',
       },
       {
         key: 'PERSISTENCE_SIZE',
-        label: 'Gitea 스토리지 크기',
+        label: 'Gitea Storage',
         type: 'string',
         required: true,
         defaultValue: '20Gi',
-        description: 'Gitea 저장소 데이터 PVC',
-        group: '리소스 (Gitea)',
+        description: 'PVC size for Gitea repository data',
+        group: 'Resources (Gitea)',
       },
-      /* 관리자 계정 */
+      /* Admin Account */
       {
         key: 'GITEA_ADMIN_USERNAME',
-        label: '관리자 사용자명',
+        label: 'Admin Username',
         type: 'string',
         required: true,
         defaultValue: 'gitadmin',
-        description: '초기 admin 계정',
-        group: 'Gitea 관리자',
+        description: 'Initial admin account',
+        group: 'Admin Account',
       },
       {
         key: 'GITEA_ADMIN_PASSWORD',
-        label: '관리자 비밀번호',
+        label: 'Admin Password',
         type: 'password',
         required: true,
-        group: 'Gitea 관리자',
+        group: 'Admin Account',
       },
       {
         key: 'GITEA_ADMIN_EMAIL',
-        label: '관리자 이메일',
+        label: 'Admin Email',
         type: 'string',
         required: true,
-        description: '예: admin@example.com',
-        group: 'Gitea 관리자',
+        description: 'e.g. admin@example.com',
+        group: 'Admin Account',
       },
       {
         key: 'METRICS_ENABLED',
-        label: 'Metrics 활성화',
+        label: 'Enable Metrics',
         type: 'boolean',
         required: true,
         defaultValue: 'false',
-        group: 'Gitea 관리자',
+        group: 'Admin Account',
       },
-      /* 내장 PostgreSQL-HA */
+      /* Embedded PostgreSQL-HA */
       {
         key: 'POSTGRESQL_HA_ENABLED',
-        label: '내장 PostgreSQL-HA 사용',
+        label: 'Enable Embedded PostgreSQL-HA',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: 'false: 외부 DB 연결',
-        group: '내장 PostgreSQL-HA',
+        description: 'Disable to connect an external database',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_DB_NAME',
-        label: 'DB 이름',
+        label: 'Database Name',
         type: 'string',
         required: false,
         defaultValue: 'gitea',
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_DB_USER',
-        label: 'DB 사용자명',
+        label: 'Database Username',
         type: 'string',
         required: false,
         defaultValue: 'gitea',
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_DB_PASSWORD',
-        label: 'DB 비밀번호',
+        label: 'Database Password',
         type: 'password',
         required: false,
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_REPMGR_PASSWORD',
-        label: 'Repmgr 비밀번호',
+        label: 'Repmgr Password',
         type: 'password',
         required: false,
-        description: 'PostgreSQL 복제 관리자 비밀번호',
+        description: 'Password for the PostgreSQL replication manager',
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_SUPERUSER_PASSWORD',
-        label: 'Superuser 비밀번호',
+        label: 'Superuser Password',
         type: 'password',
         required: false,
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_PGPOOL_ADMIN_PASSWORD',
-        label: 'Pgpool Admin 비밀번호',
+        label: 'Pgpool Admin Password',
         type: 'password',
         required: false,
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_PGPOOL_SR_CHECK_PASSWORD',
-        label: 'Pgpool SR Check 비밀번호',
+        label: 'Pgpool SR Check Password',
         type: 'password',
         required: false,
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
       {
         key: 'POSTGRESQL_PERSISTENCE_SIZE',
-        label: 'PostgreSQL 스토리지 크기',
+        label: 'PostgreSQL Storage',
         type: 'string',
         required: false,
         defaultValue: '20Gi',
         showWhen: { key: 'POSTGRESQL_HA_ENABLED', value: 'true' },
-        group: '내장 PostgreSQL-HA',
+        group: 'Embedded PostgreSQL-HA',
       },
-      /* 내장 Valkey-Cluster */
+      /* Embedded Valkey-Cluster */
       {
         key: 'VALKEY_CLUSTER_ENABLED',
-        label: '내장 Valkey-Cluster 사용',
+        label: 'Enable Embedded Valkey-Cluster',
         type: 'boolean',
         required: true,
         defaultValue: 'true',
-        description: 'false: 외부 캐시 연결',
-        group: '내장 Valkey-Cluster',
+        description: 'Disable to connect an external cache',
+        group: 'Embedded Valkey-Cluster',
       },
       {
         key: 'VALKEY_PASSWORD',
-        label: 'Valkey 비밀번호',
+        label: 'Valkey Password',
         type: 'password',
         required: false,
-        description: '특수문자 회피 권장',
+        description: 'Avoid special characters: @, #, $',
         showWhen: { key: 'VALKEY_CLUSTER_ENABLED', value: 'true' },
-        group: '내장 Valkey-Cluster',
+        group: 'Embedded Valkey-Cluster',
       },
       {
         key: 'VALKEY_PERSISTENCE_SIZE',
-        label: 'Valkey 스토리지 크기',
+        label: 'Valkey Storage',
         type: 'string',
         required: false,
         defaultValue: '8Gi',
         showWhen: { key: 'VALKEY_CLUSTER_ENABLED', value: 'true' },
-        group: '내장 Valkey-Cluster',
+        group: 'Embedded Valkey-Cluster',
       },
     ],
     defaultValuesYaml: `fullnameOverride: "\${FULLNAME_OVERRIDE}"
@@ -1113,11 +1113,11 @@ valkey-cluster:
 `,
   },
 
-  /* ── Networking: nginx (chart 미작성 — 대표값) ── */
+  /* ── Networking: nginx (chart pending — placeholder) ── */
   {
     id: 'chart-nginx',
     name: 'nginx',
-    installType: '단일 앱 (chart 준비중)',
+    installType: 'Standalone (chart pending)',
     description:
       'NGINX Ingress Controller for Kubernetes — routes external HTTP/HTTPS traffic into cluster services using Ingress resources. Multiple instances are allowed per namespace.',
     allowMultiple: true,
@@ -1151,11 +1151,11 @@ valkey-cluster:
 `,
   },
 
-  /* ── Data Processing: Kafka (chart 미작성 — 대표값) ── */
+  /* ── Data Processing: Kafka (chart pending — placeholder) ── */
   {
     id: 'chart-kafka',
     name: 'kafka',
-    installType: 'Operator 기반 (chart 준비중)',
+    installType: 'Operator (chart pending)',
     description:
       'Apache Kafka is an open-source distributed event streaming platform used for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.',
     version: '28.3.0',
@@ -1206,11 +1206,11 @@ zookeeper:
 `,
   },
 
-  /* ── Vector DB: Milvus (chart 미작성 — 대표값) ── */
+  /* ── Vector DB: Milvus (chart pending — placeholder) ── */
   {
     id: 'chart-milvus',
     name: 'milvus',
-    installType: '단일 앱 (chart 준비중)',
+    installType: 'Standalone (chart pending)',
     description:
       'Milvus is an open-source vector database built to power embedding similarity search and AI applications. Supports trillion-scale vector similarity search.',
     version: '4.2.7',
@@ -1278,64 +1278,94 @@ resources:
 ];
 
 /* ──────────────────────────────────────────────────────────────
-   Installed Apps 목 데이터 (정책서 4-1 ~ 4-3)
-   - 앱 이름, 버전, 네임스페이스, 현재 상태
-   - connectionInfo: 외부 엔드포인트, 내부 서비스 도메인, 포트
+   Installed Apps mock data (Policy §4-1 ~ §4-3)
    ────────────────────────────────────────────────────────────── */
 export const installedAppsMock: InstalledApp[] = [
   {
-    id: 'release-postgresql-default',
-    releaseName: 'postgresql-1',
-    name: 'postgresql',
+    id: 'release-cnpg-operator-system',
+    releaseName: 'cnpg-operator',
+    name: 'cnpg-operator',
     status: 'Deployed',
-    namespace: 'default',
-    chart: 'bitnami/postgresql',
-    version: '15.3.0',
+    namespace: 'cnpg-system',
+    chart: 'thakicloud/cnpg-operator',
+    version: '1.29.0',
     installedAt: '2026-03-11 14:20',
     lastDeployed: '2026-03-11 14:20',
     chartInfo: {
-      name: 'postgresql',
-      version: '15.3.0',
-      appVersion: '15.3.0',
+      name: 'cnpg-operator',
+      version: '1.29.0',
+      appVersion: '1.29.0',
       description:
-        'Chart for PostgreSQL, an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance.',
+        'CloudNativePG Operator — manages PostgreSQL clusters as Kubernetes-native resources.',
+    },
+    resources: [
+      { kind: 'Deployment', name: 'cnpg-operator', namespace: 'cnpg-system' },
+      { kind: 'ClusterRole', name: 'cnpg-operator' },
+      { kind: 'CustomResourceDefinition', name: 'clusters.postgresql.cnpg.io' },
+    ],
+  },
+  {
+    id: 'release-cnpg-instance-default',
+    releaseName: 'postgres',
+    name: 'cnpg-instance',
+    status: 'Deployed',
+    namespace: 'default',
+    chart: 'thakicloud/cnpg-instance',
+    version: '1.29.0',
+    installedAt: '2026-03-11 15:10',
+    lastDeployed: '2026-03-11 15:10',
+    chartInfo: {
+      name: 'cnpg-instance',
+      version: '1.29.0',
+      appVersion: '17.6',
+      description: 'PostgreSQL cluster instance (CNPG CRD). Requires CNPG Operator.',
     },
     connectionInfo: {
-      internalServiceDomain: 'postgresql.default.svc.cluster.local',
+      internalServiceDomain: 'postgres-rw.default.svc.cluster.local',
       port: 5432,
     },
-    valuesYaml: `auth:
-  postgresPassword: "change-me"
-  username: "appuser"
+    resources: [
+      { kind: 'Cluster', name: 'postgres', namespace: 'default' },
+      { kind: 'Secret', name: 'postgres-app', namespace: 'default' },
+      { kind: 'Pooler', name: 'postgres-pooler', namespace: 'default' },
+    ],
+  },
+  {
+    id: 'release-valkey-cache',
+    releaseName: 'valkey',
+    name: 'valkey',
+    status: 'Deployed',
+    namespace: 'cache',
+    chart: 'thakicloud/valkey',
+    version: '8.0.2',
+    installedAt: '2026-03-09 17:55',
+    lastDeployed: '2026-03-09 17:55',
+    chartInfo: {
+      name: 'valkey',
+      version: '8.0.2',
+      appVersion: '8.0.2',
+      description:
+        'Open-source, in-memory data structure store. Drop-in replacement for Redis OSS.',
+    },
+    connectionInfo: {
+      internalServiceDomain: 'valkey.cache.svc.cluster.local',
+      port: 6379,
+    },
+    valuesYaml: `fullnameOverride: "valkey"
+
+auth:
+  enabled: true
   password: "change-me"
-  database: "appdb"
 
 primary:
   persistence:
-    enabled: true
-    size: 20Gi
+    size: 5Gi
     storageClass: "longhorn"
-
-  resources:
-    requests:
-      cpu: "250m"
-      memory: "512Mi"
-    limits:
-      cpu: "1"
-      memory: "2Gi"
 `,
-    configValues: {
-      'auth.postgresPassword': 'change-me',
-      'auth.database': 'appdb',
-      'primary.persistence.storageClass': 'longhorn',
-      'primary.persistence.size': '20',
-    },
     resources: [
-      { kind: 'StatefulSet', name: 'postgresql', namespace: 'default' },
-      { kind: 'Service', name: 'postgresql', namespace: 'default' },
-      { kind: 'Secret', name: 'postgresql', namespace: 'default' },
-      { kind: 'PersistentVolumeClaim', name: 'data-postgresql-0', namespace: 'default' },
-      { kind: 'ConfigMap', name: 'postgresql-configuration', namespace: 'default' },
+      { kind: 'StatefulSet', name: 'valkey-primary', namespace: 'cache' },
+      { kind: 'Service', name: 'valkey', namespace: 'cache' },
+      { kind: 'PersistentVolumeClaim', name: 'data-valkey-primary-0', namespace: 'cache' },
     ],
   },
   {
@@ -1352,79 +1382,16 @@ primary:
       name: 'kafka',
       version: '28.3.0',
       appVersion: '3.7.0',
-      description:
-        'Apache Kafka is a distributed streaming platform designed to build real-time pipelines and can be used as a message broker or as a replacement for a log aggregation solution.',
+      description: 'Apache Kafka: distributed streaming platform for real-time data pipelines.',
     },
     connectionInfo: {
       internalServiceDomain: 'kafka.data.svc.cluster.local',
       port: 9092,
     },
-    valuesYaml: `broker:
-  replicaCount: 3
-
-persistence:
-  enabled: true
-  storageClass: "longhorn"
-  size: 8Gi
-
-zookeeper:
-  enabled: true
-  replicaCount: 3
-`,
-    configValues: {
-      'broker.replicaCount': '3',
-      'persistence.storageClass': 'longhorn',
-      'persistence.size': '8',
-    },
     resources: [
       { kind: 'StatefulSet', name: 'kafka-broker', namespace: 'data' },
       { kind: 'Service', name: 'kafka', namespace: 'data' },
       { kind: 'PersistentVolumeClaim', name: 'data-kafka-broker-0', namespace: 'data' },
-      { kind: 'StatefulSet', name: 'kafka-zookeeper', namespace: 'data' },
-    ],
-  },
-  {
-    id: 'release-valkey-cache',
-    releaseName: 'valkey',
-    name: 'valkey',
-    status: 'Deployed',
-    namespace: 'cache',
-    chart: 'bitnami/valkey',
-    version: '8.0.2',
-    installedAt: '2026-03-09 17:55',
-    lastDeployed: '2026-03-09 17:55',
-    chartInfo: {
-      name: 'valkey',
-      version: '8.0.2',
-      appVersion: '8.0.2',
-      description:
-        'Valkey is an open-source, in-memory data structure store. It is a drop-in replacement for Redis OSS.',
-    },
-    connectionInfo: {
-      internalServiceDomain: 'valkey.cache.svc.cluster.local',
-      port: 6379,
-    },
-    valuesYaml: `architecture: standalone
-
-auth:
-  enabled: true
-  password: "change-me"
-
-primary:
-  persistence:
-    enabled: true
-    size: 8Gi
-    storageClass: "longhorn"
-`,
-    configValues: {
-      'auth.password': 'change-me',
-      'primary.persistence.storageClass': 'longhorn',
-      'primary.persistence.size': '8',
-    },
-    resources: [
-      { kind: 'StatefulSet', name: 'valkey-primary', namespace: 'cache' },
-      { kind: 'Service', name: 'valkey', namespace: 'cache' },
-      { kind: 'PersistentVolumeClaim', name: 'data-valkey-primary-0', namespace: 'cache' },
     ],
   },
   {
@@ -1448,17 +1415,9 @@ primary:
       externalEndpoint: 'https://ingress.example.com',
       port: 443,
     },
-    valuesYaml: `controller:
-  replicaCount: 2
-  service:
-    type: LoadBalancer
-  metrics:
-    enabled: true
-`,
     resources: [
       { kind: 'Deployment', name: 'nginx-controller', namespace: 'ingress-nginx' },
       { kind: 'Service', name: 'nginx-controller', namespace: 'ingress-nginx' },
-      { kind: 'ConfigMap', name: 'nginx-configuration', namespace: 'ingress-nginx' },
     ],
   },
   {
@@ -1476,25 +1435,7 @@ primary:
       version: '4.2.7',
       appVersion: '2.4.7',
       description:
-        'Milvus is an open-source vector database designed for scalable similarity search, supporting high-dimensional vectors for AI/ML applications.',
-    },
-    valuesYaml: `cluster:
-  enabled: false
-
-minio:
-  auth:
-    rootUser: "admin"
-    rootPassword: "change-me"
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: "longhorn"
-`,
-    configValues: {
-      'minio.auth.rootUser': 'admin',
-      'minio.auth.rootPassword': 'change-me',
-      'minio.persistence.storageClass': 'longhorn',
-      'minio.persistence.size': '10',
+        'Open-source vector database for scalable similarity search and AI/ML applications.',
     },
     resources: [
       { kind: 'Deployment', name: 'milvus-standalone', namespace: 'ai' },
@@ -1502,39 +1443,22 @@ minio:
     ],
   },
   {
-    id: 'release-postgresql-ai',
-    releaseName: 'postgresql-1',
-    name: 'postgresql',
+    id: 'release-cnpg-instance-ai-failed',
+    releaseName: 'postgres',
+    name: 'cnpg-instance',
     status: 'Failed',
     namespace: 'ai',
-    chart: 'bitnami/postgresql',
-    version: '15.3.0',
+    chart: 'thakicloud/cnpg-instance',
+    version: '1.29.0',
     installedAt: '2026-03-12 10:30',
     lastDeployed: '2026-03-12 10:30',
     errorMessage:
-      'PersistentVolumeClaim "data-postgresql-0" failed to bind: no matching StorageClass found.',
+      'PersistentVolumeClaim "data-postgres-0" failed to bind: no matching StorageClass found.',
     chartInfo: {
-      name: 'postgresql',
-      version: '15.3.0',
-      appVersion: '15.3.0',
-      description:
-        'Chart for PostgreSQL, an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance.',
-    },
-    valuesYaml: `auth:
-  postgresPassword: "change-me"
-  database: "aidb"
-
-primary:
-  persistence:
-    enabled: true
-    size: 50Gi
-    storageClass: "fast-ssd"
-`,
-    configValues: {
-      'auth.postgresPassword': 'change-me',
-      'auth.database': 'aidb',
-      'primary.persistence.storageClass': 'fast-ssd',
-      'primary.persistence.size': '50',
+      name: 'cnpg-instance',
+      version: '1.29.0',
+      appVersion: '17.6',
+      description: 'PostgreSQL cluster instance (CNPG CRD). Requires CNPG Operator.',
     },
     resources: [],
   },
@@ -1549,4 +1473,5 @@ export const namespaceOptions = [
   { value: 'ingress-nginx', label: 'ingress-nginx' },
   { value: 'ai', label: 'ai' },
   { value: 'apps', label: 'apps' },
+  { value: 'cnpg-system', label: 'cnpg-system' },
 ];

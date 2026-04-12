@@ -43,7 +43,7 @@ const RESOURCE_TIER_OPTIONS = [
   { value: 'Small', label: 'Small' },
   { value: 'Medium', label: 'Medium' },
   { value: 'Large', label: 'Large' },
-  { value: 'Custom', label: 'Custom (직접 입력)' },
+  { value: 'Custom', label: 'Custom (manual entry)' },
 ];
 
 type SectionStep = 'target' | 'version' | 'configuration';
@@ -138,7 +138,7 @@ function OptionsFormField({
             value={value}
             onChange={(e) => onChange(opt.key, e.target.value)}
             fullWidth
-            placeholder="예: 3"
+            placeholder="e.g. 3"
           />
         );
 
@@ -155,7 +155,7 @@ function OptionsFormField({
       case 'select':
         return (
           <Select
-            options={[{ value: '', label: '선택하세요' }, ...(opt.options ?? [])]}
+            options={[{ value: '', label: 'Select…' }, ...(opt.options ?? [])]}
             value={value || ''}
             onChange={(v) => onChange(opt.key, v ?? '')}
             fullWidth
@@ -189,7 +189,7 @@ function OptionsFormField({
               value={value}
               onChange={(e) => onChange(opt.key, e.target.value)}
               unit={opt.unit}
-              placeholder="예: 8"
+              placeholder="e.g. 8"
               type="number"
             />
           );
@@ -199,7 +199,7 @@ function OptionsFormField({
             value={value}
             onChange={(e) => onChange(opt.key, e.target.value)}
             fullWidth
-            placeholder={`예: ${opt.defaultValue ?? opt.label}`}
+            placeholder={`e.g. ${opt.defaultValue ?? opt.label}`}
           />
         );
     }
@@ -352,7 +352,7 @@ export function AppInstallPage() {
   const setStep = (updates: Partial<Record<SectionStep, WizardSectionState>>) =>
     setSectionStatus((prev) => ({ ...prev, ...updates }));
 
-  // Release name: allowMultiple이면 네임스페이스 내 기존 릴리스 수 기반으로 자동 suffix 생성
+  // Release name: if allowMultiple, auto-append a suffix based on existing release count in namespace
   const autoReleaseName = useMemo(() => {
     if (!chart) return '';
     if (!chart.allowMultiple) return chart.name;
@@ -590,20 +590,20 @@ export function AppInstallPage() {
                       variant="warning"
                       icon={<IconAlertTriangle size={16} stroke={1.5} />}
                     >
-                      <strong>{chart.dependsOn}</strong> Operator가 먼저 설치되어야 합니다. App
-                      Catalog에서 Operator를 먼저 설치하세요.
+                      <strong>{chart.dependsOn}</strong> must be installed before this app. Please
+                      install the Operator first from the App Catalog.
                     </InlineMessage>
                   )}
                   {/* Install type badge */}
                   {chart?.installType && (
                     <p className="text-body-sm text-[var(--color-text-subtle)]">
-                      설치 유형:{' '}
+                      Install type:{' '}
                       <span className="font-medium text-[var(--color-text-default)]">
                         {chart.installType}
                       </span>
                     </p>
                   )}
-                  {/* App Name (Release Name) — 자동 생성, 수정 불가 */}
+                  {/* App Name (Release Name) — auto-generated, read-only */}
                   <FormField>
                     <FormField.Label>App name</FormField.Label>
                     <FormField.Control>

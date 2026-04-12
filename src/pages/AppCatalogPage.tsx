@@ -1,8 +1,8 @@
 /**
- * App Catalog — FR-001 앱 목록 조회, FR-002 앱 상세 조회, FR-003 앱 검색
+ * App Catalog — FR-001 app list, FR-002 app detail, FR-003 app search
  *
- * v1.0 제공 앱: PostgreSQL, nginx, Kafka, Valkey, Milvus
- * 카테고리 탭으로 필터링, 이름으로 검색 가능
+ * v1.0 apps: PostgreSQL, nginx, Kafka, Valkey, Milvus
+ * Filter by category tab, searchable by name
  */
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +28,7 @@ import { IconSearch, IconPackage } from '@tabler/icons-react';
 import type { CatalogChart, AppCategory } from '@/pages/apps/appsTypes';
 import { catalogCharts, CATEGORIES } from '@/pages/apps/appsMockData';
 
-/** 이름 표시용 — hyphen을 공백으로, 각 단어 첫 글자 대문자 */
+/** Display name — replace hyphens with spaces, capitalize each word */
 function toDisplayName(s: string): string {
   return s
     .replace(/-/g, ' ')
