@@ -92,8 +92,8 @@ export function DesignSystemLayout() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)]">
       {/* Left Sidebar Navigation */}
       {!isCaptureMode && (
-        <nav className="fixed left-0 top-0 w-[220px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-hidden z-50 sidebar-scroll">
-          <div className="p-4 overflow-hidden">
+        <nav className="fixed left-0 top-0 w-[200px] max-w-[200px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] overflow-y-auto overflow-x-clip z-50 sidebar-scroll">
+          <div className="max-w-[200px] box-border p-4 overflow-hidden">
             {/* Logo */}
             <Link to="/design" className="flex items-center mb-4">
               <span className="text-heading-h5 text-[var(--color-text-default)]">TDS</span>
@@ -102,7 +102,7 @@ export function DesignSystemLayout() {
             {/* EntryPage Link */}
             <Link
               to="/"
-              className="flex items-center gap-2 w-[188px] box-border px-3 py-2 mb-2 bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors"
+              className="flex items-center gap-2 w-[168px] box-border px-3 py-2 mb-2 bg-[var(--color-action-secondary)] hover:bg-[var(--color-action-secondary-hover)] text-[var(--color-text-default)] text-[length:var(--font-size-11)] font-medium transition-colors"
             >
               <IconHome size={16} stroke={1.5} className="shrink-0" />
               <span className="truncate flex-1 min-w-0">Entry page</span>
@@ -125,7 +125,7 @@ export function DesignSystemLayout() {
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
                   placeholder="Search"
-                  className="w-[188px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
+                  className="w-[168px] pl-9 pr-8 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] text-[length:var(--font-size-11)] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-border-focus)] focus:ring-2 focus:ring-[var(--color-border-focus)] focus:ring-opacity-20 transition-colors"
                 />
                 {searchQuery && (
                   <button
@@ -139,7 +139,7 @@ export function DesignSystemLayout() {
 
               {/* Search Results Dropdown */}
               {searchQuery.trim() && isSearchFocused && (
-                <div className="absolute top-full left-0 w-[188px] max-w-[188px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
+                <div className="absolute top-full left-0 w-[168px] max-w-[168px] mt-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] z-50 max-h-[300px] overflow-y-auto overflow-x-hidden sidebar-scroll">
                   {filteredNavItems.length > 0 ? (
                     <div className="p-2 min-w-0">
                       {filteredNavItems.map(({ id, label, icon: Icon, path }) => (
@@ -182,7 +182,7 @@ export function DesignSystemLayout() {
             <button
               onClick={() => navigate('/design/all')}
               className={`
-              w-[188px] box-border px-3 py-2 mb-2 flex items-center gap-2
+              w-[168px] box-border px-3 py-2 mb-2 flex items-center gap-2
               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
               ${
                 currentPath === '/design/all'
@@ -199,7 +199,7 @@ export function DesignSystemLayout() {
             <button
               onClick={() => navigate('/design/changelog')}
               className={`
-              w-[188px] box-border px-3 py-2 mb-3 flex items-center gap-2
+              w-[168px] box-border px-3 py-2 mb-3 flex items-center gap-2
               text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
               ${
                 currentPath === '/design/changelog'
@@ -213,7 +213,7 @@ export function DesignSystemLayout() {
             </button>
 
             {/* Navigation Groups */}
-            <VStack gap={1} className="w-[188px]">
+            <VStack gap={1} className="w-[168px]">
               {navGroups.map((group) => {
                 const isOpen = openGroups.has(group.title);
                 return (

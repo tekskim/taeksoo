@@ -163,23 +163,6 @@ const GUIDELINES_LEGACY = `### 1. 비활성화 or 비노출
 - 영어: 동사형 사용
 - 한국어: '~하기'를 생략한 단일 명사형 사용`;
 
-function GuidelineCard({
-  title,
-  markdown,
-  className = '',
-}: {
-  title: string;
-  markdown: string;
-  className?: string;
-}) {
-  return (
-    <div className={`border border-[var(--color-border-default)] p-5 ${className}`}>
-      <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-3">{title}</h4>
-      <NotionRenderer markdown={markdown} />
-    </div>
-  );
-}
-
 export function ButtonPage() {
   return (
     <ComponentPageTemplate
@@ -578,23 +561,28 @@ export function ButtonPage() {
         </VStack>
       }
       guidelines={
-        <VStack gap={6}>
+        <VStack gap={8}>
           <p className="text-body-lg text-[var(--color-text-muted)]">{GUIDELINES_OVERVIEW}</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <GuidelineCard title="Variants" markdown={GUIDELINES_VARIANTS} />
-            <GuidelineCard title="States" markdown={GUIDELINES_STATES} />
-            <GuidelineCard
-              title="Behavior"
-              markdown={GUIDELINES_BEHAVIOR}
-              className="md:col-span-2"
-            />
-            <GuidelineCard
-              title="Content Guidelines"
-              markdown={GUIDELINES_CONTENT}
-              className="md:col-span-2"
-            />
-          </div>
+          <VStack gap={3}>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Variants</h4>
+            <NotionRenderer markdown={GUIDELINES_VARIANTS} />
+          </VStack>
+
+          <VStack gap={3}>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">States</h4>
+            <NotionRenderer markdown={GUIDELINES_STATES} />
+          </VStack>
+
+          <VStack gap={3}>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Behavior</h4>
+            <NotionRenderer markdown={GUIDELINES_BEHAVIOR} />
+          </VStack>
+
+          <VStack gap={3}>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Content Guidelines</h4>
+            <NotionRenderer markdown={GUIDELINES_CONTENT} />
+          </VStack>
 
           <DosDonts
             doItems={[
@@ -611,7 +599,7 @@ export function ButtonPage() {
             ]}
           />
 
-          <details className="border border-[var(--color-border-default)] p-5">
+          <details className="rounded-[var(--radius-lg)]">
             <summary className="text-heading-h6 text-[var(--color-text-default)] cursor-pointer">
               이전 버전
             </summary>

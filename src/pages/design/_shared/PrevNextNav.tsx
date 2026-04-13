@@ -13,38 +13,28 @@ export function PrevNextNav() {
   if (!prev && !next) return null;
 
   return (
-    <div className="flex items-stretch gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
+    <div className="flex items-center justify-between border-t border-[var(--color-border-subtle)] pt-4">
       {prev ? (
         <Link
           to={prev.path}
-          className="group flex-1 flex items-center gap-2 px-4 py-3 border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors"
+          className="group flex items-center gap-1.5 text-body-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
         >
           <IconChevronLeft
             size={14}
             stroke={1.5}
             className="shrink-0 text-[var(--color-text-subtle)] group-hover:text-[var(--color-action-primary)] transition-colors"
           />
-          <div className="flex flex-col min-w-0">
-            <span className="text-body-xs text-[var(--color-text-subtle)]">Previous</span>
-            <span className="text-label-md text-[var(--color-text-default)] group-hover:text-[var(--color-action-primary)] transition-colors truncate">
-              {prev.label}
-            </span>
-          </div>
+          {prev.label}
         </Link>
       ) : (
-        <div className="flex-1" />
+        <div />
       )}
       {next ? (
         <Link
           to={next.path}
-          className="group flex-1 flex items-center justify-end gap-2 px-4 py-3 border border-[var(--color-border-default)] hover:border-[var(--color-border-focus)] hover:bg-[var(--color-surface-muted)] transition-colors text-right"
+          className="group flex items-center gap-1.5 text-body-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors ml-auto"
         >
-          <div className="flex flex-col min-w-0">
-            <span className="text-body-xs text-[var(--color-text-subtle)]">Next</span>
-            <span className="text-label-md text-[var(--color-text-default)] group-hover:text-[var(--color-action-primary)] transition-colors truncate">
-              {next.label}
-            </span>
-          </div>
+          {next.label}
           <IconChevronRight
             size={14}
             stroke={1.5}
@@ -52,7 +42,7 @@ export function PrevNextNav() {
           />
         </Link>
       ) : (
-        <div className="flex-1" />
+        <div />
       )}
     </div>
   );

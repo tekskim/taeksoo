@@ -10,13 +10,13 @@ function DurationDemo({ duration, label }: { duration: string; label: string }) 
       <button
         type="button"
         onClick={() => setActive(!active)}
-        className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+        className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
       >
         {active ? 'Reset' : 'Play'}
       </button>
-      <div className="flex-1 h-8 bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-md)] overflow-hidden relative">
+      <div className="flex-1 h-8 bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] overflow-hidden relative">
         <div
-          className="absolute top-0 left-0 h-full rounded-[var(--primitive-radius-md)]"
+          className="absolute top-0 left-0 h-full rounded-[var(--radius-lg)]"
           style={{
             width: active ? '100%' : '0%',
             backgroundColor: 'var(--color-action-primary)',
@@ -40,11 +40,11 @@ function EasingDemo({ easing }: { easing: string }) {
       <button
         type="button"
         onClick={() => setActive(!active)}
-        className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer shrink-0"
+        className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer shrink-0"
       >
         {active ? 'Reset' : 'Play'}
       </button>
-      <div className="flex-1 h-8 bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-md)] relative overflow-hidden px-1">
+      <div className="flex-1 h-8 bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] relative overflow-hidden px-1">
         <div
           className="absolute top-1 w-6 h-6 rounded-full bg-[var(--color-action-primary)]"
           style={{
@@ -193,7 +193,7 @@ function DesktopAppDemo() {
           <button
             type="button"
             onClick={closeAll}
-            className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
+            className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] hover:bg-[var(--color-surface-hover)] transition-colors cursor-pointer"
           >
             Close All
           </button>
@@ -201,7 +201,7 @@ function DesktopAppDemo() {
       </div>
 
       {/* Mini Desktop Area */}
-      <div className="relative w-full h-[280px] bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[var(--primitive-radius-lg)] overflow-hidden border border-[var(--color-border-default)]">
+      <div className="relative w-full h-[280px] bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[var(--radius-lg)] overflow-hidden border border-[var(--color-border-default)]">
         {/* Desktop top bar */}
         <div className="h-6 bg-black/30 flex items-center px-3">
           <span className="text-[9px] font-medium text-white/60">Desktop Preview</span>
@@ -318,21 +318,21 @@ function DesktopAppDemo() {
 
       {/* Animation spec */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           <span className="text-label-sm text-[var(--color-text-muted)]">Window Open</span>
           <pre className="text-body-xs font-mono text-[var(--color-text-default)] mt-1">{`scale: 0.95 → 1
 opacity: 0 → 1
 duration: 200ms
 ease: easeOut`}</pre>
         </div>
-        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           <span className="text-label-sm text-[var(--color-text-muted)]">Window Close</span>
           <pre className="text-body-xs font-mono text-[var(--color-text-default)] mt-1">{`scale: 1 → 0.95
 opacity: 1 → 0
 duration: 200ms
 ease: easeOut`}</pre>
         </div>
-        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           <span className="text-label-sm text-[var(--color-text-muted)]">Dock Icon Drag</span>
           <pre className="text-body-xs font-mono text-[var(--color-text-default)] mt-1">{`scale: 1.1, zIndex: 50
 boxShadow: 0 10px 30px
@@ -412,7 +412,7 @@ export function TransitionsPage() {
               {durationTokens.map(({ name, value, token, primitive, usage }) => (
                 <div
                   key={name}
-                  className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex flex-col gap-3"
+                  className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] flex flex-col gap-3"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-heading-h6 text-[var(--color-text-default)] capitalize">
@@ -444,7 +444,7 @@ export function TransitionsPage() {
               {easingFunctions.map(({ name, css, desc, usage }) => (
                 <div
                   key={name}
-                  className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex flex-col gap-3"
+                  className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] flex flex-col gap-3"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-heading-h6 text-[var(--color-text-default)]">{name}</span>
@@ -522,10 +522,10 @@ export function TransitionsPage() {
               {framerMotionPatterns.map(({ name, code, usage }) => (
                 <div
                   key={name}
-                  className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] flex flex-col gap-3"
+                  className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] flex flex-col gap-3"
                 >
                   <span className="text-heading-h6 text-[var(--color-text-default)]">{name}</span>
-                  <pre className="text-body-sm font-mono text-[var(--color-text-muted)] bg-[var(--color-surface-default)] p-3 rounded-[var(--primitive-radius-md)] overflow-x-auto whitespace-pre">
+                  <pre className="text-body-sm font-mono text-[var(--color-text-muted)] bg-[var(--color-surface-default)] p-3 rounded-[var(--radius-lg)] overflow-x-auto whitespace-pre">
                     {code}
                   </pre>
                   <p className="text-body-sm text-[var(--color-text-subtle)]">
@@ -577,7 +577,7 @@ export function TransitionsPage() {
               ].map((p) => (
                 <div
                   key={p.title}
-                  className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]"
+                  className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]"
                 >
                   <span className="text-label-md font-semibold uppercase text-[var(--color-text-default)]">
                     {p.title}
@@ -593,7 +593,7 @@ export function TransitionsPage() {
             <h3 className="text-heading-h6 text-[var(--color-text-default)]">
               Reduced Motion Support
             </h3>
-            <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] font-mono text-body-sm text-[var(--color-text-default)]">
+            <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] font-mono text-body-sm text-[var(--color-text-default)]">
               <pre>{`@media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -614,7 +614,7 @@ export function TransitionsPage() {
           <div className="space-y-4">
             <h3 className="text-heading-h6 text-[var(--color-text-default)]">Guidelines</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)]/20 rounded-[var(--primitive-radius-lg)]">
+              <div className="p-4 bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)]/20 rounded-[var(--radius-lg)]">
                 <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-success)] mb-2">
                   DO
                 </h4>
@@ -632,7 +632,7 @@ export function TransitionsPage() {
                   <li>• Match transition speed to the size of the change</li>
                 </ul>
               </div>
-              <div className="p-4 bg-[var(--color-state-danger-bg)] border border-[var(--color-state-danger)]/20 rounded-[var(--primitive-radius-lg)]">
+              <div className="p-4 bg-[var(--color-state-danger-bg)] border border-[var(--color-state-danger)]/20 rounded-[var(--radius-lg)]">
                 <h4 className="text-label-md font-semibold uppercase text-[var(--color-state-danger)] mb-2">
                   DON'T
                 </h4>

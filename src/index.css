@@ -340,7 +340,7 @@ html.theme-transition *::after {
      ---------------------------------------- */
   --layout-max-width: 1920px;
   --layout-min-width: 1440px;
-  --layout-sidebar-width: 220px;
+  --layout-sidebar-width: 200px;
   --layout-sidebar-width-collapsed: 40px;
   --layout-content-min-width: calc(var(--layout-min-width) - var(--layout-sidebar-width));
 
@@ -522,7 +522,6 @@ html.theme-transition *::after {
 
   /* SearchInput */
   --search-input-height-sm: 28px;
-  --search-input-height-md: 28px;
   --search-input-icon-size: 12px;
 
   /* ----------------------------------------

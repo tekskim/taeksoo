@@ -22,7 +22,7 @@ import {
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -33,7 +33,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -42,7 +42,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -381,7 +383,7 @@ function EditorGuidelines() {
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`┌─────────────────┬────────────────────────────────┬───────────────┐
 │                 │  1. 탭바 (Tab Bar)              │               │
 │  2. 블록 라이브러리 ├────────────────────────────────┤  4. 속성       │
@@ -506,8 +508,6 @@ function EditorGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* States */}
       <VStack gap={4}>
         <SectionTitle>States</SectionTitle>
@@ -548,8 +548,6 @@ function EditorGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -612,8 +610,6 @@ function EditorGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -632,8 +628,6 @@ function EditorGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>

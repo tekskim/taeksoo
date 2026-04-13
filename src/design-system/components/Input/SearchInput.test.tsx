@@ -125,15 +125,9 @@ describe('SearchInput', () => {
     });
   });
 
-  describe('Size variants', () => {
-    it('renders with default md size', () => {
+  describe('Size', () => {
+    it('renders with fixed 28px height', () => {
       render(<SearchInput />);
-      const input = screen.getByRole('searchbox');
-      expect(input).toHaveClass('h-[var(--search-input-height-md)]');
-    });
-
-    it('renders with sm size', () => {
-      render(<SearchInput size="sm" />);
       const input = screen.getByRole('searchbox');
       expect(input).toHaveClass('h-[var(--search-input-height-sm)]');
     });

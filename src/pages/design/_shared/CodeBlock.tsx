@@ -16,7 +16,7 @@ export function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
   }, [code]);
 
   return (
-    <div className="relative group rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] overflow-hidden">
+    <div className="relative group rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] overflow-hidden">
       {language && (
         <div className="flex items-center justify-between px-3 py-1.5 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]">
           <span className="text-body-xs text-[var(--color-text-disabled)] font-mono uppercase">
@@ -24,7 +24,7 @@ export function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
           </span>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded-[var(--radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
             aria-label="Copy code"
           >
             {copied ? (

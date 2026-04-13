@@ -1,7 +1,8 @@
 import { Badge, VStack, HStack } from '@/design-system';
-import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
-import { Label } from '../../design-system-sections/HelperComponents';
+import { Link, useLocation } from 'react-router-dom';
 import AppIconContainer from '@/assets/appIcon/container.png';
+import { PrevNextNav } from '../_shared/PrevNextNav';
+import { pageLastUpdated } from '../_shared/navigationData';
 
 type BadgeColor = 'green' | 'blue' | 'red' | 'gray' | 'white';
 
@@ -169,14 +170,14 @@ const COLOR_LABELS: Record<BadgeColor, string> = {
 
 function StatusTable({ entries }: { entries: StatusEntry[] }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         <thead>
           <tr>
-            <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)]">
+            <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)]">
               Status
             </th>
-            <th className="text-left text-label-md font-medium p-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] w-[80px]">
+            <th className="text-left text-label-md font-medium px-3 py-2.5 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-subtle)] w-[80px]">
               Color
             </th>
           </tr>
@@ -184,12 +185,12 @@ function StatusTable({ entries }: { entries: StatusEntry[] }) {
         <tbody>
           {entries.map((entry, i) => (
             <tr key={i}>
-              <td className="p-2 border border-[var(--color-border-default)]">
+              <td className="p-2 border-t border-r border-[var(--color-border-subtle)]">
                 <Badge theme={entry.color} type="subtle" size="sm">
                   {entry.status}
                 </Badge>
               </td>
-              <td className="p-2 border border-[var(--color-border-default)] text-body-sm">
+              <td className="p-2 border-t border-[var(--color-border-subtle)] text-body-sm">
                 {COLOR_LABELS[entry.color]}
               </td>
             </tr>
@@ -210,51 +211,99 @@ function ResourceStatusSection({ section }: { section: ResourceSection }) {
 }
 
 export function ContainerStatusPage() {
+  const location = useLocation();
+  const lastUpdated = pageLastUpdated[location.pathname];
+
+  const formattedDate = lastUpdated
+    ? (() => {
+        const [y, m, d] = lastUpdated.split(' ')[0].split('-');
+        const months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ];
+        return `${months[parseInt(m) - 1]} ${d}, ${y}`;
+      })()
+    : null;
+
   return (
-    <ComponentPageTemplate
-      title="Container — 리소스 상태 정의"
-      description="Container 앱의 각 리소스별 상태 목록. Kubernetes API 상태값을 Badge 컴포넌트로 표시한다."
-      preview={
-        <HStack gap={3} align="center">
+    <div>
+      <VStack gap={0} align="stretch">
+        <div className="flex items-start justify-between gap-8 pt-2 pb-6">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-heading-h3 text-[var(--color-text-default)]">
+              Container — 리소스 상태 정의
+            </h2>
+            <p className="text-body-lg text-[var(--color-text-muted)] max-w-[720px]">
+              Container 앱의 각 리소스별 상태 목록. Kubernetes API 상태값을 Badge 컴포넌트로
+              표시한다.
+            </p>
+          </div>
+          {formattedDate && (
+            <span className="text-body-sm text-[var(--color-text-subtle)] shrink-0">
+              Updated {formattedDate}
+            </span>
+          )}
+        </div>
+
+        <HStack gap={3} align="center" className="pb-4">
           <img src={AppIconContainer} alt="" className="size-6 object-contain" />
           <span className="text-heading-h5 text-[var(--color-text-default)]">Container</span>
         </HStack>
-      }
-      examples={
-        <VStack gap={8}>
-          <p className="text-body-md text-[var(--color-text-muted)]">
-            테이블에서 Badge를 사용할 경우, Badge의 최대 너비는{' '}
-            <code className="font-mono text-body-sm bg-[var(--color-surface-muted)] px-1 py-0.5 rounded-[var(--radius-sm)]">
-              80px
-            </code>
-            로 제한한다.
-          </p>
-          {CONTAINER_RESOURCES.map((section, i) => (
-            <div key={section.resource}>
-              {i > 0 && <div className="w-full h-px bg-[var(--color-border-subtle)] mb-8" />}
-              <ResourceStatusSection section={section} />
-            </div>
+
+        <p className="text-body-md text-[var(--color-text-muted)] pb-8">
+          테이블에서 Badge를 사용할 경우, Badge의 최대 너비는{' '}
+          <code className="font-mono text-body-sm bg-[var(--color-surface-muted)] px-1 py-0.5 rounded-[var(--radius-sm)]">
+            80px
+          </code>
+          로 제한한다.
+        </p>
+
+        <VStack gap={8} align="stretch">
+          {CONTAINER_RESOURCES.map((section) => (
+            <ResourceStatusSection key={section.resource} section={section} />
           ))}
         </VStack>
-      }
-      guidelines={
-        <VStack gap={3}>
-          <Label>참고</Label>
+
+        <VStack gap={3} align="stretch" className="pt-10">
           <p className="text-body-md text-[var(--color-text-muted)]">
             Container 앱은 StatusIndicator 대신 Badge 컴포넌트로 상태를 표시한다. Kubernetes API가
             제공하는 status.phase 또는 condition 값을 우선 표시하며, 사전 정의되지 않은 상태값은
             White Badge로 표시한다.
           </p>
         </VStack>
-      }
-      relatedLinks={[
-        {
-          label: 'Status Indicator',
-          path: '/design/components/status-indicator',
-          description: '상태 컴포넌트',
-        },
-        { label: 'Badge', path: '/design/components/badge', description: '상태 표시 (Badge)' },
-      ]}
-    />
+
+        <VStack gap={3} align="stretch" className="pt-8">
+          <h3 className="text-heading-h5 text-[var(--color-text-default)]">Related</h3>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link
+              to="/design/components/status-indicator"
+              className="text-body-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
+            >
+              Status Indicator
+            </Link>
+            <Link
+              to="/design/components/badge"
+              className="text-body-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors"
+            >
+              Badge
+            </Link>
+          </div>
+        </VStack>
+
+        <div className="pt-12">
+          <PrevNextNav />
+        </div>
+      </VStack>
+    </div>
   );
 }

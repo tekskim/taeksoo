@@ -234,14 +234,12 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
       role="alert"
       className={twMerge(
         'flex flex-col gap-[var(--primitive-spacing-2)]',
-        'w-fit',
+        'w-fit max-w-[320px]',
         'p-[var(--primitive-spacing-3)]',
         'rounded-[var(--primitive-radius-lg)]',
         'bg-[var(--color-surface-default)]',
         'border border-[var(--color-border-default)]',
         'shadow-lg',
-        // Hover state
-        'hover:border-[var(--color-action-primary)] hover:border-2',
         // Animation
         'transition-all duration-200 ease-out',
         isExiting ? 'opacity-0 translate-x-2' : 'opacity-100 translate-x-0 animate-toast-in',

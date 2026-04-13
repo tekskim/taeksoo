@@ -9,7 +9,7 @@ import { LockSettingDrawer } from '@/components/LockSettingDrawer';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -20,7 +20,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -29,7 +29,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -164,8 +166,6 @@ function DrawerSectionPageGuidelines() {
           </Prose>
         </VStack>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       <DosDonts
         doItems={[

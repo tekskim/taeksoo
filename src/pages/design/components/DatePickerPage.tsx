@@ -7,7 +7,7 @@ import { DatePicker, DateRangePicker, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -128,8 +130,6 @@ function DatePickerGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Variants */}
       <VStack gap={4}>
         <SectionTitle>Variants</SectionTitle>
@@ -159,8 +159,6 @@ function DatePickerGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* States */}
       <VStack gap={4}>
@@ -200,8 +198,6 @@ function DatePickerGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={6}>
@@ -302,8 +298,6 @@ function DatePickerGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -321,8 +315,6 @@ function DatePickerGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -351,7 +343,7 @@ function DatePickerGuidelines() {
             </tr>
           </tbody>
         </TableWrapper>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre-wrap">
             {`예시
 KO: 2026-03-01 – 2026-03-07
@@ -366,12 +358,12 @@ EN(연도 다름): Dec 30, 2025 – Jan 02, 2026`}
 
 export function DatePickerPage() {
   const [singleDate, setSingleDate] = useState<Date | null>(new Date(2025, 2, 8));
+  const [dateTimeValue, setDateTimeValue] = useState<Date | null>(new Date(2025, 2, 8, 14, 30));
   const [rangeValue, setRangeValue] = useState<{ start: Date | null; end: Date | null }>({
     start: new Date(2025, 2, 8),
     end: new Date(2025, 2, 23),
   });
   const [minMaxDate, setMinMaxDate] = useState<Date | null>(null);
-  const [mondayDate, setMondayDate] = useState<Date | null>(new Date(2025, 2, 8));
 
   return (
     <ComponentPageTemplate
@@ -409,6 +401,24 @@ export function DatePickerPage() {
 
           <VStack gap={3}>
             <VStack gap={1}>
+              <Label>Date & Time</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                날짜와 시간(시/분) 함께 선택. showTime 프로퍼티를 사용.
+              </span>
+            </VStack>
+            <div className="flex gap-4 flex-wrap">
+              <DatePicker value={dateTimeValue} onChange={setDateTimeValue} showTime />
+              <DatePicker
+                value={dateTimeValue}
+                onChange={setDateTimeValue}
+                showTime
+                timeFormat="12h"
+              />
+            </div>
+          </VStack>
+
+          <VStack gap={3}>
+            <VStack gap={1}>
               <Label>Date Range</Label>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 시작/종료 기간 선택. 로그 기간, 리포트 기간 등에 사용.
@@ -435,16 +445,6 @@ export function DatePickerPage() {
               minDate={new Date(2025, 2, 5)}
               maxDate={new Date(2025, 2, 25)}
             />
-          </VStack>
-
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <Label>Monday Start</Label>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                주 시작일을 월요일로 설정. firstDayOfWeek=1.
-              </span>
-            </VStack>
-            <DatePicker firstDayOfWeek={1} value={mondayDate} onChange={setMondayDate} />
           </VStack>
 
           <VStack gap={3}>
@@ -483,7 +483,7 @@ export function DatePickerPage() {
       }
       guidelines={<DatePickerGuidelines />}
       tokens={
-        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+        <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           padding: 12px · gap: 12px · radius: 8px · cell: 32×32px
         </div>
       }

@@ -10,7 +10,7 @@ import { IconCheck, IconArrowRight } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -21,7 +21,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -30,7 +30,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -219,12 +221,10 @@ function BadgeGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition (구성 요소)</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[ (icon)  label text  (icon) ]`}</pre>
         </div>
         <TableWrapper>
@@ -271,8 +271,6 @@ function BadgeGuidelines() {
           <p>radius: 4px · gap: 4px · dot-size: 6px</p>
         </Prose>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* BadgeList */}
       <VStack gap={4}>
@@ -335,8 +333,6 @@ function BadgeGuidelines() {
           </ul>
         </Prose>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Usage Guidelines */}
       <VStack gap={4}>
@@ -466,8 +462,6 @@ function BadgeGuidelines() {
         />
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Content Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Content Guidelines</SectionTitle>
@@ -544,7 +538,7 @@ export function BadgePage() {
                 Small(테이블 셀), Medium(기본).
               </span>
             </VStack>
-            <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Badge size="sm" theme="white">
                 Small
               </Badge>
@@ -561,7 +555,7 @@ export function BadgePage() {
                 6가지 컬러 테마로 상태와 카테고리를 구분합니다.
               </span>
             </VStack>
-            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-2 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Badge size="sm" type="subtle" theme="white">
                 White
               </Badge>
@@ -590,7 +584,7 @@ export function BadgePage() {
                 Text only, Left icon, Right icon 레이아웃.
               </span>
             </VStack>
-            <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-3 items-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={1} align="center">
                 <Badge size="sm" theme="blue" type="subtle">
                   Text only

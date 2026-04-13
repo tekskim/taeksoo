@@ -830,14 +830,14 @@ function IntentCard({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.15 }}
-      className={`flex flex-col gap-3 p-5 rounded-[var(--primitive-radius-lg)] border-2 transition-colors duration-200 cursor-pointer text-left w-full ${
+      className={`flex flex-col gap-3 p-5 rounded-[var(--radius-lg)] border-2 transition-colors duration-200 cursor-pointer text-left w-full ${
         selected
           ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
           : 'border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:border-[var(--color-border-strong)]'
       }`}
     >
       <div
-        className={`w-10 h-10 rounded-[var(--primitive-radius-md)] flex items-center justify-center transition-colors duration-200 ${
+        className={`w-10 h-10 rounded-[var(--radius-lg)] flex items-center justify-center transition-colors duration-200 ${
           selected
             ? 'bg-[var(--color-action-primary)] text-white'
             : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]'
@@ -925,7 +925,7 @@ function TimelineStepRow({
       {/* Content */}
       <div className={`flex-1 pb-5 ${isLast ? 'pb-0' : ''}`}>
         <div
-          className={`rounded-[var(--primitive-radius-md)] px-4 py-3 transition-colors duration-300 ${
+          className={`rounded-[var(--radius-lg)] px-4 py-3 transition-colors duration-300 ${
             step.status === 'running'
               ? 'bg-[var(--color-state-info-bg)]'
               : step.status === 'done'
@@ -939,7 +939,7 @@ function TimelineStepRow({
               {index + 1}.
             </span>
             <span
-              className="text-body-sm font-medium px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)] inline-flex items-center gap-1"
+              className="text-body-sm font-medium px-1.5 py-0.5 rounded-[var(--radius-sm)] inline-flex items-center gap-1"
               style={{ backgroundColor: step.serviceColor + '18', color: step.serviceColor }}
             >
               <ServiceIcon service={step.service} />
@@ -971,7 +971,7 @@ function TimelineStepRow({
                   </span>
                   {editing && step.status === 'pending' ? (
                     <input
-                      className="text-body-sm font-mono bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-sm)] px-1.5 py-0.5 text-[var(--color-text-default)] w-[200px]"
+                      className="text-body-sm font-mono bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] px-1.5 py-0.5 text-[var(--color-text-default)] w-[200px]"
                       value={String(v)}
                       onChange={(e) => onParamChange(k, e.target.value)}
                     />
@@ -1170,7 +1170,7 @@ export function AIWorkspacePrototypePage() {
         </p>
 
         {/* Phase stepper */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-6 py-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-6 py-4">
           <PhaseStepper phase={phase} />
         </div>
 
@@ -1231,7 +1231,7 @@ export function AIWorkspacePrototypePage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                   기본 요구사항을 입력해주세요
                 </h3>
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-5">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5">
                   <VStack gap={5}>
                     {selectedIntent === 'finetune' && (
                       <>
@@ -1677,7 +1677,7 @@ export function AIWorkspacePrototypePage() {
             >
               <VStack gap={4}>
                 {/* Env checks */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                   <VStack gap={3}>
                     <h4 className="text-heading-h5 text-[var(--color-text-default)]">환경 분석</h4>
                     <div className="flex flex-col gap-1.5">
@@ -1704,7 +1704,7 @@ export function AIWorkspacePrototypePage() {
                 </div>
 
                 {/* Plan steps with timeline */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                   <VStack gap={3}>
                     <HStack justify="between" align="center" className="w-full">
                       <h4 className="text-heading-h5 text-[var(--color-text-default)]">
@@ -1785,7 +1785,7 @@ export function AIWorkspacePrototypePage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.2 }}
-                    className="bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)] rounded-[var(--primitive-radius-lg)] p-5"
+                    className="bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)] rounded-[var(--radius-lg)] p-5"
                   >
                     <VStack gap={3} align="center">
                       <motion.div
@@ -1856,7 +1856,7 @@ export function AIWorkspacePrototypePage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="bg-[var(--color-surface-default)] rounded-[var(--primitive-radius-xl)] p-8 flex flex-col items-center gap-4 shadow-2xl"
+                className="bg-[var(--color-surface-default)] rounded-[var(--radius-xl)] p-8 flex flex-col items-center gap-4 shadow-2xl"
               >
                 <IconLoader2
                   size={32}

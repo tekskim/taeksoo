@@ -381,7 +381,7 @@ export function TextareaPage() {
                   <tbody>
                     <tr>
                       <td className="p-2 border border-[var(--color-border-default)]">
-                        <kbd className="inline-block px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)] bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono text-[var(--color-text-default)]">
+                        <kbd className="inline-block px-1.5 py-0.5 rounded-[var(--radius-sm)] bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono text-[var(--color-text-default)]">
                           Enter
                         </kbd>
                       </td>
@@ -391,7 +391,7 @@ export function TextareaPage() {
                     </tr>
                     <tr>
                       <td className="p-2 border border-[var(--color-border-default)]">
-                        <kbd className="inline-block px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)] bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono text-[var(--color-text-default)]">
+                        <kbd className="inline-block px-1.5 py-0.5 rounded-[var(--radius-sm)] bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] text-body-sm font-mono text-[var(--color-text-default)]">
                           Shift + Enter
                         </kbd>
                       </td>
