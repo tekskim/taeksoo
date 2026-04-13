@@ -15,8 +15,6 @@ import { Chip } from '../Chip';
    FilterSearchInput Types
    ---------------------------------------- */
 
-export type FilterSearchInputSize = 'sm' | 'md';
-
 /** Filter field type - text for freeform input, select for predefined options */
 export type FilterFieldType = 'text' | 'select';
 
@@ -52,8 +50,8 @@ export interface FilterSearchInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'size' | 'type' | 'onChange' | 'value'
 > {
-  /** Input size */
-  size?: FilterSearchInputSize;
+  /** @deprecated Single size only (28px). Prop kept for backward compatibility. */
+  size?: 'sm' | 'md';
   /** Available filter fields */
   filters?: FilterField[];
   /** Currently applied filters */
@@ -79,11 +77,6 @@ export interface FilterSearchInputProps extends Omit<
 /* ----------------------------------------
    Size Styles
    ---------------------------------------- */
-
-const sizes: Record<FilterSearchInputSize, string> = {
-  sm: 'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
-  md: 'h-[var(--search-input-height-md)] text-[length:var(--input-font-size-sm)]',
-};
 
 /* ----------------------------------------
    Filter Dropdown Menu
@@ -169,7 +162,7 @@ function FilterDropdown({
 export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputProps>(
   (
     {
-      size = 'md',
+      size: _size,
       filters = [],
       appliedFilters = [],
       onFiltersChange,
@@ -371,7 +364,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
       isFocused &&
         'border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]',
       disabled && 'bg-[var(--input-bg-disabled)] cursor-not-allowed',
-      sizes[size],
+      'h-[var(--search-input-height-sm)] text-[length:var(--input-font-size-sm)]',
       inputClassName
     );
 

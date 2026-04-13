@@ -406,7 +406,15 @@ export function DatePickerPage() {
                 날짜와 시간(시/분) 함께 선택. showTime 프로퍼티를 사용.
               </span>
             </VStack>
-            <DatePicker value={dateTimeValue} onChange={setDateTimeValue} showTime />
+            <div className="flex gap-4 flex-wrap">
+              <DatePicker value={dateTimeValue} onChange={setDateTimeValue} showTime />
+              <DatePicker
+                value={dateTimeValue}
+                onChange={setDateTimeValue}
+                showTime
+                timeFormat="12h"
+              />
+            </div>
           </VStack>
 
           <VStack gap={3}>
