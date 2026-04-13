@@ -348,20 +348,6 @@ interface CreatePVCVolume {
 
 type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume | CSIVolume;
 
-// Volume Claim Template
-interface VolumeClaimTemplate {
-  name: string;
-  useExistingPV: boolean;
-  storageClass: string;
-  capacity: string;
-  persistentVolume: string;
-  accessModes: {
-    readWriteOnce: boolean;
-    readOnlyMany: boolean;
-    readWriteMany: boolean;
-  };
-}
-
 // Node Affinity Term
 interface NodeAffinityTerm {
   priority: string;
@@ -1258,22 +1244,6 @@ export function ContainerCreateDeploymentPage() {
   const [volumes, setVolumes] = useState<Volume[]>([]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
-  // Volume Claim Templates state
-  const [volumeClaimTemplates, setVolumeClaimTemplates] = useState<VolumeClaimTemplate[]>(
-    isV2
-      ? [
-          {
-            name: '',
-            useExistingPV: false,
-            storageClass: '',
-            capacity: '',
-            persistentVolume: '',
-            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-          },
-        ]
-      : []
-  );
-
   // Node Affinity state
   const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>(
     isV2
@@ -1580,37 +1550,6 @@ export function ContainerCreateDeploymentPage() {
       setVolumes(newVolumes);
     },
     [volumes]
-  );
-
-  // Volume Claim Template management
-  const addVolumeClaimTemplate = useCallback(() => {
-    setVolumeClaimTemplates([
-      ...volumeClaimTemplates,
-      {
-        name: '',
-        useExistingPV: false,
-        storageClass: '',
-        capacity: '',
-        persistentVolume: '',
-        accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      },
-    ]);
-  }, [volumeClaimTemplates]);
-
-  const removeVolumeClaimTemplate = useCallback(
-    (index: number) => {
-      setVolumeClaimTemplates(volumeClaimTemplates.filter((_, i) => i !== index));
-    },
-    [volumeClaimTemplates]
-  );
-
-  const updateVolumeClaimTemplate = useCallback(
-    (index: number, updates: Partial<VolumeClaimTemplate>) => {
-      const newTemplates = [...volumeClaimTemplates];
-      newTemplates[index] = { ...newTemplates[index], ...updates };
-      setVolumeClaimTemplates(newTemplates);
-    },
-    [volumeClaimTemplates]
   );
 
   // Nameserver management
@@ -3990,190 +3929,6 @@ export function ContainerCreateDeploymentPage() {
                     <Dropdown.Option value="pvc" label="Persistent volume claim" />
                     <Dropdown.Option value="create-pvc" label="Create persistent volume claim" />
                   </Dropdown.Select>
-                </div>
-              </SectionCard.Content>
-            </SectionCard>
-
-            {/* Volume Claim Templates */}
-            <SectionCard className="pb-4">
-              <SectionCard.Header title="Volume claim templates" />
-              <SectionCard.Content showDividers={false}>
-                <div className="w-full">
-                  <div className="flex flex-col gap-3">
-                    {volumeClaimTemplates.map((template, index) => (
-                      <div
-                        key={index}
-                        className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                      >
-                        <button
-                          onClick={() => removeVolumeClaimTemplate(index)}
-                          className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                        >
-                          <IconX
-                            size={16}
-                            className="text-[var(--color-text-muted)]"
-                            stroke={1.5}
-                          />
-                        </button>
-                        <div className="flex flex-col gap-6">
-                          <div className="flex flex-col gap-2">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Persistent Volume Claim Name{' '}
-                              <span className="text-[var(--color-state-danger)]">*</span>
-                            </span>
-                            <Input
-                              placeholder="pvc-name"
-                              value={template.name}
-                              onChange={(e) =>
-                                updateVolumeClaimTemplate(index, { name: e.target.value })
-                              }
-                              className="w-full"
-                            />
-                          </div>
-
-                          <RadioGroup
-                            value={template.useExistingPV ? 'existing' : 'new'}
-                            onChange={(val) =>
-                              updateVolumeClaimTemplate(index, {
-                                useExistingPV: val === 'existing',
-                              })
-                            }
-                          >
-                            <Radio
-                              value="new"
-                              label="Use storage class and create a new persistent volume"
-                            />
-                            <Radio value="existing" label="Use existing Persistent Volume" />
-                          </RadioGroup>
-
-                          {(isV2 || !template.useExistingPV) && (
-                            <div className="flex flex-col gap-6">
-                              <div className="flex flex-col gap-2 w-full">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Storage Class{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <Select
-                                  options={[
-                                    { value: 'standard', label: 'standard' },
-                                    { value: 'fast', label: 'fast' },
-                                  ]}
-                                  value={template.storageClass}
-                                  onChange={(val) =>
-                                    updateVolumeClaimTemplate(index, {
-                                      storageClass: val,
-                                    })
-                                  }
-                                  placeholder="Select storage class"
-                                  className="w-full"
-                                />
-                              </div>
-                              <div className="flex flex-col gap-2 w-full">
-                                <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Capacity{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </span>
-                                <NumberInput
-                                  value={
-                                    template.capacity ? parseInt(template.capacity) : undefined
-                                  }
-                                  onChange={(val) =>
-                                    updateVolumeClaimTemplate(index, {
-                                      capacity: val?.toString() || '',
-                                    })
-                                  }
-                                  suffix="GiB"
-                                  width="sm"
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          {(isV2 || template.useExistingPV) && (
-                            <div className="flex flex-col gap-1">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Persistent Volume{' '}
-                                <span className="text-[var(--color-state-danger)]">*</span>
-                              </span>
-                              <Select
-                                options={[
-                                  { value: 'pv-1', label: 'pv-1' },
-                                  { value: 'pv-2', label: 'pv-2' },
-                                ]}
-                                value={template.persistentVolume}
-                                onChange={(val) =>
-                                  updateVolumeClaimTemplate(index, {
-                                    persistentVolume: val,
-                                  })
-                                }
-                                placeholder="Select persistent volume"
-                                className="w-full"
-                              />
-                            </div>
-                          )}
-
-                          <div className="flex flex-col gap-2">
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Access Modes{' '}
-                              <span className="text-[var(--color-state-danger)]">*</span>
-                            </span>
-                            <div className="flex flex-col gap-2">
-                              <Checkbox
-                                label="Single node read-write"
-                                checked={template.accessModes?.readWriteOnce}
-                                onChange={(checked) =>
-                                  updateVolumeClaimTemplate(index, {
-                                    accessModes: {
-                                      ...template.accessModes,
-                                      readWriteOnce: checked,
-                                    },
-                                  })
-                                }
-                              />
-                              <Checkbox
-                                label="Many nodes read-only"
-                                checked={template.accessModes?.readOnlyMany}
-                                onChange={(checked) =>
-                                  updateVolumeClaimTemplate(index, {
-                                    accessModes: {
-                                      ...template.accessModes,
-                                      readOnlyMany: checked,
-                                    },
-                                  })
-                                }
-                              />
-                              <Checkbox
-                                label="Many nodes read-write"
-                                checked={template.accessModes?.readWriteMany}
-                                onChange={(checked) =>
-                                  updateVolumeClaimTemplate(index, {
-                                    accessModes: {
-                                      ...template.accessModes,
-                                      readWriteMany: checked,
-                                    },
-                                  })
-                                }
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="w-fit">
-                      <Button
-                        variant="muted"
-                        appearance="outline"
-                        size="sm"
-                        onClick={addVolumeClaimTemplate}
-                      >
-                        <span className="inline-flex items-center gap-1">
-                          <IconCirclePlus size={12} />
-                          Add Volume Claim Template
-                        </span>
-                      </Button>
-                    </div>
-                  </div>
                 </div>
               </SectionCard.Content>
             </SectionCard>

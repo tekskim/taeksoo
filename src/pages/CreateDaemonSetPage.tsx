@@ -235,20 +235,6 @@ interface CreatePVCVolume {
 
 type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume;
 
-// Volume Claim Template
-interface VolumeClaimTemplate {
-  name: string;
-  useExistingPV: boolean;
-  storageClass: string;
-  capacity: string;
-  persistentVolume: string;
-  accessModes: {
-    readWriteOnce: boolean;
-    readOnlyMany: boolean;
-    readWriteMany: boolean;
-  };
-}
-
 // Node Affinity Term
 interface NodeAffinityTerm {
   priority: string;
@@ -1270,22 +1256,6 @@ export function CreateDaemonSetPage() {
   const [volumes, setVolumes] = useState<Volume[]>([]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
-  // Volume Claim Templates state
-  const [volumeClaimTemplates, setVolumeClaimTemplates] = useState<VolumeClaimTemplate[]>(
-    isV2
-      ? [
-          {
-            name: '',
-            useExistingPV: false,
-            storageClass: '',
-            capacity: '',
-            persistentVolume: '',
-            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-          },
-        ]
-      : []
-  );
-
   // Node Affinity state
   const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>(
     isV2
@@ -1639,37 +1609,6 @@ export function CreateDaemonSetPage() {
       setVolumes(newVolumes);
     },
     [volumes]
-  );
-
-  // Volume Claim Template management
-  const addVolumeClaimTemplate = useCallback(() => {
-    setVolumeClaimTemplates([
-      ...volumeClaimTemplates,
-      {
-        name: '',
-        useExistingPV: false,
-        storageClass: '',
-        capacity: '',
-        persistentVolume: '',
-        accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      },
-    ]);
-  }, [volumeClaimTemplates]);
-
-  const removeVolumeClaimTemplate = useCallback(
-    (index: number) => {
-      setVolumeClaimTemplates(volumeClaimTemplates.filter((_, i) => i !== index));
-    },
-    [volumeClaimTemplates]
-  );
-
-  const updateVolumeClaimTemplate = useCallback(
-    (index: number, updates: Partial<VolumeClaimTemplate>) => {
-      const newTemplates = [...volumeClaimTemplates];
-      newTemplates[index] = { ...newTemplates[index], ...updates };
-      setVolumeClaimTemplates(newTemplates);
-    },
-    [volumeClaimTemplates]
   );
 
   // Nameserver management
