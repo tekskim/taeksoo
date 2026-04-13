@@ -4076,20 +4076,16 @@ export function CreateCronJobPage() {
                         </div>
                       ))}
 
-                      <Dropdown.Select
-                        value=""
-                        onChange={(val) => addVolume(String(val))}
-                        placeholder="Add volume"
-                        width="md"
-                      >
-                        <Dropdown.Option value="configmap" label="ConfigMap" />
-                        <Dropdown.Option value="secret" label="Secret" />
-                        <Dropdown.Option value="pvc" label="Persistent volume claim" />
-                        <Dropdown.Option
-                          value="create-pvc"
-                          label="Create persistent volume claim"
-                        />
-                      </Dropdown.Select>
+                      <Dropdown.Root value="" onChange={(val) => addVolume(val)}>
+                        <Dropdown.Select placeholder="Add volume" width="md">
+                          <Dropdown.Option value="configmap">ConfigMap</Dropdown.Option>
+                          <Dropdown.Option value="secret">Secret</Dropdown.Option>
+                          <Dropdown.Option value="pvc">Persistent volume claim</Dropdown.Option>
+                          <Dropdown.Option value="create-pvc">
+                            Create persistent volume claim
+                          </Dropdown.Option>
+                        </Dropdown.Select>
+                      </Dropdown.Root>
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>

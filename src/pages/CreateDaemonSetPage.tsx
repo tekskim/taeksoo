@@ -4137,15 +4137,12 @@ export function CreateDaemonSetPage() {
                         </div>
                       ))}
 
-                      <Dropdown.Select
-                        value=""
-                        onChange={(val) => addVolume(String(val))}
-                        placeholder="Add volume"
-                        width="md"
-                      >
-                        <Dropdown.Option value="configmap" label="ConfigMap" />
-                        <Dropdown.Option value="secret" label="Secret" />
-                      </Dropdown.Select>
+                      <Dropdown.Root value="" onChange={(val) => addVolume(val)}>
+                        <Dropdown.Select placeholder="Add volume" width="md">
+                          <Dropdown.Option value="configmap">ConfigMap</Dropdown.Option>
+                          <Dropdown.Option value="secret">Secret</Dropdown.Option>
+                        </Dropdown.Select>
+                      </Dropdown.Root>
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>
