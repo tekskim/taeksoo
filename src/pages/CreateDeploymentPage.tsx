@@ -31,6 +31,7 @@ import {
   fixedColumns,
   columnMinWidths,
   InlineMessage,
+  Dropdown,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -47,7 +48,6 @@ import {
   IconChevronRight,
   IconInfoCircle,
   IconPencilCog,
-  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -2189,13 +2189,6 @@ export function CreateDeploymentPage() {
                 aria-label="Customize cluster appearance"
               >
                 <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
-                aria-label="Access Token"
-              >
-                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -4429,18 +4422,20 @@ export function CreateDeploymentPage() {
                         </div>
                       ))}
 
-                      <Select
-                        options={[
-                          { value: 'configmap', label: 'ConfigMap' },
-                          { value: 'secret', label: 'Secret' },
-                          { value: 'pvc', label: 'Persistent volume claim' },
-                          { value: 'create-pvc', label: 'Create persistent volume claim' },
-                        ]}
+                      <Dropdown.Select
                         value=""
-                        onChange={(val) => addVolume(val)}
+                        onChange={(val) => addVolume(String(val))}
                         placeholder="Add volume"
-                        fullWidth
-                      />
+                        width="md"
+                      >
+                        <Dropdown.Option value="configmap" label="ConfigMap" />
+                        <Dropdown.Option value="secret" label="Secret" />
+                        <Dropdown.Option value="pvc" label="Persistent volume claim" />
+                        <Dropdown.Option
+                          value="create-pvc"
+                          label="Create persistent volume claim"
+                        />
+                      </Dropdown.Select>
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>

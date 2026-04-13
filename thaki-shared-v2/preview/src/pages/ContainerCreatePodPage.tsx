@@ -27,7 +27,6 @@ import { Badge } from '@shared/components/Badge';
 import { Tag } from '@shared/components/Tag';
 import { RadioGroup, Radio, StandaloneRadioScope } from '../components/TdsRadioCompat';
 import {
-  IconBell,
   IconTerminal2,
   IconFile,
   IconCopy,
@@ -3419,18 +3418,17 @@ export function ContainerCreatePodPage() {
                     </div>
                   ))}
 
-                  <Select
-                    options={[
-                      { value: 'configmap', label: 'ConfigMap' },
-                      { value: 'secret', label: 'Secret' },
-                      { value: 'pvc', label: 'Persistent volume claim' },
-                      { value: 'create-pvc', label: 'Create persistent volume claim' },
-                    ]}
+                  <Dropdown.Select
                     value=""
-                    onChange={(val) => addVolume(val)}
+                    onChange={(val) => addVolume(String(val))}
                     placeholder="Add volume"
-                    className="w-full"
-                  />
+                    width="md"
+                  >
+                    <Dropdown.Option value="configmap" label="ConfigMap" />
+                    <Dropdown.Option value="secret" label="Secret" />
+                    <Dropdown.Option value="pvc" label="Persistent volume claim" />
+                    <Dropdown.Option value="create-pvc" label="Create persistent volume claim" />
+                  </Dropdown.Select>
                 </div>
               </SectionCard.Content>
             </SectionCard>
