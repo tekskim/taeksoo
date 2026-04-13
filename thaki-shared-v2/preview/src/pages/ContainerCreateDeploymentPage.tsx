@@ -1255,50 +1255,7 @@ export function ContainerCreateDeploymentPage() {
   const [priorityClassName, setPriorityClassName] = useState<string>('');
 
   // Volumes state
-  const [volumes, setVolumes] = useState<Volume[]>([
-    {
-      type: 'pvc' as const,
-      volumeName: 'vol-00002',
-      pvcName: 'pvc-web-data',
-      readOnly: false,
-    },
-    { type: 'pvc' as const, volumeName: 'vol-00003', pvcName: 'pvc-logs', readOnly: false },
-    {
-      type: 'configmap' as const,
-      volumeName: 'vol-00004',
-      configMapName: 'app-config',
-      optional: false,
-    },
-    {
-      type: 'secret' as const,
-      volumeName: 'vol-00005',
-      secretName: 'app-secret',
-      optional: false,
-      defaultMode: '',
-    },
-    {
-      type: 'create-pvc' as const,
-      volumeName: 'vol-00006',
-      pvcName: '',
-      useExistingPV: false,
-      storageClass: '',
-      capacity: '',
-      persistentVolume: '',
-      accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      readOnly: false,
-    },
-    {
-      type: 'create-pvc' as const,
-      volumeName: 'vol-00007',
-      pvcName: '',
-      useExistingPV: true,
-      storageClass: '',
-      capacity: '',
-      persistentVolume: '',
-      accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      readOnly: false,
-    },
-  ]);
+  const [volumes, setVolumes] = useState<Volume[]>([]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
   // Volume Claim Templates state

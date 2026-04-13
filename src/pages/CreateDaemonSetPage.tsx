@@ -1267,21 +1267,7 @@ export function CreateDaemonSetPage() {
   const [priorityClassName, setPriorityClassName] = useState<string>('');
 
   // Volumes state
-  const [volumes, setVolumes] = useState<Volume[]>([
-    {
-      type: 'configmap' as const,
-      volumeName: 'vol-00001',
-      configMapName: 'app-config',
-      optional: false,
-    },
-    {
-      type: 'secret' as const,
-      volumeName: 'vol-00002',
-      secretName: 'app-secret',
-      optional: false,
-      defaultMode: '',
-    },
-  ]);
+  const [volumes, setVolumes] = useState<Volume[]>([]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
   // Volume Claim Templates state
