@@ -48,7 +48,7 @@ const mockProjects: Project[] = [
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -59,7 +59,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -68,7 +68,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -259,8 +261,6 @@ function ProjectSelectorGuidelines() {
         </Prose>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Variants */}
       <VStack gap={4}>
         <SectionTitle>Variants</SectionTitle>
@@ -293,8 +293,6 @@ function ProjectSelectorGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Project Card */}
       <VStack gap={4}>
@@ -344,8 +342,6 @@ function ProjectSelectorGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Interaction */}
       <VStack gap={4}>
         <SectionTitle>Interaction</SectionTitle>
@@ -361,8 +357,6 @@ function ProjectSelectorGuidelines() {
           </ul>
         </Prose>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Best Practices */}
       <VStack gap={4}>
@@ -423,7 +417,7 @@ export function ProjectSelectorPage() {
                 사이드바 전체 폭 트리거. 프로젝트 이름 + 전환 아이콘을 표시한다.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <DefaultDemo />
             </div>
           </VStack>
@@ -435,7 +429,7 @@ export function ProjectSelectorPage() {
                 트리거 클릭 시 열리는 드롭다운 패널. 검색 입력과 프로젝트 카드 리스트로 구성된다.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <StaticDropdown />
             </div>
           </VStack>
@@ -447,7 +441,7 @@ export function ProjectSelectorPage() {
                 프로젝트 카드의 3가지 상태: 선택됨(Selected), 기본(Default), 비활성(Disabled).
               </span>
             </VStack>
-            <div className="flex gap-4 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex gap-4 flex-wrap p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={1.5} className="w-[260px]">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Selected</span>
                 <ProjectCard project={mockProjects[0]} isSelected />
@@ -470,7 +464,7 @@ export function ProjectSelectorPage() {
                 38x38px 정사각형 아이콘 버튼. Tooltip으로 프로젝트 이름을 표시한다.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SidebarIconDemo />
             </div>
           </VStack>

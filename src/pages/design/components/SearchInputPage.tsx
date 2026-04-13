@@ -75,7 +75,7 @@ export function SearchInputPage() {
           {/* Composition */}
           <VStack gap={6} align="stretch">
             <h3 className="text-heading-h5 text-[var(--color-text-default)]">Composition</h3>
-            <pre className="text-body-sm text-[var(--color-text-muted)] font-mono p-4 bg-[var(--color-surface-muted)] rounded-[var(--primitive-radius-md)] overflow-x-auto">
+            <pre className="text-body-sm text-[var(--color-text-muted)] font-mono p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-lg)] overflow-x-auto">
               {`[ Search / Filter field ]
 
 Status: Running   Region: Seoul   Owner: admin   ✕`}
@@ -450,7 +450,7 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               일반 텍스트 기반 검색. 필터 키 없이 자유 텍스트로 검색.
             </span>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <SearchInput placeholder="Search resources" size="sm" className="w-[320px]" />
             </div>
           </VStack>
@@ -459,7 +459,7 @@ Status: Running   Region: Seoul   Owner: admin   ✕`}
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               sm, md 사이즈를 지원한다.
             </span>
-            <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={2}>
                 <span className="text-body-xs text-[var(--color-text-subtle)]">Small</span>
                 <SearchInput

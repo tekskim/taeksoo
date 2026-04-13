@@ -210,7 +210,7 @@ function UsageChartGuidelines() {
         </TableWrapper>
 
         <SubSectionTitle>Composition</SubSectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[Label]        [Value]
 [██████░░░░░░░░]`}</pre>
         </div>
@@ -505,7 +505,7 @@ export function UsageChartPage() {
       ]}
       preview={
         <div className="flex gap-8 items-start flex-wrap">
-          <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+          <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
             <GaugeHoverTooltip used={2} max={10}>
               <ProgressBar variant="quota" label="Instance" value={2} max={10} />
             </GaugeHoverTooltip>
@@ -534,7 +534,7 @@ export function UsageChartPage() {
                 Label과 Value(사용량/총량)를 함께 표시. 복수 리소스 비교에 적합.
               </span>
             </VStack>
-            <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <GaugeHoverTooltip used={2} max={10}>
                 <ProgressBar variant="quota" label="Instance" value={2} max={10} />
               </GaugeHoverTooltip>
@@ -557,7 +557,7 @@ export function UsageChartPage() {
                 데이터를 불러오는 동안 스피너를 중앙에 표시한다.
               </span>
             </VStack>
-            <div className="w-[280px] flex items-center justify-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)] h-[176px]">
+            <div className="w-[280px] flex items-center justify-center p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] h-[176px]">
               <Loading size="md" text="" />
             </div>
           </VStack>
@@ -605,7 +605,7 @@ export function UsageChartPage() {
             </VStack>
             <div className="flex gap-6 flex-wrap items-start">
               {/* Safe — 사용량 낮고 추가해도 여유 */}
-              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                 <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
                   Safe (used + new &lt; 70%)
                 </div>
@@ -636,7 +636,7 @@ export function UsageChartPage() {
               </div>
 
               {/* Warning — 추가하면 경고 영역 진입 */}
-              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                 <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
                   Warning (used + new ≥ 70%)
                 </div>
@@ -667,7 +667,7 @@ export function UsageChartPage() {
               </div>
 
               {/* Danger — 추가하면 위험 영역 진입 */}
-              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+              <div className="w-[280px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
                 <div className="text-body-sm text-[var(--color-text-muted)] font-medium">
                   Danger (used + new ≥ 90%)
                 </div>

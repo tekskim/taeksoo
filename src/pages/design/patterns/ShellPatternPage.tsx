@@ -26,7 +26,7 @@ const SAMPLE_LOGS = [
 
 function ShellPreview() {
   return (
-    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+    <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
       {/* Header / Tab Bar */}
       <div className="flex items-center bg-[var(--color-surface-subtle)]">
         <div className="flex items-center">
@@ -222,7 +222,7 @@ export function ShellPatternPage() {
                 <li>표준 터미널 컬러 스킴 지원</li>
                 <li>스크롤 가능 (명령 이력 유지)</li>
               </ul>
-              <div className="p-3 bg-[var(--color-state-warning-bg)] rounded-[var(--primitive-radius-md)] border border-[var(--color-border-default)]">
+              <div className="p-3 bg-[var(--color-state-warning-bg)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
                 <p className="text-body-md text-[var(--color-text-muted)]">
                   ⚠️ Log Viewer (View Log) 기능의 경우 GUI 스타일만 동일하며 메인 터미널 영역의
                   입력은 불가, 데이터 출력 결과만 보여줌.

@@ -616,7 +616,7 @@ function ErrorAlertGuidelines() {
               기록 데이터 흐름
             </p>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-4 font-mono text-body-sm text-[var(--color-text-default)] leading-relaxed whitespace-pre">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-sm text-[var(--color-text-default)] leading-relaxed whitespace-pre">
             {`Event 발생
   ↓
 App Notification Center 기록

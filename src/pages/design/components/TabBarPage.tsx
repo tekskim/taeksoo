@@ -7,7 +7,7 @@ import { TabBar, useTabBar, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -60,7 +62,7 @@ function TabBarPreview() {
   });
 
   return (
-    <div className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden w-full">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden w-full">
       <TabBar
         tabs={tabs}
         activeTab={activeTab}
@@ -131,7 +133,7 @@ function TabBarDemo() {
             없음.
           </span>
         </VStack>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
           <TabBar
             tabs={tabs}
             activeTab={activeTab}
@@ -153,7 +155,7 @@ function TabBarDemo() {
             스크롤은 발생하지 않는다.
           </span>
         </VStack>
-        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] overflow-hidden">
+        <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
           <TabBar
             tabs={manyTabsDemo.tabs}
             activeTab={manyTabsDemo.activeTab}
@@ -177,7 +179,7 @@ function TabBarGuidelines() {
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[탭 영역 (a)] ···  [+ 버튼 (b)]   [— □ × (c)]`}</pre>
         </div>
 
@@ -259,8 +261,6 @@ function TabBarGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* States */}
       <VStack gap={4}>
         <SectionTitle>States</SectionTitle>
@@ -305,8 +305,6 @@ function TabBarGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -357,8 +355,6 @@ function TabBarGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -375,8 +371,6 @@ function TabBarGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>

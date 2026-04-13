@@ -102,7 +102,7 @@ export function CsvDownloadPage() {
               <p className="text-body-md text-[var(--color-text-muted)]">
                 다운로드는 다음 흐름으로 동작한다.
               </p>
-              <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
+              <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
                 {`(사용자) (선택) Filter 적용
 ↓
 (사용자) Download 버튼 클릭
@@ -148,7 +148,7 @@ export function CsvDownloadPage() {
                   <li>ZIP 파일 다운로드</li>
                   <li>
                     파일명 규칙:{' '}
-                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                       {'{resource_name}_{YYYYMMDD}_{HHMM}.zip'}
                     </span>
                   </li>
@@ -166,12 +166,12 @@ export function CsvDownloadPage() {
                 <span className="text-label-sm text-[var(--color-text-subtle)]">토스트 메시지</span>
                 <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                   <li>
-                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                       {'Failed to download the {resource_name} list.'}
                     </span>
                   </li>
                   <li>
-                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                    <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                       {'{resource_name} 목록 다운로드를 실패했습니다.'}
                     </span>
                   </li>
@@ -241,7 +241,7 @@ export function CsvDownloadPage() {
                 <li>포맷: CSV, ZIP(대용량 파일일 때)</li>
                 <li>
                   파일명 규칙:{' '}
-                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                     {'{resource_name}_{YYYYMMDD}_{HHMM}.csv / .zip'}
                   </span>
                 </li>
@@ -263,7 +263,7 @@ export function CsvDownloadPage() {
                 <li>Only icon 버튼</li>
                 <li>
                   호버 시 툴팁:{' '}
-                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                     "Download CSV"
                   </span>
                 </li>
@@ -273,7 +273,7 @@ export function CsvDownloadPage() {
             {/* 2) Modal */}
             <VStack gap={3}>
               <h4 className="text-heading-h6 text-[var(--color-text-default)]">2) Modal</h4>
-              <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+              <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
                 <VStack gap={2}>
                   <HStack gap={2} align="center">
                     <span className="text-label-sm text-[var(--color-text-subtle)] w-[60px]">
@@ -312,13 +312,13 @@ export function CsvDownloadPage() {
               </p>
               <ul className="list-disc pl-5 text-body-md text-[var(--color-text-muted)] space-y-1">
                 <li>
-                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                     EN
                   </span>{' '}
                   {'Failed to download the {resource_name} list.'}
                 </li>
                 <li>
-                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--primitive-radius-sm)]">
+                  <span className="font-mono text-body-sm bg-[var(--color-surface-subtle)] px-1.5 py-0.5 rounded-[var(--radius-sm)]">
                     KO
                   </span>{' '}
                   {'{resource_name} 목록 다운로드를 실패했습니다.'}

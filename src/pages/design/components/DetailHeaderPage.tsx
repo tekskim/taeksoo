@@ -14,7 +14,7 @@ import {
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -25,7 +25,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -34,7 +34,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -89,12 +91,10 @@ function DetailHeaderGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`┌─────────────────────────────────────────┐
 │  [Title]                  [Actions]     │  ← 1. 헤더 영역
 ├─────────────────────────────────────────┤
@@ -311,8 +311,6 @@ function DetailHeaderGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Behavior */}
       <VStack gap={4}>
         <SectionTitle>Behavior</SectionTitle>
@@ -325,8 +323,6 @@ function DetailHeaderGuidelines() {
           </Prose>
         </VStack>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Usage Guidelines */}
       <VStack gap={4}>
@@ -342,8 +338,6 @@ function DetailHeaderGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -465,7 +459,7 @@ export function DetailHeaderPage() {
                 StatusIndicator로 실시간 상태 표시. 항상 첫 번째 카드에 배치.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <div className="grid grid-cols-4 gap-2">
                 <DetailHeader.InfoCard label="Status" value="Active" status="active" />
                 <DetailHeader.InfoCard label="Status" value="Shutoff" status="shutoff" />
@@ -482,7 +476,7 @@ export function DetailHeaderPage() {
                 클립보드 복사 아이콘과 함께 표시. ID, IP 등 식별자에 사용.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <div className="grid grid-cols-2 gap-2">
                 <DetailHeader.InfoCard
                   label="Instance ID"
@@ -501,7 +495,7 @@ export function DetailHeaderPage() {
                 단순 텍스트 값 표시. Host, Created at, Availability zone 등.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <div className="grid grid-cols-3 gap-2">
                 <DetailHeader.InfoCard label="Host" value="compute-03" />
                 <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025 14:30:22" />
@@ -517,7 +511,7 @@ export function DetailHeaderPage() {
                 Info Grid 없이 Title과 Actions만 표시. 표시할 핵심 속성이 없는 리소스에 사용.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <DetailHeader>
                 <DetailHeader.Title>my-configmap</DetailHeader.Title>
                 <DetailHeader.Actions>

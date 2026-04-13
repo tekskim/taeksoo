@@ -36,7 +36,7 @@ function PopoverArrowTriangles({ position }: { position: 'top' | 'bottom' }) {
 
 function PopoverShape({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-lg">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-lg">
       {children}
     </div>
   );
@@ -102,8 +102,6 @@ function PopoverPageGuidelines() {
           </ul>
         </Prose>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       <DosDonts
         doItems={[

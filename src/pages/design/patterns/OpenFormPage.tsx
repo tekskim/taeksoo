@@ -526,7 +526,7 @@ export function OpenFormPage() {
               </p>
             </VStack>
 
-            <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)] border border-[var(--color-border-default)]">
+            <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
               <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre-wrap font-mono leading-relaxed">
                 {`PageShell
 └── VStack gap={6}

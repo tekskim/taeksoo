@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { Select } from '../Select';
 
 /* ----------------------------------------
    Types
@@ -34,6 +35,8 @@ export interface DatePickerProps {
   disabled?: boolean;
   /** First day of week (0 = Sunday, 1 = Monday) */
   firstDayOfWeek?: 0 | 1;
+  /** Show time selection (hour and minute) below calendar */
+  showTime?: boolean;
   /** Custom class name */
   className?: string;
   /** @deprecated thaki-ui compatibility - use onChange/onRangeChange instead */
@@ -196,6 +199,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   maxDate,
   disabled = false,
   firstDayOfWeek = 0,
+  showTime = false,
   className = '',
   // thaki-ui compatibility props
   onApply,
@@ -230,6 +234,36 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const [selectingRangeEnd, setSelectingRangeEnd] = useState(false);
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const currentHour = value ? String(value.getHours()).padStart(2, '0') : '00';
+  const currentMinute = value ? String(value.getMinutes()).padStart(2, '0') : '00';
+
+  const hourOptions = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, i) => ({
+        value: String(i).padStart(2, '0'),
+        label: String(i).padStart(2, '0'),
+      })),
+    []
+  );
+  const minuteOptions = useMemo(
+    () =>
+      Array.from({ length: 60 }, (_, i) => ({
+        value: String(i).padStart(2, '0'),
+        label: String(i).padStart(2, '0'),
+      })),
+    []
+  );
+
+  const handleTimeChange = useCallback(
+    (hour: number, minute: number) => {
+      if (!value || mode !== 'single') return;
+      const updated = new Date(value);
+      updated.setHours(hour, minute, 0, 0);
+      onChange?.(updated);
+    },
+    [value, mode, onChange]
+  );
 
   const weekdays = firstDayOfWeek === 1 ? WEEKDAYS_MONDAY_START : WEEKDAYS_SUNDAY_START;
 
@@ -591,6 +625,34 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           })}
         </div>
       </div>
+
+      {/* Time Picker */}
+      {showTime && mode === 'single' && (
+        <div className="flex items-center gap-2 pt-1 border-t border-[var(--color-border-subtle)]">
+          <span className="text-label-sm text-[var(--color-text-muted)] select-none">Time</span>
+          <div className="flex items-center gap-1.5 ml-auto">
+            <Select
+              options={hourOptions}
+              value={currentHour}
+              onChange={(v) => handleTimeChange(Number(v), Number(currentMinute))}
+              disabled={disabled || !value}
+              size="sm"
+              width="xs"
+              aria-label="Hour"
+            />
+            <span className="text-body-sm text-[var(--color-text-muted)] select-none">:</span>
+            <Select
+              options={minuteOptions}
+              value={currentMinute}
+              onChange={(v) => handleTimeChange(Number(currentHour), Number(v))}
+              disabled={disabled || !value}
+              size="sm"
+              width="xs"
+              aria-label="Minute"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

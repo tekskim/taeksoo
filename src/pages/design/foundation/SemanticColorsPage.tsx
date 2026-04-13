@@ -33,7 +33,7 @@ export function SemanticColorsPage() {
       preview={
         <div
           data-theme={previewTheme}
-          className={`p-6 rounded-[var(--primitive-radius-lg)] transition-colors bg-[var(--color-surface-default)] ${isDark ? 'dark' : ''}`}
+          className={`p-6 rounded-[var(--radius-lg)] transition-colors bg-[var(--color-surface-default)] ${isDark ? 'dark' : ''}`}
         >
           <VStack gap={8}>
             {/* Action & Text */}

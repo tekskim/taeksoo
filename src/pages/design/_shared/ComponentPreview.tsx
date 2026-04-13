@@ -23,7 +23,7 @@ export function ComponentPreview({
   );
 
   return (
-    <div className="border border-[var(--color-border-default)]">
+    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-muted)]">
         <span className="text-body-xs text-[var(--color-text-subtle)] font-medium uppercase tracking-wider">
           Preview
@@ -32,7 +32,7 @@ export function ComponentPreview({
           {!showCode && (
             <button
               onClick={() => setPreviewTheme(previewTheme === 'light' ? 'dark' : 'light')}
-              className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+              className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
               aria-label={`Switch to ${previewTheme === 'light' ? 'dark' : 'light'} theme`}
             >
               {previewTheme === 'light' ? (
@@ -45,7 +45,7 @@ export function ComponentPreview({
           )}
           <button
             onClick={() => setShowCode(!showCode)}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--primitive-radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="flex items-center gap-1.5 px-2 py-1 rounded-[var(--radius-sm)] text-body-xs text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-hover)] transition-colors"
             aria-label={showCode ? 'Show preview' : 'Show code'}
           >
             {showCode ? (

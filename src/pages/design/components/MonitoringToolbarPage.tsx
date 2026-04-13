@@ -6,7 +6,7 @@ import { MonitoringToolbar, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -17,7 +17,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -26,7 +26,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -54,7 +56,7 @@ function MonitoringToolbarGuidelines() {
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[30m] [1h] [6h] [12h] [24h] | Period | Refresh`}</pre>
         </div>
         <TableWrapper>
@@ -86,8 +88,6 @@ function MonitoringToolbarGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -123,7 +123,7 @@ function MonitoringToolbarGuidelines() {
               <li>그래프 데이터 갱신</li>
             </ol>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
             <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[Period]
 →
 2026-03-01 ~ 2026-03-07  [Clear]`}</pre>
@@ -148,8 +148,6 @@ function MonitoringToolbarGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -166,8 +164,6 @@ function MonitoringToolbarGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Content Guidelines */}
       <VStack gap={4}>
@@ -207,7 +203,7 @@ function MonitoringToolbarGuidelines() {
           <Prose>
             <p>기간 표기는 로케일 기준을 따른다.</p>
           </Prose>
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
             <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`Mar 1 – Mar 7, 2026
 2026-03-01 ~ 2026-03-07`}</pre>
           </div>
@@ -237,7 +233,7 @@ export function MonitoringToolbarPage() {
   onRefresh={() => {}}
 />`}
         >
-          <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+          <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
             <MonitoringToolbar
               onTimeRangeChange={() => {}}
               onCustomPeriodChange={() => {}}
@@ -255,7 +251,7 @@ export function MonitoringToolbarPage() {
                 기본값 30m이 선택된 상태. 라디오 버튼처럼 한 번에 하나만 활성화.
               </span>
             </VStack>
-            <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <MonitoringToolbar
                 onTimeRangeChange={() => {}}
                 onCustomPeriodChange={() => {}}

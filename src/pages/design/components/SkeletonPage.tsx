@@ -4,7 +4,7 @@ import { VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -15,7 +15,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -24,7 +24,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -49,7 +51,7 @@ function Prose({ children }: { children: React.ReactNode }) {
 function SkeletonBlock({ width = '100%', height = '16px' }: { width?: string; height?: string }) {
   return (
     <div
-      className="rounded-[var(--primitive-radius-sm)] animate-pulse bg-[var(--color-border-default)]"
+      className="rounded-[var(--radius-sm)] animate-pulse bg-[var(--color-border-default)]"
       style={{ width, height }}
     />
   );
@@ -57,7 +59,7 @@ function SkeletonBlock({ width = '100%', height = '16px' }: { width?: string; he
 
 function SkeletonPreview() {
   return (
-    <div className="w-full max-w-[480px] flex flex-col gap-6 p-6 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+    <div className="w-full max-w-[480px] flex flex-col gap-6 p-6 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
       <VStack gap={3}>
         <span className="text-label-sm text-[var(--color-text-subtle)]">Text Skeleton</span>
         <VStack gap={2}>
@@ -122,7 +124,7 @@ function ListPageSkeleton() {
   ];
 
   return (
-    <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)] overflow-hidden">
+    <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] overflow-hidden">
       {/* Page Header */}
       <div className="flex items-center justify-between px-6 pt-5 pb-4">
         <SkeletonBlock width="140px" height="20px" />
@@ -153,7 +155,7 @@ function ListPageSkeleton() {
       {/* Table */}
       <div className="px-6 pb-5">
         {/* Table Header */}
-        <div className="flex items-center gap-3 px-3 py-2 bg-[var(--color-surface-subtle)] rounded-t-[var(--primitive-radius-sm)] border border-[var(--color-border-default)]">
+        <div className="flex items-center gap-3 px-3 py-2 bg-[var(--color-surface-subtle)] rounded-t-[var(--radius-sm)] border border-[var(--color-border-default)]">
           {COLUMNS.map((col, i) => (
             <div
               key={`h-${i}`}
@@ -241,8 +243,6 @@ function SkeletonGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Variants */}
       <VStack gap={4}>
         <SectionTitle>Variants</SectionTitle>
@@ -287,8 +287,6 @@ function SkeletonGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -358,8 +356,6 @@ function SkeletonGuidelines() {
           </Prose>
         </VStack>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Usage Guidelines */}
       <VStack gap={4}>

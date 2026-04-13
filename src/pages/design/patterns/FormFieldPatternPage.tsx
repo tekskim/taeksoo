@@ -21,7 +21,7 @@ export function FormFieldPatternPage() {
           {/* Composition */}
           <VStack gap={6} align="stretch">
             <h3 className="text-heading-h5 text-[var(--color-text-default)]">Composition</h3>
-            <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
+            <pre className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] text-body-sm text-[var(--color-text-muted)] overflow-x-auto whitespace-pre">
               {`<구조>
 Label
 Description
@@ -216,7 +216,7 @@ Constraint text / Validation message`}
                 <VStack
                   gap={2}
                   align="stretch"
-                  className="p-4 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]"
+                  className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
                 >
                   <span className="text-body-sm text-[var(--color-text-subtle)]">기본 상태:</span>
                   <FormField
@@ -229,7 +229,7 @@ Constraint text / Validation message`}
                 <VStack
                   gap={2}
                   align="stretch"
-                  className="p-4 border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)]"
+                  className="p-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
                 >
                   <span className="text-body-sm text-[var(--color-text-subtle)]">
                     입력 오류 발생:

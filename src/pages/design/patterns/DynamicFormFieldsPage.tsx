@@ -702,7 +702,7 @@ function DisclosureNestedGridDemo() {
       {terms.map((term, ti) => (
         <div
           key={term.id}
-          className="border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] w-full overflow-hidden"
+          className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] w-full overflow-hidden"
         >
           <Disclosure
             open={openIds.has(term.id)}
@@ -872,7 +872,7 @@ const disclosureNestedGridCode = `<VStack gap={2}>
   {terms.map((term, i) => (
     <div key={term.id}
       className="border border-[var(--color-border-default)]
-        rounded-[var(--primitive-radius-md)] w-full overflow-hidden">
+        rounded-[var(--radius-lg)] w-full overflow-hidden">
       <Disclosure defaultOpen={i === 0}>
         {/* Trigger header — bg-subtle with badges */}
         <div className="px-4 py-3 bg-[var(--color-surface-subtle)]">
@@ -1220,26 +1220,26 @@ export function DynamicFormFieldsPage() {
 
           <h4 className="text-heading-h6 text-[var(--color-text-default)]">Structure</h4>
           <VStack gap={2}>
-            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Dynamic Field Table (List):</strong> bg-subtle container → column headers
                 (text-label-sm) → input rows (grid-aligned, gap-1.5) → Add button (gap-1.5)
               </p>
             </div>
-            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>With Label &amp; Description (List):</strong> VStack gap-2 → label
                 (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
                 headers + input rows (gap-1.5) + Add button (gap-1.5)
               </p>
             </div>
-            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>With Label (List):</strong> VStack gap-2 → label (text-label-lg) → bg-subtle
                 container → column headers + input rows (gap-1.5) + Add button (gap-1.5)
               </p>
             </div>
-            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>With Description Headers (List):</strong> VStack gap-2 → label
                 (text-label-lg) + description (text-body-md, subtle) → bg-subtle container → column
@@ -1247,13 +1247,13 @@ export function DynamicFormFieldsPage() {
                 rows (grid-aligned, gap-1.5) → Add button (gap-1.5)
               </p>
             </div>
-            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Repeatable Field Group (Card):</strong> bg-subtle outer container → white
                 inner cards (each with headers + close button + input rows) → Add button (mt-1)
               </p>
             </div>
-            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)]">
+            <div className="p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
               <p className="text-body-sm text-[var(--color-text-default)]">
                 <strong>Disclosure with Nested Grid (Disclosure):</strong> bordered container with
                 overflow-hidden → Disclosure → bg-subtle trigger header (title + badges + summary) →

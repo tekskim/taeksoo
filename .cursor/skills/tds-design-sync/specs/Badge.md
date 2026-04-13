@@ -1,6 +1,6 @@
 # Badge Design Spec
 
-> Extracted from TDS `src/design-system/components/Badge/Badge.tsx`  
+> Extracted from TDS `src/design-system/components/Badge/Badge.tsx`
 > thaki-shared target: `src/components/Badge/` (1:1 매핑, component-map)
 
 ## Component Mapping

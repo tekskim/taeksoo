@@ -7,7 +7,7 @@ import { Tabs, TabList, Tab, TabPanel, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -18,7 +18,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -27,7 +27,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -122,12 +124,10 @@ function TabsGuidelines() {
         </TableWrapper>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] p-3">
+        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
           <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`[ Tab Item 1 (active) ]  [ Tab Item 2 ]  [ Tab Item 3 ]
 ──────────────────────`}</pre>
         </div>
@@ -163,8 +163,6 @@ function TabsGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* States */}
       <VStack gap={4}>
@@ -215,8 +213,6 @@ function TabsGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -277,8 +273,6 @@ function TabsGuidelines() {
           </Prose>
         </VStack>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Usage Guidelines */}
       <VStack gap={4}>
@@ -344,7 +338,7 @@ export function TabsPage() {
                 선택된 탭 하단에 인디케이터 라인을 표시하는 기본형. Detail Page의 섹션 구분에 사용.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Tabs defaultValue="tab1" size="sm">
                 <TabList>
                   <Tab value="tab1">Details</Tab>
@@ -362,7 +356,7 @@ export function TabsPage() {
                 선택된 탭을 박스 형태로 강조하는 캡슐형. 폼 내부 또는 카드 내 옵션 전환에 사용.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <CapsuleTabDemo />
             </div>
           </VStack>
@@ -374,7 +368,7 @@ export function TabsPage() {
                 Default, Active, Hover, Focused, Disabled 상태.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Tabs defaultValue="tab1" size="sm">
                 <TabList>
                   <Tab value="tab1">Active</Tab>
@@ -395,7 +389,7 @@ export function TabsPage() {
                 탭 클릭 시 해당 콘텐츠 패널로 즉시 전환. 페이지 리로드 없이 처리.
               </span>
             </VStack>
-            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <Tabs defaultValue="overview" size="sm">
                 <TabList>
                   <Tab value="overview">Overview</Tab>
@@ -403,21 +397,21 @@ export function TabsPage() {
                   <Tab value="logs">Logs</Tab>
                 </TabList>
                 <TabPanel value="overview">
-                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] mt-3">
+                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] mt-3">
                     <p className="text-body-md text-[var(--color-text-default)]">
                       Overview panel content goes here.
                     </p>
                   </div>
                 </TabPanel>
                 <TabPanel value="settings">
-                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] mt-3">
+                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] mt-3">
                     <p className="text-body-md text-[var(--color-text-default)]">
                       Settings panel content goes here.
                     </p>
                   </div>
                 </TabPanel>
                 <TabPanel value="logs">
-                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--primitive-radius-md)] mt-3">
+                  <div className="p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] mt-3">
                     <p className="text-body-md text-[var(--color-text-default)]">
                       Logs panel content goes here.
                     </p>

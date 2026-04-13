@@ -5,7 +5,7 @@ import { ProgressBar, VStack } from '@/design-system';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
       <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
         {children}
       </table>
@@ -16,7 +16,7 @@ function TableWrapper({ children }: { children: React.ReactNode }) {
 function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
     <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] ${className}`}
+      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
     >
       {children}
     </th>
@@ -25,7 +25,9 @@ function Th({ children, className = '' }: { children?: React.ReactNode; classNam
 
 function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
   return (
-    <td className={`p-3 border border-[var(--color-border-default)] align-top ${className}`}>
+    <td
+      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
+    >
       {children}
     </td>
   );
@@ -74,8 +76,6 @@ function ProgressBarGuidelines() {
         </Prose>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
@@ -114,8 +114,6 @@ function ProgressBarGuidelines() {
           </tbody>
         </TableWrapper>
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Behavior */}
       <VStack gap={4}>
@@ -207,8 +205,6 @@ function ProgressBarGuidelines() {
         </VStack>
       </VStack>
 
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
-
       {/* Usage Guidelines */}
       <VStack gap={4}>
         <SectionTitle>Usage Guidelines</SectionTitle>
@@ -227,8 +223,6 @@ function ProgressBarGuidelines() {
           ]}
         />
       </VStack>
-
-      <div className="w-full h-px bg-[var(--color-border-default)]" />
 
       {/* Related */}
       <VStack gap={4}>
@@ -296,7 +290,7 @@ export function ProgressBarComponentPage() {
       ]}
       whenNotToUse={['진행률을 계산할 수 없는 작업 (→ Spinner)', '콘텐츠 로딩 (→ Skeleton)']}
       preview={
-        <div className="w-[320px] flex flex-col gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+        <div className="w-[320px] flex flex-col gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
           <VStack gap={2}>
             <div className="flex justify-between">
               <span className="text-label-sm text-[var(--color-text-default)]">Uploading...</span>
@@ -316,7 +310,7 @@ export function ProgressBarComponentPage() {
                 진행률(%)만 Fill로 표현. 레이블·수치 없이 Bar만 단독으로 표시.
               </span>
             </VStack>
-            <div className="w-[320px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="w-[320px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <ProgressBar value={0} max={100} showValue={false} />
               <ProgressBar value={25} max={100} showValue={false} />
               <ProgressBar value={50} max={100} showValue={false} />
@@ -332,7 +326,7 @@ export function ProgressBarComponentPage() {
                 Bar 상단에 작업명(Label)과 진행률 수치(Value)를 함께 표시.
               </span>
             </VStack>
-            <div className="w-[320px] flex flex-col gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-lg)]">
+            <div className="w-[320px] flex flex-col gap-6 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)]">
               <VStack gap={2}>
                 <div className="flex justify-between">
                   <span className="text-label-sm text-[var(--color-text-default)]">
