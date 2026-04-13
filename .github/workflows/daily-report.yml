@@ -1,0 +1,43 @@
+name: Daily Report
+
+on:
+  schedule:
+    # KST 08:30 = UTC 전날 23:30
+    # 월~금(KST) = UTC 일~목(0,1,2,3,4)
+    - cron: '30 23 * * 0,1,2,3,4'
+  workflow_dispatch:
+    inputs:
+      date_override:
+        description: '날짜 오버라이드 (YYYY-MM-DD, 비워두면 오늘)'
+        required: false
+        default: ''
+
+jobs:
+  daily-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: scripts/daily-report/package-lock.json
+
+      - name: Install dependencies
+        working-directory: scripts/daily-report
+        run: npm install
+
+      - name: Run Daily Report
+        working-directory: scripts/daily-report
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          if [ -n "${{ github.event.inputs.date_override }}" ]; then
+            node daily-report.js --date-override=${{ github.event.inputs.date_override }}
+          else
+            node daily-report.js
+          fi
