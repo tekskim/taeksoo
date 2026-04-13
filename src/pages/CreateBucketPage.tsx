@@ -9,7 +9,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   Select,
   SectionCard,
@@ -20,7 +19,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { IconEdit, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -1078,13 +1077,6 @@ export default function CreateBucketPage() {
                 { label: 'Buckets', href: '/storage/buckets' },
                 { label: 'Create Bucket' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

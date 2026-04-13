@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -35,7 +34,6 @@ import {
   IconDotsCircleHorizontal,
   IconUnlink,
   IconDownload,
-  IconBell,
   IconExternalLink,
   IconCube,
   IconBinaryTree,
@@ -493,13 +491,6 @@ export function FloatingIPsPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Proj-1', href: '/project' }, { label: 'Floating IPs' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

@@ -6,7 +6,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -30,7 +29,6 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconCirclePlus,
   IconTrash,
-  IconBell,
   IconDotsCircleHorizontal,
   IconLock,
   IconLockOpen,
@@ -442,13 +440,6 @@ export function ServerGroupDetailPage() {
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

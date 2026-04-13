@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -29,7 +28,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
 import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
 
@@ -389,13 +388,6 @@ export function SecurityGroupsPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Proj-1', href: '/project' }, { label: 'Security groups' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

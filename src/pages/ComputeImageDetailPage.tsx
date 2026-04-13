@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -21,13 +20,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconEdit,
-  IconBell,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -421,13 +414,6 @@ export function ComputeImageDetailPage() {
           onBack={() => navigate('/compute/images')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

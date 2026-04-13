@@ -9,7 +9,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   SectionCard,
   WizardSummary,
@@ -29,7 +28,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -339,15 +338,6 @@ export default function ComputeAdminCreateFirewallRulePage() {
                 { label: 'Create rule' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }

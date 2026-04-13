@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -23,7 +22,6 @@ import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconRefresh,
-  IconBell,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
@@ -362,9 +360,6 @@ export function BucketsPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Buckets' }]} />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

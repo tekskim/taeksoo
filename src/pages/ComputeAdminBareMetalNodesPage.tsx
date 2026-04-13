@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   StatusIndicator,
   Badge,
@@ -21,7 +20,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDownload, IconBell, IconCirclePlus } from '@tabler/icons-react';
+import { IconDownload, IconCirclePlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -444,13 +443,6 @@ export function ComputeAdminBareMetalNodesPage() {
                 { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Bare Metal Nodes' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

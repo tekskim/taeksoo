@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,6 @@ import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPause,
-  IconBell,
   IconTerminal2,
   IconWorld,
   IconNetwork,
@@ -341,13 +339,6 @@ export function WorkloadDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Pods', href: '/ai-platform/workloads' }, { label: workload.name }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -26,12 +25,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconDownload,
-  IconBell,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconDownload, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -278,13 +272,6 @@ export function ComputeAdminHostAggregatesPage() {
                 { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Host Aggregates' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

@@ -23,7 +23,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   type ContextMenuItem,
   type TableColumn,
@@ -35,7 +34,6 @@ import {
   IconDotsCircleHorizontal,
   IconDownload,
   IconTrash,
-  IconBell,
   IconBinaryTree,
 } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
@@ -794,13 +792,6 @@ export function CloudBuilderConsolePage() {
       onBack={() => window.history.back()}
       onForward={() => window.history.forward()}
       breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-      actions={
-        <TopBarAction
-          icon={<IconBell size={16} stroke={1.5} />}
-          aria-label="Notifications"
-          badge={true}
-        />
-      }
     />
   );
 

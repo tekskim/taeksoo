@@ -6,7 +6,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   SectionCard,
   WizardSummary,
@@ -21,7 +20,7 @@ import {
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -502,13 +501,6 @@ export function ComputeAdminInstanceTemplateDetailPage() {
           onBack={() => navigate('/compute-admin/instance-templates')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-6"

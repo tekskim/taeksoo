@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -27,7 +26,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -521,13 +520,6 @@ export function ComputeAdminFlavorsPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Flavors' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

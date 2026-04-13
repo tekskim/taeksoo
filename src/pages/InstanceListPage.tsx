@@ -9,7 +9,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -37,10 +36,11 @@ import {
   IconPlayerStop,
   IconTrash,
   IconPower,
-  IconBell,
   IconDownload,
   IconLock,
   IconTerminal2,
+  IconCopy,
+  IconCheck,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
@@ -140,7 +140,7 @@ interface BareMetalInstance {
 
 const mockInstances: Instance[] = [
   {
-    id: 'vm-001',
+    id: '7284d9174e81431e93060a9bbcf2cdfd',
     name: 'worker-node-01',
     status: 'running',
     locked: true,
@@ -155,7 +155,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-002',
+    id: 'a3f1e8b204c647d8b5921ac3def08712',
     name: 'worker-node-02',
     status: 'running',
     locked: false,
@@ -170,7 +170,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-003',
+    id: 'c9d2f5a63b7e4019a8e4b1d07c6e3f9a',
     name: 'master-node-01',
     status: 'running',
     locked: true,
@@ -185,7 +185,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-004',
+    id: 'e5b8c0d31f2a49e7b6d4a3c2f1e09876',
     name: 'db-server-01',
     status: 'stopped',
     locked: true,
@@ -200,7 +200,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-005',
+    id: '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d',
     name: 'gpu-node-01',
     status: 'running',
     locked: false,
@@ -215,7 +215,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-006',
+    id: 'f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5',
     name: 'gpu-node-02',
     status: 'running',
     locked: false,
@@ -230,7 +230,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-007',
+    id: '2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e',
     name: 'web-server-01',
     status: 'pending',
     locked: false,
@@ -245,7 +245,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-008',
+    id: '8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d',
     name: 'web-server-02',
     status: 'building',
     locked: false,
@@ -260,7 +260,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-009',
+    id: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
     name: 'analytics-01',
     status: 'error',
     locked: true,
@@ -275,7 +275,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-010',
+    id: 'b0a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5',
     name: 'cache-server-01',
     status: 'running',
     locked: false,
@@ -290,7 +290,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-011',
+    id: '3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b',
     name: 'api-gateway-01',
     status: 'running',
     locked: true,
@@ -305,7 +305,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-012',
+    id: '4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c',
     name: 'api-gateway-02',
     status: 'running',
     locked: true,
@@ -320,7 +320,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-013',
+    id: '5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d',
     name: 'monitoring-01',
     status: 'running',
     locked: false,
@@ -335,7 +335,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-014',
+    id: '6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e',
     name: 'logging-server-01',
     status: 'running',
     locked: false,
@@ -350,7 +350,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-015',
+    id: '7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f',
     name: 'jenkins-master',
     status: 'running',
     locked: true,
@@ -365,7 +365,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-016',
+    id: '8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a',
     name: 'jenkins-agent-01',
     status: 'running',
     locked: false,
@@ -380,7 +380,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-017',
+    id: '9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b',
     name: 'jenkins-agent-02',
     status: 'stopped',
     locked: false,
@@ -395,7 +395,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-018',
+    id: '0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c',
     name: 'gitlab-server',
     status: 'running',
     locked: true,
@@ -410,7 +410,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-019',
+    id: '1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d',
     name: 'nexus-repo',
     status: 'running',
     locked: true,
@@ -425,7 +425,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-020',
+    id: '2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7f',
     name: 'redis-cluster-01',
     status: 'running',
     locked: false,
@@ -440,7 +440,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-021',
+    id: '3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f',
     name: 'redis-cluster-02',
     status: 'running',
     locked: false,
@@ -455,7 +455,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-022',
+    id: '4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a',
     name: 'redis-cluster-03',
     status: 'running',
     locked: false,
@@ -470,7 +470,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-023',
+    id: '5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b',
     name: 'kafka-broker-01',
     status: 'running',
     locked: true,
@@ -485,7 +485,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-024',
+    id: '6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c',
     name: 'kafka-broker-02',
     status: 'running',
     locked: true,
@@ -500,7 +500,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-025',
+    id: '7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d',
     name: 'kafka-broker-03',
     status: 'error',
     locked: true,
@@ -515,7 +515,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-026',
+    id: '8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e',
     name: 'ml-training-01',
     status: 'running',
     locked: false,
@@ -530,7 +530,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-027',
+    id: '9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f',
     name: 'ml-inference-01',
     status: 'running',
     locked: false,
@@ -545,7 +545,7 @@ const mockInstances: Instance[] = [
     az: 'nova',
   },
   {
-    id: 'vm-028',
+    id: '0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a',
     name: 'bastion-host',
     status: 'running',
     locked: true,
@@ -560,7 +560,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-029',
+    id: '1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b',
     name: 'vpn-server',
     status: 'running',
     locked: true,
@@ -575,7 +575,7 @@ const mockInstances: Instance[] = [
     az: 'keystone',
   },
   {
-    id: 'vm-030',
+    id: '2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c',
     name: 'test-instance-01',
     status: 'pending',
     locked: false,
@@ -777,6 +777,24 @@ const filterFields: FilterField[] = [
     placeholder: 'Enter flavor...',
   },
 ];
+
+function InlineCopyId({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      className={`shrink-0 transition-colors ${copied ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]'}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(value);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }}
+      aria-label="Copy ID"
+    >
+      {copied ? <IconCheck size={12} stroke={2} /> : <IconCopy size={12} stroke={1.5} />}
+    </button>
+  );
+}
 
 export function InstanceListPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
@@ -1344,8 +1362,11 @@ export function InstanceListPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
-              ID : {row.id}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
           </div>
         </div>
@@ -1517,7 +1538,7 @@ export function InstanceListPage() {
               {row.name}
             </Link>
             <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
-              ID : {row.id}
+              ID : {row.id.slice(0, 8)}
             </span>
           </div>
         </div>
@@ -1648,13 +1669,6 @@ export function InstanceListPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Instances list' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

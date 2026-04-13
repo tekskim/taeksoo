@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   NumberInput,
   Select,
@@ -37,7 +36,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconUpload, IconExternalLink } from '@tabler/icons-react';
+import { IconEdit, IconUpload, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -437,19 +436,7 @@ export function ComputeAdminCreateImagePage() {
           showWindowControls={true}
         />
       }
-      topBar={
-        <TopBar
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => console.log('Notifications clicked')}
-              aria-label="Notifications"
-              badge
-            />
-          }
-        />
-      }
+      topBar={<TopBar breadcrumb={<Breadcrumb items={breadcrumbItems} />} />}
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3} className="min-w-[1176px]">

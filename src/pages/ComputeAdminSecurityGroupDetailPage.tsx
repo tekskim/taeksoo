@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,7 +24,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -426,13 +425,6 @@ export default function SecurityGroupDetailPage() {
                   { label: 'Security groups', href: '/compute-admin/security-groups' },
                   { label: securityGroup.name },
                 ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
               />
             }
           />

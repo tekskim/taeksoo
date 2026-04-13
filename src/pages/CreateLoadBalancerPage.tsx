@@ -7,7 +7,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   Select,
   SectionCard,
@@ -39,7 +38,6 @@ import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
-  IconBell,
   IconEdit,
   IconExternalLink,
   IconInfoCircle,
@@ -1442,13 +1440,6 @@ export default function CreateLoadBalancerPage() {
                 { label: 'Load Balancers', href: '/compute/load-balancers' },
                 { label: 'Create load balancer' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

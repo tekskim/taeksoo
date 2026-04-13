@@ -35,7 +35,6 @@ import {
   IconAlertTriangle,
   IconCircleX,
   IconLock,
-  IconBell,
   IconPalette,
 } from '@tabler/icons-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -787,11 +786,6 @@ export function MCPToolsPage() {
                 icon={<IconPalette size={16} stroke={1} />}
                 onClick={() => navigate('/design-system')}
                 aria-label="Design System"
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
               />
             </>
           }

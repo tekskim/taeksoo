@@ -9,7 +9,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   SectionCard,
   WizardSummary,
@@ -23,7 +22,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -218,15 +217,6 @@ export default function CreateFirewallRulePage() {
                 { label: 'Create NACL rule' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }

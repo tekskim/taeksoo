@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -20,7 +19,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconEdit, IconTrash, IconBell, IconSettings } from '@tabler/icons-react';
+import { IconCirclePlus, IconEdit, IconTrash, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -277,13 +276,6 @@ export default function ComputeAdminTenantDetailPage() {
                 { label: 'Tenants', href: '/compute-admin/tenants' },
                 { label: tenant.name },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

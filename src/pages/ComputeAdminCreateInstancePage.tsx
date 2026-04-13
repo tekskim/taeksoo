@@ -11,7 +11,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Pagination,
   Table,
   Tabs,
@@ -43,7 +42,6 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
-  IconBell,
   IconDots,
   IconEdit,
   IconExternalLink,
@@ -4505,13 +4503,6 @@ export function ComputeAdminCreateInstancePage() {
                 { label: 'Instances', href: '/compute-admin/instances' },
                 { label: 'Create instance' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

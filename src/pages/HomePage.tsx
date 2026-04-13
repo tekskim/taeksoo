@@ -7,7 +7,6 @@ import {
   IconRobotFace,
   IconSquarePlus,
   IconPuzzle,
-  IconBell,
   IconPalette,
   IconTarget,
   IconPencil,
@@ -191,11 +190,6 @@ export function HomePage() {
                 icon={<IconPalette size={16} stroke={1.5} />}
                 aria-label="Design system"
                 onClick={() => navigate('/design-system')}
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
               />
             </>
           }

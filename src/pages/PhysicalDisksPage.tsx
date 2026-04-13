@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   StatusIndicator,
   Badge,
@@ -24,7 +23,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconBell, IconDownload } from '@tabler/icons-react';
+import { IconRefresh, IconDownload } from '@tabler/icons-react';
 import { Siren } from 'lucide-react';
 
 /* ----------------------------------------
@@ -473,9 +472,6 @@ export function PhysicalDisksPage() {
             <Breadcrumb
               items={[{ label: 'Home', href: '/storage' }, { label: 'Physical disks' }]}
             />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

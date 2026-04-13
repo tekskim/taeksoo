@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -36,7 +35,6 @@ import {
   IconTrash,
   IconChevronDown,
   IconChevronRight,
-  IconBell,
   IconSquarePlus,
   IconPower,
   IconDotsCircleHorizontal,
@@ -409,13 +407,6 @@ export function BareMetalDetailPage() {
                 { label: 'Instances list', href: '/compute/instances' },
                 { label: instance.name },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

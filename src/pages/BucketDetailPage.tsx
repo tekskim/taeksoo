@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,7 +24,6 @@ import {
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconTrash,
   IconDownload,
   IconChevronDown,
@@ -652,9 +650,6 @@ export function BucketDetailPage() {
                 { label: bucketData.name },
               ]}
             />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -26,13 +25,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconTrash,
-  IconBell,
-  IconEdit,
-  IconDotsCircleHorizontal,
-  IconDownload,
-} from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 
 // Types
 type LoadBalancerStatus = 'active' | 'pending' | 'error';
@@ -505,13 +498,6 @@ export function ComputeAdminLoadBalancerDetailPage() {
                 { label: 'Load balancers', href: '/compute-admin/load-balancers' },
                 { label: loadBalancer.name },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

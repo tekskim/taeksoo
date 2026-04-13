@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -29,7 +28,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
 import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -463,13 +462,6 @@ export function VolumeBackupsPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volume backups' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

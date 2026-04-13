@@ -24,18 +24,10 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   type TableColumn,
 } from '@/design-system';
-import {
-  IconBell,
-  IconBan,
-  IconPower,
-  IconBinaryTree,
-  IconEdit,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconBan, IconPower, IconBinaryTree, IconEdit, IconTrash } from '@tabler/icons-react';
 import { Sidebar } from '@/components/Sidebar';
 import { FigmaCaptureWrapper } from '@/components/FigmaCaptureWrapper';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -457,13 +449,6 @@ export function CloudBuilderDetailPage() {
         onBack={() => window.history.back()}
         onForward={() => window.history.forward()}
         breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-        actions={
-          <TopBarAction
-            icon={<IconBell size={16} stroke={1.5} />}
-            aria-label="Notifications"
-            badge={true}
-          />
-        }
       />
     ),
   };

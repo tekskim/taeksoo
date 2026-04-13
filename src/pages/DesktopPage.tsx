@@ -1,18 +1,35 @@
 import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
 import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
-import { IconLayoutDashboard, IconCheck, IconSelector } from '@tabler/icons-react';
+import {
+  IconLayoutDashboard,
+  IconCheck,
+  IconSelector,
+  IconCircleCheck,
+  IconAlertTriangle,
+  IconAlertCircle,
+  IconCheckbox,
+  IconChevronUp,
+  IconChevronDown,
+} from '@tabler/icons-react';
 import {
   Icons,
   ContextMenu,
   Modal,
   Button,
-  NotificationCenter,
   WindowControls,
   Tooltip,
   IconWindowActive,
   IconWindowMinimized,
+  Tabs,
+  TabList,
+  Tab,
+  Select,
 } from '@/design-system';
+import AppIconCompute from '@/assets/appIcon/compute.png';
+import AppIconIAM from '@/assets/appIcon/iam.png';
+import AppIconContainer from '@/assets/appIcon/container.png';
+import AppIconStorage from '@/assets/appIcon/storage.png';
 import { motion, Reorder, AnimatePresence } from 'framer-motion';
 import {
   Link,
@@ -48,6 +65,7 @@ import imgStorageAdmin from '@/assets/appIcon/storageadmin.png';
 import imgComputeAdmin from '@/assets/appIcon/computeadmin.png';
 import imgCloud from '@/assets/appIcon/cloudbuilder.png';
 import imgAdminCenter from '@/assets/appIcon/admincenter.png';
+import imgAIPlatformAdmin from '@/assets/appIcon/aiplatformadmin.png';
 
 // App Icons
 import appIconAIChat from '@/assets/appIcon/chat.png';
@@ -113,6 +131,7 @@ function getInitialIconLayout(): DesktopIconItem[] {
 interface DesktopIconProps {
   icon: string;
   label: string;
+  iconSlot?: React.ReactNode;
   onClick?: () => void;
   onMouseDown?: (e: React.MouseEvent) => void;
   style?: React.CSSProperties;
@@ -121,7 +140,7 @@ interface DesktopIconProps {
 }
 
 const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(function DesktopIcon(
-  { icon, label, onClick, onMouseDown, style, isDragging },
+  { icon, label, iconSlot, onClick, onMouseDown, style, isDragging },
   ref
 ) {
   return (
@@ -138,17 +157,50 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
       aria-label={label}
     >
       <div className="w-20 h-20 flex items-center justify-center rounded-lg">
-        <img
-          src={icon}
-          alt={label}
-          className="w-16 h-16 object-cover object-center"
-          draggable={false}
-        />
+        {iconSlot || (
+          <img
+            src={icon}
+            alt={label}
+            className="w-16 h-16 object-cover object-center"
+            draggable={false}
+          />
+        )}
       </div>
       <span className="text-label-md text-white text-center whitespace-nowrap">{label}</span>
     </button>
   );
 });
+
+function AdminCenterCompositeIcon() {
+  return (
+    <div className="w-16 h-16 rounded-2xl bg-white/30 border border-white/10 shadow-sm grid grid-cols-2 grid-rows-2 gap-1 p-1.5">
+      <img
+        src={imgStorageAdmin}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+      <img
+        src={imgComputeAdmin}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+      <img
+        src={imgAIPlatformAdmin}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+      <img
+        src={imgCloud}
+        alt=""
+        className="w-full h-full object-contain rounded-md"
+        draggable={false}
+      />
+    </div>
+  );
+}
 
 interface DragGhostProps {
   icon: string;
@@ -834,6 +886,17 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
               </button>
               <button
                 className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
+                onClick={() => console.log('AI Platform Admin clicked')}
+              >
+                <img
+                  src={imgAIPlatformAdmin}
+                  alt="AI Platform Admin"
+                  className="w-16 h-16 object-cover"
+                />
+                <span className="text-label-md text-white text-center">AI Platform Admin</span>
+              </button>
+              <button
+                className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
                 onClick={() => console.log('Cloud Builder clicked')}
               >
                 <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
@@ -1222,6 +1285,112 @@ function PageWindow({
   );
 }
 
+interface GlobalNotif {
+  id: string;
+  message: string;
+  statusIcon?: React.ReactNode;
+  time: string;
+  project?: string;
+  app: string;
+  appIcon: string;
+  isRead?: boolean;
+  detail?: { code?: string | number; message?: string };
+}
+
+function GlobalNotificationCard({
+  notification,
+  onMarkAsRead,
+}: {
+  notification: GlobalNotif;
+  onMarkAsRead: () => void;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const hasDetail =
+    notification.detail && (notification.detail.code || notification.detail.message);
+
+  return (
+    <div
+      className={`rounded-[var(--radius-lg)] border border-[var(--color-border-default)] flex flex-col gap-4 p-3 ${
+        !notification.isRead
+          ? 'bg-[var(--color-surface-subtle)]'
+          : 'bg-[var(--color-surface-default)]'
+      }`}
+    >
+      <div
+        onClick={() => {
+          if (!notification.isRead) onMarkAsRead();
+        }}
+        className="flex gap-2 items-start cursor-pointer"
+      >
+        <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
+          <span className="text-body-md text-[var(--color-text-default)]">
+            {notification.message}
+            {notification.statusIcon && (
+              <span className="inline-flex align-[-2px] ml-1">{notification.statusIcon}</span>
+            )}
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
+              {notification.time}
+            </span>
+            {notification.project && (
+              <>
+                <div className="w-px h-[10px] bg-[var(--color-border-default)]" />
+                <span className="text-body-xs text-[var(--color-text-muted)] whitespace-nowrap">
+                  {notification.project}
+                </span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {hasDetail && (
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
+            className="flex items-center justify-end gap-1.5 w-full"
+          >
+            <span className="text-body-sm font-medium text-[var(--color-text-muted)]">
+              View detail
+            </span>
+            {isExpanded ? (
+              <IconChevronUp size={12} className="text-[var(--color-text-muted)]" />
+            ) : (
+              <IconChevronDown size={12} className="text-[var(--color-text-muted)]" />
+            )}
+          </button>
+          {isExpanded && (
+            <div
+              className={`p-3 rounded-[var(--radius-md)] flex flex-col gap-1 ${
+                !notification.isRead
+                  ? 'bg-[var(--color-surface-default)]'
+                  : 'bg-[var(--color-surface-subtle)]'
+              }`}
+            >
+              {notification.detail?.code !== undefined && (
+                <p className="text-label-sm text-[var(--color-text-default)]">
+                  code: {notification.detail.code}
+                </p>
+              )}
+              {notification.detail?.message && (
+                <p className="text-body-sm text-[var(--color-text-muted)]">
+                  {notification.detail.message}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function DesktopPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [settingsTab, setSettingsTab] = useState<
@@ -1378,40 +1547,99 @@ export function DesktopPage() {
     });
   }, []);
 
-  // Mock notifications data
-  const [notifications, setNotifications] = useState([
+  // Global notification panel data
+  const [globalNotifications, setGlobalNotifications] = useState([
     {
       id: '1',
-      type: 'info' as const,
-      message: 'System maintenance scheduled for tonight',
-      time: '2h ago',
-      project: 'Infrastructure',
+      message: 'Instance "web-01" created.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '10:23',
+      project: 'proj-1',
+      app: 'Compute',
+      appIcon: AppIconCompute,
       isRead: false,
+      detail: { code: 200, message: 'Instance created with 4 vCPUs, 8GB RAM, and 100GB storage.' },
     },
     {
       id: '2',
-      type: 'success' as const,
-      message: 'Instance created successfully',
-      time: '5h ago',
-      project: 'Compute',
+      message: 'Volume "data-vol-02" create failed.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '09:30',
+      project: 'proj-2',
+      app: 'Compute',
+      appIcon: AppIconCompute,
       isRead: false,
+      detail: {
+        code: 400,
+        message: "Flavor's disk is smaller than the minimum size specified in image metadata.",
+      },
     },
     {
       id: '3',
-      type: 'error' as const,
-      message: 'Failed to create volume snapshot',
-      time: '1d ago',
-      project: 'Storage',
-      isRead: true,
+      message: 'API key expires in 3 days.',
+      statusIcon: (
+        <IconAlertCircle size={14} stroke={1.5} className="text-[var(--color-state-warning)]" />
+      ),
+      time: '08:45',
+      app: 'IAM',
+      appIcon: AppIconIAM,
+      isRead: false,
+    },
+    {
+      id: '4',
+      message: 'Pod "api-gateway" crash loop.',
+      statusIcon: (
+        <IconAlertTriangle size={14} stroke={1.5} className="text-[var(--color-state-danger)]" />
+      ),
+      time: '09:55',
+      project: 'default',
+      app: 'Container',
+      appIcon: AppIconContainer,
+      isRead: false,
+      detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
+    },
+    {
+      id: '5',
+      message: 'Volume "backup-01" snapshot done.',
+      statusIcon: (
+        <IconCircleCheck size={14} stroke={1.5} className="text-[var(--color-state-success)]" />
+      ),
+      time: '10:10',
+      project: 'proj-1',
+      app: 'Storage',
+      appIcon: AppIconStorage,
+      isRead: false,
     },
   ]);
+  const [gnpActiveTab, setGnpActiveTab] = useState('all');
+  const [gnpActiveApp, setGnpActiveApp] = useState('all');
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
+  const gnpAppIcon = (src: string) => <img src={src} alt="" className="size-4 object-cover" />;
+  const gnpAppOptions = [
+    { value: 'all', label: 'All apps' },
+    { value: 'Compute', label: 'Compute', icon: gnpAppIcon(AppIconCompute) },
+    { value: 'IAM', label: 'IAM', icon: gnpAppIcon(AppIconIAM) },
+    { value: 'Container', label: 'Container', icon: gnpAppIcon(AppIconContainer) },
+    { value: 'Storage', label: 'Storage', icon: gnpAppIcon(AppIconStorage) },
+  ].filter((opt) => opt.value === 'all' || globalNotifications.some((n) => n.app === opt.value));
+
+  const gnpFiltered = globalNotifications.filter((n) => {
+    if (gnpActiveTab === 'unread' && n.isRead) return false;
+    if (gnpActiveApp !== 'all' && n.app !== gnpActiveApp) return false;
+    return true;
+  });
+  const gnpUnreadCount = globalNotifications.filter((n) => !n.isRead).length;
+
+  const handleGnpMarkAsRead = (id: string) => {
+    setGlobalNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+  const handleGnpMarkAllAsRead = () => {
+    setGlobalNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
   // 데스크탑 배경 클릭 시 모든 윈도우 포커스 해제
@@ -1506,6 +1734,7 @@ export function DesktopPage() {
               key={item.id}
               icon={item.icon}
               label={item.label}
+              iconSlot={item.id === 'admin-center' ? <AdminCenterCompositeIcon /> : undefined}
               isDragging={beingDragged}
               style={{ left: pos.x, top: pos.y }}
               onClick={handleClick}
@@ -1547,28 +1776,69 @@ export function DesktopPage() {
       {/* Chatbot Panel */}
       <ChatbotPanel isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
 
-      {/* Notification center */}
-      {showNotifications &&
-        notificationButtonRef.current &&
-        (() => {
-          return (
-            <>
-              {/* Click outside to close */}
-              <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
-              <div
-                className="fixed z-[6001] top-[52px] right-0"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <NotificationCenter
-                  notifications={notifications}
-                  onMarkAsRead={handleMarkAsRead}
-                  onMarkAllAsRead={handleMarkAllAsRead}
-                  onClose={() => setShowNotifications(false)}
+      {/* Global Notification Panel */}
+      {showNotifications && notificationButtonRef.current && (
+        <>
+          <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
+          <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+              <div className="relative pt-3 pb-0">
+                <button
+                  type="button"
+                  onClick={handleGnpMarkAllAsRead}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center size-7 rounded-md text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)] hover:text-[var(--color-text-default)] transition-colors group"
+                  aria-label="Mark all as read"
+                >
+                  <IconCheckbox size={16} stroke={1.5} />
+                  <span className="absolute top-full right-0 mt-1 px-2 py-1 bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-body-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    Mark all as read
+                  </span>
+                </button>
+                <Tabs
+                  value={gnpActiveTab}
+                  onChange={setGnpActiveTab}
+                  variant="underline"
+                  size="sm"
+                  className="w-full"
+                >
+                  <TabList className="w-full px-4">
+                    <Tab value="all">All</Tab>
+                    <Tab value="unread">Unread{gnpUnreadCount > 0 && ` (${gnpUnreadCount})`}</Tab>
+                  </TabList>
+                </Tabs>
+              </div>
+
+              <div className="px-3 py-2 border-b border-[var(--color-border-subtle)]">
+                <Select
+                  options={gnpAppOptions}
+                  value={gnpActiveApp}
+                  onChange={(v) => setGnpActiveApp(v)}
+                  size="md"
+                  fullWidth
                 />
               </div>
-            </>
-          );
-        })()}
+
+              {gnpFiltered.length === 0 ? (
+                <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
+                  No notifications
+                </div>
+              ) : (
+                <div className="max-h-[420px] overflow-y-auto px-3 py-2 drawer-scroll">
+                  <div className="flex flex-col gap-2">
+                    {gnpFiltered.map((n) => (
+                      <GlobalNotificationCard
+                        key={n.id}
+                        notification={n}
+                        onMarkAsRead={() => handleGnpMarkAsRead(n.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* App Windows */}
       <AnimatePresence>

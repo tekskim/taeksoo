@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -17,7 +16,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconBell, IconSettings } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -280,13 +279,6 @@ export function ComputeAdminVolumeBackupDetailPage() {
           onBack={() => navigate('/volume-backups')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

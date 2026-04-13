@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -32,7 +31,6 @@ import {
   IconDotsCircleHorizontal,
   IconUnlink,
   IconDownload,
-  IconBell,
   IconCube,
   IconBinaryTree,
 } from '@tabler/icons-react';
@@ -529,13 +527,6 @@ export function ComputeAdminFloatingIPsPage() {
                 { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Floating IPs' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

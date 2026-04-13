@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,7 +30,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconTrash,
-  IconBell,
   IconChevronDown,
   IconDotsCircleHorizontal,
   IconSettings,
@@ -369,13 +367,6 @@ export default function PoolDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

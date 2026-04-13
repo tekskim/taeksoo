@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -17,7 +16,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -185,13 +184,6 @@ export default function ComputeAdminFirewallRuleDetailPage() {
                 { label: 'Firewalls', href: '/compute-admin/firewall' },
                 { label: rule.name },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

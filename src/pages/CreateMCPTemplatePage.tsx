@@ -26,7 +26,7 @@ import {
   Badge,
 } from '@/design-system';
 import { AgentSidebar } from '@/components/AgentSidebar';
-import { IconBell, IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
+import { IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
@@ -247,11 +247,6 @@ export function CreateMCPTemplatePage() {
                 icon={<IconPalette size={16} stroke={1} />}
                 onClick={() => navigate('/design-system')}
                 aria-label="Design System"
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
               />
             </>
           }

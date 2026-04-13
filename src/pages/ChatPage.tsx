@@ -17,7 +17,6 @@ import {
 import { AgentSidebar } from '@/components/AgentSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconPlus,
   IconDots,
   IconSettings,
@@ -465,11 +464,6 @@ export function ChatPage() {
           actions={
             <>
               <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
             </>
           }
         />

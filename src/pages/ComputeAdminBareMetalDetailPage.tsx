@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -32,7 +31,6 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconChevronRight,
-  IconBell,
   IconDownload,
   IconSelector,
   IconLock,
@@ -407,13 +405,6 @@ export function ComputeAdminBareMetalDetailPage() {
                 { label: 'Bare metal nodes', href: '/compute-admin/bare-metal-nodes' },
                 { label: bareMetal.name },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

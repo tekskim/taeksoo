@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -32,7 +31,6 @@ import {
   IconUnlink,
   IconLinkPlus,
   IconTrash,
-  IconBell,
   IconEdit,
   IconCirclePlus,
   IconDotsCircleHorizontal,
@@ -511,13 +509,6 @@ export function LoadBalancerDetailPage() {
                 { label: 'Load balancers', href: '/compute/load-balancers' },
                 { label: loadBalancer.name },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

@@ -1,18 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import {
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  MonitoringToolbar,
-  PageShell,
-} from '@/design-system';
+import { TabBar, TopBar, Breadcrumb, MonitoringToolbar, PageShell } from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -586,13 +578,6 @@ export function StorageHomePage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Storage', href: '/storage' }, { label: 'Home' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -27,7 +26,6 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
-  IconBell,
   IconEdit,
   IconPlus,
 } from '@tabler/icons-react';
@@ -301,9 +299,6 @@ export function DNSZonesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/compute' }, { label: 'DNS Zones' }]} />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

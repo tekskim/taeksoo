@@ -1,7 +1,6 @@
 import {
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   PageShell,
   Badge,
@@ -14,7 +13,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconChevronRight, IconBell } from '@tabler/icons-react';
+import { IconChevronRight } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -303,13 +302,6 @@ export function ComputeHomePage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Home' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

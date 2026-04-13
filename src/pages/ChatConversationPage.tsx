@@ -3,14 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { TopBar, TopBarAction, StatusIndicator, PageShell, TabBar } from '@/design-system';
 import { AgentSidebar } from '@/components/AgentSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconPlus,
-  IconDots,
-  IconSettings,
-  IconSearch,
-  IconArrowUp,
-} from '@tabler/icons-react';
+import { IconPlus, IconDots, IconSettings, IconSearch, IconArrowUp } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Chat Sidebar Component
@@ -121,11 +114,6 @@ export function ChatConversationPage() {
           actions={
             <>
               <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
             </>
           }
         />
