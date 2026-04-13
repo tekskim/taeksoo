@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -26,7 +25,7 @@ import {
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconTrash, IconBell, IconCube, IconRouter } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCube, IconRouter } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -393,13 +392,6 @@ export default function SubnetDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

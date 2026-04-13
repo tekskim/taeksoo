@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   NumberInput,
   Slider,
@@ -30,7 +29,6 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
 import {
-  IconBell,
   IconEdit,
   IconExternalLink,
   IconCirclePlus,
@@ -383,19 +381,7 @@ export function ComputeAdminCreateFlavorPage() {
           showWindowControls={true}
         />
       }
-      topBar={
-        <TopBar
-          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => console.log('Notifications clicked')}
-              aria-label="Notifications"
-              badge
-            />
-          }
-        />
-      }
+      topBar={<TopBar breadcrumb={<Breadcrumb items={breadcrumbItems} />} />}
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3} className="min-w-[1176px]">

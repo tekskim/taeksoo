@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -21,13 +20,7 @@ import type { ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import {
-  IconCirclePlus,
-  IconTrash,
-  IconBell,
-  IconChevronDown,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconChevronDown, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -232,13 +225,6 @@ export function InstanceSnapshotDetailPage() {
           onBack={() => navigate('/instance-snapshots')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

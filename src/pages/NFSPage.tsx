@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   PageShell,
@@ -17,7 +16,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconBell, IconDownload, IconTrash } from '@tabler/icons-react';
+import { IconRefresh, IconDownload, IconTrash } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -181,9 +180,6 @@ export function NFSPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'NFS' }]} />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

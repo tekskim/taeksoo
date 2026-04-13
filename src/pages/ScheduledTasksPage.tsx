@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -26,7 +25,6 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
-  IconBell,
   IconPlayerPlay,
   IconPlayerStop,
   IconPlus,
@@ -319,9 +317,6 @@ export function ScheduledTasksPage() {
             <Breadcrumb
               items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Scheduled Tasks' }]}
             />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   Select,
   SectionCard,
@@ -34,13 +33,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconDots,
-  IconExternalLink,
-  IconAlertCircle,
-  IconEdit,
-} from '@tabler/icons-react';
+import { IconDots, IconExternalLink, IconAlertCircle, IconEdit } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -627,13 +620,6 @@ export function CreateVolumePage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Volumes', href: '/compute/volumes' }, { label: 'Create volume' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

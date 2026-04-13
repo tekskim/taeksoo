@@ -21,19 +21,14 @@ import {
   Tooltip,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate } from 'react-router-dom';
 import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
   IconDownload,
   IconTrash,
   IconDotsCircleHorizontal,
   IconChevronDown,
-  IconPencilCog,
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -106,6 +101,16 @@ const mockClusters: Cluster[] = [
     memory: '4 GiB',
     pods: '5/110',
     createdAt: 'Jul 10, 2025 01:17:01',
+  },
+  {
+    id: 'cluster-006',
+    name: 'analytics-data-processing-pipeline-cluster',
+    status: 'Updating',
+    kubernetesVersion: 'v1.33.4',
+    cpu: '12 cores',
+    memory: '24 GiB',
+    pods: '67/110',
+    createdAt: 'Jun 5, 2025 15:42:33',
   },
 ];
 
@@ -309,32 +314,7 @@ export function ClusterManagementPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
     >

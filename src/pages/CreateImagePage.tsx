@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   NumberInput,
   Select,
@@ -28,7 +27,7 @@ import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconUpload } from '@tabler/icons-react';
+import { IconEdit, IconUpload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -295,14 +294,6 @@ export function CreateImagePage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              aria-label="Notifications"
-              badge
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -18,7 +17,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconTrash, IconEdit, IconBell, IconSettings } from '@tabler/icons-react';
+import { IconCirclePlus, IconTrash, IconEdit, IconSettings } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -169,13 +168,6 @@ export function VolumeSnapshotDetailPage() {
           onBack={() => navigate('/volume-snapshots')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

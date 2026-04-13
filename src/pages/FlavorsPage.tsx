@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -29,7 +28,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -524,13 +523,6 @@ export function FlavorsPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Flavors' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

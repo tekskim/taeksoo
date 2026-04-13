@@ -11,7 +11,6 @@ import {
   Button,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tooltip,
   PageShell,
@@ -22,7 +21,6 @@ import {
   IconExternalLink,
   IconRefresh,
   IconSearch,
-  IconBell,
   IconCheck,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -3054,13 +3052,6 @@ export function TopologyD3Page() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Topology' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

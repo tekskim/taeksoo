@@ -4,7 +4,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,6 @@ import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { useTabs } from '@/contexts/TabContext';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
-  IconBell,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -1100,9 +1098,6 @@ export function OverallPerformancePage() {
             <Breadcrumb
               items={[{ label: 'Home', href: '/storage' }, { label: 'Overall performance' }]}
             />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

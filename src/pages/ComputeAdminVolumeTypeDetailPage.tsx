@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,7 +30,6 @@ import {
   IconCirclePlus,
   IconTrash,
   IconEdit,
-  IconBell,
   IconChevronDown,
   IconDownload,
   IconDotsCircleHorizontal,
@@ -369,13 +367,6 @@ export default function ComputeAdminVolumeTypeDetailPage() {
           onBack={() => navigate('/compute-admin/volume-types')}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

@@ -11,13 +11,12 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEye, IconEyeOff } from '@tabler/icons-react';
+import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import {
   CLOUD_BUILDER_SLUGS,
   getCloudBuilderListConfig,
@@ -209,13 +208,6 @@ export function CloudBuilderCreatePage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

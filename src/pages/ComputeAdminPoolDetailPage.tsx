@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,7 +24,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -354,13 +353,6 @@ export default function PoolDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

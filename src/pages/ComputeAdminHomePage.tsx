@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   PageShell,
   Badge,
@@ -11,7 +10,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronRight, IconBell, IconCpu, IconServer } from '@tabler/icons-react';
+import { IconChevronRight, IconCpu, IconServer } from '@tabler/icons-react';
 import { Cpu, MemoryStick, HardDrive } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -263,13 +262,6 @@ export function ComputeAdminHomePage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Home' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

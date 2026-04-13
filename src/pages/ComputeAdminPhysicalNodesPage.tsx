@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   MonitoringToolbar,
   Select,
@@ -19,7 +18,6 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconBell,
   IconArrowsMaximize,
   IconArrowsMinimize,
   IconDotsCircleHorizontal,
@@ -717,13 +715,6 @@ export default function ComputeAdminPhysicalNodesPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
     >

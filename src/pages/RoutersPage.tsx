@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -30,7 +29,6 @@ import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import {
   IconTrash,
   IconDownload,
-  IconBell,
   IconExternalLink,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
@@ -453,13 +451,6 @@ export function RoutersPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Routers' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

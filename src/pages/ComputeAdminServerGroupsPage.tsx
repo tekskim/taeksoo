@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -24,7 +23,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -432,13 +431,6 @@ export function ComputeAdminServerGroupsPage() {
                 { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Server Groups' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

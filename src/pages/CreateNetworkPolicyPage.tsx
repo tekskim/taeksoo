@@ -18,19 +18,10 @@ import {
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-  IconX,
-  IconCheck,
-  IconCirclePlus,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconX, IconCheck, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -1408,39 +1399,14 @@ export function CreateNetworkPolicyPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <h1 className="text-heading-h4">Create network policy</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Network policies are used to control the traffic flow between pods within the cluster

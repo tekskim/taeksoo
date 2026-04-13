@@ -11,7 +11,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Pagination,
   Table,
   Tabs,
@@ -45,7 +44,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
-  IconBell,
   IconDots,
   IconEdit,
   IconExternalLink,
@@ -4951,13 +4949,6 @@ export function CreateInstancePage() {
                 { label: 'Instances list', href: '/compute/instances' },
                 { label: 'Create instance' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

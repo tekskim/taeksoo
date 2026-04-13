@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -307,14 +306,6 @@ export default function L7PolicyDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

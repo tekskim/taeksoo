@@ -19,17 +19,11 @@ import {
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconEdit,
-  IconEye,
-  IconEyeOff,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconEdit, IconEye, IconEyeOff } from '@tabler/icons-react';
 
-function TopBarActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
+function Button({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <button
       className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
@@ -478,22 +472,7 @@ export default function InstalledAppEditPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <TopBarActionButton icon={<IconTerminal2 size={16} stroke={1.5} />} label="Console" />
-              <TopBarActionButton
-                icon={<IconBell size={16} stroke={1.5} />}
-                label="Notifications"
-              />
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

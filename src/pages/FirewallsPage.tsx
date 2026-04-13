@@ -4,7 +4,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -25,7 +24,7 @@ import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -644,9 +643,6 @@ export default function FirewallsPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-          }
         />
       }
     >

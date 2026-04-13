@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -21,7 +20,6 @@ import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
-  IconBell,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -1078,9 +1076,6 @@ export function StoragePoolDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"

@@ -14,24 +14,16 @@ import {
   TabPanel,
   ContextMenu,
   PageShell,
-  CopyButton,
-  ProgressBar,
   InfoBox,
   InlineMessage,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconChevronDown, IconLoader2, IconExternalLink } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -155,6 +147,87 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
       nodeCount: 3,
     },
   },
+  'cluster-004': {
+    id: 'cluster-004',
+    name: 'Cluster4',
+    status: 'Deleting',
+    kubernetesVersion: 'v1.33.1',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Sep 20, 2025 09:15:42',
+    networking: {
+      externalNetwork: 'extnet-04',
+      tenantNetwork: 'net-04',
+      subnet: 'subnet-04 (10.62.4.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
+      nodeCount: 3,
+      etcd: 'External (10GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
+      nodeCount: 2,
+    },
+  },
+  'cluster-005': {
+    id: 'cluster-005',
+    name: 'Cluster5',
+    status: 'Unknown',
+    kubernetesVersion: 'v1.31.0',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Aug 14, 2025 16:45:10',
+    networking: {
+      externalNetwork: 'extnet-05',
+      tenantNetwork: 'net-05',
+      subnet: 'subnet-05 (10.62.5.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
+      nodeCount: 1,
+      etcd: 'External (10GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
+      nodeCount: 1,
+    },
+  },
+  'cluster-006': {
+    id: 'cluster-006',
+    name: 'Cluster6',
+    status: 'Updating',
+    kubernetesVersion: 'v1.33.4',
+    containerNetwork: 'Kube OVN',
+    createdAt: 'Jun 5, 2025 15:42:33',
+    networking: {
+      externalNetwork: 'extnet-06',
+      tenantNetwork: 'net-06',
+      subnet: 'subnet-06 (10.62.6.0/28)',
+    },
+    nodeConfiguration: {
+      nodeType: 'Instance',
+    },
+    controlPlanes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.medium (4vCPU, 8.00 GiB RAM, 40.00 GiB Disk)',
+      nodeCount: 3,
+      etcd: 'External (20GiB)',
+    },
+    nodes: {
+      image: 'ubuntu-24.04-tk-base',
+      flavor: 'th.medium (4vCPU, 8.00 GiB RAM, 40.00 GiB Disk)',
+      nodeCount: 4,
+    },
+  },
 };
 
 /* ----------------------------------------
@@ -225,28 +298,52 @@ export function ClusterDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
-  // More actions menu items
+  const isProvisioned = clusterData.status === 'Provisioned';
+  const isProvisioning = clusterData.status === 'Provisioning';
+  const isFailed = clusterData.status === 'Failed';
+  const isDeleting = clusterData.status === 'Deleting';
+  const isUnknown = clusterData.status === 'Unknown';
+  const isUpdating = clusterData.status === 'Updating';
+
+  // More actions menu items — vary by status
   const moreActionsItems: ContextMenuItem[] = [
-    {
-      id: 'kubectl-shell',
-      label: 'Kubectl shell',
-      onClick: () => console.log('Kubectl Shell'),
-    },
-    {
-      id: 'download-kubeconfig',
-      label: 'Download KubeConfig',
-      onClick: () => console.log('Download KubeConfig'),
-    },
-    {
-      id: 'copy-kubeconfig',
-      label: 'Copy KubeConfig to clipboard',
-      onClick: () => console.log('Copy KubeConfig'),
-    },
-    {
-      id: 'edit',
-      label: 'Edit cluster',
-      onClick: () => navigate(`/container/cluster-management/${clusterData.id}/edit`),
-    },
+    ...(isProvisioned
+      ? [
+          {
+            id: 'kubectl-shell',
+            label: 'Kubectl shell',
+            onClick: () => console.log('Kubectl Shell'),
+          },
+          {
+            id: 'download-kubeconfig',
+            label: 'Download KubeConfig',
+            onClick: () => console.log('Download KubeConfig'),
+          },
+          {
+            id: 'copy-kubeconfig',
+            label: 'Copy KubeConfig to clipboard',
+            onClick: () => console.log('Copy KubeConfig'),
+          },
+        ]
+      : []),
+    ...(isProvisioned || isFailed || isUnknown
+      ? [
+          {
+            id: 'edit',
+            label: 'Edit cluster',
+            onClick: () => navigate(`/container/cluster-management/${clusterData.id}/edit`),
+          },
+        ]
+      : []),
+    ...(isFailed
+      ? [
+          {
+            id: 'reprovision',
+            label: 'Reprovision',
+            onClick: () => console.log('Reprovision'),
+          },
+        ]
+      : []),
     {
       id: 'customize-appearance',
       label: 'Customize appearance',
@@ -258,12 +355,16 @@ export function ClusterDetailPage() {
           )
         ),
     },
-    {
-      id: 'delete',
-      label: 'Delete',
-      status: 'danger',
-      onClick: () => console.log('Delete'),
-    },
+    ...(!isDeleting
+      ? [
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger' as const,
+            onClick: () => console.log('Delete'),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -298,30 +399,7 @@ export function ClusterDetailPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={clusterData.id} size="sm" iconOnly tooltip="Copy cluster ID" />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
@@ -356,12 +434,40 @@ export function ClusterDetailPage() {
                     </Badge>
                   </span>
                 </Tooltip>
-                {clusterData.status === 'Provisioning' && (
-                  <span className="flex-1 min-w-0 flex flex-col gap-1">
+                {isProvisioning && (
+                  <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <IconLoader2
+                      size={14}
+                      stroke={1.5}
+                      className="text-[var(--color-action-primary)] animate-spin shrink-0"
+                    />
                     <span className="text-body-sm text-[var(--color-text-subtle)]">
                       Control plane initializing
                     </span>
-                    <ProgressBar value={65} max={100} size="sm" showValue={false} />
+                  </span>
+                )}
+                {isDeleting && (
+                  <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <IconLoader2
+                      size={14}
+                      stroke={1.5}
+                      className="text-[var(--color-text-muted)] animate-spin shrink-0"
+                    />
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Removing cluster resources
+                    </span>
+                  </span>
+                )}
+                {isUpdating && (
+                  <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <IconLoader2
+                      size={14}
+                      stroke={1.5}
+                      className="text-[var(--color-action-primary)] animate-spin shrink-0"
+                    />
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      Updating cluster
+                    </span>
                   </span>
                 )}
               </div>
@@ -375,10 +481,40 @@ export function ClusterDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
-        {clusterData.status === 'Provisioning' && (
+        {isProvisioning && (
           <InlineMessage variant="info">
-            Cluster provisioning is in progress. Some features may be unavailable until the process
-            is complete.
+            A cluster operation is in progress. Some actions may be temporarily unavailable. Status
+            will return to &apos;Provisioned&apos; once the operation is complete.
+          </InlineMessage>
+        )}
+
+        {isFailed && (
+          <InlineMessage variant="error">
+            Cluster provisioning failed at control plane initializing.{' '}
+            <a
+              href="#logs"
+              className="inline-flex items-center gap-0.5 underline hover:no-underline text-[var(--color-action-primary)] font-medium"
+            >
+              View error logs in Logs
+              <IconExternalLink
+                size={12}
+                stroke={2}
+                className="inline-block text-[var(--color-action-primary)]"
+              />
+            </a>
+          </InlineMessage>
+        )}
+
+        {isUpdating && (
+          <InlineMessage variant="info">
+            A cluster operation is in progress. Some actions may be temporarily unavailable. Status
+            will return to &apos;Provisioned&apos; once the operation is complete.
+          </InlineMessage>
+        )}
+
+        {isDeleting && (
+          <InlineMessage variant="info">
+            Cluster deletion is in progress. All resources will be cleaned up automatically.
           </InlineMessage>
         )}
 

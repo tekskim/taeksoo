@@ -10,7 +10,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Pagination,
   Table,
   Tabs,
@@ -40,7 +39,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconAlertCircle,
-  IconBell,
   IconCaretDownFilled,
   IconCaretRightFilled,
   IconDots,
@@ -2833,13 +2831,6 @@ export function CreateTemplatePage() {
                 { label: 'Instance templates', href: '/compute/instance-templates' },
                 { label: 'Create template' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

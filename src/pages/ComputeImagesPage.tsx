@@ -8,7 +8,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -31,7 +30,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromImageDrawer } from '@/components/CreateVolumeFromImageDrawer';
 import { EditImageDrawer } from '@/components/EditImageDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -520,13 +519,6 @@ export function ComputeImagesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Images' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

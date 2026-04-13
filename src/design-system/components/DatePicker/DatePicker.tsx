@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconClock } from '@tabler/icons-react';
 import { NumberInput } from '../Input/NumberInput';
 import { Select } from '../Select';
 
@@ -42,12 +42,14 @@ export interface DatePickerProps {
   timeFormat?: '24h' | '12h';
   /** Time input mode: 'stepper' (two NumberInputs) or 'inline' (single HH:MM text input) */
   timeInputMode?: 'stepper' | 'inline';
+  /** Show Cancel / Apply buttons (auto-enabled when showTime is true) */
+  showActions?: boolean;
+  /** Callback when Apply is clicked */
+  onApply?: (date: Date) => void;
+  /** Callback when Cancel is clicked */
+  onCancel?: () => void;
   /** Custom class name */
   className?: string;
-  /** @deprecated thaki-ui compatibility - use onChange/onRangeChange instead */
-  onApply?: (value: ThakiDatePickerValue) => void;
-  /** @deprecated thaki-ui compatibility - cancel handler */
-  onCancel?: () => void;
   /** @deprecated thaki-ui compatibility - number of visible months */
   numberOfMonths?: number;
   /** @deprecated thaki-ui compatibility - loading state */
@@ -207,23 +209,16 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   showTime = false,
   timeFormat = '24h',
   timeInputMode = 'stepper',
-  className = '',
-  // thaki-ui compatibility props
+  showActions,
   onApply,
   onCancel,
+  className = '',
+  // thaki-ui compatibility props
   numberOfMonths,
   isLoading,
 }) => {
   // thaki-ui compatibility: warn about deprecated props
   if (process.env.NODE_ENV === 'development') {
-    if (onApply)
-      console.warn(
-        '[DatePicker] onApply prop is deprecated. Selection is applied immediately via onChange/onRangeChange.'
-      );
-    if (onCancel)
-      console.warn(
-        '[DatePicker] onCancel prop is deprecated. Handle cancellation in parent component.'
-      );
     if (numberOfMonths && numberOfMonths > 1)
       console.warn(
         '[DatePicker] numberOfMonths > 1 is not supported. Only single month view is available.'
@@ -233,6 +228,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         '[DatePicker] isLoading prop is deprecated. Handle loading state in parent component.'
       );
   }
+
+  const shouldShowActions = showActions ?? showTime;
   // Initialize view month from value or today
   const initialDate = value || rangeValue.start || new Date();
   const [viewYear, setViewYear] = useState(initialDate.getFullYear());
@@ -688,8 +685,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
       {/* Time Picker */}
       {showTime && mode === 'single' && (
-        <div className="flex items-center gap-2 pt-2 -mb-1 border-t border-[var(--color-border-subtle)]">
-          <span className="text-label-sm text-[var(--color-text-muted)] select-none">Time</span>
+        <div className="flex items-center gap-2 pt-2 border-t border-[var(--color-border-subtle)]">
+          <span className="flex items-center gap-1 text-label-sm text-[var(--color-text-muted)] select-none">
+            <IconClock size={12} stroke={2} />
+            Time
+          </span>
           <div className="flex items-center gap-1.5 ml-auto">
             {timeInputMode === 'inline' ? (
               <input
@@ -752,6 +752,51 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               />
             )}
           </div>
+        </div>
+      )}
+
+      {/* Cancel / Apply Actions */}
+      {shouldShowActions && (
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="
+              flex-1
+              h-[var(--button-height-sm)]
+              text-[length:var(--button-font-size-sm)]
+              leading-[var(--button-line-height-sm)]
+              font-medium
+              text-[var(--color-text-default)]
+              bg-[var(--color-surface-default)]
+              border border-[var(--color-border-strong)]
+              rounded-[var(--button-radius)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--button-secondary-hover-bg)]
+            "
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className={`
+              flex-1
+              h-[var(--button-height-sm)]
+              text-[length:var(--button-font-size-sm)]
+              leading-[var(--button-line-height-sm)]
+              font-medium
+              text-[var(--color-text-on-primary)]
+              bg-[var(--color-action-primary)]
+              rounded-[var(--button-radius)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-action-primary-hover)]
+              ${!value ? 'opacity-50 cursor-not-allowed' : ''}
+            `}
+            disabled={!value}
+            onClick={() => value && onApply?.(value)}
+          >
+            Apply
+          </button>
         </div>
       )}
     </div>

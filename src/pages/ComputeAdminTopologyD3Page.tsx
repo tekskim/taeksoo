@@ -10,7 +10,6 @@ import {
   Button,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tooltip,
   PageShell,
@@ -21,7 +20,6 @@ import {
   IconExternalLink,
   IconRefresh,
   IconSearch,
-  IconBell,
   IconCheck,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -3060,13 +3058,6 @@ export function ComputeAdminTopologyD3Page() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Topology' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

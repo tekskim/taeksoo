@@ -6,7 +6,6 @@ import {
   PageShell,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -24,7 +23,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconEdit, IconDownload } from '@tabler/icons-react';
+import { IconTrash, IconEdit, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -550,13 +549,6 @@ export default function RouterDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

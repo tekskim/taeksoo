@@ -10,7 +10,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ConfirmModal,
@@ -30,7 +29,7 @@ import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDra
 import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
-import { IconTrash, IconDownload, IconBell, IconCube, IconRouter } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconCube, IconRouter } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -643,13 +642,6 @@ export function ComputeAdminPortsPage() {
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Ports' }]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

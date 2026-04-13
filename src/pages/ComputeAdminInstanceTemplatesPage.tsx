@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -24,7 +23,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -421,13 +420,6 @@ export function ComputeAdminInstanceTemplatesPage() {
                 { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instance templates' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

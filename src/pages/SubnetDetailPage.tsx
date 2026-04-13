@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -27,14 +26,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconExternalLink,
-  IconServer,
-  IconRouter,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconExternalLink, IconServer, IconRouter } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -389,13 +381,6 @@ export default function SubnetDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              onClick={() => {}}
-              hasNotification
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"

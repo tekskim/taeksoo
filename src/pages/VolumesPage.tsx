@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   ListToolbar,
   ContextMenu,
@@ -37,7 +36,7 @@ import { ChangeVolumeTypeDrawer } from '@/components/ChangeVolumeTypeDrawer';
 import { CreateTransferDrawer } from '@/components/CreateTransferDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 import { DetachVolumeDrawer } from '@/components/DetachVolumeDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -609,13 +608,6 @@ export function VolumesPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volumes' }]} />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
           }
         />
       }

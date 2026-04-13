@@ -9,7 +9,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -36,7 +35,6 @@ import {
   IconPlayerStop,
   IconTrash,
   IconArrowUp,
-  IconBell,
   IconDownload,
   IconLock,
   IconTerminal2,
@@ -1491,13 +1489,6 @@ export function ComputeAdminInstanceListPage() {
                 { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instances list' },
               ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
             />
           }
         />

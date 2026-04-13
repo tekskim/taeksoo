@@ -7,7 +7,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   PageShell,
   PageHeader,
@@ -17,7 +16,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconRefresh, IconBell } from '@tabler/icons-react';
+import { IconRefresh } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -304,9 +303,6 @@ export function PoolsPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Pools' }]} />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

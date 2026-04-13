@@ -6,7 +6,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -27,7 +26,6 @@ import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
-  IconBell,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -745,9 +743,6 @@ export function ImageDetailPage() {
                 { label: imageData.name },
               ]}
             />
-          }
-          actions={
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
           }
         />
       }

@@ -5,7 +5,6 @@ import {
   VStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -41,7 +40,6 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconChevronRight,
-  IconBell,
   IconCirclePlus,
   IconSquarePlus,
   IconLinkPlus,
@@ -138,6 +136,7 @@ interface InstanceDetail {
   };
   image: string;
   os: string;
+  origin: string;
   locked: boolean;
   interfaces: number;
   keyPair: string;
@@ -151,8 +150,8 @@ interface InstanceDetail {
 
 // Instance data map by ID
 const mockInstancesMap: Record<string, InstanceDetail> = {
-  'vm-001': {
-    id: 'vm-001',
+  '7284d9174e81431e93060a9bbcf2cdfd': {
+    id: '7284d9174e81431e93060a9bbcf2cdfd',
     name: 'worker-node-01',
     status: 'active',
     host: 'compute-03',
@@ -162,14 +161,15 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
     os: 'CentOS 7',
+    origin: 'Container (Cluster1)',
     locked: true,
     interfaces: 5,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
     userData: '-',
   },
-  'vm-002': {
-    id: 'vm-002',
+  a3f1e8b204c647d8b5921ac3def08712: {
+    id: 'a3f1e8b204c647d8b5921ac3def08712',
     name: 'worker-node-02',
     status: 'active',
     host: 'compute-03',
@@ -179,14 +179,15 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
     image: 'CentOS 7',
     os: 'CentOS 7',
+    origin: 'Container (Cluster1)',
     locked: false,
     interfaces: 3,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
     userData: '-',
   },
-  'vm-003': {
-    id: 'vm-003',
+  c9d2f5a63b7e4019a8e4b1d07c6e3f9a: {
+    id: 'c9d2f5a63b7e4019a8e4b1d07c6e3f9a',
     name: 'master-node-01',
     status: 'active',
     host: 'compute-01',
@@ -196,14 +197,15 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
     image: 'Ubuntu 22.04',
     os: 'Ubuntu 22.04',
+    origin: 'Container (Cluster2)',
     locked: false,
     interfaces: 4,
     keyPair: 'master-key',
     serverGroup: 'master-group',
     userData: '-',
   },
-  'vm-004': {
-    id: 'vm-004',
+  e5b8c0d31f2a49e7b6d4a3c2f1e09876: {
+    id: 'e5b8c0d31f2a49e7b6d4a3c2f1e09876',
     name: 'db-server-01',
     status: 'stopped',
     host: 'compute-02',
@@ -213,14 +215,15 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
     image: 'CentOS 8',
     os: 'CentOS 8',
+    origin: 'Container (Cluster1)',
     locked: true,
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
     userData: '-',
   },
-  'vm-005': {
-    id: 'vm-005',
+  '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d': {
+    id: '1a4b7c9d3e5f2a8b6c0d4e7f9a1b3c5d',
     name: 'gpu-node-01',
     status: 'active',
     host: 'compute-gpu-01',
@@ -230,6 +233,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
     image: 'Ubuntu 22.04',
     os: 'Ubuntu 22.04',
+    origin: 'Container (Cluster3)',
     locked: false,
     interfaces: 2,
     keyPair: 'gpu-key',
@@ -250,6 +254,7 @@ const defaultInstanceDetail: InstanceDetail = {
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
   image: 'Unknown',
   os: 'Unknown',
+  origin: '-',
   locked: false,
   interfaces: 0,
   keyPair: '-',
@@ -998,13 +1003,6 @@ export function InstanceDetailPage() {
               ]}
             />
           }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1.5} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -1129,7 +1127,7 @@ export function InstanceDetailPage() {
             <DetailHeader.InfoCard label="Status" value="Active" status="active" />
             <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
             <DetailHeader.InfoCard label="Host" value={instance.host} />
-            <DetailHeader.InfoCard label="Origin" value={instance.image} />
+            <DetailHeader.InfoCard label="Origin" value={instance.origin} />
             <DetailHeader.InfoCard
               label="Locked state"
               value={

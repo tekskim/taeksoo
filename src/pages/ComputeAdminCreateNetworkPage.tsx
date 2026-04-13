@@ -7,7 +7,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   Textarea,
   SectionCard,
@@ -32,7 +31,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconBell, IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconEdit, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -374,15 +373,6 @@ export default function CreateNetworkPage() {
                 { label: 'Create network' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }

@@ -7,7 +7,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Input,
   Select,
   SectionCard,
@@ -35,7 +34,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit, IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
+import { IconEdit, IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -523,15 +522,6 @@ export default function CreateVirtualAdapterPage() {
                 { label: 'Create virtual adapter' },
               ]}
             />
-          }
-          actions={
-            <>
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                aria-label="Notifications"
-              />
-            </>
           }
         />
       }

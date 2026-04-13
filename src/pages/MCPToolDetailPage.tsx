@@ -35,7 +35,6 @@ import {
   IconRefresh,
   IconCode,
   IconDownload,
-  IconBell,
   IconPalette,
 } from '@tabler/icons-react';
 
@@ -540,11 +539,6 @@ export function MCPToolDetailPage() {
                 icon={<IconPalette size={16} stroke={1} />}
                 onClick={() => navigate('/design-system')}
                 aria-label="Design System"
-              />
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
-                aria-label="Notifications"
-                badge={true}
               />
             </>
           }

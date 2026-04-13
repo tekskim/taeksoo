@@ -23,20 +23,12 @@ import {
   Tooltip,
   BadgeList,
   SearchInput,
-  CopyButton,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconSearch,
-  IconDotsCircleHorizontal,
-  IconChevronDown,
-  IconPencilCog,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconChevronDown } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
@@ -52,6 +44,7 @@ interface ServiceData {
   clusterIP: string;
   loadBalancerIP: string;
   externalIP: string;
+  externalName?: string;
   externalTrafficPolicy: string;
   sessionAffinity: string;
   createdAt: string;
@@ -103,16 +96,16 @@ interface ConditionRow {
 const mockServiceData: Record<string, ServiceData> = {
   '1': {
     id: '1',
-    name: 'capi-webhook-service',
+    name: 'serviceName',
     status: 'Active',
-    namespace: 'default',
+    namespace: 'default:1:27',
     type: 'LoadBalancer',
-    clusterIP: '10.11.111.10',
-    loadBalancerIP: '203.0.113.10',
-    externalIP: '198.51.100.5',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '198.51.10.3',
+    externalIP: '199.51.10.4 (+2)',
     externalTrafficPolicy: 'Local',
     sessionAffinity: 'None',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Nov 11, 2025',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -126,22 +119,118 @@ const mockServiceData: Record<string, ServiceData> = {
   },
   '2': {
     id: '2',
-    name: 'nginx-service',
-    status: 'Processing',
-    namespace: 'ingress-nginx',
-    type: 'LoadBalancer',
-    clusterIP: '10.43.136.100',
-    loadBalancerIP: '203.0.113.50',
-    externalIP: '198.51.100.10',
-    externalTrafficPolicy: 'Cluster',
-    sessionAffinity: 'ClientIP',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'ClusterIP (Headless)',
+    clusterIP: '-',
+    loadBalancerIP: '',
+    externalIP: '',
+    externalTrafficPolicy: '',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2025',
     labels: {
-      'app.kubernetes.io/name': 'nginx',
-      'app.kubernetes.io/component': 'controller',
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
     },
     annotations: {
-      'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '3': {
+    id: '3',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'ExternalName',
+    clusterIP: '',
+    loadBalancerIP: '',
+    externalIP: '',
+    externalName: 'my.database.example.com',
+    externalTrafficPolicy: '',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2025',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '4': {
+    id: '4',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'LoadBalancer',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '198.51.10.3',
+    externalIP: '199.51.10.4 (+2)',
+    externalTrafficPolicy: 'Local',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2025',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '5': {
+    id: '5',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'NodePort',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '',
+    externalIP: '199.51.10.4 (+2)',
+    externalTrafficPolicy: 'Cluster',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2025',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
+    },
+  },
+  '6': {
+    id: '6',
+    name: 'serviceName',
+    status: 'Active',
+    namespace: 'default:1:27',
+    type: 'ClusterIP',
+    clusterIP: '10.100.12.210',
+    loadBalancerIP: '',
+    externalIP: '199.51.10.4 (+2)',
+    externalTrafficPolicy: '',
+    sessionAffinity: 'None',
+    createdAt: 'Nov 11, 2025',
+    labels: {
+      'app.kubernetes.io/managed-by': 'Helm',
+      'cluster.x-k8s.io/provider': 'cluster-api',
+      'control-plane': 'controller-manager',
+    },
+    annotations: {
+      'deployment.kubernetes.io/revision': '1',
+      'meta.helm.sh/release-name': 'thakicloud-provisioning-capi',
+      'meta.helm.sh/release-namespace': 'cattle-provisioning-capi-system',
     },
   },
 };
@@ -790,30 +879,7 @@ export function ContainerServiceDetailPage() {
               ]}
             />
           }
-          actions={
-            <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-cluster-appearance'))}
-                aria-label="Customize cluster appearance"
-              >
-                <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <CopyButton value={service.name} size="sm" iconOnly />
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-            </>
-          }
+          actions={<ContainerTopBarActions />}
         />
       }
       bottomPanel={
@@ -850,6 +916,7 @@ export function ContainerServiceDetailPage() {
             </ContextMenu>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
+            {/* Row 1: Common across all types */}
             <DetailHeader.InfoCard
               label="Status"
               value={
@@ -870,19 +937,47 @@ export function ContainerServiceDetailPage() {
             />
             <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
             <DetailHeader.InfoCard label="Type" value={service.type} />
-            <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
-            <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
-            <DetailHeader.InfoCard
-              label="Load balancer IP"
-              value={service.loadBalancerIP}
-              copyable
-            />
-            <DetailHeader.InfoCard
-              label="External Traffic Policy"
-              value={service.externalTrafficPolicy}
-            />
-            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
-            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
+            <DetailHeader.InfoCard label="Created At" value={service.createdAt} />
+
+            {/* Row 2+: Type-specific fields */}
+            <DetailHeader.InfoCard label="Session Affinity" value={service.sessionAffinity} />
+
+            {(service.type === 'ClusterIP' ||
+              service.type === 'ClusterIP (Headless)' ||
+              service.type === 'NodePort' ||
+              service.type === 'LoadBalancer') && (
+              <DetailHeader.InfoCard label="Cluster IP" value={service.clusterIP} copyable />
+            )}
+
+            {service.type === 'LoadBalancer' && (
+              <DetailHeader.InfoCard
+                label="Load Balancer IP"
+                value={service.loadBalancerIP}
+                copyable
+              />
+            )}
+
+            {(service.type === 'ClusterIP' ||
+              service.type === 'NodePort' ||
+              service.type === 'LoadBalancer') && (
+              <DetailHeader.InfoCard label="External IP" value={service.externalIP} copyable />
+            )}
+
+            {service.type === 'ExternalName' && (
+              <DetailHeader.InfoCard
+                label="External Name"
+                value={service.externalName || '-'}
+                copyable
+              />
+            )}
+
+            {(service.type === 'NodePort' || service.type === 'LoadBalancer') && (
+              <DetailHeader.InfoCard
+                label="External Traffic Policy"
+                value={service.externalTrafficPolicy}
+              />
+            )}
+
             <DetailHeader.InfoCard
               label={`Labels (${Object.keys(service.labels).length})`}
               value={
