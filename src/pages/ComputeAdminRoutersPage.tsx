@@ -27,6 +27,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -335,7 +336,12 @@ export function ComputeAdminRoutersPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -354,7 +360,12 @@ export function ComputeAdminRoutersPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -387,8 +398,11 @@ export function ComputeAdminRoutersPage() {
             >
               {row.externalNetwork}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID: {row.externalNetworkId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.externalNetworkId}>
+                ID : {row.externalNetworkId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.externalNetworkId} />
             </span>
           </div>
         ) : (

@@ -51,6 +51,7 @@ import {
   IconUpload,
   IconX,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -861,8 +862,11 @@ function TemplateInformationSection({
                             <span className="text-label-md text-[var(--color-action-primary)]">
                               {value}
                             </span>
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              ID: {row.id}
+                            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                              <span className="truncate" title={row.id}>
+                                ID : {row.id.slice(0, 8)}
+                              </span>
+                              <InlineCopyId value={row.id} />
                             </span>
                           </div>
                         ),
@@ -1119,7 +1123,12 @@ function ImageSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1174,7 +1183,12 @@ function ImageSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1196,7 +1210,12 @@ function ImageSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1253,7 +1272,12 @@ function ImageSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -1863,8 +1887,11 @@ function FlavorSection({
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2237,8 +2264,11 @@ function NetworkSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2313,8 +2343,11 @@ function NetworkSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2390,8 +2423,11 @@ function NetworkSection({
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </VStack>
       ),
@@ -2412,8 +2448,11 @@ function NetworkSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
-            ID: {row.ownedNetworkId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId}>
+              ID : {row.ownedNetworkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId} />
           </span>
         </VStack>
       ),

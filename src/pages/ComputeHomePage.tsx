@@ -15,6 +15,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { IconChevronRight } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Recent Activity Type
@@ -213,8 +214,11 @@ export function ComputeHomePage() {
           >
             {row.resourceType}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)] truncate">
-            ID : {row.resourceId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.resourceId}>
+              ID : {row.resourceId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.resourceId} />
           </span>
         </div>
       ),

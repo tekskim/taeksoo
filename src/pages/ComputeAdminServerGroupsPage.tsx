@@ -25,6 +25,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -291,7 +292,12 @@ export function ComputeAdminServerGroupsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -309,7 +315,12 @@ export function ComputeAdminServerGroupsPage() {
           >
             {row.tenantName}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -330,8 +341,11 @@ export function ComputeAdminServerGroupsPage() {
                 {firstInstance?.name || '-'}
               </span>
               {firstInstance && (
-                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                  ID: {firstInstance.id}
+                <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                  <span className="truncate" title={firstInstance.id}>
+                    ID : {firstInstance.id.slice(0, 8)}
+                  </span>
+                  <InlineCopyId value={firstInstance.id} />
                 </span>
               )}
             </div>

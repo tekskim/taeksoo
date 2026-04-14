@@ -14,13 +14,15 @@ import {
   Select,
   Toggle,
   FormField,
+  Modal,
+  InlineMessage,
   PageShell,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -302,10 +304,9 @@ interface SummarySidebarProps {
   sectionStatus: Record<SectionStep, WizardSectionState>;
   onCancel: () => void;
   onSave: () => void;
-  onDelete: () => void;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySidebarProps) {
+function SummarySidebar({ sectionStatus, onCancel, onSave }: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -330,19 +331,6 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySi
           </Button>
         </HStack>
       </div>
-
-      {/* Delete Action */}
-      <div className="flex justify-center mt-4">
-        <Button
-          variant="secondary"
-          size="sm"
-          leftIcon={<IconTrash size={12} />}
-          onClick={onDelete}
-          className="w-[80px] h-8"
-        >
-          Delete
-        </Button>
-      </div>
     </div>
   );
 }
@@ -364,6 +352,8 @@ export function InstanceTemplateDetailPage() {
 
   // Editable form state
   const [formData, setFormData] = useState<InstanceTemplateDetail>(originalTemplate);
+
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
   // Track which section is being edited (null = all done)
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
@@ -396,25 +386,24 @@ export function InstanceTemplateDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '#' },
+    { label: 'Proj-1', href: '/compute' },
     { label: 'Instance templates', href: '/compute/instance-templates' },
-    { label: 'Edit template' },
+    { label: formData.name, href: `/compute/instance-templates/${id}` },
+    { label: 'Edit' },
   ];
 
   const handleCancel = () => {
-    navigate('/compute/instance-templates');
+    setCancelModalOpen(true);
+  };
+
+  const handleLeave = () => {
+    setCancelModalOpen(false);
+    navigate(`/compute/instance-templates/${id}`);
   };
 
   const handleSave = () => {
-    // Save logic here
     console.log('Saving template:', formData);
-    navigate('/compute/instance-templates');
-  };
-
-  const handleDelete = () => {
-    if (window.confirm('Removing the selected instances is permanent and cannot be undone.')) {
-      navigate('/compute/instance-templates');
-    }
+    navigate(`/compute/instance-templates/${id}`);
   };
 
   const handleEdit = (section: SectionStep) => {
@@ -496,7 +485,7 @@ export function InstanceTemplateDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => navigate('/compute/instance-templates')}
+          onBack={() => navigate(`/compute/instance-templates/${id}`)}
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
@@ -827,10 +816,26 @@ export function InstanceTemplateDetailPage() {
             sectionStatus={sectionStatus}
             onCancel={handleCancel}
             onSave={handleSave}
-            onDelete={handleDelete}
           />
         </HStack>
       </VStack>
+      <Modal
+        isOpen={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        title="Unsaved changes"
+        size="sm"
+      >
+        <InlineMessage variant="info">Any unsaved changes will be lost.</InlineMessage>
+
+        <div className="flex gap-2 w-full">
+          <Button variant="secondary" onClick={handleLeave} className="flex-1">
+            Leave
+          </Button>
+          <Button variant="primary" onClick={() => setCancelModalOpen(false)} className="flex-1">
+            Stay
+          </Button>
+        </div>
+      </Modal>
     </PageShell>
   );
 }

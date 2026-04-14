@@ -29,6 +29,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -319,7 +320,12 @@ export function ComputeAdminCertificatesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -342,8 +348,11 @@ export function ComputeAdminCertificatesPage() {
                 </span>
               )}
             </div>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.listenerId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.listenerId}>
+                ID : {row.listenerId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.listenerId} />
             </span>
           </div>
         ),

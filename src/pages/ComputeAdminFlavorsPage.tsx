@@ -28,6 +28,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconDownload } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -354,7 +355,12 @@ export function ComputeAdminFlavorsPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </div>
         ),
       },

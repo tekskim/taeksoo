@@ -29,6 +29,7 @@ import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPT
 import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -388,7 +389,12 @@ export function ComputeAdminLoadBalancersPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -406,7 +412,12 @@ export function ComputeAdminLoadBalancersPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -429,8 +440,11 @@ export function ComputeAdminLoadBalancersPage() {
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.ownedNetworkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId.substring(0, 8)}>
+              ID : {row.ownedNetworkId.substring(0, 8).slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId.substring(0, 8)} />
           </span>
         </div>
       ),
@@ -449,8 +463,11 @@ export function ComputeAdminLoadBalancersPage() {
             >
               {row.floatingIp}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.floatingIpId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.floatingIpId}>
+                ID : {row.floatingIpId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.floatingIpId} />
             </span>
           </div>
         ) : (
@@ -465,8 +482,11 @@ export function ComputeAdminLoadBalancersPage() {
         <div className="flex items-center gap-1">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-body-md text-[var(--color-text-default)]">{row.listeners}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.listenerId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.listenerId}>
+                ID : {row.listenerId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.listenerId} />
             </span>
           </div>
           {row.listenerCount > 0 && (

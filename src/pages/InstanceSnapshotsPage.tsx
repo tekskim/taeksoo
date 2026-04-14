@@ -29,6 +29,7 @@ import { CreateVolumeFromSnapshotDrawer } from '@/components/CreateVolumeFromSna
 import { EditInstanceSnapshotDrawer } from '@/components/EditInstanceSnapshotDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -382,7 +383,12 @@ export function InstanceSnapshotsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -415,8 +421,11 @@ export function InstanceSnapshotsPage() {
           >
             {row.sourceInstance}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.sourceInstanceId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.sourceInstanceId}>
+              ID : {row.sourceInstanceId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.sourceInstanceId} />
           </span>
         </div>
       ),

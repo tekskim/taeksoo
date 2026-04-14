@@ -46,6 +46,7 @@ import {
   IconTrash,
   IconX,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -817,7 +818,12 @@ export default function CreateLoadBalancerPage() {
                 <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </VStack>
         ),
       },
@@ -886,7 +892,12 @@ export default function CreateLoadBalancerPage() {
                 <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </VStack>
         ),
       },
@@ -907,8 +918,11 @@ export default function CreateLoadBalancerPage() {
           <HStack gap={1} align="center" className="w-full">
             <VStack gap={0.5} align="start">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID:{row.listenerId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.listenerId}>
+                  ID : {row.listenerId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.listenerId} />
               </span>
             </VStack>
             <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
@@ -974,7 +988,12 @@ export default function CreateLoadBalancerPage() {
                 <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </VStack>
         ),
       },
@@ -988,8 +1007,11 @@ export default function CreateLoadBalancerPage() {
           <HStack gap={1} align="center" className="w-full">
             <VStack gap={0.5} align="start">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID:{row.listenerId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.listenerId}>
+                  ID : {row.listenerId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.listenerId} />
               </span>
             </VStack>
             <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
@@ -1087,7 +1109,12 @@ export default function CreateLoadBalancerPage() {
                 <IconAlertCircle size={14} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </VStack>
         ),
       },
@@ -1108,8 +1135,11 @@ export default function CreateLoadBalancerPage() {
           <HStack gap={1} align="center" className="w-full">
             <VStack gap={0.5} align="start">
               <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID:{row.listenerId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.listenerId}>
+                  ID : {row.listenerId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.listenerId} />
               </span>
             </VStack>
             <span className="ml-auto inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] h-5">
@@ -1149,7 +1179,12 @@ export default function CreateLoadBalancerPage() {
               <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </VStack>
         ),
       },
@@ -1166,8 +1201,11 @@ export default function CreateLoadBalancerPage() {
                 </span>
                 <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               </HStack>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {row.attachedInstanceId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedInstanceId}>
+                  ID : {row.attachedInstanceId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedInstanceId} />
               </span>
             </VStack>
           ) : (
@@ -1249,7 +1287,12 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <span className="text-label-md text-[var(--color-action-primary)]">{row.portName}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.portId}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.portId}>
+                ID : {row.portId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.portId} />
+            </span>
           </VStack>
         ),
       },

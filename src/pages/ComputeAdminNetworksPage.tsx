@@ -30,6 +30,7 @@ import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -369,8 +370,11 @@ export function ComputeAdminNetworksPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
-            ID: {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -390,8 +394,11 @@ export function ComputeAdminNetworksPage() {
           >
             {row.tenantName}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
-            ID: {row.tenantId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
           </span>
         </div>
       ),

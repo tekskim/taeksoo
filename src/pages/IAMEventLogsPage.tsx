@@ -21,6 +21,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Type Definitions
@@ -553,8 +554,11 @@ export default function IAMEventLogsPage() {
                         <span className="text-body-md text-[var(--color-text-default)]">
                           {log.eventName}
                         </span>
-                        <span className="text-body-sm text-[var(--color-text-subtle)]">
-                          ID: {log.eventId}
+                        <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                          <span className="truncate" title={log.eventId}>
+                            ID : {log.eventId.slice(0, 8)}
+                          </span>
+                          <InlineCopyId value={log.eventId} />
                         </span>
                       </div>
                     </div>

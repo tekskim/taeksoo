@@ -26,6 +26,7 @@ import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconTrash, IconCube, IconRouter } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -230,7 +231,12 @@ export default function SubnetDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -253,8 +259,11 @@ export default function SubnetDetailPage() {
               >
                 {row.attachedTo.name}
               </Link>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID: {row.attachedTo.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedTo.id}>
+                  ID : {row.attachedTo.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedTo.id} />
               </span>
             </div>
             <Tooltip

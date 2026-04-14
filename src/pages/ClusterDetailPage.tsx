@@ -404,119 +404,124 @@ export function ClusterDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={8}>
-        <DetailHeader>
-          <DetailHeader.Title>{clusterData.name}</DetailHeader.Title>
+      <VStack gap={6}>
+        <VStack gap={4}>
+          <DetailHeader>
+            <DetailHeader.Title>{clusterData.name}</DetailHeader.Title>
 
-          <DetailHeader.Actions>
-            <ContextMenu items={moreActionsItems} trigger="click" align="right">
-              <Button
-                variant="secondary"
-                size="sm"
-                rightIcon={<IconChevronDown size={16} stroke={1.5} />}
-              >
-                More actions
-              </Button>
-            </ContextMenu>
-          </DetailHeader.Actions>
+            <DetailHeader.Actions>
+              <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                >
+                  More actions
+                </Button>
+              </ContextMenu>
+            </DetailHeader.Actions>
 
-          <DetailHeader.InfoGrid>
-            <InfoBox label="Status" className="flex-1">
-              <div className="flex items-center gap-3 w-full">
-                <Tooltip content={clusterData.status}>
-                  <span className="shrink-0">
-                    <Badge
-                      theme={getContainerStatusTheme(clusterData.status)}
-                      type="subtle"
-                      size="sm"
-                    >
-                      {clusterData.status}
-                    </Badge>
-                  </span>
-                </Tooltip>
-                {isProvisioning && (
-                  <span className="flex-1 min-w-0 flex items-center gap-1.5">
-                    <IconLoader2
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-action-primary)] animate-spin shrink-0"
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      Control plane initializing
+            <DetailHeader.InfoGrid>
+              <InfoBox label="Status" className="flex-1">
+                <div className="flex items-center gap-3 w-full">
+                  <Tooltip content={clusterData.status}>
+                    <span className="shrink-0">
+                      <Badge
+                        theme={getContainerStatusTheme(clusterData.status)}
+                        type="subtle"
+                        size="sm"
+                      >
+                        {clusterData.status}
+                      </Badge>
                     </span>
-                  </span>
-                )}
-                {isDeleting && (
-                  <span className="flex-1 min-w-0 flex items-center gap-1.5">
-                    <IconLoader2
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-text-muted)] animate-spin shrink-0"
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      Removing cluster resources
+                  </Tooltip>
+                  {isProvisioning && (
+                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                      <IconLoader2
+                        size={14}
+                        stroke={1.5}
+                        className="text-[var(--color-action-primary)] animate-spin shrink-0"
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Control plane initializing
+                      </span>
                     </span>
-                  </span>
-                )}
-                {isUpdating && (
-                  <span className="flex-1 min-w-0 flex items-center gap-1.5">
-                    <IconLoader2
-                      size={14}
-                      stroke={1.5}
-                      className="text-[var(--color-action-primary)] animate-spin shrink-0"
-                    />
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      Updating cluster
+                  )}
+                  {isDeleting && (
+                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                      <IconLoader2
+                        size={14}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)] animate-spin shrink-0"
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Removing cluster resources
+                      </span>
                     </span>
-                  </span>
-                )}
-              </div>
-            </InfoBox>
-            <DetailHeader.InfoCard
-              label="Kubernetes version"
-              value={clusterData.kubernetesVersion}
-            />
-            <DetailHeader.InfoCard label="Container network" value={clusterData.containerNetwork} />
-            <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
-          </DetailHeader.InfoGrid>
-        </DetailHeader>
-
-        {isProvisioning && (
-          <InlineMessage variant="info">
-            A cluster operation is in progress. Some actions may be temporarily unavailable. Status
-            will return to &apos;Provisioned&apos; once the operation is complete.
-          </InlineMessage>
-        )}
-
-        {isFailed && (
-          <InlineMessage variant="error">
-            Cluster provisioning failed at control plane initializing.{' '}
-            <a
-              href="#logs"
-              className="inline-flex items-center gap-0.5 underline hover:no-underline text-[var(--color-action-primary)] font-medium"
-            >
-              View error logs in Logs
-              <IconExternalLink
-                size={12}
-                stroke={2}
-                className="inline-block text-[var(--color-action-primary)]"
+                  )}
+                  {isUpdating && (
+                    <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                      <IconLoader2
+                        size={14}
+                        stroke={1.5}
+                        className="text-[var(--color-action-primary)] animate-spin shrink-0"
+                      />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Updating cluster
+                      </span>
+                    </span>
+                  )}
+                </div>
+              </InfoBox>
+              <DetailHeader.InfoCard
+                label="Kubernetes version"
+                value={clusterData.kubernetesVersion}
               />
-            </a>
-          </InlineMessage>
-        )}
+              <DetailHeader.InfoCard
+                label="Container network"
+                value={clusterData.containerNetwork}
+              />
+              <DetailHeader.InfoCard label="Created at" value={clusterData.createdAt} />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
 
-        {isUpdating && (
-          <InlineMessage variant="info">
-            A cluster operation is in progress. Some actions may be temporarily unavailable. Status
-            will return to &apos;Provisioned&apos; once the operation is complete.
-          </InlineMessage>
-        )}
+          {isProvisioning && (
+            <InlineMessage variant="info">
+              A cluster operation is in progress. Some actions may be temporarily unavailable.
+              Status will return to &apos;Provisioned&apos; once the operation is complete.
+            </InlineMessage>
+          )}
 
-        {isDeleting && (
-          <InlineMessage variant="info">
-            Cluster deletion is in progress. All resources will be cleaned up automatically.
-          </InlineMessage>
-        )}
+          {isFailed && (
+            <InlineMessage variant="error">
+              Cluster provisioning failed at control plane initializing.{' '}
+              <a
+                href="#logs"
+                className="inline-flex items-center gap-0.5 underline hover:no-underline text-[var(--color-action-primary)] font-medium"
+              >
+                View error logs in Logs
+                <IconExternalLink
+                  size={12}
+                  stroke={2}
+                  className="inline-block text-[var(--color-action-primary)]"
+                />
+              </a>
+            </InlineMessage>
+          )}
+
+          {isUpdating && (
+            <InlineMessage variant="info">
+              A cluster operation is in progress. Some actions may be temporarily unavailable.
+              Status will return to &apos;Provisioned&apos; once the operation is complete.
+            </InlineMessage>
+          )}
+
+          {isDeleting && (
+            <InlineMessage variant="info">
+              Cluster deletion is in progress. All resources will be cleaned up automatically.
+            </InlineMessage>
+          )}
+        </VStack>
 
         {/* Tabs Section */}
         <Tabs value={activeTab} onChange={setActiveTab}>

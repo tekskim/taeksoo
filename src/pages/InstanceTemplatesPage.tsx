@@ -35,6 +35,7 @@ import {
   IconStarFilled,
 } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -400,13 +401,21 @@ export function InstanceTemplatesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute/instance-templates/${row.id}`}
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <Link
+            to={`/compute/instance-templates/${row.id}`}
+            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
       ),
     },
     {
@@ -431,6 +440,11 @@ export function InstanceTemplatesPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
+            id: 'edit',
+            label: 'Edit',
+            onClick: () => navigate(`/compute/instance-templates/${row.id}/edit`),
+          },
+          {
             id: 'create-instance',
             label: 'Create instance',
             onClick: () => console.log('Create instance from template:', row.id),
@@ -444,6 +458,7 @@ export function InstanceTemplatesPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
+            divider: true,
             onClick: () => handleDeleteClick(row),
           },
         ];

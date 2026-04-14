@@ -25,6 +25,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -312,7 +313,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -330,7 +336,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -349,8 +360,11 @@ export default function ComputeAdminFirewallsPage() {
             >
               {row.ingressPolicy}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.ingressPolicyId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.ingressPolicyId}>
+                ID : {row.ingressPolicyId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.ingressPolicyId} />
             </span>
           </div>
         ) : (
@@ -372,8 +386,11 @@ export default function ComputeAdminFirewallsPage() {
             >
               {row.egressPolicy}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.egressPolicyId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.egressPolicyId}>
+                ID : {row.egressPolicyId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.egressPolicyId} />
             </span>
           </div>
         ) : (
@@ -392,8 +409,11 @@ export default function ComputeAdminFirewallsPage() {
               <span className="text-[var(--color-text-default)]">
                 {row.associatedPorts[0].name}
               </span>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {row.associatedPorts[0].id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.associatedPorts[0].id}>
+                  ID : {row.associatedPorts[0].id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.associatedPorts[0].id} />
               </span>
             </div>
             {row.associatedPorts.length > 1 && (
@@ -482,7 +502,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -500,7 +525,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -513,8 +543,11 @@ export default function ComputeAdminFirewallsPage() {
         <div className="flex items-center gap-1 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">{row.firstRule}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.firstRuleId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.firstRuleId}>
+                ID : {row.firstRuleId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.firstRuleId} />
             </span>
           </div>
           {row.rulesCount > 1 && (
@@ -534,8 +567,11 @@ export default function ComputeAdminFirewallsPage() {
         <div className="flex items-center gap-1 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-[var(--color-text-default)]">{row.firstFirewall}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID:{row.firstFirewallId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.firstFirewallId}>
+                ID : {row.firstFirewallId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.firstFirewallId} />
             </span>
           </div>
           {row.firewallsCount > 1 && (
@@ -595,7 +631,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -613,7 +654,12 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },

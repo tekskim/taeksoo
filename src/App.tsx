@@ -34,6 +34,7 @@ import { ComputeAdminHomePage } from '@/pages/ComputeAdminHomePage';
 import { InstanceTemplatesPage } from '@/pages/InstanceTemplatesPage';
 import { ComputeAdminInstanceTemplatesPage } from '@/pages/ComputeAdminInstanceTemplatesPage';
 import { InstanceTemplateDetailPage } from '@/pages/InstanceTemplateDetailPage';
+import { InstanceTemplateDetailViewPage } from '@/pages/InstanceTemplateDetailViewPage';
 import { InstanceSnapshotsPage } from '@/pages/InstanceSnapshotsPage';
 import { ComputeAdminInstanceSnapshotsPage } from '@/pages/ComputeAdminInstanceSnapshotsPage';
 import { InstanceSnapshotDetailPage } from '@/pages/InstanceSnapshotDetailPage';
@@ -522,7 +523,8 @@ function AppRoutes() {
       <Route path="/compute/instance-templates" element={<InstanceTemplatesPage />} />
       <Route path="/compute/instance-templates/create" element={<CreateTemplatePage />} />
       <Route path="/compute/instance-templates/create-v2" element={<CreateTemplatePage />} />
-      <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailPage />} />
+      <Route path="/compute/instance-templates/:id" element={<InstanceTemplateDetailViewPage />} />
+      <Route path="/compute/instance-templates/:id/edit" element={<InstanceTemplateDetailPage />} />
       <Route path="/compute/instance-snapshots" element={<InstanceSnapshotsPage />} />
       <Route path="/compute/instance-snapshots/:id" element={<InstanceSnapshotDetailPage />} />
       <Route path="/compute/images" element={<ComputeImagesPage />} />

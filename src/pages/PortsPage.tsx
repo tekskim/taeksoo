@@ -42,6 +42,7 @@ import {
   IconRouter,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -422,7 +423,12 @@ export function PortsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -448,8 +454,11 @@ export function PortsPage() {
                   <span className="truncate">{row.attachedTo}</span>
                 </Link>
               </Tooltip>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedToId?.substring(0, 8)}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId?.substring(0, 8)}>
+                  ID : {row.attachedToId?.substring(0, 8).slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId?.substring(0, 8)} />
               </span>
             </div>
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
@@ -483,8 +492,11 @@ export function PortsPage() {
               <span className="truncate">{row.ownedNetwork}</span>
             </Link>
           </Tooltip>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.ownedNetworkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId.substring(0, 8)}>
+              ID : {row.ownedNetworkId.substring(0, 8).slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId.substring(0, 8)} />
           </span>
         </div>
       ),

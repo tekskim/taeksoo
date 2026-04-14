@@ -173,11 +173,12 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
               })}
             </FormFieldControl>
 
-            {/* Error Message (below input, shown when error) */}
-            {errorMessage && <FormFieldErrorMessage>{errorMessage}</FormFieldErrorMessage>}
-
-            {/* Helper Text (below input, always visible) */}
-            {helperText && <FormFieldHelperText>{helperText}</FormFieldHelperText>}
+            {/* Error Message replaces Helper Text when error is active */}
+            {error && errorMessage ? (
+              <FormFieldErrorMessage>{errorMessage}</FormFieldErrorMessage>
+            ) : (
+              helperText && <FormFieldHelperText>{helperText}</FormFieldHelperText>
+            )}
           </div>
         </FormFieldContext.Provider>
       );
@@ -297,10 +298,10 @@ FormFieldDescription.displayName = 'FormField.Description';
 
 const FormFieldHelperText = forwardRef<HTMLParagraphElement, FormFieldHelperTextProps>(
   ({ children, className, ...props }, ref) => {
-    const { id } = useFormField();
+    const { id, error } = useFormField();
 
-    // HelperText uses text-body-sm (11px/16px), 8px gap from input
-    // Always visible — shown alongside ErrorMessage, not replaced by it
+    if (error) return null;
+
     return (
       <p
         ref={ref}
