@@ -30,6 +30,7 @@ import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingI
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
 import { IconTrash, IconDownload, IconCube, IconRouter } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -428,7 +429,12 @@ export function ComputeAdminPortsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -447,7 +453,12 @@ export function ComputeAdminPortsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -471,8 +482,11 @@ export function ComputeAdminPortsPage() {
               >
                 {row.attachedTo}
               </Link>
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                ID: {row.attachedToId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId}>
+                  ID : {row.attachedToId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId} />
               </span>
             </div>
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
@@ -504,8 +518,11 @@ export function ComputeAdminPortsPage() {
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.ownedNetworkId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId}>
+              ID : {row.ownedNetworkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId} />
           </span>
         </div>
       ),
@@ -521,8 +538,11 @@ export function ComputeAdminPortsPage() {
             {row.securityGroups}
           </span>
           {row.securityGroupId && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID: {row.securityGroupId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.securityGroupId}>
+                ID : {row.securityGroupId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.securityGroupId} />
             </span>
           )}
         </div>

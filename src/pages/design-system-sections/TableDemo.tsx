@@ -17,6 +17,7 @@ import {
   IconTerminal2,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 interface InstanceData {
   id: string;
@@ -211,8 +212,11 @@ export function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -239,8 +243,11 @@ export function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.imageId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.imageId}>
+              ID : {row.imageId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.imageId} />
           </span>
         </div>
       ),
@@ -256,8 +263,11 @@ export function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.flavorId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -290,8 +300,11 @@ export function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -315,8 +328,11 @@ export function TableDemo() {
                   className="flex-shrink-0 text-[var(--color-action-primary)]"
                 />
               </button>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedToId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId}>
+                  ID : {row.attachedToId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId} />
               </span>
             </div>
             <Tooltip

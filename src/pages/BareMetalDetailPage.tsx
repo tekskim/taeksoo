@@ -42,6 +42,7 @@ import {
   IconLock,
   IconLockOpen,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -613,8 +614,11 @@ export function BareMetalDetailPage() {
                           >
                             {iface.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),
@@ -633,8 +637,11 @@ export function BareMetalDetailPage() {
                           >
                             {iface.network}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),

@@ -22,6 +22,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDownload, IconCirclePlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -298,7 +299,12 @@ export function ComputeAdminBareMetalNodesPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </div>
         ),
       },
@@ -317,8 +323,11 @@ export function ComputeAdminBareMetalNodesPage() {
               >
                 {row.tenant.name}
               </Link>
-              <span className="text-body-sm text-[var(--color-text-muted)]">
-                ID: {row.tenant.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.tenant.id}>
+                  ID : {row.tenant.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.tenant.id} />
               </span>
             </div>
           ) : (

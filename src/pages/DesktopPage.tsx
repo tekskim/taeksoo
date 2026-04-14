@@ -173,7 +173,7 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
 
 function AdminCenterCompositeIcon() {
   return (
-    <div className="w-16 h-16 rounded-2xl bg-white/30 border border-white/10 shadow-sm grid grid-cols-2 grid-rows-2 gap-1 p-1.5">
+    <div className="w-14 h-14 rounded-2xl bg-white/30 border border-white/10 shadow-sm grid grid-cols-2 grid-rows-2 gap-1 p-1.5">
       <img
         src={imgStorageAdmin}
         alt=""

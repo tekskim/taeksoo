@@ -27,6 +27,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -271,7 +272,12 @@ export function ServerGroupsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)] truncate">ID:{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -290,8 +296,11 @@ export function ServerGroupsPage() {
               <span className="text-body-md text-[var(--color-text-default)] truncate">
                 {first.name}
               </span>
-              <span className="text-body-sm text-[var(--color-text-muted)] truncate">
-                ID:{first.id}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={first.id}>
+                  ID : {first.id.slice(0, 8)}
+                </span>
+                <InlineCopyId value={first.id} />
               </span>
             </div>
             {extra > 0 && (

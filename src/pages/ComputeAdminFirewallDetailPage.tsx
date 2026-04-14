@@ -25,6 +25,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash, IconDownload, IconRouter, IconCube, IconServer } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -211,7 +212,12 @@ export default function ComputeAdminFirewallDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -229,8 +235,11 @@ export default function ComputeAdminFirewallDetailPage() {
             >
               {row.attachedToName}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.attachedToId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.attachedToId}>
+                ID : {row.attachedToId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.attachedToId} />
             </span>
           </div>
           <Tooltip
@@ -271,7 +280,12 @@ export default function ComputeAdminFirewallDetailPage() {
           >
             {row.network}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.networkId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.networkId}>
+              ID : {row.networkId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.networkId} />
+          </span>
         </div>
       ),
     },

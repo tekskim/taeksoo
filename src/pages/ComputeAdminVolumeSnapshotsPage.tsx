@@ -28,6 +28,7 @@ import { CreateVolumeFromVolumeSnapshotDrawer } from '@/components/CreateVolumeF
 import { EditVolumeSnapshotDrawer } from '@/components/EditVolumeSnapshotDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -340,7 +341,12 @@ export function ComputeAdminVolumeSnapshotsPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -358,7 +364,12 @@ export function ComputeAdminVolumeSnapshotsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.tenantId} />
+          </span>
         </div>
       ),
     },
@@ -388,8 +399,11 @@ export function ComputeAdminVolumeSnapshotsPage() {
           >
             {row.sourceVolume}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">
-            ID: {row.sourceVolumeId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.sourceVolumeId}>
+              ID : {row.sourceVolumeId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.sourceVolumeId} />
           </span>
         </div>
       ),

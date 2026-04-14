@@ -29,6 +29,7 @@ import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -358,8 +359,11 @@ export function ComputeAdminVolumesPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-              ID : {row.id}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
           </div>
         </div>
@@ -381,7 +385,12 @@ export function ComputeAdminVolumesPage() {
             >
               {row.tenant}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.tenantId}>
+                ID : {row.tenantId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.tenantId} />
+            </span>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -429,8 +438,11 @@ export function ComputeAdminVolumesPage() {
             >
               {row.attachedTo}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              ID: {row.attachedToId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.attachedToId}>
+                ID : {row.attachedToId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.attachedToId} />
             </span>
           </div>
         ) : (

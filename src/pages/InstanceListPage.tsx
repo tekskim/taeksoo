@@ -39,9 +39,8 @@ import {
   IconDownload,
   IconLock,
   IconTerminal2,
-  IconCopy,
-  IconCheck,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateInstanceSnapshotDrawer,
@@ -778,24 +777,6 @@ const filterFields: FilterField[] = [
   },
 ];
 
-function InlineCopyId({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      className={`shrink-0 transition-colors ${copied ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]'}`}
-      onClick={(e) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(value);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-      }}
-      aria-label="Copy ID"
-    >
-      {copied ? <IconCheck size={12} stroke={2} /> : <IconCopy size={12} stroke={1.5} />}
-    </button>
-  );
-}
-
 export function InstanceListPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [currentPage, setCurrentPage] = useState(1);
@@ -1420,8 +1401,11 @@ export function InstanceListPage() {
           >
             {row.flavor}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
-            ID : {row.id.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -1537,8 +1521,11 @@ export function InstanceListPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
-              ID : {row.id.slice(0, 8)}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
             </span>
           </div>
         </div>
@@ -1578,8 +1565,11 @@ export function InstanceListPage() {
           >
             {row.flavor}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate" title={row.id}>
-            ID : {row.id.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),

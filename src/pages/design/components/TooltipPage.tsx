@@ -3,7 +3,7 @@ import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { NotionRenderer } from '../_shared/NotionRenderer';
 import { DosDonts } from '../_shared/DosDonts';
-import { Button, Tooltip, VStack } from '@/design-system';
+import { Badge, BadgeList, Button, Popover, Tooltip, VStack } from '@/design-system';
 import { IconTrash } from '@tabler/icons-react';
 
 const TOOLTIP_GUIDELINES = `## Overview
@@ -38,6 +38,7 @@ const TOOLTIP_GUIDELINES = `## Overview
 | 구분 | 설명 |
 | --- | --- |
 | Default | 일반 텍스트 Tooltip. 기본 위치는 트리거 상단(top) |
+| Badge Tooltip | +N 인디케이터 hover 시 Badge 목록을 표시하는 변형 |
 | Position — Top | 트리거 요소 상단 중앙에 표시 |
 | Position — Top Start | 트리거 요소 상단, 화살표가 왼쪽에 위치 |
 | Position — Top End | 트리거 요소 상단, 화살표가 오른쪽에 위치 |
@@ -84,13 +85,13 @@ const TOOLTIP_GUIDELINES = `## Overview
 
 ## Usage Guidelines
 
-### 선택 기준 — Tooltip vs Popover
+### 선택 기준 — Default Tooltip vs Badge Tooltip
 
-| 기준 | Tooltip | Popover |
+| 기준 | Default Tooltip | Badge Tooltip |
 | --- | --- | --- |
-| 콘텐츠 | 텍스트만 (1~2줄) | 인터랙티브 (폼, 버튼, 메뉴 등) |
-| 트리거 | Hover 및 키보드 포커스 | Click 또는 Hover |
-| 인터랙션 | 비인터랙티브 (읽기 전용) | 인터랙티브 (클릭, 입력 가능) |
+| 콘텐츠 | 텍스트만 (1~2줄) | Badge 목록 (오버플로우 항목) |
+| 트리거 | Hover 및 키보드 포커스 | +N 인디케이터 Hover |
+| 인터랙션 | 비인터랙티브 (읽기 전용) | 비인터랙티브 (읽기 전용) |
 | 접근성 역할 | role="tooltip" | aria-haspopup="dialog" |
 
 ---
@@ -181,6 +182,212 @@ function StaticTooltip({
   );
 }
 
+/* ── Static Badge Tooltip (design preview, no interaction) ── */
+
+function BadgeTooltipArrowTriangles({ position }: { position: 'top' | 'bottom' }) {
+  if (position === 'bottom')
+    return (
+      <div className="relative inline-flex">
+        <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-[var(--color-border-default)]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[var(--color-surface-default)]" />
+      </div>
+    );
+  return (
+    <div className="relative inline-flex">
+      <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-[var(--color-border-default)]" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[var(--color-surface-default)]" />
+    </div>
+  );
+}
+
+function BadgeTooltipShape({ children }: { children: ReactNode }) {
+  return (
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-lg">
+      {children}
+    </div>
+  );
+}
+
+function StaticBadgeTooltip({
+  content,
+  position = 'top',
+  children,
+}: {
+  content: ReactNode;
+  position?: 'top' | 'bottom';
+  children?: ReactNode;
+}) {
+  const arrow = (
+    <div className={`flex justify-center ${position === 'top' ? '-mt-px' : '-mb-px'}`}>
+      <BadgeTooltipArrowTriangles position={position} />
+    </div>
+  );
+
+  const overlay = (
+    <div className="flex flex-col">
+      {position === 'bottom' && arrow}
+      <BadgeTooltipShape>{content}</BadgeTooltipShape>
+      {position === 'top' && arrow}
+    </div>
+  );
+
+  return (
+    <div className="inline-flex flex-col items-center gap-1">
+      {position === 'top' && overlay}
+      {children}
+      {position === 'bottom' && overlay}
+    </div>
+  );
+}
+
+function BadgeTooltipExamples() {
+  return (
+    <VStack gap={8}>
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <span className="text-label-md text-[var(--color-text-default)]">STATIC PREVIEW</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            호버 없이 Badge tooltip 디자인을 확인할 수 있는 정적 미리보기.
+          </span>
+        </VStack>
+        <div className="flex items-start gap-12 pt-4 pb-2">
+          <StaticBadgeTooltip
+            position="top"
+            content={
+              <div className="p-3 min-w-[120px] max-w-[320px]">
+                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                  All Labels (4)
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Badge theme="white" size="sm" className="w-fit">
+                    app=nginx-ingress-controller
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    env=production
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    team=platform-engineering
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    version=2.1.0-rc1
+                  </Badge>
+                </div>
+              </div>
+            }
+          />
+
+          <StaticBadgeTooltip
+            position="bottom"
+            content={
+              <div className="p-3 min-w-[120px] max-w-[320px]">
+                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                  All OSDs (4)
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Badge theme="white" size="sm" className="w-fit">
+                    osd.4
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    osd.5
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    osd.6
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    osd.7
+                  </Badge>
+                </div>
+              </div>
+            }
+          />
+        </div>
+      </VStack>
+
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <span className="text-label-md text-[var(--color-text-default)]">
+            BASIC — 짧은 값 (OSDs, Status)
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            테이블 셀 안에서 배열 데이터를 여러 개의 Badge로 표시. maxBadgeWidth 불필요.
+          </span>
+        </VStack>
+        <BadgeList
+          items={['osd.4', 'osd.5', 'osd.6', 'osd.7']}
+          maxVisible={2}
+          popoverTitle="All OSDs (4)"
+        />
+      </VStack>
+
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <span className="text-label-md text-[var(--color-text-default)]">
+            긴 값 (Labels, Tags)
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            긴 텍스트 뱃지는 maxBadgeWidth로 truncation. Badge tooltip에서 전체 텍스트 확인 가능.
+          </span>
+        </VStack>
+        <BadgeList
+          items={[
+            'app=nginx-ingress-controller',
+            'env=production',
+            'team=platform-engineering',
+            'version=2.1.0-rc1',
+          ]}
+          maxVisible={2}
+          maxBadgeWidth="120px"
+          popoverTitle="All Labels (4)"
+        />
+      </VStack>
+
+      <VStack gap={3}>
+        <VStack gap={1}>
+          <span className="text-label-md text-[var(--color-text-default)]">
+            Detail 페이지 Labels/Annotations
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            DetailHeader.InfoCard에서 Labels가 넘칠 때 +N hover로 전체 목록 표시.
+          </span>
+        </VStack>
+        <div className="flex items-center gap-1 min-w-0">
+          <Badge theme="white" size="sm">
+            app=nginx
+          </Badge>
+          <Popover
+            trigger="hover"
+            position="bottom"
+            delay={200}
+            hideDelay={150}
+            content={
+              <div className="p-3 min-w-[120px] max-w-[320px]">
+                <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
+                  All labels (3)
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Badge theme="white" size="sm" className="w-fit">
+                    app=nginx
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    env=production
+                  </Badge>
+                  <Badge theme="white" size="sm" className="w-fit">
+                    team=backend
+                  </Badge>
+                </div>
+              </div>
+            }
+          >
+            <span className="inline-flex shrink-0 items-center justify-center px-1.5 h-5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
+              +2
+            </span>
+          </Popover>
+        </div>
+      </VStack>
+    </VStack>
+  );
+}
+
 export function TooltipPage() {
   return (
     <ComponentPageTemplate
@@ -190,117 +397,194 @@ export function TooltipPage() {
         '아이콘 전용 버튼처럼 레이블이 없는 UI 요소의 기능을 설명해야 할 때',
         '말줄임(truncate) 처리된 텍스트의 전체 내용을 hover 시 보여줄 때',
         '보조적인 힌트 정보가 있어 레이아웃에 항상 표시하기 어려울 때',
+        'Badge tooltip: BadgeList의 +N 오버플로우 인디케이터에서 전체 목록을 hover로 표시할 때',
+        'Badge tooltip: Detail 페이지의 Labels/Annotations 등 배열 값이 넘칠 때 전체 항목을 보여줄 때',
       ]}
       whenNotToUse={[
-        '전달해야 하는 내용이 인터랙션(버튼, 링크, 폼 등)을 포함할 때 → Popover 사용',
-        '2줄을 초과하는 긴 설명이 필요할 때 → Popover 또는 별도 안내 문구 사용',
-        '이미 레이블이나 설명 텍스트가 충분히 제공된 요소에 중복 정보를 추가할 때',
-        '비활성화(disabled) 상태의 버튼에 Tooltip을 붙여야 할 때 → 비활성 이유를 UI 내에 직접 안내하는 방식 권장',
+        '메뉴 아이템 목록을 표시하는 경우 → ContextMenu 사용',
+        '복잡한 폼이나 상세 정보를 표시하는 경우 → Drawer 사용',
+        '확인/결정이 필요한 액션인 경우 → Modal 사용',
+        '이미 레이블이나 설명 텍스트가 충분히 제공된 요소에 중복 Tooltip을 추가하지 않음',
       ]}
       preview={
-        <ComponentPreview
-          code={`<Tooltip content="Delete this item permanently">
+        <VStack gap={8}>
+          <VStack gap={2}>
+            <span className="text-label-md text-[var(--color-text-default)]">Default Tooltip</span>
+            <ComponentPreview
+              code={`<Tooltip content="Delete this item permanently">
   <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
 </Tooltip>`}
-        >
-          <Tooltip content="Delete this item permanently">
-            <Button variant="danger" size="sm" icon={<IconTrash size={12} />} aria-label="Delete" />
-          </Tooltip>
-        </ComponentPreview>
+            >
+              <Tooltip content="Delete this item permanently">
+                <Button
+                  variant="danger"
+                  size="sm"
+                  icon={<IconTrash size={12} />}
+                  aria-label="Delete"
+                />
+              </Tooltip>
+            </ComponentPreview>
+          </VStack>
+          <VStack gap={2}>
+            <span className="text-label-md text-[var(--color-text-default)]">Badge Tooltip</span>
+            <ComponentPreview
+              code={`<BadgeList
+  items={['app=nginx', 'env=production', 'team=backend', 'version=2.1']}
+  maxVisible={2}
+  maxBadgeWidth="120px"
+  popoverTitle="All Labels (4)"
+/>`}
+            >
+              <BadgeList
+                items={['app=nginx', 'env=production', 'team=backend', 'version=2.1']}
+                maxVisible={2}
+                maxBadgeWidth="120px"
+                popoverTitle="All Labels (4)"
+              />
+            </ComponentPreview>
+          </VStack>
+        </VStack>
       }
       examples={
-        <VStack gap={8}>
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Directions</span>
-            <div className="grid grid-cols-3 gap-y-10 gap-x-4 items-center justify-items-center py-8 px-4">
-              <div className="justify-self-start">
-                <TooltipShape content="Tooltip" direction="top-start" />
-              </div>
-              <div>
-                <TooltipShape content="Tooltip" direction="top" />
-              </div>
-              <div className="justify-self-end">
-                <TooltipShape content="Tooltip" direction="top-end" />
-              </div>
+        <VStack gap={12}>
+          {/* ── Default Tooltip ── */}
+          <VStack gap={8}>
+            <h3 className="text-heading-h4 text-[var(--color-text-default)]">Default</h3>
+            <VStack gap={3}>
+              <span className="text-label-md text-[var(--color-text-default)]">Directions</span>
+              <div className="grid grid-cols-3 gap-y-10 gap-x-4 items-center justify-items-center py-8 px-4">
+                <div className="justify-self-start">
+                  <TooltipShape content="Tooltip" direction="top-start" />
+                </div>
+                <div>
+                  <TooltipShape content="Tooltip" direction="top" />
+                </div>
+                <div className="justify-self-end">
+                  <TooltipShape content="Tooltip" direction="top-end" />
+                </div>
 
-              <div className="justify-self-start">
-                <TooltipShape content="Tooltip" direction="left" />
-              </div>
-              <div />
-              <div className="justify-self-end">
-                <TooltipShape content="Tooltip" direction="right" />
-              </div>
+                <div className="justify-self-start">
+                  <TooltipShape content="Tooltip" direction="left" />
+                </div>
+                <div />
+                <div className="justify-self-end">
+                  <TooltipShape content="Tooltip" direction="right" />
+                </div>
 
-              <div className="justify-self-start">
-                <TooltipShape content="Tooltip" direction="bottom-start" />
+                <div className="justify-self-start">
+                  <TooltipShape content="Tooltip" direction="bottom-start" />
+                </div>
+                <div>
+                  <TooltipShape content="Tooltip" direction="bottom" />
+                </div>
+                <div className="justify-self-end">
+                  <TooltipShape content="Tooltip" direction="bottom-end" />
+                </div>
               </div>
-              <div>
-                <TooltipShape content="Tooltip" direction="bottom" />
+            </VStack>
+
+            <VStack gap={3}>
+              <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
+              <div className="flex gap-10 items-center justify-center py-6">
+                <StaticTooltip content="Top tooltip" position="top">
+                  <Button variant="secondary" size="sm">
+                    Top
+                  </Button>
+                </StaticTooltip>
+                <StaticTooltip content="Bottom tooltip" position="bottom">
+                  <Button variant="secondary" size="sm">
+                    Bottom
+                  </Button>
+                </StaticTooltip>
+                <StaticTooltip content="Left tooltip" position="left">
+                  <Button variant="secondary" size="sm">
+                    Left
+                  </Button>
+                </StaticTooltip>
+                <StaticTooltip content="Right tooltip" position="right">
+                  <Button variant="secondary" size="sm">
+                    Right
+                  </Button>
+                </StaticTooltip>
               </div>
-              <div className="justify-self-end">
-                <TooltipShape content="Tooltip" direction="bottom-end" />
-              </div>
-            </div>
+            </VStack>
           </VStack>
 
-          <VStack gap={3}>
-            <span className="text-label-md text-[var(--color-text-default)]">Positions</span>
-            <div className="flex gap-10 items-center justify-center py-6">
-              <StaticTooltip content="Top tooltip" position="top">
-                <Button variant="secondary" size="sm">
-                  Top
-                </Button>
-              </StaticTooltip>
-              <StaticTooltip content="Bottom tooltip" position="bottom">
-                <Button variant="secondary" size="sm">
-                  Bottom
-                </Button>
-              </StaticTooltip>
-              <StaticTooltip content="Left tooltip" position="left">
-                <Button variant="secondary" size="sm">
-                  Left
-                </Button>
-              </StaticTooltip>
-              <StaticTooltip content="Right tooltip" position="right">
-                <Button variant="secondary" size="sm">
-                  Right
-                </Button>
-              </StaticTooltip>
-            </div>
+          {/* ── Badge Tooltip ── */}
+          <VStack gap={8}>
+            <VStack gap={2}>
+              <h3 className="text-heading-h4 text-[var(--color-text-default)]">Badge Tooltip</h3>
+              <span className="text-body-md text-[var(--color-text-muted)]">
+                배열 데이터가 표시 가능한 수를 초과할 때, +N 인디케이터를 hover하면 전체 목록을
+                보여주는 오버레이 변형.
+              </span>
+            </VStack>
+
+            <BadgeTooltipExamples />
           </VStack>
         </VStack>
       }
       guidelines={
-        <VStack gap={6}>
-          <NotionRenderer markdown={TOOLTIP_GUIDELINES} />
-          <DosDonts
-            doItems={[
-              '아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공한다.',
-              '말줄임(truncate) 처리된 텍스트에 hover 시 전체 텍스트를 Tooltip으로 표시한다.',
-              'Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (최대 2줄)',
-              '표시 지연(delay)을 적절히 설정하여 불필요한 노출을 방지한다. (기본 200ms)',
-              '기본 위치를 top으로 하되, 화면 가장자리에서는 자동 반전을 허용한다.',
-            ]}
-            dontItems={[
-              'Tooltip 안에 링크, 버튼 등 인터랙티브 요소를 포함하지 않는다.',
-              '이미 충분히 설명된 요소에 중복 Tooltip을 추가하지 않는다.',
-              '사용자가 반드시 확인해야 하는 필수 정보를 Tooltip에만 담지 않는다.',
-              '비활성화(disabled) 버튼에 Tooltip을 붙이지 않는다.',
-            ]}
-          />
+        <VStack gap={10}>
+          <VStack gap={6}>
+            <h3 className="text-heading-h4 text-[var(--color-text-default)]">Default Tooltip</h3>
+            <NotionRenderer markdown={TOOLTIP_GUIDELINES} />
+            <DosDonts
+              doItems={[
+                '아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공한다.',
+                '말줄임(truncate) 처리된 텍스트에 hover 시 전체 텍스트를 Tooltip으로 표시한다.',
+                'Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (최대 2줄)',
+                '표시 지연(delay)을 적절히 설정하여 불필요한 노출을 방지한다. (기본 200ms)',
+                '기본 위치를 top으로 하되, 화면 가장자리에서는 자동 반전을 허용한다.',
+              ]}
+              dontItems={[
+                'Tooltip 안에 링크, 버튼 등 인터랙티브 요소를 포함하지 않는다.',
+                '이미 충분히 설명된 요소에 중복 Tooltip을 추가하지 않는다.',
+                '사용자가 반드시 확인해야 하는 필수 정보를 Tooltip에만 담지 않는다.',
+                '비활성화(disabled) 버튼에 Tooltip을 붙이지 않는다.',
+              ]}
+            />
+          </VStack>
+
+          <VStack gap={6}>
+            <h3 className="text-heading-h4 text-[var(--color-text-default)]">Badge Tooltip</h3>
+            <DosDonts
+              doItems={[
+                'BadgeList 컴포넌트를 사용하면 Badge tooltip이 자동으로 포함됩니다.',
+                '+N 인디케이터 hover 시 전체 목록을 보여주는 패턴으로 사용합니다.',
+                'Badge tooltip 타이틀에 전체 개수를 표시합니다 (예: "All Labels (4)").',
+              ]}
+              dontItems={['Badge tooltip 안에 또 다른 Badge tooltip을 중첩하지 않습니다.']}
+            />
+          </VStack>
         </VStack>
       }
       tokens={
-        <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
-          padding: 6×4px · radius: 4px · font-size: 11px · min-width: 60px · max-width: 240px ·
-          arrow: 4px
-        </div>
+        <VStack gap={3}>
+          <VStack gap={1}>
+            <span className="text-label-md text-[var(--color-text-default)]">Default Tooltip</span>
+            <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+              padding: 6×4px · radius: 4px · font-size: 11px · min-width: 60px · max-width: 240px ·
+              arrow: 4px
+            </div>
+          </VStack>
+          <VStack gap={1}>
+            <span className="text-label-md text-[var(--color-text-default)]">Badge Tooltip</span>
+            <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+              padding: 12px · radius: 8px · border: 1px · arrow: 6px
+            </div>
+          </VStack>
+        </VStack>
       }
       relatedLinks={[
-        { label: 'Popover', path: '/design/components/popover' },
         { label: 'Button', path: '/design/components/button' },
         { label: 'Badge', path: '/design/components/badge' },
-        { label: 'Select', path: '/design/components/select' },
+        {
+          label: 'Context Menu',
+          path: '/design/components/context-menu',
+          description: 'Action menu',
+        },
+        { label: 'Drawer', path: '/design/components/drawer', description: 'Complex forms' },
       ]}
     />
   );

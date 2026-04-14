@@ -29,6 +29,7 @@ import { useSidebar } from '@/contexts/SidebarContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -293,7 +294,12 @@ export function ComputeAdminVolumeTypesPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -320,7 +326,12 @@ export function ComputeAdminVolumeTypesPage() {
             >
               {row.qosSpec}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.qosSpecId}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.qosSpecId}>
+                ID : {row.qosSpecId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.qosSpecId} />
+            </span>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -414,7 +425,12 @@ export function ComputeAdminVolumeTypesPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },

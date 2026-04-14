@@ -42,6 +42,7 @@ import {
   IconLockOpen,
   IconPower,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -1341,8 +1342,11 @@ export function ComputeAdminInstanceDetailPage() {
                           >
                             {value}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),
@@ -1440,8 +1444,11 @@ export function ComputeAdminInstanceDetailPage() {
                           >
                             {iface.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),
@@ -1458,8 +1465,11 @@ export function ComputeAdminInstanceDetailPage() {
                           >
                             {iface.network}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            ID : {iface.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={iface.id}>
+                              ID : {iface.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={iface.id} />
                           </span>
                         </div>
                       ),
@@ -1540,8 +1550,11 @@ export function ComputeAdminInstanceDetailPage() {
                           >
                             {row.floatingIp}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),
@@ -1622,8 +1635,11 @@ export function ComputeAdminInstanceDetailPage() {
                           >
                             {row.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),
@@ -1714,8 +1730,11 @@ export function ComputeAdminInstanceDetailPage() {
                           >
                             {row.name}
                           </Link>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            ID : {row.id}
+                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                            <span className="truncate" title={row.id}>
+                              ID : {row.id.slice(0, 8)}
+                            </span>
+                            <InlineCopyId value={row.id} />
                           </span>
                         </div>
                       ),

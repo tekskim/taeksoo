@@ -39,6 +39,7 @@ import {
   IconBinaryTree,
   IconSettings,
 } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -380,8 +381,11 @@ export default function PortDetailPage() {
             >
               {row.floatingIp.address}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.floatingIp.id}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.floatingIp.id}>
+                ID : {row.floatingIp.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.floatingIp.id} />
             </span>
           </div>
         ) : (
@@ -403,8 +407,11 @@ export default function PortDetailPage() {
           >
             {row.ownedSubnet.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.ownedSubnet.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedSubnet.id}>
+              ID : {row.ownedSubnet.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedSubnet.id} />
           </span>
         </div>
       ),
@@ -509,7 +516,12 @@ export default function PortDetailPage() {
             {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },

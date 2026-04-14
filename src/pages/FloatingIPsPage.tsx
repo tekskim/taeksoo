@@ -39,6 +39,7 @@ import {
   IconBinaryTree,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -343,7 +344,12 @@ export function FloatingIPsPage() {
           >
             {row.floatingIp}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -369,8 +375,11 @@ export function FloatingIPsPage() {
                   />
                 </Link>
               </Tooltip>
-              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-                ID : {row.associatedToId?.substring(0, 8)}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.associatedToId?.substring(0, 8)}>
+                  ID : {row.associatedToId?.substring(0, 8).slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.associatedToId?.substring(0, 8)} />
               </span>
             </div>
             <Tooltip content="Instance" position="top">
@@ -411,8 +420,11 @@ export function FloatingIPsPage() {
               />
             </Link>
           </Tooltip>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            ID : {row.networkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.networkId.substring(0, 8)}>
+              ID : {row.networkId.substring(0, 8).slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.networkId.substring(0, 8)} />
           </span>
         </div>
       ),

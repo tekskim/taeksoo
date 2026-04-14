@@ -88,7 +88,7 @@ export function AppIconsPage() {
                 if (composite) {
                   return (
                     <div key={name} className="flex flex-col items-center gap-2">
-                      <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-muted)] grid grid-cols-2 grid-rows-2 gap-0.5 p-1.5">
+                      <div className="w-16 h-16 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] grid grid-cols-2 grid-rows-2 gap-0.5 p-1.5">
                         <img
                           src={AppIconStorageAdmin}
                           alt=""

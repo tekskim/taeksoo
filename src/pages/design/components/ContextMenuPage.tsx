@@ -572,8 +572,8 @@ export function ContextMenuPage() {
           description: '리스트/테이블 항목 컨텍스트에서 Context Menu 사용 빈도가 높음',
         },
         {
-          label: 'Popover',
-          path: '/design/components/popover',
+          label: 'Tooltip',
+          path: '/design/components/tooltip',
           description: 'Context Menu의 레이어/포지셔닝/디스미스 규칙과 일관성 필요',
         },
         {

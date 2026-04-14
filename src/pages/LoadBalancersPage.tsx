@@ -33,6 +33,7 @@ import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import containerIcon from '@/assets/appIcon/container.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -386,7 +387,12 @@ export function LoadBalancersPage() {
             >
               {row.name}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
           </div>
         </div>
       ),
@@ -413,8 +419,11 @@ export function LoadBalancersPage() {
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.ownedNetworkId.substring(0, 8)}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.ownedNetworkId.substring(0, 8)}>
+              ID : {row.ownedNetworkId.substring(0, 8).slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.ownedNetworkId.substring(0, 8)} />
           </span>
         </div>
       ),
@@ -434,8 +443,11 @@ export function LoadBalancersPage() {
             >
               {row.floatingIp}
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.floatingIpId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.floatingIpId}>
+                ID : {row.floatingIpId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.floatingIpId} />
             </span>
           </div>
         ) : (
@@ -451,8 +463,11 @@ export function LoadBalancersPage() {
         <div className="flex w-full items-center gap-1">
           <div className="flex flex-col gap-0.5 min-w-0">
             <span className="text-body-md text-[var(--color-text-default)]">{row.listeners}</span>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.listenerId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.listenerId}>
+                ID : {row.listenerId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.listenerId} />
             </span>
           </div>
           {row.listenerCount > 0 && (

@@ -33,6 +33,7 @@ import {
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -318,7 +319,12 @@ export function RoutersPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -352,8 +358,11 @@ export function RoutersPage() {
               {row.externalNetwork}
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </Link>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              ID : {row.externalNetworkId}
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.externalNetworkId}>
+                ID : {row.externalNetworkId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.externalNetworkId} />
             </span>
           </div>
         ) : (

@@ -30,6 +30,7 @@ import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer'
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -333,7 +334,12 @@ export function VolumeBackupsPage() {
           >
             {value}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </div>
       ),
     },
@@ -358,8 +364,11 @@ export function VolumeBackupsPage() {
           >
             {row.sourceVolume}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.sourceVolumeId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.sourceVolumeId}>
+              ID : {row.sourceVolumeId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.sourceVolumeId} />
           </span>
         </div>
       ),

@@ -499,8 +499,8 @@ export function DatePickerPage() {
           description: 'Trigger 표현과 상태 스타일',
         },
         {
-          label: 'Popover',
-          path: '/design/components/popover',
+          label: 'Tooltip',
+          path: '/design/components/tooltip',
           description: '캘린더 레이어/디스미스 규칙',
         },
         { label: 'Button', path: '/design/components/button', description: 'Apply/Cancel/Clear' },

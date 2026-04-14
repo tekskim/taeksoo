@@ -696,7 +696,12 @@ function OpenSectionTableDemo() {
           <span className="text-[var(--color-action-primary)] text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
             {value}
           </span>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
         </VStack>
       ),
     },
@@ -2718,8 +2723,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -2746,8 +2754,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.imageId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.imageId}>
+              ID : {row.imageId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.imageId} />
           </span>
         </div>
       ),
@@ -2763,8 +2774,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.flavorId}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -2798,8 +2812,11 @@ function TableDemo() {
           <span className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
             {value}
           </span>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -2823,8 +2840,11 @@ function TableDemo() {
                   className="flex-shrink-0 text-[var(--color-action-primary)]"
                 />
               </button>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedToId}
+              <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+                <span className="truncate" title={row.attachedToId}>
+                  ID : {row.attachedToId.slice(0, 8)}
+                </span>
+                <InlineCopyId value={row.attachedToId} />
               </span>
             </div>
             <Tooltip
@@ -16285,6 +16305,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] flex flex-col gap-1">
                       <div>
                         <code>{"import { STATUS_THRESHOLDS } from '@/design-system';"}</code>
+                        import {InlineCopyId} from '@/components/InlineCopyId';
                       </div>
                       <div className="mt-1">
                         <code>{'<ProgressBar thresholds={STATUS_THRESHOLDS.default} ... />'}</code>
