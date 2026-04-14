@@ -596,13 +596,14 @@ function BasicInformationSection({
                   placeholder="Instance name"
                   value={instanceName}
                   onChange={(e) => handleInstanceNameChange(e.target.value)}
+                  error={!!instanceNameError}
                   fullWidth
                 />
               </FormField.Control>
               <FormField.ErrorMessage>{instanceNameError}</FormField.ErrorMessage>
               <FormField.HelperText>
-                The name should start with upper letter, lower letter or chinese, and be a string
-                with 1~128 characters.
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
               </FormField.HelperText>
             </FormField>
           </div>
@@ -636,6 +637,9 @@ function BasicInformationSection({
           <div className="py-6">
             <FormField required>
               <FormField.Label>AZ (Availability zone)</FormField.Label>
+              <FormField.Description>
+                Select the availability zone for the instance.
+              </FormField.Description>
               <FormField.Control>
                 <Select
                   options={availabilityZoneOptions}
@@ -645,9 +649,6 @@ function BasicInformationSection({
                   fullWidth
                 />
               </FormField.Control>
-              <FormField.HelperText>
-                Select the availability zone for the instance.
-              </FormField.HelperText>
             </FormField>
           </div>
 
@@ -1057,6 +1058,7 @@ function ImageSection({
             value={row.id}
             checked={selectedImageId === row.id}
             onChange={() => handleImageSelect(row.id)}
+            disabled={row.status === 'error'}
           />
         </div>
       ),
@@ -1081,14 +1083,18 @@ function ImageSection({
       minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
-          <HStack gap={1} align="center">
+          <HStack gap={1} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
+              title={value}
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
+            {row.status === 'error' && (
+              <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+            )}
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -1164,7 +1170,7 @@ function ImageSection({
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -1192,7 +1198,7 @@ function ImageSection({
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -1259,7 +1265,7 @@ function ImageSection({
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -1339,7 +1345,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                     >
-                      <TabList className="mt-2">
+                      <TabList>
                         <Tab value="other">
                           <HStack gap={1} align="center">
                             <IconDots size={14} />
@@ -1375,7 +1381,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                       size="sm"
-                      className="w-[var(--search-input-width)] mt-2"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Pagination
                       currentPage={currentPage}
@@ -1388,6 +1394,7 @@ function ImageSection({
                       columns={imageColumns}
                       data={paginatedImages}
                       rowKey="id"
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
                       onRowClick={(row) => onSelectImage(row.id)}
                     />
                     <SelectionIndicator
@@ -1420,7 +1427,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                     >
-                      <TabList className="mt-2">
+                      <TabList>
                         <Tab value="other">
                           <HStack gap={1} align="center">
                             <IconDots size={14} />
@@ -1456,7 +1463,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                       size="sm"
-                      className="w-[var(--search-input-width)] mt-2"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Pagination
                       currentPage={currentPage}
@@ -1472,6 +1479,7 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
                       onRowClick={(row) => onSelectImage(row.id)}
                     />
                     <SelectionIndicator
@@ -1504,7 +1512,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                     >
-                      <TabList className="mt-2">
+                      <TabList>
                         <Tab value="other">
                           <HStack gap={1} align="center">
                             <IconDots size={14} />
@@ -1540,7 +1548,7 @@ function ImageSection({
                         setCurrentPage(1);
                       }}
                       size="sm"
-                      className="w-[var(--search-input-width)] mt-2"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Pagination
                       currentPage={currentPage}
@@ -1556,6 +1564,7 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
                       onRowClick={(row) => onSelectImage(row.id)}
                     />
                     <SelectionIndicator
@@ -1593,7 +1602,7 @@ function ImageSection({
                       setCurrentPage(1);
                     }}
                   >
-                    <TabList className="mt-2">
+                    <TabList>
                       <Tab value="other">
                         <HStack gap={1} align="center">
                           <IconDots size={14} />
@@ -1632,7 +1641,7 @@ function ImageSection({
                     setCurrentPage(1);
                   }}
                   size="sm"
-                  className="w-[var(--search-input-width)] mt-2"
+                  className="w-[var(--search-input-width)]"
                 />
 
                 {/* Pagination */}
@@ -1657,6 +1666,7 @@ function ImageSection({
                       columns={imageColumns}
                       data={paginatedImages}
                       rowKey="id"
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
                       onRowClick={(row) => onSelectImage(row.id)}
                     />
                   )}
@@ -1668,6 +1678,7 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
                       onRowClick={(row) => onSelectImage(row.id)}
                     />
                   )}
@@ -1679,6 +1690,7 @@ function ImageSection({
                         currentPage * itemsPerPage
                       )}
                       rowKey="id"
+                      selectedKeys={selectedImageId ? [selectedImageId] : []}
                       onRowClick={(row) => onSelectImage(row.id)}
                     />
                   )}
@@ -1697,84 +1709,88 @@ function ImageSection({
             )}
           </VStack>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)] mt-6" />
-
-          {/* System disk Section */}
-          <div className="py-6">
-            <span className="text-body-md italic text-[var(--color-text-subtle)] mb-2 block">
-              Image, Instance snapshot
-            </span>
-            <FormField required>
-              <FormField.Label>System disk</FormField.Label>
-              <FormField.Description>
-                Configure whether to create a system disk for booting.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <Toggle
-                  checked={createSystemDisk}
-                  onChange={setCreateSystemDisk}
-                  label="Create a new system disk"
-                />
-              </FormField.Control>
-            </FormField>
-
-            {/* Storage Type & Size Row */}
-            {(isV2 || createSystemDisk) && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
-                <HStack gap={6} align="center">
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
-                    <Select
-                      options={storageTypeOptions}
-                      value={storageType}
-                      onChange={setStorageType}
+          {/* System disk Section — visible for Image & Instance snapshot */}
+          {(isV2 || sourceTab === 'image' || sourceTab === 'snapshot') && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <div className="py-6">
+                <FormField required>
+                  <FormField.Label>System disk</FormField.Label>
+                  <FormField.Description>
+                    Configure whether to create a system disk for booting.
+                  </FormField.Description>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <Toggle
+                      checked={createSystemDisk}
+                      onChange={setCreateSystemDisk}
+                      label="Create a new system disk"
                     />
-                  </HStack>
-                  <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                    <NumberInput
-                      value={storageSize}
-                      onChange={(v) => setStorageSize(v ?? 30)}
-                      min={1}
-                      max={1000}
-                      step={1}
-                      width="sm"
-                      suffix="GiB"
-                    />
-                  </HStack>
-                  <Checkbox
-                    label="Deleted with the instance"
-                    checked={deleteWithInstance}
-                    onChange={(e) => setDeleteWithInstance(e.target.checked)}
-                  />
-                </HStack>
+                  </FormField.Control>
+                </FormField>
+
+                {/* Storage Type & Size Row */}
+                {(isV2 || createSystemDisk) && (
+                  <div className="mt-3 w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3">
+                    <div className="flex items-end gap-2">
+                      <VStack gap={1} className="w-[280px]">
+                        <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
+                        <Select
+                          options={storageTypeOptions}
+                          value={storageType}
+                          onChange={setStorageType}
+                          fullWidth
+                        />
+                      </VStack>
+                      <VStack gap={1}>
+                        <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
+                        <NumberInput
+                          value={storageSize}
+                          onChange={(v) => setStorageSize(v ?? 30)}
+                          min={1}
+                          max={1000}
+                          step={1}
+                          width="sm"
+                        />
+                      </VStack>
+                      <span className="text-body-md text-[var(--color-text-muted)] h-[32px] flex items-center">
+                        GiB
+                      </span>
+                      <div className="h-[32px] flex items-center">
+                        <Checkbox
+                          label="Deleted with the instance"
+                          checked={deleteWithInstance}
+                          onChange={(e) => setDeleteWithInstance(e.target.checked)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
 
-          {/* Divider */}
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-          {/* Delete Volume on Instance Delete Section */}
-          <div className="py-6">
-            <span className="text-body-md italic text-[var(--color-text-subtle)] mb-2 block">
-              Bootable volume
-            </span>
-            <FormField required>
-              <FormField.Label>Delete volume on instance delete</FormField.Label>
-              <FormField.Description>
-                Selecting this option will remove the source volume when the instance is deleted.
-              </FormField.Description>
-              <FormField.Control className="mt-[var(--primitive-spacing-3)]">
-                <Checkbox
-                  checked={deleteWithInstance2}
-                  onChange={(e) => setDeleteWithInstance2(e.target.checked)}
-                  label="Delete with instance"
-                />
-              </FormField.Control>
-            </FormField>
-          </div>
+          {/* Delete Volume on Instance Delete Section — visible for Bootable volume */}
+          {(isV2 || sourceTab === 'volume') && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+              <div className="py-6">
+                <FormField required>
+                  <FormField.Label>Delete volume on instance delete</FormField.Label>
+                  <FormField.Description>
+                    Selecting this option will remove the source volume when the instance is
+                    deleted.
+                  </FormField.Description>
+                  <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                    <Checkbox
+                      checked={deleteWithInstance2}
+                      onChange={(e) => setDeleteWithInstance2(e.target.checked)}
+                      label="Delete with instance"
+                    />
+                  </FormField.Control>
+                </FormField>
+              </div>
+            </>
+          )}
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1788,62 +1804,77 @@ function ImageSection({
               </span>
             </VStack>
 
-            <VStack gap={2} className="w-full">
-              {dataDisks.map((disk) => (
-                <div
-                  key={disk.id}
-                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
-                >
-                  <HStack gap={6} align="center">
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
-                      <Select
-                        options={storageTypeOptions}
-                        value={disk.type}
-                        onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
-                      />
-                    </HStack>
-                    <HStack gap={1.5} align="center">
-                      <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
-                      <NumberInput
-                        value={disk.size}
-                        onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v ?? 10)}
-                        min={1}
-                        max={1000}
-                        step={1}
-                        width="sm"
-                        suffix="GiB"
-                      />
-                    </HStack>
-                    <Checkbox
-                      label="Deleted with the instance"
-                      checked={disk.deleteWithInstance}
-                      onChange={(e) =>
-                        handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
-                      }
-                    />
-                    <div className="ml-auto">
-                      <button
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                        onClick={() => handleRemoveDataDisk(disk.id)}
-                      >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={2}>
+                {dataDisks.map((disk, index) => (
+                  <div
+                    key={disk.id}
+                    className="w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3"
+                  >
+                    <div className="flex items-end gap-2">
+                      <VStack gap={1} className="w-[280px]">
+                        {index === 0 && (
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Type
+                          </span>
+                        )}
+                        <Select
+                          options={storageTypeOptions}
+                          value={disk.type}
+                          onChange={(v) => handleUpdateDataDisk(disk.id, 'type', v)}
+                          fullWidth
+                        />
+                      </VStack>
+                      <VStack gap={1}>
+                        {index === 0 && (
+                          <span className="text-label-sm text-[var(--color-text-default)]">
+                            Size
+                          </span>
+                        )}
+                        <NumberInput
+                          value={disk.size}
+                          onChange={(v) => handleUpdateDataDisk(disk.id, 'size', v ?? 10)}
+                          min={1}
+                          max={1000}
+                          step={1}
+                          width="sm"
+                        />
+                      </VStack>
+                      <span className="text-body-md text-[var(--color-text-muted)] h-[32px] flex items-center">
+                        GiB
+                      </span>
+                      <div className="h-[32px] flex items-center">
+                        <Checkbox
+                          label="Deleted with the instance"
+                          checked={disk.deleteWithInstance}
+                          onChange={(e) =>
+                            handleUpdateDataDisk(disk.id, 'deleteWithInstance', e.target.checked)
+                          }
+                        />
+                      </div>
+                      <div className="ml-auto h-[32px] flex items-center">
+                        <button
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          onClick={() => handleRemoveDataDisk(disk.id)}
+                        >
+                          <IconX size={14} className="text-[var(--color-text-muted)]" />
+                        </button>
+                      </div>
                     </div>
-                  </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={handleAddDataDisk}
+                  >
+                    Add Data disk
+                  </Button>
                 </div>
-              ))}
-              <div className="w-fit">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} />}
-                  onClick={handleAddDataDisk}
-                >
-                  Add Data disk
-                </Button>
-              </div>
-            </VStack>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Divider + Next Button - hidden in edit mode */}
@@ -2073,6 +2104,7 @@ function FlavorSection({
             value={row.id}
             checked={selectedFlavorId === row.id}
             onChange={() => handleSelectFlavor(row.id)}
+            disabled={row.hasWarning}
           />
         </div>
       ),
@@ -2090,13 +2122,9 @@ function FlavorSection({
             >
               {value}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
             {row.hasWarning && (
-              <IconAlertCircle
-                size={14}
-                stroke={1.5}
-                className="text-[var(--color-state-danger)]"
-              />
+              <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
             )}
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -2242,6 +2270,7 @@ function FlavorSection({
                   columns={flavorColumns}
                   data={paginatedFlavors}
                   rowKey="id"
+                  selectedKeys={selectedFlavorId ? [selectedFlavorId] : []}
                   onRowClick={(row) => handleSelectFlavor(row.id)}
                 />
 
@@ -2620,7 +2649,7 @@ function NetworkSection({
             >
               {row.name}
             </a>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -3060,6 +3089,7 @@ function NetworkSection({
                 columns={networkColumns}
                 data={filteredNetworks}
                 rowKey="id"
+                selectedKeys={Array.from(selectedNetworkIds)}
                 onRowClick={(row) => {
                   const newSet = new Set(selectedNetworkIds);
                   if (newSet.has(row.id)) {
@@ -3225,6 +3255,7 @@ function NetworkSection({
               columns={securityGroupColumns}
               data={filteredSecurityGroups}
               rowKey="id"
+              selectedKeys={Array.from(selectedSecurityGroups)}
               onRowClick={(row) => {
                 const newSet = new Set(selectedSecurityGroups);
                 if (newSet.has(row.id)) {
@@ -3285,6 +3316,7 @@ function NetworkSection({
                       columns={portColumns}
                       data={filteredPorts}
                       rowKey="id"
+                      selectedKeys={selectedPortId ? [selectedPortId] : []}
                       onRowClick={(row) => setSelectedPortId(row.id)}
                     />
 
@@ -3572,6 +3604,7 @@ function AuthenticationSection({
                         columns={keyPairColumns}
                         data={filteredKeyPairs}
                         rowKey="id"
+                        selectedKeys={selectedKeyPairId ? [selectedKeyPairId] : []}
                         onRowClick={(row) => handleSelectKeyPair(row.id)}
                       />
                       <SelectionIndicator
@@ -3744,6 +3777,7 @@ function AuthenticationSection({
                         columns={keyPairColumns}
                         data={filteredKeyPairs}
                         rowKey="id"
+                        selectedKeys={selectedKeyPairId ? [selectedKeyPairId] : []}
                         onRowClick={(row) => handleSelectKeyPair(row.id)}
                       />
                       <SelectionIndicator
@@ -4172,6 +4206,7 @@ function AdvancedSection({
                 columns={serverGroupColumns}
                 data={filteredServerGroups}
                 rowKey="id"
+                selectedKeys={selectedServerGroupId ? [selectedServerGroupId] : []}
                 onRowClick={(row) => setSelectedServerGroupId(row.id)}
               />
 
@@ -4265,6 +4300,8 @@ interface TemplatesSectionProps {
   templates: TemplateRow[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  resourceType: 'vm' | 'baremetal';
+  onResourceTypeChange: (type: 'vm' | 'baremetal') => void;
   onSkip: () => void;
   onNext: () => void;
   isActive?: boolean;
@@ -4277,6 +4314,8 @@ function TemplatesSection({
   templates,
   selectedId,
   onSelect,
+  resourceType,
+  onResourceTypeChange,
   onSkip,
   onNext,
   isActive = false,
@@ -4289,7 +4328,6 @@ function TemplatesSection({
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [resourceType, setResourceType] = useState<'vm' | 'baremetal'>('vm');
 
   // Filter templates based on active tab
   const getFilteredTemplates = () => {
@@ -4422,13 +4460,13 @@ function TemplatesSection({
                   <Radio
                     value="vm"
                     checked={resourceType === 'vm'}
-                    onChange={() => setResourceType('vm')}
+                    onChange={() => onResourceTypeChange('vm')}
                     label="Virtual machine"
                   />
                   <Radio
                     value="baremetal"
                     checked={resourceType === 'baremetal'}
-                    onChange={() => setResourceType('baremetal')}
+                    onChange={() => onResourceTypeChange('baremetal')}
                     label="Bare metal"
                   />
                 </VStack>
@@ -4436,191 +4474,196 @@ function TemplatesSection({
             </FormField>
           </div>
 
-          <div className="w-full h-px bg-[var(--color-border-subtle)]" />
+          {resourceType === 'vm' && (
+            <>
+              <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Templates Sub-section */}
-          <VStack gap={3} align="start" className="w-full py-6">
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
-              <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the template to use for creating the instance. A template includes predefined
-                settings such as the image, flavor, and network configuration required for the
-                instance.
-              </span>
-            </VStack>
+              {/* Templates Sub-section */}
+              <VStack gap={3} align="start" className="w-full py-6">
+                <VStack gap={1}>
+                  <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">
+                    Select the template to use for creating the instance. A template includes
+                    predefined settings such as the image, flavor, and network configuration
+                    required for the instance.
+                  </span>
+                </VStack>
 
-            {/* Tabs */}
-            <div className="w-full">
-              <Tabs
-                value={activeTab}
-                onChange={setActiveTab}
-                size="sm"
-                variant="underline"
-                className="w-full"
-              >
-                <TabList>
-                  <Tab value="favorites">Favorites</Tab>
-                  <Tab value="current-tenant">Current tenant</Tab>
-                  <Tab value="public">Public</Tab>
-                </TabList>
+                {/* Tabs */}
+                <div className="w-full">
+                  <Tabs
+                    value={activeTab}
+                    onChange={setActiveTab}
+                    size="sm"
+                    variant="underline"
+                    className="w-full"
+                  >
+                    <TabList>
+                      <Tab value="favorites">Favorites</Tab>
+                      <Tab value="current-tenant">Current tenant</Tab>
+                      <Tab value="public">Public</Tab>
+                    </TabList>
 
-                <TabPanel value="favorites" className="pt-3">
-                  <VStack gap={2} className="w-full">
-                    {/* Action Bar - Search + Create Button */}
-                    <HStack justify="between" align="center" className="w-full">
-                      <SearchInput
-                        placeholder="Search templates by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button variant="outline" size="sm">
-                        <span>Create a new template</span>
-                        <IconExternalLink size={12} stroke={1.5} />
-                      </Button>
-                    </HStack>
+                    <TabPanel value="favorites" className="pt-3">
+                      <VStack gap={2} className="w-full">
+                        {/* Action Bar - Search + Create Button */}
+                        <HStack justify="between" align="center" className="w-full">
+                          <SearchInput
+                            placeholder="Search templates by attributes"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Button variant="outline" size="sm">
+                            <span>Create a new template</span>
+                            <IconExternalLink size={12} stroke={1.5} />
+                          </Button>
+                        </HStack>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                      totalItems={filteredTemplates.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedId ? 1 : 0}
-                    />
-
-                    {/* Table with Selection */}
-                    <VStack gap={2}>
-                      {filteredTemplates.length > 0 ? (
-                        <Table
-                          columns={columns}
-                          data={filteredTemplates}
-                          rowKey="id"
-                          onRowClick={(row) => onSelect(row.id)}
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                          totalItems={filteredTemplates.length}
+                          onPageChange={setCurrentPage}
+                          selectedCount={selectedId ? 1 : 0}
                         />
-                      ) : (
-                        <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                          No favorite templates
-                        </div>
-                      )}
-                    </VStack>
-                  </VStack>
-                </TabPanel>
 
-                <TabPanel value="current-tenant" className="pt-3">
-                  <VStack gap={2} className="w-full">
-                    {/* Action Bar - Search + Create Button */}
-                    <HStack justify="between" align="center" className="w-full">
-                      <SearchInput
-                        placeholder="Search templates by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button variant="outline" size="sm">
-                        <span>Create a new template</span>
-                        <IconExternalLink size={12} stroke={1.5} />
-                      </Button>
-                    </HStack>
+                        {/* Table with Selection */}
+                        <VStack gap={2}>
+                          {filteredTemplates.length > 0 ? (
+                            <Table
+                              columns={columns}
+                              data={filteredTemplates}
+                              rowKey="id"
+                              selectedKeys={selectedId ? [selectedId] : []}
+                              onRowClick={(row) => onSelect(row.id)}
+                            />
+                          ) : (
+                            <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                              No favorite templates
+                            </div>
+                          )}
+                        </VStack>
+                      </VStack>
+                    </TabPanel>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                      totalItems={filteredTemplates.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedId ? 1 : 0}
-                    />
+                    <TabPanel value="current-tenant" className="pt-3">
+                      <VStack gap={2} className="w-full">
+                        {/* Action Bar - Search + Create Button */}
+                        <HStack justify="between" align="center" className="w-full">
+                          <SearchInput
+                            placeholder="Search templates by attributes"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Button variant="outline" size="sm">
+                            <span>Create a new template</span>
+                            <IconExternalLink size={12} stroke={1.5} />
+                          </Button>
+                        </HStack>
 
-                    {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
-                      />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No templates in current tenant
-                      </div>
-                    )}
-                  </VStack>
-                </TabPanel>
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                          totalItems={filteredTemplates.length}
+                          onPageChange={setCurrentPage}
+                          selectedCount={selectedId ? 1 : 0}
+                        />
 
-                <TabPanel value="public" className="pt-3">
-                  <VStack gap={2} className="w-full">
-                    {/* Action Bar - Search + Create Button */}
-                    <HStack justify="between" align="center" className="w-full">
-                      <SearchInput
-                        placeholder="Search templates by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button variant="outline" size="sm">
-                        <span>Create a new template</span>
-                        <IconExternalLink size={12} stroke={1.5} />
-                      </Button>
-                    </HStack>
+                        {/* Table with Selection */}
+                        {filteredTemplates.length > 0 ? (
+                          <Table
+                            columns={columns}
+                            data={filteredTemplates}
+                            rowKey="id"
+                            selectedKeys={selectedId ? [selectedId] : []}
+                            onRowClick={(row) => onSelect(row.id)}
+                          />
+                        ) : (
+                          <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                            No templates in current tenant
+                          </div>
+                        )}
+                      </VStack>
+                    </TabPanel>
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
-                      totalItems={filteredTemplates.length}
-                      onPageChange={setCurrentPage}
-                      selectedCount={selectedId ? 1 : 0}
-                    />
+                    <TabPanel value="public" className="pt-3">
+                      <VStack gap={2} className="w-full">
+                        {/* Action Bar - Search + Create Button */}
+                        <HStack justify="between" align="center" className="w-full">
+                          <SearchInput
+                            placeholder="Search templates by attributes"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClear={() => setSearchQuery('')}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                          />
+                          <Button variant="outline" size="sm">
+                            <span>Create a new template</span>
+                            <IconExternalLink size={12} stroke={1.5} />
+                          </Button>
+                        </HStack>
 
-                    {/* Table with Selection */}
-                    {filteredTemplates.length > 0 ? (
-                      <Table
-                        columns={columns}
-                        data={filteredTemplates}
-                        rowKey="id"
-                        onRowClick={(row) => onSelect(row.id)}
-                      />
-                    ) : (
-                      <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
-                        No public templates available
-                      </div>
-                    )}
-                  </VStack>
-                </TabPanel>
-              </Tabs>
-            </div>
+                        {/* Pagination */}
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={Math.max(1, Math.ceil(filteredTemplates.length / 10))}
+                          totalItems={filteredTemplates.length}
+                          onPageChange={setCurrentPage}
+                          selectedCount={selectedId ? 1 : 0}
+                        />
 
-            {/* Selection Indicator for Templates */}
-            <SelectionIndicator
-              selectedItems={
-                selectedId
-                  ? [
-                      {
-                        id: selectedId,
-                        label: templates.find((t) => t.id === selectedId)?.name || selectedId,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelect('')}
-            />
-          </VStack>
+                        {/* Table with Selection */}
+                        {filteredTemplates.length > 0 ? (
+                          <Table
+                            columns={columns}
+                            data={filteredTemplates}
+                            rowKey="id"
+                            selectedKeys={selectedId ? [selectedId] : []}
+                            onRowClick={(row) => onSelect(row.id)}
+                          />
+                        ) : (
+                          <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                            No public templates available
+                          </div>
+                        )}
+                      </VStack>
+                    </TabPanel>
+                  </Tabs>
+                </div>
+
+                {/* Selection Indicator for Templates */}
+                <SelectionIndicator
+                  className="-mt-1"
+                  selectedItems={
+                    selectedId
+                      ? [
+                          {
+                            id: selectedId,
+                            label: templates.find((t) => t.id === selectedId)?.name || selectedId,
+                          },
+                        ]
+                      : []
+                  }
+                  onRemove={() => onSelect('')}
+                />
+              </VStack>
+            </>
+          )}
 
           {/* Action Buttons - only show when not editing or v2 */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               <HStack gap={2} justify="end" className="pt-3">
-                <Button variant="outline" onClick={onSkip} className="min-w-[80px]">
-                  Skip
-                </Button>
                 <Button variant="primary" onClick={onNext} className="min-w-[80px]">
                   Next
                 </Button>
@@ -4664,6 +4707,7 @@ export function CreateInstancePage() {
   // Form state
   const [numberOfInstances, setNumberOfInstances] = useState(1);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [selectedResourceType, setSelectedResourceType] = useState<'vm' | 'baremetal'>('vm');
 
   // Basic information state
   const [instanceName, setInstanceName] = useState('');
@@ -5036,6 +5080,8 @@ export function CreateInstancePage() {
                 templates={mockTemplates}
                 selectedId={selectedTemplateId}
                 onSelect={setSelectedTemplateId}
+                resourceType={selectedResourceType}
+                onResourceTypeChange={setSelectedResourceType}
                 onSkip={() => handleSkip('templates')}
                 onNext={() => handleNext('templates')}
                 isActive
@@ -5048,13 +5094,15 @@ export function CreateInstancePage() {
               <DoneSection title={SECTION_LABELS.templates} onEdit={() => handleEdit('templates')}>
                 <SectionCard.DataRow
                   label="Resource type"
-                  value="Virtual machine"
-                  showDivider={false}
+                  value={selectedResourceType === 'baremetal' ? 'Bare metal' : 'Virtual machine'}
+                  showDivider={selectedResourceType === 'vm'}
                 />
-                <SectionCard.DataRow
-                  label="Template"
-                  value={getTemplateSummary() || 'None selected'}
-                />
+                {selectedResourceType === 'vm' && (
+                  <SectionCard.DataRow
+                    label="Template"
+                    value={getTemplateSummary() || 'None selected'}
+                  />
+                )}
               </DoneSection>
             )}
             {sectionStatus.templates === 'skipped' && (
