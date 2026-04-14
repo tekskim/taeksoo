@@ -271,8 +271,8 @@ export function DrawerSectionPage() {
       relatedLinks={[
         { label: 'Modal', path: '/design/components/modal', description: 'Dialog overlay' },
         {
-          label: 'Popover',
-          path: '/design/components/popover',
+          label: 'Tooltip',
+          path: '/design/components/tooltip',
           description: 'Lightweight overlay',
         },
         {

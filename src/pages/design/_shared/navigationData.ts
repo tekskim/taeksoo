@@ -267,8 +267,18 @@ const navigationItems: NavItem[] = [
 ];
 
 const overlayItems: NavItem[] = [
-  { id: 'tooltip', label: 'Tooltip', icon: IconMessage2, path: '/design/components/tooltip' },
-  { id: 'popover', label: 'Popover', icon: IconMessage2, path: '/design/components/popover' },
+  {
+    id: 'tooltip',
+    label: 'Tooltip',
+    icon: IconMessage2,
+    path: '/design/components/tooltip',
+  },
+  {
+    id: 'popover',
+    label: 'Popover',
+    icon: IconMessage2,
+    path: '/design/components/popover',
+  },
   {
     id: 'context-menu',
     label: 'Context Menu',
@@ -558,8 +568,8 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/breadcrumb': '2026-03-05 13:00:00',
   '/design/components/project-selector': '2026-03-23 12:00:00',
   // Overlay
-  '/design/components/tooltip': '2026-03-18 11:00:00',
-  '/design/components/popover': '2026-03-01 10:30:00',
+  '/design/components/tooltip': '2026-04-14 10:00:00',
+  '/design/components/popover': '2026-04-14 10:00:00',
   '/design/components/menu': '2026-03-09',
   '/design/components/context-menu': '2026-03-09',
   '/design/components/modal': '2026-03-18 11:00:00',
