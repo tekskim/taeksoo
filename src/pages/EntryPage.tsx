@@ -147,19 +147,6 @@ export function EntryPage() {
             <Button variant="ghost" size="sm" onClick={() => navigate('/mail-template')}>
               Mail Template
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                const url =
-                  window.location.hostname === 'localhost'
-                    ? 'http://localhost:5174'
-                    : `${window.location.origin}/tds_ssot/shared-v2`;
-                window.location.href = url;
-              }}
-            >
-              Shared V2 Preview
-            </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate('/table-style-guide')}>
               Table Style Guide
             </Button>

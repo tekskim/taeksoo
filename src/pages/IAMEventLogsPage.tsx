@@ -586,7 +586,7 @@ export default function IAMEventLogsPage() {
 
                     {/* Result Cell */}
                     <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                      <Badge variant={log.result === 'success' ? 'info' : 'error'} size="sm">
+                      <Badge variant={log.result === 'success' ? 'success' : 'error'} size="sm">
                         {log.result === 'success' ? 'Success' : 'Failure'}
                       </Badge>
                     </div>

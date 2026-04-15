@@ -7,6 +7,7 @@ import {
   TopBar,
   Breadcrumb,
   Table,
+  Badge,
   PageShell,
   type TableColumn,
 } from '@/design-system';
@@ -237,7 +238,9 @@ export function IAMHomePage() {
       minWidth: columnMinWidths.typeLg,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)]">{value}</span>
+        <Badge variant={value === 'Success' ? 'success' : 'error'} size="sm">
+          {value}
+        </Badge>
       ),
     },
     {

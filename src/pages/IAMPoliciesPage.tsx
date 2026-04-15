@@ -591,12 +591,12 @@ export default function IAMPoliciesPage() {
                 <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                   <button
                     onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
-                    className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                    className={`shrink-0 flex items-center justify-center w-4 h-4 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
                   >
                     {expandedPolicies.has(policy.id) ? (
-                      <IconChevronDown size={16} stroke={1.5} />
+                      <IconChevronDown size={12} strokeWidth={2} />
                     ) : (
-                      <IconChevronRight size={16} stroke={1.5} />
+                      <IconChevronRight size={12} strokeWidth={2} />
                     )}
                   </button>
                   <Link
