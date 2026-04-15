@@ -234,6 +234,7 @@ import {
   IconCircleMinus,
   IconReload,
   IconRestore,
+  IconArrowBackUp,
 } from '@tabler/icons-react';
 import {
   IconUbuntu2,
@@ -371,6 +372,12 @@ const iconCategories: IconCategoryData[] = [
         note: 'DS 내부',
       },
       { icon: IconRestore, name: 'IconRestore', label: 'Restore', usage: 'VolumeBackupDetail' },
+      {
+        icon: IconArrowBackUp,
+        name: 'IconArrowBackUp',
+        label: 'Revoke',
+        usage: 'IAM Roles Active Grants bulk revoke',
+      },
       {
         icon: IconReload,
         name: 'IconReload',

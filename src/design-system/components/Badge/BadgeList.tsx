@@ -23,6 +23,8 @@ export interface BadgeListProps {
   popoverTitle?: string;
   /** Custom render for each badge item */
   renderItem?: (item: string, index: number) => ReactNode;
+  /** Align the +N overflow trigger to the right, pushing it away from the badges */
+  overflowAlign?: 'inline' | 'right';
 }
 
 /* ----------------------------------------
@@ -38,6 +40,7 @@ export const BadgeList = memo(function BadgeList({
   type,
   popoverTitle,
   renderItem,
+  overflowAlign = 'inline',
 }: BadgeListProps) {
   if (items.length === 0) return null;
 
@@ -62,7 +65,10 @@ export const BadgeList = memo(function BadgeList({
     );
 
   return (
-    <div data-figma-name="[TDS] BadgeList" className="flex flex-nowrap gap-1 items-center">
+    <div
+      data-figma-name="[TDS] BadgeList"
+      className={`flex flex-nowrap gap-1 items-center${overflowAlign === 'right' && remainingCount > 0 ? ' w-full justify-between' : ''}`}
+    >
       {visibleItems.map((item, index) => renderBadge(item, index, true))}
       {remainingCount > 0 && (
         <Popover
