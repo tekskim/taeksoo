@@ -4042,58 +4042,58 @@ function AdvancedSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={3}>
-                {tags.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center w-full">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
-                    <div />
-                    {tags.map((tag, i) => (
-                      <React.Fragment key={tag.id}>
-                        <Input
-                          value={tag.key}
-                          onChange={(e) => {
-                            const newTags = [...tags];
-                            newTags[i] = { ...newTags[i], key: e.target.value };
-                            setTags(newTags);
-                          }}
-                          placeholder="Enter key"
-                          fullWidth
-                        />
-                        <Input
-                          value={tag.value}
-                          onChange={(e) => {
-                            const newTags = [...tags];
-                            newTags[i] = { ...newTags[i], value: e.target.value };
-                            setTags(newTags);
-                          }}
-                          placeholder="Enter value"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
-                          className="flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          <IconX size={14} />
-                        </button>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                )}
+              <VStack gap={2}>
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-x-2 gap-y-1 items-center w-full">
+                  <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
+                  <div />
+                  {tags.map((tag, i) => (
+                    <React.Fragment key={tag.id}>
+                      <Input
+                        value={tag.key}
+                        onChange={(e) => {
+                          const newTags = [...tags];
+                          newTags[i] = { ...newTags[i], key: e.target.value };
+                          setTags(newTags);
+                        }}
+                        placeholder="Enter key"
+                        fullWidth
+                      />
+                      <Input
+                        value={tag.value}
+                        onChange={(e) => {
+                          const newTags = [...tags];
+                          newTags[i] = { ...newTags[i], value: e.target.value };
+                          setTags(newTags);
+                        }}
+                        placeholder="Enter value"
+                        fullWidth
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-subtle)]" />
+                      </button>
+                    </React.Fragment>
+                  ))}
+                </div>
 
                 <HStack gap={3} align="center">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} />}
-                    onClick={() =>
-                      setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
-                    }
-                    disabled={tags.length >= MAX_TAGS}
-                  >
-                    Add tag
-                  </Button>
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      onClick={() =>
+                        setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
+                      }
+                      disabled={tags.length >= MAX_TAGS}
+                    >
+                      Add tag
+                    </Button>
+                  </div>
                   <span className="text-body-md text-[var(--color-text-subtle)]">
                     {tags.length} / {MAX_TAGS} tags
                   </span>

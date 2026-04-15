@@ -270,18 +270,8 @@ export function SecurityGroupsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex items-center gap-2 min-w-0">
-          {row.origin === 'container' && (
-            <Tooltip
-              content="This security group was created via the Container cluster."
-              position="top"
-            >
-              <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-                <img src={containerIcon} alt="Container" className="w-4 h-4" />
-              </div>
-            </Tooltip>
-          )}
-          <div className="flex flex-col gap-0.5 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             <Link
               to={`/compute/security-groups/${row.id}`}
               className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
@@ -296,6 +286,16 @@ export function SecurityGroupsPage() {
               <InlineCopyId value={row.id} />
             </span>
           </div>
+          {row.origin === 'container' && (
+            <Tooltip
+              content="This security group was created via the Container cluster."
+              position="top"
+            >
+              <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                <img src={containerIcon} alt="Container" className="w-4 h-4" />
+              </div>
+            </Tooltip>
+          )}
         </div>
       ),
     },

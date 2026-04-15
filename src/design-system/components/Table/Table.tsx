@@ -45,6 +45,8 @@ export interface TableProps<T = any> extends Omit<
   selectionType?: 'checkbox' | 'radio';
   selectedKeys?: string[];
   onSelectionChange?: (keys: string[]) => void;
+  /** Keys of rows that should not be selectable */
+  disabledKeys?: string[];
   hideSelectAll?: boolean;
   stickyHeader?: boolean;
   maxHeight?: string;
@@ -98,6 +100,7 @@ export function Table<T extends Record<string, any>>({
   selectionType = 'checkbox',
   selectedKeys = [],
   onSelectionChange,
+  disabledKeys = [],
   hideSelectAll = false,
   stickyHeader = false,
   maxHeight,
@@ -187,7 +190,10 @@ export function Table<T extends Record<string, any>>({
     });
   }, [tableData, sortKey, sortDirection]);
 
+  const disabledSet = useMemo(() => new Set(disabledKeys), [disabledKeys]);
+
   const handleSelectRow = (key: string) => {
+    if (disabledSet.has(key)) return;
     if (selectionType === 'radio') {
       onSelectionChange?.(selectedKeys.includes(key) ? [] : [key]);
     } else {
@@ -438,9 +444,13 @@ export function Table<T extends Record<string, any>>({
                           isSelected
                             ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
                             : 'bg-[var(--color-surface-default)]',
-                          onRowClick && 'cursor-pointer'
+                          onRowClick && !disabledSet.has(key) && 'cursor-pointer'
                         )}
-                        onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                        onClick={
+                          onRowClick && !disabledSet.has(key)
+                            ? () => onRowClick(row, rowIndex)
+                            : undefined
+                        }
                       >
                         {selectable && (
                           <div
@@ -450,12 +460,14 @@ export function Table<T extends Record<string, any>>({
                             {selectionType === 'radio' ? (
                               <Radio
                                 checked={isSelected}
+                                disabled={disabledSet.has(key)}
                                 onChange={() => handleSelectRow(key)}
                                 aria-label={`Select row ${rowIndex + 1}`}
                               />
                             ) : (
                               <Checkbox
                                 checked={isSelected}
+                                disabled={disabledSet.has(key)}
                                 onChange={() => handleSelectRow(key)}
                                 aria-label={`Select row ${rowIndex + 1}`}
                               />
@@ -605,9 +617,13 @@ export function Table<T extends Record<string, any>>({
                       className={cn(
                         'flex items-stretch min-h-[var(--table-row-height)] w-full',
                         'transition-all hover:bg-[var(--table-row-hover-bg)]',
-                        onRowClick && 'cursor-pointer'
+                        onRowClick && !disabledSet.has(key) && 'cursor-pointer'
                       )}
-                      onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                      onClick={
+                        onRowClick && !disabledSet.has(key)
+                          ? () => onRowClick(row, rowIndex)
+                          : undefined
+                      }
                     >
                       {selectable && (
                         <div
@@ -617,12 +633,14 @@ export function Table<T extends Record<string, any>>({
                           {selectionType === 'radio' ? (
                             <Radio
                               checked={isSelected}
+                              disabled={disabledSet.has(key)}
                               onChange={() => handleSelectRow(key)}
                               aria-label={`Select row ${rowIndex + 1}`}
                             />
                           ) : (
                             <Checkbox
                               checked={isSelected}
+                              disabled={disabledSet.has(key)}
                               onChange={() => handleSelectRow(key)}
                               aria-label={`Select row ${rowIndex + 1}`}
                             />

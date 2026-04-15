@@ -345,6 +345,7 @@ export function CreateImagePage() {
                             }}
                             placeholder="Enter image name"
                             fullWidth
+                            error={!!imageNameError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{imageNameError}</FormField.ErrorMessage>
@@ -450,7 +451,7 @@ export function CreateImagePage() {
 
                     {/* Upload type */}
                     <div className="py-6">
-                      <VStack gap={2}>
+                      <VStack gap={3}>
                         <VStack gap={1}>
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Upload type
@@ -491,23 +492,26 @@ export function CreateImagePage() {
                         )}
 
                         {(isV2 || sourceType === 'url') && (
-                          <FormField
-                            label="File URL"
-                            required
-                            error={!!sourceUrlError}
-                            errorMessage={sourceUrlError || undefined}
-                            helperText="The URL must start with http:// or https://."
-                          >
-                            <Input
-                              value={sourceUrl}
-                              onChange={(e) => {
-                                setSourceUrl(e.target.value);
-                                setSourceUrlError(null);
-                              }}
-                              placeholder="e.g. https://example.com/image.qcow2"
-                              fullWidth
-                              error={!!sourceUrlError}
-                            />
+                          <FormField error={!!sourceUrlError}>
+                            <FormField.Control>
+                              <Input
+                                value={sourceUrl}
+                                onChange={(e) => {
+                                  setSourceUrl(e.target.value);
+                                  setSourceUrlError(null);
+                                }}
+                                placeholder="e.g. https://example.com/image.qcow2"
+                                fullWidth
+                                error={!!sourceUrlError}
+                              />
+                            </FormField.Control>
+                            {sourceUrlError ? (
+                              <FormField.ErrorMessage>{sourceUrlError}</FormField.ErrorMessage>
+                            ) : (
+                              <FormField.HelperText>
+                                The URL must start with http:// or https://.
+                              </FormField.HelperText>
+                            )}
                           </FormField>
                         )}
                       </VStack>
@@ -602,6 +606,7 @@ export function CreateImagePage() {
                               { value: 'iso', label: 'ISO' },
                             ]}
                             fullWidth
+                            error={!!diskFormatError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{diskFormatError}</FormField.ErrorMessage>
@@ -632,6 +637,7 @@ export function CreateImagePage() {
                               { value: 'other', label: 'Others' },
                             ]}
                             fullWidth
+                            error={!!osError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{osError}</FormField.ErrorMessage>
@@ -656,6 +662,7 @@ export function CreateImagePage() {
                             }}
                             placeholder="e.g. 22.04, 8, 2019"
                             fullWidth
+                            error={!!osVersionError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{osVersionError}</FormField.ErrorMessage>
@@ -681,6 +688,7 @@ export function CreateImagePage() {
                             }}
                             placeholder="e.g. ubuntu(ubuntu), administrator(windows)"
                             fullWidth
+                            error={!!osAdminError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{osAdminError}</FormField.ErrorMessage>

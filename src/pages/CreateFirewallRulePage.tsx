@@ -268,6 +268,7 @@ export default function CreateFirewallRulePage() {
                               setRuleNameError(null);
                             }}
                             fullWidth
+                            error={!!ruleNameError}
                           />
                         </FormField.Control>
                         <FormField.HelperText>

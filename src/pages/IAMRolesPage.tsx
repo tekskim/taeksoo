@@ -14,6 +14,10 @@ import {
   ListToolbar,
   PageShell,
   PageHeader,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -137,6 +141,7 @@ const mockRoles: Role[] = [
 export default function IAMRolesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState('roles');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -317,60 +322,97 @@ export default function IAMRolesPage() {
           }
         />
 
-        {/* Table Content */}
-        <VStack gap={3} className="w-full">
-          {/* Action Bar */}
-          <ListToolbar
-            primaryActions={
-              <ListToolbar.Actions>
-                <SearchInput
-                  placeholder="Search roles by attributes"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-[var(--search-input-width)]"
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={<IconDownload size={12} />}
-                  aria-label="Download"
-                />
-              </ListToolbar.Actions>
-            }
-            bulkActions={
-              <ListToolbar.Actions>
-                <Button
-                  variant="muted"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedRows.length === 0}
-                >
-                  Delete
-                </Button>
-              </ListToolbar.Actions>
-            }
-          />
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="roles">Roles</Tab>
+            <Tab value="active-grants">Active grants</Tab>
+          </TabList>
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            showSettings
-            totalItems={filteredRoles.length}
-            selectedCount={selectedRows.length}
-          />
+          <TabPanel value="roles" className="pt-0">
+            <VStack gap={3} className="w-full pt-3">
+              {/* Action Bar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <SearchInput
+                      placeholder="Search roles by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedRows.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
-          {/* Table */}
-          <Table<Role>
-            columns={columns}
-            data={paginatedRoles}
-            rowKey="id"
-            selectable
-            selectedKeys={selectedRows}
-            onSelectionChange={setSelectedRows}
-          />
-        </VStack>
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                showSettings
+                totalItems={filteredRoles.length}
+                selectedCount={selectedRows.length}
+              />
+
+              {/* Table */}
+              <Table<Role>
+                columns={columns}
+                data={paginatedRoles}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedRows}
+                onSelectionChange={setSelectedRows}
+              />
+            </VStack>
+          </TabPanel>
+
+          <TabPanel value="active-grants" className="pt-0">
+            <VStack gap={3} className="w-full pt-3">
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <SearchInput
+                      placeholder="Search active grants by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+              />
+              <Pagination
+                currentPage={1}
+                totalPages={1}
+                onPageChange={() => {}}
+                showSettings
+                totalItems={0}
+              />
+            </VStack>
+          </TabPanel>
+        </Tabs>
       </VStack>
     </PageShell>
   );

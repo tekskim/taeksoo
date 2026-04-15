@@ -16,6 +16,8 @@ import {
   NumberInput,
   Disclosure,
   PageShell,
+  ProgressBar,
+  STATUS_THRESHOLDS,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -50,6 +52,11 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
+const networkQuota = [
+  { label: 'Network', used: 4, max: 10, newValue: 1 },
+  { label: 'Subnet', used: 6, max: 20, newValue: 1 },
+];
+
 function SummarySidebar({
   sectionStatus,
   onCancel,
@@ -64,8 +71,29 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         <WizardSummary items={summaryItems} />
+
+        {/* Quota Card */}
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
+            <VStack gap={3}>
+              {networkQuota.map((item) => (
+                <ProgressBar
+                  key={item.label}
+                  variant="quota"
+                  label={item.label}
+                  value={item.used}
+                  max={item.max}
+                  newValue={item.newValue}
+                  showValue
+                  thresholds={STATUS_THRESHOLDS.storage}
+                />
+              ))}
+            </VStack>
+          </VStack>
+        </div>
 
         {/* Action Buttons */}
         <HStack gap={2}>
@@ -245,12 +273,12 @@ export default function CreateNetworkPage() {
                     {/* Network name */}
                     <div className="py-6">
                       <FormField required error={!!networkNameError}>
-                        <FormField.Label>Network name</FormField.Label>
+                        <FormField.Label>Image name</FormField.Label>
                         <FormField.Control>
                           <VStack gap={2}>
                             <Input
-                              placeholder="Enter network name"
-                              value={networkName || '-'}
+                              placeholder="Enter image name"
+                              value={networkName}
                               onChange={(e) => {
                                 setNetworkName(e.target.value);
                                 setNetworkNameError(null);
@@ -266,7 +294,8 @@ export default function CreateNetworkPage() {
                           </VStack>
                         </FormField.Control>
                         <FormField.HelperText>
-                          Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+                          You can use letters, numbers, and special characters (+=,.@-_), and the
+                          length must be between 2-128 characters.
                         </FormField.HelperText>
                       </FormField>
                     </div>
@@ -472,6 +501,7 @@ export default function CreateNetworkPage() {
                                   setCidrError(null);
                                 }}
                                 fullWidth
+                                error={!!cidrError}
                               />
                             </FormField.Control>
                             <FormField.ErrorMessage>{cidrError}</FormField.ErrorMessage>
