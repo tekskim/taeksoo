@@ -100,7 +100,7 @@ import containerIcon from '@/assets/appIcon/container.png';
    Types
    ---------------------------------------- */
 
-type InstanceStatus = 'running' | 'stopped' | 'pending' | 'error' | 'building';
+type InstanceStatus = 'running' | 'stopped' | 'pending' | 'error' | 'building' | 'verify_resize';
 
 interface Instance {
   id: string;
@@ -117,6 +117,7 @@ interface Instance {
   gpu: string;
   az: string;
   description?: string;
+  origin?: 'container';
 }
 
 interface BareMetalInstance {
@@ -152,11 +153,27 @@ const mockInstances: Instance[] = [
     disk: '100GB',
     gpu: '1',
     az: 'keystone',
+    origin: 'container',
+  },
+  {
+    id: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
+    name: 'analytics-01',
+    status: 'error',
+    locked: true,
+    fixedIp: '10.20.30.80',
+    floatingIp: '-',
+    os: 'Debian 12',
+    flavor: 'XLarge',
+    vcpu: 16,
+    ram: '32GB',
+    disk: '500GB',
+    gpu: '2',
+    az: 'nova',
   },
   {
     id: 'a3f1e8b204c647d8b5921ac3def08712',
     name: 'worker-node-02',
-    status: 'running',
+    status: 'verify_resize',
     locked: false,
     fixedIp: '10.20.30.41',
     floatingIp: '20.30.40.51',
@@ -167,6 +184,7 @@ const mockInstances: Instance[] = [
     disk: '100GB',
     gpu: '1',
     az: 'keystone',
+    origin: 'container',
   },
   {
     id: 'c9d2f5a63b7e4019a8e4b1d07c6e3f9a',
@@ -182,6 +200,7 @@ const mockInstances: Instance[] = [
     disk: '200GB',
     gpu: '-',
     az: 'nova',
+    origin: 'container',
   },
   {
     id: 'e5b8c0d31f2a49e7b6d4a3c2f1e09876',
@@ -257,21 +276,6 @@ const mockInstances: Instance[] = [
     disk: '50GB',
     gpu: '-',
     az: 'keystone',
-  },
-  {
-    id: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
-    name: 'analytics-01',
-    status: 'error',
-    locked: true,
-    fixedIp: '10.20.30.80',
-    floatingIp: '-',
-    os: 'Debian 12',
-    flavor: 'XLarge',
-    vcpu: 16,
-    ram: '32GB',
-    disk: '500GB',
-    gpu: '2',
-    az: 'nova',
   },
   {
     id: 'b0a1c2d3e4f5a6b7c8d9e0f1a2b3c4d5',
@@ -733,6 +737,7 @@ const statusMap: Record<InstanceStatus, StatusType> = {
   pending: 'paused',
   error: 'error',
   building: 'building',
+  verify_resize: 'verify-resized',
 };
 
 /* ----------------------------------------
@@ -1330,11 +1335,8 @@ export function InstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
-            <img src={containerIcon} alt="" className="size-4 object-contain" />
-          </div>
-          <div className="flex flex-col gap-0.5 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             <Link
               to={`/compute/instances/${row.id}`}
               className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -1350,6 +1352,13 @@ export function InstanceListPage() {
               <InlineCopyId value={row.id} />
             </span>
           </div>
+          {row.origin === 'container' && (
+            <Tooltip content="This instance was created via the Container cluster." position="top">
+              <div className="size-6 shrink-0 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
+                <img src={containerIcon} alt="Container" className="size-4 object-contain" />
+              </div>
+            </Tooltip>
+          )}
         </div>
       ),
     },
@@ -1506,13 +1515,8 @@ export function InstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex items-center gap-2 min-w-0">
-          <Tooltip content="This bare metal was created via the Container cluster." position="top">
-            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-              <img src={containerIcon} alt="Container" className="w-4 h-4" />
-            </div>
-          </Tooltip>
-          <div className="flex flex-col gap-0.5 min-w-0">
+        <div className="flex items-center gap-2 min-w-0 w-full">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             <Link
               to={`/compute/bare-metal/${row.id}`}
               className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
@@ -1528,6 +1532,11 @@ export function InstanceListPage() {
               <InlineCopyId value={row.id} />
             </span>
           </div>
+          <Tooltip content="This bare metal was created via the Container cluster." position="top">
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+              <img src={containerIcon} alt="Container" className="w-4 h-4" />
+            </div>
+          </Tooltip>
         </div>
       ),
     },

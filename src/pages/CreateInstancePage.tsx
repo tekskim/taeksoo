@@ -38,6 +38,8 @@ import {
   FormField,
   Popover,
   Badge,
+  Tooltip,
+  Password,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -1020,8 +1022,10 @@ function ImageSection({
     setDataDisks((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));
   };
 
-  // Handle image selection with error clearing
+  // Handle image selection with error clearing (skip error rows)
   const handleImageSelect = (id: string) => {
+    const img = mockImages.find((i) => i.id === id);
+    if (img?.status === 'error') return;
     onSelectImage(id);
     setSourceError(null);
   };
@@ -1093,7 +1097,9 @@ function ImageSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
             {row.status === 'error' && (
-              <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              <Tooltip content="This volume is currently unavailable.">
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
             )}
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1395,7 +1401,7 @@ function ImageSection({
                       data={paginatedImages}
                       rowKey="id"
                       selectedKeys={selectedImageId ? [selectedImageId] : []}
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                     <SelectionIndicator
                       selectedItems={
@@ -1480,7 +1486,7 @@ function ImageSection({
                       )}
                       rowKey="id"
                       selectedKeys={selectedImageId ? [selectedImageId] : []}
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                     <SelectionIndicator
                       selectedItems={
@@ -1565,7 +1571,7 @@ function ImageSection({
                       )}
                       rowKey="id"
                       selectedKeys={selectedImageId ? [selectedImageId] : []}
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                     <SelectionIndicator
                       selectedItems={
@@ -1667,7 +1673,7 @@ function ImageSection({
                       data={paginatedImages}
                       rowKey="id"
                       selectedKeys={selectedImageId ? [selectedImageId] : []}
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                   )}
                   {sourceTab === 'snapshot' && (
@@ -1679,7 +1685,7 @@ function ImageSection({
                       )}
                       rowKey="id"
                       selectedKeys={selectedImageId ? [selectedImageId] : []}
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                   )}
                   {sourceTab === 'volume' && (
@@ -1691,7 +1697,7 @@ function ImageSection({
                       )}
                       rowKey="id"
                       selectedKeys={selectedImageId ? [selectedImageId] : []}
-                      onRowClick={(row) => onSelectImage(row.id)}
+                      onRowClick={(row) => handleImageSelect(row.id)}
                     />
                   )}
 
@@ -2050,8 +2056,10 @@ function FlavorSection({
   // Validation error
   const [flavorError, setFlavorError] = useState<string | null>(null);
 
-  // Handle flavor selection with error clearing
+  // Handle flavor selection with error clearing (skip warning rows)
   const handleSelectFlavor = (id: string) => {
+    const flavor = mockFlavors.find((f) => f.id === id);
+    if (flavor?.hasWarning) return;
     onSelectFlavor(id);
     setFlavorError(null);
   };
@@ -2324,6 +2332,7 @@ interface NetworkRow {
   external: boolean;
   access: string;
   subnetCidr: string;
+  hasWarning?: boolean;
 }
 
 interface FloatingIPPoolRow {
@@ -2355,6 +2364,7 @@ interface PortRow {
   ownedNetwork: string;
   fixedIp: string;
   macAddress: string;
+  hasWarning?: boolean;
 }
 
 const mockNetworks: NetworkRow[] = [
@@ -2369,7 +2379,7 @@ const mockNetworks: NetworkRow[] = [
   {
     id: 'd32059d2',
     name: 'internal-02',
-    status: 'In-active',
+    status: 'Active',
     external: true,
     access: 'Public',
     subnetCidr: '192.168.10.0/24',
@@ -2397,6 +2407,7 @@ const mockNetworks: NetworkRow[] = [
     external: true,
     access: 'Public',
     subnetCidr: '10.7.61.0/24',
+    hasWarning: true,
   },
 ];
 
@@ -2491,6 +2502,7 @@ const mockPorts: PortRow[] = [
     ownedNetwork: 'internal-01',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:11:22:33',
+    hasWarning: true,
   },
 ];
 
@@ -2614,6 +2626,7 @@ function NetworkSection({
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
             checked={selectedNetworkIds.has(row.id)}
+            disabled={row.hasWarning}
             onChange={() => {
               const newSet = new Set(selectedNetworkIds);
               if (newSet.has(row.id)) {
@@ -2642,14 +2655,20 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0}>
-          <HStack gap={1} align="center">
+          <HStack gap={1} align="center" className="min-w-0">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
+              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
+              title={row.name}
             >
               {row.name}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
+            {row.hasWarning && (
+              <Tooltip content="This network has no subnets available.">
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
+            )}
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -2877,6 +2896,7 @@ function NetworkSection({
             value={row.id}
             checked={selectedPortId === row.id}
             onChange={() => setSelectedPortId(row.id)}
+            disabled={row.hasWarning}
           />
         </div>
       ),
@@ -2906,7 +2926,7 @@ function NetworkSection({
           >
             <span>{row.name}</span>
             <svg
-              className="w-3 h-3"
+              className="w-3 h-3 shrink-0"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -2916,6 +2936,14 @@ function NetworkSection({
               <polyline points="15 3 21 3 21 9" />
               <line x1="10" y1="14" x2="21" y2="3" />
             </svg>
+            {row.hasWarning && (
+              <Tooltip
+                content="This port is already attached to another resource."
+                position="bottom"
+              >
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
+            )}
           </a>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -3040,7 +3068,8 @@ function NetworkSection({
                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
               </span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
-                Select the networks to attach to the instance.
+                If you select a port, selecting a network is optional. You may still add another
+                network if required.
               </span>
             </VStack>
 
@@ -3091,6 +3120,7 @@ function NetworkSection({
                 rowKey="id"
                 selectedKeys={Array.from(selectedNetworkIds)}
                 onRowClick={(row) => {
+                  if (row.hasWarning) return;
                   const newSet = new Set(selectedNetworkIds);
                   if (newSet.has(row.id)) {
                     newSet.delete(row.id);
@@ -3098,7 +3128,6 @@ function NetworkSection({
                     newSet.add(row.id);
                   }
                   setSelectedNetworkIds(newSet);
-                  // Clear error when network is selected
                   if (newSet.size > 0) {
                     setNetworkError(null);
                   }
@@ -3133,16 +3162,16 @@ function NetworkSection({
               </span>
             </VStack>
 
-            <VStack gap={2} className="w-full">
-              {vlans.map((vlan) => (
-                <div
-                  key={vlan.id}
-                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
-                >
-                  <HStack gap={2} align="center" className="justify-between">
-                    <HStack gap={2} align="center">
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={2}>
+                {vlans.map((vlan) => (
+                  <div
+                    key={vlan.id}
+                    className="w-full rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-3"
+                  >
+                    <div className="flex items-start gap-2">
+                      <VStack gap={1} className="flex-1">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
                           Network
                         </span>
                         <Select
@@ -3154,10 +3183,11 @@ function NetworkSection({
                           value={vlan.network}
                           onChange={(v) => updateVlan(vlan.id, 'network', v)}
                           placeholder="network"
+                          fullWidth
                         />
-                      </HStack>
-                      <HStack gap={1.5} align="center">
-                        <span className="text-label-lg text-[var(--color-text-default)]">
+                      </VStack>
+                      <VStack gap={1} className="flex-1">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
                           Subnet
                         </span>
                         <Select
@@ -3169,37 +3199,44 @@ function NetworkSection({
                           value={vlan.subnet}
                           onChange={(v) => updateVlan(vlan.id, 'subnet', v)}
                           placeholder="subnet"
+                          fullWidth
                         />
-                      </HStack>
-                      <Select
-                        options={[
-                          { value: 'Auto-assign', label: 'Auto-assign' },
-                          { value: 'Manual', label: 'Manual' },
-                        ]}
-                        value={vlan.autoAssign}
-                        onChange={(v) => updateVlan(vlan.id, 'autoAssign', v)}
-                      />
-                    </HStack>
-                    <button
-                      onClick={() => removeVlan(vlan.id)}
-                      className="p-1 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
-                    >
-                      <IconX size={14} className="text-[var(--color-text-muted)]" />
-                    </button>
-                  </HStack>
+                      </VStack>
+                      <VStack gap={1} className="flex-1">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          IP Assignment
+                        </span>
+                        <Select
+                          options={[
+                            { value: 'Auto-assign', label: 'Auto-assign' },
+                            { value: 'Manual', label: 'Manual' },
+                          ]}
+                          value={vlan.autoAssign}
+                          onChange={(v) => updateVlan(vlan.id, 'autoAssign', v)}
+                          fullWidth
+                        />
+                      </VStack>
+                      <button
+                        onClick={() => removeVlan(vlan.id)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-px"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-muted)]" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={addVlan}
+                  >
+                    Add virtual LAN
+                  </Button>
                 </div>
-              ))}
-
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<IconCirclePlus size={12} />}
-                onClick={addVlan}
-                className="self-start"
-              >
-                Add virtual LAN
-              </Button>
-            </VStack>
+              </VStack>
+            </div>
           </VStack>
 
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -3317,7 +3354,10 @@ function NetworkSection({
                       data={filteredPorts}
                       rowKey="id"
                       selectedKeys={selectedPortId ? [selectedPortId] : []}
-                      onRowClick={(row) => setSelectedPortId(row.id)}
+                      onRowClick={(row) => {
+                        if (row.hasWarning) return;
+                        setSelectedPortId(row.id);
+                      }}
                     />
 
                     {/* Selection Indicator for Port */}
@@ -3421,8 +3461,6 @@ function AuthenticationSection({
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Validation error
   const [authError, setAuthError] = useState<string | null>(null);
@@ -3636,7 +3674,7 @@ function AuthenticationSection({
                       </TabList>
                     </Tabs>
                     <FormField
-                      label="Login Name"
+                      label="Login name"
                       helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
                     >
                       <Input
@@ -3655,94 +3693,31 @@ function AuthenticationSection({
                         'You must use a mix of at least 3 types (uppercase/lowercase letters, numbers, special characters), and the length must be between 8-32 characters. Note that your Login Name, spaces, and specific symbols (" \' < > & \\ |) are not allowed.'
                       }
                     >
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                      <Password
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password"
+                        fullWidth
+                      />
                     </FormField>
                     <FormField
-                      label="Confirm Password"
+                      label="Confirm password"
                       error={!!authError}
                       errorMessage={authError || undefined}
                     >
-                      <div className="relative">
-                        <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          value={confirmPassword}
-                          onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password again"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showConfirmPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                      <Password
+                        value={confirmPassword}
+                        onChange={(e) => {
+                          setConfirmPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password again"
+                        fullWidth
+                        error={!!authError}
+                      />
                     </FormField>
                   </VStack>
                 </div>
@@ -3757,14 +3732,23 @@ function AuthenticationSection({
                 {/* Key pair Tab Content */}
                 <TabPanel value="keypair" className="pt-4">
                   <VStack gap={3}>
-                    <SearchInput
-                      placeholder="Search key pair by attributes"
-                      value={keyPairSearch}
-                      onChange={(e) => setKeyPairSearch(e.target.value)}
-                      onClear={() => setKeyPairSearch('')}
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
+                    <HStack gap={2} align="center" justify="between" className="w-full">
+                      <SearchInput
+                        placeholder="Search key pair by attributes"
+                        value={keyPairSearch}
+                        onChange={(e) => setKeyPairSearch(e.target.value)}
+                        onClear={() => setKeyPairSearch('')}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        rightIcon={<IconExternalLink size={12} />}
+                      >
+                        Create new key pair
+                      </Button>
+                    </HStack>
                     <Pagination
                       currentPage={keyPairPage}
                       totalPages={Math.ceil(filteredKeyPairs.length / 5) || 1}
@@ -3802,7 +3786,10 @@ function AuthenticationSection({
                 {/* Password Tab Content */}
                 <TabPanel value="password" className="pt-4">
                   <VStack gap={4}>
-                    <FormField label="Login Name">
+                    <FormField
+                      label="Login name"
+                      helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
+                    >
                       <Input
                         value={loginName}
                         onChange={(e) => {
@@ -3813,95 +3800,37 @@ function AuthenticationSection({
                         fullWidth
                       />
                     </FormField>
-                    <FormField label="Password">
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                    <FormField
+                      label="Password"
+                      helperText={
+                        'You must use a mix of at least 3 types (uppercase/lowercase letters, numbers, special characters), and the length must be between 8-32 characters. Note that your Login Name, spaces, and specific symbols (" \' < > & \\ |) are not allowed.'
+                      }
+                    >
+                      <Password
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password"
+                        fullWidth
+                      />
                     </FormField>
                     <FormField
-                      label="Confirm Password"
+                      label="Confirm password"
                       error={!!authError && loginType === 'password'}
                       errorMessage={authError && loginType === 'password' ? authError : undefined}
                     >
-                      <div className="relative">
-                        <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          value={confirmPassword}
-                          onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setAuthError(null);
-                          }}
-                          placeholder="Enter password again"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          {showConfirmPassword ? (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                              <line x1="1" y1="1" x2="23" y2="23" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="w-[14px] h-[14px]"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                              <circle cx="12" cy="12" r="3" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
+                      <Password
+                        value={confirmPassword}
+                        onChange={(e) => {
+                          setConfirmPassword(e.target.value);
+                          setAuthError(null);
+                        }}
+                        placeholder="Enter password again"
+                        fullWidth
+                        error={!!(authError && loginType === 'password')}
+                      />
                     </FormField>
                   </VStack>
                 </TabPanel>
@@ -4113,58 +4042,58 @@ function AdvancedSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-              <VStack gap={3}>
-                {tags.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 items-center w-full">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Key</span>
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
-                    <div />
-                    {tags.map((tag, i) => (
-                      <React.Fragment key={tag.id}>
-                        <Input
-                          value={tag.key}
-                          onChange={(e) => {
-                            const newTags = [...tags];
-                            newTags[i] = { ...newTags[i], key: e.target.value };
-                            setTags(newTags);
-                          }}
-                          placeholder="Enter key"
-                          fullWidth
-                        />
-                        <Input
-                          value={tag.value}
-                          onChange={(e) => {
-                            const newTags = [...tags];
-                            newTags[i] = { ...newTags[i], value: e.target.value };
-                            setTags(newTags);
-                          }}
-                          placeholder="Enter value"
-                          fullWidth
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
-                          className="flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                        >
-                          <IconX size={14} />
-                        </button>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                )}
+              <VStack gap={2}>
+                <div className="grid grid-cols-[1fr_1fr_20px] gap-x-2 gap-y-1 items-center w-full">
+                  <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
+                  <div />
+                  {tags.map((tag, i) => (
+                    <React.Fragment key={tag.id}>
+                      <Input
+                        value={tag.key}
+                        onChange={(e) => {
+                          const newTags = [...tags];
+                          newTags[i] = { ...newTags[i], key: e.target.value };
+                          setTags(newTags);
+                        }}
+                        placeholder="Enter key"
+                        fullWidth
+                      />
+                      <Input
+                        value={tag.value}
+                        onChange={(e) => {
+                          const newTags = [...tags];
+                          newTags[i] = { ...newTags[i], value: e.target.value };
+                          setTags(newTags);
+                        }}
+                        placeholder="Enter value"
+                        fullWidth
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setTags(tags.filter((_, idx) => idx !== i))}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-subtle)]" />
+                      </button>
+                    </React.Fragment>
+                  ))}
+                </div>
 
                 <HStack gap={3} align="center">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} />}
-                    onClick={() =>
-                      setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
-                    }
-                    disabled={tags.length >= MAX_TAGS}
-                  >
-                    Add tag
-                  </Button>
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      onClick={() =>
+                        setTags([...tags, { id: crypto.randomUUID(), key: '', value: '' }])
+                      }
+                      disabled={tags.length >= MAX_TAGS}
+                    >
+                      Add tag
+                    </Button>
+                  </div>
                   <span className="text-body-md text-[var(--color-text-subtle)]">
                     {tags.length} / {MAX_TAGS} tags
                   </span>
@@ -4232,7 +4161,12 @@ function AdvancedSection({
 
           {/* User data */}
           <VStack gap={3} className="py-6">
-            <span className="text-label-lg">User data</span>
+            <VStack gap={1}>
+              <span className="text-label-lg">User data</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
+                Enter a script or cloud-init configuration to run when the instance first boots.
+              </span>
+            </VStack>
             {/* Upload Button */}
             <div>
               <input

@@ -25,8 +25,11 @@ import {
   SelectionIndicator,
   PageShell,
   WizardSummary,
+  ProgressBar,
+  STATUS_THRESHOLDS,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
 } from '@/design-system';
 import type { TableColumn, WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -140,7 +143,7 @@ const mockImages: ImageRow[] = [
     minRAM: '0 MiB',
     visibility: 'Public',
     os: 'ubuntu',
-    status: 'active',
+    status: 'error',
   },
   {
     id: 'img-006',
@@ -234,6 +237,13 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
+const volumeQuota = [
+  { label: 'Volume', used: 8, max: 50, newValue: 1 },
+  { label: 'Volume capacity (GiB)', used: 320, max: 3500, newValue: 100 },
+  { label: '_DEFAULT_ type', used: 3, max: Infinity, newValue: 1 },
+  { label: '_DEFAULT_ type capacity (GiB)', used: 150, max: Infinity, newValue: 100 },
+];
+
 function SummarySidebar({
   sectionStatus,
   onCancel,
@@ -248,8 +258,29 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
         <WizardSummary items={summaryItems} />
+
+        {/* Quota Card */}
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
+            <VStack gap={3}>
+              {volumeQuota.map((item) => (
+                <ProgressBar
+                  key={item.label}
+                  variant="quota"
+                  label={item.label}
+                  value={item.used}
+                  max={item.max}
+                  newValue={item.newValue}
+                  showValue
+                  thresholds={STATUS_THRESHOLDS.storage}
+                />
+              ))}
+            </VStack>
+          </VStack>
+        </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col w-full">
@@ -502,9 +533,19 @@ export function CreateVolumePage() {
       sortable: true,
       render: (value: string, row: ImageRow) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span
+              className="text-label-md text-[var(--color-action-primary)] truncate"
+              title={value}
+            >
+              {value}
+            </span>
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
+            {row.status === 'error' && (
+              <Tooltip content="This image is currently unavailable." position="bottom">
+                <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
+              </Tooltip>
+            )}
           </div>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.id}>
@@ -595,7 +636,26 @@ export function CreateVolumePage() {
 
   // Volume type table columns
   const volumeTypeColumns: TableColumn<VolumeTypeRow>[] = [
-    { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (value: string, row: VolumeTypeRow) => (
+        <div className="flex flex-col gap-0.5 min-w-0">
+          <span className="truncate" title={value}>
+            {value}
+          </span>
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
+          </span>
+        </div>
+      ),
+    },
     {
       key: 'description',
       label: 'Description',
@@ -682,6 +742,7 @@ export function CreateVolumePage() {
                             }}
                             placeholder="Enter volume name"
                             fullWidth
+                            error={!!volumeNameError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{volumeNameError}</FormField.ErrorMessage>
@@ -726,6 +787,7 @@ export function CreateVolumePage() {
                             placeholder="Select AZ"
                             options={azOptions}
                             fullWidth
+                            error={!!azError}
                           />
                         </FormField.Control>
                         <FormField.ErrorMessage>{azError}</FormField.ErrorMessage>
@@ -809,9 +871,6 @@ export function CreateVolumePage() {
                       {/* Image Selection */}
                       {(isV2 || sourceType === 'image') && (
                         <VStack gap={3} align="stretch">
-                          <span className="text-label-lg italic text-[var(--color-text-default)]">
-                            Image
-                          </span>
                           {/* OS Filter Tabs */}
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
                             {[
@@ -873,8 +932,15 @@ export function CreateVolumePage() {
                               selectable
                               selectionType="radio"
                               selectedKeys={selectedImage}
+                              disabledKeys={mockImages
+                                .filter((img) => img.status === 'error')
+                                .map((img) => img.id)}
                               onSelectionChange={(keys) => {
                                 setSelectedImage(keys);
+                                setSourceError(null);
+                              }}
+                              onRowClick={(row) => {
+                                setSelectedImage([row.id]);
                                 setSourceError(null);
                               }}
                             />
@@ -898,9 +964,6 @@ export function CreateVolumePage() {
                       {/* Snapshot Selection */}
                       {(isV2 || sourceType === 'snapshot') && (
                         <VStack gap={4} align="stretch">
-                          <span className="text-label-lg italic text-[var(--color-text-default)]">
-                            Volume snapshot
-                          </span>
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
                               placeholder="Search snapshots by attributes"
@@ -1061,11 +1124,6 @@ export function CreateVolumePage() {
                     {(isV2 || sourceType === 'snapshot') && (
                       <>
                         {/* Volume type - Read-only for snapshot */}
-                        <div className="pt-6 pb-2">
-                          <span className="text-label-lg italic text-[var(--color-text-default)]">
-                            Volume snapshot
-                          </span>
-                        </div>
                         <div className="py-6">
                           <VStack gap={2} align="stretch">
                             <VStack gap={1}>
@@ -1126,14 +1184,6 @@ export function CreateVolumePage() {
                     )}
                     {(isV2 || sourceType !== 'snapshot') && (
                       <>
-                        <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-
-                        <div className="pt-6 pb-2">
-                          <span className="text-label-lg italic text-[var(--color-text-default)]">
-                            Blank source or image
-                          </span>
-                        </div>
-
                         {/* Standard Volume type selection for blank/image sources */}
                         <div className="py-6">
                           <VStack gap={3} align="stretch">
@@ -1226,7 +1276,7 @@ export function CreateVolumePage() {
                                 />
                               </HStack>
                             </FormField.Control>
-                            <FormField.HelperText>1-1000 GiB</FormField.HelperText>
+                            <FormField.HelperText>1-1460 GiB</FormField.HelperText>
                           </FormField>
                         </div>
                       </>

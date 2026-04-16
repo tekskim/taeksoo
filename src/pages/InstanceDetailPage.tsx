@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -18,7 +18,6 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
-  Tooltip,
   Chip,
   type ContextMenuItem,
   fixedColumns,
@@ -39,6 +38,8 @@ import {
   IconTrash,
   IconChevronDown,
   IconChevronUp,
+  IconAlertTriangle,
+  IconAlertCircle,
   IconChevronRight,
   IconCirclePlus,
   IconSquarePlus,
@@ -123,7 +124,7 @@ interface ActionLog {
 interface InstanceDetail {
   id: string;
   name: string;
-  status: 'active' | 'shutoff' | 'building' | 'error' | 'paused';
+  status: 'active' | 'shutoff' | 'building' | 'error' | 'paused' | 'verify-resized';
   host: string;
   createdAt: string;
   availabilityZone: string;
@@ -172,7 +173,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
   a3f1e8b204c647d8b5921ac3def08712: {
     id: 'a3f1e8b204c647d8b5921ac3def08712',
     name: 'worker-node-02',
-    status: 'active',
+    status: 'verify-resized',
     host: 'compute-03',
     createdAt: 'Jul 24, 2025 03:19:59',
     availabilityZone: 'keystone',
@@ -185,6 +186,24 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     interfaces: 3,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
+    userData: '-',
+  },
+  d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9: {
+    id: 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9',
+    name: 'analytics-01',
+    status: 'error',
+    host: 'compute-04',
+    createdAt: 'Aug 12, 2025 14:05:33',
+    availabilityZone: 'nova',
+    description: 'Analytics processing instance',
+    flavor: { name: 'XLarge', vcpu: 16, ram: '32 GiB', disk: '500 GiB', gpu: 2 },
+    image: 'Debian 12',
+    os: 'Debian 12',
+    origin: 'Compute',
+    locked: true,
+    interfaces: 2,
+    keyPair: 'analytics-key',
+    serverGroup: 'analytics-group',
     userData: '-',
   },
   c9d2f5a63b7e4019a8e4b1d07c6e3f9a: {
@@ -886,6 +905,103 @@ const diskIOPSReadData = generateWaveData(600, 200);
 const diskIOPSWriteData = generateWaveData(420, 150);
 
 /* ----------------------------------------
+   Expandable Inline Message
+   ---------------------------------------- */
+
+const EXPANDABLE_VARIANT_STYLES: Record<
+  'error' | 'warning',
+  { bg: string; iconClass: string; icon: React.ReactNode }
+> = {
+  error: {
+    bg: 'bg-[var(--inline-message-error-bg)]',
+    iconClass: 'text-[var(--inline-message-error-icon)]',
+    icon: <IconAlertTriangle size={16} strokeWidth={1.5} />,
+  },
+  warning: {
+    bg: 'bg-[var(--inline-message-warning-bg)]',
+    iconClass: 'text-[var(--inline-message-warning-icon)]',
+    icon: <IconAlertCircle size={16} strokeWidth={1.5} />,
+  },
+};
+
+function ExpandableMessage({
+  variant = 'error',
+  timestamp,
+  children,
+}: {
+  variant?: 'error' | 'warning';
+  timestamp: string;
+  children: React.ReactNode;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [showFade, setShowFade] = useState(false);
+  const scrollRef = useRef<HTMLSpanElement>(null);
+  const styles = EXPANDABLE_VARIANT_STYLES[variant];
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 2;
+    setShowFade(!atBottom);
+  }, []);
+
+  const handleExpand = () => {
+    const next = !expanded;
+    setExpanded(next);
+    if (next) {
+      requestAnimationFrame(() => {
+        const el = scrollRef.current;
+        if (el) {
+          el.scrollTop = 0;
+          const hasOverflow = el.scrollHeight - el.clientHeight > 2;
+          setShowFade(hasOverflow);
+        }
+      });
+    } else {
+      setShowFade(false);
+    }
+  };
+
+  return (
+    <div
+      className={`flex items-start gap-[var(--inline-message-gap)] p-[var(--inline-message-padding)] rounded-[var(--inline-message-radius)] ${styles.bg}`}
+    >
+      <span className={`shrink-0 ${styles.iconClass}`}>{styles.icon}</span>
+      <span className="relative flex-1 min-w-0">
+        <span
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className={`block text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)] ${expanded ? 'max-h-[calc(3*var(--inline-message-line-height))] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden' : 'truncate'}`}
+        >
+          {children}
+        </span>
+        {expanded && showFade && (
+          <span
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-[var(--inline-message-line-height)]"
+            style={{
+              background: `linear-gradient(to top, var(--inline-message-${variant}-bg), transparent)`,
+            }}
+          />
+        )}
+      </span>
+      <span className="text-body-xs leading-[var(--inline-message-line-height)] text-[var(--color-text-default)] whitespace-nowrap shrink-0 ml-2">
+        {timestamp}
+      </span>
+      <button
+        className="shrink-0 leading-[var(--inline-message-line-height)] rounded-[var(--radius-sm)] hover:bg-black/5"
+        onClick={handleExpand}
+      >
+        {expanded ? (
+          <IconChevronUp size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        ) : (
+          <IconChevronDown size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        )}
+      </button>
+    </div>
+  );
+}
+
+/* ----------------------------------------
    Instance Detail Page
    ---------------------------------------- */
 
@@ -1008,23 +1124,10 @@ export function InstanceDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={4} className="min-w-[1176px]">
         {/* Instance Header Card */}
         <DetailHeader>
-          <DetailHeader.Title>
-            <span className="inline-flex items-center gap-2">
-              {instance.locked ? (
-                <Tooltip content="This instance is locked">
-                  <IconLock size={16} className="text-[var(--color-text-muted)]" />
-                </Tooltip>
-              ) : (
-                <Tooltip content="This instance is unlocked">
-                  <IconLockOpen size={16} className="text-[var(--color-text-disabled)]" />
-                </Tooltip>
-              )}
-              {instance.name}
-            </span>
-          </DetailHeader.Title>
+          <DetailHeader.Title>{instance.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
@@ -1125,7 +1228,20 @@ export function InstanceDetailPage() {
           </DetailHeader.Actions>
 
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard
+              label="Status"
+              value={
+                {
+                  active: 'Active',
+                  shutoff: 'Shutoff',
+                  building: 'Building',
+                  error: 'Error',
+                  paused: 'Paused',
+                  'verify-resized': 'Verify Resized',
+                }[instance.status]
+              }
+              status={instance.status}
+            />
             <DetailHeader.InfoCard label="ID" value={instance.id} copyable />
             <DetailHeader.InfoCard label="Host" value={instance.host} />
             <DetailHeader.InfoCard label="Origin" value={instance.origin} />
@@ -1149,8 +1265,31 @@ export function InstanceDetailPage() {
           </DetailHeader.InfoGrid>
         </DetailHeader>
 
+        {instance.status === 'error' && (
+          <ExpandableMessage variant="error" timestamp="Aug 12, 2025 02:05 PM">
+            Used for completed or normal operations. ERROR nova.compute.manager [instance:
+            9f3a2d1c-8ab2-44bc-9e2b-1e84f8e2a9cc] Failed to allocate the network(s). No available IP
+            addresses in subnet 192.168.10.0/24.
+          </ExpandableMessage>
+        )}
+
+        {instance.status === 'verify-resized' && (
+          <div className="flex items-start gap-[var(--inline-message-gap)] p-[var(--inline-message-padding)] rounded-[var(--inline-message-radius)] bg-[var(--inline-message-warning-bg)]">
+            <span className="shrink-0 text-[var(--inline-message-warning-icon)]">
+              <IconAlertCircle size={16} strokeWidth={1.5} />
+            </span>
+            <span className="text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)] flex-1 min-w-0">
+              Pending Resize Confirmation. Please confirm to apply the changes, or revert to go back
+              to the previous size.
+            </span>
+            <span className="text-body-xs leading-[var(--inline-message-line-height)] text-[var(--color-text-default)] whitespace-nowrap shrink-0 ml-2">
+              Jul 24, 2025 03:19 PM
+            </span>
+          </div>
+        )}
+
         {/* Instance Tabs */}
-        <div className="w-full">
+        <div className="w-full mt-2">
           <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>

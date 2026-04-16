@@ -582,6 +582,7 @@ export default function CreateVirtualAdapterPage() {
                                 setAdapterNameError(null);
                               }}
                               fullWidth
+                              error={!!adapterNameError}
                             />
                           </VStack>
                         </FormField.Control>

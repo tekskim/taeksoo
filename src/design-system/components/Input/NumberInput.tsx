@@ -311,7 +311,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
           )}
         </div>
 
-        {error && (
+        {typeof error === 'string' && error && (
           <p id={`${inputId}-error`} className="text-body-sm text-[var(--color-state-danger)]">
             {error}
           </p>

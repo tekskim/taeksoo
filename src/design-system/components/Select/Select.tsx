@@ -375,7 +375,9 @@ export function Select({
       )}
 
       {/* Error */}
-      {error && <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>}
+      {typeof error === 'string' && error && (
+        <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>
+      )}
 
       {/* Dropdown Portal */}
       {isOpen &&

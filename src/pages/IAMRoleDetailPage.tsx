@@ -23,6 +23,7 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
@@ -39,6 +40,7 @@ import { Link } from 'react-router-dom';
    ---------------------------------------- */
 
 interface RoleDetail {
+  id: string;
   name: string;
   description: string;
   type: 'Built-in' | 'Custom';
@@ -84,36 +86,42 @@ interface AttachedUser {
 
 const mockRolesMap: Record<string, RoleDetail> = {
   admin: {
+    id: 'role-12345678',
     name: 'admin',
     description: 'Full administrative access',
     type: 'Built-in',
     createdAt: 'Jun 1, 2025 10:20:28',
   },
   Member: {
+    id: 'role-23456789',
     name: 'Member',
     description: 'member role',
     type: 'Custom',
     createdAt: 'Jul 25, 2025 10:32:16',
   },
   viewer: {
+    id: 'role-34567890',
     name: 'viewer',
     description: 'Read-only access',
     type: 'Built-in',
     createdAt: 'Jun 1, 2025 10:20:28',
   },
   'compute-admin': {
+    id: 'role-45678901',
     name: 'compute-admin',
     description: 'Compute administration access',
     type: 'Built-in',
     createdAt: 'Jun 15, 2025 12:22:26',
   },
   'storage-admin': {
+    id: 'role-56789012',
     name: 'storage-admin',
     description: 'Storage administration access',
     type: 'Built-in',
     createdAt: 'Jun 20, 2025 23:27:51',
   },
   'network-admin': {
+    id: 'role-67890123',
     name: 'network-admin',
     description: 'Network administration access',
     type: 'Built-in',
@@ -279,14 +287,18 @@ const mockAttachedUsers: AttachedUser[] = [
 interface InfoCardProps {
   label: string;
   value: string;
+  copyable?: boolean;
 }
 
-function InfoCard({ label, value }: InfoCardProps) {
+function InfoCard({ label, value, copyable }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5 min-w-0">
         <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
+        <span className="flex items-center gap-1 text-body-md leading-4 text-[var(--color-text-default)] min-w-0">
+          <span className="truncate">{value}</span>
+          {copyable && <InlineCopyId value={value} />}
+        </span>
       </div>
     </div>
   );
@@ -694,8 +706,8 @@ export default function IAMRoleDetailPage() {
 
             {/* Info Cards */}
             <HStack gap={2} className="w-full">
+              <InfoCard label="ID" value={role.id} copyable />
               <InfoCard label="Description" value={role.description} />
-              <InfoCard label="Type" value={role.type} />
               <InfoCard label="Created at" value={role.createdAt} />
             </HStack>
           </VStack>
