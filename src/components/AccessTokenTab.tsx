@@ -218,14 +218,10 @@ export function AccessTokenTab({ clusterName = 'default-cluster' }: AccessTokenT
 
               {token ? (
                 <>
-                  <VStack gap={1.5}>
-                    <span className="text-body-md text-[var(--color-text-muted)]">
-                      Created on {formatDisplayDate(token.createdAt)}.
-                    </span>
-                    <span className="text-body-md text-[var(--color-text-muted)]">
-                      Expires on {formatDisplayDate(token.expiresAt)}.
-                    </span>
-                  </VStack>
+                  <span className="text-body-md text-[var(--color-text-muted)]">
+                    Created on {formatDisplayDate(token.createdAt)}, expires on{' '}
+                    {formatDisplayDate(token.expiresAt)}.
+                  </span>
 
                   {justGenerated && <TokenValueOnce copied={copied} onCopy={handleCopyToken} />}
 
