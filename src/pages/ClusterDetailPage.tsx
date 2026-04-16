@@ -22,6 +22,7 @@ import {
   type StatusType,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
+import { AccessTokenTab } from '@/components/AccessTokenTab';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
@@ -31,7 +32,6 @@ import {
   IconSearch,
   IconChevronDown,
   IconPencilCog,
-  IconKey,
 } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -436,15 +436,7 @@ export function ClusterDetailPage() {
                   />
                 </button>
               </Tooltip>
-              <Tooltip content="Access Token" position="bottom">
-                <button
-                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
-                  aria-label="Access Token"
-                >
-                  <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </Tooltip>
+
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
@@ -524,6 +516,7 @@ export function ClusterDetailPage() {
           <TabList>
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
+            <Tab value="access-token">Access token</Tab>
           </TabList>
 
           <TabPanel value="networking">
@@ -618,6 +611,10 @@ export function ClusterDetailPage() {
                 </SectionCard.Content>
               </SectionCard>
             </VStack>
+          </TabPanel>
+
+          <TabPanel value="access-token">
+            <AccessTokenTab clusterName={clusterData.name} />
           </TabPanel>
         </Tabs>
       </VStack>

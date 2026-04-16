@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
   VStack,
@@ -11,7 +11,6 @@ import {
   Input,
 } from '@/design-system';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { KubectlAccessDrawer } from '@/components/KubectlAccessDrawer';
 import {
   IconHome,
   IconAffiliate,
@@ -206,16 +205,10 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
   ]);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const [editingCluster, setEditingCluster] = useState<ClusterItem | null>(null);
-  const [accessTokenOpen, setAccessTokenOpen] = useState(false);
-
   const openAppearance = (cluster: ClusterItem) => {
     setEditingCluster(cluster);
     setAppearanceOpen(true);
   };
-
-  const openAccessToken = useCallback(() => {
-    setAccessTokenOpen(true);
-  }, []);
 
   const handleSaveAppearance = (clusterId: string, iconText: string) => {
     setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
@@ -235,12 +228,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
     window.addEventListener('open-cluster-appearance', handler);
     return () => window.removeEventListener('open-cluster-appearance', handler);
   }, [clusters]);
-
-  // Listen for external "open access token" events from other pages
-  useEffect(() => {
-    window.addEventListener('open-access-token', openAccessToken);
-    return () => window.removeEventListener('open-access-token', openAccessToken);
-  }, [openAccessToken]);
 
   // Restore scroll position after route change - use useLayoutEffect for synchronous update
   useLayoutEffect(() => {
@@ -567,14 +554,6 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           onClose={() => setAppearanceOpen(false)}
           cluster={editingCluster}
           onSave={handleSaveAppearance}
-        />,
-        document.body
-      )}
-      {createPortal(
-        <KubectlAccessDrawer
-          isOpen={accessTokenOpen}
-          onClose={() => setAccessTokenOpen(false)}
-          clusterName={clusters[0]?.name || 'default-cluster'}
         />,
         document.body
       )}

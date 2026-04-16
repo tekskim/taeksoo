@@ -33,7 +33,6 @@ import {
   IconBell,
   IconHelpCircle,
   IconPencilCog,
-  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -408,16 +407,6 @@ export function ContainerDashboardPage() {
                     className="text-[var(--color-text-muted)]"
                     stroke={1.5}
                   />
-                </button>
-              </Tooltip>
-              <Tooltip content="Access Token" position="bottom">
-                <button
-                  type="button"
-                  className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
-                  aria-label="Access Token"
-                >
-                  <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </Tooltip>
               <Tooltip content="kubectl Shell" position="bottom">

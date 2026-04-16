@@ -1,0 +1,313 @@
+import { useState } from 'react';
+import {
+  VStack,
+  HStack,
+  Button,
+  Select,
+  FormField,
+  InfoBox,
+  InlineMessage,
+  ConfirmModal,
+  SectionCard,
+} from '@/design-system';
+import { IconCopy, IconCheck } from '@tabler/icons-react';
+
+/* ------------------------------------------------------------------ */
+/*  Types & Constants                                                   */
+/* ------------------------------------------------------------------ */
+
+type DrawerMode = 'view' | 'generating' | 'regenerating';
+
+interface TokenRecord {
+  id: string;
+  createdAt: string;
+  expiresAt: string;
+}
+
+interface AccessTokenTabProps {
+  clusterName?: string;
+}
+
+const TTL_OPTIONS = [
+  { value: '1h', label: '1 hour' },
+  { value: '6h', label: '6 hours' },
+  { value: '24h', label: '24 hours (recommended)' },
+  { value: '7d', label: '7 days' },
+  { value: '30d', label: '30 days' },
+];
+
+const TTL_HOURS: Record<string, number> = {
+  '1h': 1,
+  '6h': 6,
+  '24h': 24,
+  '7d': 168,
+  '30d': 720,
+};
+
+const MOCK_TOKEN_VALUE =
+  'eyJhbGciOiJSUzI1NiIsImtpZCI6IjFLandXZm9KT2NtWnBzNXVRb3lnd3J5' +
+  'UHBQbkNJOVlXWm9NRndVc2cifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2' +
+  'VhY2NvdW50IiwibmFtZXNwYWNlIjoidGhha2ktdG9rZW5zIn0.mock';
+
+const INITIAL_TOKEN: TokenRecord = {
+  id: 'tok-g7h8i9',
+  createdAt: '2026-03-20 09:00',
+  expiresAt: '2026-04-19 09:00',
+};
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                             */
+/* ------------------------------------------------------------------ */
+
+function formatISODate(d: Date): string {
+  return d.toISOString().slice(0, 16).replace('T', ' ');
+}
+
+function formatDisplayDate(dateStr: string | undefined): string {
+  if (!dateStr) return '—';
+  const [datePart] = dateStr.split(' ');
+  if (!datePart) return dateStr;
+  const [year, month, day] = datePart.split('-').map(Number);
+  const names = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  return `${names[month - 1]} ${day}, ${year}`;
+}
+
+function makeNewRecord(ttl: string): TokenRecord {
+  const now = new Date();
+  const expiresAt = new Date(now);
+  expiresAt.setHours(expiresAt.getHours() + (TTL_HOURS[ttl] ?? 24));
+  return {
+    id: `tok-${Math.random().toString(36).slice(2, 8)}`,
+    createdAt: formatISODate(now),
+    expiresAt: formatISODate(expiresAt),
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sub-components                                                      */
+/* ------------------------------------------------------------------ */
+
+function TokenValueOnce({ copied, onCopy }: { copied: boolean; onCopy: () => void }) {
+  return (
+    <VStack gap={2}>
+      <InlineMessage variant="warning">
+        Make sure to copy your token now as you will not be able to see it again.
+      </InlineMessage>
+      <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] border border-[var(--color-border-default)]">
+        <code className="flex-1 text-body-sm text-[var(--color-text-default)] font-mono truncate select-all">
+          {MOCK_TOKEN_VALUE}
+        </code>
+        <button
+          onClick={onCopy}
+          className="shrink-0 p-1 hover:bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)] transition-colors"
+          aria-label="Copy token"
+        >
+          {copied ? (
+            <IconCheck size={14} className="text-[var(--color-state-success)]" />
+          ) : (
+            <IconCopy size={14} className="text-[var(--color-text-muted)]" />
+          )}
+        </button>
+      </div>
+    </VStack>
+  );
+}
+
+function TokenForm({
+  mode,
+  ttl,
+  onTtlChange,
+  onSubmit,
+  onCancel,
+}: {
+  mode: 'generating' | 'regenerating';
+  ttl: string;
+  onTtlChange: (v: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+}) {
+  const isRegen = mode === 'regenerating';
+  return (
+    <VStack
+      gap={4}
+      className="pt-4 pb-3 px-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)]"
+    >
+      <InlineMessage variant={isRegen ? 'warning' : 'info'}>
+        {isRegen
+          ? 'The existing token will be revoked immediately. Any kubectl sessions using it will lose access.'
+          : 'Generating a new token grants kubectl access to this cluster for the selected period.'}
+      </InlineMessage>
+
+      <FormField
+        label="Expiration"
+        helperText="Expired tokens cannot be renewed — generate a new token instead."
+      >
+        <Select options={TTL_OPTIONS} value={ttl} onChange={onTtlChange} fullWidth />
+      </FormField>
+
+      <HStack gap={2}>
+        <Button variant="secondary" size="sm" onClick={onCancel} className="flex-1">
+          Cancel
+        </Button>
+        <Button variant="primary" size="sm" onClick={onSubmit} className="flex-1">
+          {isRegen ? 'Regenerate token' : 'Generate token'}
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main Component                                                      */
+/* ------------------------------------------------------------------ */
+
+export function AccessTokenTab({ clusterName = 'default-cluster' }: AccessTokenTabProps) {
+  const [token, setToken] = useState<TokenRecord | null>(INITIAL_TOKEN);
+  const [mode, setMode] = useState<DrawerMode>('view');
+  const [justGenerated, setJustGenerated] = useState(false);
+  const [ttl, setTtl] = useState('30d');
+  const [copied, setCopied] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const handleGenerate = () => {
+    setToken(makeNewRecord(ttl));
+    setMode('view');
+    setJustGenerated(true);
+  };
+
+  const handleRegenerate = () => {
+    setToken(makeNewRecord(ttl));
+    setMode('view');
+    setJustGenerated(true);
+  };
+
+  const handleDeleteConfirmed = () => {
+    setToken(null);
+    setShowDeleteConfirm(false);
+    setJustGenerated(false);
+    setMode('view');
+  };
+
+  const handleCopyToken = async () => {
+    await navigator.clipboard.writeText(MOCK_TOKEN_VALUE);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <>
+      <VStack gap={4} className="pt-4">
+        <SectionCard>
+          <SectionCard.Header title="Access token" />
+          <SectionCard.Content>
+            <VStack gap={4} className="max-w-[560px]">
+              <InfoBox label="Cluster" value={clusterName} />
+
+              {token ? (
+                <>
+                  <VStack gap={1.5}>
+                    <span className="text-body-md text-[var(--color-text-muted)]">
+                      Created on {formatDisplayDate(token.createdAt)}.
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-muted)]">
+                      Expires on {formatDisplayDate(token.expiresAt)}.
+                    </span>
+                  </VStack>
+
+                  {justGenerated && <TokenValueOnce copied={copied} onCopy={handleCopyToken} />}
+
+                  {mode === 'view' && (
+                    <HStack gap={2}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setShowDeleteConfirm(true)}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => {
+                          setMode('regenerating');
+                          setJustGenerated(false);
+                        }}
+                      >
+                        Regenerate token
+                      </Button>
+                    </HStack>
+                  )}
+
+                  {mode === 'regenerating' && (
+                    <TokenForm
+                      mode="regenerating"
+                      ttl={ttl}
+                      onTtlChange={setTtl}
+                      onSubmit={handleRegenerate}
+                      onCancel={() => setMode('view')}
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  {mode === 'view' && (
+                    <VStack gap={4}>
+                      <InlineMessage variant="warning">
+                        No active token. Generate a new token to access this cluster via kubectl.
+                      </InlineMessage>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="self-start"
+                        onClick={() => setMode('generating')}
+                      >
+                        Generate new token
+                      </Button>
+                    </VStack>
+                  )}
+
+                  {mode === 'generating' && (
+                    <TokenForm
+                      mode="generating"
+                      ttl={ttl}
+                      onTtlChange={setTtl}
+                      onSubmit={handleGenerate}
+                      onCancel={() => setMode('view')}
+                    />
+                  )}
+                </>
+              )}
+            </VStack>
+          </SectionCard.Content>
+        </SectionCard>
+      </VStack>
+
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteConfirmed}
+        title="Delete token"
+        description="Any kubectl sessions or scripts using this token will lose access immediately."
+        infoLabel="Cluster"
+        infoValue={clusterName}
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
+    </>
+  );
+}
+
+export default AccessTokenTab;

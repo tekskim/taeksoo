@@ -44,7 +44,6 @@ import {
   IconDownload,
   IconTrash,
   IconPencilCog,
-  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -492,13 +491,6 @@ export function PersistentVolumeClaimDetailPage() {
                 aria-label="Customize cluster appearance"
               >
                 <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
-                aria-label="Access Token"
-              >
-                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"

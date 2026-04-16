@@ -18,6 +18,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
+import { formCpuToYaml, formMemoryToYaml } from '@/utils/k8sResourceUnits';
 import {
   IconBell,
   IconTerminal2,
@@ -28,7 +29,6 @@ import {
   IconX,
   IconCheck,
   IconPencilCog,
-  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -599,11 +599,25 @@ export function CreateLimitRangePage() {
       return;
     }
 
-    console.log('Creating limit range:', {
+    // Form → YAML conversion for CPU/Memory values
+    const yamlResourceLimit = {
+      cpuReservation: resourceLimit.cpuReservation
+        ? formCpuToYaml(resourceLimit.cpuReservation)
+        : undefined,
+      cpuLimit: resourceLimit.cpuLimit ? formCpuToYaml(resourceLimit.cpuLimit) : undefined,
+      memoryReservation: resourceLimit.memoryReservation
+        ? formMemoryToYaml(resourceLimit.memoryReservation)
+        : undefined,
+      memoryLimit: resourceLimit.memoryLimit
+        ? formMemoryToYaml(resourceLimit.memoryLimit)
+        : undefined,
+    };
+
+    console.log('Creating limit range (YAML values):', {
       limitRangeName,
       namespace,
       description,
-      resourceLimit,
+      resourceLimit: yamlResourceLimit,
       labels,
       annotations,
     });
@@ -695,13 +709,6 @@ export function CreateLimitRangePage() {
                 aria-label="Customize cluster appearance"
               >
                 <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
-                aria-label="Access Token"
-              >
-                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

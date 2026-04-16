@@ -34,7 +34,6 @@ import {
   IconX,
   IconCheck,
   IconPencilCog,
-  IconKey,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -641,9 +640,11 @@ export function CreateResourceQuotaPage() {
         mockYamlQuotas.map((q, i) => {
           let formLimit = q.limit;
           if (q.resourceType === 'cpu-limit' || q.resourceType === 'cpu-reservation') {
-            formLimit = String(parseCpuSafe(q.limit, 0));
+            const parsed = parseCpuSafe(q.limit);
+            formLimit = parsed !== null ? String(parsed) : '';
           } else if (q.resourceType === 'memory-limit' || q.resourceType === 'memory-reservation') {
-            formLimit = String(parseMemorySafe(q.limit, 0));
+            const parsed = parseMemorySafe(q.limit);
+            formLimit = parsed !== null ? String(parsed) : '';
           }
           return { id: `quota-edit-${i}`, resourceType: q.resourceType, limit: formLimit };
         })
@@ -806,13 +807,6 @@ export function CreateResourceQuotaPage() {
                 aria-label="Customize cluster appearance"
               >
                 <IconPencilCog size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-access-token'))}
-                aria-label="Access Token"
-              >
-                <IconKey size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
