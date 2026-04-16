@@ -19,8 +19,8 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
-import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
+import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
+import { GroupMembersDrawer } from '@/components/GroupMembersDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
 import { IconDownload, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -418,13 +418,13 @@ export function IAMUserGroupsPage() {
       </VStack>
 
       {/* User Group Drawers */}
-      <ManageRolesDrawer
+      <GroupRolesDrawer
         isOpen={manageRolesOpen}
         onClose={() => setManageRolesOpen(false)}
         userName={selectedGroupForDrawer?.name}
       />
 
-      <ManageUsersDrawer
+      <GroupMembersDrawer
         isOpen={manageUsersOpen}
         onClose={() => setManageUsersOpen(false)}
         userGroupName={selectedGroupForDrawer?.name}

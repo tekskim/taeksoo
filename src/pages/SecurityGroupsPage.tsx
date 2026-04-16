@@ -25,7 +25,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
@@ -493,7 +493,7 @@ export function SecurityGroupsPage() {
       />
 
       {/* Security Group Drawers */}
-      <CreateSecurityGroupRuleDrawer
+      <CreateSGRuleDrawer
         isOpen={createRuleOpen}
         onClose={() => setCreateRuleOpen(false)}
         securityGroupId={selectedGroupForDrawer?.id}

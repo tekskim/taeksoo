@@ -37,7 +37,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
-import { ManagePoliciesDrawer } from '@/components/ManagePoliciesDrawer';
+import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
 import { EditRoleDrawer } from '@/components/EditRoleDrawer';
 import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
@@ -786,7 +786,7 @@ export default function IAMRolesPage() {
         roleName={grantTargetRole ?? ''}
       />
 
-      <ManagePoliciesDrawer
+      <RolePoliciesDrawer
         isOpen={isManageLinkedPoliciesOpen}
         onClose={() => {
           setIsManageLinkedPoliciesOpen(false);

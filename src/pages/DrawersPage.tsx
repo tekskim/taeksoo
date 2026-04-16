@@ -24,13 +24,13 @@ import {
   type InstanceInfo as EditInstanceInfo,
 } from '@/components/EditInstanceDrawer';
 import {
-  LockSettingDrawer,
+  LockInstanceDrawer,
   type InstanceInfo as LockInstanceInfo,
-} from '@/components/LockSettingDrawer';
+} from '@/components/LockInstanceDrawer';
 import {
-  BootSettingDrawer,
+  ToggleBootableDrawer,
   type VolumeInfo as BootVolumeInfo,
-} from '@/components/BootSettingDrawer';
+} from '@/components/ToggleBootableDrawer';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateVolumeSnapshotDrawer,
@@ -41,9 +41,9 @@ import {
   type VolumeInfo as BackupVolumeInfo,
 } from '@/components/CreateVolumeBackupDrawer';
 import {
-  CloneVolumeDrawer,
+  CreateVolumeFromResourceDrawer,
   type VolumeInfo as CloneVolumeInfo,
-} from '@/components/CloneVolumeDrawer';
+} from '@/components/CreateVolumeFromResourceDrawer';
 import {
   ExtendVolumeDrawer,
   type VolumeInfo as ExtendVolumeInfo,
@@ -97,13 +97,13 @@ import {
 } from '@/components/CreateVolumeFromBackupDrawer';
 import { AddL7PolicyDrawer } from '@/components/AddL7PolicyDrawer';
 import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
-import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
 import { EditRouterDrawer } from '@/components/EditRouterDrawer';
 import { CreateStaticRouteDrawer } from '@/components/CreateStaticRouteDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
 import { CreateAllowedAddressPairDrawer } from '@/components/CreateAllowedAddressPairDrawer';
-import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
+import { EditFIPDrawer } from '@/components/EditFIPDrawer';
 import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { EditCertificateDrawer } from '@/components/EditCertificateDrawer';
@@ -111,8 +111,8 @@ import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
 import { EditPoolDrawer } from '@/components/EditPoolDrawer';
 import { AddL7RuleDrawer } from '@/components/AddL7RuleDrawer';
 import { EditListenerDrawer } from '@/components/EditListenerDrawer';
-import { AllocateIPDrawer } from '@/components/AllocateIPDrawer';
-import { CreateHealthMonitorDrawer } from '@/components/CreateHealthMonitorDrawer';
+import { AllocateFIPDrawer } from '@/components/AllocateFIPDrawer';
+import { HealthMonitorDrawer } from '@/components/HealthMonitorDrawer';
 import { EditMemberDrawer } from '@/components/EditMemberDrawer';
 import {
   DetachVolumeDrawer,
@@ -126,7 +126,7 @@ import {
   DetachInterfaceDrawer,
   type InstanceInfo as DetachInterfaceInstanceInfo,
 } from '@/components/DetachInterfaceDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { AssociateFIPtoInstanceDrawer } from '@/components/AssociateFIPtoInstanceDrawer';
 import {
   DisassociateFloatingIPDrawer,
   type InstanceInfo as DisassociateFloatingIPInstanceInfo,
@@ -148,11 +148,11 @@ import {
   ResizeInstanceDrawer,
   type InstanceInfo as ResizeInstanceInfo,
 } from '@/components/ResizeInstanceDrawer';
-import { CreateVolumeBackupWithSelectionDrawer } from '@/components/CreateVolumeBackupWithSelectionDrawer';
-import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { CreateVolumeBackupFromListDrawer } from '@/components/CreateVolumeBackupFromListDrawer';
+import { RestoreVolumeSnapshotDrawer } from '@/components/RestoreVolumeSnapshotDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { AttachInstanceDrawer } from '@/components/AttachInstanceDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { AttachInstanceToVolumeDrawer } from '@/components/AttachInstanceToVolumeDrawer';
+import { SubnetDrawer } from '@/components/SubnetDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
@@ -160,47 +160,46 @@ import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPT
 import { ChangeServerCertificateDrawer } from '@/components/ChangeServerCertificateDrawer';
 import { ChangeCACertificateDrawer } from '@/components/ChangeCACertificateDrawer';
 import { ManageSNICertificateDrawer } from '@/components/ManageSNICertificateDrawer';
-import { ExternalGatewaySettingDrawer } from '@/components/ExternalGatewaySettingDrawer';
+import { ManageExternalGatewayDrawer } from '@/components/ManageExternalGatewayDrawer';
 import { ConnectSubnetDrawer } from '@/components/ConnectSubnetDrawer';
-import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { DisconnectSubnetDrawer } from '@/components/DisconnectSubnetDrawer';
-import { ManageMembersDrawer } from '@/components/ManageMembersDrawer';
-import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
+import { ManageLoadBalancerMemberDrawer } from '@/components/ManageLoadBalancerMemberDrawer';
 import { IdentifyDeviceDrawer } from '@/components/IdentifyDeviceDrawer';
 import { CreateFolderDrawer } from '@/components/CreateFolderDrawer';
 import { CreateObjectDrawer } from '@/components/CreateObjectDrawer';
-import { MoveFilesDrawer } from '@/components/MoveFilesDrawer';
-import { EditObjectDrawer } from '@/components/EditObjectDrawer';
-import { ManageUserGroupsDrawer } from '@/components/ManageUserGroupsDrawer';
-import { ManageUsersDrawer } from '@/components/ManageUsersDrawer';
-import { ManageRolesDrawer } from '@/components/ManageRolesDrawer';
+import { MoveFolderDrawer } from '@/components/MoveFolderDrawer';
+import { EditFileDrawer } from '@/components/EditFileDrawer';
+import { UserGroupsDrawer } from '@/components/UserGroupsDrawer';
+import { GroupMembersDrawer } from '@/components/GroupMembersDrawer';
+import { GroupRolesDrawer } from '@/components/GroupRolesDrawer';
 import { ResetPasswordDrawer } from '@/components/ResetPasswordDrawer';
-import { EditUserDrawer } from '@/components/EditUserDrawer';
+import { UserEditDrawer } from '@/components/UserEditDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
-import { ManagePoliciesDrawer } from '@/components/ManagePoliciesDrawer';
+import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
 import { EditRoleDrawer } from '@/components/EditRoleDrawer';
 import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
-import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
-import { EditDomainDrawer } from '@/components/EditDomainDrawer';
+import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
+import { DomainEditDrawer } from '@/components/DomainEditDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
-import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
+import { AdminLockInstanceDrawer } from '@/components/AdminLockInstanceDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
 import {
-  MigrateInstanceDrawer,
+  AdminInstanceMigrateDrawer,
   type MigrateInstanceInfo,
-} from '@/components/MigrateInstanceDrawer';
+} from '@/components/AdminInstanceMigrateDrawer';
 import {
-  LiveMigrateInstanceDrawer,
+  AdminInstanceLiveMigrateDrawer,
   type LiveMigrateInstanceInfo,
-} from '@/components/LiveMigrateInstanceDrawer';
+} from '@/components/AdminInstanceLiveMigrateDrawer';
 import {
-  ManageMetadataDrawer,
+  AdminMetadataDrawer,
   type ManageMetadataImageInfo,
-} from '@/components/ManageMetadataDrawer';
+} from '@/components/AdminMetadataDrawer';
 import {
-  MigrateVolumeDrawer,
+  AdminVolumeMigrateDrawer,
   type MigrateVolumeInfo as MigrateVolumeVolumeInfo,
-} from '@/components/MigrateVolumeDrawer';
+} from '@/components/AdminVolumeMigrateDrawer';
 import { ManageRulesDrawer, type FirewallPolicyInfo } from '@/components/ManageRulesDrawer';
 import {
   ModifyQuotasDrawer,
@@ -1695,7 +1694,7 @@ export function DrawersPage() {
         }}
       />
 
-      <LockSettingDrawer
+      <LockInstanceDrawer
         isOpen={openDrawer === 'lock-setting'}
         onClose={closeDrawer}
         instance={mockLockInstance}
@@ -1704,7 +1703,7 @@ export function DrawersPage() {
         }}
       />
 
-      <BootSettingDrawer
+      <ToggleBootableDrawer
         isOpen={openDrawer === 'boot-setting'}
         onClose={closeDrawer}
         volume={mockBootVolume}
@@ -1745,7 +1744,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CloneVolumeDrawer
+      <CreateVolumeFromResourceDrawer
         isOpen={openDrawer === 'clone-volume'}
         onClose={closeDrawer}
         volume={mockCloneVolume}
@@ -1978,7 +1977,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateSecurityGroupRuleDrawer
+      <CreateSGRuleDrawer
         isOpen={openDrawer === 'create-security-group-rule'}
         onClose={closeDrawer}
         ruleQuota={{ used: 2, total: 10 }}
@@ -2061,7 +2060,7 @@ export function DrawersPage() {
         }}
       />
 
-      <EditFloatingIPDrawer
+      <EditFIPDrawer
         isOpen={openDrawer === 'edit-floating-i-p'}
         onClose={closeDrawer}
         floatingIP={{
@@ -2178,7 +2177,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AllocateIPDrawer
+      <AllocateFIPDrawer
         isOpen={openDrawer === 'allocate-i-p'}
         onClose={closeDrawer}
         port={{
@@ -2207,7 +2206,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateHealthMonitorDrawer
+      <HealthMonitorDrawer
         isOpen={openDrawer === 'create-health-monitor'}
         onClose={closeDrawer}
         pool={{
@@ -2265,7 +2264,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AssociateFloatingIPDrawer
+      <AssociateFIPtoInstanceDrawer
         isOpen={openDrawer === 'associate-floating-i-p'}
         onClose={closeDrawer}
         port={mockAssociateFloatingIPPort}
@@ -2334,7 +2333,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateVolumeBackupWithSelectionDrawer
+      <CreateVolumeBackupFromListDrawer
         isOpen={openDrawer === 'create-volume-backup-with-selection'}
         onClose={closeDrawer}
         onSubmit={(volumeId, backupName, description, mode) => {
@@ -2347,7 +2346,7 @@ export function DrawersPage() {
         }}
       />
 
-      <RestoreFromSnapshotDrawer
+      <RestoreVolumeSnapshotDrawer
         isOpen={openDrawer === 'restore-from-snapshot'}
         onClose={closeDrawer}
         volume={{ id: 'vol-03', name: 'vol-03' }}
@@ -2365,7 +2364,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AttachInstanceDrawer
+      <AttachInstanceToVolumeDrawer
         isOpen={openDrawer === 'attach-instance'}
         onClose={closeDrawer}
         volume={{ id: 'vol-03', name: 'vol-03' }}
@@ -2383,7 +2382,7 @@ export function DrawersPage() {
         }}
       />
 
-      <CreateSubnetDrawer
+      <SubnetDrawer
         isOpen={openDrawer === 'create-subnet'}
         onClose={closeDrawer}
         networkId="network-01"
@@ -2473,7 +2472,7 @@ export function DrawersPage() {
         }}
       />
 
-      <ExternalGatewaySettingDrawer
+      <ManageExternalGatewayDrawer
         isOpen={openDrawer === 'external-gateway-setting'}
         onClose={closeDrawer}
         router={{ name: 'router-01' }}
@@ -2492,7 +2491,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AssociateFloatingIPToPortDrawer
+      <AssociateFIPtoPortDrawer
         isOpen={openDrawer === 'associate-floating-i-p-to-port'}
         onClose={closeDrawer}
         port={{ name: 'port-10' }}
@@ -2510,7 +2509,7 @@ export function DrawersPage() {
         }}
       />
 
-      <ManageMembersDrawer
+      <ManageLoadBalancerMemberDrawer
         isOpen={openDrawer === 'manage-members'}
         onClose={closeDrawer}
         pool={{ name: 'pool-http' }}
@@ -2519,7 +2518,7 @@ export function DrawersPage() {
         }}
       />
 
-      <AllocateFloatingIPDrawer
+      <AllocateFIPDrawer
         isOpen={openDrawer === 'allocate-floating-i-p'}
         onClose={closeDrawer}
         floatingIPQuota={{ used: 2, total: 10 }}
@@ -2553,7 +2552,7 @@ export function DrawersPage() {
       />
 
       {/* Move Files Drawer */}
-      <MoveFilesDrawer
+      <MoveFolderDrawer
         isOpen={openDrawer === 'move-files'}
         onClose={closeDrawer}
         currentPath="folder/~"
@@ -2563,7 +2562,7 @@ export function DrawersPage() {
       />
 
       {/* Edit Object Drawer */}
-      <EditObjectDrawer
+      <EditFileDrawer
         isOpen={openDrawer === 'edit-object'}
         onClose={closeDrawer}
         objectName="{Current Folder Name}"
@@ -2582,7 +2581,7 @@ export function DrawersPage() {
       />
 
       {/* Manage User Groups Drawer */}
-      <ManageUserGroupsDrawer
+      <UserGroupsDrawer
         isOpen={openDrawer === 'manage-user-groups'}
         onClose={closeDrawer}
         userName="thaki.kim"
@@ -2592,7 +2591,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Users Drawer */}
-      <ManageUsersDrawer
+      <GroupMembersDrawer
         isOpen={openDrawer === 'manage-users'}
         onClose={closeDrawer}
         userGroupName="MemberGroup"
@@ -2602,7 +2601,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Roles Drawer */}
-      <ManageRolesDrawer
+      <GroupRolesDrawer
         isOpen={openDrawer === 'manage-roles'}
         onClose={closeDrawer}
         userName="thaki.kim"
@@ -2622,7 +2621,7 @@ export function DrawersPage() {
       />
 
       {/* Edit User Drawer */}
-      <EditUserDrawer
+      <UserEditDrawer
         isOpen={openDrawer === 'edit-user'}
         onClose={closeDrawer}
         userName="thaki-kim"
@@ -2650,7 +2649,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Policies Drawer */}
-      <ManagePoliciesDrawer
+      <RolePoliciesDrawer
         isOpen={openDrawer === 'manage-policies'}
         onClose={closeDrawer}
         roleName="member"
@@ -2680,7 +2679,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Linked Policies Drawer */}
-      <ManagePoliciesDrawer
+      <RolePoliciesDrawer
         isOpen={openDrawer === 'manage-linked-policies'}
         onClose={closeDrawer}
         roleName="admin"
@@ -2692,7 +2691,7 @@ export function DrawersPage() {
       />
 
       {/* Create Domain Drawer */}
-      <CreateDomainDrawer
+      <DomainCreateDrawer
         isOpen={openDrawer === 'create-domain'}
         onClose={closeDrawer}
         onSubmit={(data) => {
@@ -2701,7 +2700,7 @@ export function DrawersPage() {
       />
 
       {/* Edit Domain Drawer */}
-      <EditDomainDrawer
+      <DomainEditDrawer
         isOpen={openDrawer === 'edit-domain'}
         onClose={closeDrawer}
         initialData={{
@@ -2725,7 +2724,7 @@ export function DrawersPage() {
       />
 
       {/* Admin Lock Setting Drawer */}
-      <AdminLockSettingDrawer
+      <AdminLockInstanceDrawer
         isOpen={openDrawer === 'admin-lock-setting'}
         onClose={closeDrawer}
         adminUsername="thaki.kim"
@@ -2754,7 +2753,7 @@ export function DrawersPage() {
           COMPUTE ADMIN DRAWERS ============================================= */}
 
       {/* Migrate Instance Drawer */}
-      <MigrateInstanceDrawer
+      <AdminInstanceMigrateDrawer
         isOpen={openDrawer === 'migrate-instance'}
         onClose={closeDrawer}
         instance={mockMigrateInstance}
@@ -2764,7 +2763,7 @@ export function DrawersPage() {
       />
 
       {/* Live Migrate Instance Drawer */}
-      <LiveMigrateInstanceDrawer
+      <AdminInstanceLiveMigrateDrawer
         isOpen={openDrawer === 'live-migrate-instance'}
         onClose={closeDrawer}
         instance={mockLiveMigrateInstance}
@@ -2774,7 +2773,7 @@ export function DrawersPage() {
       />
 
       {/* Manage Metadata Drawer */}
-      <ManageMetadataDrawer
+      <AdminMetadataDrawer
         isOpen={openDrawer === 'manage-metadata'}
         onClose={closeDrawer}
         image={mockManageMetadataImage}
@@ -2784,7 +2783,7 @@ export function DrawersPage() {
       />
 
       {/* Migrate Volume Drawer */}
-      <MigrateVolumeDrawer
+      <AdminVolumeMigrateDrawer
         isOpen={openDrawer === 'migrate-volume'}
         onClose={closeDrawer}
         volume={mockMigrateVolume}

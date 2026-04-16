@@ -27,8 +27,8 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeSnapshotDrawer } from '@/components/CreateVolumeSnapshotDrawer';
 import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
-import { CloneVolumeDrawer } from '@/components/CloneVolumeDrawer';
-import { RestoreFromSnapshotDrawer } from '@/components/RestoreFromSnapshotDrawer';
+import { CreateVolumeFromResourceDrawer } from '@/components/CreateVolumeFromResourceDrawer';
+import { RestoreVolumeSnapshotDrawer } from '@/components/RestoreVolumeSnapshotDrawer';
 import { CreateImageFromVolumeDrawer } from '@/components/CreateImageFromVolumeDrawer';
 import { EditVolumeDrawer } from '@/components/EditVolumeDrawer';
 import { ExtendVolumeDrawer } from '@/components/ExtendVolumeDrawer';
@@ -749,7 +749,7 @@ export function VolumesPage() {
         }
       />
 
-      <CloneVolumeDrawer
+      <CreateVolumeFromResourceDrawer
         isOpen={cloneVolumeOpen}
         onClose={() => setCloneVolumeOpen(false)}
         volume={
@@ -763,7 +763,7 @@ export function VolumesPage() {
         }
       />
 
-      <RestoreFromSnapshotDrawer
+      <RestoreVolumeSnapshotDrawer
         isOpen={restoreSnapshotOpen}
         onClose={() => setRestoreSnapshotOpen(false)}
         volume={

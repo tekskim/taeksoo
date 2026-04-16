@@ -26,7 +26,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { SubnetDrawer } from '@/components/SubnetDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -619,7 +619,7 @@ export function ComputeAdminNetworksPage() {
       />
 
       {/* Network Drawers */}
-      <CreateSubnetDrawer
+      <SubnetDrawer
         isOpen={createSubnetOpen}
         onClose={() => setCreateSubnetOpen(false)}
         networkId={selectedNetworkForDrawer?.id}

@@ -47,9 +47,9 @@ import {
   type InstanceInfo,
 } from '@/components/CreateInstanceSnapshotDrawer';
 import {
-  LockSettingDrawer,
+  LockInstanceDrawer,
   type InstanceInfo as LockInstanceInfo,
-} from '@/components/LockSettingDrawer';
+} from '@/components/LockInstanceDrawer';
 import {
   EditInstanceDrawer,
   type InstanceInfo as EditInstanceInfo,
@@ -1720,7 +1720,7 @@ export function ComputeAdminInstanceListPage() {
       />
 
       {/* Lock setting Drawer */}
-      <LockSettingDrawer
+      <LockInstanceDrawer
         isOpen={isLockDrawerOpen}
         onClose={() => {
           setIsLockDrawerOpen(false);

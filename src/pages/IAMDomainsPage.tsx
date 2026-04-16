@@ -20,7 +20,7 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
-import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
+import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
 import { useTabs } from '@/contexts/TabContext';
 
 /* ----------------------------------------
@@ -312,7 +312,7 @@ export default function IAMDomainsPage() {
       </PageShell>
 
       {/* Create Domain Drawer */}
-      <CreateDomainDrawer
+      <DomainCreateDrawer
         isOpen={isCreateDrawerOpen}
         onClose={() => setIsCreateDrawerOpen(false)}
       />
