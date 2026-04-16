@@ -23,7 +23,7 @@ import kafkaLogo from '@/assets/catalog/kafka.svg';
 import nginxLogo from '@/assets/catalog/nginx.svg';
 import milvusLogo from '@/assets/catalog/milvus.svg';
 
-function Button({ icon, label }: { icon: React.ReactNode; label: string }) {
+function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <button
       className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"

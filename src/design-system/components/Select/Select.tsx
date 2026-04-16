@@ -303,7 +303,7 @@ export function Select({
     'border border-[var(--select-menu-border)]',
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
-    'overflow-hidden',
+    'overflow-y-auto max-h-[240px]',
     'focus:outline-none'
   );
 

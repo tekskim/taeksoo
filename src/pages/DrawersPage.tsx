@@ -179,6 +179,7 @@ import { EditUserDrawer } from '@/components/EditUserDrawer';
 import { EditUserGroupDrawer } from '@/components/EditUserGroupDrawer';
 import { ManagePoliciesDrawer } from '@/components/ManagePoliciesDrawer';
 import { EditRoleDrawer } from '@/components/EditRoleDrawer';
+import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
 import { CreateDomainDrawer } from '@/components/CreateDomainDrawer';
 import { EditDomainDrawer } from '@/components/EditDomainDrawer';
 import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
@@ -1485,6 +1486,18 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('edit-role')}
                         badge="Role"
                       />
+                      <DrawerCard
+                        title="Grant access"
+                        description="Grant a role to a user or service account with a scheduled start time and duration."
+                        onOpen={() => openDrawerFn('grant-access')}
+                        badge="Role"
+                      />
+                      <DrawerCard
+                        title="Manage linked policies"
+                        description="Add or remove policies linked to a role."
+                        onOpen={() => openDrawerFn('manage-linked-policies')}
+                        badge="Role"
+                      />
                     </div>
                   </VStack>
 
@@ -2656,6 +2669,25 @@ export function DrawersPage() {
         }}
         onSubmit={(data) => {
           console.log('Edit role:', data);
+        }}
+      />
+
+      {/* Grant Access Drawer */}
+      <GrantAccessDrawer
+        isOpen={openDrawer === 'grant-access'}
+        onClose={closeDrawer}
+        roleName="admin"
+      />
+
+      {/* Manage Linked Policies Drawer */}
+      <ManagePoliciesDrawer
+        isOpen={openDrawer === 'manage-linked-policies'}
+        onClose={closeDrawer}
+        roleName="admin"
+        title="Manage linked policies"
+        description="Add or remove policies linked to this role."
+        onSubmit={(data) => {
+          console.log('Manage linked policies:', data);
         }}
       />
 

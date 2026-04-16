@@ -2861,7 +2861,7 @@ input[type='search']::-webkit-search-decoration {
   gap: 8px;
   padding: 4px 8px 4px 12px;
   height: 28px;
-  background: #3b82f6;
+  background: var(--color-action-primary);
   color: white;
   border: none;
   border-radius: 6px;

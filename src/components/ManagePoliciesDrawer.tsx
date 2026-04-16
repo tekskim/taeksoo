@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
+  Badge,
+  BadgeList,
   Drawer,
   Button,
   SearchInput,
@@ -10,11 +12,18 @@ import {
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink } from '@tabler/icons-react';
+import { IconChevronRight, IconChevronDown, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
+
+export interface PolicyPermission {
+  application: string;
+  partition: string;
+  resource: string;
+  actions: string[];
+}
 
 export interface PolicyItem {
   id: string;
@@ -23,12 +32,15 @@ export interface PolicyItem {
   apps: string;
   description: string;
   editedAt: string;
+  permissions?: PolicyPermission[];
 }
 
 export interface ManagePoliciesDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   roleName?: string;
+  title?: string;
+  description?: string;
   initialSelectedIds?: string[];
   policies?: PolicyItem[];
   onSubmit?: (data: { policyIds: string[] }) => void;
@@ -38,41 +50,151 @@ export interface ManagePoliciesDrawerProps {
    Mock Data
    ---------------------------------------- */
 
+const defaultPermissions: PolicyPermission[] = [
+  {
+    application: 'Compute',
+    partition: 'tenantA',
+    resource: 'AI_server',
+    actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+  },
+  {
+    application: 'Container',
+    partition: 'clusterA',
+    resource: 'All(*)',
+    actions: ['Read', 'List', 'Write'],
+  },
+  {
+    application: 'IAM',
+    partition: '-',
+    resource: 'All(*)',
+    actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+  },
+  { application: 'Storage', partition: '-', resource: 'Host', actions: ['Read'] },
+];
+
 const defaultPolicies: PolicyItem[] = Array.from({ length: 25 }, (_, i) => ({
   id: `policy-${i + 1}`,
   name: 'policy',
   type: 'Built-in',
-  apps: 'compute (+3)',
+  apps: 'Compute:tenantA',
   description: '-',
   editedAt: 'Sep 12, 2025',
+  permissions: defaultPermissions,
 }));
 
 const ITEMS_PER_PAGE = 5;
 
-const policyColumns: TableColumn<PolicyItem>[] = [
-  {
-    key: 'name',
-    label: 'Name',
-    flex: 1,
-    sortable: true,
-    render: (_, row) => (
-      <span className="flex items-center gap-1.5">
-        <span className="text-label-md text-[var(--color-action-primary)] truncate">
-          {row.name}
+function buildPolicyColumns(
+  expandedIds: Set<string>,
+  onToggleExpand: (id: string) => void
+): TableColumn<PolicyItem>[] {
+  return [
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
+      minWidth: 140,
+      sortable: true,
+      render: (_, row) => (
+        <span className="flex items-center gap-1">
+          <button
+            type="button"
+            className="shrink-0 p-0 border-0 bg-transparent cursor-pointer text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleExpand(row.id);
+            }}
+            aria-label={expandedIds.has(row.id) ? 'Collapse' : 'Expand'}
+          >
+            {expandedIds.has(row.id) ? (
+              <IconChevronDown size={14} stroke={2} />
+            ) : (
+              <IconChevronRight size={14} stroke={2} />
+            )}
+          </button>
+          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+            {row.name}
+          </span>
+          <IconExternalLink
+            size={12}
+            stroke={1.5}
+            className="shrink-0 text-[var(--color-action-primary)]"
+          />
         </span>
-        <IconExternalLink
-          size={12}
-          stroke={1.5}
-          className="shrink-0 text-[var(--color-action-primary)]"
-        />
-      </span>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      width: 100,
+      render: (_, row) => (
+        <Badge theme="white" size="sm">
+          {row.type}
+        </Badge>
+      ),
+    },
+    {
+      key: 'apps',
+      label: 'Apps',
+      flex: 1,
+      minWidth: 160,
+      render: (_, row) => {
+        const items = row.permissions
+          ? [
+              ...new Set(
+                row.permissions.map((p) =>
+                  p.partition !== '-' ? `${p.application}:${p.partition}` : p.application
+                )
+              ),
+            ]
+          : [row.apps];
+        return (
+          <BadgeList
+            items={items}
+            maxVisible={1}
+            popoverTitle={`All Apps (${items.length})`}
+            overflowAlign="right"
+          />
+        );
+      },
+    },
+    { key: 'description', label: 'Description', flex: 1, minWidth: 120, sortable: true },
+    { key: 'editedAt', label: 'Edited at', flex: 1, minWidth: 120, sortable: true },
+  ];
+}
+
+interface PermissionRow extends PolicyPermission {
+  _index: number;
+}
+
+const permissionColumns: TableColumn<PermissionRow>[] = [
+  { key: '_index' as keyof PermissionRow, label: '#', width: 40 },
+  { key: 'application', label: 'Application', flex: 1 },
+  { key: 'partition', label: 'Partition', flex: 1 },
+  { key: 'resource', label: 'Resource', flex: 1 },
+  {
+    key: 'actions' as keyof PermissionRow,
+    label: 'Action',
+    flex: 1.5,
+    render: (_, row) => (
+      <BadgeList
+        items={row.actions}
+        maxVisible={1}
+        popoverTitle={`All Actions (${row.actions.length})`}
+        overflowAlign="right"
+      />
     ),
   },
-  { key: 'type', label: 'Type', width: 100, align: 'center' as const },
-  { key: 'apps', label: 'Apps', flex: 1 },
-  { key: 'description', label: 'Description', flex: 1, sortable: true },
-  { key: 'editedAt', label: 'Edited at', flex: 1, sortable: true },
 ];
+
+function PermissionSubTable({ permissions }: { permissions: PolicyPermission[] }) {
+  const data: PermissionRow[] = permissions.map((p, i) => ({ ...p, _index: i + 1 }));
+  return (
+    <div className="w-full px-4 py-3">
+      <Table<PermissionRow> columns={permissionColumns} data={data} rowKey="_index" />
+    </div>
+  );
+}
 
 /* ----------------------------------------
    ManagePoliciesDrawer Component
@@ -82,16 +204,29 @@ export function ManagePoliciesDrawer({
   isOpen,
   onClose,
   roleName = 'member',
+  title: drawerTitle = 'Manage policies',
+  description: drawerDescription = 'Add or remove policies of this role.',
   initialSelectedIds = [],
   policies = defaultPolicies,
   onSubmit,
 }: ManagePoliciesDrawerProps) {
-  // Policy selection state
   const [selectedPolicyIds, setSelectedPolicyIds] = useState<string[]>([...initialSelectedIds]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const handleToggleExpand = useCallback((id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const policyColumns = buildPolicyColumns(expandedIds, handleToggleExpand);
 
   // Filter policies
   const filteredPolicies = policies.filter(
@@ -116,6 +251,7 @@ export function ManagePoliciesDrawer({
       setSearchQuery('');
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
+      setExpandedIds(new Set());
     }
   }, [isOpen]);
 
@@ -143,6 +279,7 @@ export function ManagePoliciesDrawer({
     setSearchQuery('');
     setCurrentPage(1);
     setHasAttemptedSubmit(false);
+    setExpandedIds(new Set());
     onClose();
   };
 
@@ -159,8 +296,8 @@ export function ManagePoliciesDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Manage policies"
-      description="Add or remove policies of this role."
+      title={drawerTitle}
+      description={drawerDescription}
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -231,6 +368,11 @@ export function ManagePoliciesDrawer({
               selectedKeys={selectedPolicyIds}
               onSelectionChange={setSelectedPolicyIds}
               emptyMessage="No policies found"
+              expandedContent={(row) =>
+                expandedIds.has(row.id) && row.permissions?.length ? (
+                  <PermissionSubTable permissions={row.permissions} />
+                ) : null
+              }
             />
 
             <SelectionIndicator

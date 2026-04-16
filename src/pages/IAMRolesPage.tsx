@@ -36,6 +36,9 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { GrantAccessDrawer } from '@/components/GrantAccessDrawer';
+import { ManagePoliciesDrawer } from '@/components/ManagePoliciesDrawer';
+import { EditRoleDrawer } from '@/components/EditRoleDrawer';
 import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
 
@@ -290,6 +293,14 @@ export default function IAMRolesPage() {
   const [grantPage, setGrantPage] = useState(1);
   const [revokeTarget, setRevokeTarget] = useState<ActiveGrant | null>(null);
   const [bulkRevokeOpen, setBulkRevokeOpen] = useState(false);
+  const [isGrantDrawerOpen, setIsGrantDrawerOpen] = useState(false);
+  const [grantTargetRole, setGrantTargetRole] = useState<string | null>(null);
+  const [isManageLinkedPoliciesOpen, setIsManageLinkedPoliciesOpen] = useState(false);
+  const [manageLinkedPoliciesRole, setManageLinkedPoliciesRole] = useState<string | null>(null);
+  const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
+  const [editRoleData, setEditRoleData] = useState<{ name: string; description: string } | null>(
+    null
+  );
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -322,14 +333,36 @@ export default function IAMRolesPage() {
     {
       id: 'grant-access',
       label: 'Grant access',
-      onClick: () => console.log('Grant access', rowId),
+      onClick: () => {
+        const role = mockRoles.find((r) => r.id === rowId);
+        if (role) {
+          setGrantTargetRole(role.name);
+          setIsGrantDrawerOpen(true);
+        }
+      },
     },
     {
       id: 'manage-linked-policies',
       label: 'Manage linked policies',
-      onClick: () => console.log('Manage linked policies', rowId),
+      onClick: () => {
+        const role = mockRoles.find((r) => r.id === rowId);
+        if (role) {
+          setManageLinkedPoliciesRole(role.name);
+          setIsManageLinkedPoliciesOpen(true);
+        }
+      },
     },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', rowId) },
+    {
+      id: 'edit',
+      label: 'Edit',
+      onClick: () => {
+        const role = mockRoles.find((r) => r.id === rowId);
+        if (role) {
+          setEditRoleData({ name: role.name, description: role.description });
+          setIsEditRoleOpen(true);
+        }
+      },
+    },
     {
       id: 'delete',
       label: 'Delete',
@@ -744,6 +777,41 @@ export default function IAMRolesPage() {
       </Modal>
 
       {/* Bulk Revoke Access Modal */}
+      <GrantAccessDrawer
+        isOpen={isGrantDrawerOpen}
+        onClose={() => {
+          setIsGrantDrawerOpen(false);
+          setGrantTargetRole(null);
+        }}
+        roleName={grantTargetRole ?? ''}
+      />
+
+      <ManagePoliciesDrawer
+        isOpen={isManageLinkedPoliciesOpen}
+        onClose={() => {
+          setIsManageLinkedPoliciesOpen(false);
+          setManageLinkedPoliciesRole(null);
+        }}
+        roleName={manageLinkedPoliciesRole ?? ''}
+        title="Manage linked policies"
+        description="Add or remove policies linked to this role."
+        onSubmit={(data) => {
+          console.log('Manage linked policies:', data);
+        }}
+      />
+
+      <EditRoleDrawer
+        isOpen={isEditRoleOpen}
+        onClose={() => {
+          setIsEditRoleOpen(false);
+          setEditRoleData(null);
+        }}
+        initialData={editRoleData ?? { name: '', description: '' }}
+        onSubmit={(data) => {
+          console.log('Edit role:', data);
+        }}
+      />
+
       <Modal
         isOpen={bulkRevokeOpen}
         onClose={() => setBulkRevokeOpen(false)}

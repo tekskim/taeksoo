@@ -407,7 +407,6 @@ export function DatePickerPage() {
               </span>
             </VStack>
             <div className="flex gap-4 flex-wrap">
-              <DatePicker value={dateTimeValue} onChange={setDateTimeValue} showTime />
               <DatePicker
                 value={dateTimeValue}
                 onChange={setDateTimeValue}
