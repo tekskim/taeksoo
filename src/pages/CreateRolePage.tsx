@@ -12,6 +12,7 @@ import {
   Pagination,
   SelectionIndicator,
   SearchInput,
+  Badge,
   BadgeList,
   Checkbox,
   FormField,
@@ -19,9 +20,17 @@ import {
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { FigmaCaptureWrapper } from '@/components/FigmaCaptureWrapper';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import { IconEdit, IconExternalLink, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconExternalLink,
+  IconChevronDown,
+  IconChevronRight,
+  IconChevronUp,
+  IconSelector,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -324,17 +333,35 @@ interface DoneSectionProps {
 }
 
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
+  const context = title.replace(/\s+/g, '');
   return (
-    <SectionCard>
+    <SectionCard
+      data-figma-name={`[TDS] SectionCard-${context}-Done`}
+      aria-label={`[TDS] SectionCard-${context}-Done`}
+    >
       <SectionCard.Header
         title={title}
+        data-figma-name={`[TDS] SectionCard.Header-${context}-Done`}
+        aria-label={`[TDS] SectionCard.Header-${context}-Done`}
         actions={
-          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconEdit size={12} />}
+            onClick={onEdit}
+            data-figma-name="[TDS] Button-Edit"
+            aria-label="Edit"
+          >
             Edit
           </Button>
         }
       />
-      <SectionCard.Content>{children}</SectionCard.Content>
+      <SectionCard.Content
+        data-figma-name={`[TDS] SectionCard.Content-${context}-Done`}
+        aria-label={`[TDS] SectionCard.Content-${context}-Done`}
+      >
+        {children}
+      </SectionCard.Content>
     </SectionCard>
   );
 }
@@ -363,7 +390,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create role</h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h4>
 
             {/* Section Status List */}
             <div className="flex flex-col">
@@ -389,9 +416,13 @@ function SummarySidebar({
           </VStack>
         </div>
 
-        {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel}>
+          <Button
+            variant="secondary"
+            onClick={onCancel}
+            data-figma-name="[TDS] Button-Cancel"
+            aria-label="[TDS] Button-Cancel"
+          >
             Cancel
           </Button>
           <Button
@@ -399,6 +430,8 @@ function SummarySidebar({
             onClick={onCreate}
             disabled={!isCreateEnabled}
             className="flex-1"
+            data-figma-name="[TDS] Button-Create"
+            aria-label="[TDS] Button-Create"
           >
             Create
           </Button>
@@ -456,31 +489,56 @@ function BasicInformationSection({
   };
 
   return (
-    <SectionCard isActive>
+    <SectionCard
+      isActive
+      data-figma-name="[TDS] SectionCard-BasicInfo"
+      aria-label="[TDS] SectionCard-BasicInfo"
+    >
       <SectionCard.Header
         title="Basic information"
         showDivider={false}
+        data-figma-name="[TDS] SectionCard.Header-BasicInfo"
+        aria-label="[TDS] SectionCard.Header-BasicInfo"
         actions={
           isEditing ? (
             <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onEditCancel}
+                data-figma-name="[TDS] Button-Cancel"
+                aria-label="[TDS] Button-Cancel"
+              >
                 Cancel
               </Button>
-              <Button variant="primary" size="sm" onClick={handleDone}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleDone}
+                data-figma-name="[TDS] Button-Done"
+                aria-label="[TDS] Button-Done"
+              >
                 Done
               </Button>
             </HStack>
           ) : undefined
         }
       />
-      <SectionCard.Content showDividers={false}>
+      <SectionCard.Content
+        showDividers={false}
+        data-figma-name="[TDS] SectionCard.Content-BasicInfo"
+        aria-label="[TDS] SectionCard.Content-BasicInfo"
+      >
         <VStack gap={0}>
-          {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Role Name */}
           <div className="py-6">
-            <FormField required error={!!roleNameError}>
+            <FormField
+              required
+              error={!!roleNameError}
+              data-figma-name="[TDS] FormField-RoleName"
+              aria-label="[TDS] FormField-RoleName"
+            >
               <FormField.Label>Role name</FormField.Label>
               <FormField.Control>
                 <Input
@@ -490,6 +548,7 @@ function BasicInformationSection({
                     onRoleNameChange(e.target.value);
                     onRoleNameErrorChange(null);
                   }}
+                  error={!!roleNameError}
                   fullWidth
                 />
               </FormField.Control>
@@ -501,12 +560,13 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
-          {/* Description */}
           <div className="py-6">
-            <FormField>
+            <FormField
+              data-figma-name="[TDS] FormField-Description"
+              aria-label="[TDS] FormField-Description"
+            >
               <FormField.Label>Description</FormField.Label>
               <FormField.Control>
                 <Input
@@ -523,12 +583,16 @@ function BasicInformationSection({
             </FormField>
           </div>
 
-          {/* Divider + Next Button (only when not editing and active) */}
           {!isEditing && (
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)]" />
               <HStack justify="end" className="pt-3">
-                <Button variant="primary" onClick={handleNext}>
+                <Button
+                  variant="primary"
+                  onClick={handleNext}
+                  data-figma-name="[TDS] Button-Next"
+                  aria-label="[TDS] Button-Next"
+                >
                   Next
                 </Button>
               </HStack>
@@ -631,7 +695,22 @@ function AddPoliciesSection({
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['policy-2']));
+  const [sortKey, setSortKey] = useState<'name' | 'description' | 'editedAt' | null>(null);
+  const [sortDir, setSortDir] = useState<'asc' | 'desc' | null>(null);
   const itemsPerPage = 5;
+
+  const handleSort = (key: 'name' | 'description' | 'editedAt') => {
+    if (sortKey === key) {
+      if (sortDir === 'asc') setSortDir('desc');
+      else if (sortDir === 'desc') {
+        setSortKey(null);
+        setSortDir(null);
+      }
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
 
   const filteredPolicies = mockPolicies.filter(
     (policy) =>
@@ -641,8 +720,16 @@ function AddPoliciesSection({
       policy.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
-  const paginatedPolicies = filteredPolicies.slice(
+  const sortedPolicies = [...filteredPolicies].sort((a, b) => {
+    if (!sortKey || !sortDir) return 0;
+    const aVal = a[sortKey];
+    const bVal = b[sortKey];
+    const cmp = aVal.localeCompare(bVal);
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const totalPages = Math.ceil(sortedPolicies.length / itemsPerPage);
+  const paginatedPolicies = sortedPolicies.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -679,19 +766,33 @@ function AddPoliciesSection({
   };
 
   return (
-    <SectionCard isActive>
+    <SectionCard
+      isActive
+      data-figma-name="[TDS] SectionCard-AttachPolicies"
+      aria-label="[TDS] SectionCard-AttachPolicies"
+    >
       <SectionCard.Header
         title="Attach policies"
         showDivider={false}
+        data-figma-name="[TDS] SectionCard.Header-AttachPolicies"
+        aria-label="[TDS] SectionCard.Header-AttachPolicies"
         actions={
           isEditing ? (
             <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={onEditCancel}
+                data-figma-name="[TDS] Button-Cancel"
+                aria-label="[TDS] Button-Cancel"
+              >
                 Cancel
               </Button>
               <Button
                 variant="primary"
                 size="sm"
+                data-figma-name="[TDS] Button-Done"
+                aria-label="[TDS] Button-Done"
                 onClick={() => {
                   if (selectedPolicies.length === 0) {
                     onPoliciesErrorChange('Please select at least one policy.');
@@ -706,7 +807,11 @@ function AddPoliciesSection({
           ) : undefined
         }
       />
-      <SectionCard.Content showDividers={false}>
+      <SectionCard.Content
+        showDividers={false}
+        data-figma-name="[TDS] SectionCard.Content-AttachPolicies"
+        aria-label="[TDS] SectionCard.Content-AttachPolicies"
+      >
         {/* Divider */}
         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
         <VStack gap={0} className="py-6">
@@ -721,8 +826,7 @@ function AddPoliciesSection({
             </span>
           </div>
 
-          {/* Search */}
-          <div className="mt-3">
+          <div className="mt-3" data-figma-name="[TDS] SearchInput" aria-label="[TDS] SearchInput">
             <SearchInput
               placeholder="Search policies by attributes"
               value={searchQuery}
@@ -739,9 +843,8 @@ function AddPoliciesSection({
             />
           </div>
 
-          {/* Pagination above table */}
           {totalPages > 0 && (
-            <div className="mt-3">
+            <div className="mt-3" data-figma-name="[TDS] Pagination" aria-label="[TDS] Pagination">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -771,23 +874,92 @@ function AddPoliciesSection({
                     onChange={(e) => toggleAllSelection(e.target.checked)}
                   />
                 </div>
-                <div className="flex-[2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                <div
+                  className="flex-1 min-w-0 overflow-hidden flex items-center justify-between gap-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none"
+                  onClick={() => handleSort('name')}
+                >
                   <span className="whitespace-nowrap truncate">Name</span>
+                  {sortKey === 'name' ? (
+                    sortDir === 'asc' ? (
+                      <IconChevronUp
+                        size={14}
+                        stroke={1}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
+                    ) : (
+                      <IconChevronDown
+                        size={14}
+                        stroke={1}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
+                    )
+                  ) : (
+                    <IconSelector
+                      size={14}
+                      stroke={1}
+                      className="shrink-0 text-[var(--color-text-subtle)]"
+                    />
+                  )}
                 </div>
-                <div className="flex-[0.8] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                   <span className="whitespace-nowrap truncate">Type</span>
                 </div>
-                <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                   <span className="whitespace-nowrap truncate">Apps</span>
                 </div>
-                <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  <span className="whitespace-nowrap truncate">Roles</span>
-                </div>
-                <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                <div
+                  className="flex-1 min-w-0 overflow-hidden flex items-center justify-between gap-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none"
+                  onClick={() => handleSort('description')}
+                >
                   <span className="whitespace-nowrap truncate">Description</span>
+                  {sortKey === 'description' ? (
+                    sortDir === 'asc' ? (
+                      <IconChevronUp
+                        size={14}
+                        stroke={1}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
+                    ) : (
+                      <IconChevronDown
+                        size={14}
+                        stroke={1}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
+                    )
+                  ) : (
+                    <IconSelector
+                      size={14}
+                      stroke={1}
+                      className="shrink-0 text-[var(--color-text-subtle)]"
+                    />
+                  )}
                 </div>
-                <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                <div
+                  className="flex-1 min-w-0 overflow-hidden flex items-center justify-between gap-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none"
+                  onClick={() => handleSort('editedAt')}
+                >
                   <span className="whitespace-nowrap truncate">Edited at</span>
+                  {sortKey === 'editedAt' ? (
+                    sortDir === 'asc' ? (
+                      <IconChevronUp
+                        size={14}
+                        stroke={1}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
+                    ) : (
+                      <IconChevronDown
+                        size={14}
+                        stroke={1}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
+                    )
+                  ) : (
+                    <IconSelector
+                      size={14}
+                      stroke={1}
+                      className="shrink-0 text-[var(--color-text-subtle)]"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -807,7 +979,7 @@ function AddPoliciesSection({
                       />
                     </div>
                     {/* Name with expand icon */}
-                    <div className="flex-[2] min-w-0 overflow-hidden flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    <div className="flex-1 min-w-0 overflow-hidden flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                       <button
                         onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
                         className={`shrink-0 p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
@@ -829,19 +1001,35 @@ function AddPoliciesSection({
                       </HStack>
                     </div>
                     {/* Type */}
-                    <div className="flex-[0.8] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      <span className="truncate">{policy.type}</span>
+                    <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                      <Badge theme="white" size="sm">
+                        {policy.type}
+                      </Badge>
                     </div>
                     {/* Apps */}
-                    <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      <span className="truncate">{policy.apps}</span>
-                    </div>
-                    {/* Roles */}
-                    <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                      <span className="truncate">{policy.roles}</span>
+                    <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] [&>div]:w-full">
+                      <BadgeList
+                        items={
+                          policy.permissions
+                            ? [
+                                ...new Set(
+                                  policy.permissions.map((p) =>
+                                    p.partition !== '-'
+                                      ? `${p.application}:${p.partition}`
+                                      : p.application
+                                  )
+                                ),
+                              ]
+                            : [policy.apps]
+                        }
+                        maxVisible={1}
+                        maxBadgeWidth="140px"
+                        popoverTitle={`All Apps (${policy.permissions ? new Set(policy.permissions.map((p) => (p.partition !== '-' ? `${p.application}:${p.partition}` : p.application))).size : 1})`}
+                        overflowAlign="right"
+                      />
                     </div>
                     {/* Description */}
-                    <div className="flex-[1.2] min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    <div className="flex-1 min-w-0 overflow-hidden flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                       <span className="truncate">{policy.description}</span>
                     </div>
                     {/* Edited at */}
@@ -871,16 +1059,14 @@ function AddPoliciesSection({
             />
           </VStack>
         </VStack>
-        {/* Skip and Next Buttons (only when not editing and active) */}
         {!isEditing && (
           <>
             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
             <HStack justify="end" gap={2} className="pt-3">
-              <Button variant="secondary" onClick={onSkip}>
-                Skip
-              </Button>
               <Button
                 variant="primary"
+                data-figma-name="[TDS] Button-Next"
+                aria-label="[TDS] Button-Next"
                 onClick={() => {
                   if (selectedPolicies.length === 0) {
                     onPoliciesErrorChange('Please select at least one policy.');
@@ -904,6 +1090,9 @@ function AddPoliciesSection({
    ---------------------------------------- */
 
 export default function CreateRolePage() {
+  const [isFigmaCapture] = useState(
+    () => new URLSearchParams(window.location.search).get('figma') === 'true'
+  );
   const navigate = useNavigate();
   const isV2 = useIsV2();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -1074,140 +1263,157 @@ export default function CreateRolePage() {
     return policyNames.join(', ');
   };
 
+  const shellSidebar = (
+    <IAMSidebar
+      isOpen={sidebarOpen}
+      onToggle={() => setSidebarOpen(!sidebarOpen)}
+      currentPath="/iam/roles"
+    />
+  );
+  const shellSidebarWidth = sidebarWidth;
+  const shellTabBar = (
+    <TabBar
+      tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+      activeTab={activeTabId}
+      onTabChange={selectTab}
+      onTabClose={closeTab}
+      onTabAdd={addNewTab}
+      onTabReorder={moveTab}
+    />
+  );
+  const shellTopBar = (
+    <TopBar
+      showSidebarToggle={!sidebarOpen}
+      onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+      showNavigation={true}
+      onBack={() => window.history.back()}
+      onForward={() => window.history.forward()}
+      breadcrumb={
+        <Breadcrumb
+          items={[
+            { label: 'IAM', href: '/iam' },
+            { label: 'Roles', href: '/iam/roles' },
+            { label: 'Create role' },
+          ]}
+        />
+      }
+    />
+  );
+
+  const pageContent = (
+    <VStack gap={3} className="min-w-[1176px]">
+      <div
+        className="flex items-center justify-between h-8"
+        data-figma-name="[TDS] PageHeader"
+        aria-label="[TDS] PageHeader"
+      >
+        <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create role</h1>
+      </div>
+      <HStack gap={6} align="start" className="w-full">
+        <VStack gap={4} className="flex-1">
+          {!isV2 && sectionStatus['basic-info'] === 'pre' && (
+            <PreSection title={SECTION_LABELS['basic-info']} />
+          )}
+          {!isV2 && sectionStatus['basic-info'] === 'writing' && (
+            <WritingSection title={SECTION_LABELS['basic-info']} />
+          )}
+          {(isV2 || sectionStatus['basic-info'] === 'active') && (
+            <BasicInformationSection
+              roleName={roleName}
+              onRoleNameChange={setRoleName}
+              roleNameError={roleNameError}
+              onRoleNameErrorChange={setRoleNameError}
+              description={description}
+              onDescriptionChange={setDescription}
+              onNext={() => handleNext('basic-info')}
+              isActive={!isV2}
+              isEditing={editingSection === 'basic-info'}
+              onEditCancel={handleEditCancel}
+              onEditDone={handleEditDone}
+            />
+          )}
+          {(isV2 || sectionStatus['basic-info'] === 'done') && (
+            <DoneSection
+              title={SECTION_LABELS['basic-info']}
+              onEdit={() => handleEdit('basic-info')}
+            >
+              <SectionCard.DataRow label="Role name" value={roleName || '-'} showDivider={false} />
+              <SectionCard.DataRow label="Description" value={description || '-'} />
+            </DoneSection>
+          )}
+
+          {!isV2 && sectionStatus['add-policies'] === 'pre' && (
+            <PreSection title={SECTION_LABELS['add-policies']} />
+          )}
+          {!isV2 && sectionStatus['add-policies'] === 'writing' && (
+            <WritingSection title={SECTION_LABELS['add-policies']} />
+          )}
+          {(isV2 || sectionStatus['add-policies'] === 'active') && (
+            <AddPoliciesSection
+              selectedPolicies={selectedPolicies}
+              onSelectionChange={(ids) => {
+                setSelectedPolicies(ids);
+                if (ids.length > 0) {
+                  setPoliciesError(null);
+                }
+              }}
+              onNext={() => handleNext('add-policies')}
+              onSkip={() => handleNext('add-policies')}
+              isActive={!isV2}
+              isEditing={editingSection === 'add-policies'}
+              onEditCancel={handleEditCancel}
+              onEditDone={handleEditDone}
+              policiesError={policiesError}
+              onPoliciesErrorChange={setPoliciesError}
+            />
+          )}
+          {(isV2 || sectionStatus['add-policies'] === 'done') && (
+            <DoneSection
+              title={SECTION_LABELS['add-policies']}
+              onEdit={() => handleEdit('add-policies')}
+            >
+              <SectionCard.DataRow
+                label="Selected policies"
+                value={getSelectedPoliciesDisplay()}
+                showDivider={false}
+              />
+            </DoneSection>
+          )}
+        </VStack>
+
+        <SummarySidebar
+          sectionStatus={sectionStatus}
+          onCancel={handleCancel}
+          onCreate={handleCreate}
+          isCreateEnabled={allSectionsDone && !editingSection}
+        />
+      </HStack>
+    </VStack>
+  );
+
+  if (isFigmaCapture) {
+    return (
+      <FigmaCaptureWrapper
+        sidebar={shellSidebar}
+        sidebarWidth={shellSidebarWidth}
+        tabBar={shellTabBar}
+        topBar={shellTopBar}
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        {pageContent}
+      </FigmaCaptureWrapper>
+    );
+  }
+
   return (
     <PageShell
-      sidebar={
-        <IAMSidebar
-          isOpen={sidebarOpen}
-          onToggle={() => setSidebarOpen(!sidebarOpen)}
-          currentPath="/iam/roles"
-        />
-      }
-      sidebarWidth={sidebarWidth}
-      tabBar={
-        <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
-          onTabReorder={moveTab}
-        />
-      }
-      topBar={
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Roles', href: '/iam/roles' },
-                { label: 'Create role' },
-              ]}
-            />
-          }
-        />
-      }
+      sidebar={shellSidebar}
+      sidebarWidth={shellSidebarWidth}
+      tabBar={shellTabBar}
+      topBar={shellTopBar}
       contentClassName="pt-4 px-8 pb-6"
     >
-      {/* Main content area */}
-      <VStack gap={3} className="min-w-[1176px]">
-        {/* Page Title */}
-        <div className="flex items-center justify-between h-8">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create role</h1>
-        </div>
-        <HStack gap={6} align="start" className="w-full">
-          {/* Left Column - Form Sections */}
-          <VStack gap={4} className="flex-1">
-            {/* Basic Information Section */}
-            {!isV2 && sectionStatus['basic-info'] === 'pre' && (
-              <PreSection title={SECTION_LABELS['basic-info']} />
-            )}
-            {!isV2 && sectionStatus['basic-info'] === 'writing' && (
-              <WritingSection title={SECTION_LABELS['basic-info']} />
-            )}
-            {(isV2 || sectionStatus['basic-info'] === 'active') && (
-              <BasicInformationSection
-                roleName={roleName}
-                onRoleNameChange={setRoleName}
-                roleNameError={roleNameError}
-                onRoleNameErrorChange={setRoleNameError}
-                description={description}
-                onDescriptionChange={setDescription}
-                onNext={() => handleNext('basic-info')}
-                isActive={!isV2}
-                isEditing={editingSection === 'basic-info'}
-                onEditCancel={handleEditCancel}
-                onEditDone={handleEditDone}
-              />
-            )}
-            {(isV2 || sectionStatus['basic-info'] === 'done') && (
-              <DoneSection
-                title={SECTION_LABELS['basic-info']}
-                onEdit={() => handleEdit('basic-info')}
-              >
-                <SectionCard.DataRow
-                  label="Role name"
-                  value={roleName || '-'}
-                  showDivider={false}
-                />
-                <SectionCard.DataRow label="Description" value={description || '-'} />
-              </DoneSection>
-            )}
-
-            {/* Add Policies Section */}
-            {!isV2 && sectionStatus['add-policies'] === 'pre' && (
-              <PreSection title={SECTION_LABELS['add-policies']} />
-            )}
-            {!isV2 && sectionStatus['add-policies'] === 'writing' && (
-              <WritingSection title={SECTION_LABELS['add-policies']} />
-            )}
-            {(isV2 || sectionStatus['add-policies'] === 'active') && (
-              <AddPoliciesSection
-                selectedPolicies={selectedPolicies}
-                onSelectionChange={(ids) => {
-                  setSelectedPolicies(ids);
-                  if (ids.length > 0) {
-                    setPoliciesError(null);
-                  }
-                }}
-                onNext={() => handleNext('add-policies')}
-                onSkip={() => handleNext('add-policies')}
-                isActive={!isV2}
-                isEditing={editingSection === 'add-policies'}
-                onEditCancel={handleEditCancel}
-                onEditDone={handleEditDone}
-                policiesError={policiesError}
-                onPoliciesErrorChange={setPoliciesError}
-              />
-            )}
-            {(isV2 || sectionStatus['add-policies'] === 'done') && (
-              <DoneSection
-                title={SECTION_LABELS['add-policies']}
-                onEdit={() => handleEdit('add-policies')}
-              >
-                <SectionCard.DataRow
-                  label="Selected policies"
-                  value={getSelectedPoliciesDisplay()}
-                  showDivider={false}
-                />
-              </DoneSection>
-            )}
-          </VStack>
-
-          {/* Right Column - Summary Sidebar */}
-          <SummarySidebar
-            sectionStatus={sectionStatus}
-            onCancel={handleCancel}
-            onCreate={handleCreate}
-            isCreateEnabled={allSectionsDone && !editingSection}
-          />
-        </HStack>
-      </VStack>
+      {pageContent}
     </PageShell>
   );
 }

@@ -251,7 +251,7 @@ export function MonitoringToolbarPage() {
                 기본값 30m이 선택된 상태. 라디오 버튼처럼 한 번에 하나만 활성화.
               </span>
             </VStack>
-            <div className="flex items-center justify-end p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
+            <div className="flex items-center justify-end p-4 pb-[420px] bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] overflow-visible">
               <MonitoringToolbar
                 onTimeRangeChange={() => {}}
                 onCustomPeriodChange={() => {}}

@@ -76,6 +76,12 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
               active={isActive('/iam/user-groups')}
             />
             <MenuItem
+              icon={<IconUserCog size={16} stroke={1.5} />}
+              label="Service accounts"
+              href="/iam/service-accounts"
+              active={isActive('/iam/service-accounts')}
+            />
+            <MenuItem
               icon={<IconShieldLock size={16} stroke={1.5} />}
               label="Roles"
               href="/iam/roles"

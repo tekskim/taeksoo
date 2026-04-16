@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IconRefresh, IconX, IconCalendar } from '@tabler/icons-react';
+import { IconRefresh, IconCalendar } from '@tabler/icons-react';
 import { DateRangePicker } from '../DatePicker';
 
 /* ----------------------------------------
@@ -214,29 +214,34 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
       {/* Period Selector */}
       <div className="monitoring-toolbar-period" ref={datePickerRef}>
         {hasCustomPeriod ? (
-          <div className="monitoring-toolbar-period-tag">
-            <span className="monitoring-toolbar-period-tag-text" onClick={handlePeriodTextClick}>
+          <button
+            type="button"
+            className="flex items-center gap-2 h-[var(--input-height-sm)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border border-[var(--color-border-focus)] rounded-[var(--input-radius)] text-body-sm cursor-pointer transition-colors"
+            onClick={handlePeriodTextClick}
+          >
+            <IconCalendar
+              size={14}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-text-subtle)]"
+            />
+            <span className="text-[var(--color-text-default)] whitespace-nowrap font-medium">
               {formatDateForDisplay(customPeriod.start)}
-              <span className="monitoring-toolbar-period-tag-divider">—</span>
+              <span className="mx-0.5 text-[var(--color-text-subtle)]">—</span>
               {formatDateForDisplay(customPeriod.end)}
             </span>
-            <button
-              type="button"
-              className="monitoring-toolbar-period-tag-close"
-              onClick={handleClearCustomPeriod}
-              aria-label="Clear custom period"
-            >
-              <IconX size={12} stroke={2} />
-            </button>
-          </div>
+          </button>
         ) : (
           <button
             type="button"
-            className={`monitoring-toolbar-period-btn ${showDatePicker ? 'monitoring-toolbar-period-btn-active' : ''}`}
+            className={`flex items-center gap-2 h-[var(--input-height-sm)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border rounded-[var(--input-radius)] text-body-sm cursor-pointer transition-colors ${showDatePicker ? 'border-[var(--color-border-focus)]' : 'border-[var(--color-border-strong)] hover:border-[var(--color-border-focus)]'}`}
             onClick={handleCustomPeriodClick}
           >
-            <IconCalendar size={12} stroke={2} />
-            <span>Period</span>
+            <IconCalendar
+              size={14}
+              stroke={1.5}
+              className="shrink-0 text-[var(--color-text-subtle)]"
+            />
+            <span className="text-[var(--color-text-subtle)] font-medium">Select period</span>
           </button>
         )}
 

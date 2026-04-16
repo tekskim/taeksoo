@@ -595,4 +595,5 @@ export function ContainerServicesPage() {
   );
 }
 
+export { ContainerServicesPage as StorageClassesPage };
 export default ContainerServicesPage;
