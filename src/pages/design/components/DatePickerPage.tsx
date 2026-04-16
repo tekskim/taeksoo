@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { DatePicker, DateRangePicker, VStack } from '@/design-system';
+import { IconCalendar } from '@tabler/icons-react';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -356,6 +357,68 @@ EN(연도 다름): Dec 30, 2025 – Jan 02, 2026`}
   );
 }
 
+function formatDate(d: Date | null): string {
+  if (!d) return '';
+  return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+}
+
+function DatePickerTrigger() {
+  const [date, setDate] = useState<Date | null>(null);
+  const [open, setOpen] = useState(false);
+  const [pendingDate, setPendingDate] = useState<Date | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (open) setPendingDate(date);
+  }, [open, date]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        className="flex items-center gap-2 w-[160px] h-[var(--input-height-md)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--input-radius)] text-body-md cursor-pointer hover:border-[var(--color-border-focus)] transition-colors"
+        onClick={() => setOpen((p) => !p)}
+      >
+        <IconCalendar size={14} stroke={1.5} className="shrink-0 text-[var(--color-text-subtle)]" />
+        <span
+          className={date ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}
+        >
+          {date ? formatDate(date) : 'Select date'}
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-1 z-50">
+          <DatePicker
+            value={pendingDate}
+            onChange={setPendingDate}
+            showActions
+            onApply={(d) => {
+              setDate(d);
+              setOpen(false);
+            }}
+            onCancel={() => {
+              setPendingDate(date);
+              setOpen(false);
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function DatePickerPage() {
   const [singleDate, setSingleDate] = useState<Date | null>(new Date(2025, 2, 8));
   const [dateTimeValue, setDateTimeValue] = useState<Date | null>(new Date(2025, 2, 8, 14, 30));
@@ -385,6 +448,18 @@ export function DatePickerPage() {
       }
       examples={
         <VStack gap={8}>
+          <VStack gap={3}>
+            <VStack gap={1}>
+              <Label>Trigger (Input + Calendar Icon)</Label>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                160px 너비의 입력 트리거로 DatePicker 팝오버를 오픈. 날짜 선택 후 입력 필드에 값
+                표시. Drawer에서 사용 시: sm Drawer에서는 width: 100% (fill), md/lg Drawer에서는
+                160px.
+              </span>
+            </VStack>
+            <DatePickerTrigger />
+          </VStack>
+
           <VStack gap={3}>
             <VStack gap={1}>
               <Label>Single Date</Label>

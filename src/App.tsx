@@ -291,6 +291,8 @@ import CreateUserPage from '@/pages/CreateUserPage';
 import CreateUserGroupPage from '@/pages/CreateUserGroupPage';
 import { IAMUserGroupsPage } from '@/pages/IAMUserGroupsPage';
 import IAMUserGroupDetailPage from '@/pages/IAMUserGroupDetailPage';
+import { IAMServiceAccountsPage } from '@/pages/IAMServiceAccountsPage';
+import { IAMServiceAccountDetailPage } from '@/pages/IAMServiceAccountDetailPage';
 import IAMRolesPage from '@/pages/IAMRolesPage';
 import IAMRoleDetailPage from '@/pages/IAMRoleDetailPage';
 import CreateRolePage from '@/pages/CreateRolePage';
@@ -973,6 +975,8 @@ function AppRoutes() {
       <Route path="/iam/user-groups/create" element={<CreateUserGroupPage />} />
       <Route path="/iam/user-groups/create-v2" element={<CreateUserGroupPage />} />
       <Route path="/iam/user-groups/:groupName" element={<IAMUserGroupDetailPage />} />
+      <Route path="/iam/service-accounts" element={<IAMServiceAccountsPage />} />
+      <Route path="/iam/service-accounts/:name" element={<IAMServiceAccountDetailPage />} />
       <Route path="/iam/roles" element={<IAMRolesPage />} />
       <Route path="/iam/roles/create" element={<CreateRolePage />} />
       <Route path="/iam/roles/create-v2" element={<CreateRolePage />} />
