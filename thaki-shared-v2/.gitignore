@@ -1,7 +1,0 @@
-node_modules/
-dist/
-dist-storybook/
-*.tsbuildinfo
-.env
-.env.local
-report/

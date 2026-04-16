@@ -26,10 +26,10 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { AssociateFIPtoInstanceDrawer } from '@/components/AssociateFIPtoInstanceDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
-import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
-import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
+import { EditFIPDrawer } from '@/components/EditFIPDrawer';
+import { AllocateFIPDrawer } from '@/components/AllocateFIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconUnlink,
@@ -607,7 +607,7 @@ export function FloatingIPsPage() {
       />
 
       {/* Floating IP Drawers */}
-      <AssociateFloatingIPDrawer
+      <AssociateFIPtoInstanceDrawer
         isOpen={associateOpen}
         onClose={() => setAssociateOpen(false)}
         port={{ id: selectedFIPForDrawer?.id || '', name: selectedFIPForDrawer?.floatingIp || '' }}
@@ -626,7 +626,7 @@ export function FloatingIPsPage() {
         }
       />
 
-      <EditFloatingIPDrawer
+      <EditFIPDrawer
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
         floatingIP={{
@@ -636,7 +636,7 @@ export function FloatingIPsPage() {
       />
 
       {/* Allocate Floating IP Drawer */}
-      <AllocateFloatingIPDrawer
+      <AllocateFIPDrawer
         isOpen={isAllocateDrawerOpen}
         onClose={() => setIsAllocateDrawerOpen(false)}
       />

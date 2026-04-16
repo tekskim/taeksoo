@@ -1,7 +1,6 @@
 # InlineMessage Design Spec
 
-> Extracted from TDS `src/design-system/components/InlineMessage/InlineMessage.tsx`  
-> thaki-shared target: `thaki-shared-v2/src/components/InlineMessage/` (1:1 매핑, component-map)
+> Extracted from TDS `src/design-system/components/InlineMessage/InlineMessage.tsx`
 
 ## Component Mapping
 

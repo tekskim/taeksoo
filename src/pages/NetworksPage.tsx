@@ -31,7 +31,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
+import { SubnetDrawer } from '@/components/SubnetDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -628,7 +628,7 @@ export function NetworksPage() {
       />
 
       {/* Network Drawers */}
-      <CreateSubnetDrawer
+      <SubnetDrawer
         isOpen={createSubnetOpen}
         onClose={() => setCreateSubnetOpen(false)}
         networkId={selectedNetworkForDrawer?.id}

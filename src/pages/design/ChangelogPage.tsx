@@ -190,12 +190,6 @@ const CHANGELOG: ChangelogVersion[] = [
       },
       {
         type: 'new',
-        date: '2026-03-19',
-        description: 'thaki-shared-v2 Shared Components 분석 페이지 및 IAM 프리뷰 앱',
-        link: '/design/shared-components',
-      },
-      {
-        type: 'new',
         date: '2026-03-16',
         description: 'All Components 인덱스 페이지 — DS 컴포넌트 전체 목록 Overview',
         link: '/design/all',

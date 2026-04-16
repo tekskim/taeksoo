@@ -26,7 +26,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDrawer';
-import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
+import { AssociateFIPtoPortDrawer } from '@/components/AssociateFIPtoPortDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
 import { IconTrash, IconDownload, IconCube, IconRouter } from '@tabler/icons-react';
@@ -760,7 +760,7 @@ export function ComputeAdminPortsPage() {
         portName={selectedPortForDrawer?.name || ''}
       />
 
-      <AssociateFloatingIPToPortDrawer
+      <AssociateFIPtoPortDrawer
         isOpen={associateFIPOpen}
         onClose={() => setAssociateFIPOpen(false)}
         port={{ name: selectedPortForDrawer?.name || '' }}

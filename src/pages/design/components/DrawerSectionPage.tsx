@@ -5,7 +5,7 @@ import { DrawerDemo } from '../../design-system-sections/OverlayDemos';
 import { VStack, Button } from '@/design-system';
 import { CreateInstanceSnapshotDrawer } from '@/components/CreateInstanceSnapshotDrawer';
 import { EditInstanceDrawer } from '@/components/EditInstanceDrawer';
-import { LockSettingDrawer } from '@/components/LockSettingDrawer';
+import { LockInstanceDrawer } from '@/components/LockInstanceDrawer';
 
 function TableWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -253,7 +253,7 @@ export function DrawerSectionPage() {
             onClose={() => setEditOpen(false)}
             instance={sampleInstance}
           />
-          <LockSettingDrawer
+          <LockInstanceDrawer
             isOpen={lockOpen}
             onClose={() => setLockOpen(false)}
             instance={sampleInstance}

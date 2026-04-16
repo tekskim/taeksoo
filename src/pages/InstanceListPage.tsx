@@ -47,9 +47,9 @@ import {
   type InstanceInfo,
 } from '@/components/CreateInstanceSnapshotDrawer';
 import {
-  LockSettingDrawer,
+  LockInstanceDrawer,
   type InstanceInfo as LockInstanceInfo,
-} from '@/components/LockSettingDrawer';
+} from '@/components/LockInstanceDrawer';
 import {
   EditInstanceDrawer,
   type InstanceInfo as EditInstanceInfo,
@@ -67,7 +67,7 @@ import {
   DetachInterfaceDrawer,
   type InstanceInfo as DetachInterfaceInstanceInfo,
 } from '@/components/DetachInterfaceDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
+import { AssociateFIPtoInstanceDrawer } from '@/components/AssociateFIPtoInstanceDrawer';
 import {
   DisassociateFloatingIPDrawer,
   type InstanceInfo as DisassociateFloatingIPInstanceInfo,
@@ -856,7 +856,8 @@ export function InstanceListPage() {
     useState<DetachInterfaceInstanceInfo | null>(null);
 
   // Associate Floating IP Drawer state
-  const [isAssociateFloatingIPDrawerOpen, setIsAssociateFloatingIPDrawerOpen] = useState(false);
+  const [isAssociateFIPtoInstanceDrawerOpen, setIsAssociateFIPtoInstanceDrawerOpen] =
+    useState(false);
   const [selectedInstanceForAssociateFloatingIP, setSelectedInstanceForAssociateFloatingIP] =
     useState<{ id: string; name: string } | null>(null);
 
@@ -1113,7 +1114,7 @@ export function InstanceListPage() {
       id: instance.id,
       name: instance.name,
     });
-    setIsAssociateFloatingIPDrawerOpen(true);
+    setIsAssociateFIPtoInstanceDrawerOpen(true);
   };
 
   // Handle disassociate floating IP click
@@ -1866,7 +1867,7 @@ export function InstanceListPage() {
       />
 
       {/* Lock setting Drawer */}
-      <LockSettingDrawer
+      <LockInstanceDrawer
         isOpen={isLockDrawerOpen}
         onClose={() => {
           setIsLockDrawerOpen(false);
@@ -1944,10 +1945,10 @@ export function InstanceListPage() {
       />
 
       {/* Associate Floating IP Drawer */}
-      <AssociateFloatingIPDrawer
-        isOpen={isAssociateFloatingIPDrawerOpen}
+      <AssociateFIPtoInstanceDrawer
+        isOpen={isAssociateFIPtoInstanceDrawerOpen}
         onClose={() => {
-          setIsAssociateFloatingIPDrawerOpen(false);
+          setIsAssociateFIPtoInstanceDrawerOpen(false);
           setSelectedInstanceForAssociateFloatingIP(null);
         }}
         port={{ id: 'port-001', name: 'port-001' }}

@@ -26,7 +26,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
-import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
+import { AllocateFIPDrawer } from '@/components/AllocateFIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconUnlink,
@@ -656,7 +656,7 @@ export function ComputeAdminFloatingIPsPage() {
       />
 
       {/* Allocate Floating IP Drawer */}
-      <AllocateFloatingIPDrawer
+      <AllocateFIPDrawer
         isOpen={isAllocateDrawerOpen}
         onClose={() => setIsAllocateDrawerOpen(false)}
       />

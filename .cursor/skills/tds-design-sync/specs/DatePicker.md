@@ -136,5 +136,4 @@
 ## 참고 파일
 
 - TDS: `src/design-system/components/DatePicker/DatePicker.tsx`, `src/index.css` (Component - DatePicker)
-- shared: `thaki-shared-v2/src/components/DatePicker/DatePicker.tsx`, `DatePicker.styles.ts`
-- 토큰: `src/index.css`, `src/styles/tokens/compatibility.css` (TDS); `thaki-shared-v2/src/styles/tokens/tokens-light.css` (shared). `light.css`에 DatePicker 전용 토큰 항목 없음.
+- 토큰: `src/index.css`, `src/styles/tokens/compatibility.css`

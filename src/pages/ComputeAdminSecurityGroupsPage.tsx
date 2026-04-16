@@ -23,7 +23,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconTrash, IconDownload } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -513,7 +513,7 @@ export function ComputeAdminSecurityGroupsPage() {
       />
 
       {/* Security Group Drawers */}
-      <CreateSecurityGroupRuleDrawer
+      <CreateSGRuleDrawer
         isOpen={createRuleOpen}
         onClose={() => setCreateRuleOpen(false)}
         securityGroupId={selectedGroupForDrawer?.id}
