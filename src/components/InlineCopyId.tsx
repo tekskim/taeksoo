@@ -5,7 +5,7 @@ export function InlineCopyId({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
-      className={`shrink-0 transition-colors ${copied ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]'}`}
+      className={`shrink-0 transition-colors ${copied ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-default)] hover:text-[var(--color-text-default)]'}`}
       onClick={(e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(value);
