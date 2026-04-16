@@ -16,6 +16,7 @@ import {
   ContextMenu,
   TabBar,
   Badge,
+  BadgeList,
   PageShell,
   fixedColumns,
   columnMinWidths,
@@ -30,7 +31,10 @@ import {
   IconTrash,
   IconChevronDown,
   IconChevronRight,
+  IconChevronUp,
+  IconSelector,
   IconSettings,
+  IconLockCheck,
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -86,42 +90,42 @@ interface AttachedUser {
 
 const mockRolesMap: Record<string, RoleDetail> = {
   admin: {
-    id: 'role-12345678',
+    id: '7284d9174e81431e93060a9bbcf2cdfd',
     name: 'admin',
     description: 'Full administrative access',
     type: 'Built-in',
     createdAt: 'Jun 1, 2025 10:20:28',
   },
   Member: {
-    id: 'role-23456789',
+    id: 'a3b1c9d8e7f64520b1a2d3e4f5061728',
     name: 'Member',
     description: 'member role',
     type: 'Custom',
     createdAt: 'Jul 25, 2025 10:32:16',
   },
   viewer: {
-    id: 'role-34567890',
+    id: 'b4c2d0e9f8a75631c2b3e4f5a6172839',
     name: 'viewer',
     description: 'Read-only access',
     type: 'Built-in',
     createdAt: 'Jun 1, 2025 10:20:28',
   },
   'compute-admin': {
-    id: 'role-45678901',
+    id: 'c5d3e1f0a9b86742d3c4f5a6b728394a',
     name: 'compute-admin',
     description: 'Compute administration access',
     type: 'Built-in',
     createdAt: 'Jun 15, 2025 12:22:26',
   },
   'storage-admin': {
-    id: 'role-56789012',
+    id: 'd6e4f2a1b0c97853e4d5a6b7c8394a5b',
     name: 'storage-admin',
     description: 'Storage administration access',
     type: 'Built-in',
     createdAt: 'Jun 20, 2025 23:27:51',
   },
   'network-admin': {
-    id: 'role-67890123',
+    id: 'e7f5a3b2c1d08964f5e6b7c8d9405a6c',
     name: 'network-admin',
     description: 'Network administration access',
     type: 'Built-in',
@@ -295,7 +299,7 @@ function InfoCard({ label, value, copyable }: InfoCardProps) {
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
       <div className="flex flex-col gap-1.5 min-w-0">
         <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="flex items-center gap-1 text-body-md leading-4 text-[var(--color-text-default)] min-w-0">
+        <span className="flex items-center gap-2 text-body-md leading-4 text-[var(--color-text-default)] min-w-0">
           <span className="truncate">{value}</span>
           {copyable && <InlineCopyId value={value} />}
         </span>
@@ -385,6 +389,8 @@ export default function IAMRoleDetailPage() {
   const [entitiesCurrentPage, setEntitiesCurrentPage] = useState(1);
   const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['p-002']));
   const [entitiesSubTab, setEntitiesSubTab] = useState<'user-groups' | 'users'>('user-groups');
+  const [policySortKey, setPolicySortKey] = useState<keyof RolePolicy | null>(null);
+  const [policySortDir, setPolicySortDir] = useState<'asc' | 'desc' | null>(null);
   const itemsPerPage = 10;
 
   // Get role data
@@ -411,9 +417,35 @@ export default function IAMRoleDetailPage() {
     user.name.toLowerCase().includes(entitiesSearchQuery.toLowerCase())
   );
 
+  const handlePolicySort = (key: keyof RolePolicy) => {
+    if (policySortKey === key) {
+      if (policySortDir === 'asc') setPolicySortDir('desc');
+      else {
+        setPolicySortKey(null);
+        setPolicySortDir(null);
+      }
+    } else {
+      setPolicySortKey(key);
+      setPolicySortDir('asc');
+    }
+  };
+
+  const sortedPolicies = (() => {
+    if (!policySortKey || !policySortDir) return filteredPolicies;
+    return [...filteredPolicies].sort((a, b) => {
+      const aVal = a[policySortKey];
+      const bVal = b[policySortKey];
+      if (aVal === bVal) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+      const cmp = aVal < bVal ? -1 : 1;
+      return policySortDir === 'asc' ? cmp : -cmp;
+    });
+  })();
+
   // Pagination
-  const policiesTotalPages = Math.ceil(filteredPolicies.length / itemsPerPage);
-  const paginatedPolicies = filteredPolicies.slice(
+  const policiesTotalPages = Math.ceil(sortedPolicies.length / itemsPerPage);
+  const paginatedPolicies = sortedPolicies.slice(
     (policiesCurrentPage - 1) * itemsPerPage,
     policiesCurrentPage * itemsPerPage
   );
@@ -676,32 +708,26 @@ export default function IAMRoleDetailPage() {
 
             {/* Action Buttons */}
             <HStack gap={1}>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconLockCheck size={12} stroke={1.5} />}
+              >
+                Grant access
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconSettings size={12} stroke={1.5} />}
+              >
+                Manage linked policies
+              </Button>
               <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
                 Edit
               </Button>
               <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
                 Delete
               </Button>
-              <ContextMenu
-                items={[
-                  {
-                    id: 'manage-policies',
-                    label: 'Manage policies',
-                    onClick: () => console.log('Manage policies'),
-                  },
-                  { id: 'duplicate', label: 'Duplicate', onClick: () => console.log('Duplicate') },
-                ]}
-                trigger="click"
-                align="right"
-              >
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                >
-                  More actions
-                </Button>
-              </ContextMenu>
             </HStack>
 
             {/* Info Cards */}
@@ -717,8 +743,8 @@ export default function IAMRoleDetailPage() {
         <div className="w-full">
           <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
             <TabList>
-              <Tab value="policies">Policies</Tab>
-              <Tab value="entities">Entities attached</Tab>
+              <Tab value="policies">Attached policies</Tab>
+              <Tab value="entities">Active grants</Tab>
             </TabList>
 
             {/* Policies Tab */}
@@ -727,7 +753,7 @@ export default function IAMRoleDetailPage() {
                 {/* Section Header */}
                 <HStack justify="between" align="center" className="w-full">
                   <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    Policies
+                    Attached policies
                   </h2>
                   <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
                     Manage policies
@@ -754,8 +780,32 @@ export default function IAMRoleDetailPage() {
                 <div className="w-full flex flex-col gap-1">
                   {/* Table Header */}
                   <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                      Status
+                    <div
+                      className="flex-1 flex items-center gap-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handlePolicySort('name')}
+                    >
+                      <span>Name</span>
+                      {policySortKey === 'name' ? (
+                        policySortDir === 'asc' ? (
+                          <IconChevronUp
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        ) : (
+                          <IconChevronDown
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        )
+                      ) : (
+                        <IconSelector
+                          size={14}
+                          stroke={1}
+                          className="text-[var(--color-text-subtle)]"
+                        />
+                      )}
                     </div>
                     <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                       Type
@@ -763,14 +813,59 @@ export default function IAMRoleDetailPage() {
                     <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                       Apps
                     </div>
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Description
+                    <div
+                      className="flex-1 flex items-center gap-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handlePolicySort('description')}
+                    >
+                      <span>Description</span>
+                      {policySortKey === 'description' ? (
+                        policySortDir === 'asc' ? (
+                          <IconChevronUp
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        ) : (
+                          <IconChevronDown
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        )
+                      ) : (
+                        <IconSelector
+                          size={14}
+                          stroke={1}
+                          className="text-[var(--color-text-subtle)]"
+                        />
+                      )}
                     </div>
-                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Edited at
-                    </div>
-                    <div className="w-[72px] flex items-center justify-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                      Action
+                    <div
+                      className="flex-1 flex items-center gap-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handlePolicySort('editedAt')}
+                    >
+                      <span>Edited at</span>
+                      {policySortKey === 'editedAt' ? (
+                        policySortDir === 'asc' ? (
+                          <IconChevronUp
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        ) : (
+                          <IconChevronDown
+                            size={14}
+                            stroke={1}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        )
+                      ) : (
+                        <IconSelector
+                          size={14}
+                          stroke={1}
+                          className="text-[var(--color-text-subtle)]"
+                        />
+                      )}
                     </div>
                   </div>
 
@@ -801,33 +896,36 @@ export default function IAMRoleDetailPage() {
                           </Link>
                         </div>
                         <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                          {policy.type}
+                          <Badge theme="white" size="sm">
+                            {policy.type}
+                          </Badge>
                         </div>
                         <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                          {policy.apps}
+                          <BadgeList
+                            items={
+                              policy.permissions
+                                ? [
+                                    ...new Set(
+                                      policy.permissions.map((p) =>
+                                        p.partition !== '-'
+                                          ? `${p.application}:${p.partition}`
+                                          : p.application
+                                      )
+                                    ),
+                                  ]
+                                : [policy.apps]
+                            }
+                            maxVisible={1}
+                            maxBadgeWidth="140px"
+                            popoverTitle={`All Apps (${policy.permissions ? new Set(policy.permissions.map((p) => (p.partition !== '-' ? `${p.application}:${p.partition}` : p.application))).size : 1})`}
+                            overflowAlign="right"
+                          />
                         </div>
                         <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
                           {policy.description}
                         </div>
                         <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
                           {policy.editedAt}
-                        </div>
-                        <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
-                          <ContextMenu
-                            items={getPolicyContextMenuItems(policy.id, policy.type === 'Built-in')}
-                            trigger="click"
-                          >
-                            <button
-                              type="button"
-                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-                            >
-                              <IconDotsCircleHorizontal
-                                size={16}
-                                stroke={1.5}
-                                className="text-[var(--color-text-default)]"
-                              />
-                            </button>
-                          </ContextMenu>
                         </div>
                       </div>
 
@@ -846,7 +944,7 @@ export default function IAMRoleDetailPage() {
               <VStack gap={4} className="pt-4">
                 {/* Section Header */}
                 <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Entities attached
+                  Active grants
                 </h2>
 
                 {/* Sub Tab Container */}

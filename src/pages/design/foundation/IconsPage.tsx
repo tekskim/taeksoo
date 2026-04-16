@@ -235,6 +235,7 @@ import {
   IconReload,
   IconRestore,
   IconArrowBackUp,
+  IconLockCheck,
 } from '@tabler/icons-react';
 import {
   IconUbuntu2,
@@ -377,6 +378,12 @@ const iconCategories: IconCategoryData[] = [
         name: 'IconArrowBackUp',
         label: 'Revoke',
         usage: 'IAM Roles Active Grants bulk revoke',
+      },
+      {
+        icon: IconLockCheck,
+        name: 'IconLockCheck',
+        label: 'Grant access',
+        usage: 'IAM Role Detail grant access',
       },
       {
         icon: IconReload,
