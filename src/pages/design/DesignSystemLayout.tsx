@@ -34,6 +34,7 @@ export function DesignSystemLayout() {
   const [searchParams] = useSearchParams();
   const isCaptureMode = searchParams.get('capture') === 'true';
   const mainRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -118,6 +119,8 @@ export function DesignSystemLayout() {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
                 />
                 <input
+                  ref={searchRef}
+                  autoFocus
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

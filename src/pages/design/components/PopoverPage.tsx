@@ -138,13 +138,18 @@ function HealthMonitor({
   };
 
   return (
-    <div>
+    <div className="pt-1">
+      <div className="border-t border-[var(--color-border-subtle)] pt-2.5" />
       <div className="flex justify-between items-start">
         <button
           onClick={() => setExpanded(!expanded)}
           className="flex items-center gap-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
         >
-          {expanded ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
+          {expanded ? (
+            <IconChevronDown size={12} strokeWidth={2} />
+          ) : (
+            <IconChevronRight size={12} strokeWidth={2} />
+          )}
           <span>Health Monitor:</span>
         </button>
         <span className="flex items-center gap-2">
@@ -176,12 +181,15 @@ function HealthMonitor({
 
 function HealthMonitorEmpty() {
   return (
-    <div className="flex justify-between items-start">
-      <span className="flex items-center gap-1 text-[var(--color-text-muted)]">
-        <IconChevronRight size={14} />
-        <span>Health Monitor:</span>
-      </span>
-      <span className="text-[var(--color-text-muted)]">-</span>
+    <div className="pt-1">
+      <div className="border-t border-[var(--color-border-subtle)] pt-2.5" />
+      <div className="flex justify-between items-start">
+        <span className="flex items-center gap-1 text-[var(--color-text-muted)]">
+          <IconChevronRight size={12} strokeWidth={2} />
+          <span>Health Monitor:</span>
+        </span>
+        <span className="text-[var(--color-text-muted)]">-</span>
+      </div>
     </div>
   );
 }
