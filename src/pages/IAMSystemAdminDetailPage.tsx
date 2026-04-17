@@ -12,12 +12,12 @@ import {
   TabList,
   Tab,
   TabPanel,
-  StatusIndicator,
   ContextMenu,
   SectionCard,
   SearchInput,
   Pagination,
   PageShell,
+  DetailHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -204,28 +204,6 @@ const mockSessions: Session[] = [
     device: 'Safari / iOS',
   },
 ];
-
-/* ----------------------------------------
-   Info Card Component
-   ---------------------------------------- */
-
-interface InfoCardProps {
-  label: string;
-  value: React.ReactNode;
-  statusIndicator?: React.ReactNode;
-}
-
-function InfoCard({ label, value, statusIndicator }: InfoCardProps) {
-  return (
-    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
-      <div className="flex flex-col gap-1.5">
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      </div>
-      {statusIndicator}
-    </div>
-  );
-}
 
 /* ----------------------------------------
    IAM System Admin Detail Page
@@ -431,51 +409,36 @@ export default function IAMSystemAdminDetailPage() {
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
-        {/* Header Card */}
-        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              {admin.username}
-            </h1>
-
-            {/* Action Buttons */}
-            <HStack gap={1}>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                Edit
+        <DetailHeader>
+          <DetailHeader.Title>{admin.username}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
+              Lock setting
+            </Button>
+            <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More actions
               </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                Delete
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
-                Lock setting
-              </Button>
-              <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
-                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                  More actions
-                </Button>
-              </ContextMenu>
-            </HStack>
-
-            {/* Info Cards */}
-            <HStack gap={2} className="w-full">
-              <InfoCard
-                label="Status"
-                value={admin.status === 'online' ? 'Online' : 'Offline'}
-                statusIndicator={
-                  <StatusIndicator
-                    layout="icon-only"
-                    status={admin.status === 'online' ? 'active' : 'shutoff'}
-                  />
-                }
-              />
-              <InfoCard label="Display name" value={admin.displayName} />
-              <InfoCard label="Email address" value={admin.email} />
-              <InfoCard label="Default domain" value={admin.defaultDomain} />
-              <InfoCard label="Created at" value={admin.createdAt} />
-            </HStack>
-          </VStack>
-        </div>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              status={admin.status === 'online' ? 'active' : 'shutoff'}
+              value={admin.status === 'online' ? 'Online' : 'Offline'}
+            />
+            <DetailHeader.InfoCard label="Display name" value={admin.displayName} />
+            <DetailHeader.InfoCard label="Email address" value={admin.email} />
+            <DetailHeader.InfoCard label="Default domain" value={admin.defaultDomain} />
+            <DetailHeader.InfoCard label="Created at" value={admin.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
         {/* Tabs */}
         <Tabs

@@ -42,6 +42,7 @@ import {
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { DesktopWindowProvider } from '@/contexts/DesktopWindowContext';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
+import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import DesktopBg from '@/assets/bg-01.jpg';
 import { computeRoutes } from '@/routes/compute.routes';
 import { storageRoutes } from '@/routes/storage.routes';
@@ -166,14 +167,16 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
           />
         )}
       </div>
-      <span className="text-label-md text-white text-center whitespace-nowrap">{label}</span>
+      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap">
+        {label}
+      </span>
     </button>
   );
 });
 
 function AdminCenterCompositeIcon() {
   return (
-    <div className="w-14 h-14 rounded-2xl bg-white/30 border border-white/10 shadow-sm grid grid-cols-2 grid-rows-2 gap-1 p-1.5">
+    <div className="w-14 h-14 rounded-2xl bg-[var(--desktop-glass-bg-strong)] border border-[var(--desktop-glass-border)] shadow-sm grid grid-cols-2 grid-rows-2 gap-1 p-1.5">
       <img
         src={imgStorageAdmin}
         alt=""
@@ -223,7 +226,9 @@ function DragGhost({ icon, label, x, y }: DragGhostProps) {
           draggable={false}
         />
       </div>
-      <span className="text-label-md text-white text-center whitespace-nowrap">{label}</span>
+      <span className="text-label-md text-[var(--desktop-text)] text-center whitespace-nowrap">
+        {label}
+      </span>
     </div>
   );
 }
@@ -379,8 +384,8 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
           <div
             className={`
               w-7 h-7 rounded-lg overflow-hidden
-              ${isRunning ? 'p-0.5 border border-white/20 bg-white/10' : ''}
-              ${isActive ? 'border-white/40 bg-white/15' : ''}
+              ${isRunning ? 'p-0.5 border border-[var(--desktop-icon-running-border)] bg-[var(--desktop-icon-running-bg)]' : ''}
+              ${isActive ? 'border-[var(--desktop-icon-active-border)] bg-[var(--desktop-icon-active-bg)]' : ''}
             `}
           >
             <img
@@ -579,14 +584,18 @@ function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps)
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-white/10 border border-white/15 text-white/90 text-body-md hover:bg-white/15 transition-colors cursor-pointer select-none"
+        className="flex items-center gap-1.5 h-7 px-2.5 rounded-[var(--primitive-radius-md)] bg-[var(--desktop-glass-bg)] border border-[var(--desktop-glass-border)] text-[var(--desktop-text)] text-body-md hover:bg-[var(--desktop-glass-bg-strong)] transition-colors cursor-pointer select-none"
       >
         <span className="truncate max-w-[120px]">{selectedLabel}</span>
-        <IconSelector size={14} stroke={1.5} className="text-white/60 shrink-0" />
+        <IconSelector
+          size={14}
+          stroke={1.5}
+          className="text-[var(--desktop-text-muted)] shrink-0"
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-black/70 backdrop-blur-xl border border-white/15 rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
+        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-[var(--desktop-dropdown-bg)] backdrop-blur-xl border border-[var(--desktop-glass-border)] rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -597,12 +606,14 @@ function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps)
               }}
               className={`w-full flex items-center gap-2 px-3 py-1.5 text-body-md transition-colors cursor-pointer ${
                 opt.value === value
-                  ? 'text-white bg-white/15'
-                  : 'text-white/75 hover:text-white hover:bg-white/10'
+                  ? 'text-[var(--desktop-text)] bg-[var(--desktop-active-bg)]'
+                  : 'text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] hover:bg-[var(--desktop-hover-bg)]'
               }`}
             >
               <span className="w-4 shrink-0 flex items-center justify-center">
-                {opt.value === value && <IconCheck size={12} stroke={2} className="text-white" />}
+                {opt.value === value && (
+                  <IconCheck size={12} stroke={2} className="text-[var(--desktop-text)]" />
+                )}
               </span>
               <span>{opt.label}</span>
             </button>
@@ -621,7 +632,7 @@ function DesktopTopBar({
   dockIcons,
 }: TopBarProps) {
   const [selectedDomain, setSelectedDomain] = useState('domain-a');
-  const { theme, setTheme } = useDarkMode();
+  const { theme, isDark, setTheme } = useDarkMode();
   const [language, setLanguage] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('tds-language') || 'en';
@@ -735,11 +746,14 @@ function DesktopTopBar({
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-[52px] bg-black/40 backdrop-blur-xl flex items-center justify-between pl-4 z-[1000] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.2)] border-b border-white/10">
+    <div
+      className="fixed top-0 left-0 right-0 h-[52px] bg-[var(--desktop-topbar-bg)] backdrop-blur-xl flex items-center justify-between pl-4 z-[1000] border-b border-[var(--desktop-glass-border)]"
+      style={{ boxShadow: 'var(--desktop-topbar-shadow)' }}
+    >
       {/* Left Section - Logo + Dock Icons */}
       <div className="flex items-center gap-8 h-full">
         {/* THAKI Cloud Logo */}
-        <img src={ThakiLogoDark} alt="THAKI Cloud" className="h-5" />
+        <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
 
         {/* Dock Icons */}
         {dockIcons}
@@ -757,7 +771,7 @@ function DesktopTopBar({
         {/* Right Icons */}
         <div className="flex items-center gap-3">
           <ContextMenu items={contextMenuItems} trigger="click" minTop={52}>
-            <button className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors">
+            <button className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors">
               <Icons.Finetuning size={20} stroke={1.5} />
             </button>
           </ContextMenu>
@@ -785,21 +799,21 @@ function DesktopTopBar({
             trigger="click"
             minTop={52}
           >
-            <button className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors">
+            <button className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors">
               <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <button
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
-            className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white cursor-pointer transition-colors"
+            className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
           >
             <Icons.Notification size={20} stroke={1.5} />
           </button>
         </div>
 
         {/* Separator + Chatbot */}
-        <div className="flex items-center border-l border-white/20 px-2.5">
+        <div className="flex items-center border-l border-[var(--desktop-separator)] px-2.5">
           <button
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}
@@ -864,7 +878,7 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
           {/* Panel - centered on screen */}
           <div className="fixed inset-0 z-[501] flex items-center justify-center pointer-events-none">
             <motion.div
-              className="bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center border border-white/30 pointer-events-auto"
+              className="bg-[var(--desktop-glass-bg-strong)] backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center border border-[var(--desktop-glass-border-strong)] pointer-events-auto"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -875,14 +889,18 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
                 onClick={() => console.log('Storage Admin clicked')}
               >
                 <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-                <span className="text-label-md text-white text-center">Storage Admin</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Storage Admin
+                </span>
               </button>
               <button
                 className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
                 onClick={() => console.log('Compute Admin clicked')}
               >
                 <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-                <span className="text-label-md text-white text-center">Compute Admin</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Compute Admin
+                </span>
               </button>
               <button
                 className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
@@ -893,14 +911,18 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
                   alt="AI Platform Admin"
                   className="w-16 h-16 object-cover"
                 />
-                <span className="text-label-md text-white text-center">AI Platform Admin</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  AI Platform Admin
+                </span>
               </button>
               <button
                 className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
                 onClick={() => console.log('Cloud Builder clicked')}
               >
                 <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-                <span className="text-label-md text-white text-center">Cloud Builder</span>
+                <span className="text-label-md text-[var(--desktop-text)] text-center">
+                  Cloud Builder
+                </span>
               </button>
             </motion.div>
           </div>
@@ -1654,11 +1676,18 @@ export function DesktopPage() {
   );
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-black" onClick={handleDesktopClick}>
+    <div
+      className="fixed inset-0 overflow-hidden bg-[var(--desktop-bg)]"
+      onClick={handleDesktopClick}
+    >
       <img
         src={DesktopBg}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={{
+          opacity: 'var(--desktop-wallpaper-opacity)',
+          filter: 'var(--desktop-wallpaper-filter)',
+        }}
       />
       {/* Top Bar */}
       <DesktopTopBar
@@ -1871,7 +1900,7 @@ export function DesktopPage() {
       {/* Main Page Navigation Button - Bottom Left */}
       <Link
         to="/"
-        className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm font-medium transition-all hover:-translate-y-0.5"
+        className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-[var(--desktop-glass-bg)] hover:bg-[var(--desktop-glass-bg-strong)] backdrop-blur-sm rounded-lg text-[var(--desktop-text)] text-sm font-medium transition-all hover:-translate-y-0.5"
       >
         <IconLayoutDashboard size={18} stroke={1.5} />
         <span>Go to main page</span>

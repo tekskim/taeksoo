@@ -124,6 +124,13 @@ export function PodDisruptionBudgetsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -455,6 +462,8 @@ export function PodDisruptionBudgetsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No pod disruption budgets found"
         />
       </VStack>
     </PageShell>

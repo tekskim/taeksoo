@@ -44,7 +44,7 @@ const mockPools: Pool[] = [
     id: 'pool-001',
     name: 'volumes',
     dataProtection: 'EC: 2+1',
-    applications: 'rgb',
+    applications: 'rbd',
     pgStatus: ['127 active+clean,', '1 active+clean', '+scrubbing+deep'],
     crushRuleset: 'rule_nvme',
     usagePercent: 88.17,
@@ -55,7 +55,7 @@ const mockPools: Pool[] = [
     id: 'pool-002',
     name: 'images',
     dataProtection: 'replicas: 3',
-    applications: 'rgb',
+    applications: 'rbd',
     pgStatus: ['32 active+clean'],
     crushRuleset: 'rule_nvme',
     usagePercent: 96.5,
@@ -66,7 +66,7 @@ const mockPools: Pool[] = [
     id: 'pool-003',
     name: 'VMs',
     dataProtection: 'replicas: 3',
-    applications: 'rgb',
+    applications: 'rbd',
     pgStatus: ['32 active+clean'],
     crushRuleset: 'rule_hdd',
     usagePercent: 72.3,
@@ -99,7 +99,7 @@ const mockPools: Pool[] = [
     id: 'pool-006',
     name: 'snapshots',
     dataProtection: 'EC: 4+2',
-    applications: 'rgb',
+    applications: 'rbd',
     pgStatus: ['64 active+clean'],
     crushRuleset: 'rule_nvme',
     usagePercent: 45.2,
@@ -314,7 +314,7 @@ export function PoolsPage() {
           <div className="flex items-center gap-1">
             <div className="w-[var(--search-input-width)]">
               <SearchInput
-                placeholder="Search users by attributes"
+                placeholder="Search pools by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}

@@ -482,7 +482,7 @@ export function PhysicalDisksPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search users by attributes"
+                placeholder="Search physical disks by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}
@@ -517,7 +517,12 @@ export function PhysicalDisksPage() {
         />
 
         {/* Table */}
-        <Table columns={columns} data={paginatedDisks} getRowId={(row) => row.id} />
+        <Table
+          columns={columns}
+          data={paginatedDisks}
+          getRowId={(row) => row.id}
+          emptyMessage="No physical disks found"
+        />
       </VStack>
 
       {/* Identify Drawer */}

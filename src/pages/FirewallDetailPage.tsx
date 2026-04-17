@@ -373,7 +373,7 @@ export default function FirewallDetailPage() {
 
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="ports">Ports</Tab>

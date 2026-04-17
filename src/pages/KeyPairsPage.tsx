@@ -325,7 +325,7 @@ export function KeyPairsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={[{ label: 'Key Pairs' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Key pairs' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

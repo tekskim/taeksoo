@@ -683,6 +683,7 @@ export default function IAMRolesPage() {
                   selectable
                   selectedKeys={selectedRows}
                   onSelectionChange={setSelectedRows}
+                  emptyMessage="No roles found"
                 />
               </VStack>
             </TabPanel>
@@ -735,6 +736,7 @@ export default function IAMRolesPage() {
                   selectable
                   selectedKeys={selectedGrants}
                   onSelectionChange={setSelectedGrants}
+                  emptyMessage="No active grants found"
                 />
               </VStack>
             </TabPanel>

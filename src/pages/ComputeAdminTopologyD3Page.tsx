@@ -26,23 +26,40 @@ import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Theme Configuration
+   D3 requires runtime hex strings. Values mirror TDS chart / semantic tokens:
+   - #3b82f6 blue500 — near --chart-color-8 (blue400 #60a5fa)
+   - #93c5fd blue300 — lighter active edge
+   - #6366f1 indigo500 — near --chart-color-4 (violet400 family)
+   - #a5b4fc indigo300
+   - #14b8a6 teal500 — near --chart-color-9 (teal400 #2dd4bf)
+   - #5eead4 teal300
+   - #eab308 yellow500 — near --chart-color-3 (amber400 #fbbf24)
+   - #fde047 yellow300
+   - #22c55e green500 — --color-state-success
+   - #94a3b8 slate400 — --chart-color-neutral
+   - #ef4444 red500 — --color-state-danger
+   - #f0fdfa teal-50 / #f1f5f9 slate-50 — --color-surface-subtle / --color-border-subtle family
+   - #fee2e2 red-100 — --color-state-danger-bg family
+   - #eef2ff indigo-50
+   - #cbd5e1 slate300 — --color-border-strong
+   - #fca5a5 red300 — danger border family
    ---------------------------------------- */
 const COLORS = {
-  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' }, // Blue
-  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' }, // Indigo
-  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' }, // Teal
-  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' }, // Yellow
+  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' },
+  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' },
+  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' },
+  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' },
   status: { active: '#22c55e', inactive: '#94a3b8', error: '#ef4444' },
-  vpcPanel: { active: '#f0fdfa', inactive: '#f1f5f9', error: '#fee2e2', split: '#eef2ff' }, // Teal-50 / Indigo-50
-  vpcBorder: { active: '#5eead4', inactive: '#cbd5e1', error: '#fca5a5', split: '#a5b4fc' }, // Teal-300 / Indigo-300
+  vpcPanel: { active: '#f0fdfa', inactive: '#f1f5f9', error: '#fee2e2', split: '#eef2ff' },
+  vpcBorder: { active: '#5eead4', inactive: '#cbd5e1', error: '#fca5a5', split: '#a5b4fc' },
 };
 
-// Edge colors based on source node type
+// Edge colors based on source node type (same token mapping as COLORS node strokes above)
 const EDGE_COLORS = {
-  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' }, // Blue
-  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' }, // Indigo
-  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' }, // Teal
-  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' }, // Yellow
+  externalNetwork: { active: '#3b82f6', inactive: '#93c5fd', error: '#ef4444' },
+  router: { active: '#6366f1', inactive: '#a5b4fc', error: '#ef4444' },
+  subnet: { active: '#14b8a6', inactive: '#5eead4', error: '#ef4444' },
+  loadBalancer: { active: '#eab308', inactive: '#fde047', error: '#ef4444' },
 };
 
 type NodeType = 'externalNetwork' | 'router' | 'subnet' | 'loadBalancer';

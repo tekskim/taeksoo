@@ -411,6 +411,7 @@ export function IAMUserGroupsPage() {
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
+            emptyMessage="No user groups found"
           />
         </VStack>
       </VStack>

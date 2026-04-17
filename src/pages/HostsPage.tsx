@@ -381,7 +381,7 @@ export function HostsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search users by attributes"
+                placeholder="Search hosts by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}

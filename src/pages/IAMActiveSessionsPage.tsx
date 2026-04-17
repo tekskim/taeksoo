@@ -322,6 +322,7 @@ export default function IAMActiveSessionsPage() {
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
+            emptyMessage="No active sessions found"
           />
         </VStack>
       </VStack>

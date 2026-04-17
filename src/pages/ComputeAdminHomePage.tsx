@@ -4,6 +4,8 @@ import {
   TopBar,
   Breadcrumb,
   PageShell,
+  PageHeader,
+  VStack,
   Badge,
   ProgressBar,
   STATUS_THRESHOLDS,
@@ -264,93 +266,96 @@ export function ComputeAdminHomePage() {
       }
       contentClassName="px-8 py-6"
     >
-      {/* Top Row - 3 Cards */}
-      <div className="grid grid-cols-3 gap-6 mb-6">
-        {/* CAPACITY SUMMARY */}
-        <Card title="Capacity Summary">
-          <div className="space-y-[22px]">
-            <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
-            <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
-            <ComputeQuotaBar label="Total GPU (T4)" used={6} total={8} unit="GPU" />
-            <ComputeQuotaBar label="Total NPU" used={6} total={8} unit="NPU" />
-          </div>
-        </Card>
+      <VStack gap={6}>
+        <PageHeader title="Dashboard" />
+        {/* Top Row - 3 Cards */}
+        <div className="grid grid-cols-3 gap-6 mb-6">
+          {/* CAPACITY SUMMARY */}
+          <Card title="Capacity Summary">
+            <div className="space-y-[22px]">
+              <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
+              <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
+              <ComputeQuotaBar label="Total GPU (T4)" used={6} total={8} unit="GPU" />
+              <ComputeQuotaBar label="Total NPU" used={6} total={8} unit="NPU" />
+            </div>
+          </Card>
 
-        {/* INSTANCE SUMMARY */}
-        <Card title="Instance Summary" className="flex flex-col">
-          <div className="mb-4">
-            <div className="text-heading-h2 text-[var(--color-text-default)]">13</div>
-            <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-          </div>
-          <div className="space-y-2 mt-auto">
-            <div className="flex gap-2">
-              <SummaryStatBox value={10} label="Active" />
-              <SummaryStatBox value={0} label="Error" />
+          {/* INSTANCE SUMMARY */}
+          <Card title="Instance Summary" className="flex flex-col">
+            <div className="mb-4">
+              <div className="text-heading-h2 text-[var(--color-text-default)]">13</div>
+              <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
             </div>
-            <div className="flex gap-2">
-              <SummaryStatBox value={0} label="Stopped" />
-              <SummaryStatBox value={3} label="Others" />
+            <div className="space-y-2 mt-auto">
+              <div className="flex gap-2">
+                <SummaryStatBox value={10} label="Active" />
+                <SummaryStatBox value={0} label="Error" />
+              </div>
+              <div className="flex gap-2">
+                <SummaryStatBox value={0} label="Stopped" />
+                <SummaryStatBox value={3} label="Others" />
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        {/* BARE METAL SUMMARY */}
-        <Card title="Bare Metal Summary" className="flex flex-col">
-          <div className="mb-4">
-            <div className="text-heading-h2 text-[var(--color-text-default)]">8</div>
-            <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-          </div>
-          <div className="space-y-2 mt-auto">
-            <div className="flex gap-2">
-              <SummaryStatBox value={6} label="Active" />
-              <SummaryStatBox value={1} label="Error" />
+          {/* BARE METAL SUMMARY */}
+          <Card title="Bare Metal Summary" className="flex flex-col">
+            <div className="mb-4">
+              <div className="text-heading-h2 text-[var(--color-text-default)]">8</div>
+              <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
             </div>
-            <div className="flex gap-2">
-              <SummaryStatBox value={0} label="Stopped" />
-              <SummaryStatBox value={1} label="Others" />
+            <div className="space-y-2 mt-auto">
+              <div className="flex gap-2">
+                <SummaryStatBox value={6} label="Active" />
+                <SummaryStatBox value={1} label="Error" />
+              </div>
+              <div className="flex gap-2">
+                <SummaryStatBox value={0} label="Stopped" />
+                <SummaryStatBox value={1} label="Others" />
+              </div>
             </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Bottom Row - Tenant Usages */}
-      <Card title="Tenant Usages">
-        <div className="space-y-6">
-          <TenantRow
-            name="Tenant A"
-            enabled={true}
-            resources={{
-              vCPU: { used: 4, total: 8 },
-              RAM: { used: 22, total: 32 },
-              Disk: { used: 4, total: 6 },
-              GPU: { used: 6, total: 8 },
-              NPU: { used: 6, total: 8 },
-            }}
-          />
-          <TenantRow
-            name="Tenant B"
-            enabled={false}
-            resources={{
-              vCPU: { used: 4, total: 8 },
-              RAM: { used: 22, total: 32 },
-              Disk: { used: 4, total: 6 },
-              GPU: { used: 6, total: 8 },
-              NPU: { used: 6, total: 8 },
-            }}
-          />
-          <TenantRow
-            name="Tenant C"
-            enabled={true}
-            resources={{
-              vCPU: { used: 4, total: 8 },
-              RAM: { used: 22, total: 32 },
-              Disk: { used: 4, total: 6 },
-              GPU: { used: 6, total: 8 },
-              NPU: { used: 6, total: 8 },
-            }}
-          />
+          </Card>
         </div>
-      </Card>
+
+        {/* Bottom Row - Tenant Usages */}
+        <Card title="Tenant Usages">
+          <div className="space-y-6">
+            <TenantRow
+              name="Tenant A"
+              enabled={true}
+              resources={{
+                vCPU: { used: 5, total: 8 },
+                RAM: { used: 18, total: 32 },
+                Disk: { used: 3, total: 6 },
+                GPU: { used: 4, total: 8 },
+                NPU: { used: 2, total: 8 },
+              }}
+            />
+            <TenantRow
+              name="Tenant B"
+              enabled={false}
+              resources={{
+                vCPU: { used: 2, total: 8 },
+                RAM: { used: 28, total: 32 },
+                Disk: { used: 5, total: 6 },
+                GPU: { used: 7, total: 8 },
+                NPU: { used: 5, total: 8 },
+              }}
+            />
+            <TenantRow
+              name="Tenant C"
+              enabled={true}
+              resources={{
+                vCPU: { used: 7, total: 8 },
+                RAM: { used: 12, total: 32 },
+                Disk: { used: 2, total: 6 },
+                GPU: { used: 1, total: 8 },
+                NPU: { used: 8, total: 8 },
+              }}
+            />
+          </div>
+        </Card>
+      </VStack>
     </PageShell>
   );
 }

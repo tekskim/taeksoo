@@ -9,12 +9,21 @@ import {
   Table,
   Badge,
   PageShell,
+  PageHeader,
   type TableColumn,
 } from '@/design-system';
 import { columnMinWidths } from '@/design-system/presets/columnWidths';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconSearch } from '@tabler/icons-react';
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
+
+/** Resolved for ECharts pie slices; matches --chart-color-2 / --chart-color-7 / border-default. */
+function resolvedChartColor(cssVar: string, chartFallback: string): string {
+  if (typeof window === 'undefined') return chartFallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return v || chartFallback;
+}
 
 /* ----------------------------------------
    Types
@@ -46,10 +55,10 @@ const eventsData: EventRow[] = [
   },
   {
     id: '2',
-    time: 'Dec 12, 25 18:30:39',
-    event: 'Sign-in',
+    time: 'Dec 12, 25 18:30:52',
+    event: 'MFA challenge',
     user: 'thaki.kim',
-    target: '-',
+    target: 'IAM console',
     result: 'Success',
     ipAddress: '192.168.1.100',
   },
@@ -73,10 +82,10 @@ const eventsData: EventRow[] = [
   },
   {
     id: '5',
-    time: 'Dec 12, 25 18:32:25',
-    event: 'Sign-in',
+    time: 'Dec 12, 25 18:33:01',
+    event: 'Create API key',
     user: 'sara.connor',
-    target: '-',
+    target: 'project-api',
     result: 'Success',
     ipAddress: '192.168.1.102',
   },
@@ -217,6 +226,19 @@ export function IAMHomePage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
+  const signInPieData = [
+    { name: 'Success', value: 1234, color: chartColors.emerald400 },
+    { name: 'Failure', value: 45, color: chartColors.red400 },
+  ];
+  const mfaPieData = [
+    { name: 'Enabled', value: 117, color: chartColors.emerald400 },
+    {
+      name: 'Disabled',
+      value: 33,
+      color: resolvedChartColor('--color-border-default', chartColors.slate100),
+    },
+  ];
+
   // Update tab label on mount
   useEffect(() => {
     updateActiveTabLabel('IAM home');
@@ -281,6 +303,7 @@ export function IAMHomePage() {
       contentClassName="px-8 py-6"
     >
       <VStack gap={6}>
+        <PageHeader title="Dashboard" />
         {/* Row 1: Domain Info + Authentication Summary */}
         <div className="grid grid-cols-[320px_1fr] gap-6">
           {/* Domain Info Card */}
@@ -310,26 +333,26 @@ export function IAMHomePage() {
                   <p className="text-label-lg text-[var(--color-text-default)]">Today's Sign-ins</p>
                   <VStack gap={2}>
                     <HStack gap={1} align="center">
-                      <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
+                      <div
+                        className="w-2 h-2 rounded-sm"
+                        style={{ backgroundColor: 'var(--chart-color-2)' }}
+                      />
                       <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Success: 1,234 (96%)
                       </span>
                     </HStack>
                     <HStack gap={1} align="center">
-                      <div className="w-2 h-2 rounded-sm bg-[#f87171]" />
+                      <div
+                        className="w-2 h-2 rounded-sm"
+                        style={{ backgroundColor: 'var(--chart-color-7)' }}
+                      />
                       <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Failure: 45 (4%)
                       </span>
                     </HStack>
                   </VStack>
                 </VStack>
-                <SimplePieChart
-                  data={[
-                    { name: 'Success', value: 1234, color: '#4ade80' },
-                    { name: 'Failure', value: 45, color: '#f87171' },
-                  ]}
-                  size={120}
-                />
+                <SimplePieChart data={signInPieData} size={120} />
               </div>
 
               {/* MFA Adoption */}
@@ -338,26 +361,26 @@ export function IAMHomePage() {
                   <p className="text-label-lg text-[var(--color-text-default)]">MFA adoption</p>
                   <VStack gap={2}>
                     <HStack gap={1} align="center">
-                      <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
+                      <div
+                        className="w-2 h-2 rounded-sm"
+                        style={{ backgroundColor: 'var(--chart-color-2)' }}
+                      />
                       <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Enabled: 117 (78%)
                       </span>
                     </HStack>
                     <HStack gap={1} align="center">
-                      <div className="w-2 h-2 rounded-sm bg-[#e2e8f0]" />
+                      <div
+                        className="w-2 h-2 rounded-sm"
+                        style={{ backgroundColor: 'var(--color-border-default)' }}
+                      />
                       <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Disabled: 33 (22%)
                       </span>
                     </HStack>
                   </VStack>
                 </VStack>
-                <SimplePieChart
-                  data={[
-                    { name: 'Enabled', value: 117, color: '#4ade80' },
-                    { name: 'Disabled', value: 33, color: '#e2e8f0' },
-                  ]}
-                  size={120}
-                />
+                <SimplePieChart data={mfaPieData} size={120} />
               </div>
             </div>
           </div>
@@ -380,9 +403,11 @@ export function IAMHomePage() {
           <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
             <h6 className="text-heading-h6">IAM Resources</h6>
             <VStack gap={2}>
-              <ResourceCard label="User group" value="13" />
-              <ResourceCard label="Roles" value="13" />
-              <ResourceCard label="Policies" value="13" />
+              <ResourceCard label="Users" value="24" />
+              <ResourceCard label="Roles" value="8" />
+              <ResourceCard label="Policies" value="15" />
+              <ResourceCard label="User Groups" value="6" />
+              <ResourceCard label="Domains" value="3" />
             </VStack>
           </div>
 

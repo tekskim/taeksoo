@@ -200,7 +200,7 @@ export default function FirewallsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'NACL' }];
+  const breadcrumbItems = [{ label: 'NACLs' }];
 
   // Filtered firewalls
   const filteredFirewalls = useMemo(() => {

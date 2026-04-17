@@ -571,87 +571,93 @@ export default function IAMPoliciesPage() {
           </div>
 
           {/* Table Rows */}
-          {paginatedPolicies.map((policy) => (
-            <div
-              key={policy.id}
-              className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
-            >
-              {/* Main Row */}
-              <div
-                className={`flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors`}
-              >
-                {/* Checkbox */}
-                <div className="w-[40px] flex items-center justify-center px-3 py-2">
-                  <Checkbox
-                    checked={selectedRows.includes(policy.id)}
-                    onChange={() => toggleRowSelection(policy.id)}
-                  />
-                </div>
-                {/* Name with expand icon */}
-                <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  <button
-                    onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
-                    className={`shrink-0 flex items-center justify-center w-4 h-4 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
-                  >
-                    {expandedPolicies.has(policy.id) ? (
-                      <IconChevronDown size={12} strokeWidth={2} />
-                    ) : (
-                      <IconChevronRight size={12} strokeWidth={2} />
-                    )}
-                  </button>
-                  <Link
-                    to={`/iam/policies/${policy.id}`}
-                    className="text-[var(--color-action-primary)] font-medium hover:underline"
-                  >
-                    {policy.name}
-                  </Link>
-                </div>
-                {/* Type */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.type}
-                </div>
-                {/* Apps */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.apps}
-                </div>
-                {/* Roles */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.roles}
-                </div>
-                {/* Description */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.description}
-                </div>
-                {/* Edited at */}
-                <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                  {policy.editedAt}
-                </div>
-                {/* Action */}
-                <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                  <ContextMenu
-                    items={getContextMenuItems(policy.id, policy.type === 'Built-in')}
-                    trigger="click"
-                  >
-                    <button
-                      type="button"
-                      className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-                    >
-                      <IconDotsCircleHorizontal
-                        size={16}
-                        stroke={1.5}
-                        className="text-[var(--color-text-default)]"
-                      />
-                    </button>
-                  </ContextMenu>
-                </div>
-              </div>
-
-              {/* Expanded Policy Details */}
-              {expandedPolicies.has(policy.id) && policy.permissions && (
-                <PolicyDetails permissions={policy.permissions} />
-              )}
+          {paginatedPolicies.length === 0 ? (
+            <div className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-10 text-center text-body-md text-[var(--color-text-subtle)]">
+              No policies found
             </div>
-          ))}
+          ) : (
+            paginatedPolicies.map((policy) => (
+              <div
+                key={policy.id}
+                className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
+              >
+                {/* Main Row */}
+                <div
+                  className={`flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors`}
+                >
+                  {/* Checkbox */}
+                  <div className="w-[40px] flex items-center justify-center px-3 py-2">
+                    <Checkbox
+                      checked={selectedRows.includes(policy.id)}
+                      onChange={() => toggleRowSelection(policy.id)}
+                    />
+                  </div>
+                  {/* Name with expand icon */}
+                  <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    <button
+                      onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
+                      className={`shrink-0 flex items-center justify-center w-4 h-4 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                    >
+                      {expandedPolicies.has(policy.id) ? (
+                        <IconChevronDown size={12} strokeWidth={2} />
+                      ) : (
+                        <IconChevronRight size={12} strokeWidth={2} />
+                      )}
+                    </button>
+                    <Link
+                      to={`/iam/policies/${policy.id}`}
+                      className="text-[var(--color-action-primary)] font-medium hover:underline"
+                    >
+                      {policy.name}
+                    </Link>
+                  </div>
+                  {/* Type */}
+                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.type}
+                  </div>
+                  {/* Apps */}
+                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.apps}
+                  </div>
+                  {/* Roles */}
+                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.roles}
+                  </div>
+                  {/* Description */}
+                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.description}
+                  </div>
+                  {/* Edited at */}
+                  <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.editedAt}
+                  </div>
+                  {/* Action */}
+                  <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                    <ContextMenu
+                      items={getContextMenuItems(policy.id, policy.type === 'Built-in')}
+                      trigger="click"
+                    >
+                      <button
+                        type="button"
+                        className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+                      >
+                        <IconDotsCircleHorizontal
+                          size={16}
+                          stroke={1.5}
+                          className="text-[var(--color-text-default)]"
+                        />
+                      </button>
+                    </ContextMenu>
+                  </div>
+                </div>
+
+                {/* Expanded Policy Details */}
+                {expandedPolicies.has(policy.id) && policy.permissions && (
+                  <PolicyDetails permissions={policy.permissions} />
+                )}
+              </div>
+            ))
+          )}
         </div>
       </VStack>
     </PageShell>

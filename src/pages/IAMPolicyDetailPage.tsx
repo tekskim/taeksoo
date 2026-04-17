@@ -18,6 +18,7 @@ import {
   ContextMenu,
   DetailHeader,
   PageShell,
+  ErrorState,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -599,9 +600,15 @@ export default function IAMPolicyDetailPage() {
         }
         contentClassName="pt-4 px-8 pb-6"
       >
-        <div className="flex-1 flex items-center justify-center">
-          <p className="text-[var(--color-text-muted)]">Policy not found</p>
-        </div>
+        <ErrorState
+          title="Policy not found"
+          description="The requested policy could not be found."
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/iam/policies')}>
+              Back to policies
+            </Button>
+          }
+        />
       </PageShell>
     );
   }

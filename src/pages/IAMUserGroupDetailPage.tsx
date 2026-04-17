@@ -17,6 +17,7 @@ import {
   ContextMenu,
   TabBar,
   PageShell,
+  DetailHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -338,28 +339,6 @@ const mockGroupRoles: GroupRole[] = [
 ];
 
 /* ----------------------------------------
-   Info Card Component
-   ---------------------------------------- */
-
-interface InfoCardProps {
-  label: string;
-  value: string;
-  rightElement?: React.ReactNode;
-}
-
-function InfoCard({ label, value, rightElement }: InfoCardProps) {
-  return (
-    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
-      <div className="flex flex-col gap-1.5">
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
-      </div>
-      {rightElement}
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Main Component
    ---------------------------------------- */
 
@@ -657,56 +636,46 @@ export default function IAMUserGroupDetailPage() {
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={6}>
-        {/* Header Card */}
-        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              {userGroup.name}
-            </h1>
-
-            {/* Action Buttons */}
-            <HStack gap={1}>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
-                Edit
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
-                Delete
-              </Button>
-              <ContextMenu
-                items={[
-                  {
-                    id: 'manage-roles',
-                    label: 'Manage roles',
-                    onClick: () => console.log('Manage roles'),
-                  },
-                  {
-                    id: 'manage-users',
-                    label: 'Manage users',
-                    onClick: () => console.log('Manage users'),
-                  },
-                ]}
-                trigger="click"
-                align="right"
+        <DetailHeader>
+          <DetailHeader.Title>{userGroup.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                {
+                  id: 'manage-roles',
+                  label: 'Manage roles',
+                  onClick: () => console.log('Manage roles'),
+                },
+                {
+                  id: 'manage-users',
+                  label: 'Manage users',
+                  onClick: () => console.log('Manage users'),
+                },
+              ]}
+              trigger="click"
+              align="right"
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                >
-                  More actions
-                </Button>
-              </ContextMenu>
-            </HStack>
-
-            {/* Info Cards */}
-            <HStack gap={2} className="w-full">
-              <InfoCard label="Description" value={userGroup.description} />
-              <InfoCard label="Type" value={userGroup.type} />
-              <InfoCard label="Created at" value={userGroup.createdAt} />
-            </HStack>
-          </VStack>
-        </div>
+                More actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Description" value={userGroup.description} />
+            <DetailHeader.InfoCard label="Type" value={userGroup.type} />
+            <DetailHeader.InfoCard label="Created at" value={userGroup.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
         {/* Tabs Section */}
         <div className="w-full">

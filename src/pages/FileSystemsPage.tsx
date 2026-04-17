@@ -244,6 +244,7 @@ export function FileSystemsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No file systems found"
         />
       </VStack>
     </PageShell>

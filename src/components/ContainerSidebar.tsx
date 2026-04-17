@@ -83,6 +83,7 @@ function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSideb
   return (
     <button
       type="button"
+      aria-label={tooltip}
       onClick={onClick}
       className={`
         w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)]

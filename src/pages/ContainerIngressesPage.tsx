@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   VStack,
   TabBar,
@@ -105,6 +105,12 @@ export function ContainerIngressesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Create menu items
@@ -442,6 +448,8 @@ export function ContainerIngressesPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           onRowClick={(row) => navigate(`/container/ingresses/${row.id}`)}
+          loading={loading}
+          emptyMessage="No ingresses found"
         />
       </VStack>
     </PageShell>

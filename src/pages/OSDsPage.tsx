@@ -336,7 +336,7 @@ export function OSDsPage() {
           <div className="flex items-center gap-1">
             <div className="w-[var(--search-input-width)]">
               <SearchInput
-                placeholder="Search users by attributes"
+                placeholder="Search OSDs by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}

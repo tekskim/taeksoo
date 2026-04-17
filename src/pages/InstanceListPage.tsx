@@ -1742,7 +1742,7 @@ export function InstanceListPage() {
       <VStack gap={3}>
         {/* Page Header */}
         <PageHeader
-          title="Instances list"
+          title="Instances"
           actions={
             activeTab === 'vm' ? (
               <Link to="/compute/instances/create">

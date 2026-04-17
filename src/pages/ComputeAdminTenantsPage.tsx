@@ -12,6 +12,7 @@ import {
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
@@ -231,10 +232,9 @@ export default function ComputeAdminTenantsPage() {
           }
         />
 
-        {/* Action Bar */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <div className="w-[var(--search-input-width)]">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
                 value={searchTerm}
                 onChange={(e) => {
@@ -242,26 +242,31 @@ export default function ComputeAdminTenantsPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="Search tenants by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
-            </div>
-            <button
-              type="button"
-              className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-              aria-label="Download"
-            >
-              <IconDownload size={12} stroke={1.5} />
-            </button>
-          </div>
-          <div className="h-4 w-px bg-[var(--color-border-default)]" />
-          <Button
-            variant="muted"
-            size="sm"
-            leftIcon={<IconTrash size={12} />}
-            disabled={selectedTenants.length === 0}
-          >
-            Delete
-          </Button>
-        </div>
+              <button
+                type="button"
+                className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                aria-label="Download"
+              >
+                <IconDownload size={12} stroke={1.5} />
+              </button>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedTenants.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
 
         {/* Pagination */}
         <Pagination

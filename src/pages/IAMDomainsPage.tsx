@@ -14,6 +14,7 @@ import {
   TabBar,
   StatusIndicator,
   PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -212,6 +213,7 @@ export default function IAMDomainsPage() {
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
             title="Open console"
+            aria-label="Open console"
           >
             <ArrowRightLeft
               size={16}
@@ -264,13 +266,14 @@ export default function IAMDomainsPage() {
         contentClassName="pt-4 px-8 pb-6"
       >
         <VStack gap={3}>
-          {/* Header */}
-          <HStack justify="between" align="center" className="w-full">
-            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Domains</h1>
-            <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
-              Create domain
-            </Button>
-          </HStack>
+          <PageHeader
+            title="Domains"
+            actions={
+              <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
+                Create domain
+              </Button>
+            }
+          />
 
           {/* Table Content */}
           <VStack gap={3} className="w-full">
@@ -304,7 +307,12 @@ export default function IAMDomainsPage() {
             />
 
             {/* Table */}
-            <Table<Domain> columns={columns} data={paginatedDomains} rowKey="id" />
+            <Table<Domain>
+              columns={columns}
+              data={paginatedDomains}
+              rowKey="id"
+              emptyMessage="No domains found"
+            />
           </VStack>
         </VStack>
       </PageShell>

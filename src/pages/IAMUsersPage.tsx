@@ -423,6 +423,7 @@ export function IAMUsersPage() {
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
+            emptyMessage="No users found"
           />
         </VStack>
       </VStack>

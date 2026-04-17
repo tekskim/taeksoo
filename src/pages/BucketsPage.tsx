@@ -379,7 +379,7 @@ export function BucketsPage() {
             <ListToolbar.Actions>
               <div className="w-[var(--search-input-width)]">
                 <SearchInput
-                  placeholder="Search users by attributes"
+                  placeholder="Search buckets by attributes"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClear={() => setSearchQuery('')}
@@ -436,6 +436,7 @@ export function BucketsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No buckets found"
         />
       </VStack>
     </PageShell>

@@ -251,6 +251,7 @@ export function NFSPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No NFS exports found"
         />
       </VStack>
     </PageShell>

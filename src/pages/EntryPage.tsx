@@ -155,7 +155,7 @@ export function EntryPage() {
             </Button>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)] text-center mt-10">
-            © 2025 THAKI Cloud. All rights reserved.
+            © 2026 THAKI Cloud. All rights reserved.
           </p>
         </div>
       </footer>

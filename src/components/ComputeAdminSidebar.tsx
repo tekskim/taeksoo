@@ -230,7 +230,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
             <MenuItem
               icon={<IconFileCode size={16} stroke={1.5} />}
-              label="Metadata definition"
+              label="Metadata definitions"
               href="/compute-admin/metadata-definition"
               active={isActive('/compute-admin/metadata-definition')}
             />

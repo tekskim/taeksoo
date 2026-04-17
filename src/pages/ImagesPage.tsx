@@ -424,7 +424,12 @@ export function ImagesPage() {
         />
 
         {/* Table */}
-        <Table columns={columns} data={paginatedImages} getRowId={(row) => row.id} />
+        <Table
+          columns={columns}
+          data={paginatedImages}
+          getRowId={(row) => row.id}
+          emptyMessage="No images found"
+        />
       </VStack>
     </PageShell>
   );
