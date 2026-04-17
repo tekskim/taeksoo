@@ -374,9 +374,8 @@ export function ComputeAdminVolumeDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
     { label: 'Volumes', href: '/compute-admin/volumes' },
-    { label: volume.name, href: `/volumes/${volume.id}` },
+    { label: volume.name },
   ];
 
   // Filter snapshots by search query

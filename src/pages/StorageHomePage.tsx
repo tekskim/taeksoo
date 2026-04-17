@@ -576,9 +576,7 @@ export function StorageHomePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Storage', href: '/storage' }, { label: 'Home' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
     >

@@ -179,11 +179,7 @@ export default function ComputeAdminFirewallRuleDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Firewalls', href: '/compute-admin/firewall' },
-                { label: rule.name },
-              ]}
+              items={[{ label: 'NACL', href: '/compute-admin/firewall' }, { label: rule.name }]}
             />
           }
         />

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -276,6 +276,13 @@ export function ComputeAdminLoadBalancersPage() {
   const [associateFIPOpen, setAssociateFIPOpen] = useState(false);
   const [editLBOpen, setEditLBOpen] = useState(false);
   const [selectedLBForDrawer, setSelectedLBForDrawer] = useState<LoadBalancer | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleAssociateFloatingIP = (lb: LoadBalancer) => {
@@ -592,14 +599,7 @@ export function ComputeAdminLoadBalancersPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Load balancers' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Load Balancers' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -663,6 +663,7 @@ export function ComputeAdminLoadBalancersPage() {
           selectable
           selectedKeys={selectedLBs}
           onSelectionChange={setSelectedLBs}
+          loading={loading}
         />
       </VStack>
 

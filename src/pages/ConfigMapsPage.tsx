@@ -272,11 +272,7 @@ export function ConfigMapsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'ConfigMaps' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'ConfigMaps' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

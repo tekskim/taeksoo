@@ -393,11 +393,7 @@ export function CronJobsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'CronJobs' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'CronJobs' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

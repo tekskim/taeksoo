@@ -372,9 +372,7 @@ export function ImagesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Images' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"

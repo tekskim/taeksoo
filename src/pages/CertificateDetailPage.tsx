@@ -217,7 +217,6 @@ export default function CertificateDetailPage() {
   }, [certificate.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
     { label: 'Certificates', href: '/compute/certificates' },
     { label: certificate.name },
   ];

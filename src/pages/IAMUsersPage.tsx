@@ -356,7 +356,7 @@ export function IAMUsersPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Users' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Users' }]} />}
         />
       }
     >

@@ -178,7 +178,6 @@ export function CloudBuilderCreatePage() {
   };
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/project' },
     { label: config.title, href: `/cloudbuilder/${slug}` },
     { label: 'Register server' },
   ];

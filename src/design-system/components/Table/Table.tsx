@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { IconChevronUp, IconChevronDown, IconSelector } from '@tabler/icons-react';
 import { Checkbox } from '../Checkbox';
 import { Radio } from '../Radio';
+import { Skeleton } from '../Skeleton/Skeleton';
 import { cn } from '../../utils/cn';
 import { useColumnResize } from './useColumnResize';
 
@@ -63,6 +64,10 @@ export interface TableProps<T = any> extends Omit<
   onColumnResize?: (columnKey: string, width: number) => void;
   /** Global minimum column width in px. Defaults to 50 */
   minColumnWidth?: number;
+  /** Show skeleton loading rows instead of data */
+  loading?: boolean;
+  /** Number of skeleton rows to display when loading. Defaults to 10 */
+  loadingRows?: number;
 }
 
 /* ----------------------------------------
@@ -113,9 +118,11 @@ export function Table<T extends Record<string, any>>({
   columnResizeMode = 'onEnd',
   onColumnResize,
   minColumnWidth,
+  loading = false,
+  loadingRows = 10,
   ...rest
 }: TableProps<T>) {
-  const tableData = data ?? rows ?? [];
+  const tableData = loading ? [] : (data ?? rows ?? []);
 
   const columns = rawColumns.map((col) => ({
     ...col,
@@ -374,6 +381,70 @@ export function Table<T extends Record<string, any>>({
     );
   };
 
+  const skeletonWidths = ['65%', '45%', '55%', '70%', '40%', '60%', '50%', '75%', '35%', '80%'];
+
+  const renderSkeletonCell = (
+    column: TableColumn<T>,
+    rowIndex: number,
+    colIndex: number,
+    showFirstDivider: boolean
+  ) => {
+    const isFirstColumn = colIndex === 0;
+    const showCellDivider = isFirstColumn ? showFirstDivider : true;
+    const align = column.align || 'left';
+    const widthIdx = (rowIndex * 7 + colIndex * 3) % skeletonWidths.length;
+
+    return (
+      <div
+        key={column.key}
+        data-column-key={column.key}
+        className={cn(
+          'flex items-center',
+          'px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]',
+          'min-w-0 overflow-hidden',
+          CELL_ALIGN_CLS[align],
+          showCellDivider && 'border-l border-transparent'
+        )}
+        style={getEffectiveColumnStyle(column)}
+      >
+        <div
+          className={cn(
+            'w-full min-w-0',
+            align === 'center' && 'flex justify-center',
+            align === 'right' && 'flex justify-end'
+          )}
+        >
+          <Skeleton variant="rounded" width={skeletonWidths[widthIdx]} height={14} />
+        </div>
+      </div>
+    );
+  };
+
+  const renderSkeletonRows = (cols: TableColumn<T>[], showCheckbox: boolean) => (
+    <div className="flex flex-col gap-[var(--table-row-gap)]">
+      {Array.from({ length: loadingRows }).map((_, rowIndex) => (
+        <div
+          key={`skeleton-${rowIndex}`}
+          className={cn(
+            'rounded-[var(--table-row-radius)] overflow-hidden',
+            'border border-[var(--color-border-default)]',
+            'bg-[var(--color-surface-default)]'
+          )}
+        >
+          <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
+            {showCheckbox && (
+              <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                <Skeleton variant="rounded" width={16} height={16} />
+              </div>
+            )}
+            {cols.map((col, i) => renderSkeletonCell(col, rowIndex, i, showCheckbox))}
+            {hasResizedColumns && <div style={{ flex: '1 0 0', minWidth: 0 }} aria-hidden="true" />}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   if (hasStickyColumns) {
     return (
       <div
@@ -587,7 +658,9 @@ export function Table<T extends Record<string, any>>({
 
           {/* Body */}
           <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
-            {sortedData.length === 0 ? (
+            {loading ? (
+              renderSkeletonRows(columns, selectable)
+            ) : sortedData.length === 0 ? (
               <div
                 className={cn(
                   'px-[var(--table-cell-padding-x)] py-[var(--table-empty-padding-y)] text-center',

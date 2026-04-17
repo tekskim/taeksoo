@@ -470,7 +470,6 @@ export default function IAMPolicyDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
     { label: 'Policies', href: '/iam/policies' },
     { label: policy?.name || policyId || '' },
   ];
@@ -595,14 +594,7 @@ export default function IAMPolicyDetailPage() {
             showNavigation
             onBack={() => navigate(-1)}
             onForward={() => navigate(1)}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'IAM', href: '/iam' },
-                  { label: 'Policies', href: '/iam/policies' },
-                ]}
-              />
-            }
+            breadcrumb={<Breadcrumb items={[{ label: 'Policies', href: '/iam/policies' }]} />}
           />
         }
         contentClassName="pt-4 px-8 pb-6"

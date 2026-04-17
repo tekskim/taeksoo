@@ -356,14 +356,7 @@ export function PersistentVolumeClaimsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volume claims' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Persistent Volume Claims' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

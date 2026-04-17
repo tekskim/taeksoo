@@ -846,9 +846,8 @@ export function CreatePodDisruptionBudgetPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pod disruption budgets', href: '/container/pdb' },
-                { label: 'Create pod disruption budget' },
+                { label: 'Pod Disruption Budgets', href: '/container/pdb' },
+                { label: 'Create PDB' },
               ]}
             />
           }

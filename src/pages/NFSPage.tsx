@@ -178,9 +178,7 @@ export function NFSPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'NFS' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'NFS' }]} />}
         />
       }
     >

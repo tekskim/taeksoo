@@ -2017,9 +2017,8 @@ export function CreateDeploymentPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Deployments', href: '/container/deployments' },
-                { label: 'Create deployment' },
+                { label: 'Create Deployment' },
               ]}
             />
           }

@@ -171,13 +171,12 @@ export default function L7PolicyDetailPage() {
   }, [l7Policy?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Load balancers', href: '/compute/load-balancers' },
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
     {
-      label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
+      label:
+        l7Policy.listener?.loadBalancer?.name ?? l7Policy.listener?.loadBalancer?.id ?? 'Unknown',
     },
-    { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
+    { label: l7Policy.listener?.name ?? 'Unknown' },
     { label: l7Policy.name },
   ];
 

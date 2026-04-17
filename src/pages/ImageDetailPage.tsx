@@ -737,11 +737,7 @@ export function ImageDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Home', href: '/' },
-                { label: 'Images', href: '/storage/images' },
-                { label: imageData.name },
-              ]}
+              items={[{ label: 'Images', href: '/storage/images' }, { label: imageData.name }]}
             />
           }
         />

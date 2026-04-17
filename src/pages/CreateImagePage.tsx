@@ -158,7 +158,7 @@ export function CreateImagePage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: 'Create image' }];
+  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: 'Create Image' }];
 
   // Navigation handlers
   const handleCancel = () => {

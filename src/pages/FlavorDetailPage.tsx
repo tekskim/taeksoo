@@ -437,11 +437,7 @@ export function FlavorDetailPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '#' },
-    { label: 'Flavors', href: '/compute/flavors' },
-    { label: flavor.name, href: `/flavors/${flavor.id}` },
-  ];
+  const breadcrumbItems = [{ label: 'Flavors', href: '/compute/flavors' }, { label: flavor.name }];
 
   // Filter instances by search query
   const filteredInstances = useMemo(() => {

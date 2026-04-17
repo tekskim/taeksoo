@@ -171,7 +171,6 @@ export function ComputeAdminServerGroupDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
     { label: 'Server Groups', href: '/compute-admin/server-groups' },
     { label: serverGroup.name },
   ];

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -309,6 +309,13 @@ export function PortsPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -588,9 +595,7 @@ export function PortsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Ports' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Ports' }]} />}
         />
       }
     >
@@ -666,6 +671,7 @@ export function PortsPage() {
           selectable
           selectedKeys={selectedPorts}
           onSelectionChange={setSelectedPorts}
+          loading={loading}
         />
       </VStack>
 

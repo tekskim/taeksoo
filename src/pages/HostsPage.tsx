@@ -367,9 +367,7 @@ export function HostsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Hosts' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Hosts' }]} />}
         />
       }
     >

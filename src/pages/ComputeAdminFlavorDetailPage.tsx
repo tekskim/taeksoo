@@ -436,9 +436,8 @@ export function ComputeAdminFlavorDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
     { label: 'Flavors', href: '/compute-admin/flavors' },
-    { label: flavor.name, href: `/compute-admin/flavors/${flavor.id}` },
+    { label: flavor.name },
   ];
 
   // Filter instances by search query

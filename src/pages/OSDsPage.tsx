@@ -323,9 +323,7 @@ export function OSDsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'OSDs' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'OSDs' }]} />}
         />
       }
     >

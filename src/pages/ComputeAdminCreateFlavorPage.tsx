@@ -208,7 +208,7 @@ export function ComputeAdminCreateFlavorPage() {
 
   const breadcrumbItems = [
     { label: 'Flavors', href: '/compute-admin/flavors' },
-    { label: 'Create flavor' },
+    { label: 'Create Flavor' },
   ];
 
   // Navigation handlers

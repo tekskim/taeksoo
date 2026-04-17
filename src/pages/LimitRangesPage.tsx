@@ -286,11 +286,7 @@ export function LimitRangesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Limit ranges' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Limit Ranges' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

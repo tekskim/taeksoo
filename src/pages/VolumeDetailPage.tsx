@@ -358,11 +358,7 @@ export function VolumeDetailPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '#' },
-    { label: 'Volumes', href: '/compute/volumes' },
-    { label: volume.name, href: `/volumes/${volume.id}` },
-  ];
+  const breadcrumbItems = [{ label: 'Volumes', href: '/compute/volumes' }, { label: volume.name }];
 
   // Filter snapshots by search query
   const filteredSnapshots = useMemo(() => {

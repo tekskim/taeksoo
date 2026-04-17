@@ -316,11 +316,7 @@ export function SecretsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Secrets' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Secrets' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

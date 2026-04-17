@@ -187,7 +187,6 @@ export function CreateStatefulSetYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'StatefulSets', href: '/container/statefulsets' },
                 { label: 'Create StatefulSet' },
               ]}

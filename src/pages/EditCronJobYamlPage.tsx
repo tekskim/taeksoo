@@ -196,10 +196,8 @@ export function EditCronJobYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'CronJobs', href: '/container/cronjobs' },
-                { label: cronJobName || 'CronJob', href: `/container/cronjobs/${cronJobName}` },
-                { label: 'Edit YAML' },
+                { label: 'Edit CronJob' },
               ]}
             />
           }

@@ -4984,9 +4984,8 @@ export function CreateInstancePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances list', href: '/compute/instances' },
-                { label: 'Create instance' },
+                { label: 'Instances', href: '/compute/instances' },
+                { label: 'Create Instance' },
               ]}
             />
           }

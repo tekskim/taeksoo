@@ -174,9 +174,8 @@ export default function SubnetDetailPage() {
   }, [subnet?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Networks', href: '/compute-admin/networks' },
-    { label: subnet.network.name, href: `/networks/${subnet.network.id}` },
+    { label: subnet.network.name },
     { label: subnet.name },
   ];
 

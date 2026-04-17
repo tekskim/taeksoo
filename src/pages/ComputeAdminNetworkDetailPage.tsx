@@ -348,7 +348,6 @@ export default function NetworkDetailPage() {
   }, [network.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Networks', href: '/compute-admin/networks' },
     { label: network.name },
   ];

@@ -396,9 +396,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Instance templates', href: '/compute-admin/instance-templates' },
-    { label: 'Edit template' },
+    { label: 'Instance Templates', href: '/compute-admin/instance-templates' },
+    { label: formData.name },
   ];
 
   const handleCancel = () => {

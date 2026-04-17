@@ -312,11 +312,7 @@ export function ResourceQuotasPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Resource quotas' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Resource Quotas' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

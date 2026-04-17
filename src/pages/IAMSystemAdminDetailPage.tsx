@@ -264,8 +264,7 @@ export default function IAMSystemAdminDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'System administrators', href: '/iam/system-administrators' },
+    { label: 'System Administrators', href: '/iam/system-administrators' },
     { label: admin.username },
   ];
 

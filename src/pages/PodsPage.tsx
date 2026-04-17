@@ -406,9 +406,7 @@ export function PodsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Pods' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Pods' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

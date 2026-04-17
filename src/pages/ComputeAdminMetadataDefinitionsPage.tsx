@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
@@ -67,6 +67,14 @@ export default function ComputeAdminMetadataDefinitionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMetadata, setSelectedMetadata] = useState<string[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const itemsPerPage = 10;
 
   // Global tab management
@@ -78,10 +86,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Metadata Definitions' },
-  ];
+  const breadcrumbItems = [{ label: 'Metadata Definitions' }];
 
   // Filtered metadata
   const filteredMetadata = useMemo(() => {
@@ -312,6 +317,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
             (window.location.href = `/compute-admin/metadata-definition/${row.id}`)
           }
           stickyHeader
+          loading={loading}
         />
       </VStack>
     </PageShell>

@@ -221,9 +221,8 @@ export function CreateServiceYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Services', href: '/container/services' },
-                { label: 'Create service' },
+                { label: 'Create Service' },
               ]}
             />
           }

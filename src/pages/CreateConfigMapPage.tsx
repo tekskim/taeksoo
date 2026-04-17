@@ -782,7 +782,6 @@ export function CreateConfigMapPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'ConfigMaps', href: '/container/configmaps' },
                 { label: 'Create ConfigMap' },
               ]}

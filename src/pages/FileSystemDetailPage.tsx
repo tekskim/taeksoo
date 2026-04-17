@@ -481,7 +481,6 @@ export function FileSystemDetailPage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Home', href: '/storage' },
                   { label: 'File Systems', href: '/storage/file-systems' },
                   { label: 'Not Found' },
                 ]}
@@ -523,7 +522,6 @@ export function FileSystemDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Home', href: '/storage' },
                 { label: 'File Systems', href: '/storage/file-systems' },
                 { label: fsData.name },
               ]}

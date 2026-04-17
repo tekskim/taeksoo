@@ -381,11 +381,7 @@ export function ContainerDashboardPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'default-cluster', href: '/container' }, { label: 'Dashboard' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={<ContainerTopBarActions />}
         />
       }

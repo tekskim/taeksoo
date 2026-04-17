@@ -516,11 +516,7 @@ export function IAMUserDetailPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'Users', href: '/iam/users' },
-    { label: user.username },
-  ];
+  const breadcrumbItems = [{ label: 'Users', href: '/iam/users' }, { label: user.username }];
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;

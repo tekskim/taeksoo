@@ -196,13 +196,8 @@ export function EditStorageClassYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'StorageClasss', href: '/container/storageClasss' },
-                {
-                  label: storageClassName || 'StorageClass',
-                  href: `/container/storageClasss/${storageClassName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Storage Classes', href: '/container/storage-classes' },
+                { label: 'Edit Storage Class' },
               ]}
             />
           }

@@ -301,9 +301,7 @@ export function PoolsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Pools' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Pools' }]} />}
         />
       }
     >

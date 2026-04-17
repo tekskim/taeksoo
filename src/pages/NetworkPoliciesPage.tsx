@@ -302,11 +302,7 @@ export function NetworkPoliciesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Network policies' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Network Policies' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

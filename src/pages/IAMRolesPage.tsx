@@ -608,7 +608,7 @@ export default function IAMRolesPage() {
             showNavigation
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Roles' }]} />}
+            breadcrumb={<Breadcrumb items={[{ label: 'Roles' }]} />}
           />
         }
         contentClassName="pt-4 px-8 pb-6"

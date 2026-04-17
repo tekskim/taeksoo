@@ -196,13 +196,8 @@ export function EditPodDisruptionBudgetYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'PodDisruptionBudgets', href: '/container/podDisruptionBudgets' },
-                {
-                  label: pdbName || 'PodDisruptionBudget',
-                  href: `/container/podDisruptionBudgets/${pdbName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Pod Disruption Budgets', href: '/container/pdb' },
+                { label: 'Edit PDB' },
               ]}
             />
           }

@@ -729,13 +729,7 @@ export function JobDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Jobs', href: '/container/jobs' },
-                { label: job.name },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'Jobs', href: '/container/jobs' }, { label: job.name }]} />
           }
           actions={<ContainerTopBarActions />}
         />

@@ -259,11 +259,7 @@ export function ComputeAdminHomePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Home' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
       contentClassName="px-8 py-6"

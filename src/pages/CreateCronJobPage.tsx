@@ -1864,7 +1864,6 @@ export function CreateCronJobPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'CronJobs', href: '/container/cronjobs' },
                 { label: 'Create CronJob' },
               ]}

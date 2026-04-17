@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   PageShell,
@@ -336,6 +336,13 @@ export function ComputeAdminPortsPage() {
   const [editPortOpen, setEditPortOpen] = useState(false);
   const [selectedPortForDrawer, setSelectedPortForDrawer] = useState<Port | null>(null);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Drawer handlers
   const handleAttachInstance = (port: Port) => {
     setSelectedPortForDrawer(port);
@@ -659,11 +666,7 @@ export function ComputeAdminPortsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Ports' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Ports' }]} />}
         />
       }
     >
@@ -723,6 +726,7 @@ export function ComputeAdminPortsPage() {
           selectable
           selectedKeys={selectedPorts}
           onSelectionChange={setSelectedPorts}
+          loading={loading}
         />
       </VStack>
 

@@ -196,13 +196,8 @@ export function EditConfigMapYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'ConfigMaps', href: '/container/configMaps' },
-                {
-                  label: configMapName || 'ConfigMap',
-                  href: `/container/configMaps/${configMapName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'ConfigMaps', href: '/container/configmaps' },
+                { label: 'Edit ConfigMap' },
               ]}
             />
           }

@@ -934,7 +934,7 @@ export function AgentDetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb items={[{ label: 'Agent', href: '/agent/list' }, { label: agent.name }]} />
+            <Breadcrumb items={[{ label: 'Agents', href: '/agent/list' }, { label: agent.name }]} />
           }
           actions={
             <>

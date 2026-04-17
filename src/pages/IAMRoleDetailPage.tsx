@@ -496,7 +496,6 @@ export default function IAMRoleDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
     { label: 'Roles', href: '/iam/roles' },
     { label: role?.name || 'Role details' },
   ];

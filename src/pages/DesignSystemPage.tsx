@@ -10150,15 +10150,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                         onSidebarToggle={() => console.log('Toggle sidebar')}
                         onBack={() => console.log('Go back')}
                         onForward={() => console.log('Go forward')}
-                        breadcrumb={
-                          <Breadcrumb
-                            items={[
-                              { label: 'Home', onClick: () => {} },
-                              { label: 'Entry page', onClick: () => {} },
-                              { label: 'Settings' },
-                            ]}
-                          />
-                        }
+                        breadcrumb={<Breadcrumb items={[{ label: 'Design System' }]} />}
                         actions={<></>}
                       />
                     </div>
@@ -11097,7 +11089,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                       <Breadcrumb
                         items={[
-                          { label: 'Home', onClick: () => {} },
                           { label: 'Compute', onClick: () => {} },
                           { label: 'Instances', onClick: () => {} },
                           { label: 'web-large' },
@@ -11112,7 +11103,6 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                     <div className="p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                       <Breadcrumb
                         items={[
-                          { label: 'Home', onClick: () => {} },
                           { label: 'Instance snapshots', onClick: () => {} },
                           { label: 'Instance snapshots', onClick: () => {} },
                           { label: 'Instance snapshots', onClick: () => {} },

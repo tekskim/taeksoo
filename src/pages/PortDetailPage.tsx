@@ -583,11 +583,7 @@ export default function PortDetailPage() {
     }
   };
 
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Ports', href: '/compute/ports' },
-    { label: port.name },
-  ];
+  const breadcrumbItems = [{ label: 'Ports', href: '/compute/ports' }, { label: port.name }];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({

@@ -56,7 +56,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
           {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
+            label="Dashboard"
             href="/iam"
             active={isActive('/iam')}
           />

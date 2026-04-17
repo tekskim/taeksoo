@@ -719,9 +719,8 @@ export function CreateResourceQuotaPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Resource Quotas', href: '/container/resource-quotas' },
-                { label: 'Create resource quota' },
+                { label: 'Create Resource Quota' },
               ]}
             />
           }

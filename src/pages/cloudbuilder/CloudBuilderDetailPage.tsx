@@ -420,7 +420,6 @@ export function CloudBuilderDetailPage() {
   );
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/project' },
     { label: config.title, href: `/cloudbuilder/${slug}` },
     { label: row?.name ?? (row as any)?.serial ?? id },
   ];

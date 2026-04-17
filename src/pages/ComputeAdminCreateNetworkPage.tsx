@@ -372,9 +372,8 @@ export default function CreateNetworkPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Networks', href: '/compute-admin/networks' },
-                { label: 'Create network' },
+                { label: 'Create Network' },
               ]}
             />
           }

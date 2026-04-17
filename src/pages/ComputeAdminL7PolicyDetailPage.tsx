@@ -169,13 +169,9 @@ export default function L7PolicyDetailPage() {
   }, [l7Policy?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Load balancers', href: '/compute-admin/load-balancers' },
-    {
-      label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
-    },
-    { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
+    { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
+    { label: l7Policy.listener?.loadBalancer?.name || 'Unknown' },
+    { label: l7Policy.listener?.name || 'Unknown' },
     { label: l7Policy.name },
   ];
 

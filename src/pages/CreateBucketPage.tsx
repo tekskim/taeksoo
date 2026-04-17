@@ -1072,11 +1072,7 @@ export default function CreateBucketPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Storage', href: '/storage' },
-                { label: 'Buckets', href: '/storage/buckets' },
-                { label: 'Create Bucket' },
-              ]}
+              items={[{ label: 'Buckets', href: '/storage/buckets' }, { label: 'Create Bucket' }]}
             />
           }
         />

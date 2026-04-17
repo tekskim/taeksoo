@@ -445,7 +445,7 @@ export default function IAMPoliciesPage() {
   };
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Policies' }];
+  const breadcrumbItems = [{ label: 'Policies' }];
 
   return (
     <PageShell

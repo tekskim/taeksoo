@@ -282,11 +282,7 @@ export default function IAMSystemAdministratorsPage() {
           showNavigation
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'IAM', href: '/iam' }, { label: 'System administrators' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'System Administrators' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -249,6 +249,13 @@ export function VolumesPage() {
   const [attachInstanceOpen, setAttachInstanceOpen] = useState(false);
   const [detachInstanceOpen, setDetachInstanceOpen] = useState(false);
   const [selectedVolumeForDrawer, setSelectedVolumeForDrawer] = useState<Volume | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Helper to parse size string to number (e.g., '1500GiB' -> 1500)
   const parseSizeToNumber = (size: string): number => {
@@ -615,9 +622,7 @@ export function VolumesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volumes' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Volumes' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -692,6 +697,7 @@ export function VolumesPage() {
           selectable
           selectedKeys={selectedVolumes}
           onSelectionChange={setSelectedVolumes}
+          loading={loading}
         />
       </VStack>
 

@@ -88,7 +88,7 @@ export default function IAMLoginPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Login policies' }];
+  const breadcrumbItems = [{ label: 'Login Policies' }];
 
   // Handle reset to default for password policy
   const handleResetPasswordPolicy = () => {

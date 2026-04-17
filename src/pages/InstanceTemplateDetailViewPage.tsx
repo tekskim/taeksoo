@@ -166,8 +166,7 @@ export function InstanceTemplateDetailViewPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/compute' },
-                { label: 'Instance templates', href: '/compute/instance-templates' },
+                { label: 'Instance Templates', href: '/compute/instance-templates' },
                 { label: template.name },
               ]}
             />

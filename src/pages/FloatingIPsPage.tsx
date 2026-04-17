@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -260,6 +260,13 @@ export function FloatingIPsPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -500,11 +507,7 @@ export function FloatingIPsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Floating IPs' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Floating IPs' }]} />}
         />
       }
     >
@@ -577,6 +580,7 @@ export function FloatingIPsPage() {
           selectable
           selectedKeys={selectedFloatingIPs}
           onSelectionChange={setSelectedFloatingIPs}
+          loading={loading}
         />
       </VStack>
 

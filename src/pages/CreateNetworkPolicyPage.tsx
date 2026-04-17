@@ -1393,9 +1393,8 @@ export function CreateNetworkPolicyPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Network Policies', href: '/container/network-policies' },
-                { label: 'Create network policy' },
+                { label: 'Create Network Policy' },
               ]}
             />
           }

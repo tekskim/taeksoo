@@ -948,7 +948,6 @@ export function StatefulSetDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'StatefulSets', href: '/container/statefulsets' },
                 { label: statefulset.name },
               ]}

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -261,6 +261,13 @@ export function ComputeAdminFloatingIPsPage() {
   // Drawer states
   const [disassociateOpen, setDisassociateOpen] = useState(false);
   const [selectedFIPForDrawer, setSelectedFIPForDrawer] = useState<FloatingIP | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleDisassociate = (fip: FloatingIP) => {
@@ -533,14 +540,7 @@ export function ComputeAdminFloatingIPsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Floating IPs' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Floating IPs' }]} />}
         />
       }
     >
@@ -612,6 +612,7 @@ export function ComputeAdminFloatingIPsPage() {
           selectable
           selectedKeys={selectedFloatingIPs}
           onSelectionChange={setSelectedFloatingIPs}
+          loading={loading}
         />
       </VStack>
 

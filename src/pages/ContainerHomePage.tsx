@@ -260,7 +260,7 @@ export function ContainerHomePage() {
       topBar={
         <TopBar
           showSidebarToggle={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={<ContainerTopBarActions />}
         />
       }

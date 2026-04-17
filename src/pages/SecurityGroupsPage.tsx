@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -191,6 +191,13 @@ export function SecurityGroupsPage() {
   const [createRuleOpen, setCreateRuleOpen] = useState(false);
   const [editGroupOpen, setEditGroupOpen] = useState(false);
   const [selectedGroupForDrawer, setSelectedGroupForDrawer] = useState<SecurityGroup | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleCreateRule = (sg: SecurityGroup) => {
@@ -391,11 +398,7 @@ export function SecurityGroupsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Security groups' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }
     >
@@ -463,6 +466,7 @@ export function SecurityGroupsPage() {
           selectable
           selectedKeys={selectedGroups}
           onSelectionChange={setSelectedGroups}
+          loading={loading}
         />
       </VStack>
 

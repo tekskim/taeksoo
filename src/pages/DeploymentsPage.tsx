@@ -403,11 +403,7 @@ export function DeploymentsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Deployments' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Deployments' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

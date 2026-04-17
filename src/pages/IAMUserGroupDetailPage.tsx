@@ -587,8 +587,7 @@ export default function IAMUserGroupDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'User groups', href: '/iam/user-groups' },
+    { label: 'User Groups', href: '/iam/user-groups' },
     { label: userGroup?.name || groupName || '' },
   ];
 

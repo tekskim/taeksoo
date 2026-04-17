@@ -342,11 +342,7 @@ export default function FirewallDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/compute' },
-                { label: 'NACLs', href: '/compute/firewall' },
-                { label: firewall.name },
-              ]}
+              items={[{ label: 'NACL', href: '/compute/firewall' }, { label: firewall.name }]}
             />
           }
         />

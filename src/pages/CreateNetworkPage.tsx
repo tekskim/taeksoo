@@ -227,9 +227,8 @@ export default function CreateNetworkPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/compute' },
                 { label: 'Networks', href: '/compute/networks' },
-                { label: 'Create network' },
+                { label: 'Create Network' },
               ]}
             />
           }

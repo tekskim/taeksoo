@@ -170,11 +170,7 @@ export function NFSExportDetailPage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'NFS', href: '/storage/nfs' },
-                  { label: 'Not Found' },
-                ]}
+                items={[{ label: 'NFS', href: '/storage/nfs' }, { label: 'Not Found' }]}
               />
             }
           />
@@ -212,11 +208,7 @@ export function NFSExportDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Home', href: '/storage' },
-                { label: 'NFS', href: '/storage/nfs' },
-                { label: exportData.pseudo },
-              ]}
+              items={[{ label: 'NFS', href: '/storage/nfs' }, { label: exportData.pseudo }]}
             />
           }
         />

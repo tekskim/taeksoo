@@ -449,9 +449,7 @@ export default function IAMEventLogsPage() {
           showNavigation
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Event logs' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Event Logs' }]} />}
         />
       }
     >

@@ -367,14 +367,7 @@ export function PersistentVolumesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volumes' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Persistent Volumes' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

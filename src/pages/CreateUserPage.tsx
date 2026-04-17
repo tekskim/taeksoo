@@ -1224,11 +1224,7 @@ export default function CreateUserPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Users', href: '/iam/users' },
-                { label: 'Create user' },
-              ]}
+              items={[{ label: 'Users', href: '/iam/users' }, { label: 'Create User' }]}
             />
           }
         />

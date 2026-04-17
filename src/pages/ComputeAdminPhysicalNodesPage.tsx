@@ -658,10 +658,7 @@ export default function ComputeAdminPhysicalNodesPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Physical Nodes' },
-  ];
+  const breadcrumbItems = [{ label: 'Physical Nodes' }];
 
   const timeRangeOptions = [
     { label: '1h', value: '1h' as TimeRangeValue },

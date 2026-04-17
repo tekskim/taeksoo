@@ -256,9 +256,8 @@ export function EditServiceYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Services', href: '/container/services' },
-                { label: serviceName || 'Edit service' },
+                { label: 'Edit Service' },
               ]}
             />
           }

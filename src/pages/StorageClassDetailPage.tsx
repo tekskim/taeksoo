@@ -239,8 +239,7 @@ export function StorageClassDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Storage classes', href: '/container/storage-classes' },
+                { label: 'Storage Classes', href: '/container/storage-classes' },
                 { label: scData.name },
               ]}
             />

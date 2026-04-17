@@ -519,8 +519,7 @@ export function LoadBalancerDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/' },
-                { label: 'Load balancers', href: '/compute/load-balancers' },
+                { label: 'Load Balancers', href: '/compute/load-balancers' },
                 { label: loadBalancer.name },
               ]}
             />

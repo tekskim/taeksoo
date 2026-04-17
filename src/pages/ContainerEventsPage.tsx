@@ -394,11 +394,7 @@ export function ContainerEventsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Events' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Events' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

@@ -56,7 +56,7 @@ export default function IAMSessionPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Session policies' }];
+  const breadcrumbItems = [{ label: 'Session Policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {

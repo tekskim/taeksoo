@@ -187,9 +187,8 @@ export function CreateNetworkPolicyYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'NetworkPolicys', href: '/container/networkPolicys' },
-                { label: 'Create NetworkPolicy' },
+                { label: 'Network Policies', href: '/container/network-policies' },
+                { label: 'Create Network Policy' },
               ]}
             />
           }

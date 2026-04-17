@@ -339,14 +339,7 @@ export function PodDisruptionBudgetsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pod disruption budgets' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Pod Disruption Budgets' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

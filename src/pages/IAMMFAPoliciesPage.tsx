@@ -66,7 +66,7 @@ export default function IAMMFAPoliciesPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'MFA policies' }];
+  const breadcrumbItems = [{ label: 'MFA Policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {

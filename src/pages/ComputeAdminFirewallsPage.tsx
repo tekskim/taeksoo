@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
@@ -182,6 +182,13 @@ export default function ComputeAdminFirewallsPage() {
   const [selectedRules, setSelectedRules] = useState<string[]>([]);
   const rulesPerPage = 10;
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
@@ -192,10 +199,7 @@ export default function ComputeAdminFirewallsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Firewalls' },
-  ];
+  const breadcrumbItems = [{ label: 'NACL' }];
 
   // Filtered firewalls
   const filteredFirewalls = useMemo(() => {
@@ -840,6 +844,7 @@ export default function ComputeAdminFirewallsPage() {
                 selectable
                 selectedKeys={selectedFirewalls}
                 onSelectionChange={setSelectedFirewalls}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -896,6 +901,7 @@ export default function ComputeAdminFirewallsPage() {
                 selectable
                 selectedKeys={selectedPolicies}
                 onSelectionChange={setSelectedPolicies}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -952,6 +958,7 @@ export default function ComputeAdminFirewallsPage() {
                 selectable
                 selectedKeys={selectedRules}
                 onSelectionChange={setSelectedRules}
+                loading={loading}
               />
             </VStack>
           </TabPanel>

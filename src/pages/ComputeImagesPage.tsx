@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -255,6 +255,13 @@ export function ComputeImagesPage() {
   const [createVolumeOpen, setCreateVolumeOpen] = useState(false);
   const [editImageOpen, setEditImageOpen] = useState(false);
   const [selectedImageForDrawer, setSelectedImageForDrawer] = useState<Image | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Helper to parse size string to number
   const parseSizeToNumber = (size: string): number => {
@@ -523,9 +530,7 @@ export function ComputeImagesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Images' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
     >
@@ -604,6 +609,7 @@ export function ComputeImagesPage() {
           selectable
           selectedKeys={selectedImages}
           onSelectionChange={setSelectedImages}
+          loading={loading}
         />
       </VStack>
 

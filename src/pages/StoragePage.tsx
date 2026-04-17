@@ -362,9 +362,7 @@ export function StoragePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Data Sources' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Data Sources' }]} />}
           actions={
             <>
               <TopBarAction

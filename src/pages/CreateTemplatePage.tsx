@@ -3247,9 +3247,8 @@ export function CreateTemplatePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instance templates', href: '/compute/instance-templates' },
-                { label: 'Create template' },
+                { label: 'Instance Templates', href: '/compute/instance-templates' },
+                { label: 'Create Template' },
               ]}
             />
           }

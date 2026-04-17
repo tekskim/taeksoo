@@ -308,11 +308,7 @@ export function ContainerNamespacesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Namespaces' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Namespaces' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

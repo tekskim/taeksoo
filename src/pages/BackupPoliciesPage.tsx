@@ -142,6 +142,13 @@ export function BackupPoliciesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     updateActiveTabLabel('Backup Policies');
   }, [updateActiveTabLabel]);
@@ -282,11 +289,7 @@ export function BackupPoliciesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Backup Policies' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Backup Policies' }]} />}
         />
       }
     >
@@ -354,6 +357,7 @@ export function BackupPoliciesPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           emptyMessage="No backup policies found"
+          loading={loading}
         />
       </VStack>
     </PageShell>

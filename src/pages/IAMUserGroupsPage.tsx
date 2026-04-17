@@ -344,9 +344,7 @@ export function IAMUserGroupsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'User groups' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'User Groups' }]} />}
         />
       }
     >

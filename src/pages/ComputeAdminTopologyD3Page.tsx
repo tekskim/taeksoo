@@ -3055,11 +3055,7 @@ export function ComputeAdminTopologyD3Page() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Topology' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Topology' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6 flex flex-col"

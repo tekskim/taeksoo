@@ -386,10 +386,8 @@ export function InstanceTemplateDetailPage() {
   }));
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/compute' },
-    { label: 'Instance templates', href: '/compute/instance-templates' },
-    { label: formData.name, href: `/compute/instance-templates/${id}` },
-    { label: 'Edit' },
+    { label: 'Instance Templates', href: '/compute/instance-templates' },
+    { label: formData.name },
   ];
 
   const handleCancel = () => {

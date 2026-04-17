@@ -523,9 +523,8 @@ export default function CreateVirtualAdapterPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/compute' },
                 { label: 'Ports', href: '/compute/ports' },
-                { label: 'Create virtual adapter' },
+                { label: 'Create Virtual Adapter' },
               ]}
             />
           }

@@ -468,11 +468,7 @@ export function PhysicalDisksPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Home', href: '/storage' }, { label: 'Physical disks' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Physical disks' }]} />}
         />
       }
     >

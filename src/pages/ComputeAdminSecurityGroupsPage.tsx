@@ -416,14 +416,7 @@ export function ComputeAdminSecurityGroupsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Security groups' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }
     >

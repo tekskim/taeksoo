@@ -260,7 +260,6 @@ export function ConfigMapDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'ConfigMaps', href: '/container/configmaps' },
                 { label: configMapData.name },
               ]}

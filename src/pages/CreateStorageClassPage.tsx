@@ -573,9 +573,8 @@ export function CreateStorageClassPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Storage Classes', href: '/container/storage-classes' },
-                { label: 'Create storage class' },
+                { label: 'Create Storage Class' },
               ]}
             />
           }

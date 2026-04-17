@@ -196,13 +196,8 @@ export function EditDaemonSetYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'DaemonSets', href: '/container/daemonsets' },
-                {
-                  label: daemonSetName || 'DaemonSet',
-                  href: `/container/daemonsets/${daemonSetName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Edit DaemonSet' },
               ]}
             />
           }

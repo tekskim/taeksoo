@@ -3050,9 +3050,7 @@ export function TopologyD3Page() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Topology' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Topology' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6 flex flex-col"

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -243,6 +243,13 @@ export function ComputeAdminCertificatesPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -439,14 +446,7 @@ export function ComputeAdminCertificatesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Certificates' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Certificates' }]} />}
         />
       }
     >
@@ -515,6 +515,7 @@ export function ComputeAdminCertificatesPage() {
           selectable
           selectedKeys={selectedCerts}
           onSelectionChange={setSelectedCerts}
+          loading={loading}
         />
       </VStack>
 

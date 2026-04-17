@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -207,6 +207,13 @@ export function ComputeAdminServerGroupsPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -439,14 +446,7 @@ export function ComputeAdminServerGroupsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Server Groups' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Server Groups' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -509,6 +509,7 @@ export function ComputeAdminServerGroupsPage() {
           selectable
           selectedKeys={selectedServerGroups}
           onSelectionChange={setSelectedServerGroups}
+          loading={loading}
         />
       </VStack>
 

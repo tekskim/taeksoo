@@ -358,9 +358,7 @@ export function BucketsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Buckets' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Buckets' }]} />}
         />
       }
     >

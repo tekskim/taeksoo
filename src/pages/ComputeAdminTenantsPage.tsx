@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
@@ -68,6 +68,14 @@ export default function ComputeAdminTenantsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTenants, setSelectedTenants] = useState<string[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const tenantsPerPage = 10;
 
   // Global tab management
@@ -79,10 +87,7 @@ export default function ComputeAdminTenantsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Tenants' },
-  ];
+  const breadcrumbItems = [{ label: 'Tenants' }];
 
   // Filtered tenants
   const filteredTenants = useMemo(() => {
@@ -275,6 +280,7 @@ export default function ComputeAdminTenantsPage() {
           selectable
           selectedKeys={selectedTenants}
           onSelectionChange={setSelectedTenants}
+          loading={loading}
         />
       </VStack>
     </PageShell>

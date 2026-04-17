@@ -351,11 +351,7 @@ export function StatefulSetsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'StatefulSets' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'StatefulSets' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

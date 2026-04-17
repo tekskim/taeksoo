@@ -400,11 +400,7 @@ export function ContainerNodesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Nodes' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Nodes' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

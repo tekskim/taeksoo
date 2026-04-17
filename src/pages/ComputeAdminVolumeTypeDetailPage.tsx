@@ -202,8 +202,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Volume types', href: '/compute-admin/volume-types' },
+    { label: 'Volume Types', href: '/compute-admin/volume-types' },
     { label: volumeType.name },
   ];
 

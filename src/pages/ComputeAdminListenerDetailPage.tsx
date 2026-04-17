@@ -297,12 +297,8 @@ export default function ListenerDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Load balancers', href: '/compute-admin/load-balancers' },
-    {
-      label: listener.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${listener.loadBalancer?.id}`,
-    },
+    { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
+    { label: listener.loadBalancer?.name || 'Unknown' },
     { label: listener.name },
   ];
 

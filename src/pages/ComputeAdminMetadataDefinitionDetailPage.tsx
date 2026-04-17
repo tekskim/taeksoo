@@ -159,7 +159,6 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Metadata Definitions', href: '/compute-admin/metadata-definition' },
                 { label: metadata.displayName },
               ]}

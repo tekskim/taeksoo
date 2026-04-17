@@ -508,8 +508,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/' },
-                { label: 'Load balancers', href: '/compute-admin/load-balancers' },
+                { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
                 { label: loadBalancer.name },
               ]}
             />

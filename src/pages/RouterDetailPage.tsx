@@ -357,11 +357,7 @@ export default function RouterDetailPage() {
     }
   }, [router.name, updateActiveTabLabel]);
 
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Routers', href: '/compute/routers' },
-    { label: router.name },
-  ];
+  const breadcrumbItems = [{ label: 'Routers', href: '/compute/routers' }, { label: router.name }];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({

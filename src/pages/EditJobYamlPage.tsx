@@ -195,12 +195,7 @@ export function EditJobYamlPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Jobs', href: '/container/jobs' },
-                { label: jobName || 'Job', href: `/container/jobs/${jobName}` },
-                { label: 'Edit YAML' },
-              ]}
+              items={[{ label: 'Jobs', href: '/container/jobs' }, { label: 'Edit Job' }]}
             />
           }
           actions={<ContainerTopBarActions />}

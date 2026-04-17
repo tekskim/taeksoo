@@ -173,11 +173,7 @@ export function ConsolePage() {
           onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/compute' },
-                { label: 'Instances', href: '/compute/instances' },
-                { label: instanceName },
-              ]}
+              items={[{ label: 'Instances', href: '/compute/instances' }, { label: instanceName }]}
             />
           }
         />

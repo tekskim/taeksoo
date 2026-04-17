@@ -393,12 +393,7 @@ export default function CatalogInstallPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog', href: '/container/catalog' },
-                { label: `Install ${appName}` },
-              ]}
+              items={[{ label: 'Catalog', href: '/container/catalog' }, { label: 'Install' }]}
             />
           }
           actions={<ContainerTopBarActions />}

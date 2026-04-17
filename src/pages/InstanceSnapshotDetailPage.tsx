@@ -196,8 +196,7 @@ export function InstanceSnapshotDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Instance snapshots', href: '/compute/instance-snapshots' },
+    { label: 'Instance Snapshots', href: '/compute/instance-snapshots' },
     { label: snapshot.name },
   ];
 

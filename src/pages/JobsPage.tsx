@@ -381,9 +381,7 @@ export function JobsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Jobs' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Jobs' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

@@ -196,13 +196,8 @@ export function EditStatefulSetYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'StatefulSets', href: '/container/statefulsets' },
-                {
-                  label: statefulSetName || 'StatefulSet',
-                  href: `/container/statefulsets/${statefulSetName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Edit StatefulSet' },
               ]}
             />
           }

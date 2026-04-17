@@ -881,11 +881,7 @@ export function NodeDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Nodes', href: '/container/nodes' },
-                { label: node.name },
-              ]}
+              items={[{ label: 'Nodes', href: '/container/nodes' }, { label: node.name }]}
             />
           }
           actions={<ContainerTopBarActions />}

@@ -494,11 +494,7 @@ export default function PortDetailPage() {
     }
   };
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Ports', href: '/compute-admin/ports' },
-    { label: port.name },
-  ];
+  const breadcrumbItems = [{ label: 'Ports', href: '/compute-admin/ports' }, { label: port.name }];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({

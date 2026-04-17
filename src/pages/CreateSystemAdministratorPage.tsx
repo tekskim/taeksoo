@@ -1180,9 +1180,8 @@ export default function CreateSystemAdministratorPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'System administrators', href: '/iam/system-administrators' },
-                { label: 'Create account' },
+                { label: 'System Administrators', href: '/iam/system-administrators' },
+                { label: 'Create System Administrator' },
               ]}
             />
           }

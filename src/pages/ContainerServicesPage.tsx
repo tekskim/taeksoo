@@ -455,11 +455,7 @@ export function ContainerServicesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Services' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Services' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {

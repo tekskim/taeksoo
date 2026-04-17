@@ -196,13 +196,8 @@ export function EditNetworkPolicyYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'NetworkPolicys', href: '/container/networkPolicys' },
-                {
-                  label: networkPolicyName || 'NetworkPolicy',
-                  href: `/container/networkPolicys/${networkPolicyName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Network Policies', href: '/container/network-policies' },
+                { label: 'Edit Network Policy' },
               ]}
             />
           }

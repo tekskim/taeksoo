@@ -183,7 +183,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
               {/* Compute Admin Sidebar Menu */}
               <MenuItem
                 icon={<IconHome size={16} stroke={1.5} />}
-                label="Home"
+                label="Dashboard"
                 href="/compute-admin"
                 active={isActive('/compute-admin')}
               />
@@ -340,7 +340,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
               {/* Home */}
               <MenuItem
                 icon={<IconHome size={16} stroke={1.5} />}
-                label="Home"
+                label="Dashboard"
                 href={basePath}
                 active={isActive(basePath)}
               />

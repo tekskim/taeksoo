@@ -187,9 +187,8 @@ export function CreateResourceQuotaYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'ResourceQuotas', href: '/container/resourceQuotas' },
-                { label: 'Create ResourceQuota' },
+                { label: 'Resource Quotas', href: '/container/resource-quotas' },
+                { label: 'Create Resource Quota' },
               ]}
             />
           }

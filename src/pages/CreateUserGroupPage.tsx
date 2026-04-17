@@ -979,9 +979,8 @@ export default function CreateUserGroupPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'User groups', href: '/iam/user-groups' },
-                { label: 'Create user group' },
+                { label: 'User Groups', href: '/iam/user-groups' },
+                { label: 'Create User Group' },
               ]}
             />
           }

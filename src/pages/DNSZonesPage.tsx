@@ -165,6 +165,13 @@ export function DNSZonesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     updateActiveTabLabel('DNS Zones');
   }, [updateActiveTabLabel]);
@@ -297,9 +304,7 @@ export function DNSZonesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/compute' }, { label: 'DNS Zones' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'DNS Zones' }]} />}
         />
       }
     >
@@ -367,6 +372,7 @@ export function DNSZonesPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           emptyMessage="No DNS zones found"
+          loading={loading}
         />
       </VStack>
     </PageShell>

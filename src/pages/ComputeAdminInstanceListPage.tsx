@@ -76,6 +76,7 @@ interface Instance {
   floatingIp: string;
   image: string;
   flavor: string;
+  flavorId: string;
   vcpu: number;
   ram: string;
   disk: string;
@@ -91,6 +92,7 @@ interface BareMetalInstance {
   ip: string;
   image: string;
   flavor: string;
+  flavorId: string;
   cpu: number;
   ram: string;
   disk: string;
@@ -115,6 +117,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.50',
     image: 'CentOS 7',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -133,6 +136,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.51',
     image: 'CentOS 7',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -151,6 +155,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.10',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '16GB',
     disk: '200GB',
@@ -169,6 +174,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'CentOS 8',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '64GB',
     disk: '500GB',
@@ -187,6 +193,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.60',
     image: 'Ubuntu 22.04',
     flavor: 'GPU Large',
+    flavorId: 'flavor-gpu-large-001',
     vcpu: 32,
     ram: '128GB',
     disk: '1TB',
@@ -205,6 +212,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.61',
     image: 'Ubuntu 22.04',
     flavor: 'GPU Large',
+    flavorId: 'flavor-gpu-large-001',
     vcpu: 32,
     ram: '128GB',
     disk: '1TB',
@@ -223,6 +231,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Rocky Linux 9',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -241,6 +250,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Rocky Linux 9',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -259,6 +269,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '32GB',
     disk: '500GB',
@@ -277,6 +288,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.90',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '100GB',
@@ -295,6 +307,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.100',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -313,6 +326,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.101',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -331,6 +345,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'CentOS 8',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -349,6 +364,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '64GB',
     disk: '2TB',
@@ -367,6 +383,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.130',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '16GB',
     disk: '200GB',
@@ -385,6 +402,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -403,6 +421,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '8GB',
     disk: '100GB',
@@ -421,6 +440,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.140',
     image: 'CentOS 8',
     flavor: 'XLarge',
+    flavorId: 'flavor-xlarge-001',
     vcpu: 16,
     ram: '32GB',
     disk: '1TB',
@@ -439,6 +459,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Rocky Linux 9',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '16GB',
     disk: '500GB',
@@ -457,6 +478,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '50GB',
@@ -475,6 +497,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '50GB',
@@ -493,6 +516,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Debian 12',
     flavor: 'Medium',
+    flavorId: 'flavor-medium-001',
     vcpu: 4,
     ram: '16GB',
     disk: '50GB',
@@ -511,6 +535,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -529,6 +554,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -547,6 +573,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Large',
+    flavorId: 'flavor-large-001',
     vcpu: 8,
     ram: '32GB',
     disk: '500GB',
@@ -565,6 +592,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.180',
     image: 'Ubuntu 22.04',
     flavor: 'GPU XLarge',
+    flavorId: 'flavor-gpu-xlarge-001',
     vcpu: 64,
     ram: '256GB',
     disk: '2TB',
@@ -583,6 +611,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.181',
     image: 'Ubuntu 22.04',
     flavor: 'GPU Large',
+    flavorId: 'flavor-gpu-large-001',
     vcpu: 32,
     ram: '128GB',
     disk: '1TB',
@@ -601,6 +630,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.190',
     image: 'Rocky Linux 9',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -619,6 +649,7 @@ const mockInstances: Instance[] = [
     floatingIp: '20.30.40.200',
     image: 'CentOS 8',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -637,6 +668,7 @@ const mockInstances: Instance[] = [
     floatingIp: '-',
     image: 'Ubuntu 22.04',
     flavor: 'Small',
+    flavorId: 'flavor-small-001',
     vcpu: 2,
     ram: '4GB',
     disk: '50GB',
@@ -653,6 +685,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.30',
     image: 'BM image',
     flavor: 'BM flavor',
+    flavorId: 'flavor-bm-flavor-001',
     cpu: 8,
     ram: '16GiB',
     disk: '10GiB',
@@ -666,6 +699,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.31',
     image: 'BM image',
     flavor: 'BM flavor',
+    flavorId: 'flavor-bm-flavor-001',
     cpu: 8,
     ram: '16GiB',
     disk: '10GiB',
@@ -679,6 +713,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.40',
     image: 'BM image',
     flavor: 'BM large',
+    flavorId: 'flavor-bm-large-001',
     cpu: 16,
     ram: '64GiB',
     disk: '500GiB',
@@ -692,6 +727,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.41',
     image: 'BM image',
     flavor: 'BM large',
+    flavorId: 'flavor-bm-large-001',
     cpu: 16,
     ram: '64GiB',
     disk: '500GiB',
@@ -705,6 +741,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.50',
     image: 'BM GPU',
     flavor: 'BM GPU',
+    flavorId: 'flavor-bm-gpu-001',
     cpu: 32,
     ram: '128GiB',
     disk: '1TiB',
@@ -718,6 +755,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.51',
     image: 'BM GPU',
     flavor: 'BM GPU',
+    flavorId: 'flavor-bm-gpu-001',
     cpu: 32,
     ram: '128GiB',
     disk: '1TiB',
@@ -731,6 +769,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '—',
     image: 'BM image',
     flavor: 'BM xlarge',
+    flavorId: 'flavor-bm-xlarge-001',
     cpu: 64,
     ram: '256GiB',
     disk: '2TiB',
@@ -744,6 +783,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '—',
     image: 'BM image',
     flavor: 'BM xlarge',
+    flavorId: 'flavor-bm-xlarge-001',
     cpu: 64,
     ram: '256GiB',
     disk: '2TiB',
@@ -757,6 +797,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.60',
     image: 'BM storage',
     flavor: 'BM storage',
+    flavorId: 'flavor-bm-storage-001',
     cpu: 8,
     ram: '32GiB',
     disk: '10TiB',
@@ -770,6 +811,7 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ip: '10.62.0.61',
     image: 'BM storage',
     flavor: 'BM storage',
+    flavorId: 'flavor-bm-storage-001',
     cpu: 8,
     ram: '32GiB',
     disk: '10TiB',
@@ -811,6 +853,8 @@ const filterFields: FilterField[] = [
       { value: 'stopped', label: 'Stopped' },
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'verify_resize', label: 'Verify Resize' },
     ],
   },
   {
@@ -903,6 +947,13 @@ export function ComputeAdminInstanceListPage() {
   // Table selection state
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Shell Panel state (using hook for multi-tab support)
   const shellPanel = useShellPanel();
@@ -1234,17 +1285,17 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/flavors/${row.id}`}
+            to={`/compute-admin/flavors/${row.flavorId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
           </Link>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-            <span className="truncate" title={row.id}>
-              ID : {row.id.slice(0, 8)}
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
             </span>
-            <InlineCopyId value={row.id} />
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -1403,17 +1454,17 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/flavors/${row.id}`}
+            to={`/compute-admin/flavors/${row.flavorId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.flavor}
           </Link>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-            <span className="truncate" title={row.id}>
-              ID : {row.id.slice(0, 8)}
+            <span className="truncate" title={row.flavorId}>
+              ID : {row.flavorId.slice(0, 8)}
             </span>
-            <InlineCopyId value={row.id} />
+            <InlineCopyId value={row.flavorId} />
           </span>
         </div>
       ),
@@ -1506,14 +1557,7 @@ export function ComputeAdminInstanceListPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instances list' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Instances' }]} />}
         />
       }
       bottomPanel={
@@ -1659,6 +1703,7 @@ export function ComputeAdminInstanceListPage() {
             selectable
             selectedKeys={selectedInstances}
             onSelectionChange={setSelectedInstances}
+            loading={loading}
           />
         )}
 
@@ -1672,6 +1717,7 @@ export function ComputeAdminInstanceListPage() {
             selectable
             selectedKeys={selectedBareMetalInstances}
             onSelectionChange={setSelectedBareMetalInstances}
+            loading={loading}
           />
         )}
       </VStack>

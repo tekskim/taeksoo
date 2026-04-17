@@ -212,9 +212,8 @@ export default function CreateFirewallRulePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/compute' },
                 { label: 'NACL', href: '/compute/firewall' },
-                { label: 'Create NACL rule' },
+                { label: 'Create Firewall Rule' },
               ]}
             />
           }

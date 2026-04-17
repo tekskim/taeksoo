@@ -270,7 +270,7 @@ export function IAMHomePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'IAM' }, { label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={
             <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
               <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
