@@ -167,9 +167,7 @@ export function FileSystemsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'File Systems' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'File Systems' }]} />}
         />
       }
     >
@@ -246,6 +244,7 @@ export function FileSystemsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No file systems found"
         />
       </VStack>
     </PageShell>

@@ -1410,11 +1410,7 @@ export default function HostDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Hosts', href: '/storage/hosts' },
-                { label: host.hostname },
-              ]}
+              items={[{ label: 'Hosts', href: '/storage/hosts' }, { label: host.hostname }]}
             />
           }
         />

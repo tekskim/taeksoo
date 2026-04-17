@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -181,6 +181,13 @@ export function ComputeAdminVolumeTypesPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultVolumeTypeColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -523,14 +530,7 @@ export function ComputeAdminVolumeTypesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Volume types' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Volume Types' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -613,6 +613,7 @@ export function ComputeAdminVolumeTypesPage() {
               selectable
               selectedKeys={selectedVolumeTypes}
               onSelectionChange={setSelectedVolumeTypes}
+              loading={loading}
             />
           </VStack>
         )}
@@ -675,6 +676,7 @@ export function ComputeAdminVolumeTypesPage() {
               selectable
               selectedKeys={selectedQoSSpecs}
               onSelectionChange={setSelectedQoSSpecs}
+              loading={loading}
             />
           </VStack>
         )}

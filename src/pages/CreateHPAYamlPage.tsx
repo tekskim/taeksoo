@@ -221,11 +221,7 @@ export function CreateHPAYamlPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
-                { label: 'Create HPA' },
-              ]}
+              items={[{ label: 'HPA', href: '/container/hpa' }, { label: 'Create HPA' }]}
             />
           }
           actions={<ContainerTopBarActions />}

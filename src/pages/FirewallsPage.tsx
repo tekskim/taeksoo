@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
@@ -183,6 +183,13 @@ export default function FirewallsPage() {
   const [selectedRules, setSelectedRules] = useState<string[]>([]);
   const rulesPerPage = 10;
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
   const navigate = useNavigate();
@@ -193,7 +200,7 @@ export default function FirewallsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [{ label: 'Proj-1', href: '/compute' }, { label: 'NACLs' }];
+  const breadcrumbItems = [{ label: 'NACLs' }];
 
   // Filtered firewalls
   const filteredFirewalls = useMemo(() => {
@@ -766,6 +773,7 @@ export default function FirewallsPage() {
                 selectable
                 selectedKeys={selectedFirewalls}
                 onSelectionChange={setSelectedFirewalls}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -822,6 +830,7 @@ export default function FirewallsPage() {
                 selectable
                 selectedKeys={selectedPolicies}
                 onSelectionChange={setSelectedPolicies}
+                loading={loading}
               />
             </VStack>
           </TabPanel>
@@ -878,6 +887,7 @@ export default function FirewallsPage() {
                 selectable
                 selectedKeys={selectedRules}
                 onSelectionChange={setSelectedRules}
+                loading={loading}
               />
             </VStack>
           </TabPanel>

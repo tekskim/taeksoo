@@ -359,9 +359,7 @@ export function BucketsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Buckets' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Buckets' }]} />}
         />
       }
     >
@@ -382,7 +380,7 @@ export function BucketsPage() {
             <ListToolbar.Actions>
               <div className="w-[var(--search-input-width)]">
                 <SearchInput
-                  placeholder="Search users by attributes"
+                  placeholder="Search buckets by attributes"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClear={() => setSearchQuery('')}
@@ -439,6 +437,7 @@ export function BucketsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No buckets found"
         />
       </VStack>
     </PageShell>

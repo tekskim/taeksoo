@@ -195,12 +195,7 @@ export function EditPodYamlPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pods', href: '/container/pods' },
-                { label: podName || 'Pod', href: `/container/pods/${podName}` },
-                { label: 'Edit YAML' },
-              ]}
+              items={[{ label: 'Pods', href: '/container/pods' }, { label: 'Edit Pod' }]}
             />
           }
           actions={<ContainerTopBarActions />}

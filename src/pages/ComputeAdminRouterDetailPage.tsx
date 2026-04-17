@@ -344,7 +344,6 @@ export default function RouterDetailPage() {
   }, [router.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Routers', href: '/compute-admin/routers' },
     { label: router.name },
   ];

@@ -188,9 +188,8 @@ export function CreateNamespaceYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
-                { label: 'Create namespace' },
+                { label: 'Create Namespace' },
               ]}
             />
           }

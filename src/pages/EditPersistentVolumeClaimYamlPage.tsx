@@ -196,13 +196,8 @@ export function EditPersistentVolumeClaimYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'PersistentVolumeClaims', href: '/container/persistentVolumeClaims' },
-                {
-                  label: pvcName || 'PersistentVolumeClaim',
-                  href: `/container/persistentVolumeClaims/${pvcName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Persistent Volume Claims', href: '/container/persistent-volume-claims' },
+                { label: 'Edit PVC' },
               ]}
             />
           }

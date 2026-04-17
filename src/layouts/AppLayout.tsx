@@ -90,11 +90,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Proj-1', href: '/project' }, { label: currentLabel }]}
-              />
-            }
+            breadcrumb={<Breadcrumb items={[{ label: currentLabel }]} />}
           />
         </div>
 

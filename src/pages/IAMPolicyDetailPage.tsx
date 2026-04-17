@@ -18,6 +18,7 @@ import {
   ContextMenu,
   DetailHeader,
   PageShell,
+  ErrorState,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -470,7 +471,6 @@ export default function IAMPolicyDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
     { label: 'Policies', href: '/iam/policies' },
     { label: policy?.name || policyId || '' },
   ];
@@ -596,21 +596,20 @@ export default function IAMPolicyDetailPage() {
             showNavigation
             onBack={() => navigate(-1)}
             onForward={() => navigate(1)}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'IAM', href: '/iam' },
-                  { label: 'Policies', href: '/iam/policies' },
-                ]}
-              />
-            }
+            breadcrumb={<Breadcrumb items={[{ label: 'Policies', href: '/iam/policies' }]} />}
           />
         }
         contentClassName="pt-4 px-8 pb-6"
       >
-        <div className="flex-1 flex items-center justify-center">
-          <p className="text-[var(--color-text-muted)]">Policy not found</p>
-        </div>
+        <ErrorState
+          title="Policy not found"
+          description="The requested policy could not be found."
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/iam/policies')}>
+              Back to policies
+            </Button>
+          }
+        />
       </PageShell>
     );
   }

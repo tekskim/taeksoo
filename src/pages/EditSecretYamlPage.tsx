@@ -195,12 +195,7 @@ export function EditSecretYamlPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Secrets', href: '/container/secrets' },
-                { label: secretName || 'Secret', href: `/container/secrets/${secretName}` },
-                { label: 'Edit YAML' },
-              ]}
+              items={[{ label: 'Secrets', href: '/container/secrets' }, { label: 'Edit Secret' }]}
             />
           }
           actions={<ContainerTopBarActions />}

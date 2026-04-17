@@ -162,6 +162,12 @@ export function DeploymentsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -404,11 +410,7 @@ export function DeploymentsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Deployments' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Deployments' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -527,11 +529,13 @@ export function DeploymentsPage() {
         {/* Table */}
         <Table<DeploymentRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No deployments found"
         />
       </VStack>
     </PageShell>

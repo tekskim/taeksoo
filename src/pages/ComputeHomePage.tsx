@@ -87,16 +87,27 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
 interface SummaryStatBoxProps {
   value: number;
   label: string;
+  onClick?: () => void;
 }
 
-function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
+function SummaryStatBox({ value, label, onClick }: SummaryStatBoxProps) {
   const textColor =
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
-  const isClickable = label !== 'Others';
+  const isClickable = !!onClick;
 
   return (
     <div
       className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
+      onClick={onClick}
+      role={isClickable ? 'button' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={
+        isClickable
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') onClick?.();
+            }
+          : undefined
+      }
     >
       <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
@@ -199,29 +210,44 @@ export function ComputeHomePage() {
 
   const projectId = '7284d9174e81431e93060a9bbcf2cdfd';
 
+  const resourceTypeRouteMap: Record<string, string> = {
+    Instance: '/compute/instances',
+    Volume: '/compute/volumes',
+    Network: '/compute/networks',
+    Router: '/compute/routers',
+    'Floating IP': '/compute/floating-ips',
+    'Security Group': '/compute/security-groups',
+    'Load Balancer': '/compute/load-balancers',
+    Image: '/compute/images',
+    'Key Pair': '/compute/key-pairs',
+  };
+
   const recentActivityColumns: TableColumn<RecentActivity>[] = [
     {
       key: 'target',
       label: 'Target',
       flex: 1,
       minWidth: 140,
-      render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to="/compute/instances"
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.resourceType}
-          </Link>
-          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-            <span className="truncate" title={row.resourceId}>
-              ID : {row.resourceId.slice(0, 8)}
+      render: (_, row) => {
+        const basePath = resourceTypeRouteMap[row.resourceType] || '/compute/instances';
+        return (
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <Link
+              to={`${basePath}/${row.resourceId}`}
+              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {row.resourceType}
+            </Link>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.resourceId}>
+                ID : {row.resourceId.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.resourceId} />
             </span>
-            <InlineCopyId value={row.resourceId} />
-          </span>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
     {
       key: 'action',
@@ -242,41 +268,41 @@ export function ComputeHomePage() {
       id: '1',
       target: '',
       resourceType: 'Instance',
-      resourceId: '12345678',
-      action: 'Create',
-      requestedTime: 'Mar 18, 2026 09:42',
+      resourceId: '7284d9174e81431e',
+      action: 'Reboot',
+      requestedTime: 'Apr 15, 2026 09:42',
     },
     {
       id: '2',
       target: '',
-      resourceType: 'Instance',
-      resourceId: '23456789',
-      action: 'Create',
-      requestedTime: 'Mar 17, 2026 15:30',
+      resourceType: 'Volume',
+      resourceId: 'a3f1e8b204c647d8',
+      action: 'Extend (100 → 200 GiB)',
+      requestedTime: 'Apr 15, 2026 08:15',
     },
     {
       id: '3',
       target: '',
-      resourceType: 'Instance',
-      resourceId: '34567890',
-      action: 'Create',
-      requestedTime: 'Mar 16, 2026 11:15',
+      resourceType: 'Security Group',
+      resourceId: 'sg92c4d1e7f8a3b5',
+      action: 'Add Rule (TCP/443)',
+      requestedTime: 'Apr 14, 2026 17:30',
     },
     {
       id: '4',
       target: '',
       resourceType: 'Instance',
-      resourceId: '45678901',
+      resourceId: 'd4e5f6a7b8c9d0e1',
       action: 'Create',
-      requestedTime: 'Mar 15, 2026 08:55',
+      requestedTime: 'Apr 14, 2026 14:22',
     },
     {
       id: '5',
       target: '',
-      resourceType: 'Instance',
-      resourceId: '56789012',
-      action: 'Create',
-      requestedTime: 'Mar 14, 2026 17:20',
+      resourceType: 'Floating IP',
+      resourceId: 'fip3e8b204c647d8',
+      action: 'Associate',
+      requestedTime: 'Apr 13, 2026 11:05',
     },
   ];
 
@@ -304,9 +330,7 @@ export function ComputeHomePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Home' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
       contentClassName="px-8 py-6"
@@ -340,28 +364,40 @@ export function ComputeHomePage() {
         {/* Compute Quota */}
         <Card title="Compute quota">
           <div className="space-y-[22px]">
-            <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
-            <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
-            <ComputeQuotaBar label="Disk" used={4} total={6} unit="GiB" />
+            <ComputeQuotaBar label="vCPU" used={38} total={64} unit="vCPU" />
+            <ComputeQuotaBar label="RAM" used={86} total={128} unit="GiB" />
+            <ComputeQuotaBar label="Disk" used={420} total={1000} unit="GiB" />
             <ComputeQuotaBar label="GPU" used={6} total={8} unit="GPU" />
-            <ComputeQuotaBar label="NPU" used={6} total={8} unit="NPU" />
+            <ComputeQuotaBar label="NPU" used={2} total={4} unit="NPU" />
           </div>
         </Card>
 
         {/* VM Summary */}
         <Card title="VM Summary" className="flex flex-col">
           <div className="mb-4">
-            <div className="text-heading-h2 text-[var(--color-text-default)]">13</div>
+            <div className="text-heading-h2 text-[var(--color-text-default)]">21</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
           </div>
           <div className="space-y-2 mt-auto">
             <div className="flex gap-2">
-              <SummaryStatBox value={10} label="Active" />
-              <SummaryStatBox value={0} label="Error" />
+              <SummaryStatBox
+                value={15}
+                label="Active"
+                onClick={() => navigate('/compute/instances?tab=vm&status=running')}
+              />
+              <SummaryStatBox
+                value={2}
+                label="Error"
+                onClick={() => navigate('/compute/instances?tab=vm&status=error')}
+              />
             </div>
             <div className="flex gap-2">
-              <SummaryStatBox value={0} label="Shutoff" />
-              <SummaryStatBox value={3} label="Others" />
+              <SummaryStatBox
+                value={3}
+                label="Shutoff"
+                onClick={() => navigate('/compute/instances?tab=vm&status=stopped')}
+              />
+              <SummaryStatBox value={1} label="Others" />
             </div>
           </div>
         </Card>
@@ -369,17 +405,29 @@ export function ComputeHomePage() {
         {/* Bare Metal Summary */}
         <Card title="Bare metal summary" className="flex flex-col">
           <div className="mb-4">
-            <div className="text-heading-h2 text-[var(--color-text-default)]">8</div>
+            <div className="text-heading-h2 text-[var(--color-text-default)]">5</div>
             <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
           </div>
           <div className="space-y-2 mt-auto">
             <div className="flex gap-2">
-              <SummaryStatBox value={6} label="Active" />
-              <SummaryStatBox value={1} label="Error" />
+              <SummaryStatBox
+                value={4}
+                label="Active"
+                onClick={() => navigate('/compute/instances?tab=bm&status=running')}
+              />
+              <SummaryStatBox
+                value={1}
+                label="Error"
+                onClick={() => navigate('/compute/instances?tab=bm&status=error')}
+              />
             </div>
             <div className="flex gap-2">
-              <SummaryStatBox value={0} label="Shutoff" />
-              <SummaryStatBox value={1} label="Others" />
+              <SummaryStatBox
+                value={0}
+                label="Shutoff"
+                onClick={() => navigate('/compute/instances?tab=bm&status=stopped')}
+              />
+              <SummaryStatBox value={0} label="Others" />
             </div>
           </div>
         </Card>
@@ -402,24 +450,24 @@ export function ComputeHomePage() {
         <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
           <SectionHeader title="Infrastructure Quota" />
           <div className="grid grid-cols-2 gap-2 flex-1" style={{ gridAutoRows: '1fr' }}>
-            <InfraQuotaRow label="Volumes" used={25} total={50} href="/compute/volumes" />
-            <InfraQuotaRow label="Networks" used={25} total={50} href="/compute/networks" />
-            <InfraQuotaRow label="Routers" used={25} total={50} href="/compute/routers" />
-            <InfraQuotaRow label="Ports" used={25} total={50} href="/compute/ports" />
-            <InfraQuotaRow label="Floating IPs" used={25} total={50} href="/compute/floating-ips" />
+            <InfraQuotaRow label="Volumes" used={18} total={50} href="/compute/volumes" />
+            <InfraQuotaRow label="Networks" used={4} total={10} href="/compute/networks" />
+            <InfraQuotaRow label="Routers" used={3} total={10} href="/compute/routers" />
+            <InfraQuotaRow label="Ports" used={47} total={200} href="/compute/ports" />
+            <InfraQuotaRow label="Floating IPs" used={8} total={10} href="/compute/floating-ips" />
             <InfraQuotaRow
               label="Security groups"
-              used={25}
-              total={50}
+              used={12}
+              total={20}
               href="/compute/security-groups"
             />
             <InfraQuotaRow
               label="Server groups"
-              used={25}
-              total={50}
+              used={2}
+              total={10}
               href="/compute/server-groups"
             />
-            <InfraQuotaRow label="Key pairs" used={25} total={50} href="/compute/key-pairs" />
+            <InfraQuotaRow label="Key pairs" used={5} total={50} href="/compute/key-pairs" />
           </div>
         </div>
       </div>

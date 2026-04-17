@@ -227,9 +227,8 @@ export function CreateIngressYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Ingresses', href: '/container/ingresses' },
-                { label: 'Create ingress' },
+                { label: 'Create Ingress' },
               ]}
             />
           }

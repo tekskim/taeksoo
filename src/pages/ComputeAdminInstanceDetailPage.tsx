@@ -1022,8 +1022,7 @@ export function ComputeAdminInstanceDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instances list', href: '/compute-admin/instances' },
+                { label: 'Instances', href: '/compute-admin/instances' },
                 { label: instance.name },
               ]}
             />

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -139,6 +139,13 @@ export function KeyPairsPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -319,9 +326,7 @@ export function KeyPairsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Key pairs' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Key pairs' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -391,6 +396,7 @@ export function KeyPairsPage() {
           selectable
           selectedKeys={selectedKeyPairs}
           onSelectionChange={setSelectedKeyPairs}
+          loading={loading}
         />
       </VStack>
 

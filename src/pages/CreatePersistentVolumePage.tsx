@@ -924,9 +924,8 @@ export function CreatePersistentVolumePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
-                { label: 'Create persistent volume' },
+                { label: 'Create Persistent Volume' },
               ]}
             />
           }

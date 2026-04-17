@@ -402,8 +402,7 @@ export function ComputeAdminBareMetalDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Bare metal nodes', href: '/compute-admin/bare-metal-nodes' },
+                { label: 'Bare Metal Nodes', href: '/compute-admin/bare-metal-nodes' },
                 { label: bareMetal.name },
               ]}
             />

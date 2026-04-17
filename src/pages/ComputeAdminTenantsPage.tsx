@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   VStack,
@@ -12,6 +12,7 @@ import {
   ContextMenu,
   PageShell,
   PageHeader,
+  ListToolbar,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
@@ -68,6 +69,14 @@ export default function ComputeAdminTenantsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTenants, setSelectedTenants] = useState<string[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const tenantsPerPage = 10;
 
   // Global tab management
@@ -79,10 +88,7 @@ export default function ComputeAdminTenantsPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Tenants' },
-  ];
+  const breadcrumbItems = [{ label: 'Tenants' }];
 
   // Filtered tenants
   const filteredTenants = useMemo(() => {
@@ -227,10 +233,9 @@ export default function ComputeAdminTenantsPage() {
           }
         />
 
-        {/* Action Bar */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <div className="w-[var(--search-input-width)]">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
                 value={searchTerm}
                 onChange={(e) => {
@@ -238,26 +243,31 @@ export default function ComputeAdminTenantsPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="Search tenants by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
-            </div>
-            <button
-              type="button"
-              className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-              aria-label="Download"
-            >
-              <IconDownload size={12} stroke={1.5} />
-            </button>
-          </div>
-          <div className="h-4 w-px bg-[var(--color-border-default)]" />
-          <Button
-            variant="muted"
-            size="sm"
-            leftIcon={<IconTrash size={12} />}
-            disabled={selectedTenants.length === 0}
-          >
-            Delete
-          </Button>
-        </div>
+              <button
+                type="button"
+                className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                aria-label="Download"
+              >
+                <IconDownload size={12} stroke={1.5} />
+              </button>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedTenants.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
 
         {/* Pagination */}
         <Pagination
@@ -276,6 +286,7 @@ export default function ComputeAdminTenantsPage() {
           selectable
           selectedKeys={selectedTenants}
           onSelectionChange={setSelectedTenants}
+          loading={loading}
         />
       </VStack>
     </PageShell>

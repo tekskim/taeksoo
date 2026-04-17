@@ -419,7 +419,6 @@ export function ComputeAdminImageDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Images', href: '/compute-admin/images' },
     { label: image.name },
   ];

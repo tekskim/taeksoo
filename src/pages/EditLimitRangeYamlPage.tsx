@@ -196,13 +196,8 @@ export function EditLimitRangeYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'LimitRanges', href: '/container/limitRanges' },
-                {
-                  label: limitRangeName || 'LimitRange',
-                  href: `/container/limitRanges/${limitRangeName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Limit Ranges', href: '/container/limit-ranges' },
+                { label: 'Edit Limit Range' },
               ]}
             />
           }

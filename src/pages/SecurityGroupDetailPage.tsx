@@ -17,7 +17,7 @@ import {
   ConfirmModal,
   StatusIndicator,
   PageShell,
-  CopyButton,
+  DetailHeader,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -430,8 +430,7 @@ export default function SecurityGroupDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Security groups', href: '/compute/security-groups' },
+                { label: 'Security Groups', href: '/compute/security-groups' },
                 { label: securityGroup.name },
               ]}
             />
@@ -441,15 +440,9 @@ export default function SecurityGroupDetailPage() {
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6} className="min-w-[1176px]">
-        {/* Header Card */}
-        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
-          {/* Title */}
-          <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
-            {securityGroup.name}
-          </h1>
-
-          {/* Actions */}
-          <div className="flex items-center gap-1 mb-3">
+        <DetailHeader>
+          <DetailHeader.Title>{securityGroup.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
               Create rule
             </Button>
@@ -459,46 +452,19 @@ export default function SecurityGroupDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
               Delete
             </Button>
-          </div>
-
-          {/* Info Row */}
-          <div className="flex items-center gap-2">
-            {/* ID */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
-              <div className="flex items-center gap-1 mt-1.5">
-                <p className="text-body-md text-[var(--color-text-default)]">{securityGroup.id}</p>
-                <CopyButton value={securityGroup.id} size="sm" iconOnly />
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Description</span>
-              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
-                {securityGroup.description}
-              </p>
-            </div>
-
-            {/* Origin */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Origin</span>
-              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">Container</p>
-            </div>
-
-            {/* Created at */}
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-              <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
-              <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
-                {securityGroup.createdAt}
-              </p>
-            </div>
-          </div>
-        </div>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="" status="active" />
+            <DetailHeader.InfoCard label="ID" value={securityGroup.id} copyable />
+            <DetailHeader.InfoCard label="Description" value={securityGroup.description} />
+            <DetailHeader.InfoCard label="Origin" value="Container" />
+            <DetailHeader.InfoCard label="Created at" value={securityGroup.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
             <TabList>
               <Tab value="rules">Rules</Tab>
             </TabList>

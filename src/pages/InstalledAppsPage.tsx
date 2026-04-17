@@ -234,15 +234,7 @@ export default function InstalledAppsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Installed Apps' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Installed Apps' }]} />}
           actions={<ContainerTopBarActions />}
         />
       }

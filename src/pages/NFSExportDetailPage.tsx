@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -16,6 +16,7 @@ import {
   SearchInput,
   Pagination,
   PageShell,
+  ErrorState,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
@@ -106,6 +107,7 @@ const mockClients: NFSClient[] = [];
 
 export function NFSExportDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
@@ -170,17 +172,21 @@ export function NFSExportDetailPage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'NFS', href: '/storage/nfs' },
-                  { label: 'Not Found' },
-                ]}
+                items={[{ label: 'NFS', href: '/storage/nfs' }, { label: 'Not Found' }]}
               />
             }
           />
         }
       >
-        <div className="p-8 text-[var(--color-text-muted)]">NFS export not found.</div>
+        <ErrorState
+          title="NFS export not found"
+          description="The requested NFS export could not be found."
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/storage/nfs')}>
+              Back to NFS exports
+            </Button>
+          }
+        />
       </PageShell>
     );
   }
@@ -212,11 +218,7 @@ export function NFSExportDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Home', href: '/storage' },
-                { label: 'NFS', href: '/storage/nfs' },
-                { label: exportData.pseudo },
-              ]}
+              items={[{ label: 'NFS', href: '/storage/nfs' }, { label: exportData.pseudo }]}
             />
           }
         />

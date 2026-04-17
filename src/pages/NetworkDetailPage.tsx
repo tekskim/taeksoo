@@ -422,7 +422,6 @@ export default function NetworkDetailPage() {
   }, [network.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
     { label: 'Networks', href: '/compute/networks' },
     { label: network.name },
   ];

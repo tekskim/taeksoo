@@ -684,10 +684,7 @@ export default function ComputeAdminMonitorOverviewPage() {
     closable: tab.closable,
   }));
 
-  const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Monitor Overview' },
-  ];
+  const breadcrumbItems = [{ label: 'Monitor Overview' }];
 
   const timeRangeOptions = [
     { label: '1h', value: '1h' as TimeRangeValue },

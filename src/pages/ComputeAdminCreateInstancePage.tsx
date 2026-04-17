@@ -4530,9 +4530,8 @@ export function ComputeAdminCreateInstancePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instances', href: '/compute-admin/instances' },
-                { label: 'Create instance' },
+                { label: 'Create Instance' },
               ]}
             />
           }

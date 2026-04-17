@@ -873,11 +873,7 @@ export function ContainerServiceDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Services', href: '/container/services' },
-                { label: service.name },
-              ]}
+              items={[{ label: 'Services', href: '/container/services' }, { label: service.name }]}
             />
           }
           actions={<ContainerTopBarActions />}

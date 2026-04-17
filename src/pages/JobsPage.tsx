@@ -155,6 +155,12 @@ export function JobsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -382,9 +388,7 @@ export function JobsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Jobs' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Jobs' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -495,11 +499,13 @@ export function JobsPage() {
         {/* Table */}
         <Table<JobRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No jobs found"
         />
       </VStack>
     </PageShell>

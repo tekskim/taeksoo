@@ -384,11 +384,7 @@ export function ComputeImageDetailPage() {
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Images', href: '/compute/images' },
-    { label: image.name },
-  ];
+  const breadcrumbItems = [{ label: 'Images', href: '/compute/images' }, { label: image.name }];
 
   return (
     <PageShell

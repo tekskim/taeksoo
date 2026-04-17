@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -247,6 +247,13 @@ export function CertificatesPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -443,11 +450,7 @@ export function CertificatesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Certificates' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Certificates' }]} />}
         />
       }
     >
@@ -517,6 +520,7 @@ export function CertificatesPage() {
           selectable
           selectedKeys={selectedCerts}
           onSelectionChange={setSelectedCerts}
+          loading={loading}
         />
       </VStack>
 

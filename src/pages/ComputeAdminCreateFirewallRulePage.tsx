@@ -337,9 +337,8 @@ export default function ComputeAdminCreateFirewallRulePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Firewall', href: '/compute-admin/firewall' },
-                { label: 'Create rule' },
+                { label: 'NACL', href: '/compute-admin/firewall' },
+                { label: 'Create Firewall Rule' },
               ]}
             />
           }

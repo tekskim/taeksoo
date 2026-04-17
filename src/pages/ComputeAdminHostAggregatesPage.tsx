@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -158,6 +158,13 @@ export function ComputeAdminHostAggregatesPage() {
   const [azCurrentPage, setAzCurrentPage] = useState(1);
   const [availabilityZones] = useState(mockAvailabilityZones);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'availabilityZone', label: 'Availability Zone', visible: true },
@@ -266,14 +273,7 @@ export function ComputeAdminHostAggregatesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Host Aggregates' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Host Aggregates' }]} />}
         />
       }
     >
@@ -436,10 +436,12 @@ export function ComputeAdminHostAggregatesPage() {
                       ]}
                       data={row.metadata}
                       rowKey="key"
+                      loading={loading}
                     />
                   </div>
                 );
               }}
+              loading={loading}
             />
           </>
         )}
@@ -527,6 +529,7 @@ export function ComputeAdminHostAggregatesPage() {
               data={paginatedAZs}
               rowKey="id"
               emptyMessage="No availability zones found"
+              loading={loading}
             />
           </>
         )}

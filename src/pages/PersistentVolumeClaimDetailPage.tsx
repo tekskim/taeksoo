@@ -467,8 +467,7 @@ export function PersistentVolumeClaimDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volume claims', href: '/container/pvc' },
+                { label: 'Persistent Volume Claims', href: '/container/pvc' },
                 { label: pvcData.name },
               ]}
             />

@@ -612,11 +612,7 @@ export function CronJobDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'CronJobs', href: '/container/cronjobs' },
-                { label: cronjob.name },
-              ]}
+              items={[{ label: 'CronJobs', href: '/container/cronjobs' }, { label: cronjob.name }]}
             />
           }
           actions={<ContainerTopBarActions />}

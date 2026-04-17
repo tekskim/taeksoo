@@ -183,7 +183,7 @@ export function HomePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={
             <>
               <TopBarAction

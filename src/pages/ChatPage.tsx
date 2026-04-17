@@ -460,7 +460,7 @@ export function ChatPage() {
           canGoForward={false}
           onBack={() => {}}
           onForward={() => {}}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Chat' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Chat' }]} />}
           actions={
             <>
               <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />

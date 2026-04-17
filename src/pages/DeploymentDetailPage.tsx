@@ -948,7 +948,6 @@ export function DeploymentDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Deployments', href: '/container/deployments' },
                 { label: deployment.name },
               ]}

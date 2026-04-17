@@ -171,13 +171,12 @@ export default function L7PolicyDetailPage() {
   }, [l7Policy?.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Load balancers', href: '/compute/load-balancers' },
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
     {
-      label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
+      label:
+        l7Policy.listener?.loadBalancer?.name ?? l7Policy.listener?.loadBalancer?.id ?? 'Unknown',
     },
-    { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
+    { label: l7Policy.listener?.name ?? 'Unknown' },
     { label: l7Policy.name },
   ];
 
@@ -323,22 +322,18 @@ export default function L7PolicyDetailPage() {
       <VStack gap={8} align="stretch" className="min-w-[1176px]">
         {/* Detail header */}
         <DetailHeader>
-          <DetailHeader.Title>
-            <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
-              {l7Policy.name}
-            </h1>
-            <DetailHeader.Actions>
-              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                Edit
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                Add L7 rule
-              </Button>
-              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                Delete
-              </Button>
-            </DetailHeader.Actions>
-          </DetailHeader.Title>
+          <DetailHeader.Title>{l7Policy.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Add L7 rule
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
             <DetailHeader.InfoCard
               label="Status"
@@ -353,7 +348,7 @@ export default function L7PolicyDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab}>
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="l7-rules">L7 Rules</Tab>

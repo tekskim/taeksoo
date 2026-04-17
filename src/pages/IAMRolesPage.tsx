@@ -610,7 +610,7 @@ export default function IAMRolesPage() {
             showNavigation
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Roles' }]} />}
+            breadcrumb={<Breadcrumb items={[{ label: 'Roles' }]} />}
           />
         }
         contentClassName="pt-4 px-8 pb-6"
@@ -685,6 +685,7 @@ export default function IAMRolesPage() {
                   selectable
                   selectedKeys={selectedRows}
                   onSelectionChange={setSelectedRows}
+                  emptyMessage="No roles found"
                 />
               </VStack>
             </TabPanel>
@@ -737,6 +738,7 @@ export default function IAMRolesPage() {
                   selectable
                   selectedKeys={selectedGrants}
                   onSelectionChange={setSelectedGrants}
+                  emptyMessage="No active grants found"
                 />
               </VStack>
             </TabPanel>

@@ -203,8 +203,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Instance snapshots', href: '/compute-admin/instance-snapshots' },
+    { label: 'Instance Snapshots', href: '/compute-admin/instance-snapshots' },
     { label: snapshot.name },
   ];
 

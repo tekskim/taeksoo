@@ -138,8 +138,7 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Volume snapshots', href: '/compute-admin/volume-snapshots' },
+    { label: 'Volume Snapshots', href: '/compute-admin/volume-snapshots' },
     { label: snapshot.name },
   ];
 

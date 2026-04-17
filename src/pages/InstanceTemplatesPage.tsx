@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -244,6 +244,13 @@ export function InstanceTemplatesPage() {
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -515,11 +522,7 @@ export function InstanceTemplatesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Instance templates' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Instance Templates' }]} />}
         />
       }
     >
@@ -596,6 +599,7 @@ export function InstanceTemplatesPage() {
           selectable
           selectedKeys={selectedTemplates}
           onSelectionChange={setSelectedTemplates}
+          loading={loading}
         />
       </VStack>
 

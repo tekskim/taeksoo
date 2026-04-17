@@ -210,7 +210,7 @@ export function CloudBuilderConsolePage() {
   const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'severs0.7';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
 
-  const breadcrumbItems = [{ label: 'Proj-1', href: '/project' }, { label: config.title }];
+  const breadcrumbItems = [{ label: config.title }];
 
   const hasTabs = !!config.tabs && config.tabs.length > 0;
   const [searchParams, setSearchParams] = useSearchParams();

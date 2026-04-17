@@ -188,9 +188,8 @@ export function CreatePersistentVolumeYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'PersistentVolumes', href: '/container/persistentVolumes' },
-                { label: 'Create persistent volume' },
+                { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
+                { label: 'Create Persistent Volume' },
               ]}
             />
           }

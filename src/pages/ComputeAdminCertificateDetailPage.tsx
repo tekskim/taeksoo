@@ -216,7 +216,6 @@ export default function CertificateDetailPage() {
   }, [certificate.name, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Certificates', href: '/compute-admin/certificates' },
     { label: certificate.name },
   ];

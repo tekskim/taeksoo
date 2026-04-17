@@ -90,6 +90,18 @@ const loadingProps: PropDef[] = [
 function LoadingGuidelines() {
   return (
     <VStack gap={10}>
+      {/* Overview */}
+      <VStack gap={4}>
+        <SectionTitle>Overview</SectionTitle>
+        <Prose>
+          <p>
+            Loading은 시스템이 데이터를 가져오거나 처리하는 동안 사용자에게 진행 중 상태를 전달하기
+            위한 UI 패턴이다. Loading 상태는 작업이 진행 중임, 시스템이 정상적으로 응답하고 있음,
+            결과가 곧 표시될 예정임을 전달한다.
+          </p>
+        </Prose>
+      </VStack>
+
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
@@ -230,7 +242,7 @@ function LoadingGuidelines() {
           <SubSectionTitle>3) Loading 시간 정책</SubSectionTitle>
           <Prose>
             <ul className="list-disc pl-5 space-y-1">
-              <li>API 응답이 300ms 이내에 완료되면 로딩 표시를 건너뛴다.</li>
+              <li>API 응답이 200ms 이내에 완료되면 로딩 표시를 건너뛴다.</li>
               <li>10초 이상 소요 시 "This may take a moment..." 안내 메시지를 표시한다.</li>
               <li>10초 이상 소요되는 액션은 가능하면 ProgressBar로 표기한다.</li>
             </ul>
@@ -243,6 +255,63 @@ function LoadingGuidelines() {
             <ul className="list-disc pl-5 space-y-1">
               <li>제출 중인 버튼은 Spinner + disabled 상태로 표시한다.</li>
               <li>버튼 로딩 중에 버튼은 중복 요청을 방지하기 위해 비활성화된다.</li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>5) 생성·저장 후 리스트 복귀 (드로어 / 생성 화면)</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                Create·Save 등 주요 제출 액션: 백엔드 요청 중에는 버튼에 Inline Loading(Spinner +
+                disabled)을 적용한다.
+              </li>
+              <li>
+                요청 완료: 드로어를 닫거나 생성 화면을 종료한 뒤 리소스 테이블이 있는 리스트
+                화면으로 이동(또는 복귀)하고 목록 데이터를 조회한다.
+              </li>
+              <li>
+                요청 성공 시 성공 토스트가 노출되며, 아래 6) 테이블 신규 row 반영 정책을 따른다.
+              </li>
+              <li>요청 실패 시 실패 토스트가 노출되고 테이블에 신규 row가 추가되지 않는다.</li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>6) 테이블 신규 row 반영</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                기본: 서버 응답으로 리소스(또는 작업)를 식별할 수 있는 최소 정보(예: id, 작업 id)를
+                받은 뒤 테이블에 row를 추가한다.
+              </li>
+              <li>
+                비동기 생성: 응답에 포함된 필드는 그대로 표기하고, 값이 없는 컬럼은 빈값과 동일하게
+                두되 해당 셀 또는 행 영역에 영역 로딩(Skeleton)을 사용한다.
+              </li>
+              <li>
+                비동기 작업이 최종 완료되면 완료 알림(알림센터·스낵바 등)과 함께 row에 완료된
+                데이터를 모두 정상 표기한다.
+              </li>
+              <li>
+                실패: 동기 응답 실패와 비동기 작업의 최종 실패 모두 해당 row를 제거한다. 비동기
+                처리에서 일부 단계만 실패해도 온전한 리소스가 생성되지 않으면 전체 실패로 간주해
+                동일하게 처리한다.
+              </li>
+            </ul>
+          </Prose>
+        </VStack>
+
+        <VStack gap={3}>
+          <SubSectionTitle>7) 진행 중 row와 정렬·검색·필터</SubSectionTitle>
+          <Prose>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                정렬·필터: 진행 중인 row라도 값이 채워진 컬럼에는 동일 규칙을 적용한다. 아직 값이
+                없는 컬럼은 빈값과 동일하게 처리한다.
+              </li>
             </ul>
           </Prose>
         </VStack>
@@ -263,6 +332,67 @@ function LoadingGuidelines() {
             'Loading indicator만 표시하고 문맥을 제거하지 않는다.',
           ]}
         />
+      </VStack>
+
+      {/* Related */}
+      <VStack gap={4}>
+        <SectionTitle>Related</SectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">이름</Th>
+              <Th className="w-[120px]">유형</Th>
+              <Th>이유</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>Spinner</Td>
+              <Td>Component</Td>
+              <Td>로딩 표시</Td>
+            </tr>
+            <tr>
+              <Td>Skeleton</Td>
+              <Td>Component</Td>
+              <Td>레이아웃 유지</Td>
+            </tr>
+            <tr>
+              <Td>Progress bar</Td>
+              <Td>Component</Td>
+              <Td>진행률 표시</Td>
+            </tr>
+            <tr>
+              <Td>Table</Td>
+              <Td>Component</Td>
+              <Td>리스트 로딩</Td>
+            </tr>
+            <tr>
+              <Td>Empty State</Td>
+              <Td>Pattern</Td>
+              <Td>데이터 없음</Td>
+            </tr>
+            <tr>
+              <Td>System Error</Td>
+              <Td>Pattern</Td>
+              <Td>오류 상태</Td>
+            </tr>
+            <tr>
+              <Td>Toast</Td>
+              <Td>Component</Td>
+              <Td>접수·피드백 문구 (Behavior 5)</Td>
+            </tr>
+            <tr>
+              <Td>Snackbar</Td>
+              <Td>Component</Td>
+              <Td>완료·상태 피드백 (Behavior 5–6)</Td>
+            </tr>
+            <tr>
+              <Td>Global Notification Panel</Td>
+              <Td>Pattern</Td>
+              <Td>알림센터 연동 (Behavior 5–6)</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
       </VStack>
     </VStack>
   );
@@ -330,22 +460,30 @@ export function LoadingPage() {
         </TableWrapper>
       }
       relatedLinks={[
-        { label: 'Spinner', path: '/design/components/spinner', description: '로딩 표시 컴포넌트' },
+        { label: 'Spinner', path: '/design/components/spinner', description: '로딩 표시' },
         {
           label: 'Skeleton',
           path: '/design/components/skeleton',
-          description: '콘텐츠 플레이스홀더',
+          description: '레이아웃 유지',
         },
         {
           label: 'Progress Bar',
           path: '/design/components/progress-bar',
-          description: '진행률 표시 (determinate)',
+          description: '진행률 표시',
         },
-        { label: 'Table', path: '/design/components/table', description: '리스트 데이터 로딩' },
+        { label: 'Table', path: '/design/components/table', description: '리스트 로딩' },
         {
-          label: 'Empty State',
+          label: 'Empty States',
           path: '/design/patterns/empty-states',
-          description: '데이터 없음 패턴',
+          description: '데이터 없음',
+        },
+        { label: 'System Error', path: '/design/policies/system-error', description: '오류 상태' },
+        { label: 'Toast', path: '/design/components/toast', description: '접수·피드백 문구' },
+        { label: 'Snackbar', path: '/design/components/snackbar', description: '완료·상태 피드백' },
+        {
+          label: 'Global Notification Panel',
+          path: '/design/components/global-notification-panel',
+          description: '알림센터·글로벌 패널 연동',
         },
       ]}
     />

@@ -3449,9 +3449,8 @@ export function ComputeAdminCreateTemplatePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instance templates', href: '/compute-admin/instance-templates' },
-                { label: 'Create template' },
+                { label: 'Instance Templates', href: '/compute-admin/instance-templates' },
+                { label: 'Create Template' },
               ]}
             />
           }

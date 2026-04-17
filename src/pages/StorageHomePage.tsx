@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { TabBar, TopBar, Breadcrumb, MonitoringToolbar, PageShell } from '@/design-system';
+import {
+  TabBar,
+  TopBar,
+  Breadcrumb,
+  MonitoringToolbar,
+  PageShell,
+  PageHeader,
+} from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -322,18 +329,18 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
   const innerRadius = radius - arcWidth;
   const outerRadius = radius;
 
-  const getColor = (cssVar: string, fallback: string) => {
+  const getColor = (cssVar: string, chartFallback: string) => {
     if (typeof window !== 'undefined') {
       const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
-      return value || fallback;
+      return value || chartFallback;
     }
-    return fallback;
+    return chartFallback;
   };
 
   const statusColor = () => {
-    if (percentage >= 95) return getColor('--color-state-danger', '#ef4444');
-    if (percentage >= 85) return getColor('--color-state-warning', '#f97316');
-    return getColor('--color-state-success', '#22c55e');
+    if (percentage >= 95) return getColor('--color-state-danger', chartColors.red400);
+    if (percentage >= 85) return getColor('--color-state-warning', chartColors.orange400);
+    return getColor('--color-state-success', chartColors.emerald400);
   };
 
   const usedColor = statusColor();
@@ -379,7 +386,7 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
             width: 16,
             color: [
               [percentage / 100, usedColor],
-              [1, getColor('--color-border-subtle', '#f1f5f9')],
+              [1, getColor('--color-border-subtle', chartColors.slate100)],
             ],
           },
         },
@@ -576,14 +583,13 @@ export function StorageHomePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Storage', href: '/storage' }, { label: 'Home' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
     >
       {/* EntryPage Content */}
       <div className="py-2">
+        <PageHeader title="Dashboard" />
         {/* Top Row - 2 Cards: Inventory and Capacity */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* INVENTORY */}

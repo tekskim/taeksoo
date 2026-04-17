@@ -403,11 +403,7 @@ export function BareMetalDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instances list', href: '/compute/instances' },
-                { label: instance.name },
-              ]}
+              items={[{ label: 'Instances', href: '/compute/instances' }, { label: instance.name }]}
             />
           }
         />

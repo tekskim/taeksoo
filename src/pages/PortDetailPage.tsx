@@ -586,11 +586,7 @@ export default function PortDetailPage() {
     }
   };
 
-  const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Ports', href: '/compute/ports' },
-    { label: port.name },
-  ];
+  const breadcrumbItems = [{ label: 'Ports', href: '/compute/ports' }, { label: port.name }];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
@@ -674,7 +670,7 @@ export default function PortDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="fixed-ips">Fixed IPs</Tab>

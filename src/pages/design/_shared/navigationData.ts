@@ -44,6 +44,9 @@ import {
   IconSettings,
   IconHistory,
   IconFolder,
+  IconRobot,
+  IconSwitchHorizontal,
+  IconShieldCheck,
 } from '@tabler/icons-react';
 import type { ComponentType } from 'react';
 
@@ -229,6 +232,12 @@ const feedbackItems: NavItem[] = [
     icon: IconBell,
     path: '/design/components/global-notification-panel',
   },
+  {
+    id: 'error-boundary',
+    label: 'Error Boundary',
+    icon: IconShieldCheck,
+    path: '/design/components/error-boundary',
+  },
 ];
 
 const navigationItems: NavItem[] = [
@@ -264,6 +273,12 @@ const navigationItems: NavItem[] = [
     icon: IconLayoutSidebar,
     path: '/design/components/scrollbar',
   },
+  {
+    id: 'context-selector',
+    label: 'Context Selector',
+    icon: IconSwitchHorizontal,
+    path: '/design/components/context-selector',
+  },
 ];
 
 const overlayItems: NavItem[] = [
@@ -292,6 +307,12 @@ const overlayItems: NavItem[] = [
     label: 'Floating Card',
     icon: IconLayoutGrid,
     path: '/design/components/floating-card',
+  },
+  {
+    id: 'tca',
+    label: 'TCA',
+    icon: IconRobot,
+    path: '/design/components/tca',
   },
 ];
 
@@ -520,7 +541,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/policies/ux-writing': '2026-03-05 13:00:00',
   '/design/policies/accessibility': '2026-02-25 14:00:00',
   '/design/policies/error-alert': '2026-03-09 10:30:00',
-  '/design/policies/system-error': '2026-03-20 16:00:00',
+  '/design/policies/system-error': '2026-04-17',
   // Form Controls
   '/design/components/button': '2026-03-18 11:00:00',
   '/design/components/input': '2026-03-01 10:30:00',
@@ -531,7 +552,7 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/form-field': '2026-03-01 10:30:00',
   '/design/components/filter-search-input': '2026-03-18 11:00:00',
   '/design/components/select': '2026-03-18 11:00:00',
-  '/design/components/datepicker': '2026-03-09',
+  '/design/components/datepicker': '2026-04-17',
   '/design/components/slider': '2026-03-05 13:00:00',
   '/design/components/toggle': '2026-03-18 11:00:00',
   '/design/components/checkbox': '2026-03-18 11:00:00',
@@ -546,21 +567,21 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/chip': '2026-03-09',
   '/design/components/status-indicator': '2026-03-18 11:00:00',
   '/design/components/pagination': '2026-03-09',
-  '/design/components/file-list-card': '2026-03-01 10:30:00',
+  '/design/components/file-list-card': '2026-04-17',
   '/design/components/expandable-checklist': '2026-03-18 18:00:00',
   '/design/components/info-box': '2026-03-23 12:00:00',
   '/design/components/card-title': '2026-03-18 18:00:00',
   '/design/components/list-toolbar': '2026-03-13 10:00:00',
   // Feedback
   '/design/components/inline-message': '2026-03-18 11:00:00',
-  '/design/components/loading': '2026-03-09',
+  '/design/components/loading': '2026-04-17',
   '/design/components/progress-bar': '2026-03-26 09:00:00',
   '/design/components/skeleton': '2026-03-09',
-  '/design/components/spinner': '2026-03-09',
-  '/design/components/toast': '2026-03-18 11:00:00',
-  '/design/components/snackbar': '2026-03-26 10:00:00',
+  '/design/components/spinner': '2026-04-17',
+  '/design/components/toast': '2026-04-17',
+  '/design/components/snackbar': '2026-04-17',
 
-  '/design/components/global-notification-panel': '2026-03-18 11:00:00',
+  '/design/components/global-notification-panel': '2026-04-17',
   // Navigation
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',
@@ -569,14 +590,14 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/components/project-selector': '2026-03-23 12:00:00',
   // Overlay
   '/design/components/tooltip': '2026-04-14 10:00:00',
-  '/design/components/popover': '2026-04-14 10:00:00',
+  '/design/components/popover': '2026-04-17',
   '/design/components/menu': '2026-03-09',
   '/design/components/context-menu': '2026-03-09',
   '/design/components/modal': '2026-03-18 11:00:00',
-  '/design/components/drawer': '2026-03-09 10:30:00',
+  '/design/components/drawer': '2026-04-17',
   '/design/components/floating-card': '2026-03-05 13:00:00',
   // Layout & Patterns
-  '/design/components/disclosure': '2026-03-03 18:45:00',
+  '/design/components/disclosure': '2026-04-17',
   '/design/components/window-control': '2026-03-09',
   '/design/components/scrollbar': '2026-03-05 13:00:00',
   '/design/patterns/common': '2026-03-01 10:30:00',
@@ -586,10 +607,10 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/open-form': '2026-03-01 10:30:00',
   '/design/patterns/monitoring-toolbar': '2026-03-09',
   '/design/policies/csv-download': '2026-03-09 15:00:00',
-  '/design/policies/app-window': '2026-03-18 11:00:00',
+  '/design/policies/app-window': '2026-04-17',
   '/design/patterns/layout': '2026-03-01 10:30:00',
   '/design/patterns/desktop-grid': '2026-03-05 10:40:00',
-  '/design/patterns/dynamic-form-fields': '2026-03-01 10:30:00',
+  '/design/patterns/dynamic-form-fields': '2026-04-17',
   '/design/patterns/editor': '2026-03-09',
   '/design/patterns/list-page': '2026-03-09 15:00:00',
   '/design/patterns/detail-page': '2026-03-09',
@@ -599,10 +620,13 @@ export const pageLastUpdated: Record<string, string> = {
   '/design/patterns/shell': '2026-03-09 15:00:00',
   '/design/patterns/empty-states': '2026-03-09',
   // Charts
-  '/design/charts/overview': '2026-03-18 11:00:00',
+  '/design/charts/overview': '2026-04-17',
   '/design/charts/status-colors': '2026-03-01 10:30:00',
   '/design/charts/usage-chart': '2026-03-09',
   '/design/charts/area-chart': '2026-03-09',
-  '/design/charts/pie-chart': '2026-03-09',
+  '/design/charts/pie-chart': '2026-04-17',
   '/design/charts/tooltip': '2026-03-01 10:30:00',
+  '/design/components/tca': '2026-04-17',
+  '/design/components/context-selector': '2026-04-17',
+  '/design/components/error-boundary': '2026-04-17',
 };

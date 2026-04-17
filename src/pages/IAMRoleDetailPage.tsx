@@ -20,6 +20,7 @@ import {
   Tooltip,
   ListToolbar,
   PageShell,
+  DetailHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -300,30 +301,6 @@ const mockActiveGrants: ActiveGrant[] = [
 ];
 
 /* ----------------------------------------
-   Info Card Component
-   ---------------------------------------- */
-
-interface InfoCardProps {
-  label: string;
-  value: string;
-  copyable?: boolean;
-}
-
-function InfoCard({ label, value, copyable }: InfoCardProps) {
-  return (
-    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
-      <div className="flex flex-col gap-1.5 min-w-0">
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
-        <span className="flex items-center gap-2 text-body-md leading-4 text-[var(--color-text-default)] min-w-0">
-          <span className="truncate">{value}</span>
-          {copyable && <InlineCopyId value={value} />}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Policy Details Component
    ---------------------------------------- */
 
@@ -496,7 +473,6 @@ export default function IAMRoleDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
     { label: 'Roles', href: '/iam/roles' },
     { label: role?.name || 'Role details' },
   ];
@@ -525,7 +501,7 @@ export default function IAMRoleDetailPage() {
             )}
           </button>
           <Link
-            to={`/iam/policies/${value}`}
+            to={`/iam/policies/${row.id}`}
             className="text-[var(--color-action-primary)] font-medium hover:underline"
           >
             {value}
@@ -718,56 +694,38 @@ export default function IAMRoleDetailPage() {
         contentClassName="pt-4 px-8 pb-6"
       >
         <VStack gap={6}>
-          {/* Header Card */}
-          <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-            <VStack gap={3}>
-              {/* Title */}
-              <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                {role.name}
-              </h1>
-
-              {/* Action Buttons */}
-              <HStack gap={1}>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconLockCheck size={12} stroke={1.5} />}
-                  onClick={() => setIsGrantDrawerOpen(true)}
-                >
-                  Grant access
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconSettings size={12} stroke={1.5} />}
-                  onClick={() => setIsManageLinkedPoliciesOpen(true)}
-                >
-                  Manage linked policies
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconEdit size={12} stroke={1.5} />}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} stroke={1.5} />}
-                >
-                  Delete
-                </Button>
-              </HStack>
-
-              {/* Info Cards */}
-              <HStack gap={2} className="w-full">
-                <InfoCard label="ID" value={role.id} copyable />
-                <InfoCard label="Description" value={role.description} />
-                <InfoCard label="Created at" value={role.createdAt} />
-              </HStack>
-            </VStack>
-          </div>
+          <DetailHeader>
+            <DetailHeader.Title>{role.name}</DetailHeader.Title>
+            <DetailHeader.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconLockCheck size={12} stroke={1.5} />}
+                onClick={() => setIsGrantDrawerOpen(true)}
+              >
+                Grant access
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconSettings size={12} stroke={1.5} />}
+                onClick={() => setIsManageLinkedPoliciesOpen(true)}
+              >
+                Manage linked policies
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+                Edit
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+                Delete
+              </Button>
+            </DetailHeader.Actions>
+            <DetailHeader.InfoGrid>
+              <DetailHeader.InfoCard label="ID" value={role.id} copyable />
+              <DetailHeader.InfoCard label="Description" value={role.description} />
+              <DetailHeader.InfoCard label="Created at" value={role.createdAt} />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
 
           {/* Tabs */}
           <div className="w-full">
@@ -919,7 +877,7 @@ export default function IAMRoleDetailPage() {
                               )}
                             </button>
                             <Link
-                              to={`/iam/policies/${policy.name}`}
+                              to={`/iam/policies/${policy.id}`}
                               className="text-[var(--color-action-primary)] font-medium hover:underline"
                             >
                               {policy.name}

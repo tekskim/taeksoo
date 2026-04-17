@@ -465,10 +465,8 @@ export default function InstalledAppEditPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/installed-apps' },
                 { label: 'Installed Apps', href: '/container/installed-apps' },
-                { label: `Edit ${appName}` },
+                { label: 'Edit App' },
               ]}
             />
           }

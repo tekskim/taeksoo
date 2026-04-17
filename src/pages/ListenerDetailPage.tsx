@@ -302,11 +302,9 @@ export default function ListenerDetailPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Load balancers', href: '/compute/load-balancers' },
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
     {
-      label: listener.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${listener.loadBalancer?.id}`,
+      label: listener.loadBalancer?.name ?? listener.loadBalancer?.id ?? 'Unknown',
     },
     { label: listener.name },
   ];
@@ -772,7 +770,7 @@ export default function ListenerDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="pools">Default pool</Tab>

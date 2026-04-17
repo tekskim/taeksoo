@@ -196,13 +196,8 @@ export function EditDeploymentYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Deployments', href: '/container/deployments' },
-                {
-                  label: deploymentName || 'Deployment',
-                  href: `/container/deployments/${deploymentName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Edit Deployment' },
               ]}
             />
           }

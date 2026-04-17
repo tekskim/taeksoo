@@ -129,7 +129,7 @@ export function StoragePage() {
       id: '1',
       favorite: false,
       status: 'draft',
-      name: 'lable',
+      name: 'production-db',
       type: 'File',
       documents: '-',
       size: '-',
@@ -139,7 +139,7 @@ export function StoragePage() {
       id: '2',
       favorite: false,
       status: 'pending',
-      name: 'lable',
+      name: 'user-analytics',
       type: 'File',
       documents: '-',
       size: '-',
@@ -149,7 +149,7 @@ export function StoragePage() {
       id: '3',
       favorite: false,
       status: 'completed',
-      name: 'lable',
+      name: 'log-archive',
       type: 'File',
       documents: '7',
       size: '60 MB',
@@ -159,7 +159,7 @@ export function StoragePage() {
       id: '4',
       favorite: false,
       status: 'processing',
-      name: 'lable',
+      name: 'customer-support-kb',
       type: 'File',
       documents: '7/10 (75%)',
       documentsProgress: { current: 7, total: 10, percentage: 75 },
@@ -170,7 +170,7 @@ export function StoragePage() {
       id: '5',
       favorite: false,
       status: 'error',
-      name: 'lable',
+      name: 'billing-reports',
       type: 'File',
       documents: '7/10 (75%)',
       documentsProgress: { current: 7, total: 10, percentage: 75, hasError: true },
@@ -181,7 +181,7 @@ export function StoragePage() {
       id: '6',
       favorite: false,
       status: 'processing',
-      name: 'lable',
+      name: 'product-docs',
       type: 'File',
       documents: '(75%)',
       documentsProgress: { current: 7, total: 10, percentage: 75 },
@@ -363,9 +363,7 @@ export function StoragePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Data Sources' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Data Sources' }]} />}
           actions={
             <>
               <TopBarAction

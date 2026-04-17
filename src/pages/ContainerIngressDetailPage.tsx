@@ -305,7 +305,6 @@ export function ContainerIngressDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Ingresses', href: '/container/ingresses' },
                 { label: ingress.name },
               ]}

@@ -175,14 +175,7 @@ export function ContainerConsolePage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: `Kubectl: ${instanceName}` },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: `Kubectl: ${instanceName}` }]} />}
         />
       }
       contentClassName="flex flex-col flex-1 p-0"

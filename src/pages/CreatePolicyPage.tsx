@@ -1295,11 +1295,7 @@ export default function CreatePolicyPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'Policies', href: '/iam/policies' },
-                { label: 'Create policy' },
-              ]}
+              items={[{ label: 'Policies', href: '/iam/policies' }, { label: 'Create Policy' }]}
             />
           }
         />

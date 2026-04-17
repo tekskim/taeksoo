@@ -671,9 +671,8 @@ export function CreateLimitRangePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Limit Ranges', href: '/container/limit-ranges' },
-                { label: 'Create limit range' },
+                { label: 'Create Limit Range' },
               ]}
             />
           }

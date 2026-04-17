@@ -174,10 +174,16 @@ export function ScheduledTasksPage() {
     useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     updateActiveTabLabel('Scheduled Tasks');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const rowsPerPage = 10;
@@ -314,11 +320,7 @@ export function ScheduledTasksPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Scheduled Tasks' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Scheduled Tasks' }]} />}
         />
       }
     >
@@ -388,6 +390,7 @@ export function ScheduledTasksPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           emptyMessage="No scheduled tasks found"
+          loading={loading}
         />
       </VStack>
     </PageShell>

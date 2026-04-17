@@ -252,8 +252,7 @@ export function PersistentVolumeDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volumes', href: '/container/persistent-volumes' },
+                { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
                 { label: pvData.name },
               ]}
             />

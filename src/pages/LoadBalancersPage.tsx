@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -261,6 +261,13 @@ export function LoadBalancersPage() {
   const [associateFIPOpen, setAssociateFIPOpen] = useState(false);
   const [editLBOpen, setEditLBOpen] = useState(false);
   const [selectedLBForDrawer, setSelectedLBForDrawer] = useState<LoadBalancer | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleAssociateFloatingIP = (lb: LoadBalancer) => {
@@ -576,11 +583,7 @@ export function LoadBalancersPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Load balancers' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Load Balancers' }]} />}
         />
       }
     >
@@ -654,6 +657,7 @@ export function LoadBalancersPage() {
           selectable
           selectedKeys={selectedLBs}
           onSelectionChange={setSelectedLBs}
+          loading={loading}
         />
       </VStack>
 

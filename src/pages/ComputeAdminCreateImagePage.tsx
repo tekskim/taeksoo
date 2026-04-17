@@ -200,7 +200,7 @@ export function ComputeAdminCreateImagePage() {
 
   const breadcrumbItems = [
     { label: 'Images', href: '/compute-admin/images' },
-    { label: 'Create image' },
+    { label: 'Create Image' },
   ];
 
   // Filter tenants by search

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   FilterSearchInput,
   Table,
@@ -309,6 +309,13 @@ export function FlavorsPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -526,9 +533,7 @@ export function FlavorsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Flavors' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Flavors' }]} />}
         />
       }
     >
@@ -584,6 +589,7 @@ export function FlavorsPage() {
           data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
           rowKey="id"
           emptyMessage="No flavors found"
+          loading={loading}
         />
       </VStack>
 

@@ -64,7 +64,7 @@ const SECTION_ORDER: SectionStep[] = ['basic-info', 'add-users'];
 const mockUsers: User[] = [
   {
     id: 'user-1',
-    username: 'thaki-kim',
+    username: 'thaki-lee',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -73,7 +73,7 @@ const mockUsers: User[] = [
   },
   {
     id: 'user-2',
-    username: 'thaki-kim',
+    username: 'thaki-park',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -82,7 +82,7 @@ const mockUsers: User[] = [
   },
   {
     id: 'user-3',
-    username: 'thaki-kim',
+    username: 'thaki-choi',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -91,7 +91,7 @@ const mockUsers: User[] = [
   },
   {
     id: 'user-4',
-    username: 'thaki-kim',
+    username: 'thaki-jung',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -100,7 +100,7 @@ const mockUsers: User[] = [
   },
   {
     id: 'user-5',
-    username: 'thaki-kim',
+    username: 'thaki-kang',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -109,7 +109,7 @@ const mockUsers: User[] = [
   },
   {
     id: 'user-6',
-    username: 'thaki-kim',
+    username: 'thaki-han',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -118,7 +118,7 @@ const mockUsers: User[] = [
   },
   {
     id: 'user-7',
-    username: 'thaki-kim',
+    username: 'thaki-ryu',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
     lastSignIn: 'Sep 12, 2025',
@@ -979,9 +979,8 @@ export default function CreateUserGroupPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'IAM', href: '/iam' },
-                { label: 'User groups', href: '/iam/user-groups' },
-                { label: 'Create user group' },
+                { label: 'User Groups', href: '/iam/user-groups' },
+                { label: 'Create User Group' },
               ]}
             />
           }

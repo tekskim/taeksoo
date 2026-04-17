@@ -188,9 +188,8 @@ export function CreateLimitRangeYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'LimitRanges', href: '/container/limitRanges' },
-                { label: 'Create limit range' },
+                { label: 'Limit Ranges', href: '/container/limit-ranges' },
+                { label: 'Create Limit Range' },
               ]}
             />
           }

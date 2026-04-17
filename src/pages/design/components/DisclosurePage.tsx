@@ -1,22 +1,97 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
+import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Disclosure, VStack } from '@/design-system';
+
+const DISCLOSURE_GUIDELINES = `## Overview
+
+Disclosure는 **레이블(Label)과 Chevron 아이콘으로 구성된 토글 트리거**로, 클릭 시 하위 콘텐츠(Panel)를 펼치거나 접는 컴포넌트이다. Form 내 복잡한 설정 그룹이나 페이지 영역의 콘텐츠를 접어 화면 밀도를 조절하는 데 사용한다.
+
+---
+
+## Composition
+
+| 요소 | 설명 | 스펙 |
+| --- | --- | --- |
+| ① Chevron Icon | 접힌/펼침 상태를 시각적으로 전달하는 아이콘 | Tabler 아이콘: \`IconChevronRight\`(접힌) / \`IconChevronDown\`(펼침) |
+| ② Label | 그룹의 제목 또는 헤더를 표시하는 텍스트 | \`text-label-lg\` (13px / line-height 18px) |
+| ③ Panel | 펼침 시 노출되는 하위 콘텐츠 영역 | 펼침(노출) 상태에서만 렌더링 |
+
+### Visual Layout
+
+\`\`\`
+[ Collapsed (접힌) 상태 ]
+┌─────────────────────────────────────────────────────────────┐
+│  ① ▶  ② Section Label                                      │
+└─────────────────────────────────────────────────────────────┘
+
+[ Expanded (펼침) 상태 ]
+┌─────────────────────────────────────────────────────────────┐
+│  ① ▼  ② Section Label                                      │
+│  ─────────────────────────────────────────────────────────  │
+│  ③ Panel Content Area                                       │
+│     (Form Fields, 입력 요소 등)                              │
+└─────────────────────────────────────────────────────────────┘
+\`\`\`
+
+---
+
+## States
+
+| 상태 | 설명 | 비주얼 |
+| --- | --- | --- |
+| Default (Collapsed) | Panel이 접힌 상태 (Disclosure 기본 상태) | \`IconChevronRight\` / 기본 텍스트 색상 |
+| Default (Expanded) | Panel이 펼쳐진 상태 | \`IconChevronDown\` / 기본 텍스트 색상 |
+| Hover | Trigger 영역에 마우스가 올라갈 때 | Label 색상이 subtle 톤으로 전환 (약 150ms 트랜지션) |
+| Disabled | 토글 상호작용이 비활성화된 상태 | 컴포넌트 비활성화 스펙 준수 |
+
+---
+
+## Behavior
+
+### 1) 토글 동작
+
+- Trigger(Label + Chevron) 클릭 시 Panel을 펼치거나 접는다.
+- **아이콘 스왑**: \`IconChevronRight\`(접힌)↔\`IconChevronDown\`(펼침) 아이콘을 교체한다. rotate 애니메이션을 사용하지 않는다.
+
+### 2) 호버 상태
+
+- Trigger 영역에 호버 시 Label 색상이 subtle 텍스트 색으로 변경된다.
+- 색상 변환에는 **150ms 트랜지션**을 적용한다.
+
+### 3) 접근성
+
+- Trigger는 키보드 조작(Enter/Space)이 동작하도록 한다.
+- \`aria-expanded\`로 Panel의 펼침/접힌 상태를 제공한다.
+
+---
+
+## Related
+
+| 이름 | 유형 | 비고 |
+| --- | --- | --- |
+| Dynamic form fields | Pattern | Disclosure를 Trigger로 사용하는 상위 패턴 |
+| Form Field | Component | Panel 내부에 구성되는 입력 요소 |
+| Icon | Foundation | Chevron 아이콘 스펙 (Tabler) |
+`;
 
 export function DisclosurePage() {
   return (
     <ComponentPageTemplate
       title="Disclosure"
-      description="Expandable/collapsible content sections"
+      description="레이블(Label)과 Chevron 아이콘으로 구성된 토글 트리거로, 클릭 시 하위 콘텐츠(Panel)를 펼치거나 접는 컴포넌트이다. Form 내 복잡한 설정 그룹이나 페이지 영역의 콘텐츠를 접어 화면 밀도를 조절하는 데 사용한다."
       whenToUse={[
-        'FAQ, 도움말 등 접기/펼치기가 필요한 콘텐츠를 표시할 때',
-        '선택적 세부 정보를 기본적으로 숨기고 사용자 요청 시 표시할 때',
-        '긴 콘텐츠를 섹션별로 나누어 화면 공간을 절약할 때',
+        '관련 입력 필드 또는 설정 항목을 하나의 논리적 그룹으로 묶어 보여줘야 할 때',
+        'Form이 길어져 전체 레이아웃을 축소하는 폴딩 패턴이 필요할 때',
+        'Dynamic Form Fields 패턴에서 Disclosure with Nested Grid 구성의 상위 트리거로 사용할 때',
+        '콘텐츠의 노출/숨김 상태를 사용자가 제어할 수 있어야 할 때',
       ]}
       whenNotToUse={[
-        '항상 표시되어야 하는 중요한 정보인 경우 → SectionCard 사용',
-        '탭 간 전환이 필요한 경우 → Tabs 사용',
-        '단계별 진행이 필요한 경우 → Wizard(SectionCard) 사용',
+        '항상 모든 콘텐츠가 보여야 하는 영역(→ 접을 필요가 없는 경우)',
+        '탭(Tab) 또는 스텝퍼(Stepper)가 더 적합한 다단계 흐름',
+        'Accordion이 요구되는 상호 배타적(Exclusive) 토글 구조',
       ]}
       preview={
         <ComponentPreview
@@ -107,23 +182,15 @@ export function DisclosurePage() {
         </VStack>
       }
       guidelines={
-        <VStack gap={4}>
-          <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
-          <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Create/Edit 페이지에서 설정 카드의 접힘/펼침에 사용합니다.</li>
-              <li>
-                <strong>기본 상태</strong>: 필수 입력이 있는 섹션은 기본 펼침, 선택 사항만 있는
-                섹션은 기본 접힘. 필수+선택 혼합 시 기본 펼침.
-              </li>
-              <li>접힌 상태에서도 섹션의 입력 상태(완료/미완료/오류)를 시각적으로 표시합니다.</li>
-              <li>
-                <strong>중첩</strong>: Disclosure 내부에 또 다른 Disclosure를 중첩하지 않습니다
-                (1단계만).
-              </li>
-              <li>접힘/펼침 전환 시 부드러운 애니메이션(200~300ms)을 적용합니다.</li>
-            </ul>
-          </div>
+        <VStack gap={6}>
+          <NotionRenderer markdown={DISCLOSURE_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              'Form 내 5개 이상의 입력 필드로 구성된 그룹에 사용한다.',
+              'Label은 해당 그룹이 무엇인지 명확하게 작성한다.',
+            ]}
+            dontItems={['레이블에 긴 문장(장문)을 사용하지 않는다.']}
+          />
         </VStack>
       }
       tokens={
@@ -132,16 +199,9 @@ export function DisclosurePage() {
         </div>
       }
       relatedLinks={[
-        {
-          label: 'Section card',
-          path: '/design/patterns/section-card',
-          description: 'Container for grouping related content',
-        },
-        {
-          label: 'Detail header',
-          path: '/design/patterns/detail-header',
-          description: 'Page header for resource detail views',
-        },
+        { label: 'Dynamic Form Fields', path: '/design/patterns/dynamic-form-fields' },
+        { label: 'Form Field', path: '/design/patterns/form-field-pattern' },
+        { label: 'Icons', path: '/design/foundation/icons' },
       ]}
     />
   );

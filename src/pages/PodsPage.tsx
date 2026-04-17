@@ -55,8 +55,8 @@ const podsData: PodRow[] = [
     id: '1',
     status: 'Running',
     name: 'frontend-web-application-deployment-7fb96c846b-x2vnl',
-    namespace: 'namespaceName',
-    image: 'imageName',
+    namespace: 'default',
+    image: 'nginx:1.25',
     ready: '1/1',
     restarts: 1,
     ip: '10.76.0.1',
@@ -161,6 +161,12 @@ export function PodsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -407,9 +413,7 @@ export function PodsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Pods' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Pods' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -520,11 +524,13 @@ export function PodsPage() {
         {/* Table */}
         <Table<PodRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No pods found"
         />
       </VStack>
     </PageShell>

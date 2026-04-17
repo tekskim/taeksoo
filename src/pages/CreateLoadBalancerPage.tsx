@@ -1430,9 +1430,8 @@ export default function CreateLoadBalancerPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
                 { label: 'Load Balancers', href: '/compute/load-balancers' },
-                { label: 'Create load balancer' },
+                { label: 'Create Load Balancer' },
               ]}
             />
           }

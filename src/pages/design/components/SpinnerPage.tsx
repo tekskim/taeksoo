@@ -1,6 +1,7 @@
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { Loading, VStack } from '@/design-system';
 
@@ -34,238 +35,110 @@ function Td({ children, className = '' }: { children?: React.ReactNode; classNam
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
-}
+const SPINNER_GUIDELINES = `## Overview
 
-function SubSectionTitle({ children }: { children: React.ReactNode }) {
-  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
-}
+Spinner는 **작업이 진행 중이거나 시스템이 응답을 기다리는 동안 로딩 상태를 표시하는 컴포넌트**이다.
 
-function Prose({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
-      {children}
-    </div>
-  );
-}
+Spinner는 사용자가 시스템이 정상적으로 동작하고 있음을 인지하도록 하며, 작업이 완료될 때까지 기다려야 한다는 상태를 전달한다.
 
-function SpinnerGuidelines() {
-  return (
-    <VStack gap={10}>
-      {/* Composition */}
-      <VStack gap={4}>
-        <SectionTitle>Composition</SectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[200px]">요소</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Spinner Indicator</strong>
-              </Td>
-              <Td>회전하는 로딩 아이콘</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Container</strong>
-              </Td>
-              <Td>Spinner를 감싸는 영역</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Optional Label</strong>
-              </Td>
-              <Td>로딩 상태 설명 텍스트</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-      </VStack>
+Spinner는 다음 상황에서 사용된다.
 
-      {/* Variants */}
-      <VStack gap={4}>
-        <SectionTitle>Variants</SectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[180px]">유형</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Page Spinner</strong>
-              </Td>
-              <Td>전체 화면 로딩 표시</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Button Spinner</strong>
-              </Td>
-              <Td>버튼 내부 작업 진행 표시</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-      </VStack>
+- 작업 진행 중 (Processing state)
+- 데이터 요청 대기 상태
+- 비동기 작업 수행 중
+- 전체 화면 로딩 상태
 
-      {/* Behavior */}
-      <VStack gap={4}>
-        <SectionTitle>Behavior</SectionTitle>
+Spinner는 **작업 완료 시 자동으로 제거되며 실제 UI 또는 결과 상태로 교체된다.**
 
-        <VStack gap={3}>
-          <SubSectionTitle>1) Loading 시작</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>작업 또는 데이터 요청이 시작되면 Spinner를 표시한다.</li>
-            </ul>
-          </Prose>
-        </VStack>
+---
 
-        <VStack gap={3}>
-          <SubSectionTitle>2) Loading 진행</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Spinner는 작업이 완료될 때까지 계속 표시된다.</li>
-              <li>
-                Spinner는 <strong>무한 회전 애니메이션</strong>을 사용한다.
-              </li>
-              <li>작업 진행률을 표시하지 않는다.</li>
-            </ul>
-          </Prose>
-        </VStack>
+## Composition
 
-        <VStack gap={3}>
-          <SubSectionTitle>3) Loading 완료</SubSectionTitle>
-          <Prose>
-            <p>작업이 완료되면 Spinner는 제거되고 다음 상태로 전환된다.</p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>실제 콘텐츠 표시</li>
-              <li>성공 메시지</li>
-              <li>오류 메시지</li>
-            </ul>
-          </Prose>
-        </VStack>
+| 요소 | 설명 |
+| --- | --- |
+| Spinner Indicator | 회전하는 로딩 아이콘 |
+| Container | Spinner를 감싸는 영역 |
+| Optional Label | 로딩 상태 설명 텍스트 |
 
-        <VStack gap={3}>
-          <SubSectionTitle>4) Loading 시간 정책</SubSectionTitle>
-          <TableWrapper>
-            <thead>
-              <tr>
-                <Th>로딩 시간</Th>
-                <Th>정책</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>{'< 300ms'}</Td>
-                <Td>Spinner 표시하지 않음</Td>
-              </tr>
-              <tr>
-                <Td>300ms – 3s</Td>
-                <Td>Spinner 표시</Td>
-              </tr>
-            </tbody>
-          </TableWrapper>
-        </VStack>
+---
 
-        <VStack gap={3}>
-          <SubSectionTitle>5) 인터랙션 제한</SubSectionTitle>
-          <Prose>
-            <p>Spinner가 표시되는 동안 다음 정책을 따른다.</p>
-          </Prose>
-          <TableWrapper>
-            <thead>
-              <tr>
-                <Th>상태</Th>
-                <Th>정책</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>
-                  <strong>Button spinner</strong>
-                </Td>
-                <Td>해당 버튼 클릭 제한</Td>
-              </tr>
-              <tr>
-                <Td>
-                  <strong>Page spinner</strong>
-                </Td>
-                <Td>전체 화면 인터랙션 제한</Td>
-              </tr>
-            </tbody>
-          </TableWrapper>
-        </VStack>
+## Variants
 
-        <VStack gap={3}>
-          <SubSectionTitle>6) Optional Label</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>전체 화면 로딩이 이뤄질 경우 스피너 아래에 문구를 추가한다.</li>
-              <li>문구: Loading data…</li>
-            </ul>
-          </Prose>
-        </VStack>
+| 유형 | 설명 |
+| --- | --- |
+| Page Spinner | 전체 화면 로딩 표시 |
+| Button Spinner | 버튼 내부 작업 진행 표시 |
 
-        <VStack gap={3}>
-          <SubSectionTitle>7) Spinner와 Progress 구분</SubSectionTitle>
-          <TableWrapper>
-            <thead>
-              <tr>
-                <Th>유형</Th>
-                <Th>의미</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>
-                  <strong>Spinner</strong>
-                </Td>
-                <Td>진행률 알 수 없음</Td>
-              </tr>
-              <tr>
-                <Td>
-                  <strong>Progress bar</strong>
-                </Td>
-                <Td>진행률 알 수 있음</Td>
-              </tr>
-            </tbody>
-          </TableWrapper>
-        </VStack>
-      </VStack>
+---
 
-      {/* Usage Guidelines */}
-      <VStack gap={4}>
-        <SectionTitle>Usage Guidelines</SectionTitle>
-        <DosDonts
-          doItems={[
-            '작업 진행 상태를 명확히 전달한다.',
-            'Spinner 표시 시간을 최소화한다.',
-            '필요한 경우 상태 메시지를 함께 제공한다.',
-            '로딩 영역 범위를 명확히 한다.',
-          ]}
-          dontItems={[
-            'Skeleton과 Spinner를 동시에 사용하지 않는다.',
-            'Spinner를 너무 오래 표시하지 않는다.',
-            '로딩 상태가 아닌 곳에서 Spinner를 사용하지 않는다.',
-            '불필요하게 전체 화면 Spinner를 사용하지 않는다.',
-          ]}
-        />
-      </VStack>
-    </VStack>
-  );
-}
+## Behavior
+
+### 1) Loading 시작
+
+- 작업 또는 데이터 요청이 시작되면 Spinner를 표시한다.
+
+### 2) Loading 진행
+
+- Spinner는 작업이 완료될 때까지 계속 표시된다.
+- Spinner는 **무한 회전 애니메이션**을 사용한다.
+- 작업 진행률을 표시하지 않는다.
+
+### 3) Loading 완료
+
+- 작업이 완료되면 Spinner는 제거되고 다음 상태로 전환된다.
+
+가능한 결과:
+
+- 실제 콘텐츠 표시
+- 성공 메시지
+- 오류 메시지
+
+### 4) Loading 시간 정책
+
+| 로딩 시간 | 정책 |
+| --- | --- |
+| < 300ms | Spinner 표시하지 않음 |
+| 300ms – 3s | Spinner 표시 |
+
+### 5) 인터랙션 제한
+
+Spinner가 표시되는 동안 다음 정책을 따른다.
+
+| 상태 | 정책 |
+| --- | --- |
+| Button spinner | 해당 버튼 클릭 제한 |
+| Page spinner | 전체 화면 인터랙션 제한 |
+
+### 6) Optional Label
+
+- 전체 화면 로딩이 이뤄질 경우 스피너 아래에 문구를 추가한다.
+- 문구: Loading data…
+
+### 7) Spinner와 Progress 구분
+
+| 유형 | 의미 |
+| --- | --- |
+| Spinner | 진행률 알 수 없음 |
+| Progress bar | 진행률 알 수 있음 |
+
+---
+
+## Related
+
+| 이름 | 유형 | 이유 |
+| --- | --- | --- |
+| Loading | Pattern | 상위 로딩 패턴 |
+| Skeleton | Component | 콘텐츠 로딩 표시 |
+| Progress Bar | Component | 진행률 표시 |
+| Empty State | Pattern | 데이터 없음 상태 |
+| Modal | Component | 작업 진행 상태 표시 |
+`;
 
 export function SpinnerPage() {
   return (
     <ComponentPageTemplate
       title="Spinner"
-      description="Spinner는 작업이 진행 중이거나 시스템이 응답을 기다리는 동안 로딩 상태를 표시하는 컴포넌트이다. 사용자가 시스템이 정상적으로 동작하고 있음을 인지하도록 하며, 작업이 완료될 때까지 기다려야 한다는 상태를 전달한다."
+      description="작업이 진행 중이거나 시스템이 응답을 기다리는 동안 로딩 상태를 표시하는 컴포넌트. 사용자가 시스템이 정상적으로 동작하고 있음을 인지하도록 하며, 작업이 완료될 때까지 기다려야 한다는 상태를 전달한다. 작업 완료 시 자동으로 제거되며 실제 UI 또는 결과 상태로 교체된다."
       whenToUse={[
         '작업 진행 상태를 표시해야 하는 경우',
         'UI 레이아웃을 미리 표시할 수 없는 경우',
@@ -336,7 +209,25 @@ export function SpinnerPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<SpinnerGuidelines />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={SPINNER_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '작업 진행 상태를 명확히 전달한다.',
+              'Spinner 표시 시간을 최소화한다.',
+              '필요한 경우 상태 메시지를 함께 제공한다.',
+              '로딩 영역 범위를 명확히 한다.',
+            ]}
+            dontItems={[
+              'Skeleton과 Spinner를 동시에 사용하지 않는다.',
+              'Spinner를 너무 오래 표시하지 않는다.',
+              '로딩 상태가 아닌 곳에서 Spinner를 사용하지 않는다.',
+              '불필요하게 전체 화면 Spinner를 사용하지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <TableWrapper>
           <thead>
@@ -366,19 +257,11 @@ export function SpinnerPage() {
         </TableWrapper>
       }
       relatedLinks={[
-        { label: 'Loading', path: '/design/components/loading', description: '상위 로딩 패턴' },
-        { label: 'Skeleton', path: '/design/components/skeleton', description: '콘텐츠 로딩 표시' },
-        {
-          label: 'Progress Bar',
-          path: '/design/components/progress-bar',
-          description: '진행률 표시',
-        },
-        {
-          label: 'Empty State',
-          path: '/design/patterns/empty-states',
-          description: '데이터 없음 상태',
-        },
-        { label: 'Modal', path: '/design/components/modal', description: '작업 진행 상태 표시' },
+        { label: 'Loading', path: '/design/components/loading' },
+        { label: 'Skeleton', path: '/design/components/skeleton' },
+        { label: 'Progress Bar', path: '/design/components/progress-bar' },
+        { label: 'Empty State', path: '/design/patterns/empty-states' },
+        { label: 'Modal', path: '/design/components/modal' },
       ]}
     />
   );

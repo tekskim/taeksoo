@@ -1725,11 +1725,7 @@ export function CreatePodPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Pods', href: '/container/pods' },
-                { label: 'Create pod' },
-              ]}
+              items={[{ label: 'Pods', href: '/container/pods' }, { label: 'Create Pod' }]}
             />
           }
           actions={<ContainerTopBarActions />}

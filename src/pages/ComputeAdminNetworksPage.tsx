@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Badge,
@@ -268,6 +268,13 @@ export function ComputeAdminNetworksPage() {
   const [editNetworkOpen, setEditNetworkOpen] = useState(false);
   const [selectedNetworkForDrawer, setSelectedNetworkForDrawer] = useState<Network | null>(null);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Drawer handlers
   const handleCreateSubnet = (network: Network) => {
     setSelectedNetworkForDrawer(network);
@@ -515,11 +522,7 @@ export function ComputeAdminNetworksPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Networks' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Networks' }]} />}
         />
       }
     >
@@ -590,6 +593,7 @@ export function ComputeAdminNetworksPage() {
           selectable
           selectedKeys={selectedNetworks}
           onSelectionChange={setSelectedNetworks}
+          loading={loading}
         />
       </VStack>
 

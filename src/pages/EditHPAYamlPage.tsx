@@ -262,13 +262,7 @@ export function EditHPAYamlPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal Pod Autoscalers', href: '/container/hpa' },
-                { label: hpaName || 'Edit HPA' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'HPA', href: '/container/hpa' }, { label: 'Edit HPA' }]} />
           }
           actions={<ContainerTopBarActions />}
         />

@@ -313,9 +313,7 @@ export function AgentPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Agent' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Agents' }]} />}
           actions={
             <>
               <TopBarAction

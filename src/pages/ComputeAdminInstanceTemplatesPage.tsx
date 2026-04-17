@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -222,6 +222,13 @@ export function ComputeAdminInstanceTemplatesPage() {
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Default column config
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
@@ -415,14 +422,7 @@ export function ComputeAdminInstanceTemplatesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Instance templates' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Instance Templates' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -494,6 +494,7 @@ export function ComputeAdminInstanceTemplatesPage() {
           selectable
           selectedKeys={selectedTemplates}
           onSelectionChange={setSelectedTemplates}
+          loading={loading}
         />
       </VStack>
 

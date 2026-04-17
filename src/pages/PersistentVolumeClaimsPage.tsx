@@ -136,6 +136,12 @@ export function PersistentVolumeClaimsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -357,14 +363,7 @@ export function PersistentVolumeClaimsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Persistent volume claims' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Persistent Volume Claims' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -480,6 +479,8 @@ export function PersistentVolumeClaimsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No persistent volume claims found"
         />
       </VStack>
     </PageShell>

@@ -992,7 +992,6 @@ export function DaemonSetDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'DaemonSets', href: '/container/daemonsets' },
                 { label: daemonset.name },
               ]}

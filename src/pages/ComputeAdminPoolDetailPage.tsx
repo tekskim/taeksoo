@@ -215,10 +215,16 @@ export default function PoolDetailPage() {
   const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Load balancers', href: '/compute-admin/load-balancers' },
-    { label: 'web-lb-01', href: '/compute-admin/load-balancers/lb-001' },
-    { label: 'listener-http-80', href: '/listeners/listener-001' },
+    { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
+    {
+      label:
+        pool.listener?.id === '38fk29dk'
+          ? 'lb-002'
+          : pool.listener?.id === '9dk38fj2'
+            ? 'lb-003'
+            : 'lb-001',
+    },
+    { label: pool.listener?.id ?? '' },
     { label: pool.name },
   ];
 

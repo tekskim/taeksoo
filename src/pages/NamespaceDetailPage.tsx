@@ -875,7 +875,6 @@ export function NamespaceDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
                 { label: namespace.name },
               ]}

@@ -101,6 +101,12 @@ export function ConfigMapsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -273,11 +279,7 @@ export function ConfigMapsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'ConfigMaps' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'ConfigMaps' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -393,6 +395,8 @@ export function ConfigMapsPage() {
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          loading={loading}
+          emptyMessage="No config maps found"
         />
       </VStack>
     </PageShell>

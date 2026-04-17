@@ -13,6 +13,7 @@ import {
   SectionCard,
   Table,
   PageShell,
+  PageHeader,
   type TableColumn,
   type TimeRangeValue,
   fixedColumns,
@@ -61,17 +62,18 @@ interface StatCard {
 const poolsStats: StatCard[] = [
   { label: 'Pools', value: '21' },
   { label: 'Pools with Compression', value: 'N/A' },
-  { label: 'Total raw capacity', value: '11.6', unit: 'TiB' },
-  { label: 'Raw capacity Consumed', value: '47.4', unit: 'TiB' },
+  { label: 'Total raw capacity', value: '47.4', unit: 'TiB' },
+  { label: 'Raw capacity Consumed', value: '11.6', unit: 'TiB' },
   { label: 'Logical stored', value: '15.8', unit: 'TiB' },
   { label: 'Compression savings', value: '0', unit: 'B' },
   { label: 'Compression eligibility', value: 'N/A' },
   { label: 'Compression factor', value: 'N/A' },
 ];
 
-// Generate mock series data
+/** Deterministic mock series (6 points) — avoids chart flicker on re-render. */
+const SERIES_JITTER = [0, 1.4, 2.2, 0.7, 2.6, 1.1] as const;
 const generateSeriesData = (base: number, growth: number = 2): number[] => {
-  return [0, 1, 2, 3, 4, 5].map((i) => base + i * growth + Math.random() * 3);
+  return [0, 1, 2, 3, 4, 5].map((i) => base + i * growth + SERIES_JITTER[i]);
 };
 
 const capacitySeries = [
@@ -1095,20 +1097,13 @@ export function OverallPerformancePage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Home', href: '/storage' }, { label: 'Overall performance' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Overall performance' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6} className="min-w-[1176px]">
-        {/* Page Header */}
-        <div className="flex items-center justify-between h-8">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Overall performance</h1>
-        </div>
+        <PageHeader title="Overall performance" />
 
         {/* Page Tabs */}
         <div className="w-full">

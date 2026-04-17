@@ -89,7 +89,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
           {/* Home */}
           <MenuItem
             icon={<IconHome size={16} stroke={1.5} />}
-            label="Home"
+            label="Dashboard"
             href="/compute-admin"
             active={isActive('/compute-admin')}
           />
@@ -230,7 +230,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
             <MenuItem
               icon={<IconFileCode size={16} stroke={1.5} />}
-              label="Metadata definition"
+              label="Metadata definitions"
               href="/compute-admin/metadata-definition"
               active={isActive('/compute-admin/metadata-definition')}
             />

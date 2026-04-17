@@ -143,7 +143,6 @@ export function CreateNamespacePage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
                 { label: 'Create Namespace' },
               ]}

@@ -14,6 +14,7 @@ import {
   TabBar,
   StatusIndicator,
   PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -167,13 +168,22 @@ export default function IAMSystemAdministratorsPage() {
   );
 
   // Context menu items
-  const contextMenuItems: ContextMenuItem[] = [
-    { id: 'view', label: 'View details' },
-    { id: 'edit', label: 'Edit account' },
-    { id: 'reset-password', label: 'Reset password' },
-    { id: 'lock', label: 'Lock account' },
-    { id: 'unlock', label: 'Unlock account' },
-    { id: 'delete', label: 'Delete account', status: 'danger' },
+  const getContextMenuItems = (row: SystemAdmin): ContextMenuItem[] => [
+    { id: 'view', label: 'View details', onClick: () => console.log('view', row.id) },
+    { id: 'edit', label: 'Edit account', onClick: () => console.log('edit', row.id) },
+    {
+      id: 'reset-password',
+      label: 'Reset password',
+      onClick: () => console.log('reset-password', row.id),
+    },
+    { id: 'lock', label: 'Lock account', onClick: () => console.log('lock', row.id) },
+    { id: 'unlock', label: 'Unlock account', onClick: () => console.log('unlock', row.id) },
+    {
+      id: 'delete',
+      label: 'Delete account',
+      status: 'danger',
+      onClick: () => console.log('delete', row.id),
+    },
   ];
 
   // Table columns (using fixedColumns / columnMinWidths preset)
@@ -246,7 +256,7 @@ export default function IAMSystemAdministratorsPage() {
       align: 'center',
       sticky: 'right',
       render: (_value, row) => (
-        <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu items={getContextMenuItems(row)}>
           <button
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
@@ -283,29 +293,24 @@ export default function IAMSystemAdministratorsPage() {
           showNavigation
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'IAM', href: '/iam' }, { label: 'System administrators' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'System Administrators' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
     >
       <VStack gap={3}>
-        {/* Header */}
-        <HStack justify="between" align="center" className="w-full">
-          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            System administrators
-          </h1>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => navigate('/iam/system-administrators/create')}
-          >
-            Create account
-          </Button>
-        </HStack>
+        <PageHeader
+          title="System administrators"
+          actions={
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => navigate('/iam/system-administrators/create')}
+            >
+              Create account
+            </Button>
+          }
+        />
 
         {/* Table Content */}
         <VStack gap={3} className="w-full">
@@ -339,7 +344,12 @@ export default function IAMSystemAdministratorsPage() {
           />
 
           {/* Table */}
-          <Table<SystemAdmin> columns={columns} data={paginatedAdmins} rowKey="id" />
+          <Table<SystemAdmin>
+            columns={columns}
+            data={paginatedAdmins}
+            rowKey="id"
+            emptyMessage="No system administrators found"
+          />
         </VStack>
       </VStack>
     </PageShell>

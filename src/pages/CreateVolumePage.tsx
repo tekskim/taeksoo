@@ -690,7 +690,7 @@ export function CreateVolumePage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[{ label: 'Volumes', href: '/compute/volumes' }, { label: 'Create volume' }]}
+              items={[{ label: 'Volumes', href: '/compute/volumes' }, { label: 'Create Volume' }]}
             />
           }
         />

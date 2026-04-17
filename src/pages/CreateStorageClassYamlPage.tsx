@@ -188,9 +188,8 @@ export function CreateStorageClassYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'StorageClasss', href: '/container/storageClasss' },
-                { label: 'Create StorageClass' },
+                { label: 'Storage Classes', href: '/container/storage-classes' },
+                { label: 'Create Storage Class' },
               ]}
             />
           }

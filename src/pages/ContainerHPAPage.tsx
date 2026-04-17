@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   VStack,
-  HStack,
   PageShell,
   PageHeader,
   TabBar,
@@ -13,6 +12,7 @@ import {
   SearchInput,
   Pagination,
   ContextMenu,
+  ListToolbar,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -110,6 +110,13 @@ export function ContainerHPAPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
 
   // Create menu items
@@ -337,14 +344,7 @@ export function ContainerHPAPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal pod autoscalers' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'HPA' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -392,48 +392,53 @@ export function ContainerHPAPage() {
           }
         />
 
-        {/* Action Bar */}
-        <HStack gap={2} align="center" className="w-full min-h-7">
-          {/* Search */}
-          <HStack gap={1} align="center">
-            <SearchInput
-              placeholder="Search horizontal pod autoscaler by attributes"
-              size="sm"
-              className="w-[var(--search-input-width)]"
-            />
-            <Button
-              variant="secondary"
-              size="sm"
-              aria-label="Download"
-              className="!p-0 !w-7 !h-7 !min-w-7"
-            >
-              <IconDownload size={12} stroke={1.5} />
-            </Button>
-          </HStack>
-
-          {/* Divider */}
-          <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-          {/* Actions */}
-          <HStack gap={1} align="center">
-            <Button
-              variant="muted"
-              size="sm"
-              leftIcon={<IconDownload size={12} stroke={1.5} />}
-              disabled={selectedRows.length === 0}
-            >
-              Download YAML
-            </Button>
-            <Button
-              variant="muted"
-              size="sm"
-              leftIcon={<IconTrash size={12} stroke={1.5} />}
-              disabled={selectedRows.length === 0}
-            >
-              Delete
-            </Button>
-          </HStack>
-        </HStack>
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <SearchInput
+                placeholder="Search horizontal pod autoscaler by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                aria-label="Download"
+                className="!p-0 !w-7 !h-7 !min-w-7"
+              >
+                <IconDownload size={12} stroke={1.5} />
+              </Button>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconDownload size={12} stroke={1.5} />}
+                disabled={selectedRows.length === 0}
+              >
+                Download YAML
+              </Button>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} stroke={1.5} />}
+                disabled={selectedRows.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+          filters={filters.map((f, i) => ({
+            id: String(i),
+            field: f.key,
+            value: f.value,
+          }))}
+          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+          onFiltersClear={handleClearFilters}
+          clearFiltersLabel="Clear filters"
+        />
 
         {/* Pagination */}
         <Pagination
@@ -455,6 +460,8 @@ export function ContainerHPAPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           onRowClick={(row) => navigate(`/container/hpa/${row.id}`)}
+          loading={loading}
+          emptyMessage="No autoscalers found"
         />
       </VStack>
     </PageShell>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -16,6 +16,7 @@ import {
   SearchInput,
   Pagination,
   PageShell,
+  ErrorState,
   ProgressBar,
   STATUS_THRESHOLDS,
   columnMinWidths,
@@ -298,6 +299,7 @@ const mockClients: Client[] = [
 
 export function FileSystemDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'details';
@@ -481,7 +483,6 @@ export function FileSystemDetailPage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Home', href: '/storage' },
                   { label: 'File Systems', href: '/storage/file-systems' },
                   { label: 'Not Found' },
                 ]}
@@ -490,7 +491,15 @@ export function FileSystemDetailPage() {
           />
         }
       >
-        <div className="p-8 text-[var(--color-text-muted)]">File system not found.</div>
+        <ErrorState
+          title="File system not found"
+          description="The requested file system could not be found."
+          action={
+            <Button variant="secondary" size="md" onClick={() => navigate('/storage/file-systems')}>
+              Back to file systems
+            </Button>
+          }
+        />
       </PageShell>
     );
   }
@@ -523,7 +532,6 @@ export function FileSystemDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Home', href: '/storage' },
                 { label: 'File Systems', href: '/storage/file-systems' },
                 { label: fsData.name },
               ]}

@@ -974,11 +974,7 @@ export function OSDDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Home', href: '/storage' },
-                { label: 'OSDs', href: '/storage/osds' },
-                { label: `OSD.${osd.id}` },
-              ]}
+              items={[{ label: 'OSDs', href: '/storage/osds' }, { label: `OSD.${osd.id}` }]}
             />
           }
         />

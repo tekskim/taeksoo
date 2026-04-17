@@ -223,10 +223,9 @@ export default function PoolDetailPage() {
   const healthMonitor = mockHealthMonitor;
 
   const breadcrumbItems = [
-    { label: 'Proj-1', href: '/' },
-    { label: 'Load balancers', href: '/compute/load-balancers' },
-    { label: 'web-lb-01', href: '/compute/load-balancers/lb-001' },
-    { label: 'listener-http-80', href: '/listeners/listener-001' },
+    { label: 'Load Balancers', href: '/compute/load-balancers' },
+    { label: 'lb-001' },
+    { label: pool.listener?.id ?? '-' },
     { label: pool.name },
   ];
 
@@ -434,7 +433,7 @@ export default function PoolDetailPage() {
 
         {/* Tabs */}
         <div className="w-full">
-          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
             <TabList>
               <Tab value="details">Details</Tab>
               <Tab value="members">Members</Tab>

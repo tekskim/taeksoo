@@ -187,11 +187,7 @@ export function EditNodeConfigPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Nodes', href: '/container/nodes' },
-                { label: `Edit: ${nodeName}` },
-              ]}
+              items={[{ label: 'Nodes', href: '/container/nodes' }, { label: 'Edit Node Config' }]}
             />
           }
           actions={<ContainerTopBarActions />}

@@ -367,9 +367,7 @@ export function HostsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Hosts' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Hosts' }]} />}
         />
       }
     >
@@ -383,7 +381,7 @@ export function HostsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
-                placeholder="Search users by attributes"
+                placeholder="Search hosts by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}

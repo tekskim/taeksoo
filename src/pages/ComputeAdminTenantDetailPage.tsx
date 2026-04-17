@@ -271,11 +271,7 @@ export default function ComputeAdminTenantDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Tenants', href: '/compute-admin/tenants' },
-                { label: tenant.name },
-              ]}
+              items={[{ label: 'Tenants', href: '/compute-admin/tenants' }, { label: tenant.name }]}
             />
           }
         />

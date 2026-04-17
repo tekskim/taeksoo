@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -269,6 +269,13 @@ export function ComputeAdminImagesPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -515,11 +522,7 @@ export function ComputeAdminImagesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Compute Admin', href: '/compute-admin' }, { label: 'Images' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-6"
@@ -591,6 +594,7 @@ export function ComputeAdminImagesPage() {
           selectable
           selectedKeys={selectedImages}
           onSelectionChange={setSelectedImages}
+          loading={loading}
         />
       </VStack>
 

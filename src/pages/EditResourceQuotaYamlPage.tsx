@@ -196,13 +196,8 @@ export function EditResourceQuotaYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'ResourceQuotas', href: '/container/resourceQuotas' },
-                {
-                  label: resourceQuotaName || 'ResourceQuota',
-                  href: `/container/resourceQuotas/${resourceQuotaName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Resource Quotas', href: '/container/resource-quotas' },
+                { label: 'Edit Resource Quota' },
               ]}
             />
           }

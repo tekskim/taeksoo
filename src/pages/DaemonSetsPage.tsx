@@ -162,6 +162,12 @@ export function DaemonSetsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -383,11 +389,7 @@ export function DaemonSetsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'DaemonSets' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'DaemonSets' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -506,11 +508,13 @@ export function DaemonSetsPage() {
         {/* Table */}
         <Table<DaemonSetRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No daemon sets found"
         />
       </VStack>
     </PageShell>

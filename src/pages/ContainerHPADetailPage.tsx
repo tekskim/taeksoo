@@ -419,13 +419,7 @@ export function ContainerHPADetailPage() {
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Horizontal pod autoscalers', href: '/container/hpa' },
-                { label: hpa.name },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'HPA', href: '/container/hpa' }, { label: hpa.name }]} />
           }
           actions={<ContainerTopBarActions />}
         />

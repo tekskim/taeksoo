@@ -248,8 +248,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
-    { label: 'Volumes', href: '/compute-admin/volume-backups' },
+    { label: 'Volume Backups', href: '/compute-admin/volume-backups' },
     { label: backup.name },
   ];
 

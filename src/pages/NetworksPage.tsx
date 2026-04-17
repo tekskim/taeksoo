@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Button,
@@ -252,6 +252,13 @@ export function NetworksPage() {
   const [createSubnetOpen, setCreateSubnetOpen] = useState(false);
   const [editNetworkOpen, setEditNetworkOpen] = useState(false);
   const [selectedNetworkForDrawer, setSelectedNetworkForDrawer] = useState<Network | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Drawer handlers
   const handleCreateSubnet = (network: Network) => {
@@ -516,9 +523,7 @@ export function NetworksPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Networks' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Networks' }]} />}
         />
       }
     >
@@ -599,6 +604,7 @@ export function NetworksPage() {
           selectable
           selectedKeys={selectedNetworks}
           onSelectionChange={setSelectedNetworks}
+          loading={loading}
         />
       </VStack>
 

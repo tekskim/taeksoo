@@ -188,7 +188,6 @@ export function CreateDaemonSetYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'DaemonSets', href: '/container/daemonsets' },
                 { label: 'Create DaemonSet' },
               ]}

@@ -231,7 +231,6 @@ export default function FloatingIPDetailPage() {
   }, [floatingIP.floatingIp, updateActiveTabLabel]);
 
   const breadcrumbItems = [
-    { label: 'Compute Admin', href: '/' },
     { label: 'Floating IPs', href: '/compute-admin/floating-ips' },
     { label: floatingIP.floatingIp },
   ];

@@ -161,15 +161,7 @@ export default function CatalogPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
-                { label: 'Catalog' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Catalog' }]} />}
           actions={<ContainerTopBarActions />}
         />
       }

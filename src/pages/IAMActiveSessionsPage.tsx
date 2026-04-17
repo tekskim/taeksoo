@@ -174,7 +174,7 @@ export default function IAMActiveSessionsPage() {
   ];
 
   // Breadcrumb items
-  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Active sessions' }];
+  const breadcrumbItems = [{ label: 'Active Sessions' }];
 
   // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<ActiveSession>[] = [
@@ -323,6 +323,7 @@ export default function IAMActiveSessionsPage() {
             selectable
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
+            emptyMessage="No active sessions found"
           />
         </VStack>
       </VStack>

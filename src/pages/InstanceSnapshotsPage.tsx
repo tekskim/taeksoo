@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -239,6 +239,13 @@ export function InstanceSnapshotsPage() {
   const [editSnapshotOpen, setEditSnapshotOpen] = useState(false);
   const [selectedSnapshotForDrawer, setSelectedSnapshotForDrawer] =
     useState<InstanceSnapshot | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Helper to parse size string to number
   const parseSizeToNumber = (size: string): number => {
@@ -527,11 +534,7 @@ export function InstanceSnapshotsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'Proj-1', href: '/project' }, { label: 'Instance snapshots' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Instance Snapshots' }]} />}
         />
       }
     >
@@ -593,6 +596,7 @@ export function InstanceSnapshotsPage() {
           selectable
           selectedKeys={selectedSnapshots}
           onSelectionChange={setSelectedSnapshots}
+          loading={loading}
         />
       </VStack>
 

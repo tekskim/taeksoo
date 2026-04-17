@@ -49,7 +49,7 @@ interface ClusterRow {
 const clustersData: ClusterRow[] = [
   {
     id: '1',
-    name: 'ClusterName',
+    name: 'prod-cluster-01',
     status: 'Provisioned',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
@@ -61,7 +61,7 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '2',
-    name: 'ClusterName',
+    name: 'staging-cluster',
     status: 'Failed',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
@@ -73,7 +73,7 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '3',
-    name: 'ClusterName',
+    name: 'dev-cluster-kr',
     status: 'Provisioning',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
@@ -85,7 +85,7 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '4',
-    name: 'ClusterName',
+    name: 'monitoring-cluster',
     status: 'Processing',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
@@ -97,7 +97,7 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '5',
-    name: 'ClusterName',
+    name: 'data-pipeline-cluster',
     status: 'Deleting',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
@@ -109,7 +109,7 @@ const clustersData: ClusterRow[] = [
   },
   {
     id: '6',
-    name: 'ClusterName',
+    name: 'analytics-cluster',
     status: 'Unknown',
     kubernetesVersion: 'v1.34.0',
     createdAt: 'Nov 11, 2025',
@@ -261,7 +261,7 @@ export function ContainerHomePage() {
       topBar={
         <TopBar
           showSidebarToggle={false}
-          breadcrumb={<Breadcrumb items={[{ label: 'Home' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={<ContainerTopBarActions />}
         />
       }

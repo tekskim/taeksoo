@@ -196,13 +196,8 @@ export function EditPersistentVolumeYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'PersistentVolumes', href: '/container/persistentVolumes' },
-                {
-                  label: pvName || 'PersistentVolume',
-                  href: `/container/persistentVolumes/${pvName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Persistent Volumes', href: '/container/persistent-volumes' },
+                { label: 'Edit Persistent Volume' },
               ]}
             />
           }

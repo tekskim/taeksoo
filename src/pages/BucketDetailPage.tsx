@@ -644,11 +644,7 @@ export function BucketDetailPage() {
           onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'Home', href: '/' },
-                { label: 'Buckets', href: '/storage/buckets' },
-                { label: bucketData.name },
-              ]}
+              items={[{ label: 'Buckets', href: '/storage/buckets' }, { label: bucketData.name }]}
             />
           }
         />

@@ -1289,13 +1289,7 @@ export default function CreateRolePage() {
       onBack={() => window.history.back()}
       onForward={() => window.history.forward()}
       breadcrumb={
-        <Breadcrumb
-          items={[
-            { label: 'IAM', href: '/iam' },
-            { label: 'Roles', href: '/iam/roles' },
-            { label: 'Create role' },
-          ]}
-        />
+        <Breadcrumb items={[{ label: 'Roles', href: '/iam/roles' }, { label: 'Create role' }]} />
       }
     />
   );

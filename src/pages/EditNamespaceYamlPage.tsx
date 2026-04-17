@@ -196,13 +196,8 @@ export function EditNamespaceYamlPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
                 { label: 'Namespaces', href: '/container/namespaces' },
-                {
-                  label: namespaceName || 'Namespace',
-                  href: `/container/namespaces/${namespaceName}`,
-                },
-                { label: 'Edit YAML' },
+                { label: 'Edit Namespace' },
               ]}
             />
           }

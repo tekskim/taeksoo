@@ -1035,11 +1035,7 @@ export function StoragePoolDetailPage() {
     }
   }, [pool?.name, updateActiveTabLabel]);
 
-  const breadcrumbItems = [
-    { label: 'Home', href: '/storage' },
-    { label: 'Pools', href: '/storage/pools' },
-    { label: pool.name },
-  ];
+  const breadcrumbItems = [{ label: 'Pools', href: '/storage/pools' }, { label: pool.name }];
 
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({

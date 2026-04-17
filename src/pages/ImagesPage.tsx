@@ -372,9 +372,7 @@ export function ImagesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Images' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
@@ -426,7 +424,12 @@ export function ImagesPage() {
         />
 
         {/* Table */}
-        <Table columns={columns} data={paginatedImages} getRowId={(row) => row.id} />
+        <Table
+          columns={columns}
+          data={paginatedImages}
+          getRowId={(row) => row.id}
+          emptyMessage="No images found"
+        />
       </VStack>
     </PageShell>
   );

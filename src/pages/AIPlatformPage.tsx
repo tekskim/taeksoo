@@ -408,183 +408,111 @@ const routeConfigs: Record<string, RouteConfig> = {
   '/ai-platform': {
     title: 'Dashboard',
     subtitle: 'View cluster overview at a glance',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Dashboard' }],
+    breadcrumbs: [{ label: 'Dashboard' }],
   },
   '/ai-platform/explore': {
     title: 'Explore',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Explore' }],
+    breadcrumbs: [{ label: 'Explore' }],
   },
   // Hub
   '/ai-platform/packages': {
     title: 'Packages',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Hub' },
-      { label: 'Packages' },
-    ],
+    breadcrumbs: [{ label: 'Hub' }, { label: 'Packages' }],
     section: 'Hub',
   },
   '/ai-platform/models': {
     title: 'Models',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Hub' },
-      { label: 'Models' },
-    ],
+    breadcrumbs: [{ label: 'Hub' }, { label: 'Models' }],
     section: 'Hub',
   },
   '/ai-platform/datasets': {
     title: 'Datasets',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Hub' },
-      { label: 'Datasets' },
-    ],
+    breadcrumbs: [{ label: 'Hub' }, { label: 'Datasets' }],
     section: 'Hub',
   },
   // Infrastructure
   '/ai-platform/workloads': {
     title: 'Workloads',
     subtitle: 'Pod and Helm Chart management',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Infrastructure' },
-      { label: 'Workloads' },
-    ],
+    breadcrumbs: [{ label: 'Infrastructure' }, { label: 'Workloads' }],
     section: 'Infrastructure',
   },
   '/ai-platform/my-templates': {
     title: 'My Templates',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Infrastructure' },
-      { label: 'My Templates' },
-    ],
+    breadcrumbs: [{ label: 'Infrastructure' }, { label: 'My Templates' }],
     section: 'Infrastructure',
   },
   '/ai-platform/storage': {
     title: 'Storage',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Infrastructure' },
-      { label: 'Storage' },
-    ],
+    breadcrumbs: [{ label: 'Infrastructure' }, { label: 'Storage' }],
     section: 'Infrastructure',
   },
   '/ai-platform/serverless': {
     title: 'Serverless',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Infrastructure' },
-      { label: 'Serverless' },
-    ],
+    breadcrumbs: [{ label: 'Infrastructure' }, { label: 'Serverless' }],
     section: 'Infrastructure',
   },
   // MLOps
   '/ai-platform/fine-tune': {
     title: 'Fine-Tune',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'MLOps' },
-      { label: 'Fine-Tune' },
-    ],
+    breadcrumbs: [{ label: 'MLOps' }, { label: 'Fine-Tune' }],
     section: 'MLOps',
   },
   '/ai-platform/devspace': {
     title: 'DevSpace',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'MLOps' },
-      { label: 'DevSpace' },
-    ],
+    breadcrumbs: [{ label: 'MLOps' }, { label: 'DevSpace' }],
     section: 'MLOps',
   },
   '/ai-platform/pipeline': {
     title: 'Pipeline',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'MLOps' },
-      { label: 'Pipeline' },
-    ],
+    breadcrumbs: [{ label: 'MLOps' }, { label: 'Pipeline' }],
     section: 'MLOps',
   },
   '/ai-platform/kubeflow': {
     title: 'Kubeflow',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'MLOps' },
-      { label: 'Kubeflow' },
-    ],
+    breadcrumbs: [{ label: 'MLOps' }, { label: 'Kubeflow' }],
     section: 'MLOps',
   },
   '/ai-platform/mlflow': {
     title: 'MLflow',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'MLOps' },
-      { label: 'MLflow' },
-    ],
+    breadcrumbs: [{ label: 'MLOps' }, { label: 'MLflow' }],
     section: 'MLOps',
   },
   '/ai-platform/benchmarks': {
     title: 'Benchmarks',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'MLOps' },
-      { label: 'Benchmarks' },
-    ],
+    breadcrumbs: [{ label: 'MLOps' }, { label: 'Benchmarks' }],
     section: 'MLOps',
   },
   // Settings
   '/ai-platform/settings': {
     title: 'Settings',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Settings' }],
+    breadcrumbs: [{ label: 'Settings' }],
     section: 'Settings',
   },
   '/ai-platform/faq': {
     title: 'FAQ',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Settings' },
-      { label: 'FAQ' },
-    ],
+    breadcrumbs: [{ label: 'Settings' }, { label: 'FAQ' }],
     section: 'Settings',
   },
   // Operations
   '/ai-platform/kueue': {
     title: 'Kueue',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Operations' },
-      { label: 'Kueue' },
-    ],
+    breadcrumbs: [{ label: 'Operations' }, { label: 'Kueue' }],
     section: 'Operations',
   },
   '/ai-platform/monitoring': {
     title: 'Monitoring',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Operations' },
-      { label: 'Monitoring' },
-    ],
+    breadcrumbs: [{ label: 'Operations' }, { label: 'Monitoring' }],
     section: 'Operations',
   },
   '/ai-platform/dependencies': {
     title: 'Dependencies',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Operations' },
-      { label: 'Dependencies' },
-    ],
+    breadcrumbs: [{ label: 'Operations' }, { label: 'Dependencies' }],
     section: 'Operations',
   },
   '/ai-platform/admin': {
     title: 'System Administration',
-    breadcrumbs: [
-      { label: 'AI Platform', href: '/ai-platform' },
-      { label: 'Operations' },
-      { label: 'System Administration' },
-    ],
+    breadcrumbs: [{ label: 'Operations' }, { label: 'System Administration' }],
     section: 'Operations',
   },
 };
@@ -604,7 +532,7 @@ function useRouteConfig(): RouteConfig {
   // Default fallback
   return {
     title: 'Dashboard',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Dashboard' }],
+    breadcrumbs: [{ label: 'Dashboard' }],
   };
 }
 

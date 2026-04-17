@@ -155,6 +155,12 @@ export function CronJobsPage() {
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
   ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
   const navigate = useNavigate();
 
   // Update tab label to match the page title (most recent breadcrumb)
@@ -394,11 +400,7 @@ export function CronJobsPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'CronJobs' }]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'CronJobs' }]} />}
           actions={
             <ContainerTopBarActions
               onTerminalClick={() => {
@@ -533,11 +535,13 @@ export function CronJobsPage() {
         {/* Table */}
         <Table<CronJobRow>
           columns={columns}
+          loading={loading}
           data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
+          emptyMessage="No cron jobs found"
         />
       </VStack>
     </PageShell>

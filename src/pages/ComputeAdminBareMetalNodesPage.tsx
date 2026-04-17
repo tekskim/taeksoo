@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -236,6 +236,13 @@ export function ComputeAdminBareMetalNodesPage() {
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
   const tabBarTabs = tabs.map((tab) => ({
@@ -447,14 +454,7 @@ export function ComputeAdminBareMetalNodesPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Bare Metal Nodes' },
-              ]}
-            />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Bare Metal Nodes' }]} />}
         />
       }
     >
@@ -495,6 +495,7 @@ export function ComputeAdminBareMetalNodesPage() {
           data={paginatedItems}
           rowKey="id"
           emptyMessage="No bare metal nodes found"
+          loading={loading}
         />
       </VStack>
 

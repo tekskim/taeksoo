@@ -130,7 +130,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
               <MenuSection title="Inventory" defaultOpen={true}>
                 <MenuItem
                   icon={<IconServer2 size={16} stroke={1.5} />}
-                  label="Severs"
+                  label="Servers"
                   href="/cloudbuilder/severs0.7"
                   active={isActive('/cloudbuilder/severs0.7')}
                 />
@@ -183,7 +183,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
               {/* Compute Admin Sidebar Menu */}
               <MenuItem
                 icon={<IconHome size={16} stroke={1.5} />}
-                label="Home"
+                label="Dashboard"
                 href="/compute-admin"
                 active={isActive('/compute-admin')}
               />
@@ -340,7 +340,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
               {/* Home */}
               <MenuItem
                 icon={<IconHome size={16} stroke={1.5} />}
-                label="Home"
+                label="Dashboard"
                 href={basePath}
                 active={isActive(basePath)}
               />
@@ -453,7 +453,7 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                 />
                 <MenuItem
                   icon={<BrickWallFire size={16} strokeWidth={1.5} />}
-                  label="NACL"
+                  label="NACLs"
                   href={`${basePath}/firewall`}
                   active={isActive(`${basePath}/firewall`)}
                 />

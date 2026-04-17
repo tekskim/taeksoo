@@ -227,8 +227,6 @@ primary:
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'clusterName', href: '/container' },
-                { label: 'Apps', href: '/container/catalog' },
                 { label: 'Installed Apps', href: '/container/installed-apps' },
                 { label: app.name },
               ]}

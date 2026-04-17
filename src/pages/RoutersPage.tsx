@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   FilterSearchInput,
@@ -261,6 +261,13 @@ export function RoutersPage() {
 
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
@@ -459,9 +466,7 @@ export function RoutersPage() {
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Routers' }]} />
-          }
+          breadcrumb={<Breadcrumb items={[{ label: 'Routers' }]} />}
         />
       }
     >
@@ -529,6 +534,7 @@ export function RoutersPage() {
           selectable
           selectedKeys={selectedRouters}
           onSelectionChange={setSelectedRouters}
+          loading={loading}
         />
       </VStack>
 

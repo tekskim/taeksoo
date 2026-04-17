@@ -521,8 +521,7 @@ export function LoadBalancerDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/' },
-                { label: 'Load balancers', href: '/compute/load-balancers' },
+                { label: 'Load Balancers', href: '/compute/load-balancers' },
                 { label: loadBalancer.name },
               ]}
             />
@@ -574,7 +573,7 @@ export function LoadBalancerDetailPage() {
 
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
             <div className="flex flex-col">
               <TabList>
                 <Tab value="details">Details</Tab>
