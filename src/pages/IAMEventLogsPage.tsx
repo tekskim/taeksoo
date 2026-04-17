@@ -554,14 +554,14 @@ export default function IAMEventLogsPage() {
                         >
                           {isExpanded ? (
                             <IconChevronDown
-                              size={16}
-                              stroke={1.5}
+                              size={12}
+                              strokeWidth={2}
                               className="text-[var(--color-text-default)]"
                             />
                           ) : (
                             <IconChevronRight
-                              size={16}
-                              stroke={1.5}
+                              size={12}
+                              strokeWidth={2}
                               className="text-[var(--color-text-default)]"
                             />
                           )}
