@@ -57,6 +57,30 @@ function Prose({ children }: { children: React.ReactNode }) {
 function PieChartGuidelines() {
   return (
     <VStack gap={10}>
+      {/* Overview */}
+      <VStack gap={4}>
+        <SectionTitle>Overview</SectionTitle>
+        <Prose>
+          <p>
+            Pie Chart는{' '}
+            <strong>
+              하나의 카테고리 내에서 여러 데이터 항목의 구성 비율을 시각적으로 표현하는 차트
+              컴포넌트
+            </strong>
+            이다. 데이터의 <strong>전체 대비 비율 관계</strong>를 빠르게 이해할 수 있도록 설계되며,
+            특정 시점의 상태를 표현하는 <strong>Non-time-series Chart</strong>에 해당한다.
+          </p>
+          <p>Pie Chart는 다음 목적을 가진다.</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>데이터 구성 비율 파악</li>
+            <li>카테고리 분포 비교</li>
+            <li>리소스 사용 분포 확인</li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      <div className="w-full h-px bg-[var(--color-border-default)]" />
+
       {/* Composition */}
       <VStack gap={4}>
         <SectionTitle>Composition</SectionTitle>
@@ -155,7 +179,7 @@ function PieChartGuidelines() {
               <li>Tooltip 표시</li>
             </ol>
             <p>
-              <strong>Tooltip 정보:</strong> category label, value, percentage
+              <strong>Tooltip 정보:</strong> timestamp, series label, value
             </p>
             <p>
               <strong>정책:</strong>
@@ -442,7 +466,7 @@ export function PieChartPage() {
   return (
     <ComponentPageTemplate
       title="Pie Chart"
-      description="Pie Chart는 하나의 카테고리 내에서 여러 데이터 항목의 구성 비율을 시각적으로 표현하는 차트 컴포넌트이다. 데이터의 전체 대비 비율 관계를 빠르게 이해할 수 있도록 설계되며, 특정 시점의 상태를 표현하는 Non-time-series Chart에 해당한다."
+      description="Pie Chart는 하나의 카테고리 내에서 여러 데이터 항목의 구성 비율을 시각적으로 표현하는 차트 컴포넌트이다. 데이터의 전체 대비 비율 관계를 빠르게 이해할 수 있도록 설계되며, 특정 시점의 상태를 표현하는 Non-time-series Chart에 해당한다. 데이터 구성 비율 파악, 카테고리 분포 비교, 리소스 사용 분포 확인에 사용한다."
       whenToUse={[
         '하나의 카테고리 내에서 데이터 구성 비율을 보여줘야 하는 경우',
         '전체 대비 상대적인 비중을 빠르게 이해해야 하는 경우',
@@ -553,9 +577,18 @@ export function PieChartPage() {
       tokens={<PieChartColorTokens />}
       relatedLinks={[
         { label: 'Chart Overview', path: '/design/charts/overview', description: '상위 차트 패턴' },
-        { label: 'Usage Chart', path: '/design/charts/usage-chart', description: '사용률 차트' },
+        {
+          label: 'Usage Chart',
+          path: '/design/charts/usage-chart',
+          description: 'Gauge Bar Chart / Donut Chart',
+        },
         { label: 'Line Chart', path: '/design/charts/area-chart', description: '시계열 데이터' },
         { label: 'Tooltip', path: '/design/components/tooltip', description: '데이터 설명' },
+        {
+          label: 'UX Writing Guide',
+          path: '/design/policies/ux-writing',
+          description: '숫자 및 단위 표기 규칙',
+        },
       ]}
     />
   );

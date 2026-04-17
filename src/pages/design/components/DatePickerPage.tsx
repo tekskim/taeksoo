@@ -2,360 +2,121 @@ import { useState, useRef, useEffect } from 'react';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { ComponentPreview } from '../_shared/ComponentPreview';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Label } from '../../design-system-sections/HelperComponents';
 import { DatePicker, DateRangePicker, VStack } from '@/design-system';
 import { IconCalendar } from '@tabler/icons-react';
 
-function TableWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
-      <table className="w-full text-body-md text-[var(--color-text-default)] border-collapse">
-        {children}
-      </table>
-    </div>
-  );
-}
+const DATE_PICKER_GUIDELINES = `## Overview
 
-function Th({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
-  return (
-    <th
-      className={`text-left text-label-md font-medium p-3 bg-[var(--color-surface-subtle)] border-b border-r last:border-r-0 border-[var(--color-border-subtle)] ${className}`}
-    >
-      {children}
-    </th>
-  );
-}
+사용자가 날짜(또는 날짜 범위, 또는 **날짜+시간**)을 선택해 검색/필터/예약/기간 설정 등에 사용하는 컴포넌트이다.
 
-function Td({ children, className = '' }: { children?: React.ReactNode; className?: string }) {
-  return (
-    <td
-      className={`p-3 border-t border-r last:border-r-0 border-[var(--color-border-subtle)] align-top ${className}`}
-    >
-      {children}
-    </td>
-  );
-}
+---
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
-}
+## Composition
 
-function SubSectionTitle({ children }: { children: React.ReactNode }) {
-  return <h4 className="text-heading-h5 text-[var(--color-text-default)]">{children}</h4>;
-}
+| 요소 | 설명 |
+| --- | --- |
+| ① Trigger | 캘린더 팝오버 오픈 트리거 (아이콘 버튼 또는 입력 필드 클릭) |
+| ② Calendar Popover | 월/일 선택 UI(오버레이) |
+| ③ Month Navigation | 이전/다음 월 이동, 월/연도 표시 |
+| ④ Day Grid | 단일 일자 선택(일자 포인트) · 기간 선택(시작/종료 포인트) |
+| ⑤ Time control | **날짜+시간** Variant에서 시·(분) 선택. 스크롤 리스트, 스텝 입력, 마스크 입력 등 **제품 내 한 패턴으로 통일** |
+| ⑥ Footer Actions | Apply / Cancel 버튼 |
 
-function Prose({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="text-body-md text-[var(--color-text-muted)] leading-relaxed space-y-2">
-      {children}
-    </div>
-  );
-}
+---
 
-function DatePickerGuidelines() {
-  return (
-    <VStack gap={10}>
-      {/* Composition */}
-      <VStack gap={4}>
-        <SectionTitle>Composition</SectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[200px]">요소</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>① Trigger</strong>
-              </Td>
-              <Td>캘린더 팝오버 오픈 트리거 (아이콘 버튼 또는 입력 필드 클릭)</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>② Calendar Popover</strong>
-              </Td>
-              <Td>월/일 선택 UI(오버레이)</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>③ Month Navigation</strong>
-              </Td>
-              <Td>이전/다음 월 이동, 월/연도 표시</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>④ Day Grid</strong>
-              </Td>
-              <Td>
-                • 단일 일자 선택 (일자 포인트)
-                <br />• 기간 선택 (시작/종료 포인트)
-              </Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>⑤ Footer Actions</strong>
-              </Td>
-              <Td>Apply/Cancel 버튼</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
+## Variants
 
-        <SubSectionTitle>Design Token</SubSectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[200px]">속성</Th>
-              <Th>값</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>padding</Td>
-              <Td>12px</Td>
-            </tr>
-            <tr>
-              <Td>gap</Td>
-              <Td>12px</Td>
-            </tr>
-            <tr>
-              <Td>radius</Td>
-              <Td>8px</Td>
-            </tr>
-            <tr>
-              <Td>cell</Td>
-              <Td>32×32px</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-      </VStack>
+| 유형 | 설명 | 사용 예시 |
+| --- | --- | --- |
+| Single Date | 단일 날짜 선택 | 만료일, 청구일 |
+| Date Range | 시작/종료 기간 선택 | 로그 기간, 리포트 기간 |
+| Date & Time | 단일 날짜에 **시간(및 필요 시 분)** 까지 선택 | 예약 시작 시각, 작업 마감 일시, “해당 일의 특정 시각 이후” 필터 |
+| DateTime Range (선택) | 시작·종료 **일시** 구간 | 장애 구간, 유지보수 창구 등 기간이 시각 단위로 의미가 있을 때 |
 
-      {/* Variants */}
-      <VStack gap={4}>
-        <SectionTitle>Variants</SectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th>유형</Th>
-              <Th>설명</Th>
-              <Th>사용 예시</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Single Date</strong>
-              </Td>
-              <Td>단일 날짜 선택</Td>
-              <Td>만료일, 청구일</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Date Range</strong>
-              </Td>
-              <Td>시작/종료 기간 선택</Td>
-              <Td>로그 기간, 리포트 기간</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-      </VStack>
+---
 
-      {/* States */}
-      <VStack gap={4}>
-        <SectionTitle>States</SectionTitle>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th className="w-[160px]">상태</Th>
-              <Th>설명</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>
-                <strong>Default</strong>
-              </Td>
-              <Td>값 미선택</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Open</strong>
-              </Td>
-              <Td>캘린더 팝오버가 열린 상태</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Selected</strong>
-              </Td>
-              <Td>날짜(또는 범위)가 선택된 상태</Td>
-            </tr>
-            <tr>
-              <Td>
-                <strong>Invalid</strong>
-              </Td>
-              <Td>입력값이 규칙을 만족하지 못한 상태</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-      </VStack>
+## States
 
-      {/* Behavior */}
-      <VStack gap={6}>
-        <SectionTitle>Behavior</SectionTitle>
+| 상태 | 설명 |
+| --- | --- |
+| Default | 값 미선택 |
+| Open | 캘린더 팝오버가 열린 상태 |
+| Selected | 날짜(또는 범위, 일시)가 선택된 상태 |
+| Invalid | 입력값이 규칙을 만족하지 못한 상태 |
 
-        <VStack gap={3}>
-          <SubSectionTitle>1) 오픈/클로즈</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>입력 필드에서 Date 관련 필터 선택 또는 트리거 아이콘 클릭 시 팝오버 오픈</li>
-              <li>외부 클릭 시 팝오버 닫힘</li>
-              <li>팝오버가 열린 상태에서 스크롤이 불가</li>
-            </ul>
-          </Prose>
-        </VStack>
+---
 
-        <VStack gap={3}>
-          <SubSectionTitle>2) 선택 규칙</SubSectionTitle>
-          <Prose>
-            <p>
-              <strong>Single Date</strong>
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>일자 클릭 → 선택 완료</li>
-            </ul>
-            <p>
-              <strong>Date Range</strong>
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>첫 클릭: Start date 설정</li>
-              <li>두 번째 클릭: End date 설정</li>
-              <li>
-                End date는 Start date보다 이전일 경우, 이전 날짜를 새로운 Start date로 자동 보정
-              </li>
-            </ul>
-          </Prose>
-        </VStack>
+## Behavior
 
-        <VStack gap={3}>
-          <SubSectionTitle>3) 버튼 규칙</SubSectionTitle>
-          <TableWrapper>
-            <thead>
-              <tr>
-                <Th className="w-[100px]">버튼</Th>
-                <Th>동작</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>
-                  <strong>Apply</strong>
-                </Td>
-                <Td>
-                  • Apply 버튼은 유효한 날짜 선택이 완료되었을 때만 활성화
-                  <br />
-                  • Single Date: 날짜가 선택되면 활성화
-                  <br />
-                  • Date Range: 시작일과 종료일이 모두 선택되어야 활성화
-                  <br />• 선택된 날짜 값 확정
-                </Td>
-              </tr>
-              <tr>
-                <Td>
-                  <strong>Cancel</strong>
-                </Td>
-                <Td>변경 사항을 적용하지 않고 팝오버 닫힘</Td>
-              </tr>
-            </tbody>
-          </TableWrapper>
-        </VStack>
+### 1) 오픈/클로즈
 
-        <VStack gap={3}>
-          <SubSectionTitle>4) 월 이동</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>이전/다음 월 이동 버튼 제공</li>
-              <li>연 이동 기능 없음</li>
-            </ul>
-          </Prose>
-        </VStack>
+- 입력 필드에서 Date 관련 필터 선택 또는 트리거 아이콘 클릭 시 팝오버 오픈
+- 외부 클릭 시 팝오버 닫힘
+- 팝오버가 열린 상태에서 스크롤이 불가(제품 표준에 따름)
 
-        <VStack gap={3}>
-          <SubSectionTitle>5) 제한(Constraints)</SubSectionTitle>
-          <Prose>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong>minDate / maxDate</strong>: 선택 가능 범위를 제한. 범위 밖 날짜는 비활성화.
-              </li>
-              <li>
-                <strong>주 시작일</strong>: 기본 일요일. 필요 시 월요일 시작으로 설정 가능.
-              </li>
-              <li>
-                <strong>과거 날짜 비허용</strong>: 예약/만료 등 미래 날짜만 필요한 경우 minDate를
-                오늘로 설정.
-              </li>
-            </ul>
-          </Prose>
-        </VStack>
-      </VStack>
+### 2) 선택 규칙
 
-      {/* Usage Guidelines */}
-      <VStack gap={4}>
-        <SectionTitle>Usage Guidelines</SectionTitle>
-        <DosDonts
-          doItems={[
-            '기간 필터(로그/리포트)에는 Date Range + Presets를 권장한다. (Presets 기능은 구현 예정)',
-            '값이 필수인 경우 라벨과 required 표시를 명확히 한다.',
-            'min/max, 기간 제한 같은 정책이 있으면 입력 영역 근처에 안내한다.',
-            '기본값이 있는 경우(예: 최근 7일) 명확히 노출한다.',
-          ]}
-          dontItems={[
-            '날짜 입력 포맷을 화면마다 다르게 만들지 않는다.',
-            'Range에서 Start/End가 뒤집히는 케이스를 방치하지 않는다.',
-            '제한 정책이 있는데도 사용자가 선택한 뒤에야 에러로 막지 않는다(가능하면 선택 불가 처리).',
-          ]}
-        />
-      </VStack>
+- **Single Date**: 일자 클릭 → 선택 완료
+- **Date Range**: 첫 클릭 Start, 두 번째 클릭 End. End가 Start보다 이전이면 이전 날짜를 새 Start로 보정
+- **Date & Time**: 날짜 선택 후 Time control에서 시·분 조정. **Apply**는 날짜와 시간이 모두 유효할 때 활성화
+- **DateTime Range** (사용 시): 시작 일시·종료 일시 모두 확정 전까지 Apply 비활성 또는 단계 규칙을 제품에서 단일하게 정함
 
-      {/* Content Guidelines */}
-      <VStack gap={4}>
-        <SectionTitle>Content Guidelines</SectionTitle>
-        <Prose>
-          <p>Date Range는 다음과 같이 표기한다.</p>
-        </Prose>
-        <TableWrapper>
-          <thead>
-            <tr>
-              <Th>언어</Th>
-              <Th>단일 날짜 표시</Th>
-              <Th>기간 표시</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>한국어</Td>
-              <Td>YYYY-MM-DD</Td>
-              <Td>YYYY-MM-DD – YYYY-MM-DD (양쪽 연도 포함)</Td>
-            </tr>
-            <tr>
-              <Td>영어</Td>
-              <Td>Mth DD, YYYY</Td>
-              <Td>Mth DD – Mth DD, YYYY (동일 연도/월이면 종료일에만 연도/월 표시)</Td>
-            </tr>
-          </tbody>
-        </TableWrapper>
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3">
-          <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre-wrap">
-            {`예시
+### 3) 버튼 규칙
+
+| 버튼 | 동작 |
+| --- | --- |
+| Apply | 유효한 선택이 완료되었을 때만 활성화. Single Date: 날짜 선택 시. Date Range: 시작·종료 모두. Date & Time / DateTime Range: **날짜·시간(및 분) 규칙을 모두 만족**할 때 |
+| Cancel | 변경 없이 팝오버 닫힘 |
+
+### 4) 월 이동
+
+- 이전/다음 월 이동 버튼 제공. 연 이동은 제품 필요 시 확장
+
+### 5) 제한(Constraints)
+
+- **minDate / maxDate**: 범위 밖 날짜 비활성화
+- 날짜 변경으로 시간이 규칙 밖이 되면 **가장 가까운 유효 시각으로 보정**하거나 **비활성 처리** 중 하나로 통일
+- **주 시작일**: 기본 일요일, 필요 시 월요일 시작 설정 가능
+- **과거 날짜 비허용**: 예약/만료 등 미래 날짜만 필요한 경우 minDate를 오늘로 설정
+
+---
+
+## Content Guidelines
+
+### 날짜·기간 (기존)
+
+| 언어 | 단일 날짜 | 기간 |
+| --- | --- | --- |
+| 한국어 | YYYY-MM-DD | YYYY-MM-DD – YYYY-MM-DD (양쪽 연도 포함) |
+| 영어 | Mth DD, YYYY | Mth DD – Mth DD, YYYY (동일 연도/월이면 종료일에만 연도/월 표시) |
+
+\`\`\`
+예시
 KO: 2026-03-01 – 2026-03-07
 EN: Mar 01 – Mar 07, 2026
-EN(연도 다름): Dec 30, 2025 – Jan 02, 2026`}
-          </pre>
-        </div>
-      </VStack>
-    </VStack>
-  );
-}
+EN(연도 다름): Dec 30, 2025 – Jan 02, 2026
+\`\`\`
+
+### 날짜+시간 (추가)
+
+| 언어 | 단일 일시 | 일시 구간 (DateTime Range) |
+| --- | --- | --- |
+| 한국어 | YYYY-MM-DD HH:mm (24h, leading zero 통일) | YYYY-MM-DD HH:mm – YYYY-MM-DD HH:mm (시작–종료) |
+| 영어 | 로캘별 단일 포맷 고정 (예: MMM DD, YYYY, h:mm a) | 동일 원칙으로 시작–종료 표기 |
+
+---
+
+## Related
+
+| 이름 | 유형 | 관련 이유 |
+| --- | --- | --- |
+| Input Field | Component | Trigger 표현과 상태 스타일 |
+| Popover | Component | 캘린더 레이어/디스미스 규칙 |
+| Button | Component | Apply/Cancel |
+| UX Writing Guide | Foundation | 버튼·날짜·시간 표기 |
+`;
 
 function formatDate(d: Date | null): string {
   if (!d) return '';
@@ -431,16 +192,14 @@ export function DatePickerPage() {
   return (
     <ComponentPageTemplate
       title="Date Picker"
-      description="사용자가 날짜(또는 날짜 범위)를 선택해 검색/필터/예약/기간 설정 등에 사용하는 컴포넌트이다."
+      description="사용자가 날짜(또는 날짜 범위, 또는 날짜+시간)을 선택해 검색/필터/예약/기간 설정 등에 사용하는 컴포넌트이다."
       whenToUse={[
         '날짜/기간을 조건으로 데이터를 필터링해야 할 때(예: 로그, 리포트, 결제 내역)',
         '시작일/종료일을 지정해야 할 때(예: 예약, 스케줄, 기간 설정)',
         '단일 날짜 선택이 필요한 폼 입력(예: 만료일, 청구일)',
+        '특정 일시(날짜+시간)가 필요한 폼·필터(예: 예약 시작, 마감 일시, 로그 조회의 “해당 일의 시각 이후”)',
       ]}
-      whenNotToUse={[
-        '시간까지 포함한 정밀 선택이 핵심인 경우(→ 시간 설정 기능 추가 필요)',
-        '"최근 7일/30일" 같은 프리셋만으로 충분한 경우(→ 버튼 세트로 제공)',
-      ]}
+      whenNotToUse={['“최근 7일/30일” 같은 프리셋만으로 충분한 경우(→ 버튼 세트로 제공)']}
       preview={
         <ComponentPreview code={`<DatePicker value={date} onChange={setDate} />`}>
           <DatePicker value={singleDate} onChange={setSingleDate} />
@@ -555,39 +314,36 @@ export function DatePickerPage() {
           </VStack>
         </VStack>
       }
-      guidelines={<DatePickerGuidelines />}
+      guidelines={
+        <VStack gap={6}>
+          <NotionRenderer markdown={DATE_PICKER_GUIDELINES} />
+          <DosDonts
+            doItems={[
+              '기간 필터(로그/리포트)에는 Date Range + Presets를 권장한다.',
+              '값이 필수인 경우 라벨과 required 표시를 명확히 한다.',
+              'min/max, 기간·시간 제한이 있으면 입력 영역 근처에 안내한다.',
+              '날짜만과 날짜+시간을 같은 화면에서 혼용하지 말고 목적에 맞는 Variant 하나를 쓴다.',
+              '저장·표시 시 UTC vs 로컬 규칙은 제품 글로벌 정책과 맞춘다.',
+            ]}
+            dontItems={[
+              '날짜 입력 포맷을 화면마다 다르게 만들지 않는다.',
+              'Range에서 Start/End가 뒤집히는 케이스를 방치하지 않는다.',
+              '제한이 있는데 선택 후에야 에러로 막지 않는다(가능하면 선택 불가 처리).',
+              '시간이 필수 의미인 필드에 Date만 제공하지 않는다.',
+            ]}
+          />
+        </VStack>
+      }
       tokens={
         <div className="text-body-sm text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
           padding: 12px · gap: 12px · radius: 8px · cell: 32×32px
         </div>
       }
       relatedLinks={[
-        {
-          label: 'Input Field',
-          path: '/design/components/input',
-          description: 'Trigger 표현과 상태 스타일',
-        },
-        {
-          label: 'Monitoring Toolbar',
-          path: '/design/patterns/monitoring-toolbar',
-          description: 'Trigger 표현과 상태 스타일',
-        },
-        {
-          label: 'Tooltip',
-          path: '/design/components/tooltip',
-          description: '캘린더 레이어/디스미스 규칙',
-        },
-        { label: 'Button', path: '/design/components/button', description: 'Apply/Cancel/Clear' },
-        {
-          label: 'Search Input',
-          path: '/design/components/search-input',
-          description: '리스트/로그 필터 조건과 결합',
-        },
-        {
-          label: 'UX Writing Guide',
-          path: '/design/policies/ux-writing',
-          description: '버튼/날짜 표기 규칙',
-        },
+        { label: 'Input', path: '/design/components/input' },
+        { label: 'Popover', path: '/design/components/popover' },
+        { label: 'Button', path: '/design/components/button' },
+        { label: 'UX Writing Guide', path: '/design/policies/ux-writing' },
       ]}
     />
   );

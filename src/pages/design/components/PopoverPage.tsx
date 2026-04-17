@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { ComponentPreview } from '../_shared/ComponentPreview';
 import { DosDonts } from '../_shared/DosDonts';
+import { NotionRenderer } from '../_shared/NotionRenderer';
 import { Tooltip, VStack } from '@/design-system';
 import {
   IconX,
@@ -194,23 +195,86 @@ function HealthMonitorEmpty() {
   );
 }
 
+const POPOVER_GUIDELINES = `## Overview
+**Popover(정보 패널)**은 사용자가 **트리거**(버튼, 노드, 행 등)를 눌렀을 때 **그 근처**에 뜨는 **경량 정보·보조 액션**용 표면이다. **딤 없이** 맥락을 유지하고, **닫기 전까지 열린 상태**로 읽기·복사·링크 이동을 할 수 있다.
+
+---
+
+## Composition
+
+\`\`\`plain text
+[헤더: 제목 · 닫기]
+[본문: 라벨–값, 복사 가능 필드, 링크]
+[선택: 섹션 구분 · View detail · 접이식 블록]
+\`\`\`
+
+| 요소 | 역할 |
+| --- | --- |
+| 헤더 | 리소스 유형·이름 등 **식별** |
+| 라벨–값 | 핵심 속성 **스캔 가능**하게 나열 |
+| 복사 필드 | ID, IP, CIDR 등 **운영 복사**가 잦은 값 |
+| 링크 | 상세·목록 등 이동 |
+| 섹션 / View detail | 연관 리소스 묶음·목록으로 이동 진입점 |
+| 접이식 블록 | (예: Health Monitor) 하위 목록이 길어질 수 있을 때 |
+
+---
+
+## States (패널·세션)
+
+| 상태 | 설명 |
+| --- | --- |
+| Closed | 패널 없음 |
+| Open | 트리거에 대응하는 패널 표시 |
+| Section expanded | 접이식 영역 펼침 |
+
+---
+
+## Behavior
+
+### 열기·닫기
+- **트리거 클릭**(또는 제품이 정한 진입)으로 연다.
+- **닫기(X)**로 닫는다.
+- **팝오버 외부 공간 클릭**(패널 밖·캔버스·외부 버튼 등) 시 **닫는다**.
+- (예: 토폴로지) **다른 노드/다른 트리거**를 누르면 **해당 대상 기준으로 갱신**한다.
+
+### 인터랙션
+- **링크·이동**: 링크를 누르면 상세·목록·설정 등으로 이동하고, 이동 시 Popover를 **자동으로 닫는다**. 새 탭 또는 같은 화면 이동은 제품에 따른다.
+- **복사**: 값 옆에 **복사 아이콘 버튼**을 둔다.
+- **접기/펼치기**: 펼침 상태는 **이번에 연 패널 세션** 안에서만 유효. 패널을 닫았다가 다시 열면 **기본은 접힌 상태**이다.
+
+### 배치·레이아웃
+- 패널은 **트리거(클릭한 요소) 기준 근접** 배치한다(오프셋·플립·화살표는 디자인 시스템 구현을 따른다).
+- 패널 **드래그로 위치 변경**은 **지원하지 않는다**.
+- **한 뷰에서 동시에 하나의 Popover**만 연다(다른 트리거는 **내용 교체** 또는 **닫고 열기** — 제품별로 통일).
+
+---
+
+## Related
+
+| 항목 | 유형 | 비고 |
+| --- | --- | --- |
+| Tooltip | Component | 짧은 비지속 힌트 |
+| Modal | Component | 딤·차단형 |
+| Drawer | Component | 측면·긴 작업 |
+| DS Popover | Component | 앵커·포지션 등 구현 기반 |
+`;
+
 /* ── Page ── */
 
 export function PopoverPage() {
   return (
     <ComponentPageTemplate
       title="Popover"
-      description="네트워크 토폴로지 노드를 클릭하면 나타나는 상세 정보 카드. 리소스 상태, 이름, ID 등 핵심 정보를 빠르게 확인하고 관련 페이지로 이동할 수 있다."
+      description="Popover(정보 패널)은 트리거를 눌렀을 때 그 근처에 뜨는 경량 정보·보조 액션용 표면이다. 딤 없이 맥락을 유지하고, 닫기 전까지 열린 상태로 읽기·복사·링크 이동을 할 수 있다."
       whenToUse={[
-        '토폴로지 맵에서 노드를 클릭하여 리소스 상세 정보를 빠르게 확인할 때',
-        '리소스 간의 관계(Routers, Subnets, Instances 등)를 섹션별로 조회할 때',
-        'ID, IP 등의 값을 클립보드에 복사하거나 상세 페이지로 이동할 때',
+        '트리거 옆에서 요약 속성·식별자·상태를 보여주면 될 때',
+        '복사·상세 이동·목록 이동 등 짧은 보조 액션이 있을 때',
+        '한 번에 하나의 패널이면 충분할 때',
       ]}
       whenNotToUse={[
-        '단순 텍스트 설명만 필요한 경우 → Tooltip 사용',
-        'Badge 오버플로우 목록만 필요한 경우 → Badge Tooltip(BadgeList) 사용',
-        '메뉴 아이템 목록을 표시하는 경우 → ContextMenu 사용',
-        '복잡한 폼 입력이 필요한 경우 → Drawer 사용',
+        '차단형 확인·긴 폼·필수 입력이 필요할 때 (→ Modal / Drawer)',
+        '한 줄 힌트만 필요하고 포인터를 떼면 사라져도 될 때 (→ Tooltip)',
+        '전체 로그·긴 문서 (→ 상세 페이지 / Drawer)',
       ]}
       preview={
         <ComponentPreview
@@ -410,60 +474,17 @@ export function PopoverPage() {
         </VStack>
       }
       guidelines={
-        <VStack gap={10}>
+        <VStack gap={8}>
+          <NotionRenderer markdown={POPOVER_GUIDELINES} />
           <VStack gap={4}>
             <h3 className="text-heading-h4 text-[var(--color-text-default)]">Usage Guidelines</h3>
             <DosDonts
-              doItems={[
-                '토폴로지 노드 클릭 시 화면 중앙에 Popover를 표시합니다.',
-                '한 번에 하나의 Popover만 표시합니다. 다른 노드 클릭 시 교체됩니다.',
-                '헤더 영역을 드래그하여 Popover를 이동할 수 있습니다.',
-                'ID, IP 등 복사 가능한 값에는 CopyableText를 사용합니다.',
-                'Name, External gateway 등 링크 가능한 값에는 LinkText를 사용합니다.',
-                '관련 리소스 섹션(Routers, Subnets 등)에는 SectionDivider + View detail 링크를 사용합니다.',
-              ]}
+              doItems={['트리거 맥락을 유지한 채 짧은 읽기·복사·이동만 필요할 때 쓴다.']}
               dontItems={[
-                '배경 클릭으로 Popover를 닫지 않습니다 (X 버튼으로만 닫기).',
-                'Popover 안에 폼 입력 필드를 배치하지 않습니다.',
-                '텍스트 설명만 필요한 경우 Popover 대신 Tooltip을 사용합니다.',
+                '차단형 확인·긴 폼·필수 입력·전체 로그/문서는 Popover에 넣지 않는다 (→ Modal / Drawer / 상세 페이지).',
+                '한 줄 힌트만 필요하면 Popover 대신 Tooltip을 쓴다.',
               ]}
             />
-          </VStack>
-
-          <VStack gap={4}>
-            <h3 className="text-heading-h4 text-[var(--color-text-default)]">Behavior</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-body-md text-[var(--color-text-default)]">
-              <VStack gap={2}>
-                <span className="text-label-md">초기 위치</span>
-                <ul className="space-y-1 text-[var(--color-text-muted)] text-body-sm">
-                  <li>• 화면 중앙에 표시 (viewport center)</li>
-                  <li>• 클릭한 노드 위치와 무관하게 중앙 고정</li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-label-md">드래그 이동</span>
-                <ul className="space-y-1 text-[var(--color-text-muted)] text-body-sm">
-                  <li>• 헤더 영역을 드래그하여 이동 가능</li>
-                  <li>• 버튼/링크 클릭 시 드래그 비활성화</li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-label-md">열기/닫기</span>
-                <ul className="space-y-1 text-[var(--color-text-muted)] text-body-sm">
-                  <li>• 노드 클릭 시 열기, X 버튼으로 닫기</li>
-                  <li>• 다른 노드 클릭 시 새 Popover로 교체</li>
-                  <li>• 한 번에 하나만 표시</li>
-                </ul>
-              </VStack>
-              <VStack gap={2}>
-                <span className="text-label-md">인터랙션</span>
-                <ul className="space-y-1 text-[var(--color-text-muted)] text-body-sm">
-                  <li>• 복사 버튼: 클릭 시 클립보드 복사</li>
-                  <li>• 링크: 클릭 시 상세 페이지 이동</li>
-                  <li>• Health Monitor: 클릭 시 펼침/접힘</li>
-                </ul>
-              </VStack>
-            </div>
           </VStack>
         </VStack>
       }
@@ -499,19 +520,14 @@ export function PopoverPage() {
         {
           label: 'Tooltip',
           path: '/design/components/tooltip',
-          description: 'Text-only hover info',
+          description: '짧은 비지속 힌트',
         },
         {
-          label: 'Context Menu',
-          path: '/design/components/context-menu',
-          description: 'Action menu',
+          label: 'Modal',
+          path: '/design/components/modal',
+          description: '딤·차단형',
         },
-        { label: 'Drawer', path: '/design/components/drawer', description: 'Complex forms' },
-        {
-          label: 'Floating Card',
-          path: '/design/components/floating-card',
-          description: 'Draggable overlay card',
-        },
+        { label: 'Drawer', path: '/design/components/drawer', description: '측면·긴 작업' },
       ]}
     />
   );

@@ -168,8 +168,8 @@ function NotificationCardStates() {
 
 const SNACKBAR_GUIDELINES = `## Overview
 Snackbar는 사용자가 수행한 액션의 결과 또는 비동기 작업의 상태를 즉시 인지할 수 있도록 제공하는 기록형 알림 컴포넌트이다.
-Snackbar는 화면 상단 또는 우측 상단의 고정 영역에 노출되며, 사용자의 현재 작업 흐름을 크게 방해하지 않으면서도 중요한 결과를 전달한다.
-Snackbar는 단순한 일시적 피드백이 아니라, 알림센터에 기록되는 Notification 계열 컴포넌트이다.
+**알림센터에 기록되는 Notification 계열 컴포넌트**로, 단순한 일시적 피드백이 아니라 중요한 결과를 전달한다.
+화면 상단 또는 우측 상단의 고정 영역에 노출되며, 사용자의 현재 작업 흐름을 크게 방해하지 않으면서도 결과를 전달한다.
 
 ---
 
@@ -315,7 +315,7 @@ export function SnackbarPage() {
   return (
     <ComponentPageTemplate
       title="Snackbar"
-      description="사용자가 수행한 액션의 결과 또는 비동기 작업의 상태를 즉시 인지할 수 있도록 제공하는 기록형 알림 컴포넌트. 알림센터에 기록되는 Notification 계열 컴포넌트."
+      description="사용자가 수행한 액션의 결과 또는 비동기 작업의 상태를 즉시 인지할 수 있도록 제공하는 기록형 알림 컴포넌트. 알림센터에 기록되는 Notification 계열 컴포넌트로, 단순한 일시적 피드백이 아니라 중요한 결과를 전달한다."
       whenToUse={[
         '결과를 알림센터에 기록으로 남겨야 하는 경우',
         '실패 원인에 대한 추가 정보 또는 후속 액션이 필요한 경우',

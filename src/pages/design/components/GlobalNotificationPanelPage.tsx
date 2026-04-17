@@ -673,95 +673,127 @@ function PanelCardStates() {
    ---------------------------------------- */
 
 const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
-전역 알림 패널은 모든 앱의 '안읽은(Unread)' 기록형 알림을 한곳에서 모아 보여주는 데스크탑 레벨 보조 뷰이다.
-알림의 저장소가 아니라 unread 상태의 알림을 모아 보여주는 보조 인터페이스이다.
+앱 내부 **알림센터**는 해당 앱에서 발생한 **모든 기록형 알림의 원본 저장소**이다. 사용자가 Snackbar를 놓치거나 과거 알림을 확인하려면 알림센터에서 확인한다.
+
+**전역 알림 패널**은 **모든 앱의 안읽은(Unread) 기록형 알림**을 한곳에서 모아 보여 주는 데스크톱 수준 보조 뷰이다. 알림의 영구 저장소가 아니라 **unread 상태** 알림을 모아 보여 주는 보조 인터페이스이며, 앱 알림센터·스낵바 흐름과 **실시간으로 동기화**된다.
 
 ---
 
 ## Composition
 
+### 앱 알림센터 (In-app notification center)
+
 | 요소 | 설명 |
 | --- | --- |
-| Panel Icon | 패널 열기/닫기 |
+| Notification icon | 알림센터 열기 |
+| Unread badge | 안읽은 알림 표시 |
+| Tabs | 알림 필터 (All, Unread, Error 등) |
+| Mark all as read | 전체 읽음 처리 |
+| Notification list | 알림 목록 |
+| Notification item | 개별 알림 |
+
+#### Notification icon
+- 알림센터 진입 아이콘. 클릭 시 알림센터가 열린다.
+- 안읽은 알림이 있으면 badge를 표시한다.
+
+#### Tabs
+- All(모든 알림), Unread(읽지 않은 알림), Error(실패 알림) 등 필터를 제공한다.
+- 정렬은 **최신순**(가장 최근 알림이 최상단)이다.
+
+#### Mark all as read
+- 현재 알림센터에 표시된 알림을 읽음 처리하고 badge를 제거한다.
+- 호버 시 툴팁: "Mark all as read"
+
+#### Notification item
+- **전역 패널의 개별 알림과 동일한 구조**를 가진다. 스낵바와 유사한 구성이다.
+
+| 요소 | 설명 |
+| --- | --- |
+| Type icon | 알림 유형 |
+| Message | 알림 내용 |
+| Timestamp | 발생 시각 |
+| Partition info | tenant / cluster 등 |
+| Read button | 개별 읽음 처리 |
+| View details | 실패 상세 정보 |
+
+### 전역 알림 패널 (Global notification panel)
+
+| 요소 | 설명 |
+| --- | --- |
+| Panel Icon | 패널 열기/닫기 · Unread badge |
 | Panel | 알림 목록 컨테이너 |
-| App Filter | 앱별 알림 필터링 |
-| App Header | 앱별 그룹 헤더 |
+| App Filter | 앱별 알림 필터링 (Select) |
+| App Header | 앱별 그룹 헤더(해당 제품 UI에 따라) |
 | Show more / Show less | 알림 목록 확장 |
 | Mark all as read | 전체 읽음 처리 |
 | Notification Item | 개별 알림 카드 |
-| Unread Badge | 안읽은 알림 수 표시 |
 
-### Panel Icon
-- 전역 패널 열기/닫기 트리거
-- Unread badge와 함께 표시
-
-### Panel
-- 모든 앱의 안읽은 알림을 앱별 그룹으로 표시
-- 데스크탑 레벨 고정 위치
-
-### App Filter
-- 탭 아래에 위치하는 Select 드롭다운
-- 알림이 존재하는 앱만 옵션으로 노출
-- "All apps" 선택 시 전체 앱 알림 표시
-- 특정 앱 선택 시 해당 앱의 알림만 필터링
-
-### App Header
-- 알림이 존재하는 앱만 노출
-- 앱 아이콘, 앱 이름, Show more/less 버튼, Mark all as read 버튼
-
-### Show more / Show less
-- 알림이 1개 이상일 때 표시
-- Show more 클릭 시 해당 앱 알림 전체 표시
-- Show less 클릭 시 최신 알림 1개만 노출
-
-### Mark all as read
-- 해당 앱의 모든 알림 읽음 처리
-- 클릭 시 패널에서 즉시 제거
-
-### Notification Item
-- 알림센터의 개별 알림과 동일한 구조
-
-| 구성요소 | 설명 |
-| --- | --- |
-| Type icon | 알림 유형 (success/error/warning/info) |
-| Message | 알림 메시지 |
-| Timestamp | 발생 시각 |
-| Partition info | 프로젝트/네임스페이스 등 |
-| Read button | 읽음 처리 |
-| View details | 상세 메시지 확장 |
+- **Panel**: 모든 앱의 안읽은 알림을 표시하고, 데스크톱 레벨 고정 위치에 둔다.
+- **App Filter**: 알림이 존재하는 앱만 옵션으로 노출할 수 있다. "All apps" 선택 시 전체 앱 알림, 특정 앱 선택 시 해당 앱만 필터링한다.
+- **Mark all as read**: 클릭 시 현재 표시 알림을 읽음 처리하고 패널에서 제거한다.
 
 ---
 
 ## Behavior
 
-### 1) Snackbar suppression rule
+### 1) 기록 규칙 (앱 알림센터)
+- 스낵바로 노출되는 메시지는 **항상 알림센터에 기록**된다.
+- Toast, Inline, Validation 메시지는 알림센터에 기록하지 않는다.
 
-| 조건 | 스낵바 동작 |
+### 2) 스낵바와의 관계
+- 스낵바 메시지는 모두 알림센터에 기록된다.
+- 스낵바에서의 동작이 알림센터 읽음 처리에 영향을 준다.
+
+| 행동 | 읽음 처리 |
 | --- | --- |
-| 알림센터 열림 | 노출 안 됨 |
-| 글로벌 패널 열림 | 노출 안 됨 |
+| Snackbar 클릭 | ✔ |
+| Snackbar 닫기 | ✖ |
+| Snackbar 자동 종료 | ✖ |
+| View details | ✖ |
 
-### 2) 알림 센터 실시간 동기화
+### 3) Global Notification Panel 특성
 
-| 이벤트 | 패널 동작 |
+| 특성 | 설명 |
 | --- | --- |
-| 새 알림 발생 | 패널 상단 추가 |
-| 알림 읽음 처리 | 패널에서 제거 |
-| 알림 만료 | 패널에서 제거 |
+| 데이터 | 모든 앱의 안읽은 알림 |
+| 정렬 | 최신순 |
+| 필터 | 정책에 따라 없음 또는 앱 필터 등 |
 
-### 3) 인터랙션 규칙
-- 카드 본문 클릭 → 리소스 화면 이동 + 읽음 처리 + 패널 닫힘
-- 개별 읽음 버튼 → 해당 알림 읽음 + 패널에서 제거
-- 전체 읽음 버튼 → 현재 표시 알림 읽음 + 패널에서 제거
-- View details 버튼 → 상세 메시지 확장, 읽음 처리 안됨
+알림센터와 **실시간 동기화**된다.
 
-### 4) Real-time Behavior
-- 패널이 열린 상태에서 새 알림은 상단에 실시간 추가
-- Snackbar는 표시되지 않는다
+| 행동 | 결과 |
+| --- | --- |
+| 알림 클릭 | 리소스 이동 + 읽음 |
+| 개별 읽음 | 알림 제거(패널에서) |
+| 전체 읽음 | 목록 초기화 |
 
-### 5) 표시 규칙
-- 안읽은 알림이 하나 이상 존재할 때만 표시
-- 읽음 처리 또는 보관 기간(30일) 만료 시 제거
+### 4) Snackbar suppression rule
+앱 내 알림센터 또는 글로벌 알림 패널이 열려 있으면 스낵바는 노출하지 않는다. 이 경우 알림은 스낵바 없이 알림센터·글로벌 패널 목록에 바로 기록된다.
+
+| 상황 | 동작 |
+| --- | --- |
+| Notification Center 열림 | Snackbar 억제 |
+| Global Panel 열림 | Snackbar 억제 |
+
+### 5) 읽음 처리 기준
+| 행동 | 읽음 |
+| --- | --- |
+| Snackbar 클릭 | ✔ |
+| Notification item 클릭 | ✔ |
+| Read button | ✔ |
+| Mark all as read | ✔ |
+
+- 읽음 처리 후 해당 메시지는 **글로벌 알림 패널에서 제거**된다.
+- 모두 읽음 처리되면 알림센터·글로벌 패널 아이콘의 badge가 제거된다.
+
+### 6) 알림 보관 정책
+- 사용자가 알림을 삭제할 수 없다.
+- **30일** 보관 후 자동 삭제된다.
+
+### 7) 전역 패널 · 실시간 동작
+- 패널이 열린 상태에서 새 알림은 상단에 실시간 추가된다.
+- 이 상태에서는 Snackbar를 표시하지 않는다.
+- 카드 본문 클릭 시 리소스 이동·읽음·패널 닫힘 등은 제품 정책에 따른다. View details는 읽음 처리에 포함하지 않을 수 있다.
 
 ---
 
@@ -771,9 +803,10 @@ const GLOBAL_NOTIFICATION_PANEL_GUIDELINES = `## Overview
 | --- | --- | --- |
 | Snackbar | Component | 기록형 알림 |
 | Toast | Component | 단발성 피드백 |
-| Notification Center | Component | 알림 원본 저장소 |
+| Inline Message | Component | 지속 경고 |
+| Modal | Component | 사용자 확인 |
+| Global Notification Panel | Pattern | 안읽은 알림 집계 |
 | Error & Alert | Foundation | 알림 유형 정의 |
-| Desktop UI | Pattern | 전역 패널 위치 |
 `;
 
 /* ----------------------------------------
@@ -784,17 +817,18 @@ export function GlobalNotificationPanelPage() {
   return (
     <ComponentPageTemplate
       title="Global notification panel"
-      description="전역 알림 패널은 모든 앱의 '안읽은(Unread)' 기록형 알림을 한곳에서 모아 보여주는 데스크탑 레벨 보조 뷰. 알림의 저장소가 아니라 unread 상태의 알림을 모아 보여주는 보조 인터페이스."
+      description="앱 알림센터는 해당 앱의 기록형 알림 원본 저장소이고, 전역 알림 패널은 모든 앱의 안읽은 알림을 한곳에서 보는 보조 뷰이다. 두 UI는 스낵바·읽음 상태와 실시간으로 동기화된다."
       whenToUse={[
-        '여러 앱에서 발생한 안읽은 알림을 한곳에서 확인해야 하는 경우',
-        '사용자가 현재 어떤 앱을 보고 있는지와 관계없이 새로운 알림을 빠르게 확인해야 하는 경우',
-        'Snackbar를 놓친 경우',
+        '해당 앱에서 발생한 알림 기록을 확인해야 할 때 (앱 알림센터)',
+        '오류 상세·작업 결과를 기록형 알림으로 확인해야 할 때 (앱 알림센터)',
+        '여러 앱의 안읽은 알림을 한곳에서 빠르게 확인해야 할 때 (전역 알림 패널)',
+        'Snackbar를 놓쳤거나 과거 알림을 다시 확인해야 할 때',
       ]}
       whenNotToUse={[
         '단순 UI 피드백 (→ Toast)',
-        '지속 경고 메시지 (→ Inline)',
+        '지속 경고 메시지 (→ Inline Message)',
         '사용자 확인이 필요한 작업 (→ Modal)',
-        '특정 앱의 알림 기록을 상세히 확인 (→ Notification Center)',
+        '기록 없이 일시적인 피드백만 필요한 경우',
       ]}
       preview={<GlobalPanelPreview />}
       examples={
@@ -809,14 +843,17 @@ export function GlobalNotificationPanelPage() {
           <NotionRenderer markdown={GLOBAL_NOTIFICATION_PANEL_GUIDELINES} />
           <DosDonts
             doItems={[
-              '안읽은 알림을 빠르게 확인할 수 있도록 사용한다',
-              '알림을 앱별로 그룹화한다',
-              '최신 알림을 상단에 표시한다',
+              '모든 기록형 알림을 앱 알림센터에 저장한다',
+              '실패 알림은 상세 정보를 제공한다',
+              '안읽은 알림을 명확히 표시한다',
+              '전역 패널에서는 unread 집계를 빠르게 파악할 수 있게 한다',
+              '최신 알림을 상단에 둔다',
             ]}
             dontItems={[
-              '전역 패널을 알림 저장소로 사용하지 않는다',
-              'Toast를 전역 패널에 표시하지 않는다',
-              '읽은 알림을 표시하지 않는다',
+              'Toast를 기록형 알림으로 사용하지 않는다',
+              '사용자가 알림을 삭제하도록 하지 않는다',
+              '기록형 알림을 임의로 자동 숨기지 않는다',
+              '전역 패널을 영구 저장소처럼 쌓아 두지 않는다',
             ]}
           />
         </>
@@ -824,8 +861,9 @@ export function GlobalNotificationPanelPage() {
       relatedLinks={[
         { label: 'Snackbar', path: '/design/components/snackbar' },
         { label: 'Toast', path: '/design/components/toast' },
+        { label: 'Inline Message', path: '/design/components/inline-message' },
+        { label: 'Modal', path: '/design/components/modal' },
         { label: 'Error & Alert', path: '/design/policies/error-alert' },
-        { label: 'Desktop UI', path: '/design/patterns/desktop-grid' },
       ]}
     />
   );
