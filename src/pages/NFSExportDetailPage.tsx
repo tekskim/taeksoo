@@ -168,8 +168,8 @@ export function NFSExportDetailPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={
               <Breadcrumb
                 items={[{ label: 'NFS', href: '/storage/nfs' }, { label: 'Not Found' }]}
@@ -214,8 +214,8 @@ export function NFSExportDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'NFS', href: '/storage/nfs' }, { label: exportData.pseudo }]}

@@ -67,7 +67,10 @@ function AIPlatformLogo() {
         d="M12 2L14.5 7.5L20 10L14.5 12.5L12 18L9.5 12.5L4 10L9.5 7.5L12 2Z"
         fill="url(#ai-gradient)"
       />
-      <path d="M12 6L13.5 9.5L17 11L13.5 12.5L12 16L10.5 12.5L7 11L10.5 9.5L12 6Z" fill="#F472B6" />
+      <path
+        d="M12 6L13.5 9.5L17 11L13.5 12.5L12 16L10.5 12.5L7 11L10.5 9.5L12 6Z"
+        fill="var(--chart-color-6)"
+      />
       <defs>
         <linearGradient
           id="ai-gradient"
@@ -77,8 +80,8 @@ function AIPlatformLogo() {
           y2="18"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#A78BFA" />
-          <stop offset="1" stopColor="#818CF8" />
+          <stop stopColor="var(--chart-color-4)" />
+          <stop offset="1" stopColor="var(--chart-color-8)" />
         </linearGradient>
       </defs>
     </svg>
@@ -108,7 +111,11 @@ export function AIPlatformSidebar() {
           <AIPlatformLogo />
           <span className="text-label-lg text-[var(--color-text-default)]">AI Platform</span>
         </Link>
-        <button className="p-1.5 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] transition-colors">
+        <button
+          type="button"
+          className="p-1.5 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+          aria-label="Open apps"
+        >
           <IconApps size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
       </div>
@@ -1011,13 +1018,13 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'running') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   } else if (status === 'failed') {
     bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-danger)]';
+    iconBg = 'bg-[var(--color-state-danger)]';
   } else if (status === 'pending') {
     bgColor = 'bg-[var(--color-info-weak-bg)]';
-    iconBg = 'bg-[var(--color-info)]';
+    iconBg = 'bg-[var(--color-state-info)]';
   }
 
   const getStatusIcon = () => {
@@ -1182,7 +1189,7 @@ function WorkloadsContent() {
         <div className="flex flex-col">
           <Link
             to={`/ai-platform/workloads/${row.id}`}
-            className="text-[13px] text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            className="text-label-lg text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
@@ -1259,7 +1266,10 @@ function WorkloadsContent() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}

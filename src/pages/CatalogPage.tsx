@@ -23,17 +23,6 @@ import kafkaLogo from '@/assets/catalog/kafka.svg';
 import nginxLogo from '@/assets/catalog/nginx.svg';
 import milvusLogo from '@/assets/catalog/milvus.svg';
 
-function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
-  );
-}
-
 /* ----------------------------------------
    Types
    ---------------------------------------- */
@@ -159,8 +148,8 @@ export default function CatalogPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Catalog' }]} />}
           actions={<ContainerTopBarActions />}
         />
@@ -195,7 +184,7 @@ export default function CatalogPage() {
           </Tabs>
         </VStack>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredApps.map((app) => (
             <div
               key={app.id}
@@ -225,13 +214,19 @@ export default function CatalogPage() {
                 <Badge variant={categoryBadgeVariant[app.category] || 'info'} size="sm">
                   {app.category}
                 </Badge>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => navigate(`/container/catalog/${app.id}/install`)}
-                >
-                  Install
-                </Button>
+                {app.installed ? (
+                  <Button variant="outline" size="sm" disabled>
+                    Installed
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => navigate(`/container/catalog/${app.id}/install`)}
+                  >
+                    Install
+                  </Button>
+                )}
               </div>
             </div>
           ))}

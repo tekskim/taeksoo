@@ -49,13 +49,13 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'completed') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   } else if (status === 'error') {
     bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-danger)]';
+    iconBg = 'bg-[var(--color-state-danger)]';
   } else if (status === 'processing') {
-    bgColor = 'bg-[var(--color-info-weak-bg)]';
-    iconBg = 'bg-[var(--color-info)]';
+    bgColor = 'bg-[var(--color-state-info-bg)]';
+    iconBg = 'bg-[var(--color-state-info)]';
   }
 
   const getStatusIcon = () => {
@@ -114,6 +114,7 @@ export function StoragePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   // Set page title
   useEffect(() => {
@@ -121,6 +122,11 @@ export function StoragePage() {
     return () => {
       document.title = 'THAKI Cloud';
     };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
   }, []);
 
   // Mock data
@@ -277,7 +283,7 @@ export function StoragePage() {
               <div className="w-full h-1.5 bg-[var(--color-surface-subtle)] rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all ${
-                    hasError ? 'bg-[var(--color-danger)]' : 'bg-[var(--color-action-primary)]'
+                    hasError ? 'bg-[var(--color-state-danger)]' : 'bg-[var(--color-action-primary)]'
                   }`}
                   style={{ width: `${percentage}%` }}
                 />
@@ -325,7 +331,10 @@ export function StoragePage() {
             onClick={(e) => e.stopPropagation()}
           >
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -360,8 +369,8 @@ export function StoragePage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Data Sources' }]} />}
           actions={
             <>
@@ -463,6 +472,7 @@ export function StoragePage() {
             selectable
             selectedKeys={selectedDataSources}
             onSelectionChange={setSelectedDataSources}
+            loading={loading}
           />
         </div>
       </VStack>

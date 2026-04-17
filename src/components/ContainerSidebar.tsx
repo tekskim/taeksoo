@@ -72,7 +72,7 @@ function IconSidebarItem({ icon, iconText, active, onClick, tooltip }: IconSideb
   const renderContent = () => {
     if (iconText) {
       return (
-        <span className="text-[11px] font-semibold leading-none select-none uppercase">
+        <span className="text-body-sm font-semibold leading-none select-none uppercase">
           {iconText}
         </span>
       );
@@ -160,7 +160,7 @@ function ClusterAppearanceDrawer({
             <div className="mt-3 flex items-center">
               <div className="w-[36px] h-[36px] flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)]">
                 {previewText ? (
-                  <span className="text-[11px] font-semibold leading-none select-none text-[var(--color-text-default)]">
+                  <span className="text-body-sm font-semibold leading-none select-none text-[var(--color-text-default)]">
                     {previewText}
                   </span>
                 ) : (
@@ -300,7 +300,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             icon={<IconHome size={16} stroke={1.5} />}
             active={activeIconSection === 'home'}
             onClick={() => navigate('/container')}
-            tooltip="Home"
+            tooltip="Dashboard"
           />
           <IconSidebarItem
             icon={<FolderCog size={16} strokeWidth={1.5} />}
@@ -322,6 +322,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             icon={<IconPlus size={16} stroke={1.5} />}
             active={false}
             tooltip="Add new"
+            onClick={() => navigate('/container/cluster-management/create')}
           />
         </div>
       </aside>

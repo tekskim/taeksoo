@@ -49,7 +49,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'active') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   }
 
   const getStatusIcon = () => {
@@ -99,6 +99,42 @@ interface AgentRow {
   createdAt: string;
 }
 
+const MOCK_AGENTS: AgentRow[] = [
+  {
+    id: '1',
+    favorite: false,
+    status: 'draft',
+    name: 'lable',
+    model: 'claude-sonnet-4-5',
+    modelProvider: 'anthropic',
+    chats: '-',
+    updatedAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2025, 2:51 PM',
+  },
+  {
+    id: '2',
+    favorite: false,
+    status: 'active',
+    name: 'lable',
+    model: 'claude-sonnet-4-5',
+    modelProvider: 'anthropic',
+    chats: '5',
+    updatedAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2025, 2:51 PM',
+  },
+  {
+    id: '3',
+    favorite: true,
+    status: 'inactive',
+    name: 'lable',
+    model: 'claude-sonnet-4-5',
+    modelProvider: 'anthropic',
+    chats: '-',
+    updatedAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2025, 2:51 PM',
+  },
+];
+
 /* ----------------------------------------
    Main AgentPage Component
    ---------------------------------------- */
@@ -110,43 +146,6 @@ export function AgentPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // Mock data
-  const agents: AgentRow[] = [
-    {
-      id: '1',
-      favorite: false,
-      status: 'draft',
-      name: 'lable',
-      model: 'claude-sonnet-4-5',
-      modelProvider: 'anthropic',
-      chats: '-',
-      updatedAt: 'Nov 11, 2025, 2:51 PM',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
-    },
-    {
-      id: '2',
-      favorite: false,
-      status: 'active',
-      name: 'lable',
-      model: 'claude-sonnet-4-5',
-      modelProvider: 'anthropic',
-      chats: '5',
-      updatedAt: 'Nov 11, 2025, 2:51 PM',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
-    },
-    {
-      id: '3',
-      favorite: true,
-      status: 'inactive',
-      name: 'lable',
-      model: 'claude-sonnet-4-5',
-      modelProvider: 'anthropic',
-      chats: '-',
-      updatedAt: 'Nov 11, 2025, 2:51 PM',
-      createdAt: 'Nov 11, 2025, 2:51 PM',
-    },
-  ];
-
   // Status mapping for StatusIndicator
   const statusMap: Record<AgentRow['status'], 'active' | 'shutoff' | 'pending'> = {
     active: 'active',
@@ -156,15 +155,15 @@ export function AgentPage() {
 
   // Filter agents by search
   const filteredAgents = useMemo(() => {
-    if (!searchQuery) return agents;
+    if (!searchQuery) return MOCK_AGENTS;
 
-    return agents.filter(
+    return MOCK_AGENTS.filter(
       (a) =>
         a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.modelProvider.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [agents, searchQuery]);
+  }, [searchQuery]);
 
   const totalPages = Math.ceil(filteredAgents.length / rowsPerPage);
   const paginatedAgents = useMemo(() => {
@@ -271,7 +270,11 @@ export function AgentPage() {
             className="flex gap-1 items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              type="button"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              aria-label="View code"
+            >
               <IconCode size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
             </button>
             <ContextMenu items={menuItems} trigger="click" align="right">
@@ -310,8 +313,8 @@ export function AgentPage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Agents' }]} />}
           actions={
             <>

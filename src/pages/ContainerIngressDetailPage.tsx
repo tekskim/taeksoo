@@ -130,7 +130,7 @@ function RulesTab({ rules }: RulesTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -145,7 +145,7 @@ function RulesTab({ rules }: RulesTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -167,7 +167,7 @@ function RulesTab({ rules }: RulesTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] cursor-pointer hover:underline truncate block min-w-0"
+          className="text-body-md text-[var(--color-text-default)] truncate block min-w-0"
           title={value}
         >
           {value}
@@ -300,8 +300,8 @@ export function ContainerIngressDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

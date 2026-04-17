@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   SearchInput,
@@ -182,13 +182,20 @@ function UsageCell({ usage }: UsageCellProps) {
    ---------------------------------------- */
 
 export function OSDsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
+  const [loading, setLoading] = useState(true);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -321,8 +328,8 @@ export function OSDsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'OSDs' }]} />}
         />
       }
@@ -372,6 +379,7 @@ export function OSDsPage() {
           data={paginatedOSDs}
           rowKey="id"
           emptyMessage="No OSDs found"
+          loading={loading}
         />
       </VStack>
     </PageShell>

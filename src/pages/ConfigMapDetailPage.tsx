@@ -200,11 +200,6 @@ export function ConfigMapDetailPage() {
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/configmaps/${configMapId}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () =>

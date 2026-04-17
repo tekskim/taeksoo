@@ -478,8 +478,8 @@ export function FileSystemDetailPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={
               <Breadcrumb
                 items={[
@@ -527,8 +527,8 @@ export function FileSystemDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

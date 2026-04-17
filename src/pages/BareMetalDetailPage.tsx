@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -301,6 +301,7 @@ const mockActionLogs: ActionLog[] = [
    ---------------------------------------- */
 
 export function BareMetalDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -399,8 +400,8 @@ export function BareMetalDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Instances', href: '/compute/instances' }, { label: instance.name }]}
@@ -687,7 +688,10 @@ export function BareMetalDetailPage() {
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={interfaceMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}

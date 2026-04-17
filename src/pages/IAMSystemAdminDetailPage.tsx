@@ -277,8 +277,7 @@ export default function IAMSystemAdminDetailPage() {
   // More actions menu items
   const moreActionsItems: ContextMenuItem[] = [
     { id: 'reset-password', label: 'Reset password' },
-    { id: 'reset-mfa', label: 'Reset MFA' },
-    { type: 'divider' },
+    { id: 'reset-mfa', label: 'Reset MFA', divider: true },
     { id: 'view-activity', label: 'View activity logs' },
   ];
 
@@ -312,7 +311,12 @@ export default function IAMSystemAdminDetailPage() {
       width: fixedColumns.actions,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={mfaContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu
+          items={mfaContextMenuItems}
+          trigger="click"
+          align="right"
+          onSelect={(itemId) => console.log(itemId, row.id)}
+        >
           <button
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
@@ -365,6 +369,8 @@ export default function IAMSystemAdminDetailPage() {
       render: (_value, row) => (
         <ContextMenu
           items={sessionContextMenuItems}
+          trigger="click"
+          align="right"
           onSelect={(itemId) => console.log(itemId, row.id)}
         >
           <button
@@ -421,7 +427,12 @@ export default function IAMSystemAdminDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconLock size={12} />}>
               Lock setting
             </Button>
-            <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
+            <ContextMenu
+              items={moreActionsItems}
+              trigger="click"
+              align="right"
+              onSelect={(itemId) => console.log(itemId)}
+            >
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
                 More actions
               </Button>

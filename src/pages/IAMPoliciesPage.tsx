@@ -14,6 +14,7 @@ import {
   ListToolbar,
   PageShell,
   PageHeader,
+  Skeleton,
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -360,11 +361,17 @@ export default function IAMPoliciesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set(['p-002']));
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
   useEffect(() => {
     updateActiveTabLabel('Policies');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -571,7 +578,44 @@ export default function IAMPoliciesPage() {
           </div>
 
           {/* Table Rows */}
-          {paginatedPolicies.length === 0 ? (
+          {loading ? (
+            <div className="w-full flex flex-col gap-[var(--table-row-gap)]">
+              {Array.from({ length: 10 }).map((_, rowIndex) => (
+                <div
+                  key={`policy-skeleton-${rowIndex}`}
+                  className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] overflow-hidden"
+                >
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
+                    <div className="w-[40px] flex items-center justify-center px-3 py-2">
+                      <Skeleton variant="text" width={16} height={16} />
+                    </div>
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] gap-2">
+                      <Skeleton variant="text" width={16} height={16} />
+                      <Skeleton variant="text" width="60%" height={14} />
+                    </div>
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                      <Skeleton variant="text" width="40%" height={14} />
+                    </div>
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                      <Skeleton variant="text" width="50%" height={14} />
+                    </div>
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                      <Skeleton variant="text" width="45%" height={14} />
+                    </div>
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                      <Skeleton variant="text" width="70%" height={14} />
+                    </div>
+                    <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                      <Skeleton variant="text" width="55%" height={14} />
+                    </div>
+                    <div className="w-[64px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
+                      <Skeleton variant="text" width={24} height={24} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : paginatedPolicies.length === 0 ? (
             <div className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] px-4 py-10 text-center text-body-md text-[var(--color-text-subtle)]">
               No policies found
             </div>
@@ -636,8 +680,10 @@ export default function IAMPoliciesPage() {
                     <ContextMenu
                       items={getContextMenuItems(policy.id, policy.type === 'Built-in')}
                       trigger="click"
+                      align="right"
                     >
                       <button
+                        aria-label="Row actions"
                         type="button"
                         className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                       >

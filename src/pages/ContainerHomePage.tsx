@@ -207,7 +207,7 @@ export function ContainerHomePage() {
           variant="outline"
           size="sm"
           leftIcon={<IconSettings size={12} />}
-          onClick={() => navigate(`/container/clusters/${row.id}`)}
+          onClick={() => navigate(`/container/cluster-management/${row.id}`)}
         >
           Manage
         </Button>
@@ -222,16 +222,50 @@ export function ContainerHomePage() {
       render: (_value: string, row: ClusterRow) => (
         <ContextMenu
           items={[
-            { id: 'kubectl-shell', label: 'Kubectl Shell', onClick: () => {} },
-            { id: 'download-kubeconfig', label: 'Download KubeConfig', onClick: () => {} },
-            { id: 'copy-kubeconfig', label: 'Copy KubeConfig to Clipboard', onClick: () => {} },
-            { id: 'view-yaml', label: 'View YAML', onClick: () => {} },
-            { id: 'download-yaml', label: 'Download YAML', onClick: () => {} },
-            { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+            {
+              id: 'manage',
+              label: 'Manage',
+              onClick: () => navigate(`/container/cluster-management/${row.id}`),
+            },
+            {
+              id: 'kubectl-shell',
+              label: 'Kubectl Shell',
+              onClick: () => console.log('Kubectl Shell', row.id),
+            },
+            {
+              id: 'download-kubeconfig',
+              label: 'Download KubeConfig',
+              onClick: () => console.log('Download KubeConfig', row.id),
+            },
+            {
+              id: 'copy-kubeconfig',
+              label: 'Copy KubeConfig to Clipboard',
+              onClick: () => console.log('Copy KubeConfig to Clipboard', row.id),
+            },
+            {
+              id: 'view-yaml',
+              label: 'View YAML',
+              onClick: () => console.log('View YAML', row.id),
+            },
+            {
+              id: 'download-yaml',
+              label: 'Download YAML',
+              onClick: () => console.log('Download YAML', row.id),
+            },
+            {
+              id: 'delete',
+              label: 'Delete',
+              status: 'danger',
+              onClick: () => console.log('Delete cluster', row.id),
+            },
           ]}
           trigger="click"
         >
-          <button className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors">
+          <button
+            type="button"
+            aria-label="Row actions"
+            className="p-1.5 rounded hover:bg-[var(--color-surface-hover)] transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-muted)]"
@@ -322,7 +356,11 @@ export function ContainerHomePage() {
                   workloads.
                 </p>
                 <div className="w-full flex justify-end">
-                  <Button variant="primary" size="md">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    onClick={() => navigate('/container/cluster-management/create')}
+                  >
                     Create cluster
                   </Button>
                 </div>

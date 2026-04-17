@@ -13,7 +13,7 @@ import AIPlatformIcon from '@/assets/appIcon/aiplatform.png';
 import AIAgentIcon from '@/assets/appIcon/agentops.png';
 import StorageIcon from '@/assets/appIcon/storage.png';
 import IAMIcon from '@/assets/appIcon/iam.png';
-import DesktopIcon from '@/assets/appIcon/settings.png';
+import DesktopIcon from '@/assets/appIcon/desktop.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
 
 interface AppCard {

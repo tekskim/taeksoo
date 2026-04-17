@@ -85,7 +85,7 @@ function SummarySidebar({
                 style={{ width: '20%' }}
               />
               <div
-                className="bg-[#bbf7d0] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
+                className="bg-[var(--color-state-success-bg)] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
                 style={{ width: '10%' }}
               />
               <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-lg -mr-1 z-[1]" />

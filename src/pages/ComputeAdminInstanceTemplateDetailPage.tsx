@@ -498,7 +498,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate('/compute-admin/instance-templates')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }

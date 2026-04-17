@@ -95,6 +95,8 @@ function AgentHeader({
             <button
               onClick={onFavoriteToggle}
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              aria-pressed={isFavorite}
             >
               {isFavorite ? (
                 <IconStarFilled size={22} className="text-[var(--primitive-color-yellow400)]" />
@@ -123,7 +125,7 @@ function AgentHeader({
             leftIcon={<IconPlayerPause size={12} />}
             onClick={onDeactivate}
           >
-            Deactive
+            Deactivate
           </Button>
           <Button
             variant="secondary"
@@ -931,8 +933,8 @@ export function AgentDetailPage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Agents', href: '/agent/list' }, { label: agent.name }]} />
           }

@@ -234,8 +234,8 @@ export function CreateMCPTemplatePage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'MCP Tools', href: '/mcp-tools' }, { label: 'Create MCP Template' }]}

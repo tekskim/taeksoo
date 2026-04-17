@@ -273,14 +273,14 @@ export default function FloatingIPDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* Floating IP Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{floatingIP.floatingIp}</DetailHeader.Title>

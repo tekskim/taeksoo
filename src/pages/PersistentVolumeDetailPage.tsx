@@ -185,11 +185,6 @@ export function PersistentVolumeDetailPage() {
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/persistent-volumes/${pvId}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/persistent-volumes/${pvData.name}/edit-yaml`),
@@ -459,7 +454,7 @@ export function PersistentVolumeDetailPage() {
                     <h3 className="text-label-lg text-[var(--color-text-default)]">
                       Mount options
                     </h3>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <div className="grid grid-cols-[1fr] gap-2">
                         <span className="text-label-sm text-[var(--color-text-subtle)]">Value</span>
                         <Input value={pvData.mountOptions} onChange={() => {}} fullWidth readOnly />
@@ -476,7 +471,7 @@ export function PersistentVolumeDetailPage() {
                       {pvData.nodeSelectors.map((group) => (
                         <div
                           key={group.id}
-                          className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
+                          className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                         >
                           <div className="grid grid-cols-[1fr_140px_1fr] gap-2 items-center">
                             <span className="text-label-sm text-[var(--color-text-subtle)]">

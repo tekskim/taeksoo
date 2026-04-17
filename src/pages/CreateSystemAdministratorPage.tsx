@@ -399,7 +399,7 @@ function PasswordSection({
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                      {showPassword ? <IconEye size={16} /> : <IconEyeOff size={16} />}
                     </button>
                   </div>
                 </Tooltip>
@@ -428,7 +428,7 @@ function PasswordSection({
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                      {showConfirmPassword ? <IconEye size={16} /> : <IconEyeOff size={16} />}
                     </button>
                   </div>
                 </Tooltip>
@@ -1175,8 +1175,8 @@ export default function CreateSystemAdministratorPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

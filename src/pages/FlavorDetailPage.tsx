@@ -557,6 +557,8 @@ export function FlavorDetailPage() {
             items={getInstanceContextMenuItems(row)}
             trigger={
               <button
+                type="button"
+                aria-label="Row actions"
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -591,7 +593,7 @@ export function FlavorDetailPage() {
           onSidebarToggle={openSidebar}
           showNavigation={true}
           onBack={() => navigate(-1)}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }

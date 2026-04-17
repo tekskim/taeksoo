@@ -191,11 +191,6 @@ export function SecretDetailPage() {
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/secrets/${secretId}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/secrets/${secretData?.name ?? secretId}/edit-yaml`),

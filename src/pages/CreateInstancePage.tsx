@@ -1088,13 +1088,12 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center" className="min-w-0">
-            <a
-              href="#"
+            <span
               className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               title={value}
             >
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
             {row.status === 'error' && (
               <Tooltip content="This volume is currently unavailable.">
@@ -1170,12 +1169,9 @@ function ImageSection({
       render: (value: string, row: SnapshotRow) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1198,12 +1194,9 @@ function ImageSection({
       render: (value: string, row: SnapshotRow) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1265,12 +1258,9 @@ function ImageSection({
       render: (value: string, row: BootableVolumeRow) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -2124,12 +2114,9 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
             {row.hasWarning && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)] shrink-0" />
@@ -2656,13 +2643,12 @@ function NetworkSection({
       render: (_, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center" className="min-w-0">
-            <a
-              href="#"
+            <span
               className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
               title={row.name}
             >
               {row.name}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)] shrink-0" />
             {row.hasWarning && (
               <Tooltip content="This network has no subnets available.">
@@ -3595,12 +3581,9 @@ function AuthenticationSection({
                 {/* Key pair block */}
                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                   <VStack gap={4}>
-                    <Tabs value="keypair" onChange={() => {}} variant="underline" size="sm">
-                      <TabList>
-                        <Tab value="keypair">Key pair</Tab>
-                        <Tab value="password">Password</Tab>
-                      </TabList>
-                    </Tabs>
+                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                      Key pair
+                    </span>
                     <HStack gap={2} align="center" justify="between" className="w-full">
                       <SearchInput
                         placeholder="Search key pair by attributes"
@@ -3667,12 +3650,9 @@ function AuthenticationSection({
                 {/* Password block */}
                 <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
                   <VStack gap={4}>
-                    <Tabs value="password" onChange={() => {}} variant="underline" size="sm">
-                      <TabList>
-                        <Tab value="keypair">Key pair</Tab>
-                        <Tab value="password">Password</Tab>
-                      </TabList>
-                    </Tabs>
+                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                      Password
+                    </span>
                     <FormField
                       label="Login name"
                       helperText="You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters."
@@ -4979,8 +4959,8 @@ export function CreateInstancePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

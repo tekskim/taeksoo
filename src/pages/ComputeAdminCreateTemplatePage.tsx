@@ -1115,12 +1115,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1175,12 +1172,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1202,12 +1196,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value || 'instance-01'}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1264,12 +1255,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1334,7 +1322,7 @@ function ImageSection({
               {isV2 ? (
                 <VStack gap={6}>
                   {/* Image block */}
-                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                     <VStack gap={2}>
                       <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
                         <TabList>
@@ -1416,7 +1404,7 @@ function ImageSection({
                   </div>
 
                   {/* Instance snapshot block */}
-                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                     <VStack gap={2}>
                       <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
                         <TabList>
@@ -1498,7 +1486,7 @@ function ImageSection({
                   </div>
 
                   {/* Bootable volume block */}
-                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                     <VStack gap={2}>
                       <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
                         <TabList>
@@ -1698,7 +1686,7 @@ function ImageSection({
 
             {/* Storage Type Row - Bordered Container */}
             {(isV2 || createSystemDisk) && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
+              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3">
                 <HStack gap={6} align="start" className="flex-wrap">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1875,13 +1863,9 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
@@ -1962,7 +1946,7 @@ function FlavorSection({
                   className="w-[var(--search-input-width)]"
                 />
                 <button
-                  className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)]"
+                  className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[var(--radius-md)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)]"
                   title="Download"
                 >
                   <IconDownload size={12} stroke={1.5} />
@@ -2255,13 +2239,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -2334,13 +2314,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -2411,13 +2387,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
@@ -2439,13 +2411,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1.5} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md leading-[16px]">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -2577,7 +2545,7 @@ function NetworkSection({
                 </span>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
@@ -3069,7 +3037,7 @@ function AdvancedSection({
                 </span>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -3444,8 +3412,8 @@ export function ComputeAdminCreateTemplatePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

@@ -131,8 +131,8 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
                 <MenuItem
                   icon={<IconServer2 size={16} stroke={1.5} />}
                   label="Servers"
-                  href="/cloudbuilder/severs0.7"
-                  active={isActive('/cloudbuilder/severs0.7')}
+                  href="/cloudbuilder/servers"
+                  active={isActive('/cloudbuilder/servers')}
                 />
               </MenuSection>
 

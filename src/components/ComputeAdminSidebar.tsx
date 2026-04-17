@@ -71,6 +71,15 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
     ) {
       return true;
     }
+    // Match child resources - NACL / firewall-related routes under Firewall
+    if (
+      href === '/compute-admin/firewall' &&
+      (location.pathname.startsWith('/compute-admin/firewalls') ||
+        location.pathname.startsWith('/compute-admin/firewall-policies') ||
+        location.pathname.startsWith('/compute-admin/firewall-rules'))
+    ) {
+      return true;
+    }
     return false;
   };
 

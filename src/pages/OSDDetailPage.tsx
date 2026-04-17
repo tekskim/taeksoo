@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
 import {
@@ -859,6 +859,7 @@ const mockDeviceHealthList: DeviceHealth[] = [
    ---------------------------------------- */
 
 export function OSDDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const osdId = parseInt(id || '1', 10);
   const osd = mockOSDs[osdId] || mockOSDs[1];
@@ -970,8 +971,8 @@ export function OSDDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'OSDs', href: '/storage/osds' }, { label: `OSD.${osd.id}` }]}

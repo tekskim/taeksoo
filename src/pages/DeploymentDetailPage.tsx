@@ -295,11 +295,6 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         onClick: () => onViewLogs(row.name),
       },
       {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/pods/${row.id}/edit`),
-      },
-      {
         id: 'edit-yaml',
         label: 'Edit YAML',
         onClick: () => navigate(`/container/pods/${row.name}/edit-yaml`),
@@ -410,7 +405,10 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -480,11 +478,6 @@ function ServicesTab({ services }: ServicesTabProps) {
 
   const createServiceMenuItems = (row: ServiceRow): ContextMenuItem[] => {
     return [
-      {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/services/${row.id}/edit`),
-      },
       {
         id: 'edit-yaml',
         label: 'Edit YAML',
@@ -574,7 +567,10 @@ function ServicesTab({ services }: ServicesTabProps) {
       align: 'center',
       render: (_: unknown, row: ServiceRow) => (
         <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-muted)]"
@@ -755,7 +751,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       align: 'center',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -897,11 +896,6 @@ export function DeploymentDetailPage() {
       onClick: () => console.log('Rollback'),
     },
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/deployments/${deployment.id}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/deployments/${deployment.name}/edit-yaml`),
@@ -940,8 +934,8 @@ export function DeploymentDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

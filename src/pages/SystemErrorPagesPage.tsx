@@ -64,6 +64,7 @@ function isValidVariant(v: string | undefined): v is ErrorVariant {
 }
 
 function FullPageError({ variant }: { variant: ErrorVariant }) {
+  const navigate = useNavigate();
   const config = ERROR_CONFIGS[variant];
 
   return (
@@ -71,17 +72,15 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
       <div className="text-center px-6 -mt-20">
         {config.statusCode && (
           <div className="mb-4">
-            <span className="text-[64px] font-black text-[var(--color-text-disabled)] leading-[80px] h-[80px] inline-block">
+            <span className="text-heading-h1 font-black text-[var(--color-text-disabled)] inline-block">
               {config.statusCode}
             </span>
           </div>
         )}
 
         <div className="mb-8">
-          <h1 className="text-[18px] font-semibold leading-[26px] text-[var(--color-text-default)] mb-2">
-            {config.title}
-          </h1>
-          <p className="text-[var(--color-text-muted)] text-[13px] leading-[20px] max-w-md mx-auto">
+          <h1 className="text-heading-h4 text-[var(--color-text-default)] mb-2">{config.title}</h1>
+          <p className="text-label-lg text-[var(--color-text-muted)] max-w-md mx-auto">
             {config.description}
           </p>
         </div>
@@ -92,7 +91,7 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
               variant="secondary"
               size="sm"
               leftIcon={<IconArrowLeft size={12} />}
-              onClick={() => window.history.back()}
+              onClick={() => navigate(-1)}
             >
               Go Back
             </Button>
@@ -102,7 +101,7 @@ function FullPageError({ variant }: { variant: ErrorVariant }) {
               variant="primary"
               size="sm"
               leftIcon={<IconHome size={12} />}
-              onClick={() => (window.location.href = '/')}
+              onClick={() => navigate('/')}
             >
               Go to Homepage
             </Button>

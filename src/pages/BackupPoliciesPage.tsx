@@ -22,6 +22,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
+import { useNavigate } from 'react-router-dom';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -136,6 +137,7 @@ const statusMap: Record<PolicyStatus, 'active' | 'paused' | 'error'> = {
    ---------------------------------------- */
 
 export function BackupPoliciesPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
@@ -197,9 +199,7 @@ export function BackupPoliciesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-label-md text-[var(--color-action-primary)] hover:underline cursor-pointer">
-          {value}
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
@@ -255,7 +255,10 @@ export function BackupPoliciesPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -287,8 +290,8 @@ export function BackupPoliciesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Backup Policies' }]} />}
         />
       }
@@ -297,7 +300,7 @@ export function BackupPoliciesPage() {
         <PageHeader
           title="Backup Policies"
           actions={
-            <Button size="md" leftIcon={<IconPlus size={14} stroke={1.5} />}>
+            <Button size="md" leftIcon={<IconPlus size={12} stroke={1.5} />}>
               Create Policy
             </Button>
           }

@@ -23,6 +23,7 @@ import {
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { DomainCreateDrawer } from '@/components/DomainCreateDrawer';
 import { useTabs } from '@/contexts/TabContext';
+import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Type Definitions
@@ -115,11 +116,13 @@ const mockDomains: Domain[] = [
    IAM Domains Page
    ---------------------------------------- */
 export default function IAMDomainsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
   const itemsPerPage = 10;
@@ -128,6 +131,11 @@ export default function IAMDomainsPage() {
   useEffect(() => {
     updateActiveTabLabel('Domains');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -223,6 +231,7 @@ export default function IAMDomainsPage() {
           </button>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
             <button
+              aria-label="Row actions"
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
@@ -258,8 +267,8 @@ export default function IAMDomainsPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             showNavigation
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={<Breadcrumb items={[{ label: 'Domains' }]} />}
           />
         }
@@ -312,6 +321,7 @@ export default function IAMDomainsPage() {
               data={paginatedDomains}
               rowKey="id"
               emptyMessage="No domains found"
+              loading={loading}
             />
           </VStack>
         </VStack>

@@ -105,13 +105,13 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: '#ffffff',
-      borderColor: '#e2e8f0',
+      backgroundColor: resolvedChartColor('--color-surface-default', '#ffffff'),
+      borderColor: resolvedChartColor('--color-border-default', chartColors.slate100),
       borderWidth: 1,
       borderRadius: 6,
       padding: [8, 12],
       textStyle: {
-        color: '#1e293b',
+        color: chartColors.slate800,
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
@@ -134,7 +134,7 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#0f172a',
+          color: chartColors.slate800,
           fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
         },
         emphasis: {

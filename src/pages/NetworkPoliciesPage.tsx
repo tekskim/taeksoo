@@ -30,6 +30,7 @@ import {
   IconDotsCircleHorizontal,
   IconChevronDown,
 } from '@tabler/icons-react';
+import { getContainerStatusTheme } from './containerStatusUtils';
 
 /* ----------------------------------------
    Types
@@ -156,14 +157,10 @@ export function NetworkPoliciesPage() {
   const createMenuItems = (row: NetworkPolicyRow): ContextMenuItem[] => {
     return [
       {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => console.log('Edit Config:', row.id),
-      },
-      {
         id: 'edit-yaml',
         label: 'Edit YAML',
-        onClick: () => console.log('Edit YAML:', row.id),
+        onClick: () =>
+          navigate(`/container/network-policies/${encodeURIComponent(row.name)}/edit-yaml`),
       },
       {
         id: 'download-yaml',
@@ -187,7 +184,12 @@ export function NetworkPoliciesPage() {
       width: fixedColumns.statusLabel,
       render: (value: string) => (
         <Tooltip content={value}>
-          <Badge theme="white" size="sm" className="max-w-[80px]">
+          <Badge
+            theme={getContainerStatusTheme(value)}
+            type="subtle"
+            size="sm"
+            className="max-w-[80px]"
+          >
             <span className="truncate">{value}</span>
           </Badge>
         </Tooltip>
@@ -250,7 +252,10 @@ export function NetworkPoliciesPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -306,8 +311,8 @@ export function NetworkPoliciesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Network Policies' }]} />}
           actions={
             <ContainerTopBarActions
@@ -414,8 +419,6 @@ export function NetworkPoliciesPage() {
           onPageChange={setCurrentPage}
           totalItems={networkPoliciesData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}

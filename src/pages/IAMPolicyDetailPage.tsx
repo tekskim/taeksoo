@@ -538,6 +538,7 @@ export default function IAMPolicyDetailPage() {
         return (
           <ContextMenu items={menuItems} trigger="click" align="right">
             <button
+              aria-label="Row actions"
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
@@ -854,8 +855,13 @@ export default function IAMPolicyDetailPage() {
                       width: fixedColumns.actions,
                       align: 'center',
                       render: (_value: unknown, version: PolicyVersion) => (
-                        <ContextMenu items={getVersionContextMenuItems(version)} trigger="click">
+                        <ContextMenu
+                          items={getVersionContextMenuItems(version)}
+                          trigger="click"
+                          align="right"
+                        >
                           <button
+                            aria-label="Row actions"
                             type="button"
                             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
                           >

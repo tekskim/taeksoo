@@ -29,7 +29,7 @@ import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import containerIcon from '@/assets/appIcon/container.png';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
@@ -170,6 +170,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function SecurityGroupsPage() {
+  const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -343,7 +344,10 @@ export function SecurityGroupsPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -396,8 +400,8 @@ export function SecurityGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }

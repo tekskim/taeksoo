@@ -45,7 +45,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 interface StatusCardProps {
   label: string;
   count: number;
-  status: 'active' | 'deactive' | 'error';
+  status: 'active' | 'inactive' | 'error';
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
@@ -54,16 +54,16 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   if (status === 'active') {
     bgColor = 'bg-[var(--color-state-success-bg)]';
-    iconBg = 'bg-[var(--color-success)]';
+    iconBg = 'bg-[var(--color-state-success)]';
   } else if (status === 'error') {
     bgColor = 'bg-[var(--color-state-danger-bg)]';
-    iconBg = 'bg-[var(--color-danger)]';
+    iconBg = 'bg-[var(--color-state-danger)]';
   }
 
   const getStatusIcon = () => {
     if (status === 'active') {
       return <IconTarget size={12} stroke={1} className="text-white" />;
-    } else if (status === 'deactive') {
+    } else if (status === 'inactive') {
       return <IconCircleX size={12} stroke={1.5} className="text-white" />;
     } else if (status === 'error') {
       return <IconAlertTriangle size={12} stroke={1} className="text-white" />;
@@ -97,7 +97,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 interface MCPToolRow {
   id: string;
   favorite: boolean;
-  status: 'active' | 'deactive' | 'error' | 'processing' | 'deleted';
+  status: 'active' | 'inactive' | 'error' | 'processing' | 'deleted';
   title: string;
   mcpServer: {
     thumbnail: string;
@@ -152,7 +152,7 @@ export function MCPToolsPage() {
     'active' | 'error' | 'building' | 'deactivated' | 'pending'
   > = {
     active: 'active',
-    deactive: 'deactivated',
+    inactive: 'deactivated',
     error: 'error',
     processing: 'building',
     deleted: 'pending',
@@ -318,7 +318,7 @@ export function MCPToolsPage() {
     {
       id: '2',
       favorite: false,
-      status: 'deactive',
+      status: 'inactive',
       title: 'Google Cloud Platform',
       mcpServer: {
         thumbnail:
@@ -633,7 +633,10 @@ export function MCPToolsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -742,7 +745,10 @@ export function MCPToolsPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -777,8 +783,8 @@ export function MCPToolsPage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'MCP Tools' }]} />}
           actions={
             <>
@@ -810,7 +816,7 @@ export function MCPToolsPage() {
         {activeTab === 'my-servers' && (
           <div className="flex gap-2 items-center relative shrink-0 w-full">
             <StatusCard label="Active" count={7} status="active" />
-            <StatusCard label="Deactive" count={1} status="deactive" />
+            <StatusCard label="Inactive" count={1} status="inactive" />
             <StatusCard label="Error" count={1} status="error" />
           </div>
         )}

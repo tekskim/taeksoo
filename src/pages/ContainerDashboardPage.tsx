@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   VStack,
@@ -21,11 +21,12 @@ import {
   SearchInput,
   type TableColumn,
   columnMinWidths,
+  EmptyState,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconExternalLink, IconHelpCircle } from '@tabler/icons-react';
+import { IconExternalLink, IconInfoCircle, IconKey } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Capacity Progress bar Component
@@ -63,20 +64,20 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
     { bg: string; darkBg: string; fill: string; text: string }
   > = {
     success: {
-      bg: 'var(--color-green-100)',
-      darkBg: 'rgba(34, 197, 94, 0.15)', // green-500 with 15% opacity for dark mode
+      bg: 'var(--color-state-success-bg)',
+      darkBg: 'color-mix(in srgb, var(--color-state-success) 15%, transparent)',
       fill: 'var(--color-state-success)',
       text: 'var(--color-green-600)',
     },
     warning: {
-      bg: 'var(--color-orange-100)',
-      darkBg: 'rgba(249, 115, 22, 0.15)', // orange-500 with 15% opacity for dark mode
+      bg: 'var(--color-state-warning-bg)',
+      darkBg: 'color-mix(in srgb, var(--color-state-warning) 15%, transparent)',
       fill: 'var(--color-state-warning)',
       text: 'var(--color-orange-600)',
     },
     danger: {
-      bg: 'var(--color-red-100)',
-      darkBg: 'rgba(239, 68, 68, 0.15)', // red-500 with 15% opacity for dark mode
+      bg: 'var(--color-state-danger-bg)',
+      darkBg: 'color-mix(in srgb, var(--color-state-danger) 15%, transparent)',
       fill: 'var(--color-state-danger)',
       text: 'var(--color-red-600)',
     },
@@ -146,12 +147,12 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
         {/* Tooltip - follows cursor */}
         {showTooltip && (
           <div
-            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
             style={{ left: mousePos.x + 12, top: mousePos.y - 40 }}
           >
             <div className="flex items-center gap-1.5">
               <div
-                className="w-[5px] h-[5px] rounded-[1px]"
+                className="w-[5px] h-[5px] rounded-[var(--radius-sm)]"
                 style={{ backgroundColor: colors.fill }}
               />
               <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
@@ -159,7 +160,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
+              <div className="w-[5px] h-[5px] rounded-[var(--radius-sm)] bg-[var(--color-border-subtle)]" />
               <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Total: {total} {unit}
               </span>
@@ -283,7 +284,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     render: (value: string) => (
       <div className="min-w-0">
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          className="text-body-md text-[var(--color-text-default)] truncate block"
           title={value}
         >
           {value}
@@ -314,7 +315,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
     render: (value: string) => (
       <div className="min-w-0">
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          className="text-body-md text-[var(--color-text-default)] truncate block"
           title={value}
         >
           {value}
@@ -344,6 +345,7 @@ const eventsColumns: TableColumn<EventRow>[] = [
    ---------------------------------------- */
 
 export function ContainerDashboardPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'events';
@@ -498,10 +500,7 @@ export function ContainerDashboardPage() {
                     <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
                       {name}
                       <Tooltip content={tooltips[name]} position="top">
-                        <IconHelpCircle
-                          size={12}
-                          className="text-[var(--color-text-subtle)] cursor-help"
-                        />
+                        <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                       </Tooltip>
                     </span>
                     <span className="text-body-md leading-4 font-normal truncate text-[var(--color-text-default)]">
@@ -534,7 +533,7 @@ export function ContainerDashboardPage() {
                   className="w-[var(--search-input-width)]"
                 />
                 <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button variant="secondary" size="sm">
+                <Button variant="secondary" size="sm" onClick={() => navigate('/container/events')}>
                   Full events list
                 </Button>
               </HStack>
@@ -543,8 +542,6 @@ export function ContainerDashboardPage() {
                   currentPage={currentPage}
                   totalPages={1}
                   onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => {}}
                 />
               </div>
               <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
@@ -552,7 +549,11 @@ export function ContainerDashboardPage() {
           </TabPanel>
 
           <TabPanel value="secrets" className="pt-0">
-            <div className="text-center py-8 text-[var(--color-text-muted)]">No secrets found</div>
+            <EmptyState
+              variant="inline"
+              icon={<IconKey size={48} stroke={1} />}
+              title="No secrets found"
+            />
           </TabPanel>
         </Tabs>
       </Card>

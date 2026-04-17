@@ -660,6 +660,8 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
           align="right"
         >
           <button
+            type="button"
+            aria-label="Row actions"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => e.stopPropagation()}
           >
@@ -869,8 +871,8 @@ export function NamespaceDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

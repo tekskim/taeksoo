@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
 import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
 import {
@@ -17,7 +17,6 @@ import {
   ContextMenu,
   Modal,
   Button,
-  WindowControls,
   Tooltip,
   IconWindowActive,
   IconWindowMinimized,
@@ -966,23 +965,21 @@ interface AppState {
 
 function IsolatedRouter({ initialPath, appId }: { initialPath: string; appId: AppId }) {
   return (
-    <DesktopWindowProvider value={true}>
-      <UNSAFE_LocationContext.Provider value={null as any}>
-        <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
-          <MemoryRouter initialEntries={[initialPath]}>
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
-                  Loading...
-                </div>
-              }
-            >
-              <AppRoutes appId={appId} />
-            </Suspense>
-          </MemoryRouter>
-        </UNSAFE_RouteContext.Provider>
-      </UNSAFE_LocationContext.Provider>
-    </DesktopWindowProvider>
+    <UNSAFE_LocationContext.Provider value={null as any}>
+      <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
+        <MemoryRouter initialEntries={[initialPath]}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-full text-[var(--color-text-muted)]">
+                Loading...
+              </div>
+            }
+          >
+            <AppRoutes appId={appId} />
+          </Suspense>
+        </MemoryRouter>
+      </UNSAFE_RouteContext.Provider>
+    </UNSAFE_LocationContext.Provider>
   );
 }
 
@@ -1172,13 +1169,11 @@ function PageWindow({
     [isMaximized, position, size]
   );
 
-  if (!isOpen) return null;
-
-  const handleMinimize = () => {
+  const handleMinimize = useCallback(() => {
     onMinimize();
-  };
+  }, [onMinimize]);
 
-  const handleMaximize = () => {
+  const handleMaximize = useCallback(() => {
     if (!isMaximized) {
       setPreMaxState({ x: position.x, y: position.y, w: size.width, h: size.height });
       setIsMaximized(true);
@@ -1189,7 +1184,20 @@ function PageWindow({
       }
       setIsMaximized(false);
     }
-  };
+  }, [isMaximized, position, size, preMaxState]);
+
+  const windowControls = useMemo(
+    () => ({
+      onMinimize: handleMinimize,
+      onMaximize: handleMaximize,
+      onClose,
+      onDragStart: handleDragStart,
+      onDoubleClick: handleMaximize,
+    }),
+    [handleMinimize, handleMaximize, onClose, handleDragStart]
+  );
+
+  if (!isOpen) return null;
 
   const windowStyle: React.CSSProperties = isMaximized
     ? {
@@ -1220,40 +1228,17 @@ function PageWindow({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
-        className={`absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-2xl flex flex-col overflow-hidden pointer-events-auto ${
-          isActive ? 'ring-2 ring-[var(--color-action-primary)]' : ''
-        }`}
+        className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         style={windowStyle}
         onClick={onFocus}
         onMouseDown={onFocus}
       >
-        {/* Window Header — draggable */}
-        <div
-          className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] shrink-0 select-none"
-          onMouseDown={handleDragStart}
-          onDoubleClick={handleMaximize}
-        >
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-label-md text-[var(--color-text-default)] truncate">{title}</span>
+        {/* Window Content — window controls are integrated into TabBar via context */}
+        <DesktopWindowProvider value={{ isDesktopWindow: true, controls: windowControls }}>
+          <div className="flex-1 overflow-hidden relative" style={{ transform: 'scale(1)' }}>
+            {children}
           </div>
-          <div
-            className="flex items-center gap-1"
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <WindowControls
-              onMinimize={handleMinimize}
-              onMaximize={handleMaximize}
-              onClose={onClose}
-              isMaximized={isMaximized}
-            />
-          </div>
-        </div>
-
-        {/* Window Content */}
-        <div className="flex-1 overflow-hidden relative" style={{ transform: 'scale(1)' }}>
-          {children}
-        </div>
+        </DesktopWindowProvider>
 
         {/* Resize handles (hidden when maximized) */}
         {!isMaximized && (

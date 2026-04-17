@@ -1169,6 +1169,28 @@ export function ComputeAdminInstanceListPage() {
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 
+  const getBareMetalContextMenuItems = (_instance: BareMetalInstance): ContextMenuItem[] => [
+    {
+      id: 'instance-status',
+      label: 'Instance status',
+      submenu: [
+        { id: 'start-sub', label: 'Start' },
+        { id: 'stop-sub', label: 'Stop', status: 'danger' },
+        { id: 'reboot-sub', label: 'Reboot', status: 'danger' },
+      ],
+    },
+    {
+      id: 'configuration',
+      label: 'Configuration',
+      submenu: [
+        { id: 'lock-setting', label: 'Lock setting' },
+        { id: 'manage-tags', label: 'Manage tags' },
+        { id: 'edit', label: 'Edit' },
+      ],
+    },
+    { id: 'delete', label: 'Delete', status: 'danger' },
+  ];
+
   // Table columns definition
   const columns: TableColumn<Instance>[] = [
     {
@@ -1355,7 +1377,10 @@ export function ComputeAdminInstanceListPage() {
           </button>
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -1522,13 +1547,21 @@ export function ComputeAdminInstanceListPage() {
           >
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
-          <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-            <IconDotsCircleHorizontal
-              size={16}
-              stroke={1.5}
-              className="text-[var(--action-icon-color)]"
-            />
-          </button>
+          <div onClick={(e) => e.stopPropagation()}>
+            <ContextMenu items={getBareMetalContextMenuItems(row)} trigger="click" align="right">
+              <button
+                type="button"
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
+              </button>
+            </ContextMenu>
+          </div>
         </HStack>
       ),
     },
@@ -1555,8 +1588,8 @@ export function ComputeAdminInstanceListPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Instances' }]} />}
         />
       }

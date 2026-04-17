@@ -136,11 +136,17 @@ export default function IAMActiveSessionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
   useEffect(() => {
     updateActiveTabLabel('Active sessions');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
@@ -228,6 +234,7 @@ export default function IAMActiveSessionsPage() {
       render: (_, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -323,6 +330,7 @@ export default function IAMActiveSessionsPage() {
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
             emptyMessage="No active sessions found"
+            loading={loading}
           />
         </VStack>
       </VStack>

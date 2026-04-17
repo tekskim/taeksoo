@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   SearchInput,
@@ -200,9 +200,15 @@ export function BucketsPage() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const rowsPerPage = 10;
+  const [loading, setLoading] = useState(true);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -302,6 +308,7 @@ export function BucketsPage() {
       render: (_, row) => (
         <ContextMenu
           trigger="click"
+          align="right"
           items={[
             {
               id: 'delete',
@@ -356,8 +363,8 @@ export function BucketsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Buckets' }]} />}
         />
       }
@@ -437,6 +444,7 @@ export function BucketsPage() {
           selectedKeys={selectedRows}
           onSelectionChange={setSelectedRows}
           emptyMessage="No buckets found"
+          loading={loading}
         />
       </VStack>
     </PageShell>

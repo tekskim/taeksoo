@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -148,6 +148,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'buildi
    ---------------------------------------- */
 
 export default function SubnetDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -382,15 +383,15 @@ export default function SubnetDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{subnet.name}</DetailHeader.Title>

@@ -545,8 +545,10 @@ export default function IAMRoleDetailPage() {
         <ContextMenu
           items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')}
           trigger="click"
+          align="right"
         >
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -571,9 +573,9 @@ export default function IAMRoleDetailPage() {
       sortable: true,
       render: (_value, row) => (
         <VStack gap={0.5} align="start">
-          <Link to="#" className="text-[var(--color-action-primary)] font-medium hover:underline">
+          <span className="text-[var(--color-action-primary)] font-medium">
             {row.principalName}
-          </Link>
+          </span>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
             <span className="truncate" title={row.principalId}>
               ID:{row.principalId}

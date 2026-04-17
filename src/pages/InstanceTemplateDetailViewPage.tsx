@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -162,7 +162,7 @@ export function InstanceTemplateDetailViewPage() {
           onSidebarToggle={openSidebar}
           showNavigation
           onBack={() => navigate('/compute/instance-templates')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -273,13 +273,12 @@ export function InstanceTemplateDetailViewPage() {
                     <VStack gap={1}>
                       {template.networks.length > 0 ? (
                         template.networks.map((net) => (
-                          <Link
+                          <span
                             key={net}
-                            to="#"
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)]"
                           >
                             {net}
-                          </Link>
+                          </span>
                         ))
                       ) : (
                         <span className="text-body-md text-[var(--color-text-default)]">-</span>
@@ -290,13 +289,12 @@ export function InstanceTemplateDetailViewPage() {
                     <VStack gap={1}>
                       {template.securityGroups.length > 0 ? (
                         template.securityGroups.map((sg) => (
-                          <Link
+                          <span
                             key={sg}
-                            to="#"
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)]"
                           >
                             {sg}
-                          </Link>
+                          </span>
                         ))
                       ) : (
                         <span className="text-body-md text-[var(--color-text-default)]">-</span>
@@ -307,13 +305,12 @@ export function InstanceTemplateDetailViewPage() {
                     <VStack gap={1}>
                       {template.ports.length > 0 ? (
                         template.ports.map((port) => (
-                          <Link
+                          <span
                             key={port}
-                            to="#"
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                            className="text-label-md text-[var(--color-action-primary)]"
                           >
                             {port}
-                          </Link>
+                          </span>
                         ))
                       ) : (
                         <span className="text-body-md text-[var(--color-text-default)]">-</span>

@@ -23,7 +23,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -170,16 +170,14 @@ export function ClusterManagementPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/cluster-management/${row.id}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
           title={value as string}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/cluster-management/${row.id}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value as string}
-        </span>
+        </Link>
       ),
     },
     {
@@ -252,7 +250,10 @@ export function ClusterManagementPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -304,8 +305,8 @@ export function ClusterManagementPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -423,8 +424,6 @@ export function ClusterManagementPage() {
           onPageChange={setCurrentPage}
           totalItems={mockClusters.length}
           selectedCount={selectedClusters.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}

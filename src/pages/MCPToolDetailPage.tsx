@@ -87,8 +87,11 @@ function MCPToolHeader({
           <div className="flex items-center gap-1">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">{name}</h1>
             <button
+              type="button"
               onClick={onFavoriteToggle}
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              aria-pressed={isFavorite}
             >
               {isFavorite ? (
                 <IconStarFilled size={22} className="text-[var(--primitive-color-yellow400)]" />
@@ -117,7 +120,7 @@ function MCPToolHeader({
             variant="secondary"
             size="sm"
             leftIcon={
-              status === 'active' ? <IconPlayerPause size={16} /> : <IconPlayerPlay size={16} />
+              status === 'active' ? <IconPlayerPause size={12} /> : <IconPlayerPlay size={12} />
             }
             onClick={onDeactivate}
           >
@@ -202,7 +205,7 @@ function DetailsTabContent() {
       <SectionCard>
         <SectionCard.Header title="MCP server information" />
         <SectionCard.Content>
-          <SectionCard.DataRow label="Server name" value="Slack" isLink />
+          <SectionCard.DataRow label="Server name" value="Slack" />
           <SectionCard.DataRow label="Server URL" value="https://api.slack.com/mcp" />
           <SectionCard.DataRow label="Version" value="1.2.0" />
           <SectionCard.DataRow label="Protocol" value="MCP v1" />
@@ -526,8 +529,8 @@ export function MCPToolDetailPage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'MCP Tools', href: '/mcp-tools' }, { label: toolData.name }]}
