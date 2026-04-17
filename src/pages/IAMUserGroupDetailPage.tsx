@@ -489,6 +489,7 @@ export default function IAMUserGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={getUserContextMenuItems(row.id, row.status !== 'active')}
@@ -565,6 +566,7 @@ export default function IAMUserGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={getRoleContextMenuItems(row.id, row.type === 'Built-in')}

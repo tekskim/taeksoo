@@ -1760,6 +1760,7 @@ export function ComputeAdminInstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: InstanceSnapshot) => (
                         <div onClick={(e) => e.stopPropagation()}>
                           <button

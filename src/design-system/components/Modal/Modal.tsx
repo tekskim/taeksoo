@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from '../../utils/cn';
 import { Button } from '../Button';
+import { InlineMessage } from '../InlineMessage';
 import { useStableId } from '../../hooks/useId';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 
@@ -180,6 +181,12 @@ export function Modal({
    ConfirmModal Component
    ---------------------------------------- */
 
+const confirmVariantToMessageVariant: Record<string, 'error' | 'warning' | 'info'> = {
+  danger: 'error',
+  warning: 'warning',
+  primary: 'info',
+};
+
 export function ConfirmModal({
   isOpen,
   onClose,
@@ -194,13 +201,20 @@ export function ConfirmModal({
   isLoading = false,
   ...props
 }: ConfirmModalProps) {
+  const messageVariant = confirmVariantToMessageVariant[confirmVariant] ?? 'info';
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} description={description} {...props}>
-      {/* Info Box */}
-      {infoLabel && infoValue && (
-        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-          <span className="text-label-sm text-[var(--color-text-subtle)]">{infoLabel}</span>
-          <span className="text-body-md text-[var(--color-text-default)]">{infoValue}</span>
+    <Modal isOpen={isOpen} onClose={onClose} title={title} {...props}>
+      {/* Info Box + InlineMessage */}
+      {(infoLabel || description) && (
+        <div className="flex flex-col gap-2">
+          {infoLabel && infoValue && (
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+              <span className="text-label-sm text-[var(--color-text-subtle)]">{infoLabel}</span>
+              <span className="text-body-md text-[var(--color-text-default)]">{infoValue}</span>
+            </div>
+          )}
+          {description && <InlineMessage variant={messageVariant}>{description}</InlineMessage>}
         </div>
       )}
 

@@ -1328,6 +1328,7 @@ function WorkloadsContent() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center' as const,
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click" align="right">

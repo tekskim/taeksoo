@@ -392,6 +392,7 @@ export function ComputeAdminServerGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button

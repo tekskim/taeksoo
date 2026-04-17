@@ -1236,6 +1236,7 @@ export default function CreateLoadBalancerPage() {
         label: 'Action',
         width: 140,
         align: 'center' as const,
+        sticky: 'right',
         render: (_value, row) => (
           <Button
             variant="secondary"

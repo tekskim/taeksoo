@@ -100,6 +100,7 @@ export function CreateJobYamlPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [yamlContent, setYamlContent] = useState(DEFAULT_YAML);
+  const isModified = yamlContent !== DEFAULT_YAML;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
@@ -200,7 +201,7 @@ export function CreateJobYamlPage() {
     >
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}
-        <VStack gap={2} className="flex-shrink-0">
+        <VStack gap={1} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create job</h1>
           <p className="text-body-md text-[var(--color-text-subtle)]">
             Create a Job to run pods until a specified task completes successfully, ensuring
@@ -212,7 +213,7 @@ export function CreateJobYamlPage() {
         <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
 
         {/* Footer */}
-        <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
+        <div className="flex-shrink-0 flex items-center justify-between">
           {/* Left side - Read from File */}
           <div>
             <input
@@ -233,7 +234,7 @@ export function CreateJobYamlPage() {
               Cancel
             </Button>
             <Button variant="primary" size="md" onClick={handleCreate}>
-              Create
+              {isModified ? 'Save' : 'Create'}
             </Button>
           </HStack>
         </div>

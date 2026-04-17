@@ -483,6 +483,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -514,6 +515,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: StaticRoute) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button

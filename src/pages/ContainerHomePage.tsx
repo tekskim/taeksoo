@@ -218,6 +218,7 @@ export function ContainerHomePage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       sortable: false,
       render: (_value: string, row: ClusterRow) => (
         <ContextMenu

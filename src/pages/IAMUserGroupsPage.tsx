@@ -306,6 +306,7 @@ export function IAMUserGroupsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button

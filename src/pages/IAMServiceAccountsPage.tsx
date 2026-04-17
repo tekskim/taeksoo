@@ -19,6 +19,9 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
+import { CreateServiceAccountDrawer } from '@/components/CreateServiceAccountDrawer';
+import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
+import { EditServiceAccountDrawer } from '@/components/EditServiceAccountDrawer';
 import { useTabs } from '@/contexts/TabContext';
 import { IconDownload, IconTrash, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -146,6 +149,9 @@ export function IAMServiceAccountsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [managePoliciesAccount, setManagePoliciesAccount] = useState<ServiceAccount | null>(null);
+  const [editingAccount, setEditingAccount] = useState<ServiceAccount | null>(null);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -175,9 +181,9 @@ export function IAMServiceAccountsPage() {
     {
       id: 'manage-policies',
       label: 'Manage policies',
-      onClick: () => console.log('Manage policies', row.id),
+      onClick: () => setManagePoliciesAccount(row),
     },
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', row.id) },
+    { id: 'edit', label: 'Edit', onClick: () => setEditingAccount(row) },
     {
       id: 'delete',
       label: 'Delete',
@@ -242,6 +248,7 @@ export function IAMServiceAccountsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button
@@ -290,7 +297,7 @@ export function IAMServiceAccountsPage() {
         <PageHeader
           title="Service accounts"
           actions={
-            <Button variant="primary" size="md">
+            <Button variant="primary" size="md" onClick={() => setIsCreateOpen(true)}>
               Create service account
             </Button>
           }
@@ -347,6 +354,24 @@ export function IAMServiceAccountsPage() {
           />
         </VStack>
       </VStack>
+
+      <CreateServiceAccountDrawer isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
+
+      <RolePoliciesDrawer
+        isOpen={!!managePoliciesAccount}
+        onClose={() => setManagePoliciesAccount(null)}
+        title="Manage linked policies"
+        infoLabel="Service account"
+        roleName={managePoliciesAccount?.name ?? ''}
+      />
+
+      <EditServiceAccountDrawer
+        isOpen={!!editingAccount}
+        onClose={() => setEditingAccount(null)}
+        initialName={editingAccount?.name ?? ''}
+        initialDescription={editingAccount?.description ?? ''}
+        initialActive={editingAccount?.status === 'active'}
+      />
     </PageShell>
   );
 }

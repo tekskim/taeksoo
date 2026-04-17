@@ -449,6 +449,7 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
           {
@@ -540,6 +541,7 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: L7Policy) => {
         const policyMenuItems: ContextMenuItem[] = [
           {
@@ -638,6 +640,7 @@ export default function ListenerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Certificate) => {
         const getCertMenuItems = (): ContextMenuItem[] => {
           switch (row.type) {

@@ -1061,6 +1061,7 @@ export function OverallPerformancePage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center' as const,
+      sticky: 'right',
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
           <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -1654,6 +1655,7 @@ export function OverallPerformancePage() {
                           label: 'Action',
                           width: fixedColumns.actions,
                           align: 'center' as const,
+                          sticky: 'right',
                           render: () => (
                             <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
                               <IconTerminal2

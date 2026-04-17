@@ -316,6 +316,7 @@ export default function PoolDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },

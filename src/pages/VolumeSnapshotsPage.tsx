@@ -362,6 +362,7 @@ export function VolumeSnapshotsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {

@@ -287,6 +287,7 @@ export function IAMUsersPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => {
         const isDisabled = row.status === 'disabled';
         const menuItems: ContextMenuItem[] = [

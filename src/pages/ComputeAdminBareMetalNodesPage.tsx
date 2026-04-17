@@ -392,6 +392,7 @@ export function ComputeAdminBareMetalNodesPage() {
         label: 'Action',
         width: '110px',
         align: 'center',
+        sticky: 'right',
         render: (_, row) => (
           <div onClick={(e) => e.stopPropagation()}>
             {row.tenant ? (

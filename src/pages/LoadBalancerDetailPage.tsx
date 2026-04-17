@@ -338,6 +338,7 @@ export function LoadBalancerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
           {
@@ -462,6 +463,7 @@ export function LoadBalancerDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
           {

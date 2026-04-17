@@ -437,6 +437,7 @@ export default function IAMRolesPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row.id)} trigger="click" align="right">
           <button
@@ -538,6 +539,7 @@ export default function IAMRolesPage() {
         label: 'Action',
         width: fixedColumns.actions,
         align: 'center' as const,
+        sticky: 'right',
         render: (_value, row) => (
           <ContextMenu
             items={[

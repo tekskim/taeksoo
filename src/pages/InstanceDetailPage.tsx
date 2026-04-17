@@ -1486,6 +1486,7 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: AttachedVolume) => {
                         const volumeMenuItems: ContextMenuItem[] = [
                           {
@@ -1681,6 +1682,7 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center' as const,
+                      sticky: 'right',
                       render: (_: unknown, iface: AttachedInterface) => {
                         const interfaceMenuItems: ContextMenuItem[] = [
                           {
@@ -1788,6 +1790,7 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: FloatingIP) => {
                         const floatingIpMenuItems: ContextMenuItem[] = [
                           {
@@ -1916,6 +1919,7 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center' as const,
+                      sticky: 'right',
                       render: (_: unknown, row: SecurityGroup) => {
                         const securityGroupMenuItems: ContextMenuItem[] = [
                           {
@@ -2063,6 +2067,7 @@ export function InstanceDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_: unknown, row: InstanceSnapshot) => {
                         const snapshotMenuItems: ContextMenuItem[] = [
                           {

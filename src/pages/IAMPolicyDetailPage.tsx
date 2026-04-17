@@ -524,6 +524,7 @@ export default function IAMPolicyDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const isBuiltIn = row.type === 'Built-in';
         const menuItems: ContextMenuItem[] = [
@@ -854,6 +855,7 @@ export default function IAMPolicyDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center',
+                      sticky: 'right',
                       render: (_value: unknown, version: PolicyVersion) => (
                         <ContextMenu items={getVersionContextMenuItems(version)} trigger="click">
                           <button

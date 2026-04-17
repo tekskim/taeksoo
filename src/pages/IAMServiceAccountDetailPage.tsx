@@ -26,6 +26,8 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { CreateAPIKeyDrawer } from '@/components/CreateAPIKeyDrawer';
+import { EditAPIKeyDrawer } from '@/components/EditAPIKeyDrawer';
+import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
 import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
 import { useParams } from 'react-router-dom';
@@ -268,6 +270,8 @@ export function IAMServiceAccountDetailPage() {
   const [policyPage, setPolicyPage] = useState(1);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [isCreateAPIKeyOpen, setIsCreateAPIKeyOpen] = useState(false);
+  const [editingAPIKey, setEditingAPIKey] = useState<APIKey | null>(null);
+  const [isManagePoliciesOpen, setIsManagePoliciesOpen] = useState(false);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -302,7 +306,7 @@ export function IAMServiceAccountDetailPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   const getApiKeyMenuItems = (row: APIKey): ContextMenuItem[] => [
-    { id: 'edit', label: 'Edit', onClick: () => console.log('Edit', row.id) },
+    { id: 'edit', label: 'Edit', onClick: () => setEditingAPIKey(row) },
     { id: 'reset', label: 'Reset', onClick: () => console.log('Reset', row.id) },
     {
       id: 'delete',
@@ -364,6 +368,7 @@ export function IAMServiceAccountDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getApiKeyMenuItems(row)} trigger="click" align="right">
           <button
@@ -420,7 +425,12 @@ export function IAMServiceAccountDetailPage() {
           <DetailHeader.Title>{name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconSettings size={12} />}
+              onClick={() => setIsManagePoliciesOpen(true)}
+            >
               Manage policies
             </Button>
             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
@@ -498,7 +508,12 @@ export function IAMServiceAccountDetailPage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                   Attached policies
                 </h3>
-                <Button variant="secondary" size="sm" leftIcon={<IconSettings size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconSettings size={12} />}
+                  onClick={() => setIsManagePoliciesOpen(true)}
+                >
                   Manage policies
                 </Button>
               </div>
@@ -543,6 +558,22 @@ export function IAMServiceAccountDetailPage() {
       <CreateAPIKeyDrawer
         isOpen={isCreateAPIKeyOpen}
         onClose={() => setIsCreateAPIKeyOpen(false)}
+      />
+
+      <EditAPIKeyDrawer
+        isOpen={!!editingAPIKey}
+        onClose={() => setEditingAPIKey(null)}
+        keyId={editingAPIKey?.keyId ?? ''}
+        initialDescription={editingAPIKey?.description ?? ''}
+        initialActive={editingAPIKey?.status === 'active'}
+      />
+
+      <RolePoliciesDrawer
+        isOpen={isManagePoliciesOpen}
+        onClose={() => setIsManagePoliciesOpen(false)}
+        title="Manage linked policies"
+        infoLabel="Service account"
+        roleName={name ?? ''}
       />
     </PageShell>
   );

@@ -85,9 +85,33 @@ function DangerWarning({ children }: { children: React.ReactNode }) {
 
 function InfoBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
       <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
       <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
+    </div>
+  );
+}
+
+function InfoBoxCopyable({ label, value }: { label: string; value: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
+      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
+      <div className="flex items-center gap-2">
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
+        <button
+          type="button"
+          className={`shrink-0 transition-colors cursor-pointer bg-transparent border-0 p-0 ${copied ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-default)] hover:text-[var(--color-text-muted)]'}`}
+          onClick={() => {
+            navigator.clipboard.writeText(value);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+          aria-label={`Copy ${label}`}
+        >
+          {copied ? <IconCheck size={14} stroke={2} /> : <IconCopy size={14} stroke={1.5} />}
+        </button>
+      </div>
     </div>
   );
 }
@@ -368,7 +392,7 @@ export function ModalsPage() {
               <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
                 <SectionHeader
                   label="IAM"
-                  count={29}
+                  count={39}
                   isOpen={isIAMOpen}
                   isSearching={isSearching}
                 />
@@ -445,15 +469,27 @@ export function ModalsPage() {
                     <div className="flex flex-col gap-2">
                       <ModalListItem
                         title="Delete role"
-                        description="Removing the selected instances is permanent and cannot be undone."
+                        description="If this role has active temporary grants, deleting it removes all of those grants."
                         category="Role"
                         onOpen={() => openModalFn('delete-role')}
                       />
                       <ModalListItem
                         title="Delete roles"
-                        description="Removing the selected instances is permanent and cannot be undone."
+                        description="If any selected roles have active temporary grants, deleting them removes all of those grants."
                         category="Role"
                         onOpen={() => openModalFn('delete-roles')}
+                      />
+                      <ModalListItem
+                        title="Revoke access"
+                        description="Temporary access is revoked immediately, regardless of the scheduled end time."
+                        category="Role"
+                        onOpen={() => openModalFn('revoke-access-single')}
+                      />
+                      <ModalListItem
+                        title="Revoke access (bulk)"
+                        description="Temporary access is revoked immediately, regardless of the scheduled end time."
+                        category="Role"
+                        onOpen={() => openModalFn('revoke-access-bulk')}
                       />
                       <ModalListItem
                         title="Detach policy"
@@ -566,6 +602,59 @@ export function ModalsPage() {
                         description="This action applies the changes."
                         category="Policy"
                         onOpen={() => openModalFn('update-token-policy')}
+                      />
+                    </div>
+                  </VStack>
+                  <VStack gap={2}>
+                    <SubHeading>Service Account</SubHeading>
+                    <div className="flex flex-col gap-2">
+                      <ModalListItem
+                        title="Regenerate client secret"
+                        description="The current secret stops working immediately."
+                        category="Service Account"
+                        onOpen={() => openModalFn('regenerate-client-secret')}
+                      />
+                      <ModalListItem
+                        title="New client secret (result)"
+                        description="Credentials are shown only once. Copy and store them securely."
+                        category="Service Account"
+                        onOpen={() => openModalFn('new-client-secret')}
+                      />
+                      <ModalListItem
+                        title="New API key (result)"
+                        description="Credentials are shown only once. Copy and store them securely."
+                        category="Service Account"
+                        onOpen={() => openModalFn('new-api-key')}
+                      />
+                      <ModalListItem
+                        title="Reset API key"
+                        description="The current key stops working immediately."
+                        category="Service Account"
+                        onOpen={() => openModalFn('reset-api-key')}
+                      />
+                      <ModalListItem
+                        title="Delete API key"
+                        description="This key stops working immediately and cannot be restored."
+                        category="Service Account"
+                        onOpen={() => openModalFn('delete-api-key')}
+                      />
+                      <ModalListItem
+                        title="Delete service account"
+                        description="All credentials and permission bindings will be removed."
+                        category="Service Account"
+                        onOpen={() => openModalFn('delete-service-account')}
+                      />
+                      <ModalListItem
+                        title="Delete service accounts"
+                        description="All credentials and permission bindings for these accounts will be removed."
+                        category="Service Account"
+                        onOpen={() => openModalFn('delete-service-accounts')}
+                      />
+                      <ModalListItem
+                        title="New client secret (close)"
+                        description="Credentials are shown only once. Uses Close button variant."
+                        category="Service Account"
+                        onOpen={() => openModalFn('new-client-secret-close')}
                       />
                     </div>
                   </VStack>
@@ -1618,28 +1707,58 @@ export function ModalsPage() {
         />
         <ModalButtons onClose={closeModal} confirmText="Remove" confirmVariant="danger" />
       </Modal>
-      <ConfirmModal
-        isOpen={openModal === 'delete-role'}
-        onClose={closeModal}
-        onConfirm={closeModal}
-        title="Delete role"
-        description="Removing the selected instances is permanent and cannot be undone."
-        infoLabel="Role"
-        infoValue="developer-role"
-        confirmText="Delete"
-        confirmVariant="danger"
-      />
+      <Modal isOpen={openModal === 'delete-role'} onClose={closeModal} title="Delete role">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Role" value="developer-role" />
+          <DangerWarning>
+            If this role has active temporary grants, deleting it removes all of those grants.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-roles'} onClose={closeModal} title="Delete roles">
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Roles"
+            items={['developer-role', 'viewer-role', 'operator-role', 'auditor-role']}
+          />
+          <DangerWarning>
+            If any selected roles have active temporary grants, deleting them removes all of those
+            grants.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
       <Modal
-        isOpen={openModal === 'delete-roles'}
+        isOpen={openModal === 'revoke-access-single'}
         onClose={closeModal}
-        title="Delete roles"
-        description="Removing the selected instances is permanent and cannot be undone."
+        title="Revoke access"
       >
-        <ScrollableList
-          label="Roles"
-          items={['developer-role', 'viewer-role', 'operator-role', 'auditor-role']}
-        />
-        <ModalButtons onClose={closeModal} />
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Principal" value="john.doe@example.com" />
+          <InfoBox label="Role" value="developer-role" />
+          <InfoBox label="Scheduled end" value="Apr 30, 2026 23:59:59 (UTC+9)" />
+          <DangerWarning>
+            Temporary access is revoked immediately, regardless of the scheduled end time.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Revoke" confirmVariant="danger" />
+      </Modal>
+      <Modal isOpen={openModal === 'revoke-access-bulk'} onClose={closeModal} title="Revoke access">
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Grants"
+            items={[
+              'john.doe / developer-role / Apr 30, 2026',
+              'jane.smith / viewer-role / May 15, 2026',
+              'ops-bot / operator-role / Jun 01, 2026',
+            ]}
+          />
+          <DangerWarning>
+            Temporary access is revoked immediately, regardless of the scheduled end time.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Revoke" confirmVariant="danger" />
       </Modal>
       <Modal
         isOpen={openModal === 'detach-policy'}
@@ -1824,6 +1943,129 @@ export function ModalsPage() {
         confirmText="Apply"
         confirmVariant="primary"
       />
+
+      {/* — Service Account — */}
+      <Modal
+        isOpen={openModal === 'regenerate-client-secret'}
+        onClose={closeModal}
+        title="Regenerate client secret"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Name" value="ci-pipeline-bot" />
+          <InfoBoxCopyable label="Client ID" value="sa-client-abc123" />
+          <DangerWarning>
+            The current secret stops working immediately. The new secret is shown only once on the
+            next screen.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Regenerate" confirmVariant="primary" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'new-client-secret'}
+        onClose={closeModal}
+        title="New client secret"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Name" value="ci-pipeline-bot" />
+          <InfoBoxCopyable label="Client ID" value="sa-client-abc123" />
+          <InfoBoxCopyable label="New client secret" value="sk-xxxx-xxxx-xxxx-xxxx" />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal isOpen={openModal === 'new-api-key'} onClose={closeModal} title="New API key">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Key ID" value="ak-key-abc123" />
+          <InfoBoxCopyable label="New API key" value="thaki_sk_live_xxxxxxxxxxxx" />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Done
+          </Button>
+        </div>
+      </Modal>
+      <Modal isOpen={openModal === 'reset-api-key'} onClose={closeModal} title="Reset API key">
+        <div className="flex flex-col gap-2">
+          <InfoBoxCopyable label="Key ID" value="ak-key-abc123" />
+          <DangerWarning>
+            The current key stops working immediately. The new key is shown only once on the next
+            screen.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Reset" confirmVariant="primary" />
+      </Modal>
+      <Modal isOpen={openModal === 'delete-api-key'} onClose={closeModal} title="Delete API key">
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Key ID" value="ak-key-abc123" />
+          <DangerWarning>
+            This key stops working immediately. Requests that use it will fail, and the key cannot
+            be restored.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-service-account'}
+        onClose={closeModal}
+        title="Delete service account"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Service account" value="ci-pipeline-bot" />
+          <DangerWarning>
+            Client ID, Client Secret, all API keys, and permission bindings for this account will be
+            removed.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'delete-service-accounts'}
+        onClose={closeModal}
+        title="Delete service accounts"
+      >
+        <div className="flex flex-col gap-2">
+          <ScrollableList
+            label="Service accounts"
+            items={['ci-pipeline-bot', 'monitoring-agent', 'backup-service', 'deploy-bot']}
+          />
+          <DangerWarning>
+            Client ID, Client Secret, all API keys, and permission bindings for these accounts will
+            be removed.
+          </DangerWarning>
+        </div>
+        <ModalButtons onClose={closeModal} confirmText="Delete" confirmVariant="danger" />
+      </Modal>
+      <Modal
+        isOpen={openModal === 'new-client-secret-close'}
+        onClose={closeModal}
+        title="New client secret"
+      >
+        <div className="flex flex-col gap-2">
+          <InfoBox label="Name" value="ci-pipeline-bot" />
+          <InfoBoxCopyable label="Client ID" value="sa-client-abc123" />
+          <InfoBoxCopyable label="New client secret" value="sk-xxxx-xxxx-xxxx-xxxx" />
+          <DangerWarning>
+            These credentials are shown only once. Copy and store them securely before you close
+            this dialog.
+          </DangerWarning>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button variant="primary" onClick={closeModal} className="flex-1">
+            Close
+          </Button>
+        </div>
+      </Modal>
 
       {/* ================================================================
          MODAL INSTANCES — Storage

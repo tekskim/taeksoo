@@ -199,7 +199,7 @@ function YamlEditor({ value, onChange, onCopy, onDownload }: YamlEditorProps) {
           className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
           title="Download YAML"
         >
-          <IconDownload size={16} stroke={1.5} />
+          <IconDownload size={12} stroke={1.5} />
         </button>
       </div>
     </div>
@@ -330,7 +330,7 @@ export function EditNodeYamlPage() {
         />
 
         {/* Footer */}
-        <div className="flex-shrink-0 flex items-center justify-end gap-3 pt-4">
+        <div className="flex-shrink-0 flex items-center justify-end gap-3">
           <Button variant="secondary" size="md" onClick={handleCancel}>
             Cancel
           </Button>

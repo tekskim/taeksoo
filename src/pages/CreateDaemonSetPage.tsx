@@ -598,7 +598,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -611,7 +611,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="label key"
@@ -661,7 +661,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -674,7 +674,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="annotation key"
@@ -762,7 +762,7 @@ function ScalingPolicySection({
                     <HStack gap={1} align="center">
                       <span>Rolling update</span>
                       <Tooltip
-                        content="Gradually replaces old pods with new ones, ensuring availability during the update."
+                        content="Create new pods, until max surge is reached, before deleting old pods. Don't stop more pods than max unavailable."
                         position="right"
                       >
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
@@ -775,11 +775,8 @@ function ScalingPolicySection({
                   onChange={() => onStrategyChange('on-delete')}
                   label={
                     <HStack gap={1} align="center">
-                      <span>On delete</span>
-                      <Tooltip
-                        content="New pods are only created when existing pods are manually deleted."
-                        position="right"
-                      >
+                      <span>Recreate</span>
+                      <Tooltip content="Kill All Pods, then start new pods." position="right">
                         <IconInfoCircle size={14} className="text-[var(--color-text-subtle)]" />
                       </Tooltip>
                     </HStack>
@@ -1054,15 +1051,7 @@ export function CreateDaemonSetPage() {
       // Ports
       ports: [],
       // Environment Variables
-      envVars: [
-        { name: '', value: '', type: 'value' as const },
-        { name: '', value: '', type: 'resource' as const },
-        { name: '', value: '', type: 'configmap-key' as const },
-        { name: '', value: '', type: 'secret-key' as const },
-        { name: '', value: '', type: 'pod-field' as const },
-        { name: '', value: '', type: 'secret' as const },
-        { name: '', value: '', type: 'configmap' as const },
-      ],
+      envVars: [],
       // Service Account
       serviceAccountName: '',
       // Lifecycle Hooks
@@ -1156,13 +1145,6 @@ export function CreateDaemonSetPage() {
       volumeName: 'vol-00001',
       configMapName: 'app-config',
       optional: false,
-    },
-    {
-      type: 'secret' as const,
-      volumeName: 'vol-00002',
-      secretName: 'app-secret',
-      optional: false,
-      defaultMode: '',
     },
   ]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
@@ -1638,15 +1620,7 @@ export function CreateDaemonSetPage() {
         // Ports
         ports: [],
         // Environment Variables
-        envVars: [
-          { name: '', value: '', type: 'value' as const },
-          { name: '', value: '', type: 'resource' as const },
-          { name: '', value: '', type: 'configmap-key' as const },
-          { name: '', value: '', type: 'secret-key' as const },
-          { name: '', value: '', type: 'pod-field' as const },
-          { name: '', value: '', type: 'secret' as const },
-          { name: '', value: '', type: 'configmap' as const },
-        ],
+        envVars: [],
         // Service Account
         serviceAccountName: '',
         // Lifecycle Hooks
@@ -1866,7 +1840,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1879,7 +1853,7 @@ export function CreateDaemonSetPage() {
                             {podLabels.map((label, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="label key"
@@ -1934,7 +1908,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1947,7 +1921,7 @@ export function CreateDaemonSetPage() {
                             {podAnnotations.map((annotation, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="annotation key"
@@ -2134,7 +2108,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {nameservers.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
@@ -2149,7 +2123,7 @@ export function CreateDaemonSetPage() {
                             {nameservers.map((ns, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 8.8.8.8"
@@ -2193,7 +2167,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
@@ -2208,7 +2182,7 @@ export function CreateDaemonSetPage() {
                             {searchDomains.map((sd, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. example.com"
@@ -2252,7 +2226,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
@@ -2275,7 +2249,7 @@ export function CreateDaemonSetPage() {
                             {resolverOptions.map((opt, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="input name"
@@ -2329,7 +2303,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
@@ -2352,7 +2326,7 @@ export function CreateDaemonSetPage() {
                             {hostAliases.map((alias, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 127.0.0.1"
@@ -2523,7 +2497,7 @@ export function CreateDaemonSetPage() {
                                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
@@ -2539,7 +2513,7 @@ export function CreateDaemonSetPage() {
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2647,236 +2621,194 @@ export function CreateDaemonSetPage() {
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'matching' && (
-                        <VStack gap={2}>
-                          <VStack gap={1}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Node Affinity Rules
-                            </span>
-                            <p className="text-body-md text-[var(--color-text-subtle)] italic">
-                              Define rules for scheduling pods on specific nodes based on node
-                              labels.
-                            </p>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={3}>
-                              {nodeAffinityTerms.map((term, termIndex) => (
-                                <div
-                                  key={termIndex}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                                >
-                                  <VStack gap={6}>
-                                    <div className="flex items-start justify-between w-full">
-                                      <span className="text-label-lg text-[var(--color-text-default)]">
-                                        Rule {termIndex + 1}
+                        <VStack gap={3}>
+                          {nodeAffinityTerms.map((term, termIndex) => (
+                            <div
+                              key={termIndex}
+                              className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                            >
+                              <VStack gap={6}>
+                                <VStack gap={6} className="w-full">
+                                  <VStack gap={2} className="w-full">
+                                    <VStack gap={1}>
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        Priority
                                       </span>
-                                      <button
-                                        onClick={() => {
-                                          setNodeAffinityTerms(
-                                            nodeAffinityTerms.filter((_, i) => i !== termIndex)
-                                          );
-                                        }}
-                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
+                                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                                        Specify the priority value applied to node scheduling.
+                                      </p>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        { value: 'required', label: 'Required' },
+                                        { value: 'preferred', label: 'Preferred' },
+                                      ]}
+                                      value={term.priority}
+                                      onChange={(val) => {
+                                        const newTerms = [...nodeAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          priority: val,
+                                        };
+                                        setNodeAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2} className="w-full">
+                                    <VStack gap={1}>
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        Weight
+                                      </span>
+                                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                                        The weight used in calculating node scheduling priority.
+                                      </p>
+                                    </VStack>
+                                    <NumberInput
+                                      min={1}
+                                      max={100}
+                                      step={1}
+                                      value={Number(term.weight) || 1}
+                                      onChange={(val) => {
+                                        const newTerms = [...nodeAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          weight: String(val),
+                                        };
+                                        setNodeAffinityTerms(newTerms);
+                                      }}
+                                      width="sm"
+                                    />
+                                  </VStack>
+                                </VStack>
 
-                                    <VStack gap={6} className="w-full">
-                                      <VStack gap={2} className="w-full">
-                                        <VStack gap={1}>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
-                                            Priority
-                                          </span>
-                                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                                            Specify the priority value applied to node scheduling.
-                                          </p>
-                                        </VStack>
-                                        <Select
-                                          options={[
-                                            { value: 'required', label: 'Required' },
-                                            { value: 'preferred', label: 'Preferred' },
-                                          ]}
-                                          value={term.priority}
-                                          onChange={(val) => {
+                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                  <VStack gap={2}>
+                                    {term.matchExpressions.length > 0 && (
+                                      <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Key
+                                        </span>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Operator
+                                        </span>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Value
+                                        </span>
+                                        <div className="w-5" />
+                                      </div>
+                                    )}
+                                    {term.matchExpressions.map((expr, exprIndex) => (
+                                      <div
+                                        key={exprIndex}
+                                        className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                      >
+                                        <Input
+                                          placeholder="e.g. kubernetes.io/os"
+                                          value={expr.key}
+                                          onChange={(e) => {
                                             const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              priority: val,
+                                            newTerms[termIndex].matchExpressions[exprIndex] = {
+                                              ...expr,
+                                              key: e.target.value,
                                             };
                                             setNodeAffinityTerms(newTerms);
                                           }}
                                           fullWidth
                                         />
-                                      </VStack>
-                                      {term.priority === 'preferred' && (
-                                        <VStack gap={2} className="w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
-                                            Weight
-                                          </span>
-                                          <NumberInput
-                                            min={1}
-                                            max={100}
-                                            step={1}
-                                            value={Number(term.weight) || 1}
-                                            onChange={(val) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex] = {
-                                                ...newTerms[termIndex],
-                                                weight: String(val),
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            width="sm"
-                                          />
-                                        </VStack>
-                                      )}
-                                    </VStack>
-
-                                    <VStack gap={2}>
-                                      <span className="block text-label-sm text-[var(--color-text-default)]">
-                                        Match Expressions
-                                      </span>
-                                      {term.matchExpressions.length > 0 && (
-                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Key
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Operator
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Value
-                                          </span>
-                                          <div className="w-5" />
-                                        </div>
-                                      )}
-                                      {term.matchExpressions.map((expr, exprIndex) => (
-                                        <div
-                                          key={exprIndex}
-                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
-                                        >
-                                          <Input
-                                            placeholder="e.g. kubernetes.io/os"
-                                            value={expr.key}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions[exprIndex] = {
-                                                ...expr,
-                                                key: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                          <Select
-                                            options={[
-                                              { value: 'In', label: 'In' },
-                                              { value: 'NotIn', label: 'NotIn' },
-                                              { value: 'Exists', label: 'Exists' },
-                                              {
-                                                value: 'DoesNotExist',
-                                                label: 'DoesNotExist',
-                                              },
-                                              { value: 'Gt', label: 'Gt' },
-                                              { value: 'Lt', label: 'Lt' },
-                                            ]}
-                                            value={expr.operator}
-                                            onChange={(val) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions[exprIndex] = {
-                                                ...expr,
-                                                operator: val,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                          <Input
-                                            placeholder="e.g. linux"
-                                            value={expr.value}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions[exprIndex] = {
-                                                ...expr,
-                                                value: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                          <button
-                                            onClick={() => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions = newTerms[
-                                                termIndex
-                                              ].matchExpressions.filter((_, i) => i !== exprIndex);
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                          >
-                                            <IconX
-                                              size={16}
-                                              className="text-[var(--color-text-muted)]"
-                                              stroke={1.5}
-                                            />
-                                          </button>
-                                        </div>
-                                      ))}
-                                      <div className="w-fit">
-                                        <Button
-                                          variant="secondary"
-                                          size="sm"
-                                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                          onClick={() => {
+                                        <Select
+                                          options={[
+                                            { value: 'In', label: 'In' },
+                                            { value: 'NotIn', label: 'NotIn' },
+                                            { value: 'Exists', label: 'Exists' },
+                                            {
+                                              value: 'DoesNotExist',
+                                              label: 'DoesNotExist',
+                                            },
+                                            { value: 'Gt', label: 'Gt' },
+                                            { value: 'Lt', label: 'Lt' },
+                                          ]}
+                                          value={expr.operator}
+                                          onChange={(val) => {
                                             const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex].matchExpressions.push({
-                                              key: '',
-                                              operator: 'In',
-                                              value: '',
-                                            });
+                                            newTerms[termIndex].matchExpressions[exprIndex] = {
+                                              ...expr,
+                                              operator: val,
+                                            };
                                             setNodeAffinityTerms(newTerms);
                                           }}
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder="e.g. linux"
+                                          value={expr.value}
+                                          onChange={(e) => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex].matchExpressions[exprIndex] = {
+                                              ...expr,
+                                              value: e.target.value,
+                                            };
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                          fullWidth
+                                        />
+                                        <button
+                                          onClick={() => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex].matchExpressions = newTerms[
+                                              termIndex
+                                            ].matchExpressions.filter((_, i) => i !== exprIndex);
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
-                                          Add Expression
-                                        </Button>
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
                                       </div>
-                                    </VStack>
+                                    ))}
+                                    <div className="w-fit">
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                        onClick={() => {
+                                          const newTerms = [...nodeAffinityTerms];
+                                          newTerms[termIndex].matchExpressions.push({
+                                            key: '',
+                                            operator: 'In',
+                                            value: '',
+                                          });
+                                          setNodeAffinityTerms(newTerms);
+                                        }}
+                                      >
+                                        Add Rule
+                                      </Button>
+                                    </div>
                                   </VStack>
                                 </div>
-                              ))}
-
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={() => {
-                                    setNodeAffinityTerms([
-                                      ...nodeAffinityTerms,
-                                      {
-                                        priority: 'required',
-                                        weight: '',
-                                        matchExpressions: [{ key: '', operator: 'In', value: '' }],
-                                      },
-                                    ]);
-                                  }}
-                                >
-                                  Add Rule
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
+                              </VStack>
+                            </div>
+                          ))}
 
                           <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
                               leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={() => {
+                                setNodeAffinityTerms([
+                                  ...nodeAffinityTerms,
+                                  {
+                                    priority: 'required',
+                                    weight: '',
+                                    matchExpressions: [{ key: '', operator: 'In', value: '' }],
+                                  },
+                                ]);
+                              }}
                             >
                               Add Node Selector
                             </Button>
@@ -3142,7 +3074,7 @@ export function CreateDaemonSetPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full">
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
@@ -3158,7 +3090,7 @@ export function CreateDaemonSetPage() {
                                 {term.matchExpressions.map((expr, exprIndex) => (
                                   <div
                                     key={exprIndex}
-                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full items-center"
+                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
                                   >
                                     <Input
                                       placeholder="Input key"
@@ -3268,7 +3200,8 @@ export function CreateDaemonSetPage() {
                             <VStack gap={2}>
                               <VStack gap={1}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
-                                  Topology Key
+                                  Topology Key{' '}
+                                  <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
                                 <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Select the scheduling type to apply to the pod.
@@ -3307,26 +3240,28 @@ export function CreateDaemonSetPage() {
                               />
                             </VStack>
 
-                            <VStack gap={2} className="w-full">
-                              <span className="block text-label-lg text-[var(--color-text-default)]">
-                                Weight
-                              </span>
-                              <NumberInput
-                                min={1}
-                                max={100}
-                                step={1}
-                                value={Number(term.weight) || 1}
-                                onChange={(val) => {
-                                  const newTerms = [...podAffinityTerms];
-                                  newTerms[termIndex] = {
-                                    ...newTerms[termIndex],
-                                    weight: String(val),
-                                  };
-                                  setPodAffinityTerms(newTerms);
-                                }}
-                                width="sm"
-                              />
-                            </VStack>
+                            {term.priority === 'preferred' && (
+                              <VStack gap={2} className="w-full">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
+                                  Weight
+                                </span>
+                                <NumberInput
+                                  min={1}
+                                  max={100}
+                                  step={1}
+                                  value={Number(term.weight) || 1}
+                                  onChange={(val) => {
+                                    const newTerms = [...podAffinityTerms];
+                                    newTerms[termIndex] = {
+                                      ...newTerms[termIndex],
+                                      weight: String(val),
+                                    };
+                                    setPodAffinityTerms(newTerms);
+                                  }}
+                                  width="sm"
+                                />
+                              </VStack>
+                            )}
                           </VStack>
                         </div>
                       ))}
@@ -3372,7 +3307,7 @@ export function CreateDaemonSetPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -3394,7 +3329,7 @@ export function CreateDaemonSetPage() {
                             {tolerations.map((toleration, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="Key"
@@ -3430,13 +3365,21 @@ export function CreateDaemonSetPage() {
                                   onChange={(val) => updateToleration(index, 'effect', val)}
                                   fullWidth
                                 />
-                                <Input
-                                  placeholder=""
-                                  value={toleration.tolerationSeconds}
-                                  onChange={(e) =>
-                                    updateToleration(index, 'tolerationSeconds', e.target.value)
+                                <NumberInput
+                                  min={0}
+                                  step={1}
+                                  value={
+                                    toleration.tolerationSeconds
+                                      ? Number(toleration.tolerationSeconds)
+                                      : undefined
                                   }
-                                  fullWidth
+                                  onChange={(val) =>
+                                    updateToleration(
+                                      index,
+                                      'tolerationSeconds',
+                                      val?.toString() || ''
+                                    )
+                                  }
                                 />
                                 <button
                                   onClick={() => removeToleration(index)}
@@ -4361,7 +4304,7 @@ export function CreateDaemonSetPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
@@ -4375,7 +4318,7 @@ export function CreateDaemonSetPage() {
                                   (header: { name: string; value: string }, index: number) => (
                                     <div
                                       key={index}
-                                      className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                     >
                                       <Input
                                         placeholder="e.g. X-Custom-Header"
@@ -4607,212 +4550,6 @@ export function CreateDaemonSetPage() {
                               fullWidth
                             />
                           </VStack>
-                        </VStack>
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* 2a-2. Networking Section */}
-                    <SectionCard className="pb-4">
-                      <SectionCard.Header title="Networking" />
-                      <SectionCard.Content>
-                        <VStack gap={4}>
-                          <span className="text-body-md text-[var(--color-text-subtle)]">
-                            Define a Service to expose the container, or define a non-Kubernetes
-                            network port that the new service will run when the app on the container
-                            is expected to run.
-                          </span>
-
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={3} className="w-full">
-                              {config.ports.map((port, portIdx) => {
-                                const showListeningPort =
-                                  port.serviceType === 'NodePort' ||
-                                  port.serviceType === 'LoadBalancer';
-                                return (
-                                  <div
-                                    key={port.id}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                                  >
-                                    <div
-                                      className={`grid ${showListeningPort ? 'grid-cols-[140px_1fr_1fr_100px_1fr_1fr_1fr_20px]' : 'grid-cols-[140px_1fr_1fr_100px_1fr_1fr_20px]'} gap-2`}
-                                    >
-                                      <span className="text-label-sm text-[var(--color-text-default)]">
-                                        Service Type
-                                      </span>
-                                      <span className="text-label-sm text-[var(--color-text-default)]">
-                                        Name
-                                      </span>
-                                      <span className="text-label-sm text-[var(--color-text-default)]">
-                                        Private Container Port
-                                      </span>
-                                      <span className="text-label-sm text-[var(--color-text-default)]">
-                                        Protocol
-                                      </span>
-                                      <span className="text-label-sm text-[var(--color-text-default)]">
-                                        Public Host Port
-                                      </span>
-                                      <span className="text-label-sm text-[var(--color-text-default)]">
-                                        Host IP
-                                      </span>
-                                      {showListeningPort && (
-                                        <span className="text-label-sm text-[var(--color-text-default)]">
-                                          Listening Port
-                                        </span>
-                                      )}
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          const newPorts = config.ports.filter(
-                                            (_, i) => i !== portIdx
-                                          );
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)] ml-auto"
-                                        aria-label="Remove port"
-                                      >
-                                        <IconX
-                                          size={14}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-
-                                      <Select
-                                        options={[
-                                          {
-                                            value: 'DoNotCreate',
-                                            label: 'Do not create a service',
-                                          },
-                                          { value: 'ClusterIP', label: 'Cluster IP' },
-                                          { value: 'NodePort', label: 'Node Port' },
-                                          { value: 'LoadBalancer', label: 'Load Balancer' },
-                                        ]}
-                                        value={port.serviceType}
-                                        onChange={(val) => {
-                                          const newPorts = [...config.ports];
-                                          newPorts[portIdx] = {
-                                            ...newPorts[portIdx],
-                                            serviceType: val,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder=""
-                                        value={port.name}
-                                        onChange={(e) => {
-                                          const newPorts = [...config.ports];
-                                          newPorts[portIdx] = {
-                                            ...newPorts[portIdx],
-                                            name: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="e.g. 8080"
-                                        value={port.containerPort}
-                                        onChange={(e) => {
-                                          const newPorts = [...config.ports];
-                                          newPorts[portIdx] = {
-                                            ...newPorts[portIdx],
-                                            containerPort: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                      <Select
-                                        options={[
-                                          { value: 'TCP', label: 'TCP' },
-                                          { value: 'UDP', label: 'UDP' },
-                                          { value: 'SCTP', label: 'SCTP' },
-                                        ]}
-                                        value={port.protocol}
-                                        onChange={(val) => {
-                                          const newPorts = [...config.ports];
-                                          newPorts[portIdx] = {
-                                            ...newPorts[portIdx],
-                                            protocol: val,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="e.g. 80"
-                                        value={port.hostPort}
-                                        onChange={(e) => {
-                                          const newPorts = [...config.ports];
-                                          newPorts[portIdx] = {
-                                            ...newPorts[portIdx],
-                                            hostPort: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="e.g. 1111"
-                                        value={port.hostIP}
-                                        onChange={(e) => {
-                                          const newPorts = [...config.ports];
-                                          newPorts[portIdx] = {
-                                            ...newPorts[portIdx],
-                                            hostIP: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                      {showListeningPort && (
-                                        <Input
-                                          placeholder="e.g. 30080"
-                                          value={port.listeningPort}
-                                          onChange={(e) => {
-                                            const newPorts = [...config.ports];
-                                            newPorts[portIdx] = {
-                                              ...newPorts[portIdx],
-                                              listeningPort: e.target.value,
-                                            };
-                                            updateContainerConfig(containerId, { ports: newPorts });
-                                          }}
-                                          fullWidth
-                                        />
-                                      )}
-                                      <div />
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={() => {
-                                    const newPort = {
-                                      id: crypto.randomUUID(),
-                                      serviceType: 'DoNotCreate',
-                                      name: '',
-                                      containerPort: '',
-                                      protocol: 'TCP',
-                                      hostPort: '',
-                                      hostIP: '',
-                                      listeningPort: '',
-                                    };
-                                    updateContainerConfig(containerId, {
-                                      ports: [...config.ports, newPort],
-                                    });
-                                  }}
-                                >
-                                  Add Port or Service
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
                         </VStack>
                       </SectionCard.Content>
                     </SectionCard>
@@ -5309,7 +5046,7 @@ export function CreateDaemonSetPage() {
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5327,7 +5064,7 @@ export function CreateDaemonSetPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -5567,7 +5304,7 @@ export function CreateDaemonSetPage() {
                                     <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5585,7 +5322,7 @@ export function CreateDaemonSetPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -6078,7 +5815,7 @@ export function CreateDaemonSetPage() {
                                         <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
-                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                               <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </label>
@@ -6092,7 +5829,7 @@ export function CreateDaemonSetPage() {
                                             (header, index) => (
                                               <div
                                                 key={index}
-                                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="Input name"
@@ -7156,7 +6893,7 @@ export function CreateDaemonSetPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -7192,7 +6929,7 @@ export function CreateDaemonSetPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""
@@ -7311,10 +7048,21 @@ export function CreateDaemonSetPage() {
                           {/* Select Volume dropdown */}
                           <div className="w-full">
                             <Select
-                              options={volumes.map((v) => ({
-                                value: v.volumeName,
-                                label: v.volumeName,
-                              }))}
+                              options={volumes.map((v) => {
+                                const typeLabels: Record<string, string> = {
+                                  csi: 'CSI',
+                                  pvc: 'Persistent Volume Claim',
+                                  'create-pvc': 'Create persistent volume claim',
+                                  configmap: 'ConfigMap',
+                                  secret: 'Secret',
+                                  emptyDir: 'Empty Dir',
+                                  hostPath: 'Host Path',
+                                };
+                                return {
+                                  value: v.volumeName,
+                                  label: `${v.volumeName} (${typeLabels[v.type] || v.type})`,
+                                };
+                              })}
                               placeholder="Select volume"
                               value=""
                               onChange={(val) => {

@@ -646,6 +646,7 @@ export function IAMUserDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getSessionContextMenuItems(row.id)} trigger="click" align="right">
           <button
@@ -708,6 +709,7 @@ export function IAMUserDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getAccessKeyContextMenuItems(row.id)} trigger="click" align="right">
           <button
@@ -773,6 +775,7 @@ export function IAMUserDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getRoleContextMenuItems(row.id)} trigger="click" align="right">
           <button
@@ -833,6 +836,7 @@ export function IAMUserDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu items={getGroupContextMenuItems(row.id)} trigger="click" align="right">
           <button

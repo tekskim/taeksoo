@@ -251,6 +251,7 @@ export function AgentPage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {

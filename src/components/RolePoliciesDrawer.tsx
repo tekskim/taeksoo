@@ -39,6 +39,8 @@ export interface RolePoliciesDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   roleName?: string;
+  /** Label shown above the resource name in the InfoBox (default: "Role") */
+  infoLabel?: string;
   title?: string;
   description?: string;
   initialSelectedIds?: string[];
@@ -204,6 +206,7 @@ export function RolePoliciesDrawer({
   isOpen,
   onClose,
   roleName = 'member',
+  infoLabel = 'Role',
   title: drawerTitle = 'Manage policies',
   description: drawerDescription = 'Add or remove policies of this role.',
   initialSelectedIds = [],
@@ -318,7 +321,7 @@ export function RolePoliciesDrawer({
       <VStack gap={6} className="h-full">
         {/* Header */}
         <VStack gap={3}>
-          <InfoBox label="Role" value={roleName} />
+          <InfoBox label={infoLabel} value={roleName} />
         </VStack>
 
         {/* Policies Section */}

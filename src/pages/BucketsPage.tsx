@@ -299,6 +299,7 @@ export function BucketsPage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <ContextMenu
           trigger="click"

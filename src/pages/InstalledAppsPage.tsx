@@ -194,6 +194,7 @@ export default function InstalledAppsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">

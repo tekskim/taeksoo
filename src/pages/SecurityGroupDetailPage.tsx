@@ -333,6 +333,7 @@ export default function SecurityGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPortContextMenuItems(row)} trigger="click" align="right">
@@ -386,6 +387,7 @@ export default function SecurityGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click" align="right">

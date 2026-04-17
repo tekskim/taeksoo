@@ -353,6 +353,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
@@ -570,6 +571,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

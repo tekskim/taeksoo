@@ -548,6 +548,7 @@ export function FlavorDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center gap-1">
           <button
