@@ -288,6 +288,7 @@ export default function IAMRolesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedGrants, setSelectedGrants] = useState<string[]>([]);
   const [grantSearch, setGrantSearch] = useState('');
   const [grantPage, setGrantPage] = useState(1);
@@ -309,6 +310,11 @@ export default function IAMRolesPage() {
   useEffect(() => {
     updateActiveTabLabel('Roles');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -441,6 +447,7 @@ export default function IAMRolesPage() {
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row.id)} trigger="click" align="right">
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -489,9 +496,9 @@ export default function IAMRolesPage() {
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
-            <Link to="#" className="text-[var(--color-action-primary)] font-medium hover:underline">
+            <span className="text-[var(--color-action-primary)] font-medium">
               {row.principalName}
-            </Link>
+            </span>
             <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
               <span className="truncate" title={row.principalId}>
                 ID:{row.principalId}
@@ -608,8 +615,8 @@ export default function IAMRolesPage() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             showNavigation
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={<Breadcrumb items={[{ label: 'Roles' }]} />}
           />
         }
@@ -686,6 +693,7 @@ export default function IAMRolesPage() {
                   selectedKeys={selectedRows}
                   onSelectionChange={setSelectedRows}
                   emptyMessage="No roles found"
+                  loading={loading}
                 />
               </VStack>
             </TabPanel>
@@ -739,6 +747,7 @@ export default function IAMRolesPage() {
                   selectedKeys={selectedGrants}
                   onSelectionChange={setSelectedGrants}
                   emptyMessage="No active grants found"
+                  loading={loading}
                 />
               </VStack>
             </TabPanel>

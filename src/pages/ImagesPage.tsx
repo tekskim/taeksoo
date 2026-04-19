@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   SearchInput,
@@ -17,7 +17,7 @@ import {
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh, IconDownload } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -222,10 +222,17 @@ function NameCell({ id, name }: NameCellProps) {
    ---------------------------------------- */
 
 export function ImagesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const rowsPerPage = 10;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
@@ -370,8 +377,8 @@ export function ImagesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Images' }]} />}
         />
       }
@@ -388,7 +395,7 @@ export function ImagesPage() {
             <div className="flex items-center gap-1">
               <div className="w-[var(--search-input-width)]">
                 <SearchInput
-                  placeholder="Search users by attributes"
+                  placeholder="Search images by attributes"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClear={() => setSearchQuery('')}
@@ -427,7 +434,8 @@ export function ImagesPage() {
         <Table
           columns={columns}
           data={paginatedImages}
-          getRowId={(row) => row.id}
+          rowKey="id"
+          loading={loading}
           emptyMessage="No images found"
         />
       </VStack>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -1006,6 +1006,7 @@ function ExpandableMessage({
    ---------------------------------------- */
 
 export function InstanceDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -1109,8 +1110,8 @@ export function InstanceDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Instances', href: '/compute/instances' }, { label: instance.name }]}
@@ -1526,7 +1527,10 @@ export function InstanceDetailPage() {
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={volumeMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1691,7 +1695,10 @@ export function InstanceDetailPage() {
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={interfaceMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1799,7 +1806,10 @@ export function InstanceDetailPage() {
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={floatingIpMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -1932,7 +1942,10 @@ export function InstanceDetailPage() {
                               trigger="click"
                               align="right"
                             >
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}
@@ -2091,7 +2104,10 @@ export function InstanceDetailPage() {
                         return (
                           <div onClick={(e) => e.stopPropagation()}>
                             <ContextMenu items={snapshotMenuItems} trigger="click" align="right">
-                              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
                                 <IconDotsCircleHorizontal
                                   size={16}
                                   stroke={1.5}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -100,6 +100,7 @@ const defaultMetadataDetail: MetadataDefinitionDetail = {
    ---------------------------------------- */
 
 export default function ComputeAdminMetadataDefinitionDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -154,8 +155,8 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -168,7 +169,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{metadata.displayName}</DetailHeader.Title>

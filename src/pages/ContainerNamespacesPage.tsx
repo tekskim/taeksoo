@@ -24,7 +24,7 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
 import { getContainerStatusTheme } from './containerStatusUtils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -208,16 +208,14 @@ export function ContainerNamespacesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block min-w-0"
+        <Link
+          to={`/container/namespaces/${value}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate block min-w-0"
           title={value}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/container/namespaces/${value}`);
-          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -269,7 +267,10 @@ export function ContainerNamespacesPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -312,8 +313,8 @@ export function ContainerNamespacesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Namespaces' }]} />}
           actions={
             <ContainerTopBarActions
@@ -436,8 +437,6 @@ export function ContainerNamespacesPage() {
           onPageChange={setCurrentPage}
           totalItems={namespacesData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}

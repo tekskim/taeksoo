@@ -79,12 +79,9 @@ interface SummaryStatBoxProps {
 function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
   const textColor =
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
-  const isClickable = label !== 'Others';
 
   return (
-    <div
-      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
-    >
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent">
       <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -150,10 +147,10 @@ function TenantRow({ name, enabled, resources }: TenantRowProps) {
         <Badge variant={enabled ? 'success' : 'default'} size="sm">
           {enabled ? 'Enabled' : 'Disabled'}
         </Badge>
-        <button className="flex items-center gap-1 text-label-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]">
-          {name}
-          <IconChevronRight size={14} className="text-[var(--color-text-muted)]" />
-        </button>
+        <div className="flex items-center gap-1 text-label-md text-[var(--color-text-default)] min-w-0">
+          <span className="truncate">{name}</span>
+          <IconChevronRight size={14} className="text-[var(--color-text-muted)] shrink-0" />
+        </div>
       </div>
       <div className="grid grid-cols-5 gap-4">
         <TenantUsageCard
@@ -259,8 +256,8 @@ export function ComputeAdminHomePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }
@@ -272,7 +269,7 @@ export function ComputeAdminHomePage() {
         <div className="grid grid-cols-3 gap-6 mb-6">
           {/* CAPACITY SUMMARY */}
           <Card title="Capacity Summary">
-            <div className="space-y-[22px]">
+            <div className="space-y-6">
               <ComputeQuotaBar label="Total vCPU" used={4} total={8} unit="vCPU" />
               <ComputeQuotaBar label="Total RAM" used={22} total={32} unit="GiB" />
               <ComputeQuotaBar label="Total GPU (T4)" used={6} total={8} unit="GPU" />

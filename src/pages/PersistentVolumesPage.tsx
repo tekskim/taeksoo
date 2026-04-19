@@ -187,11 +187,6 @@ export function PersistentVolumesPage() {
   // Create menu items for each row
   const createMenuItems = (row: PersistentVolumeRow): ContextMenuItem[] => [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/persistent-volumes/${row.id}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/persistent-volumes/${row.id}/edit-yaml`),
@@ -316,7 +311,10 @@ export function PersistentVolumesPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -372,8 +370,8 @@ export function PersistentVolumesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Persistent Volumes' }]} />}
           actions={
             <ContainerTopBarActions
@@ -478,8 +476,6 @@ export function PersistentVolumesPage() {
           onPageChange={setCurrentPage}
           totalItems={persistentVolumesData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}

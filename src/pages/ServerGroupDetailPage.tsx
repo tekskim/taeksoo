@@ -351,13 +351,7 @@ export function ServerGroupDetailPage() {
       flex: 1,
       minWidth: columnMinWidths.fixedIp,
       render: (value) => (
-        <Link
-          to="#"
-          className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {value}
-        </Link>
+        <span className="text-label-md text-[var(--color-action-primary)]">{value}</span>
       ),
     },
     {
@@ -404,6 +398,8 @@ export function ServerGroupDetailPage() {
             items={getInstanceContextMenuItems(row)}
             trigger={
               <button
+                type="button"
+                aria-label="Row actions"
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >

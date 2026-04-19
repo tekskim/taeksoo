@@ -373,11 +373,6 @@ export function ContainerHPADetailPage() {
   // Context menu items for More actions
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/hpa/${hpa.id}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/hpa/${hpa.name}/edit-yaml`),
@@ -416,8 +411,8 @@ export function ContainerHPADetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb items={[{ label: 'HPA', href: '/container/hpa' }, { label: hpa.name }]} />
           }

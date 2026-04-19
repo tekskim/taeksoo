@@ -212,17 +212,26 @@ export function Table<T extends Record<string, any>>({
     }
   };
 
-  const handleSelectAll = () => {
-    const allKeys = sortedData.map(getRowKey);
-    if (selectedKeys.length === sortedData.length && sortedData.length > 0) {
-      onSelectionChange?.([]);
+  const selectableKeysList = useMemo(
+    () => sortedData.map(getRowKey).filter((key) => !disabledSet.has(key)),
+    [sortedData, getRowKey, disabledSet]
+  );
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = e.target;
+    if (checked) {
+      onSelectionChange?.(selectableKeysList);
     } else {
-      onSelectionChange?.(allKeys);
+      onSelectionChange?.([]);
     }
   };
 
-  const allSelected = sortedData.length > 0 && selectedKeys.length === sortedData.length;
-  const someSelected = selectedKeys.length > 0 && selectedKeys.length < sortedData.length;
+  const allSelected =
+    selectableKeysList.length > 0 && selectableKeysList.every((key) => selectedKeys.includes(key));
+  const someSelected =
+    selectableKeysList.length > 0 &&
+    selectedKeys.some((key) => selectableKeysList.includes(key)) &&
+    !allSelected;
 
   const renderSortIcon = (columnKey: string) => {
     if (sortKey !== columnKey) {
@@ -414,7 +423,7 @@ export function Table<T extends Record<string, any>>({
             align === 'right' && 'flex justify-end'
           )}
         >
-          <Skeleton variant="rounded" width={skeletonWidths[widthIdx]} height={14} />
+          <Skeleton variant="text" width={skeletonWidths[widthIdx]} height={14} />
         </div>
       </div>
     );
@@ -434,7 +443,7 @@ export function Table<T extends Record<string, any>>({
           <div className="flex items-stretch min-h-[var(--table-row-height)] w-full">
             {showCheckbox && (
               <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
-                <Skeleton variant="rounded" width={16} height={16} />
+                <Skeleton variant="text" width={16} height={16} />
               </div>
             )}
             {cols.map((col, i) => renderSkeletonCell(col, rowIndex, i, showCheckbox))}
@@ -491,7 +500,9 @@ export function Table<T extends Record<string, any>>({
 
               {/* Body */}
               <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)] w-full">
-                {sortedData.length === 0 ? (
+                {loading ? (
+                  renderSkeletonRows(scrollColumns, selectable)
+                ) : sortedData.length === 0 ? (
                   <div
                     className={cn(
                       'px-[var(--table-cell-padding-x)] py-[var(--table-empty-padding-y)] text-center',
@@ -578,7 +589,9 @@ export function Table<T extends Record<string, any>>({
 
             {/* Body */}
             <div className="flex flex-col gap-[var(--table-row-gap)]">
-              {sortedData.length === 0 ? (
+              {loading ? (
+                renderSkeletonRows(stickyRightColumns, false)
+              ) : sortedData.length === 0 ? (
                 <div
                   className={cn(
                     'min-h-[var(--table-row-height)]',

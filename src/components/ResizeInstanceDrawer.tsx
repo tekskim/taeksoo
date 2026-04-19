@@ -339,15 +339,15 @@ export function ResizeInstanceDrawer({
 
           {/* Buttons */}
           <div className="w-[calc(100%+48px)] -ml-6 h-px bg-[var(--color-border-default)]" />
-          <HStack gap={2} justify="center" className="w-full">
-            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+          <HStack gap={2} className="w-full">
+            <Button variant="secondary" onClick={handleClose} className="flex-1">
               Cancel
             </Button>
             <Button
               variant="primary"
               onClick={handleResize}
               disabled={isSubmitting}
-              className="w-[152px] h-8"
+              className="flex-1"
             >
               {isSubmitting ? 'Resizing...' : 'Resize'}
             </Button>

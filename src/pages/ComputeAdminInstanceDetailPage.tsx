@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -888,6 +888,7 @@ const diskIOPSWriteData = generateWaveData(420, 150);
    ---------------------------------------- */
 
 export function ComputeAdminInstanceDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -1017,8 +1018,8 @@ export function ComputeAdminInstanceDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -1933,7 +1934,7 @@ export function ComputeAdminInstanceDetailPage() {
 
                 {/* Console Area */}
                 <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
-                  <pre className="font-mono text-[13px] leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
+                  <pre className="font-mono text-label-lg text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
                     {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP

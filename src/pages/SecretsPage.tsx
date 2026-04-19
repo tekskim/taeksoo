@@ -21,7 +21,7 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { useTabs } from '@/contexts/TabContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   IconDownload,
   IconTrash,
@@ -150,11 +150,6 @@ export function SecretsPage() {
   const createMenuItems = (row: SecretRow): ContextMenuItem[] => {
     return [
       {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/secrets/${row.id}/edit`),
-      },
-      {
         id: 'edit-yaml',
         label: 'Edit YAML',
         onClick: () => navigate(`/container/secrets/${row.id}/edit-yaml`),
@@ -183,16 +178,14 @@ export function SecretsPage() {
       sortable: true,
       render: (value: string, row) => (
         <div className="min-w-0">
-          <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          <Link
+            to={`/container/secrets/${row.id}`}
+            className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
             title={value}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/container/secrets/${row.id}`);
-            }}
+            onClick={(e) => e.stopPropagation()}
           >
             {value}
-          </span>
+          </Link>
         </div>
       ),
     },
@@ -265,7 +258,10 @@ export function SecretsPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -321,8 +317,8 @@ export function SecretsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Secrets' }]} />}
           actions={
             <ContainerTopBarActions
@@ -427,8 +423,6 @@ export function SecretsPage() {
           onPageChange={setCurrentPage}
           totalItems={secretsData.length}
           selectedCount={selectedRows.length}
-          showSettings
-          onSettingsClick={() => {}}
         />
 
         {/* Table */}

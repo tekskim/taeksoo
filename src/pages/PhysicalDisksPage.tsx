@@ -25,6 +25,7 @@ import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh, IconDownload } from '@tabler/icons-react';
 import { Siren } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Custom Identify Icon (using Siren from lucide-react)
@@ -257,10 +258,12 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
    ---------------------------------------- */
 
 export function PhysicalDisksPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
+  const [loading, setLoading] = useState(true);
 
   // Identify drawer state
   const [isIdentifyDrawerOpen, setIsIdentifyDrawerOpen] = useState(false);
@@ -278,6 +281,11 @@ export function PhysicalDisksPage() {
     { value: '10', label: '10 minutes' },
     { value: '15', label: '15 minutes' },
   ];
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Countdown effect for disk timers
   useEffect(() => {
@@ -466,8 +474,8 @@ export function PhysicalDisksPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Physical disks' }]} />}
         />
       }
@@ -522,6 +530,7 @@ export function PhysicalDisksPage() {
           data={paginatedDisks}
           getRowId={(row) => row.id}
           emptyMessage="No physical disks found"
+          loading={loading}
         />
       </VStack>
 

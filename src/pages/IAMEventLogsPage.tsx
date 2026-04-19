@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   IconDownload,
   IconChevronDown,
@@ -22,6 +22,7 @@ import {
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { InlineCopyId } from '@/components/InlineCopyId';
+import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Type Definitions
@@ -360,6 +361,7 @@ function EventDetailsConsole({ details }: { details: EventLog['details'] }) {
    IAM Event Logs Page
    ---------------------------------------- */
 export default function IAMEventLogsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -387,9 +389,20 @@ export default function IAMEventLogsPage() {
       log.eventId.includes(searchQuery)
   );
 
+  // Sort
+  const sortedLogs = useMemo(() => {
+    if (!sortKey) return filteredLogs;
+    return [...filteredLogs].sort((a, b) => {
+      const aVal = String((a as Record<string, unknown>)[sortKey] ?? '');
+      const bVal = String((b as Record<string, unknown>)[sortKey] ?? '');
+      const cmp = aVal.localeCompare(bVal);
+      return sortDirection === 'asc' ? cmp : -cmp;
+    });
+  }, [filteredLogs, sortKey, sortDirection]);
+
   // Pagination
-  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
-  const paginatedLogs = filteredLogs.slice(
+  const totalPages = Math.ceil(sortedLogs.length / itemsPerPage);
+  const paginatedLogs = sortedLogs.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -447,8 +460,8 @@ export default function IAMEventLogsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Event Logs' }]} />}
         />
       }
@@ -541,14 +554,14 @@ export default function IAMEventLogsPage() {
                         >
                           {isExpanded ? (
                             <IconChevronDown
-                              size={16}
-                              stroke={1.5}
+                              size={12}
+                              strokeWidth={2}
                               className="text-[var(--color-text-default)]"
                             />
                           ) : (
                             <IconChevronRight
-                              size={16}
-                              stroke={1.5}
+                              size={12}
+                              strokeWidth={2}
                               className="text-[var(--color-text-default)]"
                             />
                           )}

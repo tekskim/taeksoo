@@ -171,6 +171,7 @@ export function IAMUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
@@ -178,6 +179,11 @@ export function IAMUsersPage() {
   useEffect(() => {
     updateActiveTabLabel('Users');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -321,6 +327,7 @@ export function IAMUsersPage() {
         return (
           <ContextMenu items={menuItems} trigger="click" align="right">
             <button
+              aria-label="Row actions"
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
             >
@@ -355,8 +362,8 @@ export function IAMUsersPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Users' }]} />}
         />
       }
@@ -425,6 +432,7 @@ export function IAMUsersPage() {
             selectedKeys={selectedRows}
             onSelectionChange={setSelectedRows}
             emptyMessage="No users found"
+            loading={loading}
           />
         </VStack>
       </VStack>

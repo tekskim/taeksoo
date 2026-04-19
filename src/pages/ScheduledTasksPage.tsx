@@ -22,6 +22,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
+import { useNavigate } from 'react-router-dom';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -61,10 +62,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Snapshot',
     target: 'db-data, db-logs',
     schedule: 'Daily at 02:00 UTC',
-    lastExecution: 'Nov 10, 2025 02:00',
-    nextExecution: 'Nov 11, 2025 02:00',
+    lastExecution: 'Feb 3, 2026 02:00',
+    nextExecution: 'Feb 4, 2026 02:00',
     createdBy: 'admin',
-    createdAt: 'Oct 1, 2025 09:23:41',
+    createdAt: 'Jan 12, 2026 09:23:41',
   },
   {
     id: 'task-002',
@@ -73,10 +74,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Restart',
     target: 'web-server-01, web-server-02',
     schedule: 'Sunday at 04:00 UTC',
-    lastExecution: 'Nov 9, 2025 04:00',
-    nextExecution: 'Nov 16, 2025 04:00',
+    lastExecution: 'Mar 8, 2026 04:00',
+    nextExecution: 'Mar 15, 2026 04:00',
     createdBy: 'devops',
-    createdAt: 'Sep 20, 2025 14:07:22',
+    createdAt: 'Jan 18, 2026 14:07:22',
   },
   {
     id: 'task-003',
@@ -85,10 +86,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Cleanup',
     target: 'All instances',
     schedule: 'Every 6 hours',
-    lastExecution: 'Nov 10, 2025 12:00',
-    nextExecution: 'Nov 10, 2025 18:00',
+    lastExecution: 'Apr 16, 2026 12:00',
+    nextExecution: 'Apr 16, 2026 18:00',
     createdBy: 'system',
-    createdAt: 'Aug 15, 2025 11:45:33',
+    createdAt: 'Mar 1, 2026 11:45:33',
   },
   {
     id: 'task-004',
@@ -97,10 +98,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Resize',
     target: 'dev-*',
     schedule: 'Weekdays at 20:00 UTC',
-    lastExecution: 'Nov 8, 2025 20:00',
+    lastExecution: 'Apr 14, 2026 20:00',
     nextExecution: '-',
     createdBy: 'admin',
-    createdAt: 'Oct 15, 2025 16:52:08',
+    createdAt: 'Feb 19, 2026 16:52:08',
   },
   {
     id: 'task-005',
@@ -109,10 +110,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Backup',
     target: 'prod-*',
     schedule: 'Daily at 01:00 UTC',
-    lastExecution: 'Nov 10, 2025 01:00',
-    nextExecution: 'Nov 11, 2025 01:00',
+    lastExecution: 'Apr 17, 2026 01:00',
+    nextExecution: 'Apr 18, 2026 01:00',
     createdBy: 'admin',
-    createdAt: 'Jul 1, 2025 08:30:15',
+    createdAt: 'Apr 2, 2026 08:30:15',
   },
   {
     id: 'task-006',
@@ -121,10 +122,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Snapshot',
     target: 'gpu-node-01, gpu-node-02',
     schedule: 'Every 12 hours',
-    lastExecution: 'Nov 10, 2025 00:00',
-    nextExecution: 'Nov 10, 2025 12:00',
+    lastExecution: 'Apr 16, 2026 00:00',
+    nextExecution: 'Apr 17, 2026 12:00',
     createdBy: 'ml-team',
-    createdAt: 'Nov 1, 2025 13:19:44',
+    createdAt: 'Mar 25, 2026 13:19:44',
   },
   {
     id: 'task-007',
@@ -133,10 +134,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Cleanup',
     target: 'monitoring-*, logging-*',
     schedule: 'Daily at 03:00 UTC',
-    lastExecution: 'Nov 10, 2025 03:00',
-    nextExecution: 'Nov 11, 2025 03:00',
+    lastExecution: 'Apr 15, 2026 03:00',
+    nextExecution: 'Apr 16, 2026 03:00',
     createdBy: 'system',
-    createdAt: 'Jun 1, 2025 10:41:27',
+    createdAt: 'Feb 9, 2026 10:41:27',
   },
   {
     id: 'task-008',
@@ -145,10 +146,10 @@ const mockTasks: ScheduledTask[] = [
     type: 'Resize',
     target: 'prod-api-*',
     schedule: 'Weekdays at 08:00 UTC',
-    lastExecution: 'Nov 10, 2025 08:00',
-    nextExecution: 'Nov 11, 2025 08:00',
+    lastExecution: 'Apr 17, 2026 08:00',
+    nextExecution: 'Apr 20, 2026 08:00',
     createdBy: 'admin',
-    createdAt: 'Oct 15, 2025 16:52:08',
+    createdAt: 'Mar 28, 2026 16:52:08',
   },
 ];
 
@@ -169,6 +170,7 @@ const statusMap: Record<TaskStatus, 'active' | 'building' | 'paused' | 'error' |
    ---------------------------------------- */
 
 export function ScheduledTasksPage() {
+  const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
@@ -230,9 +232,7 @@ export function ScheduledTasksPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-label-md text-[var(--color-action-primary)] hover:underline cursor-pointer">
-          {value}
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
@@ -286,7 +286,10 @@ export function ScheduledTasksPage() {
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -318,8 +321,8 @@ export function ScheduledTasksPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Scheduled Tasks' }]} />}
         />
       }
@@ -328,7 +331,7 @@ export function ScheduledTasksPage() {
         <PageHeader
           title="Scheduled Tasks"
           actions={
-            <Button size="md" leftIcon={<IconPlus size={14} stroke={1.5} />}>
+            <Button size="md" leftIcon={<IconPlus size={12} stroke={1.5} />}>
               Create Task
             </Button>
           }

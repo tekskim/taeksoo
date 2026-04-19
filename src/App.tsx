@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 import { TabProvider } from '@/contexts/TabContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { DarkModeProvider } from '@/hooks/useDarkMode';
@@ -966,7 +967,7 @@ function AppRoutes() {
       <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
       <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
-      <Route path="/container/*" element={<ContainerDashboardPage />} />
+      <Route path="/container/*" element={<NotFoundPage />} />
 
       {/* IAM Routes */}
       <Route path="/iam" element={<IAMHomePage />} />
@@ -1002,7 +1003,7 @@ function AppRoutes() {
       <Route path="/iam/session-policies" element={<IAMSessionPoliciesPage />} />
       <Route path="/iam/token-policies" element={<IAMTokenPoliciesPage />} />
       <Route path="/iam/login-policies" element={<IAMLoginPoliciesPage />} />
-      <Route path="/iam/*" element={<IAMHomePage />} />
+      <Route path="/iam/*" element={<NotFoundPage />} />
 
       {/* AI Platform Routes */}
       <Route path="/ai-platform" element={<AIPlatformPage />} />
@@ -1011,6 +1012,7 @@ function AppRoutes() {
       <Route path="/ai-platform/models" element={<ModelsPage />} />
       <Route path="/ai-platform/datasets" element={<DatasetsPage />} />
       <Route path="/ai-platform/workloads" element={<WorkloadsPage />} />
+      <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
       <Route path="/ai-platform/my-templates" element={<MyTemplatesPage />} />
       <Route path="/ai-platform/storage" element={<AIPlatformStoragePage />} />
       <Route path="/ai-platform/serverless" element={<ServerlessPage />} />
@@ -1190,10 +1192,7 @@ function AppRoutes() {
         <Route path="cloudbuilder" element={<FigmaCloudBuilderPage />} />
       </Route>
 
-      {/* AI Platform Routes */}
-      <Route path="/ai-platform" element={<AIPlatformPage />} />
-      <Route path="/ai-platform/workloads/:id" element={<WorkloadDetailPage />} />
-      <Route path="/ai-platform/*" element={<AIPlatformPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Button,
   SearchInput,
@@ -17,7 +17,7 @@ import {
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconRefresh } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -159,14 +159,21 @@ function UsageCell({ percent }: UsageCellProps) {
    ---------------------------------------- */
 
 export function PoolsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPools, setSelectedPools] = useState<string[]>([]);
   const rowsPerPage = 10;
+  const [loading, setLoading] = useState(true);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sidebar width
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -299,8 +306,8 @@ export function PoolsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Pools' }]} />}
         />
       }
@@ -352,6 +359,7 @@ export function PoolsPage() {
           selectable
           selectedKeys={selectedPools}
           onSelectionChange={setSelectedPools}
+          loading={loading}
         />
       </VStack>
     </PageShell>

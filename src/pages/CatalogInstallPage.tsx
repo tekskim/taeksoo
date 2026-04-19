@@ -23,17 +23,6 @@ import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { IconEdit, IconEye, IconEyeOff } from '@tabler/icons-react';
 
-function IconButton({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <button
-      className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-      aria-label={label}
-    >
-      <span className="text-[var(--color-text-muted)]">{icon}</span>
-    </button>
-  );
-}
-
 /* ----------------------------------------
    Types
    ---------------------------------------- */
@@ -389,8 +378,8 @@ export default function CatalogInstallPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Catalog', href: '/container/catalog' }, { label: 'Install' }]}

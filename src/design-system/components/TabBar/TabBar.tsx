@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconPlus, IconX, IconMinus, IconSquare } from '@tabler/icons-react';
-import { useIsDesktopWindow } from '@/contexts/DesktopWindowContext';
+import { useIsDesktopWindow, useDesktopWindowControls } from '@/contexts/DesktopWindowContext';
 
 /* ----------------------------------------
    Types
@@ -74,15 +74,19 @@ export const TabBar: React.FC<TabBarProps> = ({
 }) => {
   const navigate = useNavigate();
   const isDesktopWindow = useIsDesktopWindow();
+  const desktopControls = useDesktopWindowControls();
   const effectiveShowWindowControls = showWindowControls && !isDesktopWindow;
+  const showDesktopWindowControls = isDesktopWindow && !!desktopControls;
 
   const handleWindowClose = useCallback(() => {
-    if (onWindowClose) {
+    if (isDesktopWindow && desktopControls) {
+      desktopControls.onClose();
+    } else if (onWindowClose) {
       onWindowClose();
     } else {
       navigate('/');
     }
-  }, [onWindowClose, navigate]);
+  }, [isDesktopWindow, desktopControls, onWindowClose, navigate]);
 
   // Drag and drop state
   const [draggedTabId, setDraggedTabId] = useState<string | null>(null);
@@ -286,10 +290,14 @@ export const TabBar: React.FC<TabBarProps> = ({
         </button>
       )}
 
-      {/* Spacer to push window controls to the right */}
-      <div className="flex-1" />
+      {/* Spacer — draggable in desktop window mode */}
+      <div
+        className="flex-1 h-full"
+        onMouseDown={showDesktopWindowControls ? desktopControls!.onDragStart : undefined}
+        onDoubleClick={showDesktopWindowControls ? desktopControls!.onDoubleClick : undefined}
+      />
 
-      {/* Window Controls */}
+      {/* Window Controls — normal mode */}
       {effectiveShowWindowControls && (
         <div className="flex items-center gap-1 px-2">
           <button
@@ -327,6 +335,60 @@ export const TabBar: React.FC<TabBarProps> = ({
           <button
             type="button"
             onClick={handleWindowClose}
+            className="
+              flex items-center justify-center
+              size-[24px]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Close window"
+          >
+            <IconX size={12} stroke={1} />
+          </button>
+        </div>
+      )}
+
+      {/* Window Controls — desktop window mode (from context) */}
+      {showDesktopWindowControls && (
+        <div className="flex items-center gap-1 px-2">
+          <button
+            type="button"
+            onClick={desktopControls!.onMinimize}
+            className="
+              flex items-center justify-center
+              size-[24px]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Minimize"
+          >
+            <IconMinus size={12} stroke={1} />
+          </button>
+          <button
+            type="button"
+            onClick={desktopControls!.onMaximize}
+            className="
+              flex items-center justify-center
+              size-[24px]
+              rounded-[var(--radius-sm)]
+              text-[var(--color-text-muted)]
+              transition-colors duration-[var(--duration-fast)]
+              hover:bg-[var(--color-surface-subtle)]
+              hover:text-[var(--color-text-default)]
+            "
+            aria-label="Maximize"
+          >
+            <IconSquare size={12} stroke={1} />
+          </button>
+          <button
+            type="button"
+            onClick={desktopControls!.onClose}
             className="
               flex items-center justify-center
               size-[24px]

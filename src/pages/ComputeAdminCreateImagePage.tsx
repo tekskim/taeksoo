@@ -614,7 +614,7 @@ export function ComputeAdminCreateImagePage() {
                       {isV2 ? (
                         <VStack gap={6}>
                           {/* Public block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <RadioGroup value="public" onChange={() => {}}>
                                 <Radio value="public" label="Public" />
@@ -628,7 +628,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           {/* Shared block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <RadioGroup value="shared" onChange={() => {}}>
                                 <Radio value="public" label="Public" />
@@ -686,7 +686,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           {/* Private block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <RadioGroup value="private" onChange={() => {}}>
                                 <Radio value="public" label="Public" />
@@ -770,7 +770,7 @@ export function ComputeAdminCreateImagePage() {
 
                     {/* Protected */}
                     <div className="py-6">
-                      <FormField>
+                      <FormField spacing="loose">
                         <FormField.Label>Protected</FormField.Label>
                         <FormField.Description>
                           Protected images cannot be deleted, preventing accidental removal.
@@ -900,7 +900,7 @@ export function ComputeAdminCreateImagePage() {
                       {isV2 ? (
                         <VStack gap={6}>
                           {/* Upload file block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <Tabs value="file" onChange={() => {}} variant="underline" size="sm">
                                 <TabList>
@@ -924,7 +924,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           {/* File URL block */}
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                          <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                             <VStack gap={3}>
                               <Tabs value="url" onChange={() => {}} variant="underline" size="sm">
                                 <TabList>

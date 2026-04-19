@@ -180,11 +180,6 @@ export function StorageClassDetailPage() {
       onClick: () => console.log('Set as default'),
     },
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/storage-classes/${storageClassId}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () =>

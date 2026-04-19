@@ -604,6 +604,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                                 <button
                                   type="button"
                                   className="flex items-center justify-center p-0 leading-none"
+                                  aria-label={showNewPassword ? 'Hide password' : 'Show password'}
                                   onClick={() => setShowNewPassword(!showNewPassword)}
                                 >
                                   {showNewPassword ? (
@@ -630,6 +631,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                                 <button
                                   type="button"
                                   className="flex items-center justify-center p-0 leading-none"
+                                  aria-label={
+                                    showConfirmPassword ? 'Hide password' : 'Show password'
+                                  }
                                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 >
                                   {showConfirmPassword ? (
@@ -1148,6 +1152,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                   <button
                     type="button"
                     className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                    aria-label={showNewPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowNewPassword(!showNewPassword)}
                   >
                     {showNewPassword ? (
@@ -1184,6 +1189,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                   <button
                     type="button"
                     className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (

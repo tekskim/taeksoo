@@ -9,38 +9,50 @@ import { useTabs } from '@/contexts/TabContext';
    ---------------------------------------- */
 
 const routeLabels: Record<string, string> = {
-  '/compute-admin': 'Home',
+  '/compute-admin': 'Dashboard',
   '/compute-admin/instances': 'Instances',
-  '/compute-admin/instance-templates': 'Instance templates',
-  '/compute-admin/instance-snapshots': 'Instance snapshots',
+  '/compute-admin/instance-templates': 'Instance Templates',
+  '/compute-admin/instance-snapshots': 'Instance Snapshots',
   '/compute-admin/images': 'Images',
   '/compute-admin/flavors': 'Flavors',
-  '/compute-admin/host-aggregates': 'Host aggregates',
-  '/compute-admin/bare-metal-nodes': 'Bare metal nodes',
+  '/compute-admin/server-groups': 'Server Groups',
+  '/compute-admin/host-aggregates': 'Host Aggregates',
+  '/compute-admin/bare-metal-nodes': 'Bare Metal Nodes',
   '/compute-admin/volumes': 'Volumes',
   '/compute-admin/volume-snapshots': 'Volume Snapshots',
-  '/compute-admin/volume-backups': 'Volume backups',
-  '/compute-admin/volume-types': 'Volume types',
+  '/compute-admin/volume-backups': 'Volume Backups',
+  '/compute-admin/volume-types': 'Volume Types',
   '/compute-admin/networks': 'Networks',
+  '/compute-admin/subnets': 'Subnets',
   '/compute-admin/routers': 'Routers',
   '/compute-admin/ports': 'Ports',
   '/compute-admin/floating-ips': 'Floating IPs',
-  '/compute-admin/security-groups': 'Security groups',
-  '/compute-admin/load-balancers': 'Load balancers',
+  '/compute-admin/security-groups': 'Security Groups',
+  '/compute-admin/load-balancers': 'Load Balancers',
+  '/compute-admin/listeners': 'Listeners',
+  '/compute-admin/pools': 'Pools',
+  '/compute-admin/l7-policies': 'L7 Policies',
+  '/compute-admin/certificates': 'Certificates',
+  '/compute-admin/firewall': 'Firewall',
+  '/compute-admin/firewalls': 'Firewalls',
+  '/compute-admin/firewall-policies': 'Firewall Policies',
+  '/compute-admin/firewall-rules': 'Firewall Rules',
+  '/compute-admin/qos-specs': 'QoS Specs',
   '/compute-admin/tenants': 'Tenants',
-  '/compute-admin/metadata-definition': 'Metadata definition',
-  '/compute-admin/monitor-overview': 'Monitor overview',
-  '/compute-admin/physical-nodes': 'Physical nodes',
+  '/compute-admin/metadata-definition': 'Metadata Definitions',
+  '/compute-admin/monitor-overview': 'Monitor Overview',
+  '/compute-admin/physical-nodes': 'Physical Nodes',
+  '/compute-admin/topology': 'Topology',
+  '/compute-admin/console': 'Console',
 };
 
 function getBreadcrumbLabel(path: string): string {
-  // Check for exact match first
   if (routeLabels[path]) {
     return routeLabels[path];
   }
-  // Check for partial match (detail pages)
-  for (const [route, label] of Object.entries(routeLabels)) {
-    if (path.startsWith(route + '/')) {
+  const sortedRoutes = Object.entries(routeLabels).sort((a, b) => b[0].length - a[0].length);
+  for (const [route, label] of sortedRoutes) {
+    if (path.startsWith(`${route}/`)) {
       return label;
     }
   }
@@ -106,8 +118,8 @@ export function ComputeAdminLayout() {
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
+            onBack={() => navigate(-1)}
+            onForward={() => navigate(1)}
             breadcrumb={
               <Breadcrumb items={[{ label: 'Compute Admin' }, { label: currentLabel }]} />
             }

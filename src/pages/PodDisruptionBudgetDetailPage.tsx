@@ -373,7 +373,11 @@ export function PodDisruptionBudgetDetailPage() {
             ]}
             trigger="click"
           >
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+            <button
+              type="button"
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -549,7 +553,7 @@ export function PodDisruptionBudgetDetailPage() {
 
             {/* Budget Tab */}
             <TabPanel value="budget">
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                 <VStack gap={6}>
                   <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                     Budget
@@ -596,7 +600,7 @@ export function PodDisruptionBudgetDetailPage() {
 
             {/* Selector Tab */}
             <TabPanel value="selector">
-              <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
                 <VStack gap={6}>
                   {/* Selectors Section */}
                   <VStack gap={2} className="w-full">
@@ -725,7 +729,7 @@ export function PodDisruptionBudgetDetailPage() {
 
             {/* Labels & Annotations Tab */}
             <TabPanel value="labels-annotations">
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                 <VStack gap={6}>
                   {/* Section Title */}
                   <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">

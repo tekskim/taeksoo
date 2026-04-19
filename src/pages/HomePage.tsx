@@ -25,7 +25,7 @@ function StatCard({ value, label }: StatCardProps) {
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent">
       <div className={`text-heading-h4 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -86,16 +86,29 @@ interface QuickActionCardProps {
   label: string;
   highlighted?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
-function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickActionCardProps) {
+function QuickActionCard({
+  icon,
+  label,
+  highlighted = false,
+  onClick,
+  disabled = false,
+}: QuickActionCardProps) {
   return (
     <button
+      type="button"
+      disabled={disabled}
       onClick={onClick}
-      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 text-left transition-colors hover:bg-[var(--color-surface-muted)] ${
-        highlighted
-          ? 'border-2 border-[var(--color-action-primary)]'
-          : 'border-2 border-transparent hover:border-[var(--color-action-primary)]'
+      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 text-left transition-colors ${
+        disabled
+          ? 'opacity-60 cursor-not-allowed border-2 border-transparent'
+          : `hover:bg-[var(--color-surface-muted)] ${
+              highlighted
+                ? 'border-2 border-[var(--color-action-primary)]'
+                : 'border-2 border-transparent hover:border-[var(--color-action-primary)]'
+            }`
       }`}
     >
       <div className="pb-1">
@@ -181,8 +194,8 @@ export function HomePage() {
         <TopBar
           showSidebarToggle={false}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
           actions={
             <>
@@ -225,12 +238,18 @@ export function HomePage() {
               icon={<IconRobotFace size={20} stroke={1.5} />}
               label="New agent"
               highlighted
+              onClick={() => navigate('/agent/create')}
             />
             <QuickActionCard
               icon={<IconSquarePlus size={20} stroke={1.5} />}
               label="New data source"
+              disabled
             />
-            <QuickActionCard icon={<IconPuzzle size={20} stroke={1.5} />} label="Manage tools" />
+            <QuickActionCard
+              icon={<IconPuzzle size={20} stroke={1.5} />}
+              label="Manage tools"
+              onClick={() => navigate('/mcp-tools')}
+            />
           </div>
         </VStack>
 

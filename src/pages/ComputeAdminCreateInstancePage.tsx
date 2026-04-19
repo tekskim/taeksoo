@@ -36,6 +36,7 @@ import {
   columnMinWidths,
   WizardSectionStatusIcon,
   FormField,
+  Password,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -1070,12 +1071,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1238,7 +1236,7 @@ function ImageSection({
             {isV2 ? (
               <VStack gap={6}>
                 {/* Image block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1319,7 +1317,7 @@ function ImageSection({
                 </div>
 
                 {/* Instance snapshot block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1403,7 +1401,7 @@ function ImageSection({
                 </div>
 
                 {/* Bootable volume block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1669,7 +1667,7 @@ function ImageSection({
 
           {/* System disk Section */}
           <div className="py-6">
-            <FormField required>
+            <FormField required spacing="loose">
               <FormField.Label>System disk</FormField.Label>
               <FormField.Description>
                 Configure whether to create a system disk for booting.
@@ -1685,7 +1683,7 @@ function ImageSection({
 
             {/* Storage Type & Size Row */}
             {createSystemDisk && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
                     <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
@@ -1733,7 +1731,7 @@ function ImageSection({
               {dataDisks.map((disk) => (
                 <div
                   key={disk.id}
-                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2"
+                  className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2"
                 >
                   <HStack gap={6} align="center">
                     <HStack gap={1.5} align="center">
@@ -1987,12 +1985,9 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md"
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && <span className="text-[var(--color-state-warning)]">⚠</span>}
           </HStack>
@@ -3182,8 +3177,6 @@ function AuthenticationSection({
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Validation error
   const [authError, setAuthError] = useState<string | null>(null);
@@ -3360,93 +3353,45 @@ function AuthenticationSection({
                         />
                       </div>
                       <div>
-                        <label className="block text-label-lg mb-2">Password</label>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? 'text' : 'password'}
-                            value={password}
+                        <label
+                          htmlFor="compute-admin-create-instance-password"
+                          className="block text-label-lg mb-2"
+                        >
+                          Password
+                        </label>
+                        <Password
+                          id="compute-admin-create-instance-password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            setAuthError(null);
+                          }}
+                          placeholder="Input password"
+                          fullWidth
+                          showLabel="Show password"
+                          hideLabel="Hide password"
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="compute-admin-create-instance-confirm-password"
+                          className="block text-label-lg mb-2"
+                        >
+                          Confirm Password
+                        </label>
+                        <VStack gap={2}>
+                          <Password
+                            id="compute-admin-create-instance-confirm-password"
+                            value={confirmPassword}
                             onChange={(e) => {
-                              setPassword(e.target.value);
+                              setConfirmPassword(e.target.value);
                               setAuthError(null);
                             }}
                             placeholder="Input password"
                             fullWidth
+                            showLabel="Show confirm password"
+                            hideLabel="Hide confirm password"
                           />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                          >
-                            {showPassword ? (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                                <line x1="1" y1="1" x2="23" y2="23" />
-                              </svg>
-                            ) : (
-                              <svg
-                                className="w-[14px] h-[14px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
-                              </svg>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-label-lg mb-2">Confirm Password</label>
-                        <VStack gap={2}>
-                          <div className="relative">
-                            <Input
-                              type={showConfirmPassword ? 'text' : 'password'}
-                              value={confirmPassword}
-                              onChange={(e) => {
-                                setConfirmPassword(e.target.value);
-                                setAuthError(null);
-                              }}
-                              placeholder="Input password"
-                              fullWidth
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
-                            >
-                              {showConfirmPassword ? (
-                                <svg
-                                  className="w-[14px] h-[14px]"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                >
-                                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                                  <line x1="1" y1="1" x2="23" y2="23" />
-                                </svg>
-                              ) : (
-                                <svg
-                                  className="w-[14px] h-[14px]"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                >
-                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                  <circle cx="12" cy="12" r="3" />
-                                </svg>
-                              )}
-                            </button>
-                          </div>
                           {authError && loginType === 'password' && (
                             <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
                               {authError}
@@ -4525,8 +4470,8 @@ export function ComputeAdminCreateInstancePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

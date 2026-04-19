@@ -686,8 +686,8 @@ export function CreateVolumePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Volumes', href: '/compute/volumes' }, { label: 'Create Volume' }]}
@@ -872,7 +872,7 @@ export function CreateVolumePage() {
                       {(isV2 || sourceType === 'image') && (
                         <VStack gap={3} align="stretch">
                           {/* OS Filter Tabs */}
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-1 inline-flex w-fit">
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-1 inline-flex w-fit">
                             {[
                               { id: 'all', label: 'Others', icon: IconDots },
                               { id: 'ubuntu', label: 'Ubuntu', icon: IconUbuntu },
@@ -886,7 +886,7 @@ export function CreateVolumePage() {
                                   key={tab.id}
                                   onClick={() => setImageOsFilter(tab.id)}
                                   className={`
-                                    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
+                                    inline-flex items-center gap-1.5 px-3 py-2 rounded-[var(--radius-sm)] cursor-pointer text-label-md transition-colors
                                     ${
                                       isSelected
                                         ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)] shadow-sm'

@@ -26,7 +26,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { IconTrash, IconDownload, IconDotsCircleHorizontal } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
@@ -248,6 +248,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminRoutersPage() {
+  const navigate = useNavigate();
   const [selectedRouters, setSelectedRouters] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -450,7 +451,11 @@ export function ComputeAdminRoutersPage() {
             ]}
             trigger="click"
           >
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+            <button
+              type="button"
+              aria-label="Row actions"
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+            >
               <IconDotsCircleHorizontal
                 size={16}
                 stroke={1.5}
@@ -506,8 +511,8 @@ export function ComputeAdminRoutersPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Routers' }]} />}
         />
       }

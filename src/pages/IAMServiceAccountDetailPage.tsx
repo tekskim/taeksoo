@@ -30,7 +30,7 @@ import { EditAPIKeyDrawer } from '@/components/EditAPIKeyDrawer';
 import { RolePoliciesDrawer } from '@/components/RolePoliciesDrawer';
 import { InlineCopyId } from '@/components/InlineCopyId';
 import { useTabs } from '@/contexts/TabContext';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   IconEdit,
   IconTrash,
@@ -263,6 +263,7 @@ function PermissionSubTable({ permissions }: { permissions: PolicyPermission[] }
    ---------------------------------------- */
 
 export function IAMServiceAccountDetailPage() {
+  const navigate = useNavigate();
   const { name } = useParams<{ name: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('credentials');
@@ -372,6 +373,7 @@ export function IAMServiceAccountDetailPage() {
       render: (_value, row) => (
         <ContextMenu items={getApiKeyMenuItems(row)} trigger="click" align="right">
           <button
+            aria-label="Row actions"
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
           >
@@ -405,8 +407,8 @@ export function IAMServiceAccountDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

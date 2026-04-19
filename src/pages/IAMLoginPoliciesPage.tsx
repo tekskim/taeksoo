@@ -248,7 +248,7 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Requirements */}
                       <div className="py-6">
-                        <FormField required>
+                        <FormField required spacing="loose">
                           <FormField.Label>Requirements</FormField.Label>
                           <FormField.Description>
                             Specifies the character types that must be included in the password.
@@ -284,7 +284,7 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Exclusion rules */}
                       <div className="py-6">
-                        <FormField required>
+                        <FormField required spacing="loose">
                           <FormField.Label>Exclusion rules</FormField.Label>
                           <FormField.Description>
                             Defines words or patterns that cannot be used in passwords.
@@ -310,7 +310,7 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Password expiration */}
                       <div className="py-6">
-                        <FormField required>
+                        <FormField required spacing="loose">
                           <FormField.Label>Password expiration</FormField.Label>
                           <FormField.Description>
                             Sets the validity period for passwords. After the specified duration,
@@ -320,7 +320,7 @@ export default function IAMLoginPoliciesPage() {
                             <VStack gap={3}>
                               <Toggle
                                 checked={passwordExpirationEnabled}
-                                onChange={setPasswordExpirationEnabled}
+                                onChange={(e) => setPasswordExpirationEnabled(e.target.checked)}
                                 label={passwordExpirationEnabled ? 'On' : 'Off'}
                               />
                               <HStack gap={2} align="center">
@@ -348,23 +348,19 @@ export default function IAMLoginPoliciesPage() {
                       {/* Prevent password reuse */}
                       <div className="py-6">
                         <VStack gap={6}>
-                          <VStack gap={3}>
-                            <VStack gap={1}>
-                              <span className="text-heading-h6 text-[var(--color-text-default)]">
-                                Prevent password reuse{' '}
-                                <span className="text-[var(--color-state-danger)]">*</span>
-                              </span>
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
-                                Prevents users from reusing previously used passwords.
-                              </p>
-                            </VStack>
-
-                            <Toggle
-                              checked={preventReuseEnabled}
-                              onChange={setPreventReuseEnabled}
-                              label={preventReuseEnabled ? 'On' : 'Off'}
-                            />
-                          </VStack>
+                          <FormField required spacing="loose">
+                            <FormField.Label>Prevent password reuse</FormField.Label>
+                            <FormField.Description>
+                              Prevents users from reusing previously used passwords.
+                            </FormField.Description>
+                            <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                              <Toggle
+                                checked={preventReuseEnabled}
+                                onChange={(e) => setPreventReuseEnabled(e.target.checked)}
+                                label={preventReuseEnabled ? 'On' : 'Off'}
+                              />
+                            </FormField.Control>
+                          </FormField>
 
                           <VStack gap={6}>
                             <FormField>
@@ -469,11 +465,16 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Enable Toggle */}
                       <div className="py-6">
-                        <Toggle
-                          checked={lockoutEnabled}
-                          onChange={(e) => setLockoutEnabled(e.target.checked)}
-                          label={lockoutEnabled ? 'On' : 'Off'}
-                        />
+                        <FormField spacing="loose">
+                          <FormField.Label>Account lockout</FormField.Label>
+                          <FormField.Control className="mt-[var(--primitive-spacing-3)]">
+                            <Toggle
+                              checked={lockoutEnabled}
+                              onChange={(e) => setLockoutEnabled(e.target.checked)}
+                              label={lockoutEnabled ? 'On' : 'Off'}
+                            />
+                          </FormField.Control>
+                        </FormField>
                       </div>
 
                       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -558,7 +559,7 @@ export default function IAMLoginPoliciesPage() {
 
                           {/* Strategy to increase wait time */}
                           <div className="py-6">
-                            <FormField required>
+                            <FormField required spacing="loose">
                               <FormField.Label>Strategy to increase wait time</FormField.Label>
                               <FormField.Description>
                                 Defines how the wait time increases after repeated failed login

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -141,6 +141,7 @@ const l7RuleStatusMap: Record<L7RuleStatus, 'active' | 'building' | 'error'> = {
    ---------------------------------------- */
 
 export default function L7PolicyDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -278,7 +279,10 @@ export default function L7PolicyDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={ruleMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -311,15 +315,15 @@ export default function L7PolicyDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
           onSidebarToggle={openSidebar}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} align="stretch" className="min-w-[1176px]">
+      <VStack gap={6} align="stretch" className="min-w-[1176px]">
         {/* Detail header */}
         <DetailHeader>
           <DetailHeader.Title>{l7Policy.name}</DetailHeader.Title>

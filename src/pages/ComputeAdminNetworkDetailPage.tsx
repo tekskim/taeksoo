@@ -562,7 +562,10 @@ export default function NetworkDetailPage() {
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={subnetMenuItems} trigger="click" align="right">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+              <button
+                aria-label="Row actions"
+                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+              >
                 <IconDotsCircleHorizontal
                   size={16}
                   stroke={1.5}
@@ -639,7 +642,7 @@ export default function NetworkDetailPage() {
               position="top"
               delay={0}
             >
-              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] p-1">
                 {row.attachedTo.type === 'router' ? (
                   <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
@@ -832,14 +835,14 @@ export default function NetworkDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
       contentClassName="pt-4 px-8 pb-20"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* Network Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{network.name}</DetailHeader.Title>

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   VStack,
@@ -131,6 +131,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 export default function ComputeAdminFirewallDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -253,7 +254,7 @@ export default function ComputeAdminFirewallDetailPage() {
             position="top"
             delay={0}
           >
-            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
+            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] p-1">
               {row.attachedToType === 'Router(Interface)' ? (
                 <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
               ) : row.attachedToType === 'Instance' ? (
@@ -342,8 +343,8 @@ export default function ComputeAdminFirewallDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'NACL', href: '/compute-admin/firewall' }, { label: firewall.name }]}
@@ -353,7 +354,7 @@ export default function ComputeAdminFirewallDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{firewall.name}</DetailHeader.Title>

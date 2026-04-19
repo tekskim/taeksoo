@@ -447,7 +447,7 @@ export function ComputeAdminImageDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate('/compute-admin/images')}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
@@ -581,7 +581,7 @@ export function ComputeAdminImageDetailPage() {
             <TabPanel value="metadata" className="pt-0">
               <VStack gap={4} className="pt-4">
                 {/* Metadata Card - matching Figma design */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
                   {/* Title */}
                   <div className="h-8 flex items-center">
                     <span className="text-heading-h5 text-[var(--color-text-default)]">

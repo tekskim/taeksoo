@@ -23,13 +23,12 @@ import {
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
+import { useNavigate } from 'react-router-dom';
 import {
   getNiceScale,
   getAreaGradient,
-  chartColors as baseChartColors,
+  chartColors,
 } from '@/pages/design-system-sections/ChartComponents';
-
-const chartColors = { ...baseChartColors, orange400: '#f97316' };
 
 /* ----------------------------------------
    Mock Data
@@ -641,6 +640,7 @@ function SystemLoadCard() {
    ---------------------------------------- */
 
 export default function ComputeAdminPhysicalNodesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('1h');
@@ -709,8 +709,8 @@ export default function ComputeAdminPhysicalNodesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }

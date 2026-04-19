@@ -204,8 +204,8 @@ export function CloudBuilderCreatePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
@@ -276,9 +276,9 @@ export function CloudBuilderCreatePage() {
                         aria-label={showPassword ? 'Hide password' : 'Show password'}
                       >
                         {showPassword ? (
-                          <IconEyeOff size={14} className="text-[var(--color-text-subtle)]" />
-                        ) : (
                           <IconEye size={14} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconEyeOff size={14} className="text-[var(--color-text-subtle)]" />
                         )}
                       </button>
                     </div>

@@ -24,12 +24,12 @@ export interface ModalProps extends Omit<
   description?: string;
   /** Modal content (children) */
   children?: React.ReactNode;
-  /** Whether to show close button */
-  showCloseButton?: boolean;
   /** Close on backdrop click */
   closeOnBackdropClick?: boolean;
   /** Close on escape key */
   closeOnEscape?: boolean;
+  /** Modal width (design system presets) */
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export interface ConfirmModalProps extends Omit<ModalProps, 'children'> {
@@ -59,9 +59,9 @@ export function Modal({
   title,
   description,
   children,
-  showCloseButton: _showCloseButton = false,
   closeOnBackdropClick = true,
   closeOnEscape = true,
+  size = 'sm',
   className,
   ...rest
 }: ModalProps) {
@@ -121,6 +121,8 @@ export function Modal({
     }
   }, [closeOnBackdropClick, onClose]);
 
+  const sizeWidthClass = size === 'md' ? 'w-[480px]' : size === 'lg' ? 'w-[640px]' : 'w-[400px]';
+
   if (!shouldRender) return null;
 
   const backdropClasses = twMerge(
@@ -140,7 +142,8 @@ export function Modal({
     'flex flex-col gap-4',
     'transition-all duration-200 ease-out',
     isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
-    'w-[344px]',
+    'max-w-[calc(100vw-2rem)]',
+    sizeWidthClass,
     className
   );
 

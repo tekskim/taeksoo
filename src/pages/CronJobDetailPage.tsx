@@ -188,11 +188,6 @@ function JobsTab({ jobs }: JobsTabProps) {
   const createJobMenuItems = (row: JobRow): ContextMenuItem[] => {
     return [
       {
-        id: 'edit-config',
-        label: 'Edit config',
-        onClick: () => navigate(`/container/jobs/${row.id}/edit`),
-      },
-      {
         id: 'edit-yaml',
         label: 'Edit YAML',
         onClick: () => navigate(`/container/jobs/${row.name}/edit-yaml`),
@@ -302,7 +297,10 @@ function JobsTab({ jobs }: JobsTabProps) {
       sticky: 'right',
       render: (_: unknown, row: JobRow) => (
         <ContextMenu items={createJobMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -454,7 +452,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -565,11 +566,6 @@ export function CronJobDetailPage() {
       onClick: () => console.log('Suspend/Resume'),
     },
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/cronjobs/${cronjob.id}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/cronjobs/${cronjob.name}/edit-yaml`),
@@ -608,8 +604,8 @@ export function CronJobDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'CronJobs', href: '/container/cronjobs' }, { label: cronjob.name }]}

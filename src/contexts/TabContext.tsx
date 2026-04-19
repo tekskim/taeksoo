@@ -40,6 +40,7 @@ function getAppFromPath(path: string): string {
 
   const appPrefixes = [
     '/cloudbuilder',
+    '/compute-admin', // must be before /compute — path prefix overlap
     '/compute',
     '/storage',
     '/desktop',
@@ -68,19 +69,20 @@ function getStorageKeys(app: string) {
 // Get default home tab for an app
 function getDefaultHomeTab(app: string): TabItem {
   const appHomeMap: Record<string, { path: string; label: string }> = {
-    '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
-    '/compute': { path: '/compute', label: 'Home' },
-    '/storage': { path: '/storage', label: 'Home' },
-    '/agent': { path: '/agent', label: 'Home' }, // Agent service home
-    '/desktop': { path: '/desktop', label: 'Home' },
-    '/design': { path: '/design', label: 'Home' },
+    '/cloudbuilder': { path: '/cloudbuilder', label: 'Dashboard' },
+    '/compute-admin': { path: '/compute-admin', label: 'Dashboard' },
+    '/compute': { path: '/compute', label: 'Dashboard' },
+    '/storage': { path: '/storage', label: 'Dashboard' },
+    '/agent': { path: '/agent', label: 'Dashboard' }, // Agent service home
+    '/desktop': { path: '/desktop', label: 'Dashboard' },
+    '/design': { path: '/design', label: 'Dashboard' },
     '/container': { path: '/container', label: 'Dashboard' },
     '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
-    '/iam': { path: '/iam', label: 'Home' },
-    '/': { path: '/', label: 'Home' },
+    '/iam': { path: '/iam', label: 'Dashboard' },
+    '/': { path: '/', label: 'Dashboard' },
   };
 
-  const homeInfo = appHomeMap[app] || { path: '/', label: 'Home' };
+  const homeInfo = appHomeMap[app] || { path: '/', label: 'Dashboard' };
   return {
     id: `${app === '/' ? 'home' : app.slice(1)}-home`,
     label: homeInfo.label,
@@ -107,10 +109,11 @@ interface TabProviderProps {
 // Helper function to get label from path - returns the most recent breadcrumb item
 function getLabelFromPath(path: string): string {
   const pathLabelMap: Record<string, string> = {
-    '/': 'Home',
-    '/home': 'Home',
-    '/compute': 'Home',
-    '/compute/home': 'Home',
+    '/': 'Dashboard',
+    '/home': 'Dashboard',
+    '/compute': 'Dashboard',
+    '/compute-admin': 'Dashboard',
+    '/compute/home': 'Dashboard',
     '/compute/instances': 'Instances',
     '/compute/instances/create': 'Create instance',
     '/compute/instance-templates': 'Instance templates',
@@ -131,13 +134,13 @@ function getLabelFromPath(path: string): string {
     '/compute/certificates': 'Certificates',
     '/compute/topology': 'Topology',
     '/compute/console': 'Console',
-    '/agent': 'Home',
+    '/agent': 'Dashboard',
     '/agent/list': 'Agent',
     '/agent/create': 'Create agent',
     '/agent/storage': 'Data sources',
     '/chat': 'Chat',
     '/mcp-tools': 'MCP Tools',
-    '/storage': 'Home',
+    '/storage': 'Dashboard',
     '/storage/osds': 'OSDs',
     '/storage/hosts': 'Hosts',
     '/storage/pools': 'Pools',
@@ -149,7 +152,7 @@ function getLabelFromPath(path: string): string {
     '/container': 'Dashboard',
     '/ai-platform': 'Dashboard',
     '/ai-platform/workloads': 'Workloads',
-    '/iam': 'Home',
+    '/iam': 'Dashboard',
     '/iam/users': 'Users',
     '/iam/users/create': 'Create user',
     '/iam/groups': 'Groups',
@@ -171,7 +174,7 @@ function getLabelFromPath(path: string): string {
 
   // For all other paths, use just the last segment (most recent breadcrumb)
   const segments = path.split('/').filter(Boolean);
-  const lastSegment = segments[segments.length - 1] || 'Home';
+  const lastSegment = segments[segments.length - 1] || 'Dashboard';
   // Format: capitalize first letter and replace hyphens with spaces
   return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
 }
@@ -400,7 +403,7 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       const newTabId = `home-${Date.now()}`;
       const newTab: TabItem = {
         id: newTabId,
-        label: 'Home',
+        label: 'Dashboard',
         path: '/agent',
         closable: true,
       };
@@ -410,20 +413,21 @@ export function TabProvider({ children, defaultTabs = [] }: TabProviderProps) {
       return;
     }
 
-    // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Home으로 통일)
+    // 애플리케이션별 홈 페이지 매핑 (라벨은 모두 Dashboard로 통일)
     const appHomeMap: Record<string, { path: string; label: string }> = {
-      '/cloudbuilder': { path: '/cloudbuilder', label: 'Home' },
-      '/compute': { path: '/compute', label: 'Home' },
-      '/storage': { path: '/storage', label: 'Home' },
-      '/desktop': { path: '/desktop', label: 'Home' },
-      '/design': { path: '/design', label: 'Home' },
+      '/cloudbuilder': { path: '/cloudbuilder', label: 'Dashboard' },
+      '/compute-admin': { path: '/compute-admin', label: 'Dashboard' },
+      '/compute': { path: '/compute', label: 'Dashboard' },
+      '/storage': { path: '/storage', label: 'Dashboard' },
+      '/desktop': { path: '/desktop', label: 'Dashboard' },
+      '/design': { path: '/design', label: 'Dashboard' },
       '/container': { path: '/container', label: 'Dashboard' },
       '/ai-platform': { path: '/ai-platform', label: 'Dashboard' },
-      '/iam': { path: '/iam', label: 'Home' },
+      '/iam': { path: '/iam', label: 'Dashboard' },
     };
 
     // 현재 경로에서 애플리케이션 찾기
-    let targetApp = { path: '/', label: 'Home' };
+    let targetApp = { path: '/', label: 'Dashboard' };
     for (const [prefix, appInfo] of Object.entries(appHomeMap)) {
       if (currentPath.startsWith(prefix)) {
         targetApp = appInfo;

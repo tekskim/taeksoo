@@ -18,6 +18,13 @@ import {
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { chartColors } from '@/pages/design-system-sections/ChartComponents';
+import { useNavigate } from 'react-router-dom';
+
+function resolvedChartColor(cssVar: string, chartFallback: string): string {
+  if (typeof window === 'undefined') return chartFallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return v || chartFallback;
+}
 
 /* ----------------------------------------
    Line Chart Component (Design system Style)
@@ -80,9 +87,9 @@ function LineChart({
   // Get theme-aware colors
   const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
   const splitLineOpacity = isDarkMode ? 1 : 0.5;
-  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
-  const tooltipBorder = isDarkMode ? '#333333' : '#e2e8f0';
-  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+  const tooltipBg = resolvedChartColor('--color-surface-default', '#ffffff');
+  const tooltipBorder = resolvedChartColor('--color-border-default', chartColors.slate100);
+  const tooltipTextColor = resolvedChartColor('--color-text-default', chartColors.slate800);
 
   // Calculate max value for exactly 5 Y-axis labels (4 intervals) with nice numbers
   const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
@@ -505,6 +512,7 @@ interface FullScreenChartData {
 }
 
 export function StorageHomePage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
@@ -581,8 +589,8 @@ export function StorageHomePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
         />
       }

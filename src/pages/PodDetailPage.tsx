@@ -342,7 +342,10 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       sticky: 'right',
       render: (_: unknown, row: ContainerRow) => (
         <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -522,7 +525,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
-          <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          <button
+            aria-label="Row actions"
+            className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+          >
             <IconDotsCircleHorizontal
               size={16}
               className="text-[var(--color-text-subtle)]"
@@ -648,11 +654,6 @@ export function PodDetailPage() {
       onClick: () => handleViewLogs(pod.name),
     },
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/pods/${pod.id}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () => navigate(`/container/pods/${pod.name}/edit-yaml`),
@@ -691,8 +692,8 @@ export function PodDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb items={[{ label: 'Pods', href: '/container/pods' }, { label: pod.name }]} />
           }

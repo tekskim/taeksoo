@@ -83,20 +83,20 @@ const tenantOptions = [
 ];
 
 const mockExternalNetworks: NetworkRow[] = [
-  { id: 'ext-01', name: 'ext-01', subnetCidr: '10.70.62.120/91 +9' },
-  { id: 'ext-02', name: 'ext-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
-  { id: 'ext-03', name: 'ext-03', subnetCidr: '40.068.43.0/4 1 +5' },
-  { id: 'ext-04', name: 'ext-04', subnetCidr: '102.68.19.0/2 3' },
-  { id: 'ext-05', name: 'ext-05', subnetCidr: '102.70.8.0.0/4 8' },
-  { id: 'ext-06', name: 'ext-06', subnetCidr: '10.17.84.01.1/4 8' },
+  { id: 'ext-01', name: 'ext-01', subnetCidr: '10.244.0.0/16' },
+  { id: 'ext-02', name: 'ext-02', subnetCidr: '10.96.0.0/12' },
+  { id: 'ext-03', name: 'ext-03', subnetCidr: '192.168.0.0/16' },
+  { id: 'ext-04', name: 'ext-04', subnetCidr: '172.16.0.0/12' },
+  { id: 'ext-05', name: 'ext-05', subnetCidr: '10.128.0.0/12' },
+  { id: 'ext-06', name: 'ext-06', subnetCidr: '10.10.0.0/16' },
 ];
 
 const mockTenantNetworks: NetworkRow[] = [
-  { id: 'net-01', name: 'net-01', subnetCidr: '10.70.62.120/91 +9' },
-  { id: 'net-02', name: 'net-02', subnetCidr: '102.68.8.0.0/4 0 +5' },
-  { id: 'net-03', name: 'net-03', subnetCidr: '40.068.43.0/4 1 +5' },
-  { id: 'net-04', name: 'net-04', subnetCidr: '102.68.19.0/2 3' },
-  { id: 'net-05', name: 'net-05', subnetCidr: '102.70.8.0.0/4 8' },
+  { id: 'net-01', name: 'net-01', subnetCidr: '10.20.0.0/16' },
+  { id: 'net-02', name: 'net-02', subnetCidr: '10.30.0.0/16' },
+  { id: 'net-03', name: 'net-03', subnetCidr: '192.168.100.0/24' },
+  { id: 'net-04', name: 'net-04', subnetCidr: '172.20.0.0/16' },
+  { id: 'net-05', name: 'net-05', subnetCidr: '10.50.0.0/24' },
 ];
 
 const subnetOptions = [
@@ -477,8 +477,8 @@ export function CreateClusterPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

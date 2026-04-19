@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Badge,
   Button,
@@ -206,6 +206,7 @@ function QuotaSection({
    ---------------------------------------- */
 
 export default function ComputeAdminTenantDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -267,8 +268,8 @@ export default function ComputeAdminTenantDetailPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Tenants', href: '/compute-admin/tenants' }, { label: tenant.name }]}
@@ -278,7 +279,7 @@ export default function ComputeAdminTenantDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-6"
     >
-      <VStack gap={8} className="min-w-[1176px]">
+      <VStack gap={6} className="min-w-[1176px]">
         {/* Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{tenant.name}</DetailHeader.Title>

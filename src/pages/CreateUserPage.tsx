@@ -446,7 +446,7 @@ function PasswordSection({
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                    {showPassword ? <IconEye size={14} /> : <IconEyeOff size={14} />}
                   </button>
                 </div>
               </Tooltip>
@@ -475,7 +475,7 @@ function PasswordSection({
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                    {showConfirmPassword ? <IconEye size={14} /> : <IconEyeOff size={14} />}
                   </button>
                 </div>
               </Tooltip>
@@ -1220,8 +1220,8 @@ export default function CreateUserPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Users', href: '/iam/users' }, { label: 'Create User' }]}

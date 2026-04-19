@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useId,
+  type ReactNode,
+} from 'react';
 import { twMerge } from '../../utils/cn';
 
 /* ----------------------------------------
@@ -10,6 +17,8 @@ interface TabsContextValue {
   setActiveTab: (value: string) => void;
   size: TabSize;
   variant: TabVariant;
+  /** Stable prefix for tab/panel id wiring (accessibility) */
+  baseId: string;
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -116,8 +125,10 @@ export function Tabs({
     onChange?.(newValue);
   };
 
+  const baseId = useId();
+
   return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant }}>
+    <TabsContext.Provider value={{ activeTab, setActiveTab, size, variant, baseId }}>
       <div
         data-figma-name="[TDS] Tabs"
         className={twMerge('flex flex-col h-fit', className)}
@@ -210,9 +221,16 @@ export function TabList({ children, className = '', ...rest }: TabListProps) {
    Tab Component
    ---------------------------------------- */
 
+function tabValueIdSegment(value: string) {
+  return value.replace(/\s+/g, '-');
+}
+
 export function Tab({ value, children, disabled = false, className = '', ...rest }: TabProps) {
-  const { activeTab, setActiveTab, size, variant } = useTabsContext();
+  const { activeTab, setActiveTab, size, variant, baseId } = useTabsContext();
   const isActive = activeTab === value;
+  const idSuffix = tabValueIdSegment(value);
+  const tabDomId = `${baseId}-tab-${idSuffix}`;
+  const panelDomId = `${baseId}-panel-${idSuffix}`;
 
   const sizeStyles = {
     sm: 'text-[length:var(--tabs-font-size-sm)] leading-[var(--tabs-line-height-sm)]',
@@ -225,11 +243,13 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
       <button
         data-figma-name="[TDS] Tabs.Tab"
         {...rest}
+        id={tabDomId}
         role="tab"
         type="button"
         data-tab-value={value}
         tabIndex={isActive ? 0 : -1}
         aria-selected={isActive}
+        aria-controls={panelDomId}
         aria-disabled={disabled}
         disabled={disabled}
         onClick={() => !disabled && setActiveTab(value)}
@@ -273,11 +293,13 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
     <button
       data-figma-name="[TDS] Tabs.Tab"
       {...rest}
+      id={tabDomId}
       role="tab"
       type="button"
       data-tab-value={value}
       tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
+      aria-controls={panelDomId}
       aria-disabled={disabled}
       disabled={disabled}
       onClick={() => !disabled && setActiveTab(value)}
@@ -305,14 +327,19 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
    ---------------------------------------- */
 
 export function TabPanel({ value, children, className = '', ...rest }: TabPanelProps) {
-  const { activeTab } = useTabsContext();
+  const { activeTab, baseId } = useTabsContext();
   const isActive = activeTab === value;
+  const idSuffix = tabValueIdSegment(value);
+  const tabDomId = `${baseId}-tab-${idSuffix}`;
+  const panelDomId = `${baseId}-panel-${idSuffix}`;
 
   return (
     <div
       data-figma-name="[TDS] Tabs.Panel"
       {...rest}
+      id={panelDomId}
       role="tabpanel"
+      aria-labelledby={tabDomId}
       aria-hidden={!isActive}
       className={twMerge('pt-[var(--tabs-panel-padding)]', !isActive && 'hidden', className)}
     >

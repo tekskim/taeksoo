@@ -184,15 +184,15 @@ export function RebuildInstanceDrawer({
       description="Rebuild the instance using a selected image. The root disk will be reinstalled during this process."
       width={696}
       footer={
-        <HStack gap={2} justify="center" className="w-full">
-          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" onClick={handleClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleRebuild}
             disabled={isSubmitting}
-            className="w-[152px] h-8"
+            className="flex-1"
           >
             {isSubmitting ? 'Rebuilding...' : 'Rebuild'}
           </Button>

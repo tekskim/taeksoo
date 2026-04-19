@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   FilterSearchInput,
@@ -137,6 +137,7 @@ const filterFields: FilterField[] = [
 const azFilterFields: FilterField[] = [{ key: 'name', label: 'Name', type: 'text' }];
 
 export function ComputeAdminHostAggregatesPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -271,8 +272,8 @@ export function ComputeAdminHostAggregatesPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Host Aggregates' }]} />}
         />
       }
@@ -411,7 +412,10 @@ export function ComputeAdminHostAggregatesPage() {
                   sticky: 'right',
                   render: (_: unknown, row: HostAggregate) => (
                     <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
-                      <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
+                      <button
+                        aria-label="Row actions"
+                        className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+                      >
                         <IconDotsCircleHorizontal
                           size={16}
                           stroke={1.5}

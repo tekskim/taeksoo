@@ -555,6 +555,8 @@ export function ComputeAdminFlavorDetailPage() {
             items={getInstanceContextMenuItems(row)}
             trigger={
               <button
+                type="button"
+                aria-label="Row actions"
                 className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -591,7 +593,7 @@ export function ComputeAdminFlavorDetailPage() {
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
           onBack={() => navigate(-1)}
-          onForward={() => window.history.forward()}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }
@@ -706,8 +708,8 @@ export function ComputeAdminFlavorDetailPage() {
             {/* Parameters Tab Panel */}
             <TabPanel value="parameters" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
-                  <pre className="font-mono text-body-md leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
+                <div className="bg-[var(--color-surface-muted)] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                  <pre className="font-mono text-body-md leading-[18px] text-[var(--color-text-default)] whitespace-pre">
                     {JSON.stringify(mockFlavorParameters, null, 5)}
                   </pre>
                 </div>

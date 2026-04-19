@@ -26,7 +26,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateSGRuleDrawer } from '@/components/CreateSGRuleDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconTrash, IconDownload } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
@@ -185,6 +185,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminSecurityGroupsPage() {
+  const navigate = useNavigate();
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -415,8 +416,8 @@ export function ComputeAdminSecurityGroupsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Security Groups' }]} />}
         />
       }
@@ -477,6 +478,7 @@ export function ComputeAdminSecurityGroupsPage() {
           selectable
           selectedKeys={selectedGroups}
           onSelectionChange={setSelectedGroups}
+          emptyMessage="No security groups found"
         />
       </VStack>
 

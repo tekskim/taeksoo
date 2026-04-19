@@ -1037,13 +1037,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0} className="min-w-0">
           <HStack gap={1} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <Tooltip content="This image is currently unavailable." position="bottom">
@@ -1114,13 +1110,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0} className="min-w-0">
           <HStack gap={1} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1205,13 +1197,9 @@ function ImageSection({
       render: (value, row) => (
         <VStack gap={0} className="min-w-0">
           <HStack gap={1} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -1646,13 +1634,9 @@ function FlavorSection({
       render: (value, row) => (
         <VStack gap={0} align="start" className="min-w-0">
           <HStack gap={1.5} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
             {row.hasWarning && (
               <Tooltip
@@ -2032,13 +2016,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start" className="min-w-0">
           <HStack gap={1.5} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
             {row.hasWarning && (
               <Tooltip content="This network has no subnets available." position="bottom">
@@ -2116,13 +2096,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start" className="min-w-0">
           <HStack gap={1.5} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -2195,13 +2171,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start" className="min-w-0">
           <HStack gap={1.5} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
@@ -2223,13 +2195,9 @@ function NetworkSection({
       render: (value, row) => (
         <VStack gap={0} align="start" className="min-w-0">
           <HStack gap={1.5} align="center" className="min-w-0">
-            <a
-              href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-label-md truncate"
-              onClick={(e) => e.preventDefault()}
-            >
+            <span className="text-[var(--color-action-primary)] hover:underline text-label-md truncate">
               {value}
-            </a>
+            </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
           </HStack>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
@@ -3242,8 +3210,8 @@ export function CreateTemplatePage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[

@@ -66,20 +66,44 @@ export function ContainerTopBarActions({
           />
         </button>
       </Tooltip>
-      <Tooltip content="Download KubeConfig" position="bottom">
-        <button className={btnClass} aria-label="Download KubeConfig">
-          <IconFile size={16} className={iconClass} stroke={1.5} />
-        </button>
+      <Tooltip content="Coming soon" position="bottom">
+        <span className="inline-flex">
+          <button
+            type="button"
+            className={`${btnClass} opacity-50 cursor-not-allowed`}
+            disabled
+            aria-label="Download KubeConfig"
+            title="Coming soon"
+          >
+            <IconFile size={16} className={iconClass} stroke={1.5} />
+          </button>
+        </span>
       </Tooltip>
-      <Tooltip content="Copy Kubeconfig to clipboard" position="bottom">
-        <button className={btnClass} aria-label="Copy Kubeconfig to clipboard">
-          <IconCopy size={16} className={iconClass} stroke={1.5} />
-        </button>
+      <Tooltip content="Coming soon" position="bottom">
+        <span className="inline-flex">
+          <button
+            type="button"
+            className={`${btnClass} opacity-50 cursor-not-allowed`}
+            disabled
+            aria-label="Copy Kubeconfig to clipboard"
+            title="Coming soon"
+          >
+            <IconCopy size={16} className={iconClass} stroke={1.5} />
+          </button>
+        </span>
       </Tooltip>
-      <Tooltip content="ResourceType search" position="bottom">
-        <button className={btnClass} aria-label="ResourceType search">
-          <IconSearch size={16} className={iconClass} stroke={1.5} />
-        </button>
+      <Tooltip content="Coming soon" position="bottom">
+        <span className="inline-flex">
+          <button
+            type="button"
+            className={`${btnClass} opacity-50 cursor-not-allowed`}
+            disabled
+            aria-label="ResourceType search"
+            title="Coming soon"
+          >
+            <IconSearch size={16} className={iconClass} stroke={1.5} />
+          </button>
+        </span>
       </Tooltip>
 
       <Drawer
@@ -150,9 +174,13 @@ export function ContainerTopBarActions({
                 >
                   Cancel
                 </Button>
-                <Button variant="primary" className="flex-1">
-                  Regenerate token
-                </Button>
+                <Tooltip content="Coming soon" position="bottom">
+                  <span className="inline-flex flex-1 w-full min-w-0">
+                    <Button variant="primary" className="flex-1" disabled title="Coming soon">
+                      Regenerate token
+                    </Button>
+                  </span>
+                </Tooltip>
               </HStack>
             </VStack>
           )}

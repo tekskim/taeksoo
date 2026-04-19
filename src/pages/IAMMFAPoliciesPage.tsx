@@ -245,11 +245,16 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* OTP Enable Toggle */}
                         <div className="py-6">
-                          <Toggle
-                            checked={otpEnabled}
-                            onChange={(e) => setOtpEnabled(e.target.checked)}
-                            label={otpEnabled ? 'On' : 'Off'}
-                          />
+                          <FormField spacing="loose">
+                            <FormField.Label>Enabled</FormField.Label>
+                            <FormField.Control>
+                              <Toggle
+                                checked={otpEnabled}
+                                onChange={(e) => setOtpEnabled(e.target.checked)}
+                                label={otpEnabled ? 'On' : 'Off'}
+                              />
+                            </FormField.Control>
+                          </FormField>
                         </div>
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -281,7 +286,7 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* Reusable Token */}
                         <div className="py-6">
-                          <FormField>
+                          <FormField spacing="loose">
                             <FormField.Label>Reusable token</FormField.Label>
                             <FormField.Description>
                               For security, always keep this disabled. Enabling it may expose the
@@ -362,11 +367,16 @@ export default function IAMMFAPoliciesPage() {
 
                         {/* Email Enable Toggle */}
                         <div className="py-6">
-                          <Toggle
-                            checked={emailEnabled}
-                            onChange={(e) => setEmailEnabled(e.target.checked)}
-                            label={emailEnabled ? 'On' : 'Off'}
-                          />
+                          <FormField spacing="loose">
+                            <FormField.Label>Enabled</FormField.Label>
+                            <FormField.Control>
+                              <Toggle
+                                checked={emailEnabled}
+                                onChange={(e) => setEmailEnabled(e.target.checked)}
+                                label={emailEnabled ? 'On' : 'Off'}
+                              />
+                            </FormField.Control>
+                          </FormField>
                         </div>
 
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />

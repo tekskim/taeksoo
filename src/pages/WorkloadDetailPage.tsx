@@ -31,6 +31,7 @@ import {
   IconAlertCircle,
   IconInfoCircle,
   IconCircleX,
+  IconSettings,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -202,8 +203,8 @@ function ConnectionCard({
       case 'setup-required':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
-            <IconCircleCheck size={16} />
-            Available
+            <IconSettings size={16} />
+            Setup Required
           </span>
         );
       default:
@@ -326,7 +327,7 @@ export function WorkloadDetailPage() {
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={handleTabClose}
-          onTabMove={moveTab}
+          onTabReorder={moveTab}
           showWindowControls={true}
           onWindowClose={() => navigate('/')}
         />
@@ -334,8 +335,8 @@ export function WorkloadDetailPage() {
       topBar={
         <TopBar
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'Pods', href: '/ai-platform/workloads' }, { label: workload.name }]}
@@ -345,7 +346,7 @@ export function WorkloadDetailPage() {
       }
       contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
     >
-      <VStack gap={6} className="min-w-[1176px]">
+      <VStack gap={6}>
         {/* Workload Header Card */}
         <DetailHeader>
           <DetailHeader.Title>{workload.name}</DetailHeader.Title>
@@ -591,15 +592,17 @@ export function WorkloadDetailPage() {
             {/* Terminal Tab Panel */}
             <TabPanel value="terminal" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[#1e1e1e] rounded-lg p-4 font-mono text-body-md text-[#d4d4d4] h-[400px] overflow-auto">
+                <div className="bg-[var(--color-text-default)] rounded-lg p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px] overflow-auto">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#4ec9b0]">root</span>
-                    <span className="text-[#d4d4d4]">@</span>
-                    <span className="text-[#569cd6]">{workload.name}</span>
-                    <span className="text-[#d4d4d4]">:~$</span>
+                    <span className="text-[var(--color-state-success)]">root</span>
+                    <span className="text-[var(--color-text-subtle)]">@</span>
+                    <span className="text-[var(--color-state-info)]">{workload.name}</span>
+                    <span className="text-[var(--color-text-subtle)]">:~$</span>
                     <span className="animate-pulse">▊</span>
                   </div>
-                  <p className="text-[#808080] text-center mt-20">Click to connect to terminal</p>
+                  <p className="text-[var(--color-text-muted)] text-center mt-20">
+                    Terminal not connected
+                  </p>
                 </div>
               </div>
             </TabPanel>

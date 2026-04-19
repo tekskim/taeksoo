@@ -22,6 +22,7 @@ import {
   IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
+import { useNavigate } from 'react-router-dom';
 import {
   ChartWithFullScreen,
   getAreaGradient,
@@ -246,7 +247,7 @@ function GaugeCard({
       {/* Tooltip */}
       {showTooltip && (
         <div
-          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
@@ -671,6 +672,7 @@ function AlarmTrendCard() {
    ---------------------------------------- */
 
 export default function ComputeAdminMonitorOverviewPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sidebarWidth = sidebarOpen ? 200 : 0;
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('1h');
@@ -719,8 +721,8 @@ export default function ComputeAdminMonitorOverviewPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(true)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
       }

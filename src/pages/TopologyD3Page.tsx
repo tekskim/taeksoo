@@ -23,7 +23,7 @@ import {
   IconSearch,
   IconCheck,
 } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Theme Configuration
@@ -1205,17 +1205,12 @@ function LinkText({ value, href }: { value: string; href?: string }) {
   );
 }
 
-// Helper component for view detail link
+// Helper — "View detail" is display-only (no destination in mock topology)
 function ViewDetailLink({ count }: { count: number }) {
   return (
     <span>
       <span className="font-medium">{count}</span>
-      <Link
-        to="#"
-        className="text-[var(--color-action-primary)] hover:underline ml-2 text-label-sm"
-      >
-        View detail
-      </Link>
+      <span className="text-[var(--color-text-subtle)] ml-2 text-label-sm">View detail</span>
     </span>
   );
 }
@@ -1235,9 +1230,7 @@ function ListenersSection({
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[var(--color-text-muted)]">Listeners ({listeners.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
-          View detail
-        </Link>
+        <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
       </div>
     </div>
   );
@@ -1249,9 +1242,7 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[var(--color-text-muted)]">Routers ({routers.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
-          View detail
-        </Link>
+        <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
       </div>
     </div>
   );
@@ -1263,9 +1254,7 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[var(--color-text-muted)]">Subnets ({subnets.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
-          View detail
-        </Link>
+        <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
       </div>
     </div>
   );
@@ -1419,12 +1408,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                     Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
                     total)
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1472,12 +1456,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[var(--color-text-muted)]">
                     Routers ({data.routerList.length})
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1489,12 +1468,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[var(--color-text-muted)]">
                     Instances ({data.instanceList.length})
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1506,12 +1480,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[var(--color-text-muted)]">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
-                  <Link
-                    to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-                  >
-                    View detail
-                  </Link>
+                  <span className="text-[var(--color-text-subtle)] text-label-sm">View detail</span>
                 </div>
               </div>
             )}
@@ -1603,6 +1572,7 @@ interface TooltipState {
    Main Component
    ---------------------------------------- */
 export function TopologyD3Page() {
+  const navigate = useNavigate();
   const svgRef = useRef<SVGSVGElement>(null);
   const minimapRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -3065,8 +3035,8 @@ export function TopologyD3Page() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={openSidebar}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={[{ label: 'Topology' }]} />}
         />
       }

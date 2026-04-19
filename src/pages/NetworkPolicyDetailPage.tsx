@@ -197,11 +197,6 @@ export function NetworkPolicyDetailPage() {
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
-      id: 'edit-config',
-      label: 'Edit config',
-      onClick: () => navigate(`/container/network-policies/${networkPolicyId}/edit`),
-    },
-    {
       id: 'edit-yaml',
       label: 'Edit YAML',
       onClick: () =>
@@ -428,7 +423,7 @@ export function NetworkPolicyDetailPage() {
                 Ingress rules
               </h3>
 
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
                 <HStack gap={0} className="h-full">
                   {/* Rules List (Left Panel) */}
                   <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
@@ -671,7 +666,7 @@ export function NetworkPolicyDetailPage() {
                 Egress rules
               </h3>
 
-              <div className="w-full border border-[var(--color-border-default)] rounded-[8px] overflow-hidden">
+              <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
                 <HStack gap={0} className="h-full">
                   {/* Rules List (Left Panel) */}
                   <div className="w-[100px] border-r border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
@@ -914,7 +909,7 @@ export function NetworkPolicyDetailPage() {
 
           {/* Selectors Tab */}
           <TabPanel value="selectors">
-            <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-4">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4">
               <VStack gap={6}>
                 {/* Selectors Section */}
                 <VStack gap={2} className="w-full">
@@ -1015,7 +1010,7 @@ export function NetworkPolicyDetailPage() {
 
           {/* Labels & Annotations Tab */}
           <TabPanel value="labels-annotations">
-            <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
               <VStack gap={6}>
                 {/* Section Title */}
                 <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">

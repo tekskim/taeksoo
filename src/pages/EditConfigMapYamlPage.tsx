@@ -1,10 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, PageShell } from '@/design-system';
+import {
+  Breadcrumb,
+  Button,
+  HStack,
+  PageShell,
+  TabBar,
+  TopBar,
+  VStack,
+  YamlEditor,
+} from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCopy } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Mock YAML Content (would be fetched from API)
@@ -24,73 +32,6 @@ spec:
 #  finalizers:
 #    - string
 __clone: true`;
-
-/* ----------------------------------------
-   YAML Editor with Line Numbers
-   ---------------------------------------- */
-
-interface YamlEditorProps {
-  value: string;
-  onChange: (value: string) => void;
-  onCopy: () => void;
-}
-
-function YamlEditor({ value, onChange, onCopy }: YamlEditorProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const lineNumbersRef = useRef<HTMLDivElement>(null);
-
-  const lines = value.split('\n');
-  const lineCount = lines.length;
-
-  // Sync scroll between line numbers and textarea
-  const handleScroll = useCallback(() => {
-    if (textareaRef.current && lineNumbersRef.current) {
-      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
-    }
-  }, []);
-
-  return (
-    <div className="flex-1 flex min-h-0 border border-[var(--color-border-default)] rounded-[4px] bg-[var(--color-base-white)] overflow-hidden relative">
-      {/* Line Numbers */}
-      <div
-        ref={lineNumbersRef}
-        className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        <div className="font-mono text-body-md leading-[18px] text-[var(--color-text-subtle)]">
-          {Array.from({ length: lineCount }, (_, i) => (
-            <div key={i + 1}>{i + 1}</div>
-          ))}
-        </div>
-      </div>
-
-      {/* Editor */}
-      <div className="flex-1 min-w-0 overflow-hidden">
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onScroll={handleScroll}
-          className="w-full h-full py-2 px-2.5 pr-12 font-mono text-body-md leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto yaml-editor-scroll"
-          spellCheck={false}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-        />
-      </div>
-
-      {/* Copy Button - Absolute positioned */}
-      <div className="absolute top-2 right-4">
-        <button
-          onClick={onCopy}
-          className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-          title="Copy to clipboard"
-        >
-          <IconCopy size={12} stroke={1.5} />
-        </button>
-      </div>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Main Page Component
@@ -129,16 +70,6 @@ export function EditConfigMapYamlPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 248 : 48;
 
-  // Handle copy to clipboard
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(yamlContent);
-      // Could add a toast notification here
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  }, [yamlContent]);
-
   // Handle read from file
   const handleReadFromFile = useCallback(() => {
     fileInputRef.current?.click();
@@ -160,14 +91,14 @@ export function EditConfigMapYamlPage() {
 
   // Handle cancel
   const handleCancel = useCallback(() => {
-    navigate(`/container/configMaps/${configMapName}`);
+    navigate(`/container/configmaps/${configMapName}`);
   }, [navigate, configMapName]);
 
   // Handle save
   const handleSave = useCallback(() => {
     // TODO: Implement actual configMap update via API
     console.log('Saving configMap YAML:', yamlContent);
-    navigate(`/container/configMaps/${configMapName}`);
+    navigate(`/container/configmaps/${configMapName}`);
   }, [navigate, configMapName, yamlContent]);
 
   return (
@@ -191,8 +122,8 @@ export function EditConfigMapYamlPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -215,7 +146,7 @@ export function EditConfigMapYamlPage() {
         </VStack>
 
         {/* YAML Editor */}
-        <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
+        <YamlEditor value={yamlContent} onChange={setYamlContent} />
 
         {/* Footer */}
         <div className="flex-shrink-0 flex items-center justify-between">

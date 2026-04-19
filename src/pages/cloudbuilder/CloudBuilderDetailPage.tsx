@@ -406,7 +406,7 @@ export function CloudBuilderDetailPage() {
               layout="icon-only"
               size="sm"
             />
-            <span className="text-[12px] text-[var(--color-text-default)]">{r.status}</span>
+            <span className="text-body-md text-[var(--color-text-default)]">{r.status}</span>
           </div>
         ),
       },
@@ -445,8 +445,8 @@ export function CloudBuilderDetailPage() {
         showSidebarToggle={!sidebarOpen}
         onSidebarToggle={openSidebar}
         showNavigation={true}
-        onBack={() => window.history.back()}
-        onForward={() => window.history.forward()}
+        onBack={() => navigate(-1)}
+        onForward={() => navigate(1)}
         breadcrumb={<Breadcrumb items={breadcrumbItems} />}
       />
     ),
@@ -473,17 +473,17 @@ export function CloudBuilderDetailPage() {
         <DetailHeader
           id="tds-DetailHeader"
           data-figma-name="[TDS] DetailPageHeader"
-          aria-label="[TDS] DetailPageHeader"
+          aria-label="Resource detail header"
         >
           <DetailHeader.Title
             data-figma-name="[TDS] DetailPageHeader.Title"
-            aria-label="[TDS] DetailPageHeader.Title"
+            aria-label="Resource name"
           >
             {row?.name ?? `Network Agent #${id}`}
           </DetailHeader.Title>
           <DetailHeader.Actions
             data-figma-name="[TDS] DetailPageHeader.Actions"
-            aria-label="[TDS] DetailPageHeader.Actions"
+            aria-label="Resource actions"
           >
             <Button
               variant="secondary"
@@ -492,7 +492,7 @@ export function CloudBuilderDetailPage() {
                 serviceStatus === 'Disabled' ? <IconPower size={12} /> : <IconBan size={12} />
               }
               data-figma-name="[TDS] Button-EnableDisable"
-              aria-label="[TDS] Button-EnableDisable"
+              aria-label="Enable or disable service"
               onClick={() => {
                 const current = serviceStatus || 'Enabled';
                 const to = current === 'Disabled' ? 'Enabled' : 'Disabled';
@@ -507,19 +507,19 @@ export function CloudBuilderDetailPage() {
           <DetailHeader.InfoGrid
             className="flex-wrap"
             data-figma-name="[TDS] DetailPageHeader.InfoGrid"
-            aria-label="[TDS] DetailPageHeader.InfoGrid"
+            aria-label="Resource summary"
           >
             <DetailHeader.InfoCard
               label="Service State"
               data-figma-name="[TDS] DetailPageHeader.InfoField-ServiceState"
-              aria-label="[TDS] DetailPageHeader.InfoField-ServiceState"
+              aria-label="Service state"
               value={row?.serviceState ?? 'Up'}
               status={(row?.serviceState ?? 'Up') === 'Up' ? 'active' : 'error'}
             />
             <DetailHeader.InfoCard
               label="Service Status"
               data-figma-name="[TDS] DetailPageHeader.InfoField-ServiceStatus"
-              aria-label="[TDS] DetailPageHeader.InfoField-ServiceStatus"
+              aria-label="Service status"
               value={
                 <Badge
                   theme={(serviceStatus || 'Enabled') === 'Enabled' ? 'green' : 'neutral'}
@@ -535,13 +535,13 @@ export function CloudBuilderDetailPage() {
               value={row?.id ?? id}
               copyable
               data-figma-name="[TDS] DetailPageHeader.InfoField-ID"
-              aria-label="[TDS] DetailPageHeader.InfoField-ID"
+              aria-label="Resource identifier"
             />
             <DetailHeader.InfoCard
               label="Created at"
               value={networkAgentMeta?.createdAt ?? '-'}
               data-figma-name="[TDS] DetailPageHeader.InfoField-CreatedAt"
-              aria-label="[TDS] DetailPageHeader.InfoField-CreatedAt"
+              aria-label="Created at"
             />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -549,11 +549,11 @@ export function CloudBuilderDetailPage() {
         <DetailHeader
           id="tds-DetailHeader"
           data-figma-name="[TDS] DetailPageHeader"
-          aria-label="[TDS] DetailPageHeader"
+          aria-label="Resource detail header"
         >
           <DetailHeader.Title
             data-figma-name="[TDS] DetailPageHeader.Title"
-            aria-label="[TDS] DetailPageHeader.Title"
+            aria-label="Resource name"
           >
             {(row as any)?.serial ?? (row as any)?.name ?? `${config.title} #${id}`}
           </DetailHeader.Title>
@@ -587,7 +587,7 @@ export function CloudBuilderDetailPage() {
           )}
           <DetailHeader.InfoGrid
             data-figma-name="[TDS] DetailPageHeader.InfoGrid"
-            aria-label="[TDS] DetailPageHeader.InfoGrid"
+            aria-label="Resource summary"
           >
             {isServer && (
               <DetailHeader.InfoCard
@@ -595,7 +595,7 @@ export function CloudBuilderDetailPage() {
                 value={serverDerived?.uuid ?? '-'}
                 copyable
                 data-figma-name="[TDS] DetailPageHeader.InfoField-UUID"
-                aria-label="[TDS] DetailPageHeader.InfoField-UUID"
+                aria-label="Server UUID"
               />
             )}
             <DetailHeader.InfoCard
@@ -603,13 +603,13 @@ export function CloudBuilderDetailPage() {
               value={isServer ? (serverDerived?.serverId ?? row?.id ?? id) : (row?.id ?? id)}
               copyable
               data-figma-name="[TDS] DetailPageHeader.InfoField-ID"
-              aria-label="[TDS] DetailPageHeader.InfoField-ID"
+              aria-label="Resource identifier"
             />
             {isServer && (
               <DetailHeader.InfoCard
                 label="Role"
                 data-figma-name="[TDS] DetailPageHeader.InfoField-Role"
-                aria-label="[TDS] DetailPageHeader.InfoField-Role"
+                aria-label="Server role"
                 value={renderStatusBadge(columns, 'role', String((row as any)?.role ?? '-') || '-')}
               />
             )}
@@ -617,7 +617,7 @@ export function CloudBuilderDetailPage() {
               <DetailHeader.InfoCard
                 label="Power"
                 data-figma-name="[TDS] DetailPageHeader.InfoField-PowerState"
-                aria-label="[TDS] DetailPageHeader.InfoField-PowerState"
+                aria-label="Power state"
                 value={renderPowerStateBadge(serverDerived?.bmc.powerState ?? '-')}
               />
             )}
@@ -625,7 +625,7 @@ export function CloudBuilderDetailPage() {
               <DetailHeader.InfoCard
                 label="Status"
                 data-figma-name="[TDS] DetailPageHeader.InfoField-Status"
-                aria-label="[TDS] DetailPageHeader.InfoField-Status"
+                aria-label="Server status"
                 value={renderStatusBadge(
                   columns,
                   'status',
@@ -637,7 +637,7 @@ export function CloudBuilderDetailPage() {
               <DetailHeader.InfoCard
                 label="Domain"
                 data-figma-name="[TDS] DetailPageHeader.InfoField-Domain"
-                aria-label="[TDS] DetailPageHeader.InfoField-Domain"
+                aria-label="Domain"
                 value={String((row as any)?.domain ?? '-')}
               />
             )}
@@ -650,24 +650,24 @@ export function CloudBuilderDetailPage() {
           <Tabs
             id="tds-Tabs"
             data-figma-name="[TDS] Tabs"
-            aria-label="[TDS] Tabs"
+            aria-label="Detail sections"
             value={activeDetailTab}
             onChange={(v) => setActiveDetailTab(v as any)}
             variant="underline"
             size="sm"
           >
-            <TabList data-figma-name="[TDS] Tabs.List" aria-label="[TDS] Tabs.List">
+            <TabList data-figma-name="[TDS] Tabs.List" aria-label="Section tabs">
               <Tab
                 value="basic-information"
                 data-figma-name="[TDS] Tabs.Tab-BasicInfo"
-                aria-label="[TDS] Tabs.Tab-BasicInfo"
+                aria-label="Basic information tab"
               >
                 Basic information
               </Tab>
               <Tab
                 value="configuration"
                 data-figma-name="[TDS] Tabs.Tab-Configuration"
-                aria-label="[TDS] Tabs.Tab-Configuration"
+                aria-label="Configuration tab"
               >
                 Configuration
               </Tab>
@@ -677,69 +677,69 @@ export function CloudBuilderDetailPage() {
               value="basic-information"
               className="pt-4"
               data-figma-name="[TDS] Tabs.Panel-BasicInfo"
-              aria-label="[TDS] Tabs.Panel-BasicInfo"
+              aria-label="Basic information panel"
             >
               <SectionCard
                 id="tds-SectionCard-BasicInfo"
                 data-figma-name="[TDS] DetailCard-BasicInfo"
-                aria-label="[TDS] DetailCard-BasicInfo"
+                aria-label="Basic information"
               >
                 <SectionCard.Header
                   title="Basic information"
                   data-figma-name="[TDS] DetailCard.Header-BasicInfo"
-                  aria-label="[TDS] DetailCard.Header-BasicInfo"
+                  aria-label="Basic information heading"
                 />
                 <SectionCard.Content
                   data-figma-name="[TDS] DetailCard.Content-BasicInfo"
-                  aria-label="[TDS] DetailCard.Content-BasicInfo"
+                  aria-label="Basic information details"
                 >
                   <SectionCard.DataRow
                     label="Type"
                     value={row?.type ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-Type"
-                    aria-label="[TDS] DetailCard.Field-Type"
+                    aria-label="Type"
                   />
                   <SectionCard.DataRow
                     label="Host"
                     value={row?.host ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-Host"
-                    aria-label="[TDS] DetailCard.Field-Host"
+                    aria-label="Host"
                   />
                   <SectionCard.DataRow
                     label="Availability zone"
                     value={row?.availabilityZone ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-AvailabilityZone"
-                    aria-label="[TDS] DetailCard.Field-AvailabilityZone"
+                    aria-label="Availability zone"
                   />
                   <SectionCard.DataRow
                     label="Topic"
                     value={networkAgentMeta?.topic ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-Topic"
-                    aria-label="[TDS] DetailCard.Field-Topic"
+                    aria-label="Topic"
                   />
                   <SectionCard.DataRow
                     label="Resources synced"
                     value={networkAgentMeta?.resourcesSynced ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-ResourcesSynced"
-                    aria-label="[TDS] DetailCard.Field-ResourcesSynced"
+                    aria-label="Resources synced"
                   />
                   <SectionCard.DataRow
                     label="Heartbeat timestamp"
                     value={networkAgentMeta?.heartbeatTimestamp ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-HeartbeatTimestamp"
-                    aria-label="[TDS] DetailCard.Field-HeartbeatTimestamp"
+                    aria-label="Heartbeat timestamp"
                   />
                   <SectionCard.DataRow
                     label="Started at"
                     value={networkAgentMeta?.startedAt ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-StartedAt"
-                    aria-label="[TDS] DetailCard.Field-StartedAt"
+                    aria-label="Started at"
                   />
                   <SectionCard.DataRow
                     label="Description"
                     value={networkAgentMeta?.description ?? '-'}
                     data-figma-name="[TDS] DetailCard.Field-Description"
-                    aria-label="[TDS] DetailCard.Field-Description"
+                    aria-label="Description"
                   />
                 </SectionCard.Content>
               </SectionCard>
@@ -749,12 +749,12 @@ export function CloudBuilderDetailPage() {
               value="configuration"
               className="pt-4"
               data-figma-name="[TDS] Tabs.Panel-Configuration"
-              aria-label="[TDS] Tabs.Panel-Configuration"
+              aria-label="Configuration panel"
             >
               <SectionCard
                 id="tds-SectionCard-Config"
                 data-figma-name="[TDS] DetailCard-Config"
-                aria-label="[TDS] DetailCard-Config"
+                aria-label="Configuration"
               >
                 <SectionCard.Header
                   title="Configuration"
@@ -767,14 +767,14 @@ export function CloudBuilderDetailPage() {
                     />
                   }
                   data-figma-name="[TDS] DetailCard.Header-Config"
-                  aria-label="[TDS] DetailCard.Header-Config"
+                  aria-label="Configuration heading"
                 />
                 <SectionCard.Content
                   gap={3}
                   data-figma-name="[TDS] DetailCard.Content-Config"
-                  aria-label="[TDS] DetailCard.Content-Config"
+                  aria-label="Configuration content"
                 >
-                  <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
+                  <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-body-md text-[var(--color-text-default)]">
                     {networkAgentMeta?.configurationText ?? ''}
                   </pre>
                 </SectionCard.Content>
@@ -799,7 +799,7 @@ export function CloudBuilderDetailPage() {
                 : `Change this ${config.title.replace(/s$/, '').toLowerCase()} status to Enabled?`
             }
             data-figma-name="[TDS] ResourceActionModal"
-            aria-label="[TDS] ResourceActionModal"
+            aria-label="Change service status"
           >
             <>
               {nextStatus === 'Disabled' && !!config.statusAction?.requireDisableReason ? (
@@ -853,18 +853,14 @@ export function CloudBuilderDetailPage() {
         <Tabs
           id="tds-Tabs"
           data-figma-name="[TDS] Tabs"
-          aria-label="[TDS] Tabs"
+          aria-label="Detail sections"
           value={activeDetailTab}
           onChange={(v) => setActiveDetailTab(v as any)}
           variant="underline"
           size="sm"
         >
-          <TabList data-figma-name="[TDS] Tabs.List" aria-label="[TDS] Tabs.List">
-            <Tab
-              value="details"
-              data-figma-name="[TDS] Tabs.Tab-Details"
-              aria-label="[TDS] Tabs.Tab-Details"
-            >
+          <TabList data-figma-name="[TDS] Tabs.List" aria-label="Section tabs">
+            <Tab value="details" data-figma-name="[TDS] Tabs.Tab-Details" aria-label="Details tab">
               Details
             </Tab>
           </TabList>
@@ -873,23 +869,23 @@ export function CloudBuilderDetailPage() {
             value="details"
             className="pt-4"
             data-figma-name="[TDS] Tabs.Panel-Details"
-            aria-label="[TDS] Tabs.Panel-Details"
+            aria-label="Details panel"
           >
             {isServer ? (
               <VStack gap={6}>
                 <SectionCard
                   id="tds-SectionCard-BasicInfo"
                   data-figma-name="[TDS] DetailCard-BasicInfo"
-                  aria-label="[TDS] DetailCard-BasicInfo"
+                  aria-label="Basic information"
                 >
                   <SectionCard.Header
                     title="Basic Information"
                     data-figma-name="[TDS] DetailCard.Header-BasicInfo"
-                    aria-label="[TDS] DetailCard.Header-BasicInfo"
+                    aria-label="Basic information heading"
                   />
                   <SectionCard.Content
                     data-figma-name="[TDS] DetailCard.Content-BasicInfo"
-                    aria-label="[TDS] DetailCard.Content-BasicInfo"
+                    aria-label="Basic information details"
                   >
                     <SectionCard.DataRow
                       label="Product name"
@@ -922,16 +918,16 @@ export function CloudBuilderDetailPage() {
                 <SectionCard
                   id="tds-SectionCard-Hardware"
                   data-figma-name="[TDS] DetailCard-Hardware"
-                  aria-label="[TDS] DetailCard-Hardware"
+                  aria-label="Hardware"
                 >
                   <SectionCard.Header
                     title="Hardware"
                     data-figma-name="[TDS] DetailCard.Header-Hardware"
-                    aria-label="[TDS] DetailCard.Header-Hardware"
+                    aria-label="Hardware heading"
                   />
                   <SectionCard.Content
                     data-figma-name="[TDS] DetailCard.Content-Hardware"
-                    aria-label="[TDS] DetailCard.Content-Hardware"
+                    aria-label="Hardware details"
                   >
                     <SectionCard.DataRow
                       label="CPU"
@@ -946,16 +942,16 @@ export function CloudBuilderDetailPage() {
               <SectionCard
                 id="tds-SectionCard-Details"
                 data-figma-name="[TDS] DetailCard-Details"
-                aria-label="[TDS] DetailCard-Details"
+                aria-label="Resource details"
               >
                 <SectionCard.Header
                   title="Details"
                   data-figma-name="[TDS] DetailCard.Header-Details"
-                  aria-label="[TDS] DetailCard.Header-Details"
+                  aria-label="Details heading"
                 />
                 <SectionCard.Content
                   data-figma-name="[TDS] DetailCard.Content-Details"
-                  aria-label="[TDS] DetailCard.Content-Details"
+                  aria-label="Details content"
                 >
                   {columns.map((column, idx) => {
                     const value = String((row as any)?.[column.key] ?? '-') || '-';
@@ -974,7 +970,7 @@ export function CloudBuilderDetailPage() {
                         >
                           <div className="flex flex-col gap-2 w-full max-w-[520px]">
                             <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
-                            <div className="text-[12px] text-[var(--color-text-default)]">
+                            <div className="text-body-md text-[var(--color-text-default)]">
                               {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
                             </div>
                           </div>
@@ -1015,16 +1011,16 @@ export function CloudBuilderDetailPage() {
         <SectionCard
           id="tds-SectionCard-Empty"
           data-figma-name="[TDS] DetailCard-Empty"
-          aria-label="[TDS] DetailCard-Empty"
+          aria-label="No resource data"
         >
           <SectionCard.Header
             title="Details"
             data-figma-name="[TDS] DetailCard.Header-Empty"
-            aria-label="[TDS] DetailCard.Header-Empty"
+            aria-label="Empty state heading"
           />
           <SectionCard.Content
             data-figma-name="[TDS] DetailCard.Content-Empty"
-            aria-label="[TDS] DetailCard.Content-Empty"
+            aria-label="Empty state content"
           >
             <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">
               데이터를 찾을 수 없습니다.
