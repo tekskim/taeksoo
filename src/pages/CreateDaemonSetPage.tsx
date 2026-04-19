@@ -1726,53 +1726,55 @@ export function CreateDaemonSetPage() {
       }
       contentClassName="pt-4 px-8 pb-60"
     >
-      <VStack gap={6}>
-        {/* Page Header */}
-        <VStack gap={1}>
-          <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create DaemonSet
-          </h1>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a DaemonSet to run a copy of a pod on every selected node, ensuring consistent
-            background services or node-level agents across the cluster.
-          </p>
-        </VStack>
+      <VStack gap={4}>
+        {/* Page Header + Tabs */}
+        <VStack gap={3}>
+          <VStack gap={1}>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
+              Create DaemonSet
+            </h1>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Create a DaemonSet to run a copy of a pod on every selected node, ensuring consistent
+              background services or node-level agents across the cluster.
+            </p>
+          </VStack>
 
-        {/* Form Tabs - Outside the row so sidebar aligns with content */}
-        <div className="w-full border-b border-[var(--color-border-default)]">
-          <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
-            <div ref={tabListRef} className="flex items-start pt-3">
-              <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
-                {formTabs.map((tab) => (
-                  <Tab key={tab.id} value={tab.id} className="shrink-0">
-                    <HStack gap={2} align="center" className="min-w-0">
-                      <span className="truncate">{tab.label}</span>
-                      {tab.closable && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeContainerTab(tab.id);
-                          }}
-                          className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
-                        >
-                          <IconX size={12} stroke={1} />
-                        </button>
-                      )}
-                    </HStack>
-                  </Tab>
-                ))}
-              </TabList>
-              <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
-                <button
-                  onClick={addContainerTab}
-                  className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
-                >
-                  <IconPlus size={14} stroke={1} />
-                </button>
+          {/* Form Tabs - Outside the row so sidebar aligns with content */}
+          <div className="w-full border-b border-[var(--color-border-default)]">
+            <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
+              <div ref={tabListRef} className="flex items-start pt-3">
+                <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
+                  {formTabs.map((tab) => (
+                    <Tab key={tab.id} value={tab.id} className="shrink-0">
+                      <HStack gap={2} align="center" className="min-w-0">
+                        <span className="truncate">{tab.label}</span>
+                        {tab.closable && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeContainerTab(tab.id);
+                            }}
+                            className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
+                          >
+                            <IconX size={12} stroke={1} />
+                          </button>
+                        )}
+                      </HStack>
+                    </Tab>
+                  ))}
+                </TabList>
+                <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
+                  <button
+                    onClick={addContainerTab}
+                    className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
+                  >
+                    <IconPlus size={14} stroke={1} />
+                  </button>
+                </div>
               </div>
-            </div>
-          </Tabs>
-        </div>
+            </Tabs>
+          </div>
+        </VStack>
 
         {/* Main Content with Sidebar */}
         <HStack gap={6} className="w-full items-start">
@@ -2624,8 +2626,22 @@ export function CreateDaemonSetPage() {
                           {nodeAffinityTerms.map((term, termIndex) => (
                             <div
                               key={termIndex}
-                              className="border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                              className="relative border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
                             >
+                              <button
+                                onClick={() => {
+                                  setNodeAffinityTerms(
+                                    nodeAffinityTerms.filter((_, i) => i !== termIndex)
+                                  );
+                                }}
+                                className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconX
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
                               <VStack gap={6}>
                                 <VStack gap={6} className="w-full">
                                   <VStack gap={2} className="w-full">
