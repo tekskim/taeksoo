@@ -18,11 +18,12 @@ import {
   PageShell,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
+import { WizardSectionStatusIcon } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import { IconX, IconCheck, IconCirclePlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -153,30 +154,7 @@ interface Metric {
    Summary Status Icon Component
    ---------------------------------------- */
 function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
+  return <WizardSectionStatusIcon status={status} />;
 }
 
 /* ----------------------------------------
@@ -268,16 +246,12 @@ export default function CreateHPAPage() {
   const [maxReplicas, setMaxReplicas] = useState(10);
 
   // Behavior state
-  const [scaleDownBehavior, setScaleDownBehavior] = useState(true);
-  const [scaleDownPolicies, setScaleDownPolicies] = useState<ScalingPolicy[]>([
-    { id: 'initial-sd-policy', type: '', value: 0, periodSeconds: 0 },
-  ]);
+  const [scaleDownBehavior, setScaleDownBehavior] = useState(false);
+  const [scaleDownPolicies, setScaleDownPolicies] = useState<ScalingPolicy[]>([]);
   const [scaleDownSelectPolicy, setScaleDownSelectPolicy] = useState('Max');
   const [scaleDownStabilization, setScaleDownStabilization] = useState(300);
-  const [scaleUpBehavior, setScaleUpBehavior] = useState(true);
-  const [scaleUpPolicies, setScaleUpPolicies] = useState<ScalingPolicy[]>([
-    { id: 'initial-su-policy', type: '', value: 0, periodSeconds: 0 },
-  ]);
+  const [scaleUpBehavior, setScaleUpBehavior] = useState(false);
+  const [scaleUpPolicies, setScaleUpPolicies] = useState<ScalingPolicy[]>([]);
   const [scaleUpSelectPolicy, setScaleUpSelectPolicy] = useState('Max');
   const [scaleUpStabilization, setScaleUpStabilization] = useState(300);
 
@@ -350,9 +324,10 @@ export default function CreateHPAPage() {
     return {
       'basic-info': namespace && name ? 'done' : 'active',
       target: targetReference ? 'done' : 'pre',
-      behavior: 'pre',
+      behavior: scaleDownBehavior || scaleUpBehavior ? 'done' : 'pre',
       metrics: metrics.length > 0 ? 'done' : 'pre',
-      'labels-annotations': 'pre',
+      'labels-annotations':
+        labels.some((l) => l.key) || annotations.some((a) => a.key) ? 'done' : 'pre',
     };
   };
 
@@ -679,10 +654,10 @@ export default function CreateHPAPage() {
 
                     {scaleDownBehavior && (
                       <VStack gap={6} className="mt-1">
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                          <VStack gap={2}>
                             {scaleDownPolicies.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Type <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
@@ -699,7 +674,7 @@ export default function CreateHPAPage() {
                             {scaleDownPolicies.map((policy) => (
                               <div
                                 key={policy.id}
-                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Select
                                   options={SCALING_POLICY_TYPE_OPTIONS}
@@ -777,10 +752,10 @@ export default function CreateHPAPage() {
 
                     {scaleUpBehavior && (
                       <VStack gap={6} className="mt-1">
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-                          <VStack gap={1.5}>
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                          <VStack gap={2}>
                             {scaleUpPolicies.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Type <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
@@ -797,7 +772,7 @@ export default function CreateHPAPage() {
                             {scaleUpPolicies.map((policy) => (
                               <div
                                 key={policy.id}
-                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Select
                                   options={SCALING_POLICY_TYPE_OPTIONS}
@@ -1035,10 +1010,10 @@ export default function CreateHPAPage() {
                               <label className="text-label-lg text-[var(--color-text-default)]">
                                 Metric Selector
                               </label>
-                              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-                                <VStack gap={1.5}>
+                              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                <VStack gap={2}>
                                   {metric.selectors.length > 0 && (
-                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                       <label className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </label>
@@ -1054,7 +1029,7 @@ export default function CreateHPAPage() {
                                   {metric.selectors.map((selector) => (
                                     <div
                                       key={selector.id}
-                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                     >
                                       <Input
                                         placeholder="Input key"
@@ -1158,7 +1133,7 @@ export default function CreateHPAPage() {
                           {labels.length > 0 && (
                             <VStack gap={2} className="w-full">
                               {/* Header row */}
-                              <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Key
                                 </span>
@@ -1170,7 +1145,7 @@ export default function CreateHPAPage() {
                               {labels.map((label) => (
                                 <div
                                   key={label.id}
-                                  className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center"
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
                                 >
                                   <Input
                                     placeholder="e.g. key"
@@ -1225,7 +1200,7 @@ export default function CreateHPAPage() {
                           {annotations.length > 0 && (
                             <VStack gap={2} className="w-full">
                               {/* Header row */}
-                              <div className="grid grid-cols-[1fr_1fr_23px] gap-1">
+                              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
                                 <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
                                   Key
                                 </span>
@@ -1237,7 +1212,7 @@ export default function CreateHPAPage() {
                               {annotations.map((annotation) => (
                                 <div
                                   key={annotation.id}
-                                  className="grid grid-cols-[1fr_1fr_23px] gap-1 items-center"
+                                  className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
                                 >
                                   <Input
                                     placeholder="e.g. key"

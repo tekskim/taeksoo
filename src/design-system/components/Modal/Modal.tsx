@@ -121,7 +121,7 @@ export function Modal({
     }
   }, [closeOnBackdropClick, onClose]);
 
-  const sizeWidthClass = size === 'md' ? 'w-[480px]' : size === 'lg' ? 'w-[640px]' : 'w-[400px]';
+  const sizeWidthClass = size === 'md' ? 'w-[480px]' : size === 'lg' ? 'w-[640px]' : 'w-[360px]';
 
   if (!shouldRender) return null;
 

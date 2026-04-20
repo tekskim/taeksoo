@@ -66,44 +66,20 @@ export function ContainerTopBarActions({
           />
         </button>
       </Tooltip>
-      <Tooltip content="Coming soon" position="bottom">
-        <span className="inline-flex">
-          <button
-            type="button"
-            className={`${btnClass} opacity-50 cursor-not-allowed`}
-            disabled
-            aria-label="Download KubeConfig"
-            title="Coming soon"
-          >
-            <IconFile size={16} className={iconClass} stroke={1.5} />
-          </button>
-        </span>
+      <Tooltip content="Download KubeConfig" position="bottom">
+        <button className={btnClass} aria-label="Download KubeConfig">
+          <IconFile size={16} className={iconClass} stroke={1.5} />
+        </button>
       </Tooltip>
-      <Tooltip content="Coming soon" position="bottom">
-        <span className="inline-flex">
-          <button
-            type="button"
-            className={`${btnClass} opacity-50 cursor-not-allowed`}
-            disabled
-            aria-label="Copy Kubeconfig to clipboard"
-            title="Coming soon"
-          >
-            <IconCopy size={16} className={iconClass} stroke={1.5} />
-          </button>
-        </span>
+      <Tooltip content="Copy KubeConfig to clipboard" position="bottom">
+        <button className={btnClass} aria-label="Copy KubeConfig to clipboard">
+          <IconCopy size={16} className={iconClass} stroke={1.5} />
+        </button>
       </Tooltip>
-      <Tooltip content="Coming soon" position="bottom">
-        <span className="inline-flex">
-          <button
-            type="button"
-            className={`${btnClass} opacity-50 cursor-not-allowed`}
-            disabled
-            aria-label="ResourceType search"
-            title="Coming soon"
-          >
-            <IconSearch size={16} className={iconClass} stroke={1.5} />
-          </button>
-        </span>
+      <Tooltip content="Resource search" position="bottom">
+        <button className={btnClass} aria-label="Resource search">
+          <IconSearch size={16} className={iconClass} stroke={1.5} />
+        </button>
       </Tooltip>
 
       <Drawer

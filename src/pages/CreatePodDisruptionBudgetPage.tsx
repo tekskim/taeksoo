@@ -15,12 +15,13 @@ import {
   Table,
   NumberInput,
   Disclosure,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useIsV2 } from '@/hooks/useIsV2';
 import { useTabs } from '@/contexts/TabContext';
-import { IconCirclePlus, IconX, IconCheck } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -61,30 +62,8 @@ interface Annotation {
    ---------------------------------------- */
 
 function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
+  const mapped = status === 'pending' ? 'pre' : status;
+  return <WizardSectionStatusIcon status={mapped} />;
 }
 
 /* ----------------------------------------

@@ -41,6 +41,7 @@ import {
   IconPlus,
   IconChevronRight,
   IconInfoCircle,
+  IconLock,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -560,6 +561,12 @@ function BasicInfoSection({
    ---------------------------------------- */
 
 interface LabelsAnnotationsSectionProps {
+  title?: string;
+  labelsTitle?: string;
+  labelsDescription?: React.ReactNode;
+  labelsRequired?: boolean;
+  addLabelText?: string;
+  hideAnnotations?: boolean;
   labels: Label[];
   onAddLabel: () => void;
   onRemoveLabel: (index: number) => void;
@@ -571,6 +578,12 @@ interface LabelsAnnotationsSectionProps {
 }
 
 function LabelsAnnotationsSection({
+  title = 'Labels & Annotations',
+  labelsTitle = 'Labels',
+  labelsDescription = 'Specify the labels used to identify and categorize the resource.',
+  labelsRequired = false,
+  addLabelText = 'Add Label',
+  hideAnnotations = false,
   labels,
   onAddLabel,
   onRemoveLabel,
@@ -582,16 +595,17 @@ function LabelsAnnotationsSection({
 }: LabelsAnnotationsSectionProps) {
   return (
     <SectionCard className="pb-4">
-      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Header title={title} />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
           <VStack gap={2}>
             <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the labels used to identify and categorize the resource.
-              </p>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                {labelsTitle}
+                {labelsRequired && <span className="ml-1 text-[var(--color-state-danger)]">*</span>}
+              </span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">{labelsDescription}</p>
             </VStack>
 
             {/* Bordered container for labels */}
@@ -641,7 +655,7 @@ function LabelsAnnotationsSection({
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddLabel}
                   >
-                    Add Label
+                    {addLabelText}
                   </Button>
                 </div>
               </VStack>
@@ -649,67 +663,69 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={2}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the annotations used to provide additional metadata for the resource.
-              </p>
-            </VStack>
-
-            {/* Bordered container for annotations */}
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-              <VStack gap={1.5}>
-                {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div className="w-5" />
-                  </div>
-                )}
-                {annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                  >
-                    <Input
-                      placeholder="annotation key"
-                      value={annotation.key}
-                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="annotation value"
-                      value={annotation.value}
-                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => onRemoveAnnotation(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  </div>
-                ))}
-
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddAnnotation}
-                  >
-                    Add Annotation
-                  </Button>
-                </div>
+          {!hideAnnotations && (
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  Specify the annotations used to provide additional metadata for the resource.
+                </p>
               </VStack>
-            </div>
-          </VStack>
+
+              {/* Bordered container for annotations */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+                <VStack gap={1.5}>
+                  {annotations.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div className="w-5" />
+                    </div>
+                  )}
+                  {annotations.map((annotation, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    >
+                      <Input
+                        placeholder="annotation key"
+                        value={annotation.key}
+                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="annotation value"
+                        value={annotation.value}
+                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveAnnotation(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddAnnotation}
+                    >
+                      Add Annotation
+                    </Button>
+                  </div>
+                </VStack>
+              </div>
+            </VStack>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -876,6 +892,13 @@ export function CreateDaemonSetPage() {
   const [annotations, setAnnotations] = useState<Annotation[]>(
     isV2 ? [{ key: '', value: '' }] : []
   );
+
+  // Selector labels state
+  const [selectorLabels, setSelectorLabels] = useState<Label[]>([
+    { key: 'app', value: 'my-daemonset' },
+    { key: 'tier', value: 'backend' },
+    { key: 'env', value: 'production' },
+  ]);
 
   // Scaling & Upgrade Policy state
   const [strategy, setStrategy] = useState<'rolling-update' | 'on-delete'>('rolling-update');
@@ -1355,6 +1378,27 @@ export function CreateDaemonSetPage() {
     [annotations]
   );
 
+  // Selector label management
+  const addSelectorLabel = useCallback(() => {
+    setSelectorLabels([...selectorLabels, { key: '', value: '' }]);
+  }, [selectorLabels]);
+
+  const removeSelectorLabel = useCallback(
+    (index: number) => {
+      setSelectorLabels(selectorLabels.filter((_, i) => i !== index));
+    },
+    [selectorLabels]
+  );
+
+  const updateSelectorLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...selectorLabels];
+      newLabels[index][field] = value;
+      setSelectorLabels(newLabels);
+    },
+    [selectorLabels]
+  );
+
   // Pod Label management
   const addPodLabel = useCallback(() => {
     setPodLabels([...podLabels, { key: '', value: '' }]);
@@ -1803,6 +1847,30 @@ export function CreateDaemonSetPage() {
                   onRemoveAnnotation={removeAnnotation}
                   onUpdateAnnotation={updateAnnotation}
                 />
+                <LabelsAnnotationsSection
+                  title="Selector labels"
+                  labelsTitle="Match labels"
+                  labelsDescription={
+                    <>
+                      These labels are written to{' '}
+                      <code className="font-[var(--font-mono)] text-body-md">
+                        spec.selector.matchLabels
+                      </code>{' '}
+                      and are always merged into the pod template labels when you save.
+                    </>
+                  }
+                  labelsRequired
+                  addLabelText="Add selector"
+                  hideAnnotations
+                  labels={selectorLabels}
+                  onAddLabel={addSelectorLabel}
+                  onRemoveLabel={removeSelectorLabel}
+                  onUpdateLabel={updateSelectorLabel}
+                  annotations={annotations}
+                  onAddAnnotation={addAnnotation}
+                  onRemoveAnnotation={removeAnnotation}
+                  onUpdateAnnotation={updateAnnotation}
+                />
                 <ScalingPolicySection
                   strategy={strategy}
                   onStrategyChange={setStrategy}
@@ -1833,14 +1901,15 @@ export function CreateDaemonSetPage() {
                             Labels
                           </span>
                           <p className="text-body-md text-[var(--color-text-subtle)]">
-                            Specify the labels used to identify and categorize the resource.
+                            Specify the labels for pod. Entries synced from matchLabels are
+                            read-only and cannot be modified or removed.
                           </p>
                         </VStack>
 
                         {/* Labels container */}
                         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
-                            {podLabels.length > 0 && (
+                            {(selectorLabels.length > 0 || podLabels.length > 0) && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
@@ -1851,6 +1920,22 @@ export function CreateDaemonSetPage() {
                                 <div className="w-5" />
                               </div>
                             )}
+                            {selectorLabels.map((label, index) => (
+                              <div
+                                key={`selector-${index}`}
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                              >
+                                <Input value={label.key} disabled fullWidth />
+                                <Input value={label.value} disabled fullWidth />
+                                <div className="size-5 flex items-center justify-center">
+                                  <IconLock
+                                    size={14}
+                                    className="text-[var(--color-text-disabled)]"
+                                    stroke={1.5}
+                                  />
+                                </div>
+                              </div>
+                            ))}
                             {podLabels.map((label, index) => (
                               <div
                                 key={index}
@@ -4569,6 +4654,217 @@ export function CreateDaemonSetPage() {
                       </SectionCard.Content>
                     </SectionCard>
 
+                    {/* 2a-2. Networking Section */}
+                    <SectionCard className="pb-4">
+                      <SectionCard.Header
+                        title="Networking"
+                        description="Define a Service to expose the container, or define a non-Kubernetes network port that the new service will run when the app on the container is expected to run."
+                      />
+                      <SectionCard.Content>
+                        <VStack gap={4}>
+                          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+                            <VStack gap={3} className="w-full">
+                              {config.ports.map((port, portIdx) => {
+                                const showListeningPort =
+                                  port.serviceType === 'NodePort' ||
+                                  port.serviceType === 'LoadBalancer';
+                                return (
+                                  <div
+                                    key={port.id}
+                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
+                                  >
+                                    <VStack gap={2}>
+                                      <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Service Type
+                                        </span>
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Name
+                                        </span>
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Private Container Port
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            const newPorts = config.ports.filter(
+                                              (_, i) => i !== portIdx
+                                            );
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          className="flex size-5 items-center justify-center rounded transition-colors hover:bg-[var(--color-surface-muted)] ml-auto"
+                                          aria-label="Remove port"
+                                        >
+                                          <IconX
+                                            size={14}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                        <Select
+                                          options={[
+                                            {
+                                              value: 'DoNotCreate',
+                                              label: 'Do not create a service',
+                                            },
+                                            { value: 'ClusterIP', label: 'Cluster IP' },
+                                            { value: 'NodePort', label: 'Node Port' },
+                                            { value: 'LoadBalancer', label: 'Load Balancer' },
+                                          ]}
+                                          value={port.serviceType}
+                                          onChange={(val) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              serviceType: val,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder=""
+                                          value={port.name}
+                                          onChange={(e) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              name: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder="e.g. 8080"
+                                          value={port.containerPort}
+                                          onChange={(e) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              containerPort: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                        <div />
+                                      </div>
+
+                                      <div
+                                        className={`grid ${showListeningPort ? 'grid-cols-[1fr_1fr_1fr_1fr_20px]' : 'grid-cols-[1fr_1fr_1fr_20px]'} gap-2 w-full`}
+                                      >
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Protocol
+                                        </span>
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Public Host Port
+                                        </span>
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
+                                          Host IP
+                                        </span>
+                                        {showListeningPort && (
+                                          <span className="text-label-sm text-[var(--color-text-default)]">
+                                            Listening Port
+                                          </span>
+                                        )}
+                                        <div />
+                                        <Select
+                                          options={[
+                                            { value: 'TCP', label: 'TCP' },
+                                            { value: 'UDP', label: 'UDP' },
+                                            { value: 'SCTP', label: 'SCTP' },
+                                          ]}
+                                          value={port.protocol}
+                                          onChange={(val) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              protocol: val,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder="e.g. 80"
+                                          value={port.hostPort}
+                                          onChange={(e) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              hostPort: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder="e.g. 1111"
+                                          value={port.hostIP}
+                                          onChange={(e) => {
+                                            const newPorts = [...config.ports];
+                                            newPorts[portIdx] = {
+                                              ...newPorts[portIdx],
+                                              hostIP: e.target.value,
+                                            };
+                                            updateContainerConfig(containerId, { ports: newPorts });
+                                          }}
+                                          fullWidth
+                                        />
+                                        {showListeningPort && (
+                                          <Input
+                                            placeholder="e.g. 30080"
+                                            value={port.listeningPort}
+                                            onChange={(e) => {
+                                              const newPorts = [...config.ports];
+                                              newPorts[portIdx] = {
+                                                ...newPorts[portIdx],
+                                                listeningPort: e.target.value,
+                                              };
+                                              updateContainerConfig(containerId, {
+                                                ports: newPorts,
+                                              });
+                                            }}
+                                            fullWidth
+                                          />
+                                        )}
+                                        <div />
+                                      </div>
+                                    </VStack>
+                                  </div>
+                                );
+                              })}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={() => {
+                                    const newPort = {
+                                      id: crypto.randomUUID(),
+                                      serviceType: 'DoNotCreate',
+                                      name: '',
+                                      containerPort: '',
+                                      protocol: 'TCP',
+                                      hostPort: '',
+                                      hostIP: '',
+                                      listeningPort: '',
+                                    };
+                                    updateContainerConfig(containerId, {
+                                      ports: [...config.ports, newPort],
+                                    });
+                                  }}
+                                >
+                                  Add Port or Service
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
+                        </VStack>
+                      </SectionCard.Content>
+                    </SectionCard>
+
                     {/* 2b. Command Section */}
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Command" />
@@ -6983,7 +7279,6 @@ export function CreateDaemonSetPage() {
                                             <div className="flex items-center whitespace-nowrap">
                                               <Checkbox
                                                 label="Read Only"
-                                                className="[&>label]:flex-row-reverse"
                                                 checked={mount.readOnly || false}
                                                 onChange={(e) => {
                                                   const newVolumes = [

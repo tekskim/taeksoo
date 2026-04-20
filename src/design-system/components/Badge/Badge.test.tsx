@@ -53,7 +53,7 @@ describe('Badge', () => {
       render(<Badge theme="blue">Solid</Badge>);
       const badge = screen.getByText('Solid');
       expect(badge).toHaveClass('bg-[var(--color-state-info)]');
-      expect(badge).toHaveClass('text-white');
+      expect(badge).toHaveClass('text-[var(--color-text-on-primary)]');
     });
 
     it('applies subtle type', () => {

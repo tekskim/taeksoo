@@ -1209,9 +1209,6 @@ export function ComputeAdminInstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-2 min-w-0">
-          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-            <img src={containerIcon} alt="Container" className="w-4 h-4" />
-          </div>
           <div className="flex flex-col gap-0.5 min-w-0">
             <Link
               to={`/compute-admin/instances/${row.id}`}
@@ -1226,6 +1223,9 @@ export function ComputeAdminInstanceListPage() {
               </span>
               <InlineCopyId value={row.id} />
             </span>
+          </div>
+          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ml-auto">
+            <img src={containerIcon} alt="Container" className="w-4 h-4" />
           </div>
         </div>
       ),
