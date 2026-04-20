@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
   DatePicker,
@@ -16,7 +16,7 @@ import {
   VStack,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
-import { IconCalendar, IconExternalLink, IconX } from '@tabler/icons-react';
+import { IconCalendar, IconExternalLink } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 const mockUsers = [
@@ -111,7 +111,10 @@ function ScheduleDateButton({
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (containerRef.current && !containerRef.current.contains(target)) {
+        const el = target instanceof Element ? target : target.parentElement;
+        if (el?.closest('[role="listbox"]')) return;
         setOpen(false);
       }
     };
@@ -119,37 +122,20 @@ function ScheduleDateButton({
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
-  const handleClear = useCallback(() => {
-    onChange(null);
-    setOpen(false);
-  }, [onChange]);
-
   return (
-    <div ref={containerRef} className="relative w-fit">
-      {value ? (
-        <div className="monitoring-toolbar-period-tag">
-          <span className="monitoring-toolbar-period-tag-text" onClick={() => setOpen((p) => !p)}>
-            {formatDateTag(value)}
-          </span>
-          <button
-            type="button"
-            className="monitoring-toolbar-period-tag-close"
-            onClick={handleClear}
-            aria-label="Clear date"
-          >
-            <IconX size={12} />
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className={`monitoring-toolbar-period-btn ${open ? 'monitoring-toolbar-period-btn-active' : ''}`}
-          onClick={() => setOpen((p) => !p)}
+    <div ref={containerRef} className="relative w-full">
+      <button
+        type="button"
+        className={`flex items-center gap-2 w-full h-[var(--input-height-md)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border rounded-[var(--input-radius)] text-body-md cursor-pointer transition-colors ${value ? 'border-[var(--color-border-focus)]' : open ? 'border-[var(--color-border-focus)]' : 'border-[var(--color-border-strong)] hover:border-[var(--color-border-focus)]'}`}
+        onClick={() => setOpen((p) => !p)}
+      >
+        <IconCalendar size={14} stroke={1.5} className="shrink-0 text-[var(--color-text-subtle)]" />
+        <span
+          className={value ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}
         >
-          <IconCalendar size={12} stroke={2} />
-          <span>Period</span>
-        </button>
-      )}
+          {value ? formatDateTag(value) : 'Select date and time'}
+        </span>
+      </button>
 
       {open && (
         <div className="absolute top-full left-0 mt-2 z-50">

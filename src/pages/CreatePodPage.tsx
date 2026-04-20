@@ -553,7 +553,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -566,7 +566,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="label key"
@@ -615,7 +615,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -628,7 +628,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="annotation key"
@@ -1733,53 +1733,55 @@ export function CreatePodPage() {
       }
       contentClassName="pt-4 px-8 pb-60"
     >
-      <VStack gap={6}>
-        {/* Page Header */}
-        <VStack gap={1}>
-          <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create pod
-          </h1>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a Pod to run one or more containers as the smallest deployable unit in
-            Kubernetes.
-          </p>
-        </VStack>
+      <VStack gap={4}>
+        {/* Page Header + Tabs */}
+        <VStack gap={3}>
+          <VStack gap={1}>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
+              Create pod
+            </h1>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Create a Pod to run one or more containers as the smallest deployable unit in
+              Kubernetes.
+            </p>
+          </VStack>
 
-        {/* Form Tabs - Outside the row so sidebar aligns with content */}
-        <div className="w-full border-b border-[var(--color-border-default)]">
-          <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
-            <div ref={tabListRef} className="flex items-start pt-3">
-              <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
-                {formTabs.map((tab) => (
-                  <Tab key={tab.id} value={tab.id} className="shrink-0">
-                    <HStack gap={2} align="center" className="min-w-0">
-                      <span className="truncate">{tab.label}</span>
-                      {tab.closable && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeContainerTab(tab.id);
-                          }}
-                          className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
-                        >
-                          <IconX size={12} stroke={1} />
-                        </button>
-                      )}
-                    </HStack>
-                  </Tab>
-                ))}
-              </TabList>
-              <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
-                <button
-                  onClick={addContainerTab}
-                  className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
-                >
-                  <IconPlus size={14} stroke={1} />
-                </button>
+          {/* Form Tabs - Outside the row so sidebar aligns with content */}
+          <div className="w-full border-b border-[var(--color-border-default)]">
+            <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
+              <div ref={tabListRef} className="flex items-start pt-3">
+                <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
+                  {formTabs.map((tab) => (
+                    <Tab key={tab.id} value={tab.id} className="shrink-0">
+                      <HStack gap={2} align="center" className="min-w-0">
+                        <span className="truncate">{tab.label}</span>
+                        {tab.closable && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeContainerTab(tab.id);
+                            }}
+                            className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
+                          >
+                            <IconX size={12} stroke={1} />
+                          </button>
+                        )}
+                      </HStack>
+                    </Tab>
+                  ))}
+                </TabList>
+                <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
+                  <button
+                    onClick={addContainerTab}
+                    className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
+                  >
+                    <IconPlus size={14} stroke={1} />
+                  </button>
+                </div>
               </div>
-            </div>
-          </Tabs>
-        </div>
+            </Tabs>
+          </div>
+        </VStack>
 
         {/* Main Content with Sidebar */}
         <HStack gap={6} className="w-full items-start">
@@ -1819,7 +1821,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1832,7 +1834,7 @@ export function CreatePodPage() {
                             {podLabels.map((label, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="label key"
@@ -1889,7 +1891,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1902,7 +1904,7 @@ export function CreatePodPage() {
                             {podAnnotations.map((annotation, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="annotation key"
@@ -2089,7 +2091,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {nameservers.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
@@ -2104,7 +2106,7 @@ export function CreatePodPage() {
                             {nameservers.map((ns, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 8.8.8.8"
@@ -2148,7 +2150,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
@@ -2163,7 +2165,7 @@ export function CreatePodPage() {
                             {searchDomains.map((sd, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. example.com"
@@ -2207,7 +2209,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
@@ -2230,7 +2232,7 @@ export function CreatePodPage() {
                             {resolverOptions.map((opt, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="input name"
@@ -2284,7 +2286,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
@@ -2307,7 +2309,7 @@ export function CreatePodPage() {
                             {hostAliases.map((alias, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 127.0.0.1"
@@ -2478,7 +2480,7 @@ export function CreatePodPage() {
                                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
@@ -2494,7 +2496,7 @@ export function CreatePodPage() {
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2713,7 +2715,7 @@ export function CreatePodPage() {
                                         Match Expressions
                                       </span>
                                       {term.matchExpressions.length > 0 && (
-                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
+                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
                                           <span className="block text-label-sm text-[var(--color-text-default)]">
                                             Key
                                           </span>
@@ -2729,7 +2731,7 @@ export function CreatePodPage() {
                                       {term.matchExpressions.map((expr, exprIndex) => (
                                         <div
                                           key={exprIndex}
-                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. kubernetes.io/os"
@@ -3086,7 +3088,7 @@ export function CreatePodPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full">
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
@@ -3102,7 +3104,7 @@ export function CreatePodPage() {
                                 {term.matchExpressions.map((expr, exprIndex) => (
                                   <div
                                     key={exprIndex}
-                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full items-center"
+                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
                                   >
                                     <Input
                                       placeholder="Input key"
@@ -3316,7 +3318,7 @@ export function CreatePodPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -3338,7 +3340,7 @@ export function CreatePodPage() {
                             {tolerations.map((toleration, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="Key"
@@ -4307,7 +4309,7 @@ export function CreatePodPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
@@ -4321,7 +4323,7 @@ export function CreatePodPage() {
                                   (header: { name: string; value: string }, index: number) => (
                                     <div
                                       key={index}
-                                      className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                     >
                                       <Input
                                         placeholder="e.g. X-Custom-Header"
@@ -5260,7 +5262,7 @@ export function CreatePodPage() {
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5278,7 +5280,7 @@ export function CreatePodPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -5518,7 +5520,7 @@ export function CreatePodPage() {
                                     <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5536,7 +5538,7 @@ export function CreatePodPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -6029,7 +6031,7 @@ export function CreatePodPage() {
                                         <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
-                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                               <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </label>
@@ -6043,7 +6045,7 @@ export function CreatePodPage() {
                                             (header, index) => (
                                               <div
                                                 key={index}
-                                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="Input name"
@@ -7107,7 +7109,7 @@ export function CreatePodPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -7143,7 +7145,7 @@ export function CreatePodPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""

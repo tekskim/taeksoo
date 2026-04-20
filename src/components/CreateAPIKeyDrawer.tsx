@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Drawer, Button, Input, Select, Toggle, FormField, DatePicker } from '@/design-system';
+import { useState, useEffect, useRef } from 'react';
+import { Drawer, Button, Textarea, Select, Toggle, FormField, DatePicker } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconCalendar, IconX } from '@tabler/icons-react';
+import { IconCalendar } from '@tabler/icons-react';
 
 export interface CreateAPIKeyDrawerProps {
   isOpen: boolean;
@@ -46,7 +46,10 @@ function CustomDatePicker({
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (containerRef.current && !containerRef.current.contains(target)) {
+        const el = target instanceof Element ? target : target.parentElement;
+        if (el?.closest('[role="listbox"]')) return;
         setOpen(false);
       }
     };
@@ -54,37 +57,20 @@ function CustomDatePicker({
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
-  const handleClear = useCallback(() => {
-    onChange(null);
-    setOpen(false);
-  }, [onChange]);
-
   return (
-    <div ref={containerRef} className="relative w-fit">
-      {value ? (
-        <div className="monitoring-toolbar-period-tag">
-          <span className="monitoring-toolbar-period-tag-text" onClick={() => setOpen((p) => !p)}>
-            {formatDateTag(value)}
-          </span>
-          <button
-            type="button"
-            className="monitoring-toolbar-period-tag-close"
-            onClick={handleClear}
-            aria-label="Clear date"
-          >
-            <IconX size={12} />
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className={`monitoring-toolbar-period-btn ${open ? 'monitoring-toolbar-period-btn-active' : ''}`}
-          onClick={() => setOpen((p) => !p)}
+    <div ref={containerRef} className="relative w-full">
+      <button
+        type="button"
+        className={`flex items-center gap-2 w-full h-[var(--input-height-md)] px-[var(--input-padding-x)] bg-[var(--color-surface-default)] border rounded-[var(--input-radius)] text-body-md cursor-pointer transition-colors ${value ? 'border-[var(--color-border-focus)]' : open ? 'border-[var(--color-border-focus)]' : 'border-[var(--color-border-strong)] hover:border-[var(--color-border-focus)]'}`}
+        onClick={() => setOpen((p) => !p)}
+      >
+        <IconCalendar size={14} stroke={1.5} className="shrink-0 text-[var(--color-text-subtle)]" />
+        <span
+          className={value ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}
         >
-          <IconCalendar size={12} stroke={2} />
-          <span>Selection expiration date</span>
-        </button>
-      )}
+          {value ? formatDateTag(value) : 'Select expiration date'}
+        </span>
+      </button>
 
       {open && (
         <div className="absolute top-full left-0 mt-2 z-50">
@@ -150,10 +136,11 @@ export function CreateAPIKeyDrawer({ isOpen, onClose, onSubmit }: CreateAPIKeyDr
           label="Description"
           helperText="You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters."
         >
-          <Input
+          <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter description"
+            maxLength={255}
             fullWidth
           />
         </FormField>

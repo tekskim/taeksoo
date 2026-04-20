@@ -35,3 +35,8 @@ storybook-static
 
 # npm auth token
 .npmrc
+
+# Environment variables
+.env
+.env.*
+!.env.example

@@ -1511,6 +1511,7 @@ export function InstanceListPage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
           <button
@@ -1678,6 +1679,7 @@ export function InstanceListPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div
           className="flex items-center justify-center w-full"

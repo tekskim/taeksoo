@@ -133,7 +133,10 @@ export const MonitoringToolbar: React.FC<MonitoringToolbarProps> = ({
   // Close date picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (datePickerRef.current && !datePickerRef.current.contains(target)) {
+        const el = target instanceof Element ? target : target.parentElement;
+        if (el?.closest('[role="listbox"]')) return;
         setShowDatePicker(false);
       }
     };

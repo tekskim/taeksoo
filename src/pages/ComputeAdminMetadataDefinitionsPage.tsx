@@ -208,6 +208,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
       label: 'Action',
       width: fixedColumns.action,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getMetadataMenuItems(row)} trigger="click" align="right">

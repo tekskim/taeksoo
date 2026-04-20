@@ -18,7 +18,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { IconSearch } from '@tabler/icons-react';
 import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
-/** Resolved for ECharts pie slices; matches --chart-color-2 / --chart-color-7 / border-default. */
 function resolvedChartColor(cssVar: string, chartFallback: string): string {
   if (typeof window === 'undefined') return chartFallback;
   const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
@@ -292,7 +291,7 @@ export function IAMHomePage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'IAM' }, { label: 'Home' }]} />}
           actions={
             <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
               <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

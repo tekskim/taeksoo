@@ -397,6 +397,7 @@ export default function PortDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: FixedIP) => {
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -429,6 +430,7 @@ export default function PortDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: AllowedAddressPair) => {
         return (
           <div onClick={(e) => e.stopPropagation()}>

@@ -541,6 +541,7 @@ export default function IAMRoleDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={getPolicyContextMenuItems(row.id, row.type === 'Built-in')}
@@ -623,6 +624,7 @@ export default function IAMRoleDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center' as const,
+      sticky: 'right',
       render: (_value, row) => (
         <ContextMenu
           items={[

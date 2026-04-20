@@ -461,6 +461,7 @@ export function VolumeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center">
           <ContextMenu items={getSnapshotContextMenuItems(row)} trigger="click" align="right">
@@ -544,6 +545,7 @@ export function VolumeDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="flex items-center justify-center">
           <ContextMenu items={getBackupContextMenuItems(row)} trigger="click" align="right">

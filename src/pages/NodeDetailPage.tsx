@@ -741,6 +741,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: () => (
         <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
           <IconDotsCircleHorizontal

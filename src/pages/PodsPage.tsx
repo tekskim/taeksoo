@@ -344,6 +344,7 @@ export function PodsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">

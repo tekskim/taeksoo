@@ -136,7 +136,10 @@ function DatePickerTrigger() {
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (containerRef.current && !containerRef.current.contains(target)) {
+        const el = target instanceof Element ? target : target.parentElement;
+        if (el?.closest('[role="listbox"]')) return;
         setOpen(false);
       }
     };

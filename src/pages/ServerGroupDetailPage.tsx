@@ -381,6 +381,7 @@ export function ServerGroupDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
           <button

@@ -548,6 +548,7 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Subnet) => {
         const subnetMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit subnet', row.id) },
@@ -743,6 +744,7 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button
@@ -796,6 +798,7 @@ export default function NetworkDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: DhcpAgent) => (
         <div onClick={(e) => e.stopPropagation()}>
           <button

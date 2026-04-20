@@ -139,7 +139,7 @@ export function EditLimitRangeYamlPage() {
     >
       <VStack gap={6} className="flex-1 min-h-0">
         {/* Header */}
-        <VStack gap={2} className="flex-shrink-0">
+        <VStack gap={1} className="flex-shrink-0">
           <h1 className="text-heading-h5 text-[var(--color-text-default)]">
             LimitRange: {limitRangeName}
           </h1>
@@ -149,7 +149,7 @@ export function EditLimitRangeYamlPage() {
         <YamlEditor value={yamlContent} onChange={setYamlContent} />
 
         {/* Footer */}
-        <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
+        <div className="flex-shrink-0 flex items-center justify-between">
           {/* Left side - Read from File */}
           <div>
             <input

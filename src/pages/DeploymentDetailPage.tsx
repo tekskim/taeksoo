@@ -403,6 +403,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
           <button
@@ -565,6 +566,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: ServiceRow) => (
         <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="right">
           <button
@@ -749,6 +751,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
           <button

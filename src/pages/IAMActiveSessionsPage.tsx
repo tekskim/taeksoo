@@ -231,6 +231,7 @@ export default function IAMActiveSessionsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button

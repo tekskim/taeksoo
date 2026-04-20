@@ -653,6 +653,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: WorkloadRow) => (
         <ContextMenu
           items={getWorkloadMenuItems(row.type, row, handleMenuAction)}

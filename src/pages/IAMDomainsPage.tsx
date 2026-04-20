@@ -215,6 +215,7 @@ export default function IAMDomainsPage() {
       label: 'Action',
       width: fixedColumns.actionWide,
       align: 'center',
+      sticky: 'right',
       render: (_value, row) => (
         <HStack gap={1} align="center" justify="center">
           <button

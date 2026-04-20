@@ -676,6 +676,7 @@ export function BareMetalDetailPage() {
                       label: 'Action',
                       width: fixedColumns.actions,
                       align: 'center' as const,
+                      sticky: 'right',
                       render: (_: unknown, iface: AttachedInterface) => {
                         const interfaceMenuItems: ContextMenuItem[] = [
                           {

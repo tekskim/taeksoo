@@ -409,6 +409,7 @@ export function ComputeAdminHostAggregatesPage() {
                   label: 'Action',
                   width: '64px',
                   align: 'center' as const,
+                  sticky: 'right',
                   render: (_: unknown, row: HostAggregate) => (
                     <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
                       <button

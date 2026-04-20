@@ -441,6 +441,7 @@ export function ComputeAdminRoutersPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu

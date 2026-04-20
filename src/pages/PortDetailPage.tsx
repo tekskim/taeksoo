@@ -422,6 +422,7 @@ export default function PortDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: FixedIP) => {
         const fixedIpMenuItems: ContextMenuItem[] = [
           {
@@ -476,6 +477,7 @@ export default function PortDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: AllowedAddressPair) => {
         const pairMenuItems: ContextMenuItem[] = [
           {
@@ -552,6 +554,7 @@ export default function PortDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: SecurityGroup) => {
         const sgMenuItems: ContextMenuItem[] = [
           {

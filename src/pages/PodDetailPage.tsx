@@ -339,6 +339,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: ContainerRow) => (
         <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="right">
           <button
@@ -521,6 +522,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
           <button

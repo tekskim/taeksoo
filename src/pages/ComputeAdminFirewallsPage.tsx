@@ -474,6 +474,7 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getFirewallMenuItems(row)} trigger="click" align="right">
@@ -606,6 +607,7 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPolicyMenuItems(row)} trigger="click" align="right">
@@ -719,6 +721,7 @@ export default function ComputeAdminFirewallsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleMenuItems(row)} trigger="click" align="right">

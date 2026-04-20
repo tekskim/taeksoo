@@ -368,6 +368,7 @@ function DataSourcesTab() {
       label: 'Action',
       width: fixedColumns.action,
       align: 'center',
+      sticky: 'right',
       render: () => (
         <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
           <IconRefresh size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -568,6 +569,7 @@ function MCPServersTab() {
       label: 'Action',
       width: fixedColumns.action,
       align: 'center',
+      sticky: 'right',
       render: () => (
         <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
           <IconRefresh size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />

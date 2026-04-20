@@ -487,6 +487,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: Port) => {
         const portMenuItems: ContextMenuItem[] = [
           {
@@ -536,6 +537,7 @@ export default function RouterDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: StaticRoute) => {
         const routeMenuItems: ContextMenuItem[] = [
           {

@@ -620,6 +620,7 @@ export function MCPToolsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
@@ -722,6 +723,7 @@ export function MCPToolsPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {

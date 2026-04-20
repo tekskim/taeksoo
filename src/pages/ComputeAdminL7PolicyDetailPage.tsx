@@ -254,6 +254,7 @@ export default function L7PolicyDetailPage() {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit rule', row.id) },

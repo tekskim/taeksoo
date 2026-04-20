@@ -21,7 +21,6 @@ import {
   Tab,
   Table,
   Pagination,
-  Slider,
   Chip,
   PageShell,
   WizardSectionStatusIcon,
@@ -598,7 +597,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -611,7 +610,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="label key"
@@ -661,7 +660,7 @@ function LabelsAnnotationsSection({
             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -674,7 +673,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="annotation key"
@@ -1117,50 +1116,7 @@ export function CreateJobPage() {
   const [priorityClassName, setPriorityClassName] = useState<string>('');
 
   // Volumes state
-  const [volumes, setVolumes] = useState<Volume[]>([
-    {
-      type: 'pvc' as const,
-      volumeName: 'vol-00002',
-      pvcName: 'pvc-web-data',
-      readOnly: false,
-    },
-    { type: 'pvc' as const, volumeName: 'vol-00003', pvcName: 'pvc-logs', readOnly: false },
-    {
-      type: 'configmap' as const,
-      volumeName: 'vol-00004',
-      configMapName: 'app-config',
-      optional: false,
-    },
-    {
-      type: 'secret' as const,
-      volumeName: 'vol-00005',
-      secretName: 'app-secret',
-      optional: false,
-      defaultMode: '',
-    },
-    {
-      type: 'create-pvc' as const,
-      volumeName: 'vol-00006',
-      pvcName: '',
-      useExistingPV: false,
-      storageClass: '',
-      capacity: '',
-      persistentVolume: '',
-      accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      readOnly: false,
-    },
-    {
-      type: 'create-pvc' as const,
-      volumeName: 'vol-00007',
-      pvcName: '',
-      useExistingPV: true,
-      storageClass: '',
-      capacity: '',
-      persistentVolume: '',
-      accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      readOnly: false,
-    },
-  ]);
+  const [volumes, setVolumes] = useState<Volume[]>([]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
   // Volume Claim Templates state
@@ -1732,52 +1688,54 @@ export function CreateJobPage() {
       }
       contentClassName="pt-4 px-8 pb-60"
     >
-      <VStack gap={6}>
-        {/* Page Header */}
-        <VStack gap={1}>
-          <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
-            Create job
-          </h1>
-          <p className="text-body-md text-[var(--color-text-subtle)]">
-            Create a Job to run a batch task that executes one or more Pods to completion.
-          </p>
-        </VStack>
+      <VStack gap={4}>
+        {/* Page Header + Tabs */}
+        <VStack gap={3}>
+          <VStack gap={1}>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)] min-h-8 flex items-center">
+              Create job
+            </h1>
+            <p className="text-body-md text-[var(--color-text-subtle)]">
+              Create a Job to run a batch task that executes one or more Pods to completion.
+            </p>
+          </VStack>
 
-        {/* Form Tabs - Outside the row so sidebar aligns with content */}
-        <div className="w-full border-b border-[var(--color-border-default)]">
-          <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
-            <div ref={tabListRef} className="flex items-start pt-3">
-              <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
-                {formTabs.map((tab) => (
-                  <Tab key={tab.id} value={tab.id} className="shrink-0">
-                    <HStack gap={2} align="center" className="min-w-0">
-                      <span className="truncate">{tab.label}</span>
-                      {tab.closable && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeContainerTab(tab.id);
-                          }}
-                          className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
-                        >
-                          <IconX size={12} stroke={1} />
-                        </button>
-                      )}
-                    </HStack>
-                  </Tab>
-                ))}
-              </TabList>
-              <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
-                <button
-                  onClick={addContainerTab}
-                  className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
-                >
-                  <IconPlus size={14} stroke={1} />
-                </button>
+          {/* Form Tabs - Outside the row so sidebar aligns with content */}
+          <div className="w-full border-b border-[var(--color-border-default)]">
+            <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
+              <div ref={tabListRef} className="flex items-start pt-3">
+                <TabList className="after:hidden min-w-0 overflow-x-auto scrollbar-none">
+                  {formTabs.map((tab) => (
+                    <Tab key={tab.id} value={tab.id} className="shrink-0">
+                      <HStack gap={2} align="center" className="min-w-0">
+                        <span className="truncate">{tab.label}</span>
+                        {tab.closable && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeContainerTab(tab.id);
+                            }}
+                            className="size-[var(--tabbar-close-size)] flex items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-surface-muted)] shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors duration-[var(--duration-fast)]"
+                          >
+                            <IconX size={12} stroke={1} />
+                          </button>
+                        )}
+                      </HStack>
+                    </Tab>
+                  ))}
+                </TabList>
+                <div className="h-[var(--tabs-line-height-sm)] flex items-center shrink-0">
+                  <button
+                    onClick={addContainerTab}
+                    className="shrink-0 flex items-center justify-center size-[var(--tabbar-add-size)] mx-[var(--tabbar-add-margin)] rounded-[var(--radius-sm)] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--tabbar-hover-bg)] hover:text-[var(--color-text-default)]"
+                  >
+                    <IconPlus size={14} stroke={1} />
+                  </button>
+                </div>
               </div>
-            </div>
-          </Tabs>
-        </div>
+            </Tabs>
+          </div>
+        </VStack>
 
         {/* Main Content with Sidebar */}
         <HStack gap={6} className="w-full items-start">
@@ -1842,7 +1800,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1855,7 +1813,7 @@ export function CreateJobPage() {
                             {podLabels.map((label, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="label key"
@@ -1912,7 +1870,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -1925,7 +1883,7 @@ export function CreateJobPage() {
                             {podAnnotations.map((annotation, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="annotation key"
@@ -2099,7 +2057,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {nameservers.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Nameserver
@@ -2114,7 +2072,7 @@ export function CreateJobPage() {
                             {nameservers.map((ns, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 8.8.8.8"
@@ -2158,7 +2116,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
-                              <div className="grid grid-cols-[1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Search Domain
@@ -2173,7 +2131,7 @@ export function CreateJobPage() {
                             {searchDomains.map((sd, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. example.com"
@@ -2217,7 +2175,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     Name
@@ -2240,7 +2198,7 @@ export function CreateJobPage() {
                             {resolverOptions.map((opt, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="input name"
@@ -2294,7 +2252,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
                                 <VStack gap={0.5}>
                                   <span className="block text-label-sm text-[var(--color-text-default)]">
                                     IP Address
@@ -2317,7 +2275,7 @@ export function CreateJobPage() {
                             {hostAliases.map((alias, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="e.g. 127.0.0.1"
@@ -2488,7 +2446,7 @@ export function CreateJobPage() {
                                     <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full">
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Key
                                             </span>
@@ -2504,7 +2462,7 @@ export function CreateJobPage() {
                                         {term.matchExpressions.map((expr, exprIndex) => (
                                           <div
                                             key={exprIndex}
-                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder="e.g. kubernetes.io/os"
@@ -2612,252 +2570,208 @@ export function CreateJobPage() {
                         </div>
                       )}
                       {!isV2 && nodeScheduling === 'matching' && (
-                        <VStack gap={2}>
-                          <VStack gap={1}>
-                            <span className="text-label-lg text-[var(--color-text-default)]">
-                              Node Affinity Rules
-                            </span>
-                            <p className="text-body-md text-[var(--color-text-subtle)] italic">
-                              Define rules for scheduling pods on specific nodes based on node
-                              labels.
-                            </p>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
-                            <VStack gap={3}>
-                              {nodeAffinityTerms.map((term, termIndex) => (
-                                <div
-                                  key={termIndex}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
-                                >
-                                  <VStack gap={6}>
-                                    <div className="flex items-start justify-between w-full">
-                                      <span className="text-label-lg text-[var(--color-text-default)]">
-                                        Rule {termIndex + 1}
+                        <VStack gap={3}>
+                          {nodeAffinityTerms.map((term, termIndex) => (
+                            <div
+                              key={termIndex}
+                              className="relative border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                            >
+                              <button
+                                onClick={() => {
+                                  setNodeAffinityTerms(
+                                    nodeAffinityTerms.filter((_, i) => i !== termIndex)
+                                  );
+                                }}
+                                className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconX
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
+                              <VStack gap={6}>
+                                <VStack gap={6} className="w-full">
+                                  <VStack gap={2} className="w-full">
+                                    <VStack gap={1}>
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        Priority
                                       </span>
-                                      <button
-                                        onClick={() => {
-                                          setNodeAffinityTerms(
-                                            nodeAffinityTerms.filter((_, i) => i !== termIndex)
-                                          );
-                                        }}
-                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
+                                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                                        Specify the priority value applied to node scheduling.
+                                      </p>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        { value: 'required', label: 'Required' },
+                                        { value: 'preferred', label: 'Preferred' },
+                                      ]}
+                                      value={term.priority}
+                                      onChange={(val) => {
+                                        const newTerms = [...nodeAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          priority: val,
+                                        };
+                                        setNodeAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2} className="w-full">
+                                    <VStack gap={1}>
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
+                                        Weight
+                                      </span>
+                                      <p className="text-body-md text-[var(--color-text-subtle)]">
+                                        The weight used in calculating node scheduling priority.
+                                      </p>
+                                    </VStack>
+                                    <NumberInput
+                                      min={1}
+                                      max={100}
+                                      step={1}
+                                      value={Number(term.weight) || 1}
+                                      onChange={(val) => {
+                                        const newTerms = [...nodeAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          weight: String(val),
+                                        };
+                                        setNodeAffinityTerms(newTerms);
+                                      }}
+                                      width="sm"
+                                    />
+                                  </VStack>
+                                </VStack>
 
-                                    <VStack gap={6} className="w-full">
-                                      <VStack gap={2} className="w-full">
-                                        <VStack gap={1}>
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
-                                            Priority
-                                          </span>
-                                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                                            Specify the priority value applied to node scheduling.
-                                          </p>
-                                        </VStack>
-                                        <Select
-                                          options={[
-                                            { value: 'required', label: 'Required' },
-                                            { value: 'preferred', label: 'Preferred' },
-                                          ]}
-                                          value={term.priority}
-                                          onChange={(val) => {
+                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                  <VStack gap={2}>
+                                    {term.matchExpressions.length > 0 && (
+                                      <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Key
+                                        </span>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Operator
+                                        </span>
+                                        <span className="block text-label-sm text-[var(--color-text-default)]">
+                                          Value
+                                        </span>
+                                        <div className="w-5" />
+                                      </div>
+                                    )}
+                                    {term.matchExpressions.map((expr, exprIndex) => (
+                                      <div
+                                        key={exprIndex}
+                                        className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                      >
+                                        <Input
+                                          placeholder="e.g. kubernetes.io/os"
+                                          value={expr.key}
+                                          onChange={(e) => {
                                             const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex] = {
-                                              ...newTerms[termIndex],
-                                              priority: val,
+                                            newTerms[termIndex].matchExpressions[exprIndex] = {
+                                              ...expr,
+                                              key: e.target.value,
                                             };
                                             setNodeAffinityTerms(newTerms);
                                           }}
                                           fullWidth
                                         />
-                                      </VStack>
-                                      {term.priority === 'preferred' && (
-                                        <VStack gap={2} className="w-full">
-                                          <span className="block text-label-lg text-[var(--color-text-default)]">
-                                            Weight
-                                          </span>
-                                          <HStack gap={3} align="center">
-                                            <Slider
-                                              min={1}
-                                              max={100}
-                                              step={1}
-                                              value={Number(term.weight) || 1}
-                                              onChange={(val) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: String(val),
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                            />
-                                            <NumberInput
-                                              min={1}
-                                              max={100}
-                                              step={1}
-                                              value={Number(term.weight) || 1}
-                                              onChange={(val) => {
-                                                const newTerms = [...nodeAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  weight: String(val),
-                                                };
-                                                setNodeAffinityTerms(newTerms);
-                                              }}
-                                              width="sm"
-                                            />
-                                          </HStack>
-                                        </VStack>
-                                      )}
-                                    </VStack>
-
-                                    <VStack gap={2}>
-                                      <span className="block text-label-sm text-[var(--color-text-default)]">
-                                        Match Expressions
-                                      </span>
-                                      {term.matchExpressions.length > 0 && (
-                                        <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full">
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Key
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Operator
-                                          </span>
-                                          <span className="block text-label-sm text-[var(--color-text-default)]">
-                                            Value
-                                          </span>
-                                          <div className="w-5" />
-                                        </div>
-                                      )}
-                                      {term.matchExpressions.map((expr, exprIndex) => (
-                                        <div
-                                          key={exprIndex}
-                                          className="grid grid-cols-[1fr_140px_1fr_20px] gap-1 w-full items-center"
-                                        >
-                                          <Input
-                                            placeholder="e.g. kubernetes.io/os"
-                                            value={expr.key}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions[exprIndex] = {
-                                                ...expr,
-                                                key: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                          <Select
-                                            options={[
-                                              { value: 'In', label: 'In' },
-                                              { value: 'NotIn', label: 'NotIn' },
-                                              { value: 'Exists', label: 'Exists' },
-                                              {
-                                                value: 'DoesNotExist',
-                                                label: 'DoesNotExist',
-                                              },
-                                              { value: 'Gt', label: 'Gt' },
-                                              { value: 'Lt', label: 'Lt' },
-                                            ]}
-                                            value={expr.operator}
-                                            onChange={(val) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions[exprIndex] = {
-                                                ...expr,
-                                                operator: val,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                          <Input
-                                            placeholder="e.g. linux"
-                                            value={expr.value}
-                                            onChange={(e) => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions[exprIndex] = {
-                                                ...expr,
-                                                value: e.target.value,
-                                              };
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            fullWidth
-                                          />
-                                          <button
-                                            onClick={() => {
-                                              const newTerms = [...nodeAffinityTerms];
-                                              newTerms[termIndex].matchExpressions = newTerms[
-                                                termIndex
-                                              ].matchExpressions.filter((_, i) => i !== exprIndex);
-                                              setNodeAffinityTerms(newTerms);
-                                            }}
-                                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                          >
-                                            <IconX
-                                              size={16}
-                                              className="text-[var(--color-text-muted)]"
-                                              stroke={1.5}
-                                            />
-                                          </button>
-                                        </div>
-                                      ))}
-                                      <div className="w-fit">
-                                        <Button
-                                          variant="secondary"
-                                          size="sm"
-                                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                          onClick={() => {
+                                        <Select
+                                          options={[
+                                            { value: 'In', label: 'In' },
+                                            { value: 'NotIn', label: 'NotIn' },
+                                            { value: 'Exists', label: 'Exists' },
+                                            {
+                                              value: 'DoesNotExist',
+                                              label: 'DoesNotExist',
+                                            },
+                                            { value: 'Gt', label: 'Gt' },
+                                            { value: 'Lt', label: 'Lt' },
+                                          ]}
+                                          value={expr.operator}
+                                          onChange={(val) => {
                                             const newTerms = [...nodeAffinityTerms];
-                                            newTerms[termIndex].matchExpressions.push({
-                                              key: '',
-                                              operator: 'In',
-                                              value: '',
-                                            });
+                                            newTerms[termIndex].matchExpressions[exprIndex] = {
+                                              ...expr,
+                                              operator: val,
+                                            };
                                             setNodeAffinityTerms(newTerms);
                                           }}
+                                          fullWidth
+                                        />
+                                        <Input
+                                          placeholder="e.g. linux"
+                                          value={expr.value}
+                                          onChange={(e) => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex].matchExpressions[exprIndex] = {
+                                              ...expr,
+                                              value: e.target.value,
+                                            };
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                          fullWidth
+                                        />
+                                        <button
+                                          onClick={() => {
+                                            const newTerms = [...nodeAffinityTerms];
+                                            newTerms[termIndex].matchExpressions = newTerms[
+                                              termIndex
+                                            ].matchExpressions.filter((_, i) => i !== exprIndex);
+                                            setNodeAffinityTerms(newTerms);
+                                          }}
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
-                                          Add Expression
-                                        </Button>
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
                                       </div>
-                                    </VStack>
+                                    ))}
+                                    <div className="w-fit">
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                        onClick={() => {
+                                          const newTerms = [...nodeAffinityTerms];
+                                          newTerms[termIndex].matchExpressions.push({
+                                            key: '',
+                                            operator: 'In',
+                                            value: '',
+                                          });
+                                          setNodeAffinityTerms(newTerms);
+                                        }}
+                                      >
+                                        Add Rule
+                                      </Button>
+                                    </div>
                                   </VStack>
                                 </div>
-                              ))}
-
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={() => {
-                                    setNodeAffinityTerms([
-                                      ...nodeAffinityTerms,
-                                      {
-                                        priority: 'required',
-                                        weight: '',
-                                        matchExpressions: [{ key: '', operator: 'In', value: '' }],
-                                      },
-                                    ]);
-                                  }}
-                                >
-                                  Add Rule
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
+                              </VStack>
+                            </div>
+                          ))}
 
                           <div className="w-fit">
                             <Button
                               variant="secondary"
                               size="sm"
                               leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={() => {
+                                setNodeAffinityTerms([
+                                  ...nodeAffinityTerms,
+                                  {
+                                    priority: 'required',
+                                    weight: '',
+                                    matchExpressions: [{ key: '', operator: 'In', value: '' }],
+                                  },
+                                ]);
+                              }}
                             >
                               Add Node Selector
                             </Button>
@@ -3123,7 +3037,7 @@ export function CreateJobPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full">
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
@@ -3139,7 +3053,7 @@ export function CreateJobPage() {
                                 {term.matchExpressions.map((expr, exprIndex) => (
                                   <div
                                     key={exprIndex}
-                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1 w-full items-center"
+                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
                                   >
                                     <Input
                                       placeholder="Input key"
@@ -3353,7 +3267,7 @@ export function CreateJobPage() {
                         <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
                                 <span className="block text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
@@ -3375,7 +3289,7 @@ export function CreateJobPage() {
                             {tolerations.map((toleration, index) => (
                               <div
                                 key={index}
-                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-1 w-full items-center"
+                                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
                                 <Input
                                   placeholder="Key"
@@ -3411,13 +3325,21 @@ export function CreateJobPage() {
                                   onChange={(val) => updateToleration(index, 'effect', val)}
                                   fullWidth
                                 />
-                                <Input
-                                  placeholder=""
-                                  value={toleration.tolerationSeconds}
-                                  onChange={(e) =>
-                                    updateToleration(index, 'tolerationSeconds', e.target.value)
+                                <NumberInput
+                                  min={0}
+                                  step={1}
+                                  value={
+                                    toleration.tolerationSeconds
+                                      ? Number(toleration.tolerationSeconds)
+                                      : undefined
                                   }
-                                  fullWidth
+                                  onChange={(val) =>
+                                    updateToleration(
+                                      index,
+                                      'tolerationSeconds',
+                                      val !== undefined ? String(val) : ''
+                                    )
+                                  }
                                 />
                                 <button
                                   onClick={() => removeToleration(index)}
@@ -4344,7 +4266,7 @@ export function CreateJobPage() {
                             <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                     <label className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </label>
@@ -4358,7 +4280,7 @@ export function CreateJobPage() {
                                   (header: { name: string; value: string }, index: number) => (
                                     <div
                                       key={index}
-                                      className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                     >
                                       <Input
                                         placeholder="e.g. X-Custom-Header"
@@ -5292,7 +5214,7 @@ export function CreateJobPage() {
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
                                       ).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5310,7 +5232,7 @@ export function CreateJobPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -5550,7 +5472,7 @@ export function CreateJobPage() {
                                     <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                        <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                           <label className="text-label-sm text-[var(--color-text-default)]">
                                             Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -5568,7 +5490,7 @@ export function CreateJobPage() {
                                       ).map((header, index) => (
                                         <div
                                           key={index}
-                                          className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                          className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                         >
                                           <Input
                                             placeholder="e.g. accept-ranges"
@@ -6061,7 +5983,7 @@ export function CreateJobPage() {
                                         <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
-                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center">
+                                            <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                                               <label className="text-label-sm text-[var(--color-text-default)]">
                                                 Name
                                               </label>
@@ -6075,7 +5997,7 @@ export function CreateJobPage() {
                                             (header, index) => (
                                               <div
                                                 key={index}
-                                                className="grid grid-cols-[1fr_1fr_auto] gap-1 w-full items-center"
+                                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                               >
                                                 <Input
                                                   placeholder="Input name"
@@ -7139,7 +7061,7 @@ export function CreateJobPage() {
                                       </span>
                                       {/* Mount rows */}
                                       {(selectedVol.mounts || []).length > 0 && (
-                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full">
+                                        <div className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full">
                                           <VStack gap={0.5}>
                                             <span className="block text-label-sm text-[var(--color-text-default)]">
                                               Mount Point{' '}
@@ -7175,7 +7097,7 @@ export function CreateJobPage() {
                                         ) => (
                                           <div
                                             key={mountIndex}
-                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-1 w-full items-center"
+                                            className="grid grid-cols-[1fr_1fr_84px_20px] gap-2 w-full items-center"
                                           >
                                             <Input
                                               placeholder=""

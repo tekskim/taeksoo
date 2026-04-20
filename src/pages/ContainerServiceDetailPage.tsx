@@ -486,6 +486,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       label: 'Action',
       width: fixedColumns.actions,
       align: 'center',
+      sticky: 'right',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
           <button
