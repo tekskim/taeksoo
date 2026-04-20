@@ -6983,7 +6983,6 @@ export function CreateDaemonSetPage() {
                                             <div className="flex items-center whitespace-nowrap">
                                               <Checkbox
                                                 label="Read Only"
-                                                className="[&>label]:flex-row-reverse"
                                                 checked={mount.readOnly || false}
                                                 onChange={(e) => {
                                                   const newVolumes = [

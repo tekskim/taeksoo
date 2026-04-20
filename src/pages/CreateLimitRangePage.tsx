@@ -13,13 +13,15 @@ import {
   Input,
   NumberInput,
   Select,
+  Slider,
   SectionCard,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconCirclePlus, IconX, IconCheck } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -59,30 +61,8 @@ interface Annotation {
    ---------------------------------------- */
 
 function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
+  const mapped = status === 'pending' ? 'pre' : status;
+  return <WizardSectionStatusIcon status={mapped} />;
 }
 
 /* ----------------------------------------
@@ -263,16 +243,26 @@ function ContainerResourceLimitSection({
                 Specify the minimum CPU amount reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <NumberInput
-                  value={resourceLimit.cpuReservation}
-                  onChange={(val) => updateField('cpuReservation', val)}
-                  min={10}
-                  max={1000}
-                  step={1}
-                  width="sm"
-                  suffix="mCPUs"
-                />
+                <HStack gap={2} align="center">
+                  <Slider
+                    min={10}
+                    max={1000}
+                    step={10}
+                    value={Number(resourceLimit.cpuReservation) || 10}
+                    onChange={(val) => updateField('cpuReservation', String(val))}
+                  />
+                  <NumberInput
+                    value={resourceLimit.cpuReservation}
+                    onChange={(val) => updateField('cpuReservation', val)}
+                    min={10}
+                    max={1000}
+                    step={1}
+                    width="xs"
+                    suffix="mCPU"
+                  />
+                </HStack>
               </FormField.Control>
+              <FormField.HelperText>10–1000 mCPU</FormField.HelperText>
             </FormField>
 
             {/* CPU Limit */}
@@ -282,16 +272,26 @@ function ContainerResourceLimitSection({
                 Specify the maximum CPU amount the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <NumberInput
-                  value={resourceLimit.cpuLimit}
-                  onChange={(val) => updateField('cpuLimit', val)}
-                  min={10}
-                  max={1000}
-                  step={1}
-                  width="sm"
-                  suffix="mCPUs"
-                />
+                <HStack gap={2} align="center">
+                  <Slider
+                    min={10}
+                    max={1000}
+                    step={10}
+                    value={Number(resourceLimit.cpuLimit) || 10}
+                    onChange={(val) => updateField('cpuLimit', String(val))}
+                  />
+                  <NumberInput
+                    value={resourceLimit.cpuLimit}
+                    onChange={(val) => updateField('cpuLimit', val)}
+                    min={10}
+                    max={1000}
+                    step={1}
+                    width="xs"
+                    suffix="mCPU"
+                  />
+                </HStack>
               </FormField.Control>
+              <FormField.HelperText>10–1000 mCPU</FormField.HelperText>
             </FormField>
 
             {/* Memory Reservation */}
@@ -301,16 +301,26 @@ function ContainerResourceLimitSection({
                 Specify the minimum memory capacity reserved for the container.
               </FormField.Description>
               <FormField.Control>
-                <NumberInput
-                  value={resourceLimit.memoryReservation}
-                  onChange={(val) => updateField('memoryReservation', val)}
-                  min={4}
-                  max={128}
-                  step={1}
-                  width="sm"
-                  suffix="MiB"
-                />
+                <HStack gap={2} align="center">
+                  <Slider
+                    min={4}
+                    max={128}
+                    step={5}
+                    value={Number(resourceLimit.memoryReservation) || 4}
+                    onChange={(val) => updateField('memoryReservation', String(val))}
+                  />
+                  <NumberInput
+                    value={resourceLimit.memoryReservation}
+                    onChange={(val) => updateField('memoryReservation', val)}
+                    min={4}
+                    max={128}
+                    step={1}
+                    width="xs"
+                    suffix="GiB"
+                  />
+                </HStack>
               </FormField.Control>
+              <FormField.HelperText>4–128 GiB</FormField.HelperText>
             </FormField>
 
             {/* Memory Limit */}
@@ -320,16 +330,26 @@ function ContainerResourceLimitSection({
                 Specify the maximum memory capacity the container is allowed to use.
               </FormField.Description>
               <FormField.Control>
-                <NumberInput
-                  value={resourceLimit.memoryLimit}
-                  onChange={(val) => updateField('memoryLimit', val)}
-                  min={4}
-                  max={128}
-                  step={1}
-                  width="sm"
-                  suffix="MiB"
-                />
+                <HStack gap={2} align="center">
+                  <Slider
+                    min={4}
+                    max={128}
+                    step={5}
+                    value={Number(resourceLimit.memoryLimit) || 4}
+                    onChange={(val) => updateField('memoryLimit', String(val))}
+                  />
+                  <NumberInput
+                    value={resourceLimit.memoryLimit}
+                    onChange={(val) => updateField('memoryLimit', val)}
+                    min={4}
+                    max={128}
+                    step={1}
+                    width="xs"
+                    suffix="GiB"
+                  />
+                </HStack>
               </FormField.Control>
+              <FormField.HelperText>4–128 GiB</FormField.HelperText>
             </FormField>
           </div>
         </VStack>
@@ -375,10 +395,10 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-                <VStack gap={1.5}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                <VStack gap={2}>
                   {labels.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -391,7 +411,7 @@ function LabelsAnnotationsSection({
                   {labels.map((label, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -436,10 +456,10 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-                <VStack gap={1.5}>
+              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                <VStack gap={2}>
                   {annotations.length > 0 && (
-                    <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                       <span className="block text-label-sm text-[var(--color-text-default)]">
                         Key
                       </span>
@@ -452,7 +472,7 @@ function LabelsAnnotationsSection({
                   {annotations.map((annotation, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                     >
                       <Input
                         placeholder="Key"
@@ -683,7 +703,7 @@ export function CreateLimitRangePage() {
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create limit range</h1>
           </div>

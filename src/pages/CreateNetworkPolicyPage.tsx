@@ -17,11 +17,12 @@ import {
   Disclosure,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
+import { WizardSectionStatusIcon } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconX, IconCheck, IconCirclePlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -147,27 +148,7 @@ const MATCHING_PODS_COLUMNS = [
    Summary Status Icon Component
    ---------------------------------------- */
 function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
-      </div>
-    );
-  }
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
+  return <WizardSectionStatusIcon status={status} />;
 }
 
 /* ----------------------------------------
@@ -1216,90 +1197,24 @@ export function CreateNetworkPolicyPage() {
   const [description, setDescription] = useState('');
 
   // Ingress Rules state
-  const [ingressEnabled, setIngressEnabled] = useState(true);
+  const [ingressEnabled, setIngressEnabled] = useState(false);
   const [ingressRules, setIngressRules] = useState<TrafficRule[]>([
     {
       id: 'ingress-rule-1',
       name: 'Rule 1',
-      targets: [
-        {
-          id: 'target-i1',
-          ruleType: 'ip-block',
-          cidr: '',
-          exceptions: [''],
-          namespaceSelectors: [],
-          podSelectors: [],
-        },
-        {
-          id: 'target-i2',
-          ruleType: 'namespace-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-i2-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [],
-        },
-        {
-          id: 'target-i3',
-          ruleType: 'pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [],
-          podSelectors: [{ id: 'ls-i3-pod', key: '', operator: 'in', values: '' }],
-        },
-        {
-          id: 'target-i4',
-          ruleType: 'namespace-pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-i4-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [{ id: 'ls-i4-pod', key: '', operator: 'in', values: '' }],
-        },
-      ],
-      allowedPorts: [{ id: 'port-i1', port: '', protocol: 'TCP' }],
+      targets: [],
+      allowedPorts: [],
     },
   ]);
 
   // Egress Rules state
-  const [egressEnabled, setEgressEnabled] = useState(true);
+  const [egressEnabled, setEgressEnabled] = useState(false);
   const [egressRules, setEgressRules] = useState<TrafficRule[]>([
     {
       id: 'egress-rule-1',
       name: 'Rule 1',
-      targets: [
-        {
-          id: 'target-e1',
-          ruleType: 'ip-block',
-          cidr: '',
-          exceptions: [''],
-          namespaceSelectors: [],
-          podSelectors: [],
-        },
-        {
-          id: 'target-e2',
-          ruleType: 'namespace-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-e2-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [],
-        },
-        {
-          id: 'target-e3',
-          ruleType: 'pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [],
-          podSelectors: [{ id: 'ls-e3-pod', key: '', operator: 'in', values: '' }],
-        },
-        {
-          id: 'target-e4',
-          ruleType: 'namespace-pod-label-selector',
-          cidr: '',
-          exceptions: [],
-          namespaceSelectors: [{ id: 'ls-e4-ns', key: '', operator: 'in', values: '' }],
-          podSelectors: [{ id: 'ls-e4-pod', key: '', operator: 'in', values: '' }],
-        },
-      ],
-      allowedPorts: [{ id: 'port-e1', port: '', protocol: 'TCP' }],
+      targets: [],
+      allowedPorts: [],
     },
   ]);
 

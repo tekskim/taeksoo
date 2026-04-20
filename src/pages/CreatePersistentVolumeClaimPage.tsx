@@ -16,14 +16,14 @@ import {
   Radio,
   RadioGroup,
   SectionCard,
-  Slider,
   Disclosure,
+  WizardSectionStatusIcon,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useIsV2 } from '@/hooks/useIsV2';
-import { IconCirclePlus, IconX, IconCheck } from '@tabler/icons-react';
+import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -64,11 +64,11 @@ const STORAGE_CLASS_OPTIONS = [
   { value: 'slow', label: 'slow' },
 ];
 
-// Storage unit options
-const STORAGE_UNIT_OPTIONS = [
-  { value: 'GiB', label: 'GiB' },
-  { value: 'MiB', label: 'MiB' },
-  { value: 'TiB', label: 'TiB' },
+// Persistent Volume options
+const PERSISTENT_VOLUME_OPTIONS = [
+  { value: 'pv-001', label: 'pv-001' },
+  { value: 'pv-002', label: 'pv-002' },
+  { value: 'pv-003', label: 'pv-003' },
 ];
 
 // Access Mode options
@@ -114,30 +114,8 @@ interface Annotation {
    ---------------------------------------- */
 
 function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
+  const mapped = status === 'pending' ? 'pre' : status;
+  return <WizardSectionStatusIcon status={mapped} />;
 }
 
 /* ----------------------------------------
@@ -290,8 +268,6 @@ interface VolumeClaimSectionProps {
   onStorageClassChange: (value: string) => void;
   requestStorage: string;
   onRequestStorageChange: (value: string) => void;
-  storageUnit: string;
-  onStorageUnitChange: (value: string) => void;
 }
 
 function VolumeClaimSection({
@@ -301,8 +277,6 @@ function VolumeClaimSection({
   onStorageClassChange,
   requestStorage,
   onRequestStorageChange,
-  storageUnit,
-  onStorageUnitChange,
 }: VolumeClaimSectionProps) {
   return (
     <SectionCard className="pb-4">
@@ -328,50 +302,36 @@ function VolumeClaimSection({
             </FormField.Control>
           </FormField>
 
-          {/* Storage Class - only show when using storage class source */}
-          {sourceType === 'storage-class' && (
-            <FormField>
-              <FormField.Label>Storage Class</FormField.Label>
-              <FormField.Control>
-                <Select
-                  options={STORAGE_CLASS_OPTIONS}
-                  value={storageClass}
-                  onChange={(value) => onStorageClassChange(value)}
-                  fullWidth
-                />
-              </FormField.Control>
-            </FormField>
-          )}
+          {/* Storage Class / Persistent Volume */}
+          <FormField>
+            <FormField.Label>
+              {sourceType === 'existing-pv' ? 'Persistent volume' : 'Storage Class'}
+            </FormField.Label>
+            <FormField.Control>
+              <Select
+                options={
+                  sourceType === 'existing-pv' ? PERSISTENT_VOLUME_OPTIONS : STORAGE_CLASS_OPTIONS
+                }
+                value={storageClass}
+                onChange={(value) => onStorageClassChange(value)}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
 
           {/* Request Storage */}
           <FormField required>
             <FormField.Label>Request Storage</FormField.Label>
             <FormField.Control>
-              <HStack gap={3} align="center">
-                <Slider
-                  min={1}
-                  max={1000}
-                  step={10}
-                  value={Number(requestStorage) || 1}
-                  onChange={(val) => onRequestStorageChange(String(val))}
-                />
-                <HStack gap={1} align="center">
-                  <NumberInput
-                    value={requestStorage}
-                    onChange={(value) => onRequestStorageChange(value)}
-                    min={1}
-                    max={1000}
-                    step={1}
-                    width="xs"
-                  />
-                  <Select
-                    options={STORAGE_UNIT_OPTIONS}
-                    value={storageUnit}
-                    onChange={(value) => onStorageUnitChange(value)}
-                    width="xs"
-                  />
-                </HStack>
-              </HStack>
+              <NumberInput
+                value={requestStorage}
+                onChange={(value) => onRequestStorageChange(value)}
+                min={1}
+                max={1000}
+                step={1}
+                width="sm"
+                suffix="GiB"
+              />
             </FormField.Control>
           </FormField>
         </VStack>
@@ -505,10 +465,10 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-              <VStack gap={1.5}>
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={2}>
                 {labels.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -521,7 +481,7 @@ function LabelsAnnotationsSection({
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -566,10 +526,10 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-              <VStack gap={1.5}>
+            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <VStack gap={2}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center">
                     <span className="block text-label-sm text-[var(--color-text-default)]">
                       Key
                     </span>
@@ -582,7 +542,7 @@ function LabelsAnnotationsSection({
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full items-center"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
                     <Input
                       placeholder="Key"
@@ -641,7 +601,6 @@ export function CreatePersistentVolumeClaimPage() {
   const [sourceType, setSourceType] = useState<VolumeSourceType>('storage-class');
   const [storageClass, setStorageClass] = useState('default');
   const [requestStorage, setRequestStorage] = useState('10');
-  const [storageUnit, setStorageUnit] = useState('GiB');
 
   // Storage Configuration state
   const [accessModes, setAccessModes] = useState({
@@ -704,7 +663,7 @@ export function CreatePersistentVolumeClaimPage() {
       volumeClaim: {
         sourceType,
         storageClass,
-        requestStorage: `${requestStorage}${storageUnit}`,
+        requestStorage: `${requestStorage}GiB`,
       },
       storageConfig: {
         accessModes,
@@ -719,7 +678,6 @@ export function CreatePersistentVolumeClaimPage() {
     sourceType,
     storageClass,
     requestStorage,
-    storageUnit,
     accessModes,
     labels,
     annotations,
@@ -809,7 +767,7 @@ export function CreatePersistentVolumeClaimPage() {
     >
       <VStack gap={6}>
         {/* Page Header */}
-        <VStack gap={2}>
+        <VStack gap={1}>
           <div className="flex items-center justify-between h-8">
             <h1 className="text-heading-h5 text-[var(--color-text-default)]">
               Create persistent volume claim
@@ -847,8 +805,6 @@ export function CreatePersistentVolumeClaimPage() {
               onStorageClassChange={setStorageClass}
               requestStorage={requestStorage}
               onRequestStorageChange={setRequestStorage}
-              storageUnit={storageUnit}
-              onStorageUnitChange={setStorageUnit}
             />
 
             {/* Storage Configuration Section */}
