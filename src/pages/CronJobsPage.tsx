@@ -61,7 +61,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'imageName',
     schedule: '@daily',
     lastSchedule: '36 days',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -71,7 +71,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'backup-tool:v2.1',
     schedule: '0 2 * * *',
     lastSchedule: '12h',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -81,7 +81,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'cleanup-tool:v1.5',
     schedule: '*/30 * * * *',
     lastSchedule: '15m',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '4',
@@ -91,7 +91,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'report-gen:v3.2',
     schedule: '0 9 * * 1',
     lastSchedule: '7 days',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '5',
@@ -101,7 +101,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'sync-worker:v2.0',
     schedule: '*/5 * * * *',
     lastSchedule: '3m',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '6',
@@ -111,7 +111,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'indexer:v4.1',
     schedule: '0 3 * * 0',
     lastSchedule: '5 days',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
   {
     id: '7',
@@ -121,7 +121,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'cache-warmer:v1.2',
     schedule: '0 6 * * *',
     lastSchedule: '2 days',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
   },
   {
     id: '8',
@@ -131,7 +131,7 @@ const cronJobsData: CronJobRow[] = [
     image: 'metrics:v1.0',
     schedule: '*/10 * * * *',
     lastSchedule: '8m',
-    createdAt: 'Nov 5, 2025 14:12:36',
+    createdAt: 'Nov 5, 2026 14:12:36',
   },
 ];
 

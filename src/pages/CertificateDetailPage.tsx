@@ -18,6 +18,7 @@ import {
   Pagination,
   Badge,
   PageShell,
+  ConfirmModal,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
@@ -92,38 +93,38 @@ interface Listener {
    ---------------------------------------- */
 
 const mockServerCertificate: ServerCertificateDetail = {
-  id: '7284d9174e81431e93060a9bbcf2cdfd',
+  id: 'cert-001',
   name: 'server-cert-1',
   status: 'valid',
   certificateType: 'server',
   type: 'Wildcard',
   domain: '.domain.com',
-  expiresAt: 'Sep 25, 2025 23:59:59',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  expiresAt: 'Sep 25, 2026 23:59:59',
+  createdAt: 'Jul 25, 2026 10:32:16',
   description: '-',
   // Certificate Metadata
   classification: 'Server Certificate',
   issuer: "Let's Encrypt Authority X3",
   san: 'www.domain.com, api.domain.com',
   signatureType: 'SHA256withRSA',
-  validFrom: 'Feb 10, 2025',
+  validFrom: 'Feb 10, 2026',
   validTo: 'Feb 10, 2026',
 };
 
 const mockCACertificate: CACertificateDetail = {
-  id: '8395e0285f92542f04171b0cde3deef0',
+  id: 'cert-006',
   name: 'root-ca',
   status: 'valid',
   certificateType: 'ca',
-  expiresAt: 'Sep 25, 2025 23:59:59',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  expiresAt: 'Sep 25, 2026 23:59:59',
+  createdAt: 'Jul 25, 2026 10:32:16',
   description: '-',
   // Certificate Metadata
   classification: 'CA Certificate',
   authority: 'Sectigo Root CA',
   issuer: 'Sectigo Root CA',
   signatureType: 'SHA256withRSA',
-  validFrom: 'Feb 10, 2025',
+  validFrom: 'Feb 10, 2026',
   validTo: 'Feb 10, 2026',
 };
 
@@ -131,10 +132,14 @@ const mockCACertificate: CACertificateDetail = {
 const mockCertificates: Record<string, CertificateDetail> = {
   'cert-001': mockServerCertificate,
   'cert-002': { ...mockServerCertificate, id: 'cert-002', name: 'api-cert' },
-  'cert-003': { ...mockServerCertificate, id: 'cert-003', name: 'web-cert' },
-  'cert-004': { ...mockCACertificate, id: 'cert-004', name: 'intermediate-ca' },
-  'cert-005': { ...mockCACertificate, id: 'cert-005', name: 'private-ca' },
-  'cert-006': { ...mockCACertificate, id: 'cert-006', name: 'root-ca' },
+  'cert-003': { ...mockServerCertificate, id: 'cert-003', name: 'wildcard-cert' },
+  'cert-004': { ...mockServerCertificate, id: 'cert-004', name: 'staging-cert', status: 'pending' },
+  'cert-005': { ...mockServerCertificate, id: 'cert-005', name: 'internal-cert' },
+  'cert-006': mockCACertificate,
+  'cert-007': { ...mockCACertificate, id: 'cert-007', name: 'intermediate-ca' },
+  'cert-008': { ...mockServerCertificate, id: 'cert-008', name: 'expired-cert', status: 'expired' },
+  'cert-009': { ...mockCACertificate, id: 'cert-009', name: 'dev-ca' },
+  'cert-010': { ...mockServerCertificate, id: 'cert-010', name: 'client-auth-cert' },
 };
 
 // Mock listeners data
@@ -206,6 +211,8 @@ export default function CertificateDetailPage() {
 
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // In a real app, fetch based on id
   const certificate = id && mockCertificates[id] ? mockCertificates[id] : mockServerCertificate;
@@ -372,20 +379,40 @@ export default function CertificateDetailPage() {
             {isServerCertificate(certificate) ? (
               // Server Certificate actions
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconDownload size={12} />}
+                  onClick={() => console.log('Download certificate')}
+                >
                   Download
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  onClick={() => setDeleteModalOpen(true)}
+                >
                   Delete
                 </Button>
               </>
             ) : (
               // CA Certificate actions
               <>
-                <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconDownload size={12} />}
+                  onClick={() => console.log('Download certificate')}
+                >
                   Download
                 </Button>
-                <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  onClick={() => setDeleteModalOpen(true)}
+                >
                   Delete
                 </Button>
               </>
@@ -527,6 +554,20 @@ export default function CertificateDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Delete Certificate"
+        description="Removing this certificate is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          console.log('Delete certificate:', certificate.id);
+          setDeleteModalOpen(false);
+        }}
+      />
     </PageShell>
   );
 }

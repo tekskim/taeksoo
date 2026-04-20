@@ -825,7 +825,7 @@ const mockDeviceHealthList: DeviceHealth[] = [
             "Namespace 1 Utilization:            3,200,626,515,968 [3.20 TB]",
             "Namespace 1 Formatted LBA Size:     512",
             "Namespace 1 IEEE EUI-64:            8ce38e e3049580e8",
-            "Local Time is:                      Tue Dec 16 01:00:01 2025 UTC",
+            "Local Time is:                      Tue Dec 16 01:00:01 2026 UTC",
             "Firmware Updates (0x16):            3 Slots, no Reset required"`,
   },
   {

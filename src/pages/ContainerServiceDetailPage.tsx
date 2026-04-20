@@ -105,7 +105,7 @@ const mockServiceData: Record<string, ServiceData> = {
     externalIP: '199.51.10.4 (+2)',
     externalTrafficPolicy: 'Local',
     sessionAffinity: 'None',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -128,7 +128,7 @@ const mockServiceData: Record<string, ServiceData> = {
     externalIP: '',
     externalTrafficPolicy: '',
     sessionAffinity: 'None',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -152,7 +152,7 @@ const mockServiceData: Record<string, ServiceData> = {
     externalName: 'my.database.example.com',
     externalTrafficPolicy: '',
     sessionAffinity: 'None',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -175,7 +175,7 @@ const mockServiceData: Record<string, ServiceData> = {
     externalIP: '199.51.10.4 (+2)',
     externalTrafficPolicy: 'Local',
     sessionAffinity: 'None',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -198,7 +198,7 @@ const mockServiceData: Record<string, ServiceData> = {
     externalIP: '199.51.10.4 (+2)',
     externalTrafficPolicy: 'Cluster',
     sessionAffinity: 'None',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -221,7 +221,7 @@ const mockServiceData: Record<string, ServiceData> = {
     externalIP: '199.51.10.4 (+2)',
     externalTrafficPolicy: '',
     sessionAffinity: 'None',
-    createdAt: 'Nov 11, 2025',
+    createdAt: 'Nov 11, 2026',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -245,7 +245,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
@@ -256,7 +256,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName-2',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '3',
@@ -267,7 +267,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '4',
@@ -278,7 +278,7 @@ const mockPodsData: PodRow[] = [
     restarts: 3,
     ip: '10.11.0.14',
     node: 'nodeName-2',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
 ];
 
@@ -325,7 +325,7 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'Service has minimum availability.',
-    lastTransition: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
   },
   {
     id: '2',
@@ -333,7 +333,7 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
-    lastTransition: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
   },
 ];
 

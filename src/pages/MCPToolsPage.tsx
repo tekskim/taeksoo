@@ -168,8 +168,8 @@ export function MCPToolsPage() {
     visibility: i === 1 ? 'visible' : i % 2 === 0 ? 'visible' : 'hidden',
     category: 'Communication',
     tools: 99,
-    updatedAt: 'Nov 11, 2025, 2:51 PM',
-    createdAt: 'Nov 11, 2025, 2:51 PM',
+    updatedAt: 'Nov 11, 2026, 2:51 PM',
+    createdAt: 'Nov 11, 2026, 2:51 PM',
   }));
 
   // Initialize template visibility state
@@ -315,7 +315,7 @@ export function MCPToolsPage() {
       },
       category: 'Communication',
       tags: ['Messaging', 'Team', 'Real-time'],
-      createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2026, 2:51 PM',
     },
     {
       id: '2',
@@ -329,7 +329,7 @@ export function MCPToolsPage() {
       },
       category: 'Cloud',
       tags: ['Infrastructure', 'Storage', 'Compute', 'BigQuery', 'Cloud Functions'],
-      createdAt: 'Nov 10, 2025, 10:30 AM',
+      createdAt: 'Nov 10, 2026, 10:30 AM',
     },
     {
       id: '3',
@@ -342,7 +342,7 @@ export function MCPToolsPage() {
       },
       category: 'Communication',
       tags: ['Video', 'Meeting', 'Collaboration', 'Office 365', 'SharePoint'],
-      createdAt: 'Nov 9, 2025, 4:15 PM',
+      createdAt: 'Nov 9, 2026, 4:15 PM',
     },
     {
       id: '4',
@@ -355,7 +355,7 @@ export function MCPToolsPage() {
       },
       category: 'Development',
       tags: ['CI/CD', 'Version Control', 'Automation', 'Pull Request', 'Workflow'],
-      createdAt: 'Nov 8, 2025, 1:20 PM',
+      createdAt: 'Nov 8, 2026, 1:20 PM',
     },
     {
       id: '5',
@@ -368,7 +368,7 @@ export function MCPToolsPage() {
       },
       category: 'Productivity',
       tags: ['Documentation', 'Notes', 'Wiki', 'Database', 'Templates'],
-      createdAt: 'Nov 7, 2025, 9:45 AM',
+      createdAt: 'Nov 7, 2026, 9:45 AM',
     },
     {
       id: '6',
@@ -381,7 +381,7 @@ export function MCPToolsPage() {
       },
       category: 'Communication',
       tags: ['Chat', 'Community', 'Bot', 'Voice', 'Gaming'],
-      createdAt: 'Nov 6, 2025, 3:30 PM',
+      createdAt: 'Nov 6, 2026, 3:30 PM',
     },
     {
       id: '7',
@@ -394,7 +394,7 @@ export function MCPToolsPage() {
       },
       category: 'Cloud',
       tags: ['S3', 'Lambda', 'EC2', 'RDS', 'CloudWatch'],
-      createdAt: 'Nov 5, 2025, 11:00 AM',
+      createdAt: 'Nov 5, 2026, 11:00 AM',
     },
     {
       id: '8',
@@ -408,7 +408,7 @@ export function MCPToolsPage() {
       },
       category: 'Productivity',
       tags: ['Project', 'Issue Tracking', 'Agile', 'Sprint', 'Backlog'],
-      createdAt: 'Nov 4, 2025, 2:15 PM',
+      createdAt: 'Nov 4, 2026, 2:15 PM',
     },
     {
       id: '9',
@@ -421,7 +421,7 @@ export function MCPToolsPage() {
       },
       category: 'Development',
       tags: ['Issue', 'Sprint', 'Planning', 'Roadmap', 'Milestone'],
-      createdAt: 'Nov 3, 2025, 8:30 AM',
+      createdAt: 'Nov 3, 2026, 8:30 AM',
     },
     {
       id: '10',
@@ -434,7 +434,7 @@ export function MCPToolsPage() {
       },
       category: 'Design',
       tags: ['UI/UX', 'Prototype', 'Collaboration', 'Design system', 'Components'],
-      createdAt: 'Nov 2, 2025, 5:45 PM',
+      createdAt: 'Nov 2, 2026, 5:45 PM',
     },
   ];
 

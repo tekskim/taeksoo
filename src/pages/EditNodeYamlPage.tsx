@@ -29,7 +29,7 @@ metadata:
     management.cattle.io/pod-requests: '{"cpu":"1360m","memory":"338Mi","pods":"43"}'
     node.alpha.kubernetes.io/ttl: '0'
     volumes.kubernetes.io/controller-managed-attach-detach: 'true'
-  creationTimestamp: '2025-10-14T06:59:07Z'
+  creationTimestamp: '2026-10-14T06:59:07Z'
   finalizers:
     - wrangler.cattle.io/node
   labels:
@@ -95,26 +95,26 @@ status:
     memory: 8019Mi
     pods: '110'
   conditions:
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet has sufficient memory available
       reason: KubeletHasSufficientMemory
       status: 'False'
       type: MemoryPressure
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet has no disk pressure
       reason: KubeletHasNoDiskPressure
       status: 'False'
       type: DiskPressure
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet has sufficient PID available
       reason: KubeletHasSufficientPID
       status: 'False'
       type: PIDPressure
-    - lastHeartbeatTime: '2025-01-15T10:00:00Z'
-      lastTransitionTime: '2025-10-14T06:59:07Z'
+    - lastHeartbeatTime: '2026-01-15T10:00:00Z'
+      lastTransitionTime: '2026-10-14T06:59:07Z'
       message: kubelet is posting ready status
       reason: KubeletReady
       status: 'True'

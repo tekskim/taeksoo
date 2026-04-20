@@ -154,7 +154,7 @@ const mockNodeData: Record<string, NodeData> = {
       'alpha.kubernetes.io/provided-node-ip': '172.16.0.237',
       'csi.volume.kubernetes.io/nodeid': '{"driver.csi.io":"thakicloud"}',
     },
-    createdAt: 'Jul 25, 2025 16:45:11',
+    createdAt: 'Jul 25, 2026 16:45:11',
     cpu: { used: 0.24, total: 4 },
     memory: { used: 5.45, total: 14, unit: 'GB' },
     pods: { used: 17, total: 110 },
@@ -187,7 +187,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.29',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025 09:12:33',
+    createdAt: 'Nov 3, 2026 09:12:33',
   },
   {
     id: '2',
@@ -199,7 +199,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.30',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025 10:24:15',
+    createdAt: 'Nov 3, 2026 10:24:15',
   },
   {
     id: '3',
@@ -211,7 +211,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.42.0.31',
     node: 'thakicloud',
-    createdAt: 'Nov 3, 2025 11:36:47',
+    createdAt: 'Nov 3, 2026 11:36:47',
   },
 ];
 
@@ -234,8 +234,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletHasSufficientMemory',
     size: '14 GB',
     message: 'kubelet has sufficient memory available',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
   {
     id: '2',
@@ -244,8 +244,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletHasNoDiskPressure',
     size: '256 GB',
     message: 'kubelet has no disk pressure',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
   {
     id: '3',
@@ -254,8 +254,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletHasSufficientPID',
     size: '32768',
     message: 'kubelet has sufficient PID available',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
   {
     id: '4',
@@ -264,8 +264,8 @@ const mockConditionsData: ConditionRow[] = [
     reason: 'KubeletReady',
     size: '—',
     message: 'kubelet is posting ready status',
-    lastTransition: 'Oct 14, 2025',
-    lastHeartbeat: 'Jan 15, 2025',
+    lastTransition: 'Oct 14, 2026',
+    lastHeartbeat: 'Jan 15, 2026',
   },
 ];
 

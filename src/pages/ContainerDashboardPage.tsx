@@ -451,7 +451,7 @@ export function ContainerDashboardPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
-                <span className="text-body-md text-[var(--color-text-default)]">Nov 9, 2025</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Nov 9, 2026</span>
               </div>
               <div className="flex flex-col gap-1.5">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Deployments</span>

@@ -19,6 +19,7 @@ import {
   Tooltip,
   Badge,
   PageShell,
+  ConfirmModal,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
@@ -144,6 +145,8 @@ export default function FirewallDetailPage() {
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);
   const portsPerPage = 10;
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
@@ -355,7 +358,12 @@ export default function FirewallDetailPage() {
         <DetailHeader>
           <DetailHeader.Title>{firewall.name}</DetailHeader.Title>
           <DetailHeader.Actions>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setDeleteModalOpen(true)}
+            >
               Delete
             </Button>
           </DetailHeader.Actions>
@@ -466,6 +474,20 @@ export default function FirewallDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Delete NACL"
+        description="Removing this NACL is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onConfirm={() => {
+          console.log('Delete NACL:', firewall.id);
+          setDeleteModalOpen(false);
+        }}
+      />
     </PageShell>
   );
 }

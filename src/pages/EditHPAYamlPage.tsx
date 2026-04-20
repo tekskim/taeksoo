@@ -25,7 +25,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: php-apache
     meta.helm.sh/release-namespace: default
-  creationTimestamp: '2025-07-25T09:12:20Z'
+  creationTimestamp: '2026-07-25T09:12:20Z'
   generation: 1
   labels:
     app.kubernetes.io/managed-by: Helm
@@ -48,7 +48,7 @@ metadata:
           f:scaleTargetRef: {}
       manager: helm
       operation: Update
-      time: '2025-07-25T09:12:20Z'
+      time: '2026-07-25T09:12:20Z'
   name: php-apache-hpa
   namespace: default
   resourceVersion: '12345'
@@ -69,12 +69,12 @@ spec:
     name: php-apache
 status:
   conditions:
-    - lastTransitionTime: '2025-07-25T09:12:30Z'
+    - lastTransitionTime: '2026-07-25T09:12:30Z'
       message: recommended size matches current size
       reason: ReadyForNewScale
       status: 'True'
       type: AbleToScale
-    - lastTransitionTime: '2025-07-25T09:12:30Z'
+    - lastTransitionTime: '2026-07-25T09:12:30Z'
       message: the HPA was able to successfully calculate a replica count
       reason: ValidMetricFound
       status: 'True'

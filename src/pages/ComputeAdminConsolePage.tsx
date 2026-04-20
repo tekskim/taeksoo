@@ -90,10 +90,10 @@ export function ComputeAdminConsolePage() {
     addTab({
       id: newTabId,
       label: 'New tab',
-      path: '/',
+      path: '/compute-admin',
       closable: true,
     });
-    navigate('/');
+    navigate('/compute-admin');
   };
 
   // Container options for Select

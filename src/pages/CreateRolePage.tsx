@@ -83,7 +83,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute:tenantA (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -106,7 +106,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -136,7 +136,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute',
     roles: 'admin',
     description: 'Full access to compute resources',
-    editedAt: 'Aug 15, 2025',
+    editedAt: 'Aug 15, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -159,7 +159,7 @@ const mockPolicies: Policy[] = [
     apps: 'storage',
     roles: 'viewer',
     description: 'Read-only access to storage',
-    editedAt: 'Aug 10, 2025',
+    editedAt: 'Aug 10, 2026',
     permissions: [
       { application: 'Storage', partition: '*all', resource: 'Bucket', actions: ['Read', 'List'] },
       { application: 'Storage', partition: '*all', resource: 'Object', actions: ['Read', 'List'] },
@@ -172,7 +172,7 @@ const mockPolicies: Policy[] = [
     apps: 'network',
     roles: 'network-admin',
     description: 'Network administration policy',
-    editedAt: 'Jul 20, 2025',
+    editedAt: 'Jul 20, 2026',
     permissions: [
       {
         application: 'Network',
@@ -195,7 +195,7 @@ const mockPolicies: Policy[] = [
     apps: 'container (+2)',
     roles: 'developer (+1)',
     description: 'Container deployment permissions',
-    editedAt: 'Jul 15, 2025',
+    editedAt: 'Jul 15, 2026',
     permissions: [
       {
         application: 'Container',
@@ -218,7 +218,7 @@ const mockPolicies: Policy[] = [
     apps: 'iam',
     roles: 'viewer',
     description: 'View-only IAM permissions',
-    editedAt: 'Jun 30, 2025',
+    editedAt: 'Jun 30, 2026',
     permissions: [
       { application: 'IAM', partition: '-', resource: 'User', actions: ['Read', 'List'] },
       { application: 'IAM', partition: '-', resource: 'Role', actions: ['Read', 'List'] },
@@ -231,7 +231,7 @@ const mockPolicies: Policy[] = [
     apps: 'security (+3)',
     roles: 'auditor',
     description: 'Security audit permissions',
-    editedAt: 'Jun 25, 2025',
+    editedAt: 'Jun 25, 2026',
     permissions: [
       {
         application: 'Security',
@@ -254,7 +254,7 @@ const mockPolicies: Policy[] = [
     apps: 'database',
     roles: 'db-admin',
     description: 'Database administration policy',
-    editedAt: 'Jun 20, 2025',
+    editedAt: 'Jun 20, 2026',
     permissions: [
       {
         application: 'Database',
@@ -277,7 +277,7 @@ const mockPolicies: Policy[] = [
     apps: 'logging',
     roles: 'support',
     description: 'Access to logging services',
-    editedAt: 'Jun 15, 2025',
+    editedAt: 'Jun 15, 2026',
     permissions: [
       { application: 'Logging', partition: '*all', resource: 'Log', actions: ['Read', 'List'] },
       { application: 'Logging', partition: '*all', resource: 'Metric', actions: ['Read', 'List'] },

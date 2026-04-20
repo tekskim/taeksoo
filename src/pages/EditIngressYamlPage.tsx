@@ -32,7 +32,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: '30'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
-  creationTimestamp: '2025-10-14T07:13:48Z'
+  creationTimestamp: '2026-10-14T07:13:48Z'
   generation: 1
   labels:
     app: thakicloud
@@ -66,7 +66,7 @@ metadata:
           f:tls: {}
       manager: helm
       operation: Update
-      time: '2025-10-14T07:13:48Z'
+      time: '2026-10-14T07:13:48Z'
     - apiVersion: networking.k8s.io/v1
       fieldsType: FieldsV1
       fieldsV1:
@@ -76,7 +76,7 @@ metadata:
       manager: nginx-ingress-controller
       operation: Update
       subresource: status
-      time: '2025-10-14T07:14:02Z'
+      time: '2026-10-14T07:14:02Z'
   name: thakicloud
   namespace: cattle-system
   resourceVersion: '4123'

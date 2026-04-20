@@ -81,7 +81,7 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     name: 'presidio-pii-deid-eb9502cc',
     status: 'running',
     namespace: 'default',
-    createdAt: 'Jan 8, 2025 11:51:27',
+    createdAt: 'Jan 8, 2026 11:51:27',
     computeType: 'gpu × 1',
     memory: '40960Mi',
     cost: '$0.89/hr',
@@ -109,7 +109,7 @@ const mockWorkloadsMap: Record<string, WorkloadDetail> = {
     name: 'audiocraft-f6c7d9c6',
     status: 'running',
     namespace: 'default',
-    createdAt: 'Jan 7, 2025 04:38:10',
+    createdAt: 'Jan 7, 2026 04:38:10',
     computeType: 'gpu × 1',
     memory: '40960Mi',
     cost: '$0.89/hr',
@@ -575,15 +575,15 @@ export function WorkloadDetailPage() {
               <div className="pt-6">
                 <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
                   <pre className="whitespace-pre-wrap">
-                    {`[2025-01-08 14:30:00] Starting container...
-[2025-01-08 14:30:02] Pulling image presidio-pii-deid:latest
-[2025-01-08 14:30:15] Image pulled successfully
-[2025-01-08 14:30:16] Creating container...
-[2025-01-08 14:30:18] Container created
-[2025-01-08 14:30:19] Starting services...
-[2025-01-08 14:30:25] GPU initialized: NVIDIA A100 40GB
-[2025-01-08 14:30:30] Service ready on port 8080
-[2025-01-08 14:30:30] Workload is now running`}
+                    {`[2026-01-08 14:30:00] Starting container...
+[2026-01-08 14:30:02] Pulling image presidio-pii-deid:latest
+[2026-01-08 14:30:15] Image pulled successfully
+[2026-01-08 14:30:16] Creating container...
+[2026-01-08 14:30:18] Container created
+[2026-01-08 14:30:19] Starting services...
+[2026-01-08 14:30:25] GPU initialized: NVIDIA A100 40GB
+[2026-01-08 14:30:30] Service ready on port 8080
+[2026-01-08 14:30:30] Workload is now running`}
                   </pre>
                 </div>
               </div>

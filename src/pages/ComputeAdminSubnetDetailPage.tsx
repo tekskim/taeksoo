@@ -78,7 +78,7 @@ const mockSubnetDetail: SubnetDetail = {
   name: 'subnet-1',
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
-  createdAt: 'Jul 25, 2025 10:32:16',
+  createdAt: 'Jul 25, 2026 10:32:16',
   // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,
@@ -125,7 +125,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   floatingIp: i % 3 === 0 ? '' : '-',
   macAddress: 'fa:16:3e:77:62:19',
   adminState: i % 7 === 0 ? 'Down' : 'Up',
-  createdAt: 'Dec 15, 2025 12:22:26',
+  createdAt: 'Dec 15, 2026 12:22:26',
 }));
 
 /* ----------------------------------------

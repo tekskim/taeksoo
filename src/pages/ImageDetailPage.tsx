@@ -457,7 +457,7 @@ const mockImageDetail: ImageDetail = {
   name: 'volume-1f6b9382-6afe-4d37-acff-0bd507e6386d',
   pool: 'volumes',
   dataPool: '-',
-  created: '2025-05-12 14:45',
+  created: '2026-05-12 14:45',
   size: '10 GiB',
   objects: '2.6 k',
   objectSize: '4 MiB',

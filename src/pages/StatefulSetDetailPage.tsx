@@ -112,7 +112,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
     status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025 16:45:11',
+    createdAt: 'Jul 25, 2026 16:45:11',
     podRestarts: 1,
     ready: { current: 1, desired: 1 },
     labels: {
@@ -132,7 +132,7 @@ const mockStatefulSetData: Record<string, StatefulSetData> = {
     status: 'Active',
     namespace: 'database',
     image: 'mysql:8.0',
-    createdAt: 'Nov 9, 2025 09:12:33',
+    createdAt: 'Nov 9, 2026 09:12:33',
     podRestarts: 0,
     ready: { current: 1, desired: 1 },
     labels: {
@@ -155,7 +155,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:47:22',
+    createdAt: 'Jul 25, 2026 16:47:22',
     containers: [
       'container-0',
       'container-1',
@@ -174,7 +174,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:49:33',
+    createdAt: 'Jul 25, 2026 16:49:33',
     containers: ['container-0'],
   },
   {
@@ -186,7 +186,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:51:44',
+    createdAt: 'Jul 25, 2026 16:51:44',
     containers: ['container-0'],
   },
   {
@@ -198,7 +198,7 @@ const mockPodsData: PodRow[] = [
     restarts: 3,
     ip: '10.11.0.14',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 16:53:55',
+    createdAt: 'Jul 25, 2026 16:53:55',
     containers: ['container-0'],
   },
 ];
@@ -211,7 +211,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.0.0.100:80',
     selector: 'app=statefulset',
     type: 'ClusterIP',
-    createdAt: 'Jul 25, 2025 16:55:06',
+    createdAt: 'Jul 25, 2026 16:55:06',
   },
 ];
 
@@ -222,8 +222,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'StatefulSet has minimum availability.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 

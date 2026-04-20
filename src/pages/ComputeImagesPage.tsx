@@ -70,7 +70,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Base Ubuntu 22.04 image',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
     status: 'active',
   },
   {
@@ -83,7 +83,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Minimal CentOS 8 installation',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     status: 'active',
   },
   {
@@ -96,7 +96,7 @@ const mockImages: Image[] = [
     visibility: 'Shared',
     access: 'Shared',
     description: 'Rocky Linux 9 server image',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
     status: 'active',
   },
   {
@@ -109,7 +109,7 @@ const mockImages: Image[] = [
     visibility: 'Public',
     access: 'Public',
     description: 'Standard Debian 12 image',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     status: 'active',
   },
   {
@@ -122,7 +122,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Ubuntu 20.04 LTS server',
-    createdAt: 'Aug 28, 2025 07:11:07',
+    createdAt: 'Aug 28, 2026 07:11:07',
     status: 'active',
   },
   {
@@ -135,7 +135,7 @@ const mockImages: Image[] = [
     visibility: 'Shared',
     access: 'Shared',
     description: 'Windows Server 2022 Datacenter',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     status: 'pending',
   },
   {
@@ -148,7 +148,7 @@ const mockImages: Image[] = [
     visibility: 'Public',
     access: 'Public',
     description: 'Lightweight Alpine Linux',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockImages: Image[] = [
     visibility: 'Community',
     access: 'Private',
     description: 'Fedora 39 workstation image',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     status: 'active',
   },
   {
@@ -174,7 +174,7 @@ const mockImages: Image[] = [
     visibility: 'Shared',
     access: 'Shared',
     description: 'Oracle Linux 8 for databases',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     status: 'deactivated',
   },
   {
@@ -187,7 +187,7 @@ const mockImages: Image[] = [
     visibility: 'Private',
     access: 'Private',
     description: 'Ubuntu with GPU drivers',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     status: 'active',
   },
 ];

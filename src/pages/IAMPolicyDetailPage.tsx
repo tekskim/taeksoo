@@ -89,8 +89,8 @@ const mockPoliciesMap: Record<string, PolicyDetail> = {
     description: 'Provide read only access to all apps',
     type: 'Custom',
     condition: '-',
-    editedAt: 'Jul 25, 2025',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    editedAt: 'Jul 25, 2026',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   'p-002': {
     id: 'p-002',
@@ -98,8 +98,8 @@ const mockPoliciesMap: Record<string, PolicyDetail> = {
     description: 'Full access policy for compute resources',
     type: 'Built-in',
     condition: 'MFA Required',
-    editedAt: 'Aug 15, 2025',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    editedAt: 'Aug 15, 2026',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
   'p-003': {
     id: 'p-003',
@@ -107,8 +107,8 @@ const mockPoliciesMap: Record<string, PolicyDetail> = {
     description: 'Full access to compute resources',
     type: 'Built-in',
     condition: '-',
-    editedAt: 'Aug 15, 2025',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    editedAt: 'Aug 15, 2026',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
 };
 
@@ -177,7 +177,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Built-in',
     userGroupCount: 5,
     policies: 'FullAccess (+2)',
-    createdAt: 'Jun 1, 2025 10:20:28',
+    createdAt: 'Jun 1, 2026 10:20:28',
   },
   {
     id: 'role-002',
@@ -185,7 +185,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Built-in',
     userGroupCount: 3,
     policies: 'ComputeAccess',
-    createdAt: 'Jun 15, 2025 12:22:26',
+    createdAt: 'Jun 15, 2026 12:22:26',
   },
   {
     id: 'role-003',
@@ -193,7 +193,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Built-in',
     userGroupCount: 8,
     policies: 'ReadOnly (+1)',
-    createdAt: 'Jul 1, 2025 10:20:28',
+    createdAt: 'Jul 1, 2026 10:20:28',
   },
   {
     id: 'role-004',
@@ -201,7 +201,7 @@ const mockAttachedRoles: AttachedRole[] = [
     type: 'Custom',
     userGroupCount: 4,
     policies: 'NetworkAccess (+1)',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
 ];
 
@@ -212,7 +212,7 @@ const mockVersionHistory: PolicyVersion[] = [
     isActive: true,
     conditions: 'MFA',
     editedBy: 'thaki-kim',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     statements: [
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
@@ -225,7 +225,7 @@ const mockVersionHistory: PolicyVersion[] = [
     isActive: false,
     conditions: '-',
     editedBy: 'alex-jones',
-    editedAt: 'Sep 11, 2025',
+    editedAt: 'Sep 11, 2026',
     statements: [
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
@@ -239,7 +239,7 @@ const mockVersionHistory: PolicyVersion[] = [
     isActive: false,
     conditions: 'IP Range',
     editedBy: 'sarah-lee',
-    editedAt: 'Sep 5, 2025',
+    editedAt: 'Sep 5, 2026',
     statements: [
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
@@ -251,7 +251,7 @@ const mockVersionHistory: PolicyVersion[] = [
     isActive: false,
     conditions: '-',
     editedBy: 'thaki-kim',
-    editedAt: 'Aug 20, 2025',
+    editedAt: 'Aug 20, 2026',
     statements: ['{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}'],
   },
   {
@@ -260,7 +260,7 @@ const mockVersionHistory: PolicyVersion[] = [
     isActive: false,
     conditions: '-',
     editedBy: 'thaki-kim',
-    editedAt: 'Jul 25, 2025',
+    editedAt: 'Jul 25, 2026',
     statements: [
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',
       '{app}:{partition}:{resource}:{resourceId}:{actionclass}:{action}',

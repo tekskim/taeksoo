@@ -910,7 +910,7 @@ export function CloudBuilderDetailPage() {
                     />
                     <SectionCard.DataRow
                       label="Created at"
-                      value={serverDerived?.createdAt ?? 'Oct 06, 2025 09:05:45'}
+                      value={serverDerived?.createdAt ?? 'Oct 06, 2026 09:05:45'}
                     />
                   </SectionCard.Content>
                 </SectionCard>

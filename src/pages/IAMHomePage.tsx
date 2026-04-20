@@ -316,7 +316,7 @@ export function IAMHomePage() {
             <VStack gap={4} className="mt-auto">
               <div>
                 <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Created at</div>
-                <div className="text-body-md text-[var(--color-text-default)]">Dec 12, 2025</div>
+                <div className="text-body-md text-[var(--color-text-default)]">Dec 12, 2026</div>
               </div>
               <div>
                 <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Description</div>

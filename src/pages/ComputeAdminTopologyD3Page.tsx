@@ -170,21 +170,21 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-apne2-public',
     status: 'active',
     description: 'Seoul Region Public Internet',
-    createdAt: '2024-01-15T09:00:00Z',
+    createdAt: '2026-01-15T09:00:00Z',
   },
   {
     id: 'extnet-usw2-pub-001',
     name: 'extnet-usw2-public',
     status: 'active',
     description: 'Oregon Region Public Internet',
-    createdAt: '2024-02-20T14:30:00Z',
+    createdAt: '2026-02-20T14:30:00Z',
   },
   {
     id: 'extnet-dc-priv-001',
     name: 'extnet-dc-private',
     status: 'active',
     description: 'Datacenter Direct Connect',
-    createdAt: '2024-03-10T11:00:00Z',
+    createdAt: '2026-03-10T11:00:00Z',
   },
   // Case 1: 아무것도 연결되지 않은 External Network
   {
@@ -192,7 +192,7 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-isolated',
     status: 'active',
     description: 'Isolated External Network (no connections)',
-    createdAt: '2024-06-01T08:00:00Z',
+    createdAt: '2026-06-01T08:00:00Z',
   },
   // Case 2: External Network + Router만 연결 (VPC 없음)
   {
@@ -200,7 +200,7 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-router-only',
     status: 'active',
     description: 'External Network with Router only',
-    createdAt: '2024-04-05T16:00:00Z',
+    createdAt: '2026-04-05T16:00:00Z',
   },
 ];
 
@@ -212,21 +212,21 @@ const routers: Router[] = [
     name: 'prod-apne2-edge',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
-    createdAt: '2024-01-20T10:00:00Z',
+    createdAt: '2026-01-20T10:00:00Z',
   },
   {
     id: 'rtr-nprd-apne2-edge-001',
     name: 'k8s-clusterapi-cluster-tkdev-oks-tkdev-oks-003',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
-    createdAt: '2024-01-25T14:00:00Z',
+    createdAt: '2026-01-25T14:00:00Z',
   },
   {
     id: 'rtr-mgmt-apne2-int-001',
     name: 'mgmt-apne2-int',
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
-    createdAt: '2024-03-15T09:00:00Z',
+    createdAt: '2026-03-15T09:00:00Z',
   },
   // US Region (usw2)
   {
@@ -234,14 +234,14 @@ const routers: Router[] = [
     name: 'prod-usw2-edge',
     status: 'active',
     externalNetworkId: 'extnet-usw2-pub-001',
-    createdAt: '2024-02-25T11:00:00Z',
+    createdAt: '2026-02-25T11:00:00Z',
   },
   {
     id: 'rtr-dr-usw2-edge-001',
     name: 'dr-usw2-edge',
     status: 'inactive',
     externalNetworkId: 'extnet-usw2-pub-001',
-    createdAt: '2024-03-01T16:00:00Z',
+    createdAt: '2026-03-01T16:00:00Z',
   },
   // Shared Infrastructure
   {
@@ -249,7 +249,7 @@ const routers: Router[] = [
     name: 'shrd-dc-int',
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
-    createdAt: '2024-03-20T13:00:00Z',
+    createdAt: '2026-03-20T13:00:00Z',
   },
   // Case 2: External Network + Router만 연결
   {
@@ -257,7 +257,7 @@ const routers: Router[] = [
     name: 'router-only',
     status: 'active',
     externalNetworkId: 'extnet-router-only-001',
-    createdAt: '2024-04-10T10:00:00Z',
+    createdAt: '2026-04-10T10:00:00Z',
   },
   // Case 3: 아무것도 연결되지 않은 Router (standalone)
   {
@@ -265,7 +265,7 @@ const routers: Router[] = [
     name: 'isolated-router',
     status: 'active',
     // externalNetworkId 없음
-    createdAt: '2024-05-01T08:00:00Z',
+    createdAt: '2026-05-01T08:00:00Z',
   },
   // Case 4: Router + VPC + LB만 (External Network 없음)
   {
@@ -273,7 +273,7 @@ const routers: Router[] = [
     name: 'internal-only-router',
     status: 'active',
     // externalNetworkId 없음
-    createdAt: '2024-05-15T12:00:00Z',
+    createdAt: '2026-05-15T12:00:00Z',
   },
 ];
 
@@ -312,74 +312,74 @@ const networks: Network[] = [
     id: 'vpc-prod-apne2-web-001',
     name: 'prod-apne2-web',
     status: 'active',
-    createdAt: '2024-01-22T09:00:00Z',
+    createdAt: '2026-01-22T09:00:00Z',
   },
   {
     id: 'vpc-prod-apne2-app-001',
     name: 'prod-apne2-app',
     status: 'active',
-    createdAt: '2024-01-23T10:00:00Z',
+    createdAt: '2026-01-23T10:00:00Z',
   },
   {
     id: 'vpc-prod-apne2-data-001',
     name: 'prod-apne2-data',
     status: 'active',
-    createdAt: '2024-01-24T11:00:00Z',
+    createdAt: '2026-01-24T11:00:00Z',
   },
   // Production - US (usw2)
   {
     id: 'vpc-prod-usw2-web-001',
     name: 'prod-usw2-web',
     status: 'active',
-    createdAt: '2024-02-26T09:00:00Z',
+    createdAt: '2026-02-26T09:00:00Z',
   },
   {
     id: 'vpc-prod-usw2-app-001',
     name: 'prod-usw2-app',
     status: 'active',
-    createdAt: '2024-02-27T10:00:00Z',
+    createdAt: '2026-02-27T10:00:00Z',
   },
   // Non-Production
   {
     id: 'vpc-stg-apne2-001',
     name: 'stg-apne2',
     status: 'active',
-    createdAt: '2024-02-01T08:00:00Z',
+    createdAt: '2026-02-01T08:00:00Z',
   },
   {
     id: 'vpc-dev-apne2-001',
     name: 'dev-apne2',
     status: 'active',
-    createdAt: '2024-02-05T09:00:00Z',
+    createdAt: '2026-02-05T09:00:00Z',
   },
-  { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active', createdAt: '2024-02-10T10:00:00Z' },
+  { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active', createdAt: '2026-02-10T10:00:00Z' },
   // Infrastructure
-  { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active', createdAt: '2024-03-18T08:00:00Z' },
+  { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active', createdAt: '2026-03-18T08:00:00Z' },
   {
     id: 'vpc-mgmt-apne2-001',
     name: 'mgmt-apne2',
     status: 'active',
-    createdAt: '2024-03-16T09:00:00Z',
+    createdAt: '2026-03-16T09:00:00Z',
   },
   {
     id: 'vpc-dmz-apne2-001',
     name: 'dmz-apne2',
     status: 'active',
-    createdAt: '2024-03-17T10:00:00Z',
+    createdAt: '2026-03-17T10:00:00Z',
   },
   // Case 4: Router + VPC + LB만 (ExtNet 없음)
   {
     id: 'vpc-internal-only-001',
     name: 'internal-only-vpc',
     status: 'active',
-    createdAt: '2024-05-16T08:00:00Z',
+    createdAt: '2026-05-16T08:00:00Z',
   },
   // Case 5: VPC + LB만 (Router 없음)
   {
     id: 'vpc-standalone-001',
     name: 'standalone-vpc',
     status: 'active',
-    createdAt: '2024-06-01T09:00:00Z',
+    createdAt: '2026-06-01T09:00:00Z',
   },
 ];
 
@@ -1003,7 +1003,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.100',
-    createdAt: '2024-03-18T09:00:00Z',
+    createdAt: '2026-03-18T09:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-grafana-001',
@@ -1011,7 +1011,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.101',
-    createdAt: '2024-03-18T10:00:00Z',
+    createdAt: '2026-03-18T10:00:00Z',
   },
   // Case 6: 4 LBs connected to single subnet (monitoring)
   {
@@ -1020,7 +1020,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.102',
-    createdAt: '2024-03-18T11:00:00Z',
+    createdAt: '2026-03-18T11:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-loki-001',
@@ -1028,7 +1028,7 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.103',
-    createdAt: '2024-03-18T12:00:00Z',
+    createdAt: '2026-03-18T12:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-jenkins-001',

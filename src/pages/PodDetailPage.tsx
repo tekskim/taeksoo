@@ -104,7 +104,7 @@ const mockPodData: Record<string, PodData> = {
     status: 'Running',
     namespace: 'default',
     podIP: '10.11.0.11',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     workload: 'deploymentName',
     workloadType: 'Deployment',
     node: 'nodeName',
@@ -133,7 +133,7 @@ const mockPodData: Record<string, PodData> = {
     status: 'Running',
     namespace: 'default',
     podIP: '10.76.0.12',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     workload: 'nginx-deployment',
     workloadType: 'Deployment',
     node: 'worker-node-1',
@@ -163,7 +163,7 @@ const mockContainersData: ContainerRow[] = [
     image: 'imageName',
     initContainer: true,
     restarts: 1,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
@@ -173,7 +173,7 @@ const mockContainersData: ContainerRow[] = [
     image: 'nginx:1.27',
     initContainer: false,
     restarts: 0,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '3',
@@ -183,7 +183,7 @@ const mockContainersData: ContainerRow[] = [
     image: 'sidecar:latest',
     initContainer: false,
     restarts: 2,
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
 ];
 
@@ -194,8 +194,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'PodReady',
     message: 'Pod is ready.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
   {
     id: '2',
@@ -203,8 +203,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'ContainersReady',
     message: 'All containers are ready.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 

@@ -61,7 +61,7 @@ const ingressesData: IngressRow[] = [
     target: ['http → 80/TCP', 'https-internal → 444/TCP'],
     default: '-',
     ingressClass: 'traefik',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -71,7 +71,7 @@ const ingressesData: IngressRow[] = [
     target: ['api → 8080/TCP'],
     default: '-',
     ingressClass: 'nginx',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -81,7 +81,7 @@ const ingressesData: IngressRow[] = [
     target: ['web → 80/TCP', 'websecure → 443/TCP'],
     default: 'backend-service:80',
     ingressClass: 'traefik',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '4',
@@ -91,7 +91,7 @@ const ingressesData: IngressRow[] = [
     target: ['app → 3000/TCP'],
     default: '-',
     ingressClass: 'traefik',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
 ];
 

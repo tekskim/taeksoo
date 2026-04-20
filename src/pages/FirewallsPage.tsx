@@ -14,6 +14,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  ConfirmModal,
   Badge,
   PageShell,
   PageHeader,
@@ -68,6 +69,11 @@ interface FirewallPolicy {
   createdAt: string;
 }
 
+type DeleteTarget =
+  | { kind: 'firewall'; item: Firewall }
+  | { kind: 'policy'; item: FirewallPolicy }
+  | { kind: 'rule'; item: FirewallRule };
+
 interface FirewallRule {
   id: string;
   name: string;
@@ -107,7 +113,7 @@ const mockFirewalls: Firewall[] = Array.from({ length: 25 }, (_, i) => ({
         ]
       : [],
   adminState: i % 5 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026 ${String(8 + (i % 16)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
 }));
 
 const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i) => ({
@@ -125,7 +131,7 @@ const mockFirewallPolicies: FirewallPolicy[] = Array.from({ length: 20 }, (_, i)
   audited: i % 2 === 0,
   shared: i % 3 === 0,
   adminState: i % 4 === 0 ? 'Down' : 'Up',
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
 }));
 
 const mockFirewallRules: FirewallRule[] = Array.from({ length: 30 }, (_, i) => ({
@@ -141,7 +147,7 @@ const mockFirewallRules: FirewallRule[] = Array.from({ length: 30 }, (_, i) => (
   destinationPort: ['80', '443', '22', '3306', 'any'][i % 5],
   action: ['allow', 'deny', 'reject'][i % 3] as 'allow' | 'deny' | 'reject',
   enabled: i % 4 !== 0,
-  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2025`,
+  createdAt: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i % 12]} ${(i % 28) + 1}, 2026`,
 }));
 
 /* ----------------------------------------
@@ -184,6 +190,9 @@ export default function FirewallsPage() {
   const rulesPerPage = 10;
 
   const [loading, setLoading] = useState(true);
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<DeleteTarget | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -250,6 +259,18 @@ export default function FirewallsPage() {
     return filteredRules.slice(start, start + rulesPerPage);
   }, [filteredRules, ruleCurrentPage]);
 
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (itemToDelete) {
+      console.log('Delete confirmed', itemToDelete.kind, itemToDelete.item.id);
+    }
+    handleDeleteCancel();
+  };
+
   // Context menu items
   const getFirewallMenuItems = (fw: Firewall): ContextMenuItem[] => [
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit firewall', fw.id) },
@@ -262,7 +283,10 @@ export default function FirewallsPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      onClick: () => console.log('Delete firewall', fw.id),
+      onClick: () => {
+        setItemToDelete({ kind: 'firewall', item: fw });
+        setDeleteModalOpen(true);
+      },
     },
   ];
 
@@ -273,7 +297,10 @@ export default function FirewallsPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      onClick: () => console.log('Delete policy', p.id),
+      onClick: () => {
+        setItemToDelete({ kind: 'policy', item: p });
+        setDeleteModalOpen(true);
+      },
     },
   ];
 
@@ -283,7 +310,10 @@ export default function FirewallsPage() {
       id: 'delete',
       label: 'Delete',
       status: 'danger',
-      onClick: () => console.log('Delete rule', r.id),
+      onClick: () => {
+        setItemToDelete({ kind: 'rule', item: r });
+        setDeleteModalOpen(true);
+      },
     },
   ];
 
@@ -902,6 +932,31 @@ export default function FirewallsPage() {
           </TabPanel>
         </Tabs>
       </VStack>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title={
+          itemToDelete?.kind === 'firewall'
+            ? 'Delete NACL'
+            : itemToDelete?.kind === 'policy'
+              ? 'Delete NACL policy'
+              : 'Delete NACL rule'
+        }
+        description="This action is permanent and cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        infoLabel={
+          itemToDelete?.kind === 'firewall'
+            ? 'NACL name'
+            : itemToDelete?.kind === 'policy'
+              ? 'Policy name'
+              : 'Rule name'
+        }
+        infoValue={itemToDelete?.item.name}
+      />
     </PageShell>
   );
 }

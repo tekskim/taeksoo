@@ -117,7 +117,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
     status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     podRestarts: 3,
     ready: { current: 1, desired: 1 },
     upToDate: 1,
@@ -139,7 +139,7 @@ const mockDeploymentData: Record<string, DeploymentData> = {
     status: 'Active',
     namespace: 'ingress-nginx',
     image: 'nginx-ingress-controller:v1.9.4',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     podRestarts: 0,
     ready: { current: 3, desired: 3 },
     upToDate: 3,
@@ -165,7 +165,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: [
       'container-0',
       'container-1',
@@ -185,7 +185,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: ['container-0'],
   },
   {
@@ -198,7 +198,7 @@ const mockPodsData: PodRow[] = [
     restarts: 2,
     ip: '10.11.0.13',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: ['container-0'],
   },
   {
@@ -211,7 +211,7 @@ const mockPodsData: PodRow[] = [
     restarts: 3,
     ip: '10.11.0.14',
     node: 'nodeName',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     containers: ['container-0'],
   },
 ];
@@ -224,7 +224,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.43.136.100:443 → webhook-server/TCP',
     selector: 'cluster.x-k8s.io/provider=cluster-api',
     type: 'Cluster IP',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
   {
     id: '2',
@@ -233,7 +233,7 @@ const mockServicesData: ServiceRow[] = [
     target: '10.43.136.101:80 → http/TCP',
     selector: 'app=cart-manager',
     type: 'Cluster IP',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
   },
 ];
 
@@ -244,8 +244,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'Deployment has minimum availability.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
   {
     id: '2',
@@ -253,8 +253,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet "cart-manager-77" has successfully progressed.',
-    lastTransition: 'Jul 25, 2025',
-    lastUpdate: 'Jul 25, 2025',
+    lastTransition: 'Jul 25, 2026',
+    lastUpdate: 'Jul 25, 2026',
   },
 ];
 

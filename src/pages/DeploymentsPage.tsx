@@ -61,7 +61,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '1/1',
     upToDate: 1,
     available: 1,
-    createdAt: 'Nov 10, 2025 08:35:22',
+    createdAt: 'Nov 10, 2026 08:35:22',
   },
   {
     id: '2',
@@ -72,7 +72,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '3/3',
     upToDate: 3,
     available: 3,
-    createdAt: 'Nov 8, 2025 11:42:18',
+    createdAt: 'Nov 8, 2026 11:42:18',
   },
   {
     id: '3',
@@ -83,7 +83,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '1/1',
     upToDate: 1,
     available: 1,
-    createdAt: 'Nov 7, 2025 14:28:45',
+    createdAt: 'Nov 7, 2026 14:28:45',
   },
   {
     id: '4',
@@ -94,7 +94,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '0/1',
     upToDate: 1,
     available: 0,
-    createdAt: 'Nov 9, 2025 09:15:33',
+    createdAt: 'Nov 9, 2026 09:15:33',
   },
   {
     id: '5',
@@ -105,7 +105,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '1/1',
     upToDate: 1,
     available: 1,
-    createdAt: 'Nov 6, 2025 16:52:07',
+    createdAt: 'Nov 6, 2026 16:52:07',
   },
   {
     id: '6',
@@ -116,7 +116,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '0/2',
     upToDate: 0,
     available: 0,
-    createdAt: 'Nov 10, 2025 10:18:41',
+    createdAt: 'Nov 10, 2026 10:18:41',
   },
   {
     id: '7',
@@ -127,7 +127,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '2/2',
     upToDate: 2,
     available: 2,
-    createdAt: 'Nov 5, 2025 13:45:29',
+    createdAt: 'Nov 5, 2026 13:45:29',
   },
   {
     id: '8',
@@ -138,7 +138,7 @@ const deploymentsData: DeploymentRow[] = [
     ready: '3/3',
     upToDate: 3,
     available: 3,
-    createdAt: 'Nov 4, 2025 11:22:14',
+    createdAt: 'Nov 4, 2026 11:22:14',
   },
 ];
 

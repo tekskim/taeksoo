@@ -28,11 +28,14 @@ export default function SettingsAccountPage() {
 
   // Account State
   const [name, setName] = useState('John Doe');
-  const [email] = useState('john.doe@thakicloud.co.kr');
+  const [email, setEmail] = useState('john.doe@thakicloud.co.kr');
+  const [isEditingAccount, setIsEditingAccount] = useState(false);
+  const [draftName, setDraftName] = useState('John Doe');
+  const [draftEmail, setDraftEmail] = useState('john.doe@thakicloud.co.kr');
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordLastUpdated, setPasswordLastUpdated] = useState('Jan 10, 2024');
+  const [passwordLastUpdated, setPasswordLastUpdated] = useState('Jan 10, 2026');
 
   // 2-Step Verification State
   const [twoStepEnabled, setTwoStepEnabled] = useState(false);
@@ -137,16 +140,75 @@ export default function SettingsAccountPage() {
           <SectionCard.Header
             title="Account information"
             actions={
-              <Button variant="outline" size="sm" className="gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => {
+                  setDraftName(name);
+                  setDraftEmail(email);
+                  setIsEditingAccount(true);
+                }}
+              >
                 <IconEdit size={16} />
                 Edit{' '}
               </Button>
             }
           />
           <SectionCard.Content>
-            <SectionCard.DataRow label="ID" value="john.doe" />
-            <SectionCard.DataRow label="Email" value={email} />
-            <SectionCard.DataRow label="Name" value={name} />
+            {!isEditingAccount ? (
+              <>
+                <SectionCard.DataRow label="ID" value="john.doe" />
+                <SectionCard.DataRow label="Email" value={email} />
+                <SectionCard.DataRow label="Name" value={name} />
+              </>
+            ) : (
+              <VStack gap={4} className="max-w-[400px]">
+                <SectionCard.DataRow label="ID" value="john.doe" />
+                <VStack gap={2}>
+                  <span className="text-label-md text-[var(--color-text-default)]">Email</span>
+                  <Input
+                    type="email"
+                    value={draftEmail}
+                    onChange={(e) => setDraftEmail(e.target.value)}
+                    placeholder="Email"
+                  />
+                </VStack>
+                <VStack gap={2}>
+                  <span className="text-label-md text-[var(--color-text-default)]">Name</span>
+                  <Input
+                    value={draftName}
+                    onChange={(e) => setDraftName(e.target.value)}
+                    placeholder="Name"
+                  />
+                </VStack>
+                <div className="flex gap-2 pt-1">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      setIsEditingAccount(false);
+                      setDraftName(name);
+                      setDraftEmail(email);
+                    }}
+                  >
+                    Cancel{' '}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => {
+                      setName(draftName);
+                      setEmail(draftEmail);
+                      setIsEditingAccount(false);
+                    }}
+                    disabled={!draftName.trim() || !draftEmail.trim()}
+                  >
+                    Save{' '}
+                  </Button>
+                </div>
+              </VStack>
+            )}
           </SectionCard.Content>
         </SectionCard>
 

@@ -510,7 +510,7 @@ export function MCPToolDetailPage() {
     mcpServer: 'Slack',
     category: 'Communication',
     executions: 1234,
-    createdAt: 'Nov 11, 2025, 2:51 PM',
+    createdAt: 'Nov 11, 2026, 2:51 PM',
   };
 
   return (

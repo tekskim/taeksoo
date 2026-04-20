@@ -61,7 +61,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 1,
     current: 1,
     desired: 1,
-    createdAt: 'Nov 10, 2025 08:22:15',
+    createdAt: 'Nov 10, 2026 08:22:15',
   },
   {
     id: '2',
@@ -72,7 +72,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 3,
     current: 3,
     desired: 3,
-    createdAt: 'Nov 9, 2025 10:45:33',
+    createdAt: 'Nov 9, 2026 10:45:33',
   },
   {
     id: '3',
@@ -83,7 +83,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 5,
     current: 5,
     desired: 5,
-    createdAt: 'Nov 8, 2025 13:18:42',
+    createdAt: 'Nov 8, 2026 13:18:42',
   },
   {
     id: '4',
@@ -94,7 +94,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 2,
     current: 3,
     desired: 5,
-    createdAt: 'Nov 10, 2025 14:52:07',
+    createdAt: 'Nov 10, 2026 14:52:07',
   },
   {
     id: '5',
@@ -105,7 +105,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 5,
     current: 5,
     desired: 5,
-    createdAt: 'Nov 7, 2025 09:35:21',
+    createdAt: 'Nov 7, 2026 09:35:21',
   },
   {
     id: '6',
@@ -116,7 +116,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 0,
     current: 0,
     desired: 5,
-    createdAt: 'Nov 10, 2025 16:28:54',
+    createdAt: 'Nov 10, 2026 16:28:54',
   },
   {
     id: '7',
@@ -127,7 +127,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 2,
     current: 2,
     desired: 2,
-    createdAt: 'Nov 6, 2025 11:12:38',
+    createdAt: 'Nov 6, 2026 11:12:38',
   },
   {
     id: '8',
@@ -138,7 +138,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 5,
     current: 5,
     desired: 5,
-    createdAt: 'Nov 5, 2025 15:44:19',
+    createdAt: 'Nov 5, 2026 15:44:19',
   },
 ];
 

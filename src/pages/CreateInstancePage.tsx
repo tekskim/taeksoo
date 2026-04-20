@@ -165,7 +165,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.tiny',
     description: '-',
     visibility: 'Private',
-    createdAt: 'Nov 19, 2025 10:22:15',
+    createdAt: 'Nov 19, 2026 10:22:15',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'tiny-instance',
@@ -189,7 +189,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.small',
     description: 'Small instance',
     visibility: 'Public',
-    createdAt: 'Nov 18, 2025 14:38:42',
+    createdAt: 'Nov 18, 2026 14:38:42',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'small-instance',
@@ -213,7 +213,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.medium',
     description: 'Medium instance',
     visibility: 'Private',
-    createdAt: 'Nov 17, 2025 09:15:33',
+    createdAt: 'Nov 17, 2026 09:15:33',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'medium-instance',
@@ -237,7 +237,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.large',
     description: 'Large instance',
     visibility: 'Public',
-    createdAt: 'Nov 16, 2025 16:52:07',
+    createdAt: 'Nov 16, 2026 16:52:07',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'large-instance',
@@ -260,7 +260,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.xlarge',
     description: 'Extra large instance',
     visibility: 'Private',
-    createdAt: 'Nov 15, 2025 11:03:28',
+    createdAt: 'Nov 15, 2026 11:03:28',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'xlarge-instance',
@@ -284,7 +284,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.2xlarge',
     description: '2x large instance',
     visibility: 'Public',
-    createdAt: 'Nov 14, 2025 13:47:19',
+    createdAt: 'Nov 14, 2026 13:47:19',
     isFavorite: false,
     config: {
       instanceNamePrefix: '2xlarge-instance',
@@ -849,7 +849,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '24.04',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
-    createdAt: 'Sep 1, 2025 08:14:32',
+    createdAt: 'Sep 1, 2026 08:14:32',
   },
   {
     id: 's2',
@@ -858,7 +858,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '22.04',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
-    createdAt: 'Aug 28, 2025 12:25:41',
+    createdAt: 'Aug 28, 2026 12:25:41',
   },
   {
     id: 's3',
@@ -867,7 +867,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '9.2',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
-    createdAt: 'Aug 25, 2025 15:33:18',
+    createdAt: 'Aug 25, 2026 15:33:18',
   },
   {
     id: 's4',
@@ -876,7 +876,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '24.04',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
-    createdAt: 'Aug 20, 2025 09:42:55',
+    createdAt: 'Aug 20, 2026 09:42:55',
   },
   {
     id: 's5',
@@ -885,7 +885,7 @@ const mockSnapshots: SnapshotRow[] = [
     version: '22.04',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
-    createdAt: 'Aug 15, 2025 17:08:27',
+    createdAt: 'Aug 15, 2026 17:08:27',
   },
 ];
 
@@ -896,7 +896,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-01',
     size: '50 GiB',
     type: 'SSD',
-    createdAt: 'Sep 1, 2025 10:55:12',
+    createdAt: 'Sep 1, 2026 10:55:12',
   },
   {
     id: 'v2',
@@ -904,7 +904,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-02',
     size: '100 GiB',
     type: 'SSD',
-    createdAt: 'Aug 28, 2025 14:22:36',
+    createdAt: 'Aug 28, 2026 14:22:36',
   },
   {
     id: 'v3',
@@ -912,7 +912,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'system-disk',
     size: '80 GiB',
     type: 'HDD',
-    createdAt: 'Aug 20, 2025 11:18:44',
+    createdAt: 'Aug 20, 2026 11:18:44',
   },
 ];
 
@@ -2448,20 +2448,20 @@ const mockSecurityGroups: SecurityGroupRow[] = [
     id: 'sg1',
     name: 'default',
     description: 'Default security group',
-    createdAt: 'Aug 15, 2025 13:40:22',
+    createdAt: 'Aug 15, 2026 13:40:22',
   },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025 09:12:05' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2026 09:12:05' },
   {
     id: 'sg3',
     name: 'web-sg',
     description: 'Web server security group',
-    createdAt: 'Sep 10, 2025 16:28:51',
+    createdAt: 'Sep 10, 2026 16:28:51',
   },
   {
     id: 'sg4',
     name: 'db-sg',
     description: 'Database security group',
-    createdAt: 'Sep 15, 2025 10:55:33',
+    createdAt: 'Sep 15, 2026 10:55:33',
   },
 ];
 

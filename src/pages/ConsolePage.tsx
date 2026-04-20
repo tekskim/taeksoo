@@ -86,10 +86,10 @@ export function ConsolePage() {
     addTab({
       id: newTabId,
       label: 'New tab',
-      path: '/',
+      path: '/compute',
       closable: true,
     });
-    navigate('/');
+    navigate('/compute');
   };
 
   // Container options for Select

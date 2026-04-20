@@ -21,9 +21,6 @@ import { LinkExpiredPage } from '@/pages/LinkExpiredPage';
 import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
 
 // Pages - Compute (Pilot - Phase 2-A)
-import { DNSZonesPage } from '@/pages/DNSZonesPage';
-import { BackupPoliciesPage } from '@/pages/BackupPoliciesPage';
-import { ScheduledTasksPage } from '@/pages/ScheduledTasksPage';
 
 // Pages - Compute
 import { InstanceListPage } from '@/pages/InstanceListPage';
@@ -581,9 +578,6 @@ function AppRoutes() {
       <Route path="/compute/firewall-rules/:id" element={<FirewallRuleDetailPage />} />
       <Route path="/compute/firewall/create-rule" element={<CreateFirewallRulePage />} />
       <Route path="/compute/firewall/create-rule-v2" element={<CreateFirewallRulePage />} />
-      <Route path="/compute/dns-zones" element={<DNSZonesPage />} />
-      <Route path="/compute/backup-policies" element={<BackupPoliciesPage />} />
-      <Route path="/compute/scheduled-tasks" element={<ScheduledTasksPage />} />
       <Route path="/compute/topology" element={<TopologyD3Page />} />
       <Route path="/compute/console/:instanceId" element={<ConsolePage />} />
 

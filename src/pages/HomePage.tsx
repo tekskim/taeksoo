@@ -278,13 +278,13 @@ export function HomePage() {
               <ChatItem
                 title="New chat"
                 description="Analyze SQL queries and recommend optimal indexes"
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
                 onClick={() => navigate('/chat')}
               />
               <ChatItem
                 title="New chat"
                 description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
               />
             </VStack>
           </VStack>
@@ -296,52 +296,52 @@ export function HomePage() {
               <ChatItem
                 title="New chat"
                 description="Analyze SQL queries and recommend optimal indexes"
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
               />
               <ChatItem
                 title="New Chat 222"
                 description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
-                createdAt="Sep 26, 2025"
+                createdAt="Sep 26, 2026"
               />
               <ChatItem
                 title="API 최적화 분석"
                 description="REST API 응답 시간을 개선하기 위한 캐싱 전략과 데이터베이스 쿼리 최적화 방법을 검토했습니다."
-                createdAt="Sep 25, 2025"
+                createdAt="Sep 25, 2026"
               />
               <ChatItem
                 title="코드 리뷰 요청"
                 description="새로운 인증 모듈에 대한 코드 리뷰를 진행하고 보안 취약점을 분석했습니다."
-                createdAt="Sep 25, 2025"
+                createdAt="Sep 25, 2026"
               />
               <ChatItem
                 title="데이터 마이그레이션"
                 description="레거시 시스템에서 새 데이터베이스로 마이그레이션하는 스크립트를 작성하고 검증했습니다."
-                createdAt="Sep 24, 2025"
+                createdAt="Sep 24, 2026"
               />
               <ChatItem
                 title="성능 테스트 결과"
                 description="로드 테스트 결과를 분석하고 병목 현상이 발생하는 구간을 식별했습니다."
-                createdAt="Sep 24, 2025"
+                createdAt="Sep 24, 2026"
               />
               <ChatItem
                 title="UI 컴포넌트 설계"
                 description="새로운 대시보드를 위한 재사용 가능한 UI 컴포넌트 라이브러리 설계를 논의했습니다."
-                createdAt="Sep 23, 2025"
+                createdAt="Sep 23, 2026"
               />
               <ChatItem
                 title="배포 자동화"
                 description="CI/CD 파이프라인을 구성하고 자동 배포 프로세스를 설정했습니다."
-                createdAt="Sep 23, 2025"
+                createdAt="Sep 23, 2026"
               />
               <ChatItem
                 title="에러 로깅 시스템"
                 description="중앙 집중식 에러 로깅 시스템을 구축하고 알림 설정을 완료했습니다."
-                createdAt="Sep 22, 2025"
+                createdAt="Sep 22, 2026"
               />
               <ChatItem
                 title="문서화 작업"
                 description="API 문서와 사용자 가이드를 업데이트하고 예제 코드를 추가했습니다."
-                createdAt="Sep 22, 2025"
+                createdAt="Sep 22, 2026"
               />
             </VStack>
           </VStack>
