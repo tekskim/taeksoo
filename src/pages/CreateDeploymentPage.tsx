@@ -28,6 +28,7 @@ import {
   WizardSectionStatusIcon,
   FilterSearchInput,
   Badge,
+  InlineMessage,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -580,6 +581,12 @@ function BasicInfoSection({
    ---------------------------------------- */
 
 interface LabelsAnnotationsSectionProps {
+  title?: string;
+  labelsTitle?: string;
+  labelsDescription?: React.ReactNode;
+  labelsRequired?: boolean;
+  addLabelText?: string;
+  hideAnnotations?: boolean;
   labels: Label[];
   onAddLabel: () => void;
   onRemoveLabel: (index: number) => void;
@@ -591,6 +598,12 @@ interface LabelsAnnotationsSectionProps {
 }
 
 function LabelsAnnotationsSection({
+  title = 'Labels & Annotations',
+  labelsTitle = 'Labels',
+  labelsDescription = 'Specify the labels used to identify and categorize the resource.',
+  labelsRequired = false,
+  addLabelText = 'Add Label',
+  hideAnnotations = false,
   labels,
   onAddLabel,
   onRemoveLabel,
@@ -602,16 +615,17 @@ function LabelsAnnotationsSection({
 }: LabelsAnnotationsSectionProps) {
   return (
     <SectionCard className="pb-4">
-      <SectionCard.Header title="Labels & Annotations" />
+      <SectionCard.Header title={title} />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
           <VStack gap={2}>
             <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the labels used to identify and categorize the resource.
-              </p>
+              <span className="text-label-lg text-[var(--color-text-default)]">
+                {labelsTitle}
+                {labelsRequired && <span className="ml-1 text-[var(--color-state-danger)]">*</span>}
+              </span>
+              <p className="text-body-md text-[var(--color-text-subtle)]">{labelsDescription}</p>
             </VStack>
 
             {/* Labels container */}
@@ -661,7 +675,7 @@ function LabelsAnnotationsSection({
                     leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddLabel}
                   >
-                    Add Label
+                    {addLabelText}
                   </Button>
                 </div>
               </VStack>
@@ -669,67 +683,69 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={2}>
-            <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
-              <p className="text-body-md text-[var(--color-text-subtle)]">
-                Specify the annotations used to provide additional metadata for the resource.
-              </p>
-            </VStack>
-
-            {/* Annotations container */}
-            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
-              <VStack gap={1.5}>
-                {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <span className="block text-label-sm text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <div className="w-5" />
-                  </div>
-                )}
-                {annotations.map((annotation, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                  >
-                    <Input
-                      placeholder="annotation key"
-                      value={annotation.key}
-                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                    <Input
-                      placeholder="annotation value"
-                      value={annotation.value}
-                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => onRemoveAnnotation(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  </div>
-                ))}
-
-                <div className="w-fit">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                    onClick={onAddAnnotation}
-                  >
-                    Add Annotation
-                  </Button>
-                </div>
+          {!hideAnnotations && (
+            <VStack gap={2}>
+              <VStack gap={1}>
+                <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  Specify the annotations used to provide additional metadata for the resource.
+                </p>
               </VStack>
-            </div>
-          </VStack>
+
+              {/* Annotations container */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
+                <VStack gap={1.5}>
+                  {annotations.length > 0 && (
+                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Key
+                      </span>
+                      <span className="block text-label-sm text-[var(--color-text-default)]">
+                        Value
+                      </span>
+                      <div className="w-5" />
+                    </div>
+                  )}
+                  {annotations.map((annotation, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                    >
+                      <Input
+                        placeholder="annotation key"
+                        value={annotation.key}
+                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="annotation value"
+                        value={annotation.value}
+                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveAnnotation(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={onAddAnnotation}
+                    >
+                      Add Annotation
+                    </Button>
+                  </div>
+                </VStack>
+              </div>
+            </VStack>
+          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -2045,6 +2061,30 @@ export function CreateDeploymentPage() {
                   onRemoveAnnotation={removeAnnotation}
                   onUpdateAnnotation={updateAnnotation}
                 />
+                <LabelsAnnotationsSection
+                  title="Selector labels"
+                  labelsTitle="Match labels"
+                  labelsDescription={
+                    <>
+                      These labels are written to{' '}
+                      <code className="font-[var(--font-mono)] text-body-md">
+                        spec.selector.matchLabels
+                      </code>{' '}
+                      and are always merged into the pod template labels when you save.
+                    </>
+                  }
+                  labelsRequired
+                  addLabelText="Add selector"
+                  hideAnnotations
+                  labels={podLabels}
+                  onAddLabel={addPodLabel}
+                  onRemoveLabel={removePodLabel}
+                  onUpdateLabel={updatePodLabel}
+                  annotations={podAnnotations}
+                  onAddAnnotation={addPodAnnotation}
+                  onRemoveAnnotation={removePodAnnotation}
+                  onUpdateAnnotation={updatePodAnnotation}
+                />
                 <ScalingPolicySection
                   strategy={strategy}
                   onStrategyChange={setStrategy}
@@ -2074,6 +2114,10 @@ export function CreateDeploymentPage() {
                   <SectionCard.Header title="Labels & Annotations" />
                   <SectionCard.Content>
                     <VStack gap={6}>
+                      <InlineMessage variant="info">
+                        Selector labels are managed on the workload tab. When you save, selector
+                        labels are always merged back into the pod template labels.
+                      </InlineMessage>
                       {/* Labels */}
                       <VStack gap={2}>
                         <VStack gap={1}>
@@ -4853,15 +4897,12 @@ export function CreateDeploymentPage() {
 
                     {/* 2a-2. Networking Section */}
                     <SectionCard className="pb-4">
-                      <SectionCard.Header title="Networking" />
+                      <SectionCard.Header
+                        title="Networking"
+                        description="Define a Service to expose the container, or define a non-Kubernetes network port that the new service will run when the app on the container is expected to run."
+                      />
                       <SectionCard.Content>
                         <VStack gap={4}>
-                          <span className="text-body-md text-[var(--color-text-subtle)]">
-                            Define a Service to expose the container, or define a non-Kubernetes
-                            network port that the new service will run when the app on the container
-                            is expected to run.
-                          </span>
-
                           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                             <VStack gap={3} className="w-full">
                               {config.ports.map((port, portIdx) => {

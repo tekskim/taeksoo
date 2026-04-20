@@ -16,6 +16,7 @@ import {
   PageShell,
   InfoBox,
   InlineMessage,
+  ConfirmModal,
   type ContextMenuItem,
   type StatusType,
 } from '@/design-system';
@@ -23,7 +24,13 @@ import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { IconChevronDown, IconLoader2, IconExternalLink } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconLoader2,
+  IconExternalLink,
+  IconRefresh,
+  IconTrash,
+} from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
@@ -252,6 +259,7 @@ export function ClusterDetailPage() {
   const navigate = useNavigate();
   const { clusterId } = useParams<{ clusterId: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isDeleteTokenOpen, setIsDeleteTokenOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'networking';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
@@ -528,6 +536,7 @@ export function ClusterDetailPage() {
           <TabList>
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
+            <Tab value="access-token">Access token</Tab>
           </TabList>
 
           <TabPanel value="networking">
@@ -590,8 +599,58 @@ export function ClusterDetailPage() {
               </SectionCard>
             </VStack>
           </TabPanel>
+
+          <TabPanel value="access-token">
+            <VStack gap={6}>
+              <SectionCard>
+                <SectionCard.Header
+                  title="Access token"
+                  actions={
+                    <>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconTrash size={12} />}
+                        onClick={() => setIsDeleteTokenOpen(true)}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        leftIcon={<IconRefresh size={12} />}
+                        onClick={() => console.log('Regenerate token')}
+                      >
+                        Regenerate
+                      </Button>
+                    </>
+                  }
+                />
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Cluster" value={clusterData.name} />
+                  <SectionCard.DataRow label="Created on" value="Mar 20, 2026" />
+                  <SectionCard.DataRow label="Expires on" value="Apr 19, 2026" />
+                </SectionCard.Content>
+              </SectionCard>
+            </VStack>
+          </TabPanel>
         </Tabs>
       </VStack>
+
+      <ConfirmModal
+        isOpen={isDeleteTokenOpen}
+        onClose={() => setIsDeleteTokenOpen(false)}
+        onConfirm={() => {
+          console.log('Delete access token');
+          setIsDeleteTokenOpen(false);
+        }}
+        title="Delete token"
+        description="Any kubectl sessions or scripts using this token will lose access immediately."
+        infoLabel="Cluster"
+        infoValue={clusterData.name}
+        confirmText="Delete"
+        confirmVariant="danger"
+      />
     </PageShell>
   );
 }

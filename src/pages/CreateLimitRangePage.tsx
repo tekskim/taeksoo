@@ -262,7 +262,6 @@ function ContainerResourceLimitSection({
                   />
                 </HStack>
               </FormField.Control>
-              <FormField.HelperText>10–1000 mCPU</FormField.HelperText>
             </FormField>
 
             {/* CPU Limit */}
@@ -291,7 +290,6 @@ function ContainerResourceLimitSection({
                   />
                 </HStack>
               </FormField.Control>
-              <FormField.HelperText>10–1000 mCPU</FormField.HelperText>
             </FormField>
 
             {/* Memory Reservation */}
@@ -316,11 +314,10 @@ function ContainerResourceLimitSection({
                     max={128}
                     step={1}
                     width="xs"
-                    suffix="GiB"
+                    suffix="MiB"
                   />
                 </HStack>
               </FormField.Control>
-              <FormField.HelperText>4–128 GiB</FormField.HelperText>
             </FormField>
 
             {/* Memory Limit */}
@@ -345,11 +342,10 @@ function ContainerResourceLimitSection({
                     max={128}
                     step={1}
                     width="xs"
-                    suffix="GiB"
+                    suffix="MiB"
                   />
                 </HStack>
               </FormField.Control>
-              <FormField.HelperText>4–128 GiB</FormField.HelperText>
             </FormField>
           </div>
         </VStack>
