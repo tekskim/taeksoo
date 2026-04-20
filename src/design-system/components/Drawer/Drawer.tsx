@@ -107,7 +107,7 @@ export function Drawer({
 
   const backdropClasses = twMerge(
     'fixed inset-0 z-[var(--z-modal)]',
-    'bg-black/60',
+    'bg-[color-mix(in_srgb,var(--color-text-default)_60%,transparent)]',
     'transition-opacity duration-300 ease-out',
     isAnimating ? 'opacity-100' : 'opacity-0'
   );
@@ -116,7 +116,7 @@ export function Drawer({
     'fixed top-0 bottom-0 z-[var(--z-modal)]',
     'bg-[var(--color-surface-default)]',
     'flex flex-col',
-    'shadow-2xl',
+    'shadow-[0_25px_50px_-12px_color-mix(in_srgb,var(--color-text-default)_25%,transparent)]',
     'transition-transform duration-300 ease-out',
     side === 'right' ? 'right-0' : 'left-0',
     isAnimating ? 'translate-x-0' : side === 'right' ? 'translate-x-full' : '-translate-x-full',

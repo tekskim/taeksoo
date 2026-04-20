@@ -316,6 +316,8 @@ const mockSelectorsData: SelectorRow[] = [
   },
 ];
 
+const TAB_TABLE_PAGE_SIZE = 10;
+
 const mockConditionsData: ConditionRow[] = [
   {
     id: '1',
@@ -357,6 +359,21 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       pod.image.toLowerCase().includes(podSearch.toLowerCase()) ||
       pod.node.toLowerCase().includes(podSearch.toLowerCase())
   );
+
+  const podsTotalPages = Math.max(1, Math.ceil(filteredPods.length / TAB_TABLE_PAGE_SIZE));
+  const podsPage = Math.min(currentPage, podsTotalPages);
+  const paginatedPods = filteredPods.slice(
+    (podsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    podsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [podSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, podsTotalPages));
+  }, [podsTotalPages]);
 
   const createPodMenuItems = (row: PodRow): ContextMenuItem[] => {
     return [
@@ -517,15 +534,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredPods.length / 10))}
+        currentPage={podsPage}
+        totalPages={podsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredPods.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={filteredPods}
+        data={paginatedPods}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -553,6 +570,21 @@ function PortsTab({ ports }: PortsTabProps) {
       port.protocol.toLowerCase().includes(portSearch.toLowerCase()) ||
       String(port.port).includes(portSearch)
   );
+
+  const portsTotalPages = Math.max(1, Math.ceil(filteredPorts.length / TAB_TABLE_PAGE_SIZE));
+  const portsPage = Math.min(currentPage, portsTotalPages);
+  const paginatedPorts = filteredPorts.slice(
+    (portsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    portsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [portSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, portsTotalPages));
+  }, [portsTotalPages]);
 
   const columns: TableColumn<PortRow>[] = [
     {
@@ -612,12 +644,12 @@ function PortsTab({ ports }: PortsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredPorts.length / 10))}
+        currentPage={portsPage}
+        totalPages={portsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredPorts.length}
       />
-      <Table columns={columns} data={filteredPorts} rowKey="id" />
+      <Table columns={columns} data={paginatedPorts} rowKey="id" />
     </VStack>
   );
 }
@@ -639,6 +671,24 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
       sel.key.toLowerCase().includes(selectorSearch.toLowerCase()) ||
       sel.value.toLowerCase().includes(selectorSearch.toLowerCase())
   );
+
+  const selectorsTotalPages = Math.max(
+    1,
+    Math.ceil(filteredSelectors.length / TAB_TABLE_PAGE_SIZE)
+  );
+  const selectorsPage = Math.min(currentPage, selectorsTotalPages);
+  const paginatedSelectors = filteredSelectors.slice(
+    (selectorsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    selectorsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectorSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, selectorsTotalPages));
+  }, [selectorsTotalPages]);
 
   const columns: TableColumn<SelectorRow>[] = [
     {
@@ -669,12 +719,12 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredSelectors.length / 10))}
+        currentPage={selectorsPage}
+        totalPages={selectorsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredSelectors.length}
       />
-      <Table columns={columns} data={filteredSelectors} rowKey="id" />
+      <Table columns={columns} data={paginatedSelectors} rowKey="id" />
     </VStack>
   );
 }
@@ -698,6 +748,24 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       cond.message.toLowerCase().includes(conditionSearch.toLowerCase()) ||
       cond.reason.toLowerCase().includes(conditionSearch.toLowerCase())
   );
+
+  const conditionsTotalPages = Math.max(
+    1,
+    Math.ceil(filteredConditions.length / TAB_TABLE_PAGE_SIZE)
+  );
+  const conditionsPage = Math.min(currentPage, conditionsTotalPages);
+  const paginatedConditions = filteredConditions.slice(
+    (conditionsPage - 1) * TAB_TABLE_PAGE_SIZE,
+    conditionsPage * TAB_TABLE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [conditionSearch]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, conditionsTotalPages));
+  }, [conditionsTotalPages]);
 
   const columns: TableColumn<ConditionRow>[] = [
     {
@@ -747,12 +815,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
         className="w-[var(--search-input-width)]"
       />
       <Pagination
-        currentPage={currentPage}
-        totalPages={Math.max(1, Math.ceil(filteredConditions.length / 10))}
+        currentPage={conditionsPage}
+        totalPages={conditionsTotalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredConditions.length}
       />
-      <Table columns={columns} data={filteredConditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }

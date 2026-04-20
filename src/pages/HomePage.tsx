@@ -133,7 +133,7 @@ interface ChatItemProps {
 
 function ChatItem({ title, description, createdAt, onClick }: ChatItemProps) {
   const shellClassName =
-    'm-0 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)] font-sans';
+    'm-0 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)] font-sans';
 
   const inner = (
     <>

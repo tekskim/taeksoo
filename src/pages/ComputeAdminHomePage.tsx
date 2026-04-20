@@ -81,7 +81,7 @@ function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent">
       <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -102,7 +102,7 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
   const percentage = Math.round((used / total) * 100);
 
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1 text-label-md text-[var(--color-text-default)]">
           <span className="flex-shrink-0">{icon}</span>

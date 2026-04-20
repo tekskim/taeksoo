@@ -60,21 +60,29 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'completed') {
-      return <IconTarget size={16} stroke={1} className="text-white" />;
+      return <IconTarget size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'error') {
-      return <IconAlertTriangle size={16} stroke={1} className="text-white" />;
+      return (
+        <IconAlertTriangle size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />
+      );
     } else if (status === 'processing') {
-      return <IconLoader2 size={16} stroke={1} className="text-white animate-spin" />;
+      return (
+        <IconLoader2
+          size={16}
+          stroke={1}
+          className="text-[var(--color-text-on-primary)] animate-spin"
+        />
+      );
     } else if (status === 'pending') {
-      return <IconRefresh size={12} stroke={1} className="text-white" />;
+      return <IconRefresh size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'draft') {
-      return <IconPencil size={16} stroke={1} className="text-white" />;
+      return <IconPencil size={16} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     }
   };
 
   return (
     <div
-      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-[var(--radius-lg)] shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="text-label-sm text-[var(--color-text-subtle)]">{label}</p>

@@ -204,10 +204,10 @@ const mockImages: Image[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'os', label: 'OS', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'os', label: 'OS', type: 'text' },
   {
-    key: 'diskFormat',
+    id: 'diskFormat',
     label: 'Disk Format',
     type: 'select',
     options: [
@@ -216,7 +216,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -226,7 +226,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -318,7 +318,7 @@ export function ComputeAdminImagesPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((img) => {
         return appliedFilters.every((filter) => {
-          const value = String(img[filter.field as keyof Image] || '').toLowerCase();
+          const value = String(img[filter.fieldId as keyof Image] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });

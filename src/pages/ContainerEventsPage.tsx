@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   PageShell,
@@ -56,14 +56,14 @@ const eventsData: EventRow[] = [
     status: 'OK',
     name: 'frontend-web-server-pod-started-successfully-event',
     namespace: 'default',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Normal',
     reason: 'Started',
     object: 'Pod-web-server-1',
     subobject: '-',
     source: 'kubelet, worker-node-1',
     message: 'the web-server-1 was successfully started on node worker-node-1.',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 2,
   },
   {
@@ -71,14 +71,14 @@ const eventsData: EventRow[] = [
     status: 'OK',
     name: 'frontend-web-server-pod-scheduled-to-worker-node-event',
     namespace: 'default',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Normal',
     reason: 'Scheduled',
     object: 'Pod-web-server-1',
     subobject: '-',
     source: 'default-scheduler',
     message: 'Successfully assigned default/web-server-1 to worker-node-1',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 1,
   },
   {
@@ -86,14 +86,14 @@ const eventsData: EventRow[] = [
     status: 'CreateContainerConfigError',
     name: 'nginx-deployment-pod-failed-scheduling-no-nodes-event',
     namespace: 'kube-system',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Warning',
     reason: 'FailedScheduling',
     object: 'Pod-nginx-deployment',
     subobject: '-',
     source: 'default-scheduler',
     message: 'no nodes available to schedule pods',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 5,
   },
   {
@@ -101,14 +101,14 @@ const eventsData: EventRow[] = [
     status: 'InvalidImageName',
     name: 'api-server-deployment-scaled-replicaset-event',
     namespace: 'production',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Normal',
     reason: 'ScalingReplicaSet',
     object: 'Deployment-api-server',
     subobject: '-',
     source: 'deployment-controller',
     message: 'Scaled up replica set api-server-abc123 to 3',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 1,
   },
   {
@@ -116,14 +116,14 @@ const eventsData: EventRow[] = [
     status: 'ImagePullBackOff',
     name: 'backend-service-pod-crash-loop-backoff-event',
     namespace: 'staging',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Warning',
     reason: 'BackOff',
     object: 'Pod-backend-service',
     subobject: 'container-main',
     source: 'kubelet, worker-node-2',
     message: 'Back-off restarting failed container',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 12,
   },
   {
@@ -131,14 +131,14 @@ const eventsData: EventRow[] = [
     status: 'True',
     name: 'web-frontend-service-created-clusterip-event',
     namespace: 'default',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Normal',
     reason: 'Created',
     object: 'Service-web-frontend',
     subobject: '-',
     source: 'service-controller',
     message: 'Created service web-frontend with ClusterIP',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 1,
   },
   {
@@ -146,14 +146,14 @@ const eventsData: EventRow[] = [
     status: 'Raw',
     name: 'worker-node-3-status-now-ready-event',
     namespace: 'default',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Normal',
     reason: 'NodeReady',
     object: 'Node-worker-node-3',
     subobject: '-',
     source: 'kubelet, worker-node-3',
     message: 'Node worker-node-3 status is now: NodeReady',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 1,
   },
   {
@@ -161,14 +161,14 @@ const eventsData: EventRow[] = [
     status: 'None',
     name: 'database-replica-pod-image-pull-failed-event',
     namespace: 'production',
-    lastSeen: 'Oct 21, 2025',
+    lastSeen: 'Oct 21, 2026',
     type: 'Warning',
     reason: 'ErrImagePull',
     object: 'Pod-database-replica',
     subobject: 'container-db',
     source: 'kubelet, worker-node-1',
     message: 'Failed to pull image "postgres:16": rpc error',
-    firstSeen: 'Oct 21, 2025',
+    firstSeen: 'Oct 21, 2026',
     count: 8,
   },
 ];
@@ -195,6 +195,7 @@ export function ContainerEventsPage() {
     { key: 'Name', value: 'a' },
   ]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -202,6 +203,24 @@ export function ContainerEventsPage() {
   }, []);
 
   const navigate = useNavigate();
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return eventsData;
+    const q = searchTerm.toLowerCase();
+    return eventsData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.namespace?.toLowerCase().includes(q) ||
+        item.type?.toLowerCase().includes(q) ||
+        item.reason?.toLowerCase().includes(q) ||
+        item.message?.toLowerCase().includes(q) ||
+        item.source?.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
@@ -225,8 +244,8 @@ export function ContainerEventsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(eventsData.length / rowsPerPage);
-  const paginatedData = eventsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -449,6 +468,9 @@ export function ContainerEventsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 placeholder="Search events by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
@@ -487,7 +509,7 @@ export function ContainerEventsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={eventsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

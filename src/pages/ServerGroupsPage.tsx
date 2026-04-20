@@ -147,9 +147,9 @@ const mockServerGroups: ServerGroup[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'policy',
+    id: 'policy',
     label: 'Policy',
     type: 'select',
     options: [
@@ -159,7 +159,7 @@ const filterFields: FilterField[] = [
       { value: 'Soft-affinity', label: 'Soft-affinity' },
     ],
   },
-  { key: 'instances', label: 'Instances', type: 'text' },
+  { id: 'instances', label: 'Instances', type: 'text' },
 ];
 
 export function ServerGroupsPage() {
@@ -231,7 +231,7 @@ export function ServerGroupsPage() {
 
     return serverGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
-        const value = String(sg[filter.field as keyof ServerGroup] || '').toLowerCase();
+        const value = String(sg[filter.fieldId as keyof ServerGroup] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

@@ -155,7 +155,7 @@ function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
   if (status === 'done') {
     return (
       <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
+        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
       </div>
     );
   }
@@ -204,9 +204,9 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             {/* Title */}
             <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
@@ -638,7 +638,7 @@ export function CreateServicePage() {
                     <span className="text-label-lg text-[var(--color-text-default)] italic">
                       Cluster IP, Headless
                     </span>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {/* Header row */}
                         {ports.length > 0 && (
@@ -749,9 +749,9 @@ export function CreateServicePage() {
                     <span className="text-label-lg text-[var(--color-text-default)] italic">
                       Load Balancer
                     </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                       <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {/* Header row */}
                             {ports.length > 0 && (
@@ -891,9 +891,9 @@ export function CreateServicePage() {
                     <span className="text-label-lg text-[var(--color-text-default)] italic">
                       Node port
                     </span>
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                       <VStack gap={6}>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {/* Header row */}
                             {ports.length > 0 && (
@@ -1053,7 +1053,7 @@ export function CreateServicePage() {
                     <label className="text-label-lg text-[var(--color-text-default)]">
                       External IPs
                     </label>
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {externalIPs.length > 0 && (
                           <div className="grid grid-cols-[1fr_20px] gap-1 w-full">
@@ -1116,7 +1116,7 @@ export function CreateServicePage() {
                       Keys and values
                     </span>
                     {selectors.length === 0 ? (
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                         <HStack gap={2}>
                           <Button
                             variant="secondary"
@@ -1132,7 +1132,7 @@ export function CreateServicePage() {
                         </HStack>
                       </div>
                     ) : (
-                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                         <VStack gap={1.5}>
                           {selectors.length > 0 && (
                             <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -1291,7 +1291,7 @@ export function CreateServicePage() {
                     </VStack>
 
                     {/* Bordered container for labels */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -1361,7 +1361,7 @@ export function CreateServicePage() {
                     </VStack>
 
                     {/* Bordered container for annotations */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">

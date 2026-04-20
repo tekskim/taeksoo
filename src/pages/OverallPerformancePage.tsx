@@ -561,7 +561,7 @@ interface StatCardProps {
 
 function StatCardItem({ label, value, unit }: StatCardProps) {
   return (
-    <div className="flex-1 min-w-0 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
+    <div className="flex-1 min-w-0 p-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-default)]">
       <p className="text-body-sm text-[var(--color-text-subtle)] mb-2 whitespace-nowrap">{label}</p>
       <p className="text-heading-h3 text-[var(--color-text-default)] whitespace-nowrap">
         {value}
@@ -1046,11 +1046,7 @@ export function OverallPerformancePage() {
       flex: 1,
       minWidth: columnMinWidths.osd,
       sortable: true,
-      render: (_, row) => (
-        <span className="text-[var(--color-action-primary)] hover:underline cursor-pointer">
-          {row.osdId}
-        </span>
-      ),
+      render: (_, row) => <span className="text-[var(--color-text-default)]">{row.osdId}</span>,
     },
     {
       key: 'slowOps',
@@ -1066,7 +1062,11 @@ export function OverallPerformancePage() {
       align: 'center' as const,
       sticky: 'right',
       render: () => (
-        <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
+        <button
+          type="button"
+          aria-label="Open OSD terminal"
+          className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors"
+        >
           <IconTerminal2 size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
       ),

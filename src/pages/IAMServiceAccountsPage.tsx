@@ -318,7 +318,8 @@ export function IAMServiceAccountsPage() {
                 <SearchInput
                   placeholder="Search service accounts by attributes"
                   value={searchQuery}
-                  onChange={setSearchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onClear={() => setSearchQuery('')}
                   className="w-[var(--search-input-width)]"
                 />
                 <Button

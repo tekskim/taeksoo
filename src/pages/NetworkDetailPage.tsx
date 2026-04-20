@@ -24,6 +24,7 @@ import {
   fixedColumns,
   columnMinWidths,
   BadgeList,
+  type StatusType,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -112,7 +113,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
     networkName: 'net-01',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -131,7 +132,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
     networkName: 'internal-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -150,7 +151,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
     networkName: 'dev-network',
     availabilityZone: 'keystone',
     availabilityZoneHint: '-',
@@ -169,7 +170,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: 'Sep 1, 2025 10:20:28',
+    createdAt: 'Sep 1, 2026 10:20:28',
     networkName: 'prod-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -188,7 +189,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Down',
     access: 'Project',
     external: false,
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
     networkName: 'test-network',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -207,7 +208,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
     networkName: 'dmz-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -226,7 +227,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Down',
     access: 'Project',
     external: false,
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
     networkName: 'management-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -245,7 +246,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
     networkName: 'backup-network',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -264,7 +265,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Shared',
     external: true,
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
     networkName: 'external-gateway',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -283,7 +284,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'External',
     external: true,
-    createdAt: 'Aug 1, 2025 10:20:28',
+    createdAt: 'Aug 1, 2026 10:20:28',
     networkName: 'provider-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -329,7 +330,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => {
     gatewayIp: `192.168.${thirdOctet}.1`,
     dhcpEnabled: true,
     portCount: 2 + (i % 8),
-    createdAt: 'Jan 15, 2025 12:22:26',
+    createdAt: 'Jan 15, 2026 12:22:26',
   };
 });
 
@@ -380,6 +381,21 @@ const portStatusMap: Record<Port['status'], 'active' | 'building' | 'shutoff'> =
   active: 'active',
   build: 'building',
   down: 'shutoff',
+};
+
+/** Maps API/network model status to DetailHeader StatusIndicator (active / error / muted / building) */
+const networkStatusIndicatorMap: Record<NetworkStatus, StatusType> = {
+  active: 'active',
+  building: 'building',
+  error: 'error',
+  down: 'down',
+};
+
+const networkStatusLabel: Record<NetworkStatus, string> = {
+  active: 'Active',
+  building: 'Building...',
+  error: 'Error',
+  down: 'Down',
 };
 
 /* ----------------------------------------
@@ -800,7 +816,11 @@ export default function NetworkDetailPage() {
             </Button>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" value="Available" status="active" />
+            <DetailHeader.InfoCard
+              label="Status"
+              value={networkStatusLabel[network.status]}
+              status={networkStatusIndicatorMap[network.status]}
+            />
             <DetailHeader.InfoCard label="ID" value={network.id} copyable />
             <DetailHeader.InfoCard label="Admin state" value={network.adminState} />
             <DetailHeader.InfoCard label="Access" value={network.access} />
@@ -886,7 +906,7 @@ export default function NetworkDetailPage() {
                     }}
                     placeholder="Search subnet by attributes"
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                 </div>
 
@@ -912,6 +932,7 @@ export default function NetworkDetailPage() {
                   selectable
                   selectedKeys={selectedSubnets}
                   onSelectionChange={setSelectedSubnets}
+                  emptyMessage="No subnets found"
                 />
               </VStack>
             </TabPanel>
@@ -934,7 +955,7 @@ export default function NetworkDetailPage() {
                     }}
                     placeholder="Search port by attributes"
                     size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                 </div>
 
@@ -957,6 +978,7 @@ export default function NetworkDetailPage() {
                   sortBy={portSortBy}
                   sortDirection={portSortDirection}
                   onSort={handlePortSort}
+                  emptyMessage="No ports found"
                 />
               </VStack>
             </TabPanel>

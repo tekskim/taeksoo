@@ -88,8 +88,8 @@ export function MailTemplatePage() {
               onClick={() => navigate('/')}
             />
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
-                <IconMail size={18} className="text-white" stroke={1.5} />
+              <div className="w-8 h-8 rounded-[var(--radius-lg)] bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
+                <IconMail size={18} className="text-[var(--color-text-on-primary)]" stroke={1.5} />
               </div>
               <h1 className="text-heading-h5 text-[var(--color-text-default)]">Mail templates </h1>
             </div>
@@ -146,7 +146,7 @@ export function MailTemplatePage() {
                   <div className="p-4">
                     <VStack gap={3}>
                       <HStack justify="between" align="start" className="w-full">
-                        <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] flex items-center justify-center">
                           <Icon size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
                         </div>
                         <Badge variant={config.color} size="sm">
@@ -209,7 +209,7 @@ export function MailTemplatePage() {
                 <div className="p-4">
                   <VStack gap={3}>
                     <HStack justify="between" align="start" className="w-full">
-                      <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)] flex items-center justify-center">
                         <IconHourglass
                           size={20}
                           className="text-[var(--color-text-muted)]"

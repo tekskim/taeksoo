@@ -350,7 +350,7 @@ function EventDetailsConsole({ details }: { details: EventLog['details'] }) {
 
   return (
     <div className="border-x border-b border-[var(--color-border-default)] rounded-b-md overflow-hidden">
-      <div className="bg-[var(--color-surface-contrast)] p-4 font-mono text-body-md leading-[18px] text-white overflow-x-auto">
+      <div className="bg-[var(--color-surface-contrast)] p-4 font-mono text-body-md leading-[18px] text-[var(--color-text-on-primary)] overflow-x-auto">
         <pre className="whitespace-pre-wrap">{jsonString}</pre>
       </div>
     </div>

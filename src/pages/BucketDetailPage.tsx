@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -85,7 +85,7 @@ const mockBucketDetail: BucketDetail = {
   owner: 'ai_platform$ai.platform',
   usedCapacity: 'ai_platform$ai.platform',
   objects: 13,
-  creationDate: 'Sep 19, 2025 14:30:00',
+  creationDate: 'Sep 19, 2026 14:30:00',
 };
 
 const mockObjectTree: ObjectItem[] = [
@@ -153,7 +153,7 @@ const mockTableObjects: ObjectItem[] = [
     size: '51.0 KiB',
     storageClass: 'STANDARD',
     etag: '9ec45b70efc38e0d6',
-    lastModified: 'Dec 22, 2025',
+    lastModified: 'Dec 22, 2026',
     s3Uri: 's3://images/343da87798e1c6356b47236f21099b63.jpg',
     objectUrl:
       'http://10.7.50.253.80/images/343da87798e1c6356b47236f21099b63.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=4J350T4JB1JKIZUN1AS4%2F20260107%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20260107T072559Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ea6089c110b3b219b8c2c7d530e67fdd0d2f281064588c1a8db4bb133249e9a1',
@@ -164,7 +164,7 @@ const mockTableObjects: ObjectItem[] = [
         storageClass: 'STANDARD',
         type: 'file',
         size: '51.0 KiB',
-        lastModified: 'Dec 22, 2025',
+        lastModified: 'Dec 22, 2026',
       },
     ],
   },
@@ -180,6 +180,8 @@ const mockTableObjects: ObjectItem[] = [
     lastModified: '-',
   },
 ];
+
+const OBJECTS_PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Tree Item Component
@@ -211,6 +213,8 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
       >
         {isFolder ? (
           <button
+            type="button"
+            aria-label={isExpanded ? 'Collapse folder' : 'Expand folder'}
             className="shrink-0 flex items-center justify-center w-4 h-4"
             onClick={(e) => {
               e.stopPropagation();
@@ -252,6 +256,8 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
         <span className="flex-1 truncate">{item.name}</span>
 
         <button
+          type="button"
+          aria-label="File actions"
           className="shrink-0 p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-[var(--color-surface-muted)]"
           onClick={(e) => e.stopPropagation()}
         >
@@ -322,6 +328,8 @@ function ObjectRow({
         <div className="flex-1 min-w-[140px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center gap-2">
           {!isFolder && (
             <button
+              type="button"
+              aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
               onClick={onToggleExpand}
             >
@@ -389,7 +397,11 @@ function ObjectRow({
 
         {/* Action */}
         <div className="w-[60px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
-          <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded">
+          <button
+            type="button"
+            aria-label="File actions"
+            className="p-1 hover:bg-[var(--color-surface-muted)] rounded"
+          >
             <IconDotsCircleHorizontal
               size={14}
               stroke={1.5}
@@ -405,7 +417,7 @@ function ObjectRow({
           {/* S3 URI & Object URL */}
           <div className="flex gap-4 mb-6">
             {/* S3 URI Box */}
-            <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
+            <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-default)]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">S3 URI</span>
                 <CopyButton
@@ -420,7 +432,7 @@ function ObjectRow({
               </div>
             </div>
             {/* Object URL Box */}
-            <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
+            <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-default)]">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-body-sm text-[var(--color-text-muted)]">Object URL</span>
                 <CopyButton
@@ -598,11 +610,35 @@ export function BucketDetailPage() {
   };
 
   // Filter objects based on search
-  const filteredObjects = mockTableObjects.filter(
-    (obj) =>
-      obj.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      obj.owner?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredObjects = useMemo(
+    () =>
+      mockTableObjects.filter(
+        (obj) =>
+          obj.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          obj.owner?.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
+
+  const totalPages = Math.max(1, Math.ceil(filteredObjects.length / OBJECTS_PAGE_SIZE));
+
+  const paginatedObjects = useMemo(
+    () =>
+      filteredObjects.slice((currentPage - 1) * OBJECTS_PAGE_SIZE, currentPage * OBJECTS_PAGE_SIZE),
+    [filteredObjects, currentPage]
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const pageObjectIds = paginatedObjects.map((o) => o.id);
+  const allPageRowsSelected =
+    pageObjectIds.length > 0 && pageObjectIds.every((id) => selectedRows.includes(id));
 
   // Tags table columns
   const tagsColumns: TableColumn<{ key: string; value: string }>[] = [
@@ -762,7 +798,7 @@ export function BucketDetailPage() {
                 <div className="flex gap-4">
                   {/* Left Sidebar - Objects Tree */}
                   {treeSidebarOpen && (
-                    <div className="w-[224px] shrink-0 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
+                    <div className="w-[224px] shrink-0 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-default)]">
                       <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--color-border-subtle)]">
                         <span className="text-label-md text-[var(--color-text-default)]">
                           Objects
@@ -834,9 +870,9 @@ export function BucketDetailPage() {
                     {/* Pagination */}
                     <Pagination
                       currentPage={currentPage}
-                      totalPages={5}
+                      totalPages={totalPages}
                       onPageChange={setCurrentPage}
-                      totalItems={115}
+                      totalItems={filteredObjects.length}
                     />
 
                     {/* Table */}
@@ -845,15 +881,16 @@ export function BucketDetailPage() {
                       <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                         <div className="w-[var(--table-checkbox-width)] flex items-center justify-center shrink-0 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]">
                           <Checkbox
-                            checked={
-                              selectedRows.length === filteredObjects.length &&
-                              filteredObjects.length > 0
-                            }
+                            checked={allPageRowsSelected}
                             onChange={() => {
-                              if (selectedRows.length === filteredObjects.length) {
-                                setSelectedRows([]);
+                              if (allPageRowsSelected) {
+                                setSelectedRows((prev) =>
+                                  prev.filter((id) => !pageObjectIds.includes(id))
+                                );
                               } else {
-                                setSelectedRows(filteredObjects.map((o) => o.id));
+                                setSelectedRows((prev) => [
+                                  ...new Set([...prev, ...pageObjectIds]),
+                                ]);
                               }
                             }}
                           />
@@ -905,7 +942,7 @@ export function BucketDetailPage() {
                       </div>
 
                       {/* Table Body */}
-                      {filteredObjects.map((object) => (
+                      {paginatedObjects.map((object) => (
                         <ObjectRow
                           key={object.id}
                           object={object}

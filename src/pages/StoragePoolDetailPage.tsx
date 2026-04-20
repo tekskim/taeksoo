@@ -24,15 +24,7 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
-import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
-
-const chartColors = {
-  ...baseChartColors,
-  blue500: '#3b82f6',
-  emerald500: '#10b981',
-  red500: '#dc2626',
-  green500: '#00a63e',
-};
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
 function resolvedChartColor(cssVar: string, chartFallback: string): string {
   if (typeof window === 'undefined') return chartFallback;
@@ -557,10 +549,10 @@ function TimeTillFull({ value, unit }: TimeTillFullProps) {
   return (
     <div className="h-[200px] flex items-center justify-center">
       <div className="flex items-baseline gap-2">
-        <span className="text-heading-h1" style={{ color: chartColors.green500 }}>
+        <span className="text-heading-h1" style={{ color: chartColors.emerald400 }}>
           {value}
         </span>
-        <span className="text-heading-h4" style={{ color: chartColors.green500 }}>
+        <span className="text-heading-h4" style={{ color: chartColors.emerald400 }}>
           {unit}
         </span>
       </div>
@@ -1203,14 +1195,14 @@ export function StoragePoolDetailPage() {
                 {/* Top Row - Capacity & Time Till Full */}
                 <div className="grid grid-cols-2 gap-4">
                   {/* Capacity Used */}
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                     <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                       Capacity used
                     </h4>
                     <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
                   </div>
                   {/* Time Till Full */}
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                     <h4 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
                       Time till full
                     </h4>
@@ -1227,7 +1219,7 @@ export function StoragePoolDetailPage() {
                       {
                         name: 'Objects per second',
                         data: [0.15, 0.25, 0.35, 0.3, 0.2, 0.4],
-                        color: chartColors.emerald500,
+                        color: chartColors.emerald400,
                       },
                     ]}
                     timeLabels={timeLabels}
@@ -1240,12 +1232,12 @@ export function StoragePoolDetailPage() {
                       {
                         name: 'reads',
                         data: [200, 350, 500, 450, 300, 600],
-                        color: chartColors.blue500,
+                        color: chartColors.blue400,
                       },
                       {
                         name: 'writes',
                         data: [100, 200, 300, 250, 150, 350],
-                        color: chartColors.emerald500,
+                        color: chartColors.emerald400,
                       },
                     ]}
                     timeLabels={timeLabels}
@@ -1258,12 +1250,12 @@ export function StoragePoolDetailPage() {
                       {
                         name: 'reads',
                         data: [80, 100, 120, 110, 90, 130],
-                        color: chartColors.blue500,
+                        color: chartColors.blue400,
                       },
                       {
                         name: 'writes',
                         data: [60, 80, 100, 90, 70, 110],
-                        color: chartColors.emerald500,
+                        color: chartColors.emerald400,
                       },
                     ]}
                     timeLabels={timeLabels}
@@ -1276,7 +1268,7 @@ export function StoragePoolDetailPage() {
                       {
                         name: 'Number of Objects',
                         data: [2.9, 2.905, 2.91, 2.915, 2.92, 2.96],
-                        color: chartColors.emerald500,
+                        color: chartColors.emerald400,
                       },
                     ]}
                     timeLabels={timeLabels}

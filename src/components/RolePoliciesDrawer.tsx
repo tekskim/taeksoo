@@ -12,7 +12,7 @@ import {
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconChevronRight, IconChevronDown, IconExternalLink } from '@tabler/icons-react';
+import { IconChevronRight, IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -80,7 +80,7 @@ const defaultPolicies: PolicyItem[] = Array.from({ length: 25 }, (_, i) => ({
   type: 'Built-in',
   apps: 'Compute:tenantA',
   description: '-',
-  editedAt: 'Sep 12, 2025',
+  editedAt: 'Sep 12, 2026',
   permissions: defaultPermissions,
 }));
 
@@ -114,14 +114,9 @@ function buildPolicyColumns(
               <IconChevronRight size={14} stroke={2} />
             )}
           </button>
-          <span className="text-label-md text-[var(--color-action-primary)] truncate">
+          <span className="text-label-md text-[var(--color-text-default)] truncate">
             {row.name}
           </span>
-          <IconExternalLink
-            size={12}
-            stroke={1.5}
-            className="shrink-0 text-[var(--color-action-primary)]"
-          />
         </span>
       ),
     },

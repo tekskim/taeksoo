@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   PageShell,
@@ -60,7 +60,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'Ceph-pvc',
     source: 'rbd.csi.ceph.com',
     reason: '',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
   {
     id: '2',
@@ -70,7 +70,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'data-postgres-0',
     source: 'nfs.csi.k8s.io',
     reason: '',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
   },
   {
     id: '3',
@@ -80,7 +80,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'nfs.csi.k8s.io',
     reason: '',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
   },
   {
     id: '4',
@@ -90,7 +90,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
     reason: 'Claim deleted',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
   },
   {
     id: '5',
@@ -100,7 +100,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'redis-data',
     source: 'local.csi.k8s.io',
     reason: '',
-    createdAt: 'Nov 6, 2025 21:25:53',
+    createdAt: 'Nov 6, 2026 21:25:53',
   },
   {
     id: '6',
@@ -110,7 +110,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
     reason: 'Provisioning failed',
-    createdAt: 'Nov 5, 2025 14:12:36',
+    createdAt: 'Nov 5, 2026 14:12:36',
   },
   {
     id: '7',
@@ -120,7 +120,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'pending-claim',
     source: 'nfs.csi.k8s.io',
     reason: 'Waiting for node',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
   },
 ];
 
@@ -141,6 +141,7 @@ export function PersistentVolumesPage() {
     updateActiveTabLabel,
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
@@ -157,6 +158,24 @@ export function PersistentVolumesPage() {
   useEffect(() => {
     updateActiveTabLabel('Persistent volumes');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return persistentVolumesData;
+    const q = searchTerm.toLowerCase();
+    return persistentVolumesData.filter(
+      (item) =>
+        item.status.toLowerCase().includes(q) ||
+        item.name.toLowerCase().includes(q) ||
+        item.reclaimPolicy.toLowerCase().includes(q) ||
+        item.persistentVolumeClaim.toLowerCase().includes(q) ||
+        item.source.toLowerCase().includes(q) ||
+        item.reason.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -175,8 +194,8 @@ export function PersistentVolumesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(persistentVolumesData.length / rowsPerPage);
-  const paginatedData = persistentVolumesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -429,6 +448,9 @@ export function PersistentVolumesPage() {
             <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search Persistent Volumes by attributes"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
@@ -474,7 +496,7 @@ export function PersistentVolumesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={persistentVolumesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

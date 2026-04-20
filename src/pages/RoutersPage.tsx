@@ -69,7 +69,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '29tgj234',
     adminState: true,
     status: 'active',
-    createdAt: 'Sep 12, 2025 15:43:35',
+    createdAt: 'Sep 12, 2026 15:43:35',
   },
   {
     id: 'router-002',
@@ -81,7 +81,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-002',
     adminState: true,
     status: 'active',
-    createdAt: 'Sep 10, 2025 01:17:01',
+    createdAt: 'Sep 10, 2026 01:17:01',
   },
   {
     id: 'router-003',
@@ -93,7 +93,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: true,
     status: 'active',
-    createdAt: 'Sep 8, 2025 11:51:27',
+    createdAt: 'Sep 8, 2026 11:51:27',
   },
   {
     id: 'router-004',
@@ -105,7 +105,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-003',
     adminState: true,
     status: 'building',
-    createdAt: 'Sep 5, 2025 14:12:36',
+    createdAt: 'Sep 5, 2026 14:12:36',
   },
   {
     id: 'router-005',
@@ -117,7 +117,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: false,
     status: 'active',
-    createdAt: 'Aug 30, 2025 21:37:41',
+    createdAt: 'Aug 30, 2026 21:37:41',
   },
   {
     id: 'router-006',
@@ -129,7 +129,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-004',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 25, 2025 10:32:16',
+    createdAt: 'Aug 25, 2026 10:32:16',
   },
   {
     id: 'router-007',
@@ -141,7 +141,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-005',
     adminState: false,
     status: 'error',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'router-008',
@@ -153,7 +153,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 15, 2025 12:22:26',
+    createdAt: 'Aug 15, 2026 12:22:26',
   },
   {
     id: 'router-009',
@@ -165,7 +165,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-006',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 10, 2025 01:17:01',
+    createdAt: 'Aug 10, 2026 01:17:01',
   },
   {
     id: 'router-010',
@@ -177,7 +177,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-007',
     adminState: true,
     status: 'active',
-    createdAt: 'Aug 5, 2025 14:12:36',
+    createdAt: 'Aug 5, 2026 14:12:36',
   },
 ];
 
@@ -197,9 +197,9 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'externalGateway',
+    id: 'externalGateway',
     label: 'External gateway',
     type: 'select',
     options: [
@@ -207,10 +207,10 @@ const filterFields: FilterField[] = [
       { value: 'false', label: 'No' },
     ],
   },
-  { key: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
-  { key: 'externalNetwork', label: 'External network', type: 'text' },
+  { id: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
+  { id: 'externalNetwork', label: 'External network', type: 'text' },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -219,7 +219,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -287,7 +287,7 @@ export function RoutersPage() {
 
     return routers.filter((r) => {
       return appliedFilters.every((filter) => {
-        const value = String(r[filter.field as keyof Router] || '').toLowerCase();
+        const value = String(r[filter.fieldId as keyof Router] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

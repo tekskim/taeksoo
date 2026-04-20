@@ -1079,7 +1079,7 @@ export function OSDDetailPage() {
             <TabPanel value="device-health" className="pt-0">
               <div className="flex gap-4 pt-4">
                 {/* Device List Sidebar */}
-                <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3">
+                <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-3">
                   <h6 className="text-heading-h5 text-[var(--color-text-default)]">
                     Device health
                   </h6>
@@ -1166,7 +1166,7 @@ export function OSDDetailPage() {
                           Smartctl Output
                         </p>
                         <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
-                          <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
+                          <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-[var(--color-text-on-primary)] whitespace-pre-wrap">
                             {selectedHealthDevice.smartctlOutput}
                           </pre>
                         </div>

@@ -205,10 +205,10 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
   {
-    key: 'external',
+    id: 'external',
     label: 'External',
     type: 'select',
     options: [
@@ -217,7 +217,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'shared',
+    id: 'shared',
     label: 'Shared',
     type: 'select',
     options: [
@@ -226,7 +226,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -235,7 +235,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -333,7 +333,7 @@ export function ComputeAdminNetworksPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((n) => {
         return appliedFilters.every((filter) => {
-          const value = String(n[filter.field as keyof Network] || '').toLowerCase();
+          const value = String(n[filter.fieldId as keyof Network] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });

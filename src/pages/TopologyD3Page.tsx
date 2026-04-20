@@ -3049,7 +3049,7 @@ export function TopologyD3Page() {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
+        <div className="flex items-center gap-3 flex-wrap bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] p-3">
           {/* Search */}
           <div className="w-[280px]">
             <SearchInput
@@ -3118,10 +3118,10 @@ export function TopologyD3Page() {
 
         {/* Empty state when no results */}
         {filteredData.subnets.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center bg-white border border-slate-200 rounded-lg">
+          <div className="flex-1 flex items-center justify-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]">
             <div className="text-center py-12">
-              <IconSearch size={48} className="mx-auto mb-3 text-slate-300" />
-              <p className="text-slate-500">No resources match your filters</p>
+              <IconSearch size={48} className="mx-auto mb-3 text-[var(--color-border-strong)]" />
+              <p className="text-[var(--color-text-subtle)]">No resources match your filters</p>
               <button onClick={resetFilters} className="mt-2 text-teal-600 hover:underline text-sm">
                 Clear filters
               </button>
@@ -3130,13 +3130,13 @@ export function TopologyD3Page() {
         ) : (
           <div
             ref={containerRef}
-            className="flex-1 bg-white border border-[var(--color-border-default)] rounded-lg overflow-hidden relative"
+            className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden relative"
             style={{ minHeight: '500px' }}
           >
             <svg ref={svgRef} className="w-full h-full" />
 
             {/* Stats & Zoom Controls */}
-            <div className="absolute top-4 left-4 flex items-center gap-3 bg-white/90 px-3 py-2 rounded-lg border border-slate-200">
+            <div className="absolute top-4 left-4 flex items-center gap-3 bg-[color-mix(in_srgb,var(--color-surface-default)_90%,transparent)] px-3 py-2 rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 {stats.filteredSubnets === stats.totalSubnets
                   ? `${stats.totalSubnets} subnets`
@@ -3172,35 +3172,35 @@ export function TopologyD3Page() {
             </div>
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-white/90 px-4 py-2 rounded-lg border border-slate-200">
-              <span className="text-sm font-medium text-slate-600">Legend:</span>
+            <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-[color-mix(in_srgb,var(--color-surface-default)_90%,transparent)] px-4 py-2 rounded-[var(--radius-lg)] border border-[var(--color-border-default)]">
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">Legend:</span>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.externalNetwork.active }}
                 />
-                <span className="text-xs text-slate-600">External network</span>
+                <span className="text-xs text-[var(--color-text-muted)]">External network</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.router.active }}
                 />
-                <span className="text-xs text-slate-600">Router</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Router</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.subnet.active }}
                 />
-                <span className="text-xs text-slate-600">Subnet</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Subnet</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: COLORS.loadBalancer.active }}
                 />
-                <span className="text-xs text-slate-600">Load balancer</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Load balancer</span>
               </div>
             </div>
           </div>
@@ -3210,22 +3210,24 @@ export function TopologyD3Page() {
       {/* Tooltip */}
       {tooltip.visible && (
         <div
-          className="fixed z-50 bg-slate-800 text-white px-3 py-2 rounded-lg text-xs shadow-lg pointer-events-none"
+          className="fixed z-50 bg-[var(--color-text-default)] text-[var(--color-text-on-primary)] px-3 py-2 rounded-[var(--radius-lg)] text-xs shadow-lg pointer-events-none"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
           <div className="font-semibold">{tooltip.content.name}</div>
-          <div className="text-slate-300">{tooltip.content.type}</div>
+          <div className="text-[color-mix(in_srgb,var(--color-text-on-primary)_75%,transparent)]">
+            {tooltip.content.type}
+          </div>
           <div className="flex items-center gap-1 mt-1">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
                 tooltip.content.status === 'active'
                   ? 'bg-green-400'
                   : tooltip.content.status === 'inactive'
-                    ? 'bg-slate-400'
+                    ? 'bg-[var(--color-text-disabled)]'
                     : 'bg-red-400'
               }`}
             />
-            <span className="text-slate-300">
+            <span className="text-[color-mix(in_srgb,var(--color-text-on-primary)_75%,transparent)]">
               {tooltip.content.status === 'active'
                 ? '활성'
                 : tooltip.content.status === 'inactive'
@@ -3234,7 +3236,9 @@ export function TopologyD3Page() {
             </span>
           </div>
           {tooltip.content.extra && (
-            <div className="text-slate-400 mt-1 font-mono">{tooltip.content.extra}</div>
+            <div className="text-[color-mix(in_srgb,var(--color-text-on-primary)_60%,transparent)] mt-1 font-mono">
+              {tooltip.content.extra}
+            </div>
           )}
         </div>
       )}

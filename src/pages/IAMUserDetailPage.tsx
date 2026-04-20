@@ -98,7 +98,7 @@ const mockUsersMap: Record<string, UserDetail> = {
     email: 'thaki.kim@example.com',
     status: 'online',
     locked: false,
-    createdAt: 'Jul 25, 2025 09:14:33',
+    createdAt: 'Jul 25, 2026 09:14:33',
   },
   'alex.johnson': {
     username: 'alex.johnson',
@@ -106,63 +106,63 @@ const mockUsersMap: Record<string, UserDetail> = {
     email: 'alex.johnson@example.com',
     status: 'online',
     locked: true, // This user is locked
-    createdAt: 'Aug 15, 2025 11:42:18',
+    createdAt: 'Aug 15, 2026 11:42:18',
   },
   'sara.connor': {
     username: 'sara.connor',
     displayName: 'Sara Connor',
     email: 'sara.connor@example.com',
     status: 'offline',
-    createdAt: 'Jul 20, 2025 14:28:45',
+    createdAt: 'Jul 20, 2026 14:28:45',
   },
   'john.doe': {
     username: 'john.doe',
     displayName: 'John Doe',
     email: 'john.doe@example.com',
     status: 'offline',
-    createdAt: 'Jun 10, 2025 08:35:22',
+    createdAt: 'Jun 10, 2026 08:35:22',
   },
   'jane.smith': {
     username: 'jane.smith',
     displayName: 'Jane Smith',
     email: 'jane.smith@example.com',
     status: 'online',
-    createdAt: 'Jan 5, 2025 10:18:51',
+    createdAt: 'Jan 5, 2026 10:18:51',
   },
   'mike.wilson': {
     username: 'mike.wilson',
     displayName: 'Mike Wilson',
     email: 'mike.wilson@example.com',
     status: 'offline',
-    createdAt: 'Apr 18, 2025 16:52:07',
+    createdAt: 'Apr 18, 2026 16:52:07',
   },
   'emily.chen': {
     username: 'emily.chen',
     displayName: 'Emily Chen',
     email: 'emily.chen@example.com',
     status: 'online',
-    createdAt: 'Mar 22, 2025 13:25:38',
+    createdAt: 'Mar 22, 2026 13:25:38',
   },
   'david.lee': {
     username: 'david.lee',
     displayName: 'David Lee',
     email: 'david.lee@example.com',
     status: 'online',
-    createdAt: 'Feb 14, 2025 09:42:14',
+    createdAt: 'Feb 14, 2026 09:42:14',
   },
   'lisa.park': {
     username: 'lisa.park',
     displayName: 'Lisa Park',
     email: 'lisa.park@example.com',
     status: 'offline',
-    createdAt: 'May 30, 2025 11:18:52',
+    createdAt: 'May 30, 2026 11:18:52',
   },
   'chris.taylor': {
     username: 'chris.taylor',
     displayName: 'Chris Taylor',
     email: 'chris.taylor@example.com',
     status: 'online',
-    createdAt: 'Jan 28, 2025 15:33:27',
+    createdAt: 'Jan 28, 2026 15:33:27',
   },
 };
 
@@ -203,8 +203,8 @@ const mockAccessKeys: AccessKey[] = [
     id: 'ak-001',
     keyId: 'AKIA112AK3IALQI2',
     description: '-',
-    lastUsed: 'Sep 12, 2025',
-    createdAt: 'Sep 12, 2025 08:22:15',
+    lastUsed: 'Sep 12, 2026',
+    createdAt: 'Sep 12, 2026 08:22:15',
     status: 'active',
   },
 ];
@@ -212,113 +212,113 @@ const mockAccessKeys: AccessKey[] = [
 const mockSessions: Session[] = [
   {
     id: 's-001',
-    started: 'Nov 4, 2025',
-    lastAccess: 'Nov 4, 2025',
+    started: 'Nov 4, 2026',
+    lastAccess: 'Nov 4, 2026',
     ipAddress: '10.2.40.25',
     device: 'Chrome/Mac OS',
   },
   {
     id: 's-002',
-    started: 'Nov 3, 2025',
-    lastAccess: 'Nov 3, 2025',
+    started: 'Nov 3, 2026',
+    lastAccess: 'Nov 3, 2026',
     ipAddress: '192.168.1.100',
     device: 'Firefox/Windows',
   },
   {
     id: 's-003',
-    started: 'Nov 2, 2025',
-    lastAccess: 'Nov 2, 2025',
+    started: 'Nov 2, 2026',
+    lastAccess: 'Nov 2, 2026',
     ipAddress: '10.2.40.30',
     device: 'Safari/iOS',
   },
   {
     id: 's-004',
-    started: 'Nov 1, 2025',
-    lastAccess: 'Nov 1, 2025',
+    started: 'Nov 1, 2026',
+    lastAccess: 'Nov 1, 2026',
     ipAddress: '172.16.0.50',
     device: 'Edge/Windows',
   },
   {
     id: 's-005',
-    started: 'Oct 31, 2025',
-    lastAccess: 'Oct 31, 2025',
+    started: 'Oct 31, 2026',
+    lastAccess: 'Oct 31, 2026',
     ipAddress: '10.2.40.45',
     device: 'Chrome/Linux',
   },
   {
     id: 's-006',
-    started: 'Oct 30, 2025',
-    lastAccess: 'Oct 30, 2025',
+    started: 'Oct 30, 2026',
+    lastAccess: 'Oct 30, 2026',
     ipAddress: '192.168.2.75',
     device: 'Firefox/Mac OS',
   },
   {
     id: 's-007',
-    started: 'Oct 29, 2025',
-    lastAccess: 'Oct 29, 2025',
+    started: 'Oct 29, 2026',
+    lastAccess: 'Oct 29, 2026',
     ipAddress: '10.2.40.60',
     device: 'Safari/Mac OS',
   },
   {
     id: 's-008',
-    started: 'Oct 28, 2025',
-    lastAccess: 'Oct 28, 2025',
+    started: 'Oct 28, 2026',
+    lastAccess: 'Oct 28, 2026',
     ipAddress: '172.16.0.80',
     device: 'Chrome/Android',
   },
   {
     id: 's-009',
-    started: 'Oct 27, 2025',
-    lastAccess: 'Oct 27, 2025',
+    started: 'Oct 27, 2026',
+    lastAccess: 'Oct 27, 2026',
     ipAddress: '10.2.40.70',
     device: 'Firefox/Linux',
   },
   {
     id: 's-010',
-    started: 'Oct 26, 2025',
-    lastAccess: 'Oct 26, 2025',
+    started: 'Oct 26, 2026',
+    lastAccess: 'Oct 26, 2026',
     ipAddress: '192.168.3.90',
     device: 'Edge/Mac OS',
   },
   {
     id: 's-011',
-    started: 'Oct 25, 2025',
-    lastAccess: 'Oct 25, 2025',
+    started: 'Oct 25, 2026',
+    lastAccess: 'Oct 25, 2026',
     ipAddress: '10.2.40.85',
     device: 'Chrome/Windows',
   },
   {
     id: 's-012',
-    started: 'Oct 24, 2025',
-    lastAccess: 'Oct 24, 2025',
+    started: 'Oct 24, 2026',
+    lastAccess: 'Oct 24, 2026',
     ipAddress: '172.16.0.100',
     device: 'Safari/iOS',
   },
   {
     id: 's-013',
-    started: 'Oct 23, 2025',
-    lastAccess: 'Oct 23, 2025',
+    started: 'Oct 23, 2026',
+    lastAccess: 'Oct 23, 2026',
     ipAddress: '10.2.40.95',
     device: 'Firefox/Windows',
   },
   {
     id: 's-014',
-    started: 'Oct 22, 2025',
-    lastAccess: 'Oct 22, 2025',
+    started: 'Oct 22, 2026',
+    lastAccess: 'Oct 22, 2026',
     ipAddress: '192.168.4.110',
     device: 'Chrome/Linux',
   },
   {
     id: 's-015',
-    started: 'Oct 21, 2025',
-    lastAccess: 'Oct 21, 2025',
+    started: 'Oct 21, 2026',
+    lastAccess: 'Oct 21, 2026',
     ipAddress: '10.2.40.105',
     device: 'Edge/Windows',
   },
   {
     id: 's-016',
-    started: 'Oct 20, 2025',
-    lastAccess: 'Oct 20, 2025',
+    started: 'Oct 20, 2026',
+    lastAccess: 'Oct 20, 2026',
     ipAddress: '172.16.0.120',
     device: 'Safari/Mac OS',
   },
@@ -331,7 +331,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Built-in',
     policies: 'ReadCompute (+2)',
-    createdAt: 'Sep 12, 2025 09:22:18',
+    createdAt: 'Sep 12, 2026 09:22:18',
   },
   {
     id: 'r-002',
@@ -339,7 +339,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'ComputeFullAccess (+5)',
-    createdAt: 'Aug 20, 2025 11:35:42',
+    createdAt: 'Aug 20, 2026 11:35:42',
   },
   {
     id: 'r-003',
@@ -347,7 +347,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'StorageReadOnly',
-    createdAt: 'Jul 15, 2025 14:48:27',
+    createdAt: 'Jul 15, 2026 14:48:27',
   },
   {
     id: 'r-004',
@@ -355,7 +355,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'NetworkFullAccess (+3)',
-    createdAt: 'Jun 10, 2025 08:52:15',
+    createdAt: 'Jun 10, 2026 08:52:15',
   },
   {
     id: 'r-005',
@@ -363,7 +363,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Built-in',
     policies: 'IAMReadOnly (+1)',
-    createdAt: 'May 5, 2025 16:18:33',
+    createdAt: 'May 5, 2026 16:18:33',
   },
   {
     id: 'r-006',
@@ -371,7 +371,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'SecurityAudit (+2)',
-    createdAt: 'Apr 1, 2025 10:25:48',
+    createdAt: 'Apr 1, 2026 10:25:48',
   },
   {
     id: 'r-007',
@@ -379,7 +379,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'BillingReadOnly',
-    createdAt: 'Mar 15, 2025 13:42:19',
+    createdAt: 'Mar 15, 2026 13:42:19',
   },
   {
     id: 'r-008',
@@ -387,7 +387,7 @@ const mockRoles: Role[] = [
     source: 'Direct',
     type: 'Custom',
     policies: 'DevAccess (+4)',
-    createdAt: 'Feb 20, 2025 09:55:32',
+    createdAt: 'Feb 20, 2026 09:55:32',
   },
   {
     id: 'r-009',
@@ -395,7 +395,7 @@ const mockRoles: Role[] = [
     source: 'Group',
     type: 'Built-in',
     policies: 'OperatorAccess (+2)',
-    createdAt: 'Jan 10, 2025 15:28:44',
+    createdAt: 'Jan 10, 2026 15:28:44',
   },
   {
     id: 'r-010',
@@ -946,7 +946,8 @@ export function IAMUserDetailPage() {
                 <SearchInput
                   placeholder="Search groups by attributes"
                   value={searchQuery}
-                  onChange={setSearchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onClear={() => setSearchQuery('')}
                   className="w-[var(--search-input-width)]"
                 />
 
@@ -980,7 +981,8 @@ export function IAMUserDetailPage() {
                 <SearchInput
                   placeholder="Search roles by attributes"
                   value={rolesSearchQuery}
-                  onChange={setRolesSearchQuery}
+                  onChange={(e) => setRolesSearchQuery(e.target.value)}
+                  onClear={() => setRolesSearchQuery('')}
                   className="w-[var(--search-input-width)]"
                 />
 
@@ -1013,7 +1015,7 @@ export function IAMUserDetailPage() {
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Last updated at"
-                      value="2025.11.11 14:22:43 (Updated by user)"
+                      value="2026.11.11 14:22:43 (Updated by user)"
                     />
                   </SectionCard.Content>
                 </SectionCard>
@@ -1033,8 +1035,8 @@ export function IAMUserDetailPage() {
                     }
                   />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Last used" value="2025.11.11 14:22:43" />
-                    <SectionCard.DataRow label="Created at" value="2025.11.11 14:22:43" />
+                    <SectionCard.DataRow label="Last used" value="2026.11.11 14:22:43" />
+                    <SectionCard.DataRow label="Created at" value="2026.11.11 14:22:43" />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -1072,7 +1074,8 @@ export function IAMUserDetailPage() {
                   <SearchInput
                     placeholder="Search session by attributes"
                     value={sessionsSearchQuery}
-                    onChange={setSessionsSearchQuery}
+                    onChange={(e) => setSessionsSearchQuery(e.target.value)}
+                    onClear={() => setSessionsSearchQuery('')}
                     className="w-[var(--search-input-width)]"
                   />
                   <div className="w-px h-4 bg-[var(--color-border-default)]" />

@@ -1053,7 +1053,7 @@ export function DaemonSetDetailPage() {
 
           {/* Second row: Pod Restarts, Ready, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Pod restarts</span>
                 <span className="text-body-md text-[var(--color-text-default)]">
@@ -1061,7 +1061,7 @@ export function DaemonSetDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Ready</span>
                 <span className="text-body-md text-[var(--color-text-default)]">
@@ -1069,7 +1069,7 @@ export function DaemonSetDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(daemonset.labels).length})
@@ -1116,7 +1116,7 @@ export function DaemonSetDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(daemonset.annotations).length})

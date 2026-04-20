@@ -65,7 +65,7 @@ function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }
   if (status === 'done') {
     return (
       <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
+        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
       </div>
     );
   }
@@ -122,9 +122,9 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={4}>
             <span className="text-heading-h5">Summary</span>
             <VStack gap={0}>
@@ -412,7 +412,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
           {/* Selector Rules */}
           <VStack gap={2}>
             <span className="text-label-lg text-[var(--color-text-default)]">Rule</span>
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {selectorRules.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -486,7 +486,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
               >
                 <span className="text-[var(--color-text-default)]">‹</span>
               </button>
-              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-white rounded-md text-label-sm">
+              <span className="w-6 h-6 flex items-center justify-center bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)] rounded-md text-label-sm">
                 {currentPage}
               </span>
               <button
@@ -567,7 +567,7 @@ function LabelsAnnotationsSection({
               Specify the labels used to identify and categorize the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {labels.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -628,7 +628,7 @@ function LabelsAnnotationsSection({
               Specify the annotations used to provide additional metadata for the resource.
             </FormField.Description>
             <FormField.Control>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {annotations.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">

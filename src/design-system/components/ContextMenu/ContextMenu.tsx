@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { IconChevronRight } from '@tabler/icons-react';
-import { Tooltip } from '../Tooltip';
 
 /* ----------------------------------------
    Types
@@ -250,6 +249,7 @@ const ContextMenuItemComponent: React.FC<{
       ref={itemRef}
       role="menuitem"
       tabIndex={-1}
+      title={typeof item.tooltip === 'string' ? item.tooltip : undefined}
       aria-disabled={item.disabled || undefined}
       aria-haspopup={hasSubmenu ? 'menu' : undefined}
       aria-expanded={hasSubmenu ? showSubmenu : undefined}
@@ -291,13 +291,7 @@ const ContextMenuItemComponent: React.FC<{
 
   return (
     <>
-      {item.tooltip ? (
-        <Tooltip content={item.tooltip} position={item.tooltipPosition || 'left'}>
-          {menuItem}
-        </Tooltip>
-      ) : (
-        menuItem
-      )}
+      {menuItem}
 
       {/* Submenu - rendered via portal */}
       {showSubmenu &&
@@ -439,6 +433,12 @@ const ContextMenuContent: React.FC<ContextMenuContentProps> = ({
         case 'End': {
           e.preventDefault();
           menuItems[menuItems.length - 1].focus();
+          break;
+        }
+        case 'Escape': {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
           break;
         }
         case 'Enter':

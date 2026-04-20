@@ -221,14 +221,14 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
-  { key: 'tenant', label: 'Tenant', type: 'text' },
-  { key: 'description', label: 'Description', type: 'text' },
-  { key: 'associatedTo', label: 'Associated to', type: 'text' },
-  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
-  { key: 'network', label: 'Network', type: 'text' },
+  { id: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
+  { id: 'associatedTo', label: 'Associated to', type: 'text' },
+  { id: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { id: 'network', label: 'Network', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -325,7 +325,7 @@ export function ComputeAdminFloatingIPsPage() {
 
     return floatingIPs.filter((fip) => {
       return appliedFilters.every((filter) => {
-        const value = String(fip[filter.field as keyof FloatingIP] || '').toLowerCase();
+        const value = String(fip[filter.fieldId as keyof FloatingIP] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

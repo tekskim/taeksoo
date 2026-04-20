@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -73,6 +73,7 @@ interface AttachedInterface {
   id: string;
   name: string;
   network: string;
+  networkId: string;
   port: string;
   portStatus: 'Active' | 'Inactive' | 'Down' | 'Build';
   fixedIp: string;
@@ -390,6 +391,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '29tgj234',
     name: 'port-01',
     network: 'net-01',
+    networkId: 'net-1',
     port: '123984734',
     portStatus: 'Inactive',
     fixedIp: '10.0.0.6',
@@ -400,6 +402,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '38hdk456',
     name: 'port-02',
     network: 'net-02',
+    networkId: 'net-2',
     port: '987654321',
     portStatus: 'Active',
     fixedIp: '10.0.0.5',
@@ -410,6 +413,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '47jfl789',
     name: 'port-03',
     network: 'net-03',
+    networkId: 'net-3',
     port: '456789123',
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
@@ -420,6 +424,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '56kgm012',
     name: 'port-04',
     network: 'net-04',
+    networkId: 'net-4',
     port: '789012345',
     portStatus: 'Active',
     fixedIp: '172.16.0.10',
@@ -430,6 +435,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '65lhn345',
     name: 'port-05',
     network: 'net-05',
+    networkId: 'net-5',
     port: '234567890',
     portStatus: 'Active',
     fixedIp: '10.10.0.5',
@@ -440,6 +446,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '74mip678',
     name: 'port-06',
     network: 'net-06',
+    networkId: 'net-6',
     port: '345678901',
     portStatus: 'Down',
     fixedIp: '10.20.0.15',
@@ -450,6 +457,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '83njq901',
     name: 'port-07',
     network: 'net-07',
+    networkId: 'net-7',
     port: '456789012',
     portStatus: 'Active',
     fixedIp: '10.30.0.20',
@@ -460,6 +468,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '92okr234',
     name: 'port-08',
     network: 'net-08',
+    networkId: 'net-8',
     port: '567890123',
     portStatus: 'Active',
     fixedIp: '10.40.0.25',
@@ -470,6 +479,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '01pls567',
     name: 'port-09',
     network: 'net-09',
+    networkId: 'net-9',
     port: '678901234',
     portStatus: 'Build',
     fixedIp: '10.50.0.30',
@@ -480,6 +490,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '10qmt890',
     name: 'port-10',
     network: 'net-10',
+    networkId: 'net-10',
     port: '789012345',
     portStatus: 'Active',
     fixedIp: '10.60.0.35',
@@ -490,6 +501,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '29rnu123',
     name: 'port-11',
     network: 'net-11',
+    networkId: 'net-11',
     port: '890123456',
     portStatus: 'Active',
     fixedIp: '10.70.0.40',
@@ -500,6 +512,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     id: '38sov456',
     name: 'port-12',
     network: 'net-12',
+    networkId: 'net-12',
     port: '901234567',
     portStatus: 'Inactive',
     fixedIp: '10.80.0.45',
@@ -1021,29 +1034,121 @@ export function InstanceDetailPage() {
   );
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
-  // Volumes tab pagination state
+  // Volumes tab — search & pagination
+  const [volumeSearchTerm, setVolumeSearchTerm] = useState('');
   const [volumesPage, setVolumesPage] = useState(1);
   const volumesPageSize = 10;
-  const totalVolumePages = Math.ceil(mockAttachedVolumes.length / volumesPageSize);
-  const paginatedAttachedVolumes = mockAttachedVolumes.slice(
-    (volumesPage - 1) * volumesPageSize,
-    volumesPage * volumesPageSize
+  const filteredAttachedVolumes = useMemo(() => {
+    const q = volumeSearchTerm.trim().toLowerCase();
+    if (!q) return mockAttachedVolumes;
+    return mockAttachedVolumes.filter((v) =>
+      [v.id, v.name, v.status, v.size, v.type, v.diskTag, String(v.bootable), v.access].some(
+        (field) => String(field).toLowerCase().includes(q)
+      )
+    );
+  }, [volumeSearchTerm]);
+  const totalVolumePages = Math.ceil(filteredAttachedVolumes.length / volumesPageSize);
+  const paginatedAttachedVolumes = useMemo(
+    () =>
+      filteredAttachedVolumes.slice(
+        (volumesPage - 1) * volumesPageSize,
+        volumesPage * volumesPageSize
+      ),
+    [filteredAttachedVolumes, volumesPage, volumesPageSize]
   );
 
-  // Interface tab pagination state
+  // Interface tab — search & pagination
+  const [interfaceSearchTerm, setInterfaceSearchTerm] = useState('');
   const [interfaceCurrentPage, setInterfaceCurrentPage] = useState(1);
   const interfaceRowsPerPage = 10;
-  const interfaceTotalPages = Math.ceil(mockAttachedInterfaces.length / interfaceRowsPerPage);
+  const filteredAttachedInterfaces = useMemo(() => {
+    const q = interfaceSearchTerm.trim().toLowerCase();
+    if (!q) return mockAttachedInterfaces;
+    return mockAttachedInterfaces.filter((iface) =>
+      [
+        iface.id,
+        iface.name,
+        iface.network,
+        iface.networkId,
+        iface.port,
+        iface.portStatus,
+        iface.fixedIp,
+        iface.macAddress,
+        iface.createdAt,
+      ].some((field) => String(field).toLowerCase().includes(q))
+    );
+  }, [interfaceSearchTerm]);
+  const interfaceTotalPages = Math.ceil(filteredAttachedInterfaces.length / interfaceRowsPerPage);
+  const paginatedAttachedInterfaces = useMemo(
+    () =>
+      filteredAttachedInterfaces.slice(
+        (interfaceCurrentPage - 1) * interfaceRowsPerPage,
+        interfaceCurrentPage * interfaceRowsPerPage
+      ),
+    [filteredAttachedInterfaces, interfaceCurrentPage, interfaceRowsPerPage]
+  );
 
-  // Floating IP tab pagination state
+  // Floating IP tab — search & pagination
+  const [floatingIpSearchTerm, setFloatingIpSearchTerm] = useState('');
   const [floatingIpCurrentPage, setFloatingIpCurrentPage] = useState(1);
   const floatingIpRowsPerPage = 10;
-  const floatingIpTotalPages = Math.ceil(mockFloatingIPs.length / floatingIpRowsPerPage);
+  const filteredFloatingIPs = useMemo(() => {
+    const q = floatingIpSearchTerm.trim().toLowerCase();
+    if (!q) return mockFloatingIPs;
+    return mockFloatingIPs.filter((row) =>
+      [row.id, row.name, row.status, row.floatingIp, row.fixedIp, row.createdAt].some((field) =>
+        String(field).toLowerCase().includes(q)
+      )
+    );
+  }, [floatingIpSearchTerm]);
+  const floatingIpTotalPages = Math.ceil(filteredFloatingIPs.length / floatingIpRowsPerPage);
+  const paginatedFloatingIPs = useMemo(
+    () =>
+      filteredFloatingIPs.slice(
+        (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
+        floatingIpCurrentPage * floatingIpRowsPerPage
+      ),
+    [filteredFloatingIPs, floatingIpCurrentPage, floatingIpRowsPerPage]
+  );
 
-  // Security tab pagination state
+  // Security tab — search & pagination
+  const [securityGroupSearchTerm, setSecurityGroupSearchTerm] = useState('');
   const [securityCurrentPage, setSecurityCurrentPage] = useState(1);
   const securityRowsPerPage = 10;
-  const securityTotalPages = Math.ceil(mockSecurityGroups.length / securityRowsPerPage);
+  const filteredSecurityGroups = useMemo(() => {
+    const q = securityGroupSearchTerm.trim().toLowerCase();
+    if (!q) return mockSecurityGroups;
+    return mockSecurityGroups.filter((row) =>
+      [row.id, row.name, row.description, row.createdAt].some((field) =>
+        field.toLowerCase().includes(q)
+      )
+    );
+  }, [securityGroupSearchTerm]);
+  const securityTotalPages = Math.ceil(filteredSecurityGroups.length / securityRowsPerPage);
+  const paginatedSecurityGroups = useMemo(
+    () =>
+      filteredSecurityGroups.slice(
+        (securityCurrentPage - 1) * securityRowsPerPage,
+        securityCurrentPage * securityRowsPerPage
+      ),
+    [filteredSecurityGroups, securityCurrentPage, securityRowsPerPage]
+  );
+
+  useEffect(() => {
+    setVolumesPage(1);
+  }, [volumeSearchTerm]);
+
+  useEffect(() => {
+    setInterfaceCurrentPage(1);
+  }, [interfaceSearchTerm]);
+
+  useEffect(() => {
+    setFloatingIpCurrentPage(1);
+  }, [floatingIpSearchTerm]);
+
+  useEffect(() => {
+    setSecurityCurrentPage(1);
+  }, [securityGroupSearchTerm]);
 
   // Instance snapshots tab pagination state
   const [snapshotCurrentPage, setSnapshotCurrentPage] = useState(1);
@@ -1411,13 +1516,16 @@ export function InstanceDetailPage() {
                   placeholder="Search volume by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={volumeSearchTerm}
+                  onChange={(e) => setVolumeSearchTerm(e.target.value)}
+                  onClear={() => setVolumeSearchTerm('')}
                 />
 
                 {/* Pagination */}
                 <Pagination
                   currentPage={volumesPage}
                   totalPages={totalVolumePages}
-                  totalItems={mockAttachedVolumes.length}
+                  totalItems={filteredAttachedVolumes.length}
                   onPageChange={setVolumesPage}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
@@ -1578,6 +1686,9 @@ export function InstanceDetailPage() {
                   placeholder="Search interface by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={interfaceSearchTerm}
+                  onChange={(e) => setInterfaceSearchTerm(e.target.value)}
+                  onClear={() => setInterfaceSearchTerm('')}
                 />
 
                 {/* Pagination */}
@@ -1585,7 +1696,7 @@ export function InstanceDetailPage() {
                   currentPage={interfaceCurrentPage}
                   totalPages={interfaceTotalPages}
                   onPageChange={setInterfaceCurrentPage}
-                  totalItems={mockAttachedInterfaces.length}
+                  totalItems={filteredAttachedInterfaces.length}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1648,16 +1759,16 @@ export function InstanceDetailPage() {
                       render: (_value: string, iface: AttachedInterface) => (
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
-                            to={`/compute/networks/${iface.id}`}
+                            to={`/compute/networks/${iface.networkId}`}
                             className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {iface.network}
                           </Link>
                           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-                            <span className="truncate" title={iface.id}>
-                              ID : {iface.id.slice(0, 8)}
+                            <span className="truncate" title={iface.networkId}>
+                              ID : {iface.networkId.slice(0, 8)}
                             </span>
-                            <InlineCopyId value={iface.id} />
+                            <InlineCopyId value={iface.networkId} />
                           </span>
                         </div>
                       ),
@@ -1724,10 +1835,7 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockAttachedInterfaces.slice(
-                    (interfaceCurrentPage - 1) * interfaceRowsPerPage,
-                    interfaceCurrentPage * interfaceRowsPerPage
-                  )}
+                  data={paginatedAttachedInterfaces}
                   rowKey="id"
                   emptyMessage="No network interfaces found"
                 />
@@ -1750,6 +1858,9 @@ export function InstanceDetailPage() {
                   placeholder="Search floating IP by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={floatingIpSearchTerm}
+                  onChange={(e) => setFloatingIpSearchTerm(e.target.value)}
+                  onClear={() => setFloatingIpSearchTerm('')}
                 />
 
                 {/* Pagination */}
@@ -1757,7 +1868,7 @@ export function InstanceDetailPage() {
                   currentPage={floatingIpCurrentPage}
                   totalPages={floatingIpTotalPages}
                   onPageChange={setFloatingIpCurrentPage}
-                  totalItems={mockFloatingIPs.length}
+                  totalItems={filteredFloatingIPs.length}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1836,10 +1947,7 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockFloatingIPs.slice(
-                    (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
-                    floatingIpCurrentPage * floatingIpRowsPerPage
-                  )}
+                  data={paginatedFloatingIPs}
                   rowKey="id"
                   emptyMessage="No floating IPs assigned"
                 />
@@ -1880,6 +1988,9 @@ export function InstanceDetailPage() {
                   placeholder="Search security group by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={securityGroupSearchTerm}
+                  onChange={(e) => setSecurityGroupSearchTerm(e.target.value)}
+                  onClear={() => setSecurityGroupSearchTerm('')}
                 />
 
                 {/* Pagination */}
@@ -1887,7 +1998,7 @@ export function InstanceDetailPage() {
                   currentPage={securityCurrentPage}
                   totalPages={securityTotalPages}
                   onPageChange={setSecurityCurrentPage}
-                  totalItems={mockSecurityGroups.length}
+                  totalItems={filteredSecurityGroups.length}
                   showSettings
                   onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
@@ -1973,10 +2084,7 @@ export function InstanceDetailPage() {
                       },
                     },
                   ]}
-                  data={mockSecurityGroups.slice(
-                    (securityCurrentPage - 1) * securityRowsPerPage,
-                    securityCurrentPage * securityRowsPerPage
-                  )}
+                  data={paginatedSecurityGroups}
                   rowKey="id"
                   emptyMessage="No security groups assigned"
                 />
@@ -2280,7 +2388,7 @@ export function InstanceDetailPage() {
                 </div>
 
                 {/* Console Area */}
-                <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
+                <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
                   <pre className="font-mono text-label-lg leading-relaxed text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
                     {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2026
 [    0.500123] cloud-init[101]: Starting network configuration...

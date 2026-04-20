@@ -208,8 +208,8 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
   // Filter fields for search
   const filterFields: FilterField[] = [
-    { key: 'parameter', label: 'Parameter', type: 'text' },
-    { key: 'value', label: 'Value', type: 'text' },
+    { id: 'parameter', label: 'Parameter', type: 'text' },
+    { id: 'value', label: 'Value', type: 'text' },
   ];
 
   // Filter extra specs
@@ -227,7 +227,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
     appliedFilters.forEach((filter) => {
       result = result.filter((spec) => {
-        const value = spec[filter.field as keyof ExtraSpec];
+        const value = spec[filter.fieldId as keyof ExtraSpec];
         if (typeof value === 'string') {
           return value.toLowerCase().includes(filter.value.toLowerCase());
         }

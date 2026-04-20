@@ -282,7 +282,7 @@ interface InfoCardProps {
 
 function InfoCard({ label, value }: InfoCardProps) {
   return (
-    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
+    <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
       <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
       <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
     </div>

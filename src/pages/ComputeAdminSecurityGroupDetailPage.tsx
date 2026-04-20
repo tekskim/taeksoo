@@ -437,7 +437,7 @@ export default function SecurityGroupDetailPage() {
       >
         <VStack gap={6} className="min-w-[1176px]">
           {/* Header Card */}
-          <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
+          <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4">
             {/* Title */}
             <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
               {securityGroup.name}
@@ -453,7 +453,7 @@ export default function SecurityGroupDetailPage() {
             {/* Info Row */}
             <div className="flex items-center gap-2">
               {/* ID */}
-              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
                 <div className="flex items-center gap-1 mt-1.5">
                   <p className="text-body-md text-[var(--color-text-default)]">
@@ -464,13 +464,13 @@ export default function SecurityGroupDetailPage() {
               </div>
 
               {/* Tenant */}
-              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Tenant</span>
                 <p className="text-body-md text-[var(--color-text-default)] mt-1.5">tenantA</p>
               </div>
 
               {/* Created at */}
-              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
                 <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
                   {securityGroup.createdAt}

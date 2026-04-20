@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
@@ -37,6 +37,8 @@ import {
   IconTrash,
   IconCheck,
 } from '@tabler/icons-react';
+
+const PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Types
@@ -247,6 +249,15 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
+  const totalPages = Math.max(1, Math.ceil(containers.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedContainers = containers.slice(start, start + PAGE_SIZE);
+
   const createContainerMenuItems = (row: ContainerRow): ContextMenuItem[] => {
     return [
       {
@@ -370,15 +381,15 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Containers</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={containers.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={containers}
+        data={paginatedContainers}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -398,6 +409,15 @@ interface ConditionsTabProps {
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(conditions.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedConditions = conditions.slice(start, start + PAGE_SIZE);
 
   const columns: TableColumn<ConditionRow>[] = [
     {
@@ -439,12 +459,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     <VStack gap={3}>
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={conditions.length}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -461,6 +481,30 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((row) => {
+      const haystack = [row.name, row.type, row.reason, row.message, row.source]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [events, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredEvents.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedEvents = filteredEvents.slice(start, start + PAGE_SIZE);
 
   const createEventMenuItems = (row: EventRow): ContextMenuItem[] => {
     return [
@@ -574,15 +618,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={events.length}
+        totalItems={filteredEvents.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={events}
+        data={paginatedEvents}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -775,7 +819,7 @@ export function PodDetailPage() {
 
           {/* Second row: Workload, Node, Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Workload</span>
                 <span
@@ -786,7 +830,7 @@ export function PodDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={1.5}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">Node</span>
                 <span
@@ -797,7 +841,7 @@ export function PodDetailPage() {
                 </span>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Labels ({Object.keys(pod.labels).length})
@@ -844,7 +888,7 @@ export function PodDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)]">
                   Annotations ({Object.keys(pod.annotations).length})

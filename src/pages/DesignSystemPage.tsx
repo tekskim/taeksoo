@@ -755,7 +755,7 @@ function OpenSectionTableDemo() {
                           setCurrentPage(1);
                         }}
                         className={`
-                        flex items-center gap-1 px-[10px] py-[6px] rounded-[6px] text-[12px] font-medium leading-5 text-center transition-all
+                        flex items-center gap-1 px-[10px] py-[6px] rounded-[var(--radius-md)] text-[12px] font-medium leading-5 text-center transition-all
                         ${
                           osFilter === filter
                             ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
@@ -2284,7 +2284,7 @@ function CapsuleTabDemo() {
       <button
         onClick={() => setSelected('left')}
         className={`
-          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          min-w-[80px] px-[10px] py-[6px] rounded-[var(--radius-md)] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
           ${
             selected === 'left'
               ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
@@ -2297,7 +2297,7 @@ function CapsuleTabDemo() {
       <button
         onClick={() => setSelected('right')}
         className={`
-          min-w-[80px] px-[10px] py-[6px] rounded-[6px] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
+          min-w-[80px] px-[10px] py-[6px] rounded-[var(--radius-md)] text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-18)] text-center transition-all
           ${
             selected === 'right'
               ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
@@ -14947,12 +14947,12 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   {/* Basic Example - QuotaSidebar Style */}
                   <VStack gap={4}>
                     <Label>Basic Example (QuotaSidebar from Create Instance)</Label>
-                    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-lg">
+                    <div className="relative bg-[var(--color-surface-subtle)] p-6 rounded-[var(--radius-lg)]">
                       {/* QuotaSidebar Container */}
                       <div className="w-[var(--wizard-summary-width)] shrink-0">
-                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
                           {/* Summary Card */}
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                             <VStack gap={3}>
                               <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                                 Summary
@@ -15030,7 +15030,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                           </div>
 
                           {/* Quota Card */}
-                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
                             <VStack gap={3}>
                               <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                                 Quota
@@ -15109,7 +15109,7 @@ whileDrag={{ scale: 1.15, zIndex: 50 }}`,
                   {/* Status Icons */}
                   <VStack gap={4}>
                     <Label>Status icons</Label>
-                    <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-lg">
+                    <div className="flex gap-4 items-center p-4 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)]">
                       <div className="flex items-center gap-2">
                         <div
                           className="size-4 rounded-full border border-[var(--color-border-default)]"

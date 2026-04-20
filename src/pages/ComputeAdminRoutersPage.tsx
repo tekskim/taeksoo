@@ -213,10 +213,10 @@ const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
   {
-    key: 'externalGateway',
+    id: 'externalGateway',
     label: 'External gateway',
     type: 'select',
     options: [
@@ -224,10 +224,10 @@ const filterFields: FilterField[] = [
       { value: 'false', label: 'Closed' },
     ],
   },
-  { key: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
-  { key: 'externalNetwork', label: 'External network', type: 'text' },
+  { id: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
+  { id: 'externalNetwork', label: 'External network', type: 'text' },
   {
-    key: 'adminState',
+    id: 'adminState',
     label: 'Admin state',
     type: 'select',
     options: [
@@ -236,7 +236,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -304,7 +304,7 @@ export function ComputeAdminRoutersPage() {
 
     return routers.filter((r) => {
       return appliedFilters.every((filter) => {
-        const value = String(r[filter.field as keyof Router] || '').toLowerCase();
+        const value = String(r[filter.fieldId as keyof Router] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

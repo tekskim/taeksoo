@@ -72,7 +72,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Nov 11, 2025 08:30:18',
+    createdAt: 'Nov 11, 2026 08:30:18',
     networking: {
       externalNetwork: 'extnet-01',
       tenantNetwork: 'net-01',
@@ -99,7 +99,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Failed',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Oct 6, 2025 21:25:53',
+    createdAt: 'Oct 6, 2026 21:25:53',
     networking: {
       externalNetwork: 'extnet-02',
       tenantNetwork: 'net-02',
@@ -126,7 +126,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Provisioning',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Oct 5, 2025 14:12:36',
+    createdAt: 'Oct 5, 2026 14:12:36',
     networking: {
       externalNetwork: 'extnet-03',
       tenantNetwork: 'net-03',
@@ -153,7 +153,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Deleting',
     kubernetesVersion: 'v1.33.1',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Sep 20, 2025 09:15:42',
+    createdAt: 'Sep 20, 2026 09:15:42',
     networking: {
       externalNetwork: 'extnet-04',
       tenantNetwork: 'net-04',
@@ -180,7 +180,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Unknown',
     kubernetesVersion: 'v1.31.0',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Aug 14, 2025 16:45:10',
+    createdAt: 'Aug 14, 2026 16:45:10',
     networking: {
       externalNetwork: 'extnet-05',
       tenantNetwork: 'net-05',
@@ -207,7 +207,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'Updating',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Jun 5, 2025 15:42:33',
+    createdAt: 'Jun 5, 2026 15:42:33',
     networking: {
       externalNetwork: 'extnet-06',
       tenantNetwork: 'net-06',
@@ -268,7 +268,7 @@ export function ClusterDetailPage() {
     status: 'Provisioned',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     networking: {
       externalNetwork: 'extnet-01',
       tenantNetwork: 'net-01',

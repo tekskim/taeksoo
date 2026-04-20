@@ -774,7 +774,7 @@ export function CloudBuilderDetailPage() {
                   data-figma-name="[TDS] DetailCard.Content-Config"
                   aria-label="Configuration content"
                 >
-                  <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-body-md text-[var(--color-text-default)]">
+                  <pre className="max-h-[420px] overflow-auto rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-body-md text-[var(--color-text-default)]">
                     {networkAgentMeta?.configurationText ?? ''}
                   </pre>
                 </SectionCard.Content>

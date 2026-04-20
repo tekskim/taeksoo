@@ -3088,7 +3088,7 @@ export function FigmaComponentsPage() {
         <SubTitle>Sub Elements</SubTitle>
         <div className="flex flex-col gap-4">
           <FigmaFrame name="Toast/Sub/Container">
-            <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg flex gap-3">
+            <div className="w-[360px] p-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-lg flex gap-3">
               <IconCircleCheck size={20} className="shrink-0 text-[var(--color-state-success)]" />
               <div className="flex-1 flex flex-col gap-1">
                 <span className="text-label-md text-[var(--color-text-default)]">Success</span>

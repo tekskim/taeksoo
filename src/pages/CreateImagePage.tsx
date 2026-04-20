@@ -71,7 +71,7 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
@@ -141,7 +141,7 @@ export function CreateImagePage() {
     'basic-info': 'active',
     source: isV2 ? 'active' : 'pre',
     specification: isV2 ? 'active' : 'pre',
-    advanced: 'done',
+    advanced: 'pre',
   });
 
   // Tab management

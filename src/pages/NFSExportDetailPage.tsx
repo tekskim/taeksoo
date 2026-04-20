@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -117,6 +117,29 @@ export function NFSExportDetailPage() {
     useTabs();
 
   const exportData = id ? mockNFSExportDetails[id] : undefined;
+
+  const LIST_PAGE_SIZE = 10;
+
+  const [clientsSearch, setClientsSearch] = useState('');
+  const [clientsPage, setClientsPage] = useState(1);
+
+  const filteredClients = useMemo(() => {
+    const q = clientsSearch.trim().toLowerCase();
+    if (!q) return mockClients;
+    return mockClients.filter((c) => {
+      const hay = [c.addresses, c.accessType, c.squash].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [clientsSearch]);
+
+  const paginatedClients = useMemo(
+    () => filteredClients.slice((clientsPage - 1) * LIST_PAGE_SIZE, clientsPage * LIST_PAGE_SIZE),
+    [filteredClients, clientsPage]
+  );
+
+  useEffect(() => {
+    setClientsPage(1);
+  }, [clientsSearch]);
 
   useEffect(() => {
     if (exportData?.pseudo) {
@@ -275,19 +298,26 @@ export function NFSExportDetailPage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">Clients</h3>
               </div>
               <div className="w-[var(--search-input-width)]">
-                <SearchInput placeholder="Search clients by attributes" size="sm" fullWidth />
+                <SearchInput
+                  placeholder="Search clients by attributes"
+                  size="sm"
+                  fullWidth
+                  value={clientsSearch}
+                  onChange={(e) => setClientsSearch(e.target.value)}
+                  onClear={() => setClientsSearch('')}
+                />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockClients.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockClients.length}
-                itemsPerPage={10}
+                currentPage={clientsPage}
+                totalPages={Math.ceil(filteredClients.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setClientsPage}
+                totalItems={filteredClients.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<NFSClient>
                 columns={clientColumns}
-                data={mockClients}
+                data={paginatedClients}
                 rowKey="id"
                 emptyMessage="No clients found"
               />

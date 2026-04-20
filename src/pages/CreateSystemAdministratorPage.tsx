@@ -95,7 +95,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -113,7 +113,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -167,9 +167,9 @@ function SummarySidebar({
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card with Header and Status */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             {/* Header */}
             <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create account</h4>
@@ -263,10 +263,10 @@ function PasswordSection({
         {hasMinLength ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           8-64 characters long
         </span>
@@ -275,10 +275,10 @@ function PasswordSection({
         {hasUppercase ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one uppercase letter (A-Z)
         </span>
@@ -287,10 +287,10 @@ function PasswordSection({
         {hasLowercase ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one lowercase letter (a-z)
         </span>
@@ -299,10 +299,10 @@ function PasswordSection({
         {hasNumber ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one number
         </span>
@@ -311,10 +311,10 @@ function PasswordSection({
         {hasSpecialChar ? (
           <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCircle size={16} className="text-white/50" />
+          <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
         )}
         <span
-          className={`text-body-sm ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+          className={`text-body-sm ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
         >
           At least one special character
         </span>
@@ -332,10 +332,10 @@ function PasswordSection({
       {passwordsMatch ? (
         <IconCircleCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
-        <IconCircle size={16} className="text-white/50" />
+        <IconCircle size={16} className="text-[var(--color-text-on-primary)]/50" />
       )}
       <span
-        className={`text-body-sm ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        className={`text-body-sm ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-on-primary)]'}`}
       >
         Passwords match.
       </span>
@@ -376,7 +376,7 @@ function PasswordSection({
 
       {/* Password inputs - shown when manual is selected */}
       {passwordOption === 'manual' && (
-        <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
+        <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-2">
           <HStack gap={6} align="center">
             {/* Password */}
             <FormField required error={!!passwordError}>

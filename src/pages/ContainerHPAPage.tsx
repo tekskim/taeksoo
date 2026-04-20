@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   PageShell,
@@ -111,11 +111,16 @@ export function ContainerHPAPage() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const navigate = useNavigate();
 
@@ -150,6 +155,33 @@ export function ContainerHPAPage() {
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 248 : 48;
+
+  const filteredData = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return hpaData;
+    return hpaData.filter((row) => {
+      const haystack = [
+        row.name,
+        row.namespace,
+        row.workload,
+        row.status,
+        row.createdAt,
+        String(row.minReplicas),
+        String(row.maxReplicas),
+        String(row.currentReplicas),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [searchTerm]);
+
+  const rowsPerPage = 10;
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
@@ -402,6 +434,9 @@ export function ContainerHPAPage() {
                 placeholder="Search horizontal pod autoscaler by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
               />
               <Button
                 variant="secondary"
@@ -446,16 +481,16 @@ export function ContainerHPAPage() {
         {/* Pagination */}
         <Pagination
           currentPage={currentPage}
-          totalPages={1}
+          totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={hpaData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 
         {/* Table */}
         <Table<HPARow>
           columns={columns}
-          data={hpaData}
+          data={paginatedData}
           rowKey="id"
           selectable
           selectedKeys={selectedRows}

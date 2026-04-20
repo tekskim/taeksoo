@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   PageShell,
@@ -114,6 +114,7 @@ export function NetworkPoliciesPage() {
     { key: 'Name', value: 'a' },
   ]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -121,6 +122,23 @@ export function NetworkPoliciesPage() {
   }, []);
 
   const navigate = useNavigate();
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return networkPoliciesData;
+    const q = searchTerm.toLowerCase();
+    return networkPoliciesData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.namespace?.toLowerCase().includes(q) ||
+        item.status?.toLowerCase().includes(q) ||
+        item.podSelector?.toLowerCase().includes(q) ||
+        item.createdAt?.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
@@ -144,8 +162,8 @@ export function NetworkPoliciesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(networkPoliciesData.length / rowsPerPage);
-  const paginatedData = networkPoliciesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -369,6 +387,9 @@ export function NetworkPoliciesPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 placeholder="Search network policy by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
@@ -418,7 +439,7 @@ export function NetworkPoliciesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={networkPoliciesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

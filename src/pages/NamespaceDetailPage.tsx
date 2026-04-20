@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
   Badge,
+  BadgeList,
   Pagination,
   DetailHeader,
   Button,
@@ -22,7 +23,6 @@ import {
   fixedColumns,
   columnMinWidths,
   Tooltip,
-  Popover,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
@@ -348,7 +348,7 @@ function StatCard({ label, value, color }: StatCardProps) {
   };
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
       <VStack gap={1.5}>
         <span className={`text-label-sm ${colorStyles[color].text}`}>{label}</span>
         <span className={`text-heading-h3 ${colorStyles[color].text}`}>{value}</span>
@@ -922,47 +922,19 @@ export function NamespaceDetailPage() {
             <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
             <DetailHeader.InfoCard
               label={`Labels (${Object.keys(namespace.labels).length})`}
-              value={(() => {
-                const entries = Object.entries(namespace.labels);
-                if (entries.length === 0) return '-';
-                const [firstKey, firstVal] = entries[0];
-                const text = `${firstKey}: ${firstVal}`;
-                return (
-                  <div className="flex items-center gap-1 min-w-0 w-full">
-                    <Tooltip content={text} position="top">
-                      <Badge theme="white" size="sm" className="max-w-full">
-                        <span className="truncate">{text}</span>
-                      </Badge>
-                    </Tooltip>
-                    {entries.length > 1 && (
-                      <Popover
-                        trigger="hover"
-                        position="bottom"
-                        delay={100}
-                        hideDelay={100}
-                        content={
-                          <div className="p-3 min-w-[120px] max-w-[320px]">
-                            <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                              All Labels ({entries.length})
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              {entries.map(([k, v], i) => (
-                                <Badge key={i} theme="white" size="sm">
-                                  {k}: {v}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        }
-                      >
-                        <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                          +{entries.length - 1}
-                        </span>
-                      </Popover>
-                    )}
-                  </div>
-                );
-              })()}
+              value={
+                Object.keys(namespace.labels).length === 0 ? (
+                  '-'
+                ) : (
+                  <BadgeList
+                    items={Object.entries(namespace.labels).map(([k, v]) => `${k}: ${v}`)}
+                    maxVisible={2}
+                    theme="white"
+                    popoverTitle={`All Labels (${Object.keys(namespace.labels).length})`}
+                    maxBadgeWidth="140px"
+                  />
+                )
+              }
             />
             <DetailHeader.InfoCard
               label={`Annotations (${Object.keys(namespace.annotations).length})`}
@@ -976,7 +948,7 @@ export function NamespaceDetailPage() {
         </DetailHeader>
 
         {/* Resources Section */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4 w-full">
           <VStack gap={3}>
             <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
               Workload

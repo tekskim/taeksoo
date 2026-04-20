@@ -79,7 +79,7 @@ const mockFirewallsMap: Record<string, FirewallDetail> = {
     ingressPolicyId: 'fwp-001',
     egressPolicy: 'egress-policy-1',
     egressPolicyId: 'fwp-002',
-    createdAt: 'Dec 25, 2025 10:32:16',
+    createdAt: 'Dec 25, 2026 10:32:16',
   },
   'fw-002': {
     id: '8394e0285f92542f04171b0ccd3deff0',
@@ -93,7 +93,7 @@ const mockFirewallsMap: Record<string, FirewallDetail> = {
     ingressPolicyId: 'fwp-003',
     egressPolicy: 'db-egress-policy',
     egressPolicyId: 'fwp-004',
-    createdAt: 'Dec 20, 2025 23:27:51',
+    createdAt: 'Dec 20, 2026 23:27:51',
   },
 };
 

@@ -60,7 +60,7 @@ const mockClusters: Cluster[] = [
     cpu: '8 cores',
     memory: '16 GiB',
     pods: '46/110',
-    createdAt: 'Nov 11, 2025 08:30:18',
+    createdAt: 'Nov 11, 2026 08:30:18',
   },
   {
     id: 'cluster-002',
@@ -70,7 +70,7 @@ const mockClusters: Cluster[] = [
     cpu: '4 cores',
     memory: '8 GiB',
     pods: '23/110',
-    createdAt: 'Oct 6, 2025 21:25:53',
+    createdAt: 'Oct 6, 2026 21:25:53',
   },
   {
     id: 'cluster-003',
@@ -80,7 +80,7 @@ const mockClusters: Cluster[] = [
     cpu: '16 cores',
     memory: '32 GiB',
     pods: '89/110',
-    createdAt: 'Sep 15, 2025 12:22:26',
+    createdAt: 'Sep 15, 2026 12:22:26',
   },
   {
     id: 'cluster-004',
@@ -90,7 +90,7 @@ const mockClusters: Cluster[] = [
     cpu: '4 cores',
     memory: '8 GiB',
     pods: '12/110',
-    createdAt: 'Aug 20, 2025 23:27:51',
+    createdAt: 'Aug 20, 2026 23:27:51',
   },
   {
     id: 'cluster-005',
@@ -100,7 +100,7 @@ const mockClusters: Cluster[] = [
     cpu: '2 cores',
     memory: '4 GiB',
     pods: '5/110',
-    createdAt: 'Jul 10, 2025 01:17:01',
+    createdAt: 'Jul 10, 2026 01:17:01',
   },
   {
     id: 'cluster-006',
@@ -110,7 +110,7 @@ const mockClusters: Cluster[] = [
     cpu: '12 cores',
     memory: '24 GiB',
     pods: '67/110',
-    createdAt: 'Jun 5, 2025 15:42:33',
+    createdAt: 'Jun 5, 2026 15:42:33',
   },
 ];
 

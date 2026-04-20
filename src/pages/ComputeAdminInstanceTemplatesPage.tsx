@@ -189,10 +189,10 @@ const mockTemplates: InstanceTemplate[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'network', label: 'Network', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'network', label: 'Network', type: 'text' },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -275,7 +275,7 @@ export function ComputeAdminInstanceTemplatesPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((t) => {
         return appliedFilters.every((filter) => {
-          const value = String(t[filter.field as keyof InstanceTemplate] || '').toLowerCase();
+          const value = String(t[filter.fieldId as keyof InstanceTemplate] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });

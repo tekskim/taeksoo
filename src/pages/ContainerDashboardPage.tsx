@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
@@ -273,6 +273,8 @@ const eventsData: EventRow[] = [
   },
 ];
 
+const EVENTS_PAGE_SIZE = 10;
+
 const eventsColumns: TableColumn<EventRow>[] = [
   { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
   {
@@ -355,10 +357,41 @@ export function ContainerDashboardPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
 
+  const filteredEvents = useMemo(() => {
+    const q = eventSearchQuery.trim().toLowerCase();
+    if (!q) return eventsData;
+    return eventsData.filter((row) => {
+      const haystack = [
+        row.reason,
+        row.object,
+        row.message,
+        row.name,
+        row.firstSeen,
+        row.lastSeen,
+        String(row.count),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [eventSearchQuery]);
+
+  const totalEventPages = Math.max(1, Math.ceil(filteredEvents.length / EVENTS_PAGE_SIZE));
+  const effectiveEventPage = Math.min(currentPage, totalEventPages);
+
+  const paginatedEvents = useMemo(() => {
+    const start = (effectiveEventPage - 1) * EVENTS_PAGE_SIZE;
+    return filteredEvents.slice(start, start + EVENTS_PAGE_SIZE);
+  }, [filteredEvents, effectiveEventPage]);
+
   // Update tab label to "Dashboard" on mount
   useEffect(() => {
     updateActiveTabLabel('Dashboard');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [eventSearchQuery]);
 
   // Calculate sidebar width (40px icon sidebar always visible + 200px menu sidebar when open)
   const sidebarWidth = sidebarOpen ? 248 : 48;
@@ -483,7 +516,7 @@ export function ContainerDashboardPage() {
               return (
                 <div
                   key={name}
-                  className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 relative min-w-0"
+                  className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 relative min-w-0"
                 >
                   <div className="absolute top-1/2 right-3 -translate-y-1/2">
                     <Badge theme="white" size="sm">
@@ -521,7 +554,8 @@ export function ContainerDashboardPage() {
               <HStack gap={2} align="center">
                 <SearchInput
                   value={eventSearchQuery}
-                  onChange={setEventSearchQuery}
+                  onChange={(e) => setEventSearchQuery(e.target.value)}
+                  onClear={() => setEventSearchQuery('')}
                   placeholder="Search events by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
@@ -533,12 +567,12 @@ export function ContainerDashboardPage() {
               </HStack>
               <div className="flex justify-start">
                 <Pagination
-                  currentPage={currentPage}
-                  totalPages={1}
+                  currentPage={effectiveEventPage}
+                  totalPages={totalEventPages}
                   onPageChange={setCurrentPage}
                 />
               </div>
-              <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
+              <Table<EventRow> columns={eventsColumns} data={paginatedEvents} rowKey="id" />
             </VStack>
           </TabPanel>
 

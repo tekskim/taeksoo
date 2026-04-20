@@ -189,6 +189,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             aria-invalid={error || undefined}
             className="sr-only peer"
             {...props}
+            aria-checked={indeterminate ? 'mixed' : Boolean(isCheckedValue)}
           />
 
           {/* Custom checkbox box */}

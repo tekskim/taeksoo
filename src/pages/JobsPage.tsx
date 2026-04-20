@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -156,12 +156,32 @@ export function JobsPage() {
     { key: 'Name', value: 'a' },
   ]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
   const navigate = useNavigate();
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return jobsData;
+    const q = searchTerm.toLowerCase();
+    return jobsData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.namespace?.toLowerCase().includes(q) ||
+        item.status?.toLowerCase().includes(q) ||
+        item.image?.toLowerCase().includes(q) ||
+        item.completions?.toLowerCase().includes(q) ||
+        item.duration?.toLowerCase().includes(q) ||
+        item.createdAt?.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
@@ -185,8 +205,11 @@ export function JobsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(jobsData.length / rowsPerPage);
-  const paginatedData = jobsData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 248 : 48;
@@ -440,6 +463,9 @@ export function JobsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 placeholder="Search jobs by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
@@ -486,7 +512,7 @@ export function JobsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={jobsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

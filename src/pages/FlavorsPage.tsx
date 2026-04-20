@@ -270,9 +270,9 @@ const mockFlavors: Flavor[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'access',
+    id: 'access',
     label: 'Access',
     type: 'select',
     options: [
@@ -353,7 +353,7 @@ export function FlavorsPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((f) => {
         return appliedFilters.every((filter) => {
-          const value = String(f[filter.field as keyof Flavor] || '').toLowerCase();
+          const value = String(f[filter.fieldId as keyof Flavor] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });

@@ -334,9 +334,9 @@ function QuotaSidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h5>
             <div className="flex flex-col">
@@ -364,7 +364,7 @@ function QuotaSidebar({
         </div>
 
         {/* Quota Card */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
@@ -419,7 +419,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -437,7 +437,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -457,7 +457,7 @@ interface SkippedSectionProps {
 
 function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="flex items-center justify-between h-8">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
@@ -1323,7 +1323,7 @@ function ImageSection({
             {isV2 ? (
               <VStack gap={6}>
                 {/* Image block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="image" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1405,7 +1405,7 @@ function ImageSection({
                 </div>
 
                 {/* Instance snapshot block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="snapshot" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1490,7 +1490,7 @@ function ImageSection({
                 </div>
 
                 {/* Bootable volume block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={2}>
                     <Tabs value="volume" onChange={() => {}} variant="underline" size="sm">
                       <TabList>
@@ -1800,7 +1800,7 @@ function ImageSection({
               </span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={2}>
                 {dataDisks.map((disk, index) => (
                   <div
@@ -3148,7 +3148,7 @@ function NetworkSection({
               </span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={2}>
                 {vlans.map((vlan) => (
                   <div
@@ -3579,7 +3579,7 @@ function AuthenticationSection({
             {isV2 ? (
               <VStack gap={6}>
                 {/* Key pair block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={4}>
                     <span className="text-heading-h6 text-[var(--color-text-default)]">
                       Key pair
@@ -3648,7 +3648,7 @@ function AuthenticationSection({
                 </div>
 
                 {/* Password block */}
-                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                   <VStack gap={4}>
                     <span className="text-heading-h6 text-[var(--color-text-default)]">
                       Password
@@ -4021,7 +4021,7 @@ function AdvancedSection({
               </span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={2}>
                 <div className="grid grid-cols-[1fr_1fr_20px] gap-x-2 gap-y-1 items-center w-full">
                   <span className="text-label-sm text-[var(--color-text-default)]">Key</span>

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -38,6 +38,8 @@ import {
 } from '@tabler/icons-react';
 import { getContainerStatusTheme } from './containerStatusUtils';
 
+const PAGE_SIZE = 10;
+
 /* ----------------------------------------
    Types
    ---------------------------------------- */
@@ -61,6 +63,7 @@ interface PodRow {
   id: string;
   status: string;
   name: string;
+  namespace: string;
   image: string;
   ready: string;
   restarts: number;
@@ -156,6 +159,7 @@ const mockPodsData: PodRow[] = [
     id: '1',
     status: 'Running',
     name: 'podName-77',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 1,
@@ -175,6 +179,7 @@ const mockPodsData: PodRow[] = [
     id: '2',
     status: 'Succeeded',
     name: 'podName-78',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '1/1',
     restarts: 0,
@@ -187,6 +192,7 @@ const mockPodsData: PodRow[] = [
     id: '3',
     status: 'Processing',
     name: 'podName-79',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '0/1',
     restarts: 2,
@@ -199,6 +205,7 @@ const mockPodsData: PodRow[] = [
     id: '4',
     status: 'Failed',
     name: 'podName-80',
+    namespace: 'default',
     image: 'nginx:1.27',
     ready: '0/1',
     restarts: 3,
@@ -282,6 +289,30 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
+  const filteredPods = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return pods;
+    return pods.filter((row) => {
+      const haystack = [row.name, row.namespace, row.status, row.ip, row.node]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [pods, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPods.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedPods = filteredPods.slice(start, start + PAGE_SIZE);
+
   const createPodMenuItems = (row: PodRow): ContextMenuItem[] => {
     return [
       {
@@ -339,10 +370,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-        >
+        <span className="text-[var(--color-text-default)] font-medium truncate" title={value}>
           {value}
         </span>
       ),
@@ -382,10 +410,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.node,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
-          title={value}
-        >
+        <span className="text-[var(--color-text-default)] truncate" title={value}>
           {value}
         </span>
       ),
@@ -446,15 +471,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={pods.length}
+        totalItems={filteredPods.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={pods}
+        data={paginatedPods}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -476,6 +501,15 @@ function ServicesTab({ services }: ServicesTabProps) {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const totalPages = Math.max(1, Math.ceil(services.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedServices = services.slice(start, start + PAGE_SIZE);
 
   const createServiceMenuItems = (row: ServiceRow): ContextMenuItem[] => {
     return [
@@ -524,13 +558,13 @@ function ServicesTab({ services }: ServicesTabProps) {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <Link
+          to={`/container/services/${row.name}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate"
           title={value}
-          onClick={() => navigate(`/container/services/${row.id}`)}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -588,15 +622,15 @@ function ServicesTab({ services }: ServicesTabProps) {
     <VStack gap={3}>
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Services</h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={services.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={services}
+        data={paginatedServices}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -616,6 +650,15 @@ interface ConditionsTabProps {
 
 function ConditionsTab({ conditions }: ConditionsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(conditions.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedConditions = conditions.slice(start, start + PAGE_SIZE);
 
   const columns: TableColumn<ConditionRow>[] = [
     {
@@ -659,12 +702,12 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
         Conditions
       </h3>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={conditions.length}
       />
-      <Table columns={columns} data={conditions} rowKey="id" />
+      <Table columns={columns} data={paginatedConditions} rowKey="id" />
     </VStack>
   );
 }
@@ -681,6 +724,30 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((row) => {
+      const haystack = [row.name, row.type, row.reason, row.message, row.source, row.subobject]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [events, searchQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredEvents.length / PAGE_SIZE));
+  useEffect(() => {
+    setCurrentPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const effectivePage = Math.min(currentPage, totalPages);
+  const start = (effectivePage - 1) * PAGE_SIZE;
+  const paginatedEvents = filteredEvents.slice(start, start + PAGE_SIZE);
 
   const createEventMenuItems = (row: EventRow): ContextMenuItem[] => {
     return [
@@ -796,15 +863,15 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
         </HStack>
       </HStack>
       <Pagination
-        currentPage={currentPage}
-        totalPages={1}
+        currentPage={effectivePage}
+        totalPages={totalPages}
         onPageChange={setCurrentPage}
-        totalItems={events.length}
+        totalItems={filteredEvents.length}
         selectedCount={selectedKeys.length}
       />
       <Table
         columns={columns}
-        data={events}
+        data={paginatedEvents}
         rowKey="id"
         selectable
         selectedKeys={selectedKeys}
@@ -1037,7 +1104,7 @@ export function DeploymentDetailPage() {
 
           {/* Labels & Annotations Cards */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(deployment.labels).length})
@@ -1084,7 +1151,7 @@ export function DeploymentDetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(deployment.annotations).length})

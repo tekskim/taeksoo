@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -97,6 +97,7 @@ export function ConfigMapsPage() {
     updateActiveTabLabel,
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
@@ -113,6 +114,21 @@ export function ConfigMapsPage() {
   useEffect(() => {
     updateActiveTabLabel('ConfigMaps');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return configMapsData;
+    const q = searchTerm.toLowerCase();
+    return configMapsData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.namespace?.toLowerCase().includes(q) ||
+        item.data?.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -131,8 +147,8 @@ export function ConfigMapsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(configMapsData.length / rowsPerPage);
-  const paginatedData = configMapsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -332,6 +348,9 @@ export function ConfigMapsPage() {
             <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search configmap by attributes"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
@@ -377,7 +396,7 @@ export function ConfigMapsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={configMapsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

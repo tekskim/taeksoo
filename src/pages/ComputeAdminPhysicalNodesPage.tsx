@@ -95,7 +95,7 @@ function StatCard({
   unit?: string;
 }) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-5 flex-1 min-w-0">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex-1 min-w-0">
       <div className="mb-4">
         <span className="chartTitle">{title}</span>
       </div>

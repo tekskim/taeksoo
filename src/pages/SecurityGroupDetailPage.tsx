@@ -302,7 +302,7 @@ export default function SecurityGroupDetailPage() {
       minWidth: columnMinWidths.name,
       render: (_, row) => (
         <Link
-          to={`/compute/networks/${row.id}`}
+          to={`/compute/ports/${row.id}`}
           className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
           onClick={(e) => e.stopPropagation()}
         >

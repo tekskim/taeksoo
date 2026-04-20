@@ -30,6 +30,9 @@ import {
   fixedColumns,
   columnMinWidths,
   Tooltip,
+  Tabs,
+  TabList,
+  Tab,
 } from '@/design-system';
 import type { TableColumn, WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -258,11 +261,11 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         <WizardSummary items={summaryItems} />
 
         {/* Quota Card */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
@@ -872,34 +875,31 @@ export function CreateVolumePage() {
                       {(isV2 || sourceType === 'image') && (
                         <VStack gap={3} align="stretch">
                           {/* OS Filter Tabs */}
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-1 inline-flex w-fit">
-                            {[
-                              { id: 'all', label: 'Others', icon: IconDots },
-                              { id: 'ubuntu', label: 'Ubuntu', icon: IconUbuntu },
-                              { id: 'windows', label: 'Windows', icon: IconGrid },
-                              { id: 'rocky', label: 'Rocky', icon: IconRocky },
-                            ].map((tab) => {
-                              const isSelected = imageOsFilter === tab.id;
-                              const Icon = tab.icon;
-                              return (
-                                <button
-                                  key={tab.id}
-                                  onClick={() => setImageOsFilter(tab.id)}
-                                  className={`
-                                    inline-flex items-center gap-1.5 px-3 py-2 rounded-[var(--radius-sm)] cursor-pointer text-label-md transition-colors
-                                    ${
-                                      isSelected
-                                        ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)] shadow-sm'
-                                        : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
-                                    }
-                                  `}
-                                >
-                                  <Icon size={14} />
-                                  <span>{tab.label}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
+                          <Tabs
+                            value={imageOsFilter}
+                            onChange={setImageOsFilter}
+                            variant="boxed"
+                            size="sm"
+                          >
+                            <TabList>
+                              <Tab value="all" className="gap-1.5">
+                                <IconDots size={14} />
+                                <span>All</span>
+                              </Tab>
+                              <Tab value="ubuntu" className="gap-1.5">
+                                <IconUbuntu size={14} />
+                                <span>Ubuntu</span>
+                              </Tab>
+                              <Tab value="windows" className="gap-1.5">
+                                <IconGrid size={14} />
+                                <span>Windows</span>
+                              </Tab>
+                              <Tab value="rocky" className="gap-1.5">
+                                <IconRocky size={14} />
+                                <span>Rocky</span>
+                              </Tab>
+                            </TabList>
+                          </Tabs>
 
                           <div className="w-[var(--search-input-width)]">
                             <SearchInput
@@ -1136,7 +1136,7 @@ export function CreateVolumePage() {
                                 create the snapshot.
                               </span>
                             </VStack>
-                            <div className="bg-[var(--color-surface-subtle)] px-4 rounded-lg w-full h-8 flex items-center">
+                            <div className="bg-[var(--color-surface-subtle)] px-4 rounded-[var(--radius-lg)] w-full h-8 flex items-center">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 {selectedSnapshot.length > 0
                                   ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])

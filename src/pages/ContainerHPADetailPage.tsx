@@ -177,7 +177,8 @@ function MetricsTab() {
           <SectionCard.Content>
             <SectionCard.DataRow label="Source" value={mockMetricData.source} showDivider={false} />
             <SectionCard.DataRow label="Name" value={mockMetricData.name} />
-            <SectionCard.DataRow label="Target name" value={mockMetricData.targetType} />
+            <SectionCard.DataRow label="Target name" value={mockMetricData.referentName} />
+            <SectionCard.DataRow label="Target type" value={mockMetricData.targetType} />
             <SectionCard.DataRow label="Value" value={mockMetricData.value} />
             <SectionCard.DataRow
               label="Referent API version"
@@ -271,9 +272,9 @@ function ConditionsTab() {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
-      minWidth: columnMinWidths.size,
+      minWidth: columnMinWidths.status,
       sortable: true,
     },
     {
@@ -375,7 +376,7 @@ export function ContainerHPADetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/hpa/${hpa.name}/edit-yaml`),
+      onClick: () => navigate(`/container/hpa/${hpaId}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -472,7 +473,7 @@ export function ContainerHPADetailPage() {
 
           {/* Second row: Labels, Annotations */}
           <HStack gap={3} className="w-full mt-3">
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Labels ({Object.keys(hpa.labels).length})
@@ -519,7 +520,7 @@ export function ContainerHPADetailPage() {
                 </div>
               </VStack>
             </div>
-            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
               <VStack gap={2}>
                 <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                   Annotations ({Object.keys(hpa.annotations).length})

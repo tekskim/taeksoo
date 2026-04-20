@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
+import { forwardRef, type InputHTMLAttributes, useState, useCallback, useId } from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconSearch, IconX } from '@tabler/icons-react';
 
@@ -44,7 +44,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     },
     ref
   ) => {
-    const inputId = id || `search-input-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
 
     // Track value for clear button visibility
     const [internalValue, setInternalValue] = useState(defaultValue ?? '');

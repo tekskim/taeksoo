@@ -4,6 +4,7 @@ import {
   useCallback,
   useRef,
   useEffect,
+  useId,
   type InputHTMLAttributes,
   type KeyboardEvent,
 } from 'react';
@@ -89,6 +90,7 @@ interface FilterDropdownProps {
   onOptionSelect: (option: { value: string; label: string }) => void;
   onBack: () => void;
   isOpen: boolean;
+  listboxId: string;
 }
 
 function FilterDropdown({
@@ -98,6 +100,7 @@ function FilterDropdown({
   onOptionSelect,
   onBack,
   isOpen,
+  listboxId,
 }: FilterDropdownProps) {
   if (!isOpen) return null;
 
@@ -108,11 +111,12 @@ function FilterDropdown({
         <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
           {selectedFilter.label}
         </div>
-        <div>
+        <div id={listboxId} role="listbox">
           {selectedFilter.options.map((option) => (
             <button
               key={option.value}
               type="button"
+              role="option"
               onClick={() => onOptionSelect(option)}
               className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
             >
@@ -139,11 +143,12 @@ function FilterDropdown({
       <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
         Filter by
       </div>
-      <div>
+      <div id={listboxId} role="listbox">
         {filters.map((filter) => (
           <button
             key={filter.id}
             type="button"
+            role="option"
             onClick={() => onFilterSelect(filter)}
             className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
           >
@@ -182,6 +187,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const listboxId = useId();
 
     // State
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -402,6 +408,15 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
               placeholder={getPlaceholder()}
               disabled={disabled}
               {...props}
+              {...(filters.length > 0
+                ? {
+                    role: 'combobox' as const,
+                    'aria-expanded': isDropdownOpen && !disabled,
+                    'aria-haspopup': 'listbox' as const,
+                    'aria-autocomplete': 'list' as const,
+                    'aria-controls': listboxId,
+                  }
+                : {})}
             />
 
             {/* Search icon */}
@@ -419,6 +434,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
               onOptionSelect={handleOptionSelect}
               onBack={handleBack}
               isOpen={isDropdownOpen && !disabled}
+              listboxId={listboxId}
             />
           )}
         </div>

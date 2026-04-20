@@ -204,9 +204,9 @@ export function TableStyleGuidePage() {
         <main className="flex-1 min-w-0 space-y-8">
           {/* Version Info */}
           <div className="flex items-center gap-4 text-body-md text-[var(--color-text-subtle)]">
-            <span>버전: 1.1</span>
+            <span>버전: 1.2</span>
             <span>•</span>
-            <span>최종 업데이트: Mar 11, 2026</span>
+            <span>최종 업데이트: Apr 20, 2026</span>
           </div>
 
           {/* Section 1: Overview */}
@@ -290,6 +290,7 @@ export function TableStyleGuidePage() {
                     ['`actions`', '64px', '액션 메뉴', 'ContextMenu'],
                     ['`action`', '64px', '액션 메뉴 (단수)', 'ContextMenu'],
                     ['`actionWide`', '72px', '액션 메뉴 (넓은 버전)', '-'],
+                    ['`actionsDouble`', '96px', '액션 버튼 2개', 'Button × 2'],
                     ['`identify`', '80px', '식별 버튼', 'Identify 버튼'],
                   ]}
                 />
@@ -303,28 +304,67 @@ export function TableStyleGuidePage() {
                 <GuideTable
                   headers={['카테고리', '키', 'minWidth', '용도']}
                   rows={[
-                    ['이름/식별자', '`name`', '180px', '리소스 이름'],
+                    ['이름/식별자', '`id`', '64px', 'ID'],
+                    ['', '`name`', '180px', '리소스 이름'],
                     ['', '`nameLg`', '240px', '긴 리소스 이름'],
-                    ['', '`hostname`', '150px', '호스트명'],
+                    ['', '`nameWide`', '220px', '넓은 이름'],
+                    ['', '`nameXl`', '300px', '매우 긴 이름'],
+                    ['', '`hostname`', '180px', '호스트명'],
+                    ['', '`node`', '150px', '노드명'],
                     ['', '`username`', '150px', '사용자명'],
+                    ['상태', '`statusLg`', '160px', '상태 (텍스트 포함)'],
+                    ['', '`ready`', '80px', '준비 상태'],
+                    ['', '`phase`', '100px', '페이즈'],
                     ['날짜/시간', '`createdAt`', '140px', '생성일'],
                     ['', '`updatedAt`', '140px', '수정일'],
-                    ['', '`expiresAt`', '120px', '만료일'],
+                    ['', '`startTime`', '140px', '시작 시간'],
+                    ['', '`lastUpdated`', '140px', '최근 업데이트'],
                     ['', '`lastSignIn`', '120px', '마지막 로그인'],
+                    ['', '`expiresAt`', '120px', '만료일'],
+                    ['', '`age`', '150px', '경과 시간'],
+                    ['', '`duration`', '100px', '소요 시간'],
+                    ['', '`timestamp`', '160px', '타임스탬프'],
+                    ['숫자/카운트', '`count`', '80px', '개수'],
                     ['IP/주소', '`ipAddress`', '130px', 'IP 주소'],
                     ['', '`fixedIp`', '130px', '고정 IP'],
                     ['', '`floatingIp`', '130px', '유동 IP'],
                     ['', '`macAddress`', '150px', 'MAC 주소'],
                     ['', '`cidr`', '130px', 'CIDR 블록'],
+                    ['', '`gatewayIp`', '130px', '게이트웨이 IP'],
                     ['타입/분류', '`type`', '100px', '유형'],
+                    ['', '`typeXl`', '200px', '유형 (넓은)'],
                     ['', '`category`', '140px', '카테고리'],
                     ['', '`protocol`', '90px', '프로토콜'],
-                    ['리소스', '`vcpu`', '80px', 'vCPU'],
+                    ['', '`version`', '100px', '버전'],
+                    ['Compute', '`vcpu`', '80px', 'vCPU'],
                     ['', '`ram`', '80px', 'RAM'],
                     ['', '`disk`', '80px', '디스크'],
-                    ['기타', '`description`', '200px', '설명'],
-                    ['', '`role`', '100px', '역할'],
+                    ['', '`gpu`', '80px', 'GPU'],
+                    ['', '`image`', '110px', '이미지'],
+                    ['', '`flavor`', '90px', '플레이버'],
+                    ['', '`az`', '80px', '가용 영역'],
+                    ['', '`size`', '100px', '크기'],
+                    ['Network', '`network`', '140px', '네트워크명'],
+                    ['', '`attachedTo`', '160px', '연결 대상'],
+                    ['', '`securityGroups`', '150px', '보안그룹'],
+                    ['', '`direction`', '80px', '방향'],
+                    ['Storage', '`capacity`', '100px', '용량'],
+                    ['', '`accessModes`', '120px', '접근 모드'],
+                    ['', '`storageClass`', '120px', '스토리지 클래스'],
+                    ['Container', '`namespace`', '120px', '네임스페이스'],
+                    ['', '`replicas`', '80px', '레플리카'],
+                    ['', '`pods`', '80px', '파드'],
+                    ['', '`restarts`', '80px', '재시작 수'],
+                    ['', '`schedule`', '120px', '스케줄'],
+                    ['', '`selector`', '200px', '셀렉터'],
+                    ['', '`host`', '300px', '호스트 (Ingress)'],
+                    ['IAM', '`policies`', '150px', '정책'],
+                    ['', '`iamRoles`', '150px', 'IAM 역할'],
                     ['', '`mfa`', '80px', 'MFA 상태'],
+                    ['기타', '`description`', '200px', '설명'],
+                    ['', '`labels`', '180px', '라벨'],
+                    ['', '`annotations`', '300px', '어노테이션'],
+                    ['', '`role`', '100px', '역할'],
                     ['', '`fingerprint`', '360px', 'SSH 키 fingerprint'],
                     ['Cloud Builder', '`service`', '120px', '서비스명'],
                     ['', '`serviceState`', '120px', '서비스 상태 (Badge)'],
@@ -464,6 +504,34 @@ export function TableStyleGuidePage() {
 <Table columns={metricsColumns} data={metrics} rowKey="id" rowHeight="40px" />`}
                 />
               </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">3.4 추가 Table Props</h4>
+                <GuideTable
+                  headers={['Prop', '타입', '기본값', '설명']}
+                  rows={[
+                    ['`loading`', 'boolean', 'false', '스켈레톤 로딩 행 표시'],
+                    ['`loadingRows`', 'number', '10', '로딩 시 표시할 스켈레톤 행 수'],
+                    ['`stickyHeader`', 'boolean', 'false', '스크롤 시 헤더 고정'],
+                    ['`maxHeight`', 'string', '-', '테이블 최대 높이 (스크롤 영역)'],
+                    ['`expandedContent`', '(row, index) => ReactNode', '-', '행 아래 확장 콘텐츠'],
+                  ]}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">3.5 컬럼 Sticky (고정 컬럼)</h4>
+                <p className="text-body-md text-[var(--color-text-muted)] mb-3">
+                  가로 스크롤 시 특정 컬럼을 좌측/우측에 고정할 수 있습니다.
+                </p>
+                <CodeBlock
+                  code={`// Actions 컬럼을 우측에 고정
+{ key: 'actions', label: 'Action', width: fixedColumns.actions, align: 'center', sticky: 'right' }
+
+// 이름 컬럼을 좌측에 고정
+{ key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sticky: 'left' }`}
+                />
+              </div>
             </SectionCard.Content>
           </SectionCard>
 
@@ -477,16 +545,15 @@ export function TableStyleGuidePage() {
                   headers={['정렬', '적용 대상', '예시 컬럼']}
                   rows={[
                     [
+                      '왼쪽 (기본)',
+                      '유연 컬럼 (텍스트, 숫자, 날짜, 연관 리소스 등)',
+                      'name, size, count, createdAt, attachedTo',
+                    ],
+                    [
                       '중앙',
                       '고정 너비 컬럼 (아이콘/버튼)',
                       'status, locked, actions, select, checkbox',
                     ],
-                    [
-                      '왼쪽',
-                      '유연 컬럼 (텍스트/데이터) - 기본값',
-                      'name, description, type, count',
-                    ],
-                    ['오른쪽', '연관 리소스 표시', 'attachedTo, associatedTo'],
                   ]}
                 />
               </div>
@@ -496,15 +563,11 @@ export function TableStyleGuidePage() {
                 <ul className="list-decimal list-inside text-body-md text-[var(--color-text-muted)] space-y-2">
                   <li>
                     <strong>고정 컬럼은 중앙 정렬</strong>: fixedColumns에 정의된 모든 컬럼은 align:
-                    'center' 적용{' '}
+                    'center' 적용 (status, actions, checkbox 등){' '}
                   </li>
                   <li>
-                    <strong>유연 컬럼은 왼쪽 정렬</strong>: 텍스트, 숫자 등 데이터 컬럼은 명시적
-                    설정 불필요 (기본값)
-                  </li>
-                  <li>
-                    <strong>오른쪽 정렬은 특수 케이스만</strong>: 연관 리소스 참조 컬럼에만
-                    사용{' '}
+                    <strong>유연 컬럼은 왼쪽 정렬</strong>: 텍스트, 숫자, 날짜, 연관 리소스 등 모든
+                    데이터 컬럼은 기본값(왼쪽) 유지. 명시적 설정 불필요{' '}
                   </li>
                 </ul>
               </div>
@@ -519,9 +582,8 @@ export function TableStyleGuidePage() {
 
 // 유연 컬럼 - 왼쪽 정렬 (기본값, 명시 불필요)
 { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name }
-{ key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count }
-
-// 연관 리소스 - 왼쪽 정렬 (기본값)
+{ key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.size }
+{ key: 'createdAt', label: 'Created at', flex: 1, minWidth: columnMinWidths.createdAt }
 { key: 'attachedTo', label: 'Attached to', flex: 1, minWidth: columnMinWidths.attachedTo }`}
                 />
               </div>
@@ -607,7 +669,7 @@ export function TableStyleGuidePage() {
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">4.4 금지 패턴</h4>
+                <h4 className="text-[13px] font-medium mb-2">5.4 금지 패턴</h4>
                 <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                   <CodeBlock
                     code={`// ❌ 줄바꿈 허용 (테이블 행 높이가 깨짐)
@@ -773,10 +835,10 @@ const {
                 <CodeBlock
                   code={`// /cloudbuilder/services — 4개 유연 컬럼, Action 없음
 columns: [
-  { key: 'name', minWidth: columnMinWidths.name },           // 180px
-  { key: 'service', minWidth: columnMinWidths.service },     // 120px
-  { key: 'region', minWidth: columnMinWidths.region },       // 100px
-  { key: 'endpoints', minWidth: columnMinWidths.endpoints }, // 150px
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },           // 180px
+  { key: 'service', flex: 1, minWidth: columnMinWidths.service },     // 120px
+  { key: 'region', flex: 1, minWidth: columnMinWidths.region },       // 100px
+  { key: 'endpoints', flex: 1, minWidth: columnMinWidths.endpoints }, // 150px
 ]`}
                 />
               </div>
@@ -789,11 +851,11 @@ columns: [
                   code={`// /cloudbuilder/compute-services — 고정(status) + 유연 5개 + Action
 columns: [
   { key: 'serviceStatus', width: fixedColumns.status, align: 'center' }, // 고정 64px
-  { key: 'name', minWidth: columnMinWidths.name },                       // 180px
-  { key: 'host', minWidth: columnMinWidths.host },                       // 300px
-  { key: 'availabilityZone', minWidth: columnMinWidths.availabilityZone }, // 80px
-  { key: 'serviceState', minWidth: columnMinWidths.serviceState },       // 120px
-  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated },         // 140px
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },                       // 180px
+  { key: 'host', flex: 1, minWidth: columnMinWidths.host },                       // 300px
+  { key: 'availabilityZone', flex: 1, minWidth: columnMinWidths.availabilityZone }, // 80px
+  { key: 'serviceState', flex: 1, minWidth: columnMinWidths.serviceState },       // 120px
+  { key: 'lastUpdated', flex: 1, minWidth: columnMinWidths.lastUpdated },         // 140px
 ]`}
                 />
               </div>
@@ -801,16 +863,16 @@ columns: [
               <div>
                 <h4 className="text-[13px] font-medium mb-2">7.4 Compute Services — Hypervisors</h4>
                 <CodeBlock
-                  code={`// 8개 유연 컬럼 (숫자 데이터도 왼쪽 정렬)
+                  code={`// 8개 유연 컬럼
 columns: [
-  { key: 'name', minWidth: columnMinWidths.name },                             // 180px
-  { key: 'id', minWidth: columnMinWidths.id },                                 // 64px
-  { key: 'type', minWidth: columnMinWidths.type },                             // 100px
-  { key: 'vcpuCore', minWidth: columnMinWidths.vcpuCore },                     // 100px
-  { key: 'configuredMemoryGiB', minWidth: columnMinWidths.configuredMemoryGiB }, // 140px
-  { key: 'instances', minWidth: columnMinWidths.instances },                   // 100px
-  { key: 'gpuUsage', minWidth: columnMinWidths.gpuUsage },                     // 100px
-  { key: 'pcpuUsage', minWidth: columnMinWidths.pcpuUsage },                   // 100px
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },                             // 180px
+  { key: 'id', flex: 1, minWidth: columnMinWidths.id },                                 // 64px
+  { key: 'type', flex: 1, minWidth: columnMinWidths.type },                             // 100px
+  { key: 'vcpuCore', flex: 1, minWidth: columnMinWidths.vcpuCore },                     // 100px
+  { key: 'configuredMemoryGiB', flex: 1, minWidth: columnMinWidths.configuredMemoryGiB }, // 140px
+  { key: 'instances', flex: 1, minWidth: columnMinWidths.instances },                   // 100px
+  { key: 'gpuUsage', flex: 1, minWidth: columnMinWidths.gpuUsage },                     // 100px
+  { key: 'pcpuUsage', flex: 1, minWidth: columnMinWidths.pcpuUsage },                   // 100px
 ]`}
                 />
               </div>
@@ -821,12 +883,12 @@ columns: [
                   code={`// /cloudbuilder/network-agents — 고정(status) + 유연 6개 + Action
 columns: [
   { key: 'serviceStatus', width: fixedColumns.status, align: 'center' }, // 고정 64px
-  { key: 'name', minWidth: columnMinWidths.name },                       // 180px
-  { key: 'type', minWidth: columnMinWidths.typeXl },                     // 200px
-  { key: 'host', minWidth: columnMinWidths.host },                       // 300px
-  { key: 'availabilityZone', minWidth: columnMinWidths.availabilityZone }, // 80px
-  { key: 'serviceState', minWidth: columnMinWidths.serviceState },       // 120px
-  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated },         // 140px
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },                       // 180px
+  { key: 'type', flex: 1, minWidth: columnMinWidths.typeXl },                     // 200px
+  { key: 'host', flex: 1, minWidth: columnMinWidths.host },                       // 300px
+  { key: 'availabilityZone', flex: 1, minWidth: columnMinWidths.availabilityZone }, // 80px
+  { key: 'serviceState', flex: 1, minWidth: columnMinWidths.serviceState },       // 120px
+  { key: 'lastUpdated', flex: 1, minWidth: columnMinWidths.lastUpdated },         // 140px
 ]`}
                 />
               </div>
@@ -837,19 +899,19 @@ columns: [
                   code={`// Block storage 탭 — 고정(status) + 유연 5개 + Action
 columns: [
   { key: 'serviceStatus', width: fixedColumns.status, align: 'center' }, // 고정 64px
-  { key: 'name', minWidth: columnMinWidths.name },                       // 180px
-  { key: 'host', minWidth: columnMinWidths.host },                       // 300px
-  { key: 'availabilityZone', minWidth: columnMinWidths.availabilityZone }, // 80px
-  { key: 'serviceState', minWidth: columnMinWidths.serviceState },       // 120px
-  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated },         // 140px
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },                       // 180px
+  { key: 'host', flex: 1, minWidth: columnMinWidths.host },                       // 300px
+  { key: 'availabilityZone', flex: 1, minWidth: columnMinWidths.availabilityZone }, // 80px
+  { key: 'serviceState', flex: 1, minWidth: columnMinWidths.serviceState },       // 120px
+  { key: 'lastUpdated', flex: 1, minWidth: columnMinWidths.lastUpdated },         // 140px
 ]
 
 // Storage backends 탭 — 유연 4개, 프리셋 없는 경우 직접 지정
 columns: [
-  { key: 'name', minWidth: columnMinWidths.name },             // 180px
-  { key: 'protocol', minWidth: columnMinWidths.protocol },     // 90px
-  { key: 'backendName', minWidth: columnMinWidths.backendName }, // 150px
-  { key: 'storageCapacityGiB', minWidth: '150px' },           // 직접 지정
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },             // 180px
+  { key: 'protocol', flex: 1, minWidth: columnMinWidths.protocol },     // 90px
+  { key: 'backendName', flex: 1, minWidth: columnMinWidths.backendName }, // 150px
+  { key: 'storageCapacityGiB', flex: 1, minWidth: '150px' },           // 직접 지정
 ]`}
                 />
               </div>
@@ -859,11 +921,11 @@ columns: [
                 <CodeBlock
                   code={`// /cloudbuilder/orchestration-services — 유연 5개, Action 없음
 columns: [
-  { key: 'name', minWidth: columnMinWidths.name },             // 180px
-  { key: 'engineId', minWidth: columnMinWidths.engineId },     // 320px
-  { key: 'host', minWidth: columnMinWidths.host },             // 300px
-  { key: 'status', minWidth: columnMinWidths.serviceState },   // 120px
-  { key: 'lastUpdated', minWidth: columnMinWidths.lastUpdated }, // 140px
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },             // 180px
+  { key: 'engineId', flex: 1, minWidth: columnMinWidths.engineId },     // 320px
+  { key: 'host', flex: 1, minWidth: columnMinWidths.host },             // 300px
+  { key: 'status', flex: 1, minWidth: columnMinWidths.serviceState },   // 120px
+  { key: 'lastUpdated', flex: 1, minWidth: columnMinWidths.lastUpdated }, // 140px
 ]`}
                 />
               </div>
@@ -1071,6 +1133,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
   actions: '64px',
   action: '64px',
   actionWide: '72px',
+  actionsDouble: '96px',
   identify: '80px',
 } as const;`}
                 />
@@ -1080,45 +1143,75 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
                 <h4 className="text-[13px] font-medium mb-2">B. columnMinWidths (주요 항목)</h4>
                 <CodeBlock
                   code={`export const columnMinWidths = {
-  // 이름/식별자 name: '180px',
+  // 식별자/이름
+  id: '64px',
+  name: '180px',
   nameLg: '240px',
-  hostname: '150px',
+  nameWide: '220px',
+  hostname: '180px',
+  node: '150px',
   username: '150px',
   
-  // 날짜/시간 createdAt: '140px',
-  updatedAt: '140px',
-  expiresAt: '120px',
-  lastSignIn: '120px',
+  // 상태 (텍스트 포함)
+  statusLg: '160px',
+  ready: '80px',
+  phase: '100px',
   
-  // IP/주소 ipAddress: '130px',
+  // 날짜/시간
+  createdAt: '140px',
+  updatedAt: '140px',
+  startTime: '140px',
+  lastUpdated: '140px',
+  lastSignIn: '120px',
+  expiresAt: '120px',
+  age: '150px',
+  timestamp: '160px',
+  duration: '100px',
+  
+  // IP/주소
+  ipAddress: '130px',
   fixedIp: '130px',
   floatingIp: '130px',
   macAddress: '150px',
   cidr: '130px',
+  gatewayIp: '130px',
   
-  // 타입/분류 type: '100px',
+  // 타입/분류
+  type: '100px',
+  typeXl: '200px',
   category: '140px',
   protocol: '90px',
+  version: '100px',
   
-  // 리소스 vcpu: '80px',
-  ram: '80px',
-  disk: '80px',
+  // Compute
+  vcpu: '80px', ram: '80px', disk: '80px', gpu: '80px',
+  image: '110px', flavor: '90px', az: '80px', size: '100px',
   
-  // 기타 description: '200px',
-  role: '100px',
-  mfa: '80px',
-  fingerprint: '360px',
+  // Network
+  network: '140px', attachedTo: '160px',
+  securityGroups: '150px', direction: '80px',
+  
+  // Storage
+  capacity: '100px', accessModes: '120px', storageClass: '120px',
+  
+  // Container (Kubernetes)
+  namespace: '120px', replicas: '80px', pods: '80px',
+  restarts: '80px', schedule: '120px',
+  selector: '200px', host: '300px',
+  
+  // IAM
+  policies: '150px', iamRoles: '150px', mfa: '80px',
+  
+  // 기타
+  description: '200px', labels: '180px', annotations: '300px',
+  role: '100px', fingerprint: '360px',
   
   // Cloud Builder
-  serial: '120px',
-  service: '120px',
-  serviceState: '120px',
-  serviceStatus: '120px',
-  endpoints: '150px',
-  backendName: '150px',
-  rpName: '120px',
-  engineId: '320px',
-  // ... (전체 목록은 columnWidths.ts 참조)
+  serial: '120px', service: '120px',
+  serviceState: '120px', serviceStatus: '120px',
+  endpoints: '150px', backendName: '150px',
+  rpName: '120px', engineId: '320px',
+  // ... 전체 목록은 columnWidths.ts 참조
 } as const;`}
                 />
               </div>

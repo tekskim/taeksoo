@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
@@ -39,15 +39,7 @@ import {
   IconArrowsMinimize,
 } from '@tabler/icons-react';
 import { Siren } from 'lucide-react';
-import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
-
-const chartColors = {
-  ...baseChartColors,
-  blue500: '#3b82f6',
-  emerald500: '#10b981',
-  red500: '#dc2626',
-  green500: '#00a63e',
-};
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
 /* ----------------------------------------
    Custom Identify Icon (now using Siren from lucide-react)
@@ -1108,6 +1100,96 @@ export default function HostDetailPage() {
   // Get host data
   const host = id ? mockHostData[id] : null;
 
+  const LIST_PAGE_SIZE = 10;
+
+  const [devicesSearch, setDevicesSearch] = useState('');
+  const [devicesPage, setDevicesPage] = useState(1);
+  const [physicalDisksSearch, setPhysicalDisksSearch] = useState('');
+  const [physicalDisksPage, setPhysicalDisksPage] = useState(1);
+  const [daemonsSearch, setDaemonsSearch] = useState('');
+  const [daemonsPage, setDaemonsPage] = useState(1);
+
+  const filteredDevices = useMemo(() => {
+    const list = host?.devices ?? [];
+    const q = devicesSearch.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((d) => {
+      const hay = [d.deviceId, d.deviceName, ...d.daemons].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [host?.devices, devicesSearch]);
+
+  const paginatedDevices = useMemo(
+    () => filteredDevices.slice((devicesPage - 1) * LIST_PAGE_SIZE, devicesPage * LIST_PAGE_SIZE),
+    [filteredDevices, devicesPage]
+  );
+
+  const filteredPhysicalDisks = useMemo(() => {
+    const list = host?.physicalDisks ?? [];
+    const q = physicalDisksSearch.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((d) => {
+      const hay = [
+        d.devicePath,
+        d.type,
+        d.vendor,
+        d.model,
+        d.size,
+        d.osd,
+        d.available ? 'yes' : 'no',
+      ]
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [host?.physicalDisks, physicalDisksSearch]);
+
+  const paginatedPhysicalDisks = useMemo(
+    () =>
+      filteredPhysicalDisks.slice(
+        (physicalDisksPage - 1) * LIST_PAGE_SIZE,
+        physicalDisksPage * LIST_PAGE_SIZE
+      ),
+    [filteredPhysicalDisks, physicalDisksPage]
+  );
+
+  const filteredDaemons = useMemo(() => {
+    const list = host?.daemons ?? [];
+    const q = daemonsSearch.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((d) => {
+      const hay = [
+        d.status,
+        d.daemonName,
+        d.version,
+        d.lastRefreshed,
+        String(d.cpuUsage),
+        d.memoryUsage,
+        d.daemonEvents,
+      ]
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [host?.daemons, daemonsSearch]);
+
+  const paginatedDaemons = useMemo(
+    () => filteredDaemons.slice((daemonsPage - 1) * LIST_PAGE_SIZE, daemonsPage * LIST_PAGE_SIZE),
+    [filteredDaemons, daemonsPage]
+  );
+
+  useEffect(() => {
+    setDevicesPage(1);
+  }, [devicesSearch]);
+
+  useEffect(() => {
+    setPhysicalDisksPage(1);
+  }, [physicalDisksSearch]);
+
+  useEffect(() => {
+    setDaemonsPage(1);
+  }, [daemonsSearch]);
+
   // Update tab label to match the host name (most recent breadcrumb)
   useEffect(() => {
     if (host?.hostname) {
@@ -1492,24 +1574,31 @@ export default function HostDetailPage() {
                 {/* Search */}
                 <div className="flex items-center gap-4">
                   <div className="w-[var(--search-input-width)]">
-                    <SearchInput placeholder="Search devices by attributes" size="sm" fullWidth />
+                    <SearchInput
+                      placeholder="Search devices by attributes"
+                      size="sm"
+                      fullWidth
+                      value={devicesSearch}
+                      onChange={(e) => setDevicesSearch(e.target.value)}
+                      onClear={() => setDevicesSearch('')}
+                    />
                   </div>
                 </div>
 
                 {/* Pagination */}
                 <Pagination
-                  currentPage={1}
-                  totalPages={Math.ceil(host.devices.length / 10) || 1}
-                  onPageChange={() => {}}
-                  totalItems={host.devices.length}
-                  itemsPerPage={10}
+                  currentPage={devicesPage}
+                  totalPages={Math.ceil(filteredDevices.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setDevicesPage}
+                  totalItems={filteredDevices.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
                   showItemCount
                 />
 
                 {/* Table */}
                 <Table
                   columns={deviceColumns}
-                  data={host.devices}
+                  data={paginatedDevices}
                   rowKey="id"
                   emptyMessage="No devices found"
                 />
@@ -1532,23 +1621,26 @@ export default function HostDetailPage() {
                     placeholder="Search physical disks by attributes"
                     size="sm"
                     fullWidth
+                    value={physicalDisksSearch}
+                    onChange={(e) => setPhysicalDisksSearch(e.target.value)}
+                    onClear={() => setPhysicalDisksSearch('')}
                   />
                 </div>
 
                 {/* Pagination */}
                 <Pagination
-                  currentPage={1}
-                  totalPages={Math.ceil(host.physicalDisks.length / 10) || 1}
-                  onPageChange={() => {}}
-                  totalItems={host.physicalDisks.length}
-                  itemsPerPage={10}
+                  currentPage={physicalDisksPage}
+                  totalPages={Math.ceil(filteredPhysicalDisks.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setPhysicalDisksPage}
+                  totalItems={filteredPhysicalDisks.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
                   showItemCount
                 />
 
                 {/* Table */}
                 <Table
                   columns={physicalDiskColumns}
-                  data={host.physicalDisks}
+                  data={paginatedPhysicalDisks}
                   rowKey="id"
                   emptyMessage="No physical disks found"
                 />
@@ -1565,23 +1657,30 @@ export default function HostDetailPage() {
 
                 {/* Search */}
                 <div className="w-[var(--search-input-width)]">
-                  <SearchInput placeholder="Search daemons by attributes" size="sm" fullWidth />
+                  <SearchInput
+                    placeholder="Search daemons by attributes"
+                    size="sm"
+                    fullWidth
+                    value={daemonsSearch}
+                    onChange={(e) => setDaemonsSearch(e.target.value)}
+                    onClear={() => setDaemonsSearch('')}
+                  />
                 </div>
 
                 {/* Pagination */}
                 <Pagination
-                  currentPage={1}
-                  totalPages={Math.ceil(host.daemons.length / 10) || 1}
-                  onPageChange={() => {}}
-                  totalItems={host.daemons.length}
-                  itemsPerPage={10}
+                  currentPage={daemonsPage}
+                  totalPages={Math.ceil(filteredDaemons.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setDaemonsPage}
+                  totalItems={filteredDaemons.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
                   showItemCount
                 />
 
                 {/* Table */}
                 <Table
                   columns={daemonColumns}
-                  data={host.daemons}
+                  data={paginatedDaemons}
                   rowKey="id"
                   emptyMessage="No daemons found"
                 />
@@ -1592,7 +1691,7 @@ export default function HostDetailPage() {
             <TabPanel value="device-health" className="pt-0">
               <div className="flex gap-4 pt-4">
                 {/* Left Panel - Device List */}
-                <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
+                <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-3 flex flex-col gap-3">
                   <h6 className="text-heading-h5 text-[var(--color-text-default)]">
                     Device health
                   </h6>
@@ -1665,7 +1764,7 @@ export default function HostDetailPage() {
                               Smartctl Output
                             </span>
                             <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
-                              <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
+                              <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-[var(--color-text-on-primary)] whitespace-pre-wrap">
                                 {selectedDeviceData.smartctlOutput}
                               </pre>
                             </div>
@@ -1744,7 +1843,7 @@ export default function HostDetailPage() {
                 </div>
 
                 {/* System Overview Section */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg pt-4 px-6 pb-6">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] pt-4 px-6 pb-6">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
                     System overview
                   </h3>
@@ -1752,7 +1851,7 @@ export default function HostDetailPage() {
                   {/* Stat Cards Row */}
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     {/* OSDs Card */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4">
                       <span className="text-body-md text-[var(--color-text-muted)]">OSDs</span>
                       <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
                         {host.osds || 24}
@@ -1760,7 +1859,7 @@ export default function HostDetailPage() {
                     </div>
 
                     {/* Raw capacity Card */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4">
                       <span className="text-body-md text-[var(--color-text-muted)]">
                         Raw capacity
                       </span>
@@ -1903,7 +2002,7 @@ export default function HostDetailPage() {
                 </div>
 
                 {/* DISK PERFORMANCE Section */}
-                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg pt-4 px-6 pb-6">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] pt-4 px-6 pb-6">
                   <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-4">
                     Disk performance
                   </h3>

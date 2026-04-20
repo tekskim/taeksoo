@@ -416,7 +416,7 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-3 flex flex-col gap-3">
         <WizardSummary items={summaryItems} />
 
         {/* Action Buttons */}
@@ -1565,7 +1565,7 @@ export default function CreateLoadBalancerPage() {
                         {isV2 ? (
                           <VStack gap={6}>
                             {/* No provider selected block */}
-                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                               <VStack gap={4}>
                                 <span className="text-label-lg text-[var(--color-text-default)]">
                                   No provider selected
@@ -1606,7 +1606,7 @@ export default function CreateLoadBalancerPage() {
                             </div>
 
                             {/* OVN selected block */}
-                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                               <VStack gap={4}>
                                 <span className="text-label-lg italic text-[var(--color-text-default)]">
                                   OVN
@@ -1669,7 +1669,7 @@ export default function CreateLoadBalancerPage() {
                             </div>
 
                             {/* Amphora selected block */}
-                            <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                            <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                               <VStack gap={4}>
                                 <span className="text-label-lg italic text-[var(--color-text-default)]">
                                   Amphora
@@ -1821,7 +1821,7 @@ export default function CreateLoadBalancerPage() {
                           </span>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <div className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-x-2 gap-y-1 items-end">
                             <span className="text-label-sm text-[var(--color-text-default)]">
                               Subnet
@@ -2488,7 +2488,7 @@ export default function CreateLoadBalancerPage() {
                                 </p>
                               </VStack>
 
-                              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                 <VStack gap={1.5}>
                                   {allowedCidrs.length > 0 && (
                                     <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -3102,7 +3102,7 @@ export default function CreateLoadBalancerPage() {
                           </VStack>
                         </VStack>
 
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {externalMembers.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">

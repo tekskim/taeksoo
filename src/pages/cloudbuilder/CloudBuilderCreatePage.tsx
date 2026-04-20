@@ -46,8 +46,8 @@ function SummarySidebar({
 }: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={4}>
             <h5 className="text-heading-h6 text-[var(--color-text-default)]">Summary</h5>
             <VStack gap={2}>
@@ -123,7 +123,7 @@ export function CloudBuilderCreatePage() {
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   const handleFetch = () => {
-    setSerial('SN-2025-00483');
+    setSerial('SN-2026-00483');
     setProductModel('PowerEdge R750');
     setVendor('Dell Inc.');
     setBiosVersion('2.18.1');

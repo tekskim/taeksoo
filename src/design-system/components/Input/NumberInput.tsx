@@ -5,6 +5,7 @@ import {
   useCallback,
   useRef,
   useEffect,
+  useId,
 } from 'react';
 import { twMerge } from '../../utils/cn';
 import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
@@ -74,7 +75,8 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     },
     ref
   ) => {
-    const inputId = id || `number-input-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
 
     const isControlled = controlledValue !== undefined;
     const [internalValue, setInternalValue] = useState<number | undefined>(defaultValue);

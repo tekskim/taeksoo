@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -103,9 +103,8 @@ export function LimitRangesPage() {
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [filters, setFilters] = useState<{ key: string; value: string }[]>([
-    { key: 'Name', value: 'a' },
-  ]);
+  const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -119,6 +118,23 @@ export function LimitRangesPage() {
   useEffect(() => {
     updateActiveTabLabel('Limit ranges');
   }, [updateActiveTabLabel]);
+
+  const filteredData = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return limitRangesData;
+    return limitRangesData.filter((row) => {
+      return (
+        row.name.toLowerCase().includes(q) ||
+        row.namespace.toLowerCase().includes(q) ||
+        row.status.toLowerCase().includes(q) ||
+        row.createdAt.toLowerCase().includes(q)
+      );
+    });
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -137,8 +153,8 @@ export function LimitRangesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(limitRangesData.length / rowsPerPage);
-  const paginatedData = limitRangesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -349,6 +365,9 @@ export function LimitRangesPage() {
                 placeholder="Search limit range by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
               />
               <Button
                 variant="secondary"
@@ -395,7 +414,7 @@ export function LimitRangesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={limitRangesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import type { ECharts } from 'echarts';
@@ -642,6 +642,54 @@ export function ImageDetailPage() {
     }
   }, [imageData?.name, updateActiveTabLabel]);
 
+  const LIST_PAGE_SIZE = 10;
+
+  const [snapshotsSearch, setSnapshotsSearch] = useState('');
+  const [snapshotsPage, setSnapshotsPage] = useState(1);
+  const [configurationSearch, setConfigurationSearch] = useState('');
+  const [configurationPage, setConfigurationPage] = useState(1);
+
+  const filteredSnapshots = useMemo(() => {
+    const q = snapshotsSearch.trim().toLowerCase();
+    if (!q) return mockSnapshots;
+    return mockSnapshots.filter((s) => {
+      const hay = [s.name, s.size, s.used, s.state, s.created].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [snapshotsSearch]);
+
+  const paginatedSnapshots = useMemo(
+    () =>
+      filteredSnapshots.slice((snapshotsPage - 1) * LIST_PAGE_SIZE, snapshotsPage * LIST_PAGE_SIZE),
+    [filteredSnapshots, snapshotsPage]
+  );
+
+  const filteredConfigs = useMemo(() => {
+    const q = configurationSearch.trim().toLowerCase();
+    if (!q) return mockConfigs;
+    return mockConfigs.filter((c) => {
+      const hay = [c.name, c.description, c.key, c.source, c.value].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [configurationSearch]);
+
+  const paginatedConfigs = useMemo(
+    () =>
+      filteredConfigs.slice(
+        (configurationPage - 1) * LIST_PAGE_SIZE,
+        configurationPage * LIST_PAGE_SIZE
+      ),
+    [filteredConfigs, configurationPage]
+  );
+
+  useEffect(() => {
+    setSnapshotsPage(1);
+  }, [snapshotsSearch]);
+
+  useEffect(() => {
+    setConfigurationPage(1);
+  }, [configurationSearch]);
+
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -816,21 +864,28 @@ export function ImageDetailPage() {
                 </div>
 
                 <div className="w-[var(--search-input-width)]">
-                  <SearchInput placeholder="Search snapshots by attributes" size="sm" fullWidth />
+                  <SearchInput
+                    placeholder="Search snapshots by attributes"
+                    size="sm"
+                    fullWidth
+                    value={snapshotsSearch}
+                    onChange={(e) => setSnapshotsSearch(e.target.value)}
+                    onClear={() => setSnapshotsSearch('')}
+                  />
                 </div>
 
                 <Pagination
-                  currentPage={1}
-                  totalPages={Math.ceil(mockSnapshots.length / 10) || 1}
-                  onPageChange={() => {}}
-                  totalItems={mockSnapshots.length}
-                  itemsPerPage={10}
+                  currentPage={snapshotsPage}
+                  totalPages={Math.ceil(filteredSnapshots.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setSnapshotsPage}
+                  totalItems={filteredSnapshots.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
                   showItemCount
                 />
 
                 <Table<ImageSnapshot>
                   columns={snapshotColumns}
-                  data={mockSnapshots}
+                  data={paginatedSnapshots}
                   rowKey="id"
                   emptyMessage="No snapshots found"
                 />
@@ -851,21 +906,24 @@ export function ImageDetailPage() {
                     placeholder="Search configuration by attributes"
                     size="sm"
                     fullWidth
+                    value={configurationSearch}
+                    onChange={(e) => setConfigurationSearch(e.target.value)}
+                    onClear={() => setConfigurationSearch('')}
                   />
                 </div>
 
                 <Pagination
-                  currentPage={1}
-                  totalPages={Math.ceil(mockConfigs.length / 10) || 1}
-                  onPageChange={() => {}}
-                  totalItems={mockConfigs.length}
-                  itemsPerPage={10}
+                  currentPage={configurationPage}
+                  totalPages={Math.ceil(filteredConfigs.length / LIST_PAGE_SIZE) || 1}
+                  onPageChange={setConfigurationPage}
+                  totalItems={filteredConfigs.length}
+                  itemsPerPage={LIST_PAGE_SIZE}
                   showItemCount
                 />
 
                 <Table<ImageConfig>
                   columns={configColumns}
-                  data={mockConfigs}
+                  data={paginatedConfigs}
                   rowKey="id"
                   emptyMessage="No configuration found"
                 />

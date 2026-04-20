@@ -43,7 +43,7 @@ function ModalListItem({ title, description, category, onOpen }: ModalListItemPr
 
   return (
     <div
-      className="flex items-center justify-between px-4 py-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
+      className="flex items-center justify-between px-4 py-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
       onClick={onOpen}
     >
       <HStack gap={4} className="flex-1 items-center min-w-0">
@@ -168,7 +168,7 @@ function SectionHeader({
   isSearching,
 }: SectionHeaderProps) {
   return (
-    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
       <div className="flex items-center gap-3">
         {isSearching || isOpen ? (
           <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />

@@ -183,7 +183,7 @@ export default function SettingsNotificationsPage() {
               {services.map(({ key, label }) => (
                 <Disclosure
                   key={key}
-                  className="border border-[var(--color-border-default)] rounded-lg overflow-hidden"
+                  className="border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden"
                 >
                   <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
                     <span className="text-label-md text-[var(--color-text-default)]">{label}</span>

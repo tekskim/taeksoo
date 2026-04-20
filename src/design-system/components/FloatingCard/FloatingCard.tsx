@@ -84,13 +84,13 @@ function StatusIcon({ status }: { status: SectionStatus }) {
     case 'success':
       return (
         <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-          <IconCheck size={10} stroke={2} className="text-white" />
+          <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
         </div>
       );
     case 'warning':
       return (
         <div className="size-4 rounded-full border border-[var(--color-state-danger)] bg-[var(--color-state-danger)] shrink-0 flex items-center justify-center">
-          <IconAlertTriangle size={10} stroke={2} className="text-white" />
+          <IconAlertTriangle size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
         </div>
       );
     case 'processing':

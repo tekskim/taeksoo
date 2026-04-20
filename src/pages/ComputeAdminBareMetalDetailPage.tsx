@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -104,8 +104,8 @@ interface BareMetalDetail {
 
 // Bare Metal data map by ID
 const mockBareMetalMap: Record<string, BareMetalDetail> = {
-  'bm-001': {
-    id: 'bm-001',
+  '12345678': {
+    id: '12345678',
     name: 'web-server-1',
     status: 'active',
     locked: true,
@@ -121,8 +121,8 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     serverGroup: 'web-group',
     userData: 'Provided at creation',
   },
-  'bm-002': {
-    id: 'bm-002',
+  '12345679': {
+    id: '12345679',
     name: 'web-server-2',
     status: 'active',
     locked: false,
@@ -138,8 +138,8 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     serverGroup: 'web-group',
     userData: 'Provided at creation',
   },
-  'bm-003': {
-    id: 'bm-003',
+  '12345680': {
+    id: '12345680',
     name: 'db-server-1',
     status: 'active',
     locked: true,
@@ -309,6 +309,41 @@ export function ComputeAdminBareMetalDetailPage() {
   const activeDetailTab = searchParams.get('tab') || 'details';
   const setActiveDetailTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
+  // Interfaces tab search + pagination
+  const [interfaceSearchQuery, setInterfaceSearchQuery] = useState('');
+  const [interfaceCurrentPage, setInterfaceCurrentPage] = useState(1);
+  const interfaceRowsPerPage = 10;
+  const filteredInterfaces = useMemo(() => {
+    const q = interfaceSearchQuery.trim().toLowerCase();
+    if (!q) return mockAttachedInterfaces;
+    return mockAttachedInterfaces.filter((iface) => {
+      const haystack = [
+        iface.name,
+        iface.id,
+        iface.network,
+        iface.port,
+        iface.portStatus,
+        iface.fixedIp,
+        iface.macAddress,
+        iface.createdAt,
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [interfaceSearchQuery]);
+  const interfaceTotalPages = Math.ceil(filteredInterfaces.length / interfaceRowsPerPage);
+
+  useEffect(() => {
+    setInterfaceCurrentPage(1);
+  }, [interfaceSearchQuery]);
+
+  useEffect(() => {
+    if (interfaceTotalPages > 0 && interfaceCurrentPage > interfaceTotalPages) {
+      setInterfaceCurrentPage(interfaceTotalPages);
+    }
+  }, [interfaceTotalPages, interfaceCurrentPage]);
 
   // Action Logs tab state
   const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
@@ -566,6 +601,8 @@ export function ComputeAdminBareMetalDetailPage() {
                 <div className="flex items-center gap-1">
                   <SearchInput
                     placeholder="Search interface by attributes"
+                    value={interfaceSearchQuery}
+                    onChange={(e) => setInterfaceSearchQuery(e.target.value)}
                     size="sm"
                     className="w-[280px]"
                   />
@@ -573,10 +610,10 @@ export function ComputeAdminBareMetalDetailPage() {
 
                 {/* Pagination */}
                 <Pagination
-                  currentPage={1}
-                  totalPages={1}
-                  totalItems={mockAttachedInterfaces.length}
-                  onPageChange={() => {}}
+                  currentPage={interfaceCurrentPage}
+                  totalPages={interfaceTotalPages}
+                  totalItems={filteredInterfaces.length}
+                  onPageChange={setInterfaceCurrentPage}
                 />
 
                 {/* Table */}
@@ -670,7 +707,10 @@ export function ComputeAdminBareMetalDetailPage() {
                       ),
                     },
                   ]}
-                  data={mockAttachedInterfaces}
+                  data={filteredInterfaces.slice(
+                    (interfaceCurrentPage - 1) * interfaceRowsPerPage,
+                    interfaceCurrentPage * interfaceRowsPerPage
+                  )}
                   rowKey="id"
                 />
               </VStack>

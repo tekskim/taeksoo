@@ -218,7 +218,7 @@ function ConnectionCard({
 
   return (
     <div
-      className={`border rounded-lg p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
+      className={`border rounded-[var(--radius-lg)] p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-start gap-3">
@@ -573,7 +573,7 @@ export function WorkloadDetailPage() {
             {/* Logs Tab Panel */}
             <TabPanel value="logs" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
+                <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
                   <pre className="whitespace-pre-wrap">
                     {`[2025-01-08 14:30:00] Starting container...
 [2025-01-08 14:30:02] Pulling image presidio-pii-deid:latest
@@ -592,7 +592,7 @@ export function WorkloadDetailPage() {
             {/* Terminal Tab Panel */}
             <TabPanel value="terminal" className="pt-0">
               <div className="pt-6">
-                <div className="bg-[var(--color-text-default)] rounded-lg p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px] overflow-auto">
+                <div className="bg-[var(--color-text-default)] rounded-[var(--radius-lg)] p-4 font-mono text-body-md text-[var(--color-text-subtle)] h-[400px] overflow-auto">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[var(--color-state-success)]">root</span>
                     <span className="text-[var(--color-text-subtle)]">@</span>

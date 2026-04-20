@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   VStack,
@@ -93,7 +93,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'cert-manager',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -115,14 +115,14 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound successfully',
-        updated: 'Jul 25, 2025',
+        updated: 'Jul 25, 2026',
       },
       {
         id: '2',
         condition: 'FileSystemResizePending',
         size: 'False',
         message: '[Info] No resize pending',
-        updated: 'Jul 25, 2025',
+        updated: 'Jul 25, 2026',
       },
     ],
     events: [
@@ -157,7 +157,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'data-postgres-0',
     status: 'OK',
     namespace: 'database',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     labels: {
       app: 'postgres',
     },
@@ -179,7 +179,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound to pvc-abc12345',
-        updated: 'Nov 9, 2025',
+        updated: 'Nov 9, 2026',
       },
     ],
     events: [
@@ -202,7 +202,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'redis-data',
     status: 'True',
     namespace: 'cache',
-    createdAt: 'Nov 8, 2025 11:51:27',
+    createdAt: 'Nov 8, 2026 11:51:27',
     labels: {
       app: 'redis',
     },
@@ -222,7 +222,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Bound to existing PV',
-        updated: 'Nov 8, 2025',
+        updated: 'Nov 8, 2026',
       },
     ],
     events: [
@@ -245,7 +245,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'pending-claim',
     status: 'Raw',
     namespace: 'default',
-    createdAt: 'Nov 10, 2025 01:17:01',
+    createdAt: 'Nov 10, 2026 01:17:01',
     labels: {},
     annotations: {},
     source: 'storage-class',
@@ -263,7 +263,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Pending',
         size: 'True',
         message: '[Waiting] Waiting for volume to be provisioned',
-        updated: 'Nov 10, 2025',
+        updated: 'Nov 10, 2026',
       },
     ],
     events: [
@@ -298,7 +298,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'elasticsearch-data-0',
     status: 'OK',
     namespace: 'logging',
-    createdAt: 'Nov 7, 2025 04:38:10',
+    createdAt: 'Nov 7, 2026 04:38:10',
     labels: {
       app: 'elasticsearch',
     },
@@ -320,7 +320,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound to pvc-elastic-001',
-        updated: 'Nov 7, 2025',
+        updated: 'Nov 7, 2026',
       },
     ],
     events: [
@@ -339,6 +339,8 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     ],
   },
 };
+
+const EVENTS_PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Component
@@ -362,6 +364,8 @@ export function PersistentVolumeClaimDetailPage() {
   const activeTab = searchParams.get('tab') || 'volume-claim';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
   const [selectedEventKeys, setSelectedEventKeys] = useState<string[]>([]);
+  const [eventsSearch, setEventsSearch] = useState('');
+  const [eventsPage, setEventsPage] = useState(1);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -377,6 +381,39 @@ export function PersistentVolumeClaimDetailPage() {
       setPvcData(mockPersistentVolumeClaimData['1']);
     }
   }, [pvcId]);
+
+  const filteredEvents = useMemo(() => {
+    const events = pvcData?.events ?? [];
+    const q = eventsSearch.trim().toLowerCase();
+    if (!q) return events;
+    return events.filter((ev) => {
+      const haystack = [
+        ev.name,
+        ev.type,
+        ev.reason,
+        ev.message,
+        ev.subobject,
+        ev.source,
+        ev.lastSeen,
+        ev.firstSeen,
+        String(ev.count),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [pvcData, eventsSearch]);
+
+  useEffect(() => {
+    setEventsPage(1);
+  }, [eventsSearch]);
+
+  const eventsTotalPages = Math.max(1, Math.ceil(filteredEvents.length / EVENTS_PAGE_SIZE));
+
+  const paginatedEvents = useMemo(
+    () => filteredEvents.slice((eventsPage - 1) * EVENTS_PAGE_SIZE, eventsPage * EVENTS_PAGE_SIZE),
+    [filteredEvents, eventsPage]
+  );
 
   // Update tab label to match the PVC name (most recent breadcrumb)
   useEffect(() => {
@@ -854,6 +891,9 @@ export function PersistentVolumeClaimDetailPage() {
                   placeholder="Search events by attributes"
                   size="sm"
                   className="w-[var(--search-input-width)]"
+                  value={eventsSearch}
+                  onChange={(e) => setEventsSearch(e.target.value)}
+                  onClear={() => setEventsSearch('')}
                 />
                 <div className="w-px h-5 bg-[var(--color-border-default)]" />
                 <HStack gap={1}>
@@ -878,90 +918,96 @@ export function PersistentVolumeClaimDetailPage() {
 
               {/* Pagination */}
               <Pagination
-                currentPage={1}
-                totalPages={1}
-                onPageChange={() => {}}
-                totalItems={pvcData.events.length}
+                currentPage={eventsPage}
+                totalPages={eventsTotalPages}
+                onPageChange={setEventsPage}
+                totalItems={filteredEvents.length}
                 selectedCount={selectedEventKeys.length}
               />
 
               {/* Table */}
               {pvcData.events.length > 0 ? (
-                <Table<PVCEvent>
-                  columns={[
-                    {
-                      key: 'lastSeen',
-                      label: 'Last seen',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.lastSeen,
-                    },
-                    {
-                      key: 'type',
-                      label: 'Type',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.type,
-                    },
-                    {
-                      key: 'reason',
-                      label: 'Reason',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.reason,
-                    },
-                    {
-                      key: 'subobject',
-                      label: 'Subobject',
-                      flex: 1,
-                      minWidth: columnMinWidths.subobject,
-                    },
-                    {
-                      key: 'source',
-                      label: 'Source',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: '120px',
-                    },
-                    {
-                      key: 'message',
-                      label: 'Message',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: '350px',
-                    },
-                    {
-                      key: 'firstSeen',
-                      label: 'First seen',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.firstSeen,
-                    },
-                    {
-                      key: 'count',
-                      label: 'Count',
-                      sortable: true,
-                      flex: 1,
-                      minWidth: columnMinWidths.count,
-                    },
-                    {
-                      key: 'name',
-                      label: 'Name',
-                      sortable: true,
-                      flex: 1,
-                      render: (value: string) => (
-                        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
-                          {value}
-                        </span>
-                      ),
-                    },
-                  ]}
-                  data={pvcData.events}
-                  rowKey="id"
-                  selectable
-                  selectedKeys={selectedEventKeys}
-                  onSelectionChange={setSelectedEventKeys}
-                />
+                filteredEvents.length > 0 ? (
+                  <Table<PVCEvent>
+                    columns={[
+                      {
+                        key: 'lastSeen',
+                        label: 'Last seen',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.lastSeen,
+                      },
+                      {
+                        key: 'type',
+                        label: 'Type',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.type,
+                      },
+                      {
+                        key: 'reason',
+                        label: 'Reason',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.reason,
+                      },
+                      {
+                        key: 'subobject',
+                        label: 'Subobject',
+                        flex: 1,
+                        minWidth: columnMinWidths.subobject,
+                      },
+                      {
+                        key: 'source',
+                        label: 'Source',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: '120px',
+                      },
+                      {
+                        key: 'message',
+                        label: 'Message',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: '350px',
+                      },
+                      {
+                        key: 'firstSeen',
+                        label: 'First seen',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.firstSeen,
+                      },
+                      {
+                        key: 'count',
+                        label: 'Count',
+                        sortable: true,
+                        flex: 1,
+                        minWidth: columnMinWidths.count,
+                      },
+                      {
+                        key: 'name',
+                        label: 'Name',
+                        sortable: true,
+                        flex: 1,
+                        render: (value: string) => (
+                          <span className="text-[var(--color-text-default)] font-medium">
+                            {value}
+                          </span>
+                        ),
+                      },
+                    ]}
+                    data={paginatedEvents}
+                    rowKey="id"
+                    selectable
+                    selectedKeys={selectedEventKeys}
+                    onSelectionChange={setSelectedEventKeys}
+                  />
+                ) : (
+                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                    No events match your search.
+                  </p>
+                )
               ) : (
                 <p className="text-body-md text-[var(--color-text-subtle)]">
                   No recent events to display.

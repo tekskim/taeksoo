@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -106,11 +106,16 @@ export function ContainerIngressesPage() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
   const navigate = useNavigate();
 
   // Create menu items
@@ -142,10 +147,29 @@ export function ContainerIngressesPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
+  const filteredData = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return ingressesData;
+    return ingressesData.filter((row) => {
+      const haystack = [
+        row.name,
+        row.namespace,
+        row.status,
+        row.default,
+        row.ingressClass,
+        row.createdAt,
+        row.target.join(' '),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [searchTerm]);
+
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(ingressesData.length / rowsPerPage);
-  const paginatedData = ingressesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -393,6 +417,9 @@ export function ContainerIngressesPage() {
                 placeholder="Search ingress by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
               />
               <Button
                 variant="secondary"
@@ -436,7 +463,7 @@ export function ContainerIngressesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={ingressesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

@@ -97,7 +97,7 @@ function SummaryStatBox({ value, label, onClick }: SummaryStatBoxProps) {
 
   return (
     <div
-      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
+      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
       onClick={onClick}
       role={isClickable ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
@@ -129,7 +129,7 @@ function InfraQuotaRow({ label, used, total, href }: InfraQuotaRowProps) {
   const percentage = Math.round((used / total) * 100);
 
   return (
-    <div className="flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-lg p-3 justify-center">
+    <div className="flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-3 justify-center">
       <div className="flex items-center justify-between">
         <Link
           to={href}
@@ -383,19 +383,19 @@ export function ComputeHomePage() {
               <SummaryStatBox
                 value={15}
                 label="Active"
-                onClick={() => navigate('/compute/instances?tab=vm&status=running')}
+                onClick={() => navigate('/compute/instances?tab=vm')}
               />
               <SummaryStatBox
                 value={2}
                 label="Error"
-                onClick={() => navigate('/compute/instances?tab=vm&status=error')}
+                onClick={() => navigate('/compute/instances?tab=vm')}
               />
             </div>
             <div className="flex gap-2">
               <SummaryStatBox
                 value={3}
                 label="Shutoff"
-                onClick={() => navigate('/compute/instances?tab=vm&status=stopped')}
+                onClick={() => navigate('/compute/instances?tab=vm')}
               />
               <SummaryStatBox value={1} label="Others" />
             </div>
@@ -413,19 +413,19 @@ export function ComputeHomePage() {
               <SummaryStatBox
                 value={4}
                 label="Active"
-                onClick={() => navigate('/compute/instances?tab=bm&status=running')}
+                onClick={() => navigate('/compute/instances?tab=bare-metal')}
               />
               <SummaryStatBox
                 value={1}
                 label="Error"
-                onClick={() => navigate('/compute/instances?tab=bm&status=error')}
+                onClick={() => navigate('/compute/instances?tab=bare-metal')}
               />
             </div>
             <div className="flex gap-2">
               <SummaryStatBox
                 value={0}
                 label="Shutoff"
-                onClick={() => navigate('/compute/instances?tab=bm&status=stopped')}
+                onClick={() => navigate('/compute/instances?tab=bare-metal')}
               />
               <SummaryStatBox value={0} label="Others" />
             </div>

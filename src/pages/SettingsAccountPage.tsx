@@ -251,9 +251,9 @@ export default function SettingsAccountPage() {
               </VStack>
 
               {/* Verification Methods - Always visible */}
-              <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
+              <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-[var(--radius-lg)] bg-[var(--color-surface-subtle)]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
                     <IconShieldCheck size={20} className="text-[var(--color-action-primary)]" />
                   </div>
                   <div>

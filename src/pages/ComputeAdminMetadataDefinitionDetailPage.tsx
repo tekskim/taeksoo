@@ -64,7 +64,7 @@ const mockMetadataMap: Record<string, MetadataDefinitionDetail> = Object.fromEnt
               : 'Custom metadata definition for resources',
         isPublic: i % 3 !== 1,
         isProtected: i % 4 === 0,
-        createdAt: 'Dec 28 2025',
+        createdAt: 'Dec 28 2026',
         resourceTypes:
           i === 0
             ? [
@@ -240,7 +240,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
 
             {/* Contents Tab */}
             <TabPanel value="contents" className="pt-6">
-              <div className="bg-[var(--primitive-color-blue-gray800)] rounded-lg p-6 font-mono text-label-lg overflow-x-auto">
+              <div className="bg-[var(--primitive-color-blue-gray800)] rounded-[var(--radius-lg)] p-6 font-mono text-label-lg overflow-x-auto">
                 <pre className="text-[var(--primitive-color-blue-gray200)]">
                   <span className="text-[var(--color-text-muted)]">{'{'}</span>
                   {'\n'}
@@ -278,7 +278,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
                   {'\n'}
                   <span className="text-[var(--color-action-primary)]">{`  "created_at"`}</span>
                   <span className="text-[var(--color-text-muted)]">: </span>
-                  <span className="text-[var(--color-state-warning)]">{`"2025-05-13T02:48:18Z"`}</span>
+                  <span className="text-[var(--color-state-warning)]">{`"2026-05-13T02:48:18Z"`}</span>
                   <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
                   <span className="text-[var(--color-action-primary)]">{`  "resource_type_associations"`}</span>
@@ -305,7 +305,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
                       {'\n'}
                       <span className="text-[var(--color-action-primary)]">{`      "created_at"`}</span>
                       <span className="text-[var(--color-text-muted)]">: </span>
-                      <span className="text-[var(--color-state-warning)]">{`"2025-05-13T02:48:18Z"`}</span>
+                      <span className="text-[var(--color-state-warning)]">{`"2026-05-13T02:48:18Z"`}</span>
                       {'\n'}
                       <span className="text-[var(--color-text-muted)]">
                         {`    }`}

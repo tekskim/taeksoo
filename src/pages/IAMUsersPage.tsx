@@ -388,7 +388,8 @@ export function IAMUsersPage() {
                 <SearchInput
                   placeholder="Search users by attributes"
                   value={searchQuery}
-                  onChange={setSearchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onClear={() => setSearchQuery('')}
                   className="w-[var(--search-input-width)]"
                 />
                 <Button

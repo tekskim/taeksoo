@@ -156,7 +156,7 @@ const DesktopIcon = React.forwardRef<HTMLButtonElement, DesktopIconProps>(functi
       onMouseDown={onMouseDown}
       aria-label={label}
     >
-      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
+      <div className="w-20 h-20 flex items-center justify-center rounded-[var(--radius-lg)]">
         {iconSlot || (
           <img
             src={icon}
@@ -217,7 +217,7 @@ function DragGhost({ icon, label, x, y }: DragGhostProps) {
       className="fixed z-[9999] flex flex-col items-center gap-1 w-20 pointer-events-none opacity-80"
       style={{ left: x - GRID.ICON_W / 2, top: y - 40 }}
     >
-      <div className="w-20 h-20 flex items-center justify-center rounded-lg">
+      <div className="w-20 h-20 flex items-center justify-center rounded-[var(--radius-lg)]">
         <img
           src={icon}
           alt={label}
@@ -391,7 +391,7 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
         >
           <div
             className={`
-              w-7 h-7 rounded-lg overflow-hidden
+              w-7 h-7 rounded-[var(--radius-lg)] overflow-hidden
               ${isRunning ? 'p-0.5 border border-[var(--desktop-icon-running-border)] bg-[var(--desktop-icon-running-bg)]' : ''}
               ${isActive ? 'border-[var(--desktop-icon-active-border)] bg-[var(--desktop-icon-active-bg)]' : ''}
             `}
@@ -1247,7 +1247,7 @@ function PageWindow({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
-        className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
+        className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         style={windowStyle}
         onClick={onFocus}
         onMouseDown={onFocus}
@@ -1814,7 +1814,7 @@ export function DesktopPage() {
         <>
           <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
           <div className="fixed z-[6001] top-[52px] right-0" onClick={(e) => e.stopPropagation()}>
-            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)] shadow-lg overflow-hidden">
+            <div className="w-[360px] bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] shadow-lg overflow-hidden">
               <div className="relative pt-3 pb-0">
                 <button
                   type="button"
@@ -1904,7 +1904,7 @@ export function DesktopPage() {
       {/* Main Page Navigation Button - Bottom Left */}
       <Link
         to="/"
-        className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-[var(--desktop-glass-bg)] hover:bg-[var(--desktop-glass-bg-strong)] backdrop-blur-sm rounded-lg text-[var(--desktop-text)] text-sm font-medium transition-all hover:-translate-y-0.5"
+        className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-[var(--desktop-glass-bg)] hover:bg-[var(--desktop-glass-bg-strong)] backdrop-blur-sm rounded-[var(--radius-lg)] text-[var(--desktop-text)] text-sm font-medium transition-all hover:-translate-y-0.5"
       >
         <IconLayoutDashboard size={18} stroke={1.5} />
         <span>Go to main page</span>

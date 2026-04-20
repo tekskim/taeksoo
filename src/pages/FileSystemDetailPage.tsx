@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -327,6 +327,192 @@ export function FileSystemDetailPage() {
   const ranks = id ? mockRanks[id] || [] : [];
   const pools = id ? mockPools[id] || [] : [];
 
+  const LIST_PAGE_SIZE = 10;
+
+  const [ranksSearch, setRanksSearch] = useState('');
+  const [ranksPage, setRanksPage] = useState(1);
+  const [poolsSearch, setPoolsSearch] = useState('');
+  const [poolsPage, setPoolsPage] = useState(1);
+  const [directoriesSearch, setDirectoriesSearch] = useState('');
+  const [directoriesPage, setDirectoriesPage] = useState(1);
+  const [subvolumesSearch, setSubvolumesSearch] = useState('');
+  const [subvolumesPage, setSubvolumesPage] = useState(1);
+  const [subvolumeGroupsSearch, setSubvolumeGroupsSearch] = useState('');
+  const [subvolumeGroupsPage, setSubvolumeGroupsPage] = useState(1);
+  const [snapshotsSearch, setSnapshotsSearch] = useState('');
+  const [snapshotsPage, setSnapshotsPage] = useState(1);
+  const [snapshotSchedulesSearch, setSnapshotSchedulesSearch] = useState('');
+  const [snapshotSchedulesPage, setSnapshotSchedulesPage] = useState(1);
+  const [clientsSearch, setClientsSearch] = useState('');
+  const [clientsPage, setClientsPage] = useState(1);
+
+  const filteredRanks = useMemo(() => {
+    const q = ranksSearch.trim().toLowerCase();
+    if (!q) return ranks;
+    return ranks.filter((r) => {
+      const hay = [
+        String(r.rank),
+        r.state,
+        r.daemon,
+        r.activity,
+        r.dentries,
+        r.inodes,
+        r.dirs,
+        r.caps,
+      ].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [ranks, ranksSearch]);
+
+  const paginatedRanks = useMemo(
+    () => filteredRanks.slice((ranksPage - 1) * LIST_PAGE_SIZE, ranksPage * LIST_PAGE_SIZE),
+    [filteredRanks, ranksPage]
+  );
+
+  const filteredPools = useMemo(() => {
+    const q = poolsSearch.trim().toLowerCase();
+    if (!q) return pools;
+    return pools.filter((p) => {
+      const hay = [p.pool, p.type, p.size, String(p.usageValue), String(p.usageMax)].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [pools, poolsSearch]);
+
+  const paginatedPools = useMemo(
+    () => filteredPools.slice((poolsPage - 1) * LIST_PAGE_SIZE, poolsPage * LIST_PAGE_SIZE),
+    [filteredPools, poolsPage]
+  );
+
+  const filteredDirectories = useMemo(() => {
+    const q = directoriesSearch.trim().toLowerCase();
+    if (!q) return mockDirectories;
+    return mockDirectories.filter((d) => d.path.toLowerCase().includes(q));
+  }, [directoriesSearch]);
+
+  const paginatedDirectories = useMemo(
+    () =>
+      filteredDirectories.slice(
+        (directoriesPage - 1) * LIST_PAGE_SIZE,
+        directoriesPage * LIST_PAGE_SIZE
+      ),
+    [filteredDirectories, directoriesPage]
+  );
+
+  const filteredSubvolumes = useMemo(() => {
+    const q = subvolumesSearch.trim().toLowerCase();
+    if (!q) return mockSubvolumes;
+    return mockSubvolumes.filter((s) => {
+      const hay = [s.name, s.status, s.size, s.dataPool, s.created].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [subvolumesSearch]);
+
+  const paginatedSubvolumes = useMemo(
+    () =>
+      filteredSubvolumes.slice(
+        (subvolumesPage - 1) * LIST_PAGE_SIZE,
+        subvolumesPage * LIST_PAGE_SIZE
+      ),
+    [filteredSubvolumes, subvolumesPage]
+  );
+
+  const filteredSubvolumeGroups = useMemo(() => {
+    const q = subvolumeGroupsSearch.trim().toLowerCase();
+    if (!q) return mockSubvolumeGroups;
+    return mockSubvolumeGroups.filter((g) => {
+      const hay = [g.name, g.dataPool, g.mode].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [subvolumeGroupsSearch]);
+
+  const paginatedSubvolumeGroups = useMemo(
+    () =>
+      filteredSubvolumeGroups.slice(
+        (subvolumeGroupsPage - 1) * LIST_PAGE_SIZE,
+        subvolumeGroupsPage * LIST_PAGE_SIZE
+      ),
+    [filteredSubvolumeGroups, subvolumeGroupsPage]
+  );
+
+  const filteredSnapshots = useMemo(() => {
+    const q = snapshotsSearch.trim().toLowerCase();
+    if (!q) return mockSnapshots;
+    return mockSnapshots.filter((s) => {
+      const hay = [s.name, s.path, s.created].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [snapshotsSearch]);
+
+  const paginatedSnapshots = useMemo(
+    () =>
+      filteredSnapshots.slice((snapshotsPage - 1) * LIST_PAGE_SIZE, snapshotsPage * LIST_PAGE_SIZE),
+    [filteredSnapshots, snapshotsPage]
+  );
+
+  const filteredSnapshotSchedules = useMemo(() => {
+    const q = snapshotSchedulesSearch.trim().toLowerCase();
+    if (!q) return mockSnapshotSchedules;
+    return mockSnapshotSchedules.filter((s) => {
+      const hay = [s.path, s.schedule, s.retention, s.status, s.created].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [snapshotSchedulesSearch]);
+
+  const paginatedSnapshotSchedules = useMemo(
+    () =>
+      filteredSnapshotSchedules.slice(
+        (snapshotSchedulesPage - 1) * LIST_PAGE_SIZE,
+        snapshotSchedulesPage * LIST_PAGE_SIZE
+      ),
+    [filteredSnapshotSchedules, snapshotSchedulesPage]
+  );
+
+  const filteredClients = useMemo(() => {
+    const q = clientsSearch.trim().toLowerCase();
+    if (!q) return mockClients;
+    return mockClients.filter((c) => {
+      const hay = [c.clientId, c.hostname, c.root, c.version].join(' ');
+      return hay.toLowerCase().includes(q);
+    });
+  }, [clientsSearch]);
+
+  const paginatedClients = useMemo(
+    () => filteredClients.slice((clientsPage - 1) * LIST_PAGE_SIZE, clientsPage * LIST_PAGE_SIZE),
+    [filteredClients, clientsPage]
+  );
+
+  useEffect(() => {
+    setRanksPage(1);
+  }, [ranksSearch]);
+
+  useEffect(() => {
+    setPoolsPage(1);
+  }, [poolsSearch]);
+
+  useEffect(() => {
+    setDirectoriesPage(1);
+  }, [directoriesSearch]);
+
+  useEffect(() => {
+    setSubvolumesPage(1);
+  }, [subvolumesSearch]);
+
+  useEffect(() => {
+    setSubvolumeGroupsPage(1);
+  }, [subvolumeGroupsSearch]);
+
+  useEffect(() => {
+    setSnapshotsPage(1);
+  }, [snapshotsSearch]);
+
+  useEffect(() => {
+    setSnapshotSchedulesPage(1);
+  }, [snapshotSchedulesSearch]);
+
+  useEffect(() => {
+    setClientsPage(1);
+  }, [clientsSearch]);
+
   const rankColumns: TableColumn<Rank>[] = [
     { key: 'rank', label: 'Rank', width: 60, sortable: true },
     { key: 'state', label: 'State', flex: 1, minWidth: 70, sortable: true },
@@ -574,19 +760,26 @@ export function FileSystemDetailPage() {
                 <SectionCard.Header title="Ranks" />
                 <SectionCard.Content showDividers={false} gap={3}>
                   <div className="w-[var(--search-input-width)]">
-                    <SearchInput placeholder="Search ranks by attributes" size="sm" fullWidth />
+                    <SearchInput
+                      placeholder="Search ranks by attributes"
+                      size="sm"
+                      fullWidth
+                      value={ranksSearch}
+                      onChange={(e) => setRanksSearch(e.target.value)}
+                      onClear={() => setRanksSearch('')}
+                    />
                   </div>
                   <Pagination
-                    currentPage={1}
-                    totalPages={Math.ceil(ranks.length / 10) || 1}
-                    onPageChange={() => {}}
-                    totalItems={ranks.length}
-                    itemsPerPage={10}
+                    currentPage={ranksPage}
+                    totalPages={Math.ceil(filteredRanks.length / LIST_PAGE_SIZE) || 1}
+                    onPageChange={setRanksPage}
+                    totalItems={filteredRanks.length}
+                    itemsPerPage={LIST_PAGE_SIZE}
                     showItemCount
                   />
                   <Table<Rank>
                     columns={rankColumns}
-                    data={ranks}
+                    data={paginatedRanks}
                     rowKey="id"
                     emptyMessage="No ranks found"
                   />
@@ -598,19 +791,26 @@ export function FileSystemDetailPage() {
                 <SectionCard.Header title="Pools" />
                 <SectionCard.Content showDividers={false} gap={3}>
                   <div className="w-[var(--search-input-width)]">
-                    <SearchInput placeholder="Search pools by attributes" size="sm" fullWidth />
+                    <SearchInput
+                      placeholder="Search pools by attributes"
+                      size="sm"
+                      fullWidth
+                      value={poolsSearch}
+                      onChange={(e) => setPoolsSearch(e.target.value)}
+                      onClear={() => setPoolsSearch('')}
+                    />
                   </div>
                   <Pagination
-                    currentPage={1}
-                    totalPages={Math.ceil(pools.length / 10) || 1}
-                    onPageChange={() => {}}
-                    totalItems={pools.length}
-                    itemsPerPage={10}
+                    currentPage={poolsPage}
+                    totalPages={Math.ceil(filteredPools.length / LIST_PAGE_SIZE) || 1}
+                    onPageChange={setPoolsPage}
+                    totalItems={filteredPools.length}
+                    itemsPerPage={LIST_PAGE_SIZE}
                     showItemCount
                   />
                   <Table<Pool>
                     columns={poolColumns}
-                    data={pools}
+                    data={paginatedPools}
                     rowKey="id"
                     emptyMessage="No pools found"
                   />
@@ -634,19 +834,26 @@ export function FileSystemDetailPage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">Directories</h3>
               </div>
               <div className="w-[var(--search-input-width)]">
-                <SearchInput placeholder="Search directories by attributes" size="sm" fullWidth />
+                <SearchInput
+                  placeholder="Search directories by attributes"
+                  size="sm"
+                  fullWidth
+                  value={directoriesSearch}
+                  onChange={(e) => setDirectoriesSearch(e.target.value)}
+                  onClear={() => setDirectoriesSearch('')}
+                />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockDirectories.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockDirectories.length}
-                itemsPerPage={10}
+                currentPage={directoriesPage}
+                totalPages={Math.ceil(filteredDirectories.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setDirectoriesPage}
+                totalItems={filteredDirectories.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<Directory>
                 columns={directoryColumns}
-                data={mockDirectories}
+                data={paginatedDirectories}
                 rowKey="id"
                 emptyMessage="No directories found"
               />
@@ -660,19 +867,26 @@ export function FileSystemDetailPage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">Subvolumes</h3>
               </div>
               <div className="w-[var(--search-input-width)]">
-                <SearchInput placeholder="Search subvolumes by attributes" size="sm" fullWidth />
+                <SearchInput
+                  placeholder="Search subvolumes by attributes"
+                  size="sm"
+                  fullWidth
+                  value={subvolumesSearch}
+                  onChange={(e) => setSubvolumesSearch(e.target.value)}
+                  onClear={() => setSubvolumesSearch('')}
+                />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockSubvolumes.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockSubvolumes.length}
-                itemsPerPage={10}
+                currentPage={subvolumesPage}
+                totalPages={Math.ceil(filteredSubvolumes.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setSubvolumesPage}
+                totalItems={filteredSubvolumes.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<Subvolume>
                 columns={subvolumeColumns}
-                data={mockSubvolumes}
+                data={paginatedSubvolumes}
                 rowKey="id"
                 emptyMessage="No subvolumes found"
               />
@@ -692,19 +906,22 @@ export function FileSystemDetailPage() {
                   placeholder="Search subvolume groups by attributes"
                   size="sm"
                   fullWidth
+                  value={subvolumeGroupsSearch}
+                  onChange={(e) => setSubvolumeGroupsSearch(e.target.value)}
+                  onClear={() => setSubvolumeGroupsSearch('')}
                 />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockSubvolumeGroups.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockSubvolumeGroups.length}
-                itemsPerPage={10}
+                currentPage={subvolumeGroupsPage}
+                totalPages={Math.ceil(filteredSubvolumeGroups.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setSubvolumeGroupsPage}
+                totalItems={filteredSubvolumeGroups.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<SubvolumeGroup>
                 columns={subvolumeGroupColumns}
-                data={mockSubvolumeGroups}
+                data={paginatedSubvolumeGroups}
                 rowKey="id"
                 emptyMessage="No subvolume groups found"
               />
@@ -718,19 +935,26 @@ export function FileSystemDetailPage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">Snapshots</h3>
               </div>
               <div className="w-[var(--search-input-width)]">
-                <SearchInput placeholder="Search snapshots by attributes" size="sm" fullWidth />
+                <SearchInput
+                  placeholder="Search snapshots by attributes"
+                  size="sm"
+                  fullWidth
+                  value={snapshotsSearch}
+                  onChange={(e) => setSnapshotsSearch(e.target.value)}
+                  onClear={() => setSnapshotsSearch('')}
+                />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockSnapshots.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockSnapshots.length}
-                itemsPerPage={10}
+                currentPage={snapshotsPage}
+                totalPages={Math.ceil(filteredSnapshots.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setSnapshotsPage}
+                totalItems={filteredSnapshots.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<Snapshot>
                 columns={snapshotColumns}
-                data={mockSnapshots}
+                data={paginatedSnapshots}
                 rowKey="id"
                 emptyMessage="No snapshots found"
               />
@@ -750,19 +974,22 @@ export function FileSystemDetailPage() {
                   placeholder="Search snapshot schedules by attributes"
                   size="sm"
                   fullWidth
+                  value={snapshotSchedulesSearch}
+                  onChange={(e) => setSnapshotSchedulesSearch(e.target.value)}
+                  onClear={() => setSnapshotSchedulesSearch('')}
                 />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockSnapshotSchedules.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockSnapshotSchedules.length}
-                itemsPerPage={10}
+                currentPage={snapshotSchedulesPage}
+                totalPages={Math.ceil(filteredSnapshotSchedules.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setSnapshotSchedulesPage}
+                totalItems={filteredSnapshotSchedules.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<SnapshotSchedule>
                 columns={snapshotScheduleColumns}
-                data={mockSnapshotSchedules}
+                data={paginatedSnapshotSchedules}
                 rowKey="id"
                 emptyMessage="No snapshot schedules found"
               />
@@ -776,19 +1003,26 @@ export function FileSystemDetailPage() {
                 <h3 className="text-heading-h5 text-[var(--color-text-default)]">Clients</h3>
               </div>
               <div className="w-[var(--search-input-width)]">
-                <SearchInput placeholder="Search clients by attributes" size="sm" fullWidth />
+                <SearchInput
+                  placeholder="Search clients by attributes"
+                  size="sm"
+                  fullWidth
+                  value={clientsSearch}
+                  onChange={(e) => setClientsSearch(e.target.value)}
+                  onClear={() => setClientsSearch('')}
+                />
               </div>
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(mockClients.length / 10) || 1}
-                onPageChange={() => {}}
-                totalItems={mockClients.length}
-                itemsPerPage={10}
+                currentPage={clientsPage}
+                totalPages={Math.ceil(filteredClients.length / LIST_PAGE_SIZE) || 1}
+                onPageChange={setClientsPage}
+                totalItems={filteredClients.length}
+                itemsPerPage={LIST_PAGE_SIZE}
                 showItemCount
               />
               <Table<Client>
                 columns={clientColumns}
-                data={mockClients}
+                data={paginatedClients}
                 rowKey="id"
                 emptyMessage="No clients found"
               />

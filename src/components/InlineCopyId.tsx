@@ -5,6 +5,7 @@ export function InlineCopyId({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
+      type="button"
       className={`shrink-0 transition-colors ${copied ? 'text-[var(--color-state-success)]' : 'text-current hover:text-[var(--color-text-default)]'}`}
       onClick={(e) => {
         e.stopPropagation();

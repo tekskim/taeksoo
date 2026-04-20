@@ -80,7 +80,7 @@ function MCPToolHeader({
   onDelete,
 }: MCPToolHeaderProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 pt-3 pb-4 w-full">
       <div className="flex flex-col gap-4">
         {/* Title Row */}
         <div className="flex flex-col gap-1">

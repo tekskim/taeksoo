@@ -57,7 +57,7 @@ function AccountInvitationTemplate({
 }: AccountInvitationProps) {
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
-      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
+      <div className="bg-white rounded-[var(--radius-lg)] p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         {/* English */}
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#64748b' }}>
@@ -97,7 +97,7 @@ function AccountInvitationTemplate({
           </p>
         </div>
         <div
-          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+          className="rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5 w-full"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
@@ -170,7 +170,7 @@ function ResetPasswordTemplate({
 }: ResetPasswordProps) {
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
-      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
+      <div className="bg-white rounded-[var(--radius-lg)] p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         {/* English */}
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#64748b' }}>
@@ -211,7 +211,7 @@ function ResetPasswordTemplate({
           </p>
         </div>
         <div
-          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+          className="rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5 w-full"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
@@ -288,7 +288,7 @@ function EmailMFATemplate({
 
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
-      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
+      <div className="bg-white rounded-[var(--radius-lg)] p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         {/* English */}
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#64748b' }}>
@@ -328,7 +328,7 @@ function EmailMFATemplate({
           </p>
         </div>
         <div
-          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+          className="rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5 w-full"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
@@ -847,7 +847,7 @@ export function MailTemplatePreviewPage() {
       <main className="max-w-7xl mx-auto px-8 py-8">
         <div className="flex gap-8">
           <div className="w-[var(--search-input-width)] flex-shrink-0">
-            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
               <h2 className="text-body-lg font-semibold text-[var(--color-text-default)] mb-4">
                 Template Variables{' '}
               </h2>
@@ -858,13 +858,13 @@ export function MailTemplatePreviewPage() {
           <div className="flex-1 min-w-[700px]" style={{ colorScheme: 'light' }}>
             {viewMode === 'preview' ? (
               <div
-                className="rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12"
+                className="rounded-[var(--radius-lg)] p-8 min-h-[600px] flex justify-center items-start pt-12"
                 style={{ backgroundColor: '#f8fafc' }}
               >
                 {renderPreview()}
               </div>
             ) : (
-              <div className="bg-slate-800 rounded-lg p-4 min-h-[600px] overflow-auto">
+              <div className="bg-slate-800 rounded-[var(--radius-lg)] p-4 min-h-[600px] overflow-auto">
                 <pre className="text-body-md text-slate-200 font-mono whitespace-pre-wrap break-all">
                   {getHtmlCode()}
                 </pre>

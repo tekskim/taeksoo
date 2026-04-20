@@ -62,7 +62,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'cpu_allocation_ratio', value: '16.0' },
       { key: 'ram_allocation_ratio', value: '1.5' },
     ],
-    createdAt: 'Dec 25, 2025 09:15:33',
+    createdAt: 'Dec 25, 2026 09:15:33',
   },
   {
     id: 'ha-002',
@@ -73,7 +73,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'gpu', value: 'nvidia-a100' },
       { key: 'gpu_count', value: '8' },
     ],
-    createdAt: 'Dec 25, 2025 10:42:18',
+    createdAt: 'Dec 25, 2026 10:42:18',
   },
   {
     id: 'ha-003',
@@ -84,7 +84,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'memory', value: 'high' },
       { key: 'ram_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025 14:08:52',
+    createdAt: 'Dec 25, 2026 14:08:52',
   },
   {
     id: 'ha-004',
@@ -95,7 +95,7 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'storage', value: 'nvme' },
       { key: 'disk_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025 16:25:41',
+    createdAt: 'Dec 25, 2026 16:25:41',
   },
   {
     id: 'ha-005',
@@ -103,7 +103,7 @@ const mockHostAggregates: HostAggregate[] = [
     availabilityZone: 'zone-c',
     hosts: ['bm-host-1'],
     metadata: [{ key: 'bare-metal', value: 'true' }],
-    createdAt: 'Dec 25, 2025 17:53:27',
+    createdAt: 'Dec 25, 2026 17:53:27',
   },
 ];
 
@@ -130,11 +130,11 @@ const mockAvailabilityZones: AvailabilityZone[] = [
    ---------------------------------------- */
 
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'availabilityZone', label: 'Availability Zone', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'availabilityZone', label: 'Availability Zone', type: 'text' },
 ];
 
-const azFilterFields: FilterField[] = [{ key: 'name', label: 'Name', type: 'text' }];
+const azFilterFields: FilterField[] = [{ id: 'name', label: 'Name', type: 'text' }];
 
 export function ComputeAdminHostAggregatesPage() {
   const navigate = useNavigate();
@@ -206,7 +206,7 @@ export function ComputeAdminHostAggregatesPage() {
     if (appliedFilters.length === 0) return hostAggregates;
     return hostAggregates.filter((ha) => {
       return appliedFilters.every((filter) => {
-        const value = String(ha[filter.field as keyof HostAggregate] || '').toLowerCase();
+        const value = String(ha[filter.fieldId as keyof HostAggregate] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });
@@ -223,7 +223,7 @@ export function ComputeAdminHostAggregatesPage() {
     if (azAppliedFilters.length === 0) return availabilityZones;
     return availabilityZones.filter((az) => {
       return azAppliedFilters.every((filter) => {
-        const value = String(az[filter.field as keyof AvailabilityZone] || '').toLowerCase();
+        const value = String(az[filter.fieldId as keyof AvailabilityZone] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

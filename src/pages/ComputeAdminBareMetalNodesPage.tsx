@@ -187,9 +187,9 @@ const mockBareMetalNodes: BareMetalNode[] = [
    ---------------------------------------- */
 
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -201,7 +201,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'powerState',
+    id: 'powerState',
     label: 'Power State',
     type: 'select',
     options: [
@@ -256,7 +256,7 @@ export function ComputeAdminBareMetalNodesPage() {
     if (appliedFilters.length === 0) return nodes;
     return nodes.filter((node) => {
       return appliedFilters.every((filter) => {
-        const value = String(node[filter.field as keyof BareMetalNode] || '').toLowerCase();
+        const value = String(node[filter.fieldId as keyof BareMetalNode] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -127,6 +127,8 @@ const clustersData: ClusterRow[] = [
 
 export function ContainerHomePage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const paginatedData = clustersData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
     useTabs();
@@ -169,13 +171,12 @@ export function ContainerHomePage() {
       sortable: true,
       render: (value: string) => (
         <div className="min-w-0">
-          <Link
-            to="/container/dashboard"
-            className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
+          <span
+            className="text-body-md text-[var(--color-text-default)] font-medium truncate block"
             title={value}
           >
             {value}
-          </Link>
+          </span>
         </div>
       ),
     },
@@ -331,13 +332,13 @@ export function ContainerHomePage() {
                 />
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={Math.ceil(clustersData.length / 10)}
+                  totalPages={Math.ceil(clustersData.length / pageSize)}
                   onPageChange={setCurrentPage}
                   totalItems={clustersData.length}
                 />
                 <Table<ClusterRow>
                   columns={columns}
-                  data={clustersData}
+                  data={paginatedData}
                   rowKey="id"
                   rowHeight="40px"
                 />

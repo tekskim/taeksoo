@@ -52,7 +52,7 @@ function AgentCard({
       onClick={onClick}
       className={`
         bg-[var(--color-surface-default)] 
-        border rounded-lg p-3
+        border rounded-[var(--radius-lg)] p-3
         flex flex-col gap-2
         cursor-pointer 
         transition-all duration-150

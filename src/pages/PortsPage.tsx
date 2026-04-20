@@ -229,14 +229,14 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'attachedTo', label: 'Attached to', type: 'text' },
-  { key: 'ownedNetwork', label: 'Network', type: 'text' },
-  { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
-  { key: 'floatingIp', label: 'Floating IP', type: 'text' },
-  { key: 'macAddress', label: 'MAC Address', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'attachedTo', label: 'Attached to', type: 'text' },
+  { id: 'ownedNetwork', label: 'Network', type: 'text' },
+  { id: 'fixedIp', label: 'Fixed IP', type: 'text' },
+  { id: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { id: 'macAddress', label: 'MAC Address', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -389,7 +389,7 @@ export function PortsPage() {
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((p) => {
         return appliedFilters.every((filter) => {
-          const value = String(p[filter.field as keyof Port] || '').toLowerCase();
+          const value = String(p[filter.fieldId as keyof Port] || '').toLowerCase();
           return value.includes(filter.value.toLowerCase());
         });
       });

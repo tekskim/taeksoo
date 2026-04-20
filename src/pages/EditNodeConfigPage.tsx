@@ -246,7 +246,7 @@ export function EditNodeConfigPage() {
               <SectionCard.Header title="Taints" />
               <SectionCard.Content>
                 <VStack gap={3}>
-                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                  <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                     <VStack gap={1.5}>
                       {taints.length > 0 && (
                         <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -328,7 +328,7 @@ export function EditNodeConfigPage() {
                       </p>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {labels.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -395,7 +395,7 @@ export function EditNodeConfigPage() {
                       </p>
                     </VStack>
 
-                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                       <VStack gap={1.5}>
                         {annotations.length > 0 && (
                           <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -457,7 +457,7 @@ export function EditNodeConfigPage() {
 
           {/* Summary Sidebar */}
           <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
               <WizardSummary
                 items={[
                   {

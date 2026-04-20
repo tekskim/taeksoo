@@ -112,7 +112,7 @@ const networkIOData = {
 
 function AlertCard({ title, value }: { title: string; value: number }) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-5 flex-1 flex flex-col">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex-1 flex flex-col">
       <span className="chartTitle">{title}</span>
       <div className="flex-1 flex items-center justify-center text-heading-h1 text-[var(--color-text-default)]">
         {value}

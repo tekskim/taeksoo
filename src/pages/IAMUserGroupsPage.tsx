@@ -376,7 +376,8 @@ export function IAMUserGroupsPage() {
                 <SearchInput
                   placeholder="Search user groups by attributes"
                   value={searchQuery}
-                  onChange={setSearchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onClear={() => setSearchQuery('')}
                   className="w-[var(--search-input-width)]"
                 />
                 <Button

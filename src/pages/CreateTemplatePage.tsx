@@ -542,9 +542,9 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
         {/* Summary Card */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={3}>
             <h5 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h5>
             <div className="flex flex-col">
@@ -594,7 +594,7 @@ interface PreSectionProps {
 
 function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
@@ -612,7 +612,7 @@ interface WritingSectionProps {
 
 function WritingSection({ title }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="h-8 flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
@@ -632,7 +632,7 @@ interface SkippedSectionProps {
 
 function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="flex items-center justify-between h-8">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
@@ -1407,7 +1407,7 @@ function ImageSection({
 
             {/* Storage Type Row - Bordered Container */}
             {(isV2 || createSystemDisk) && (
-              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3">
+              <div className="mt-3 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3">
                 <div className="flex items-end gap-2">
                   <VStack gap={1}>
                     <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
@@ -1452,11 +1452,11 @@ function ImageSection({
                 </span>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full flex flex-col items-start gap-2">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full flex flex-col items-start gap-2">
                 {dataDisks.map((disk) => (
                   <div
                     key={disk.id}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                   >
                     <div className="relative">
                       <button
@@ -1723,7 +1723,7 @@ function FlavorSection({
                     className="w-[var(--search-input-width)]"
                   />
                   <button
-                    className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)]"
+                    className="flex items-center justify-center w-[28px] h-[28px] border border-[var(--color-border-strong)] rounded-[var(--radius-md)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)]"
                     title="Download"
                   >
                     <IconDownload size={12} stroke={1.5} />
@@ -2323,7 +2323,7 @@ function NetworkSection({
                 Each selected network requires at least one Virtual LAN configuration. Each VLAN
                 represents a virtual network card (NIC) attached to the selected network.
               </span>
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {virtualLANs.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -2806,7 +2806,7 @@ function AdvancedSection({
                 </p>
               </VStack>
 
-              <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                 <VStack gap={1.5}>
                   {tags.length > 0 && (
                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">

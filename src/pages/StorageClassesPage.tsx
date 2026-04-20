@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -132,6 +132,7 @@ export function StorageClassesPage() {
     updateActiveTabLabel,
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,6 +145,24 @@ export function StorageClassesPage() {
   useEffect(() => {
     updateActiveTabLabel('Storage Classes');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return storageClassesData;
+    const q = searchTerm.toLowerCase();
+    return storageClassesData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.status.toLowerCase().includes(q) ||
+        item.provisioner.toLowerCase().includes(q) ||
+        item.reclaimPolicy.toLowerCase().includes(q) ||
+        item.volumeBindingMode.toLowerCase().includes(q) ||
+        String(item.allowVolumeExpansion).toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
 
   const navigate = useNavigate();
 
@@ -174,8 +193,8 @@ export function StorageClassesPage() {
   };
 
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(storageClassesData.length / rowsPerPage);
-  const paginatedData = storageClassesData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -410,6 +429,9 @@ export function StorageClassesPage() {
             <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search storage classes by attributes"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
@@ -457,7 +479,7 @@ export function StorageClassesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={storageClassesData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

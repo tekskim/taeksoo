@@ -16,7 +16,7 @@ import {
   VStack,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
-import { IconCalendar, IconExternalLink } from '@tabler/icons-react';
+import { IconCalendar } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 const mockUsers = [
@@ -65,13 +65,9 @@ function getPrincipalColumns(type: 'user' | 'service-account'): TableColumn<Mock
       sortable: true,
       render: (_val, row) => (
         <VStack gap={0.5} align="start" className="min-w-0">
-          <button
-            type="button"
-            className="inline-flex items-center gap-1 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline bg-transparent border-0 p-0 cursor-pointer text-left"
-          >
-            <span className="truncate">{row.username}</span>
-            <IconExternalLink size={12} className="shrink-0" aria-hidden />
-          </button>
+          <span className="text-label-md text-[var(--color-text-default)] truncate">
+            {row.username}
+          </span>
           <span className="inline-flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] truncate w-full">
             {row.userId}
             <InlineCopyId value={row.userId} />
@@ -216,8 +212,15 @@ export function GrantAccessDrawer({ isOpen, onClose, roleName, onGrant }: GrantA
     return filteredUsers.slice(start, start + PRINCIPAL_PAGE_SIZE);
   }, [filteredUsers, principalCurrentPage, principalTotalPages]);
 
+  const [scheduledDateError, setScheduledDateError] = useState<string | null>(null);
+
   const handleGrant = () => {
     if (!selectedPrincipal || !reason.trim()) return;
+    if (startTimeType === 'scheduled' && !scheduledDate) {
+      setScheduledDateError('Please select a scheduled date.');
+      return;
+    }
+    setScheduledDateError(null);
     const payload = {
       roleName,
       principalType,
@@ -227,7 +230,6 @@ export function GrantAccessDrawer({ isOpen, onClose, roleName, onGrant }: GrantA
       reason: reason.trim(),
     };
     onGrant?.(payload);
-    console.log('Grant access', payload);
     onClose();
   };
 
@@ -310,7 +312,20 @@ export function GrantAccessDrawer({ isOpen, onClose, roleName, onGrant }: GrantA
                 ]}
               />
               {startTimeType === 'scheduled' && (
-                <ScheduleDateButton value={scheduledDate} onChange={setScheduledDate} />
+                <VStack gap={2} className="w-full">
+                  <ScheduleDateButton
+                    value={scheduledDate}
+                    onChange={(d) => {
+                      setScheduledDate(d);
+                      setScheduledDateError(null);
+                    }}
+                  />
+                  {scheduledDateError && (
+                    <span className="text-body-sm text-[var(--color-state-danger)]">
+                      {scheduledDateError}
+                    </span>
+                  )}
+                </VStack>
               )}
             </VStack>
           </FormField.Control>

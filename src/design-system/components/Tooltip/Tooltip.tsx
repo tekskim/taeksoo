@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 /* ----------------------------------------
@@ -35,6 +35,7 @@ export function Tooltip({
   disabled = false,
   ...rest
 }: TooltipProps) {
+  const tooltipId = useId();
   const [isVisible, setIsVisible] = useState(false);
   const [isPositioned, setIsPositioned] = useState(false);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -200,6 +201,7 @@ export function Tooltip({
         onFocus={handleMouseEnter}
         onBlur={handleMouseLeave}
         className="inline-flex"
+        aria-describedby={isVisible ? tooltipId : undefined}
       >
         {children}
       </div>
@@ -208,6 +210,7 @@ export function Tooltip({
         createPortal(
           <div
             ref={tooltipRef}
+            id={tooltipId}
             role="tooltip"
             className="fixed z-[var(--z-tooltip)] pointer-events-none transition-opacity duration-[var(--duration-fast)]"
             style={{

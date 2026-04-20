@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -93,23 +93,23 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     name: 'poddisruptionbudgetName',
     status: 'OK',
     namespace: 'default',
-    createdAt: 'Jul 25, 2025 10:32:16',
+    createdAt: 'Jul 25, 2026 10:32:16',
     labels: { app: 'web' },
     annotations: { description: 'PDB for web application' },
     minAvailable: '2',
     maxUnavailable: '',
     selector: { app: 'web', tier: 'frontend' },
     matchingPods: [
-      { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2025 10:32:16' },
-      { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2025 10:32:16' },
-      { name: 'web-deployment-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2025 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2026 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2026 10:32:16' },
+      { name: 'web-deployment-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2026 10:32:16' },
     ],
     conditions: [
       {
         condition: 'ConditionName',
         size: 'True',
         message: '[MessageHeader] Message text',
-        updated: 'Nov 10, 2025',
+        updated: 'Nov 10, 2026',
       },
     ],
     recentEvents: [
@@ -144,7 +144,7 @@ const mockPdbData: Record<string, PodDisruptionBudgetData> = {
     name: 'web-pdb',
     status: 'True',
     namespace: 'production',
-    createdAt: 'Nov 9, 2025 18:04:44',
+    createdAt: 'Nov 9, 2026 18:04:44',
     labels: { env: 'production' },
     annotations: {},
     minAvailable: '',
@@ -162,6 +162,8 @@ const operatorOptions = [
   { value: 'Exists', label: 'Exists' },
   { value: 'Does Not Exist', label: 'Does Not Exist' },
 ];
+
+const EVENTS_PAGE_SIZE = 10;
 
 /* ----------------------------------------
    Component
@@ -187,6 +189,7 @@ export function PodDisruptionBudgetDetailPage() {
   const [matchingPodsPage, setMatchingPodsPage] = useState(1);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [eventsPage, setEventsPage] = useState(1);
+  const [eventsSearchQuery, setEventsSearchQuery] = useState('');
 
   // Get PDB data first (moved up for tab label)
   const pdbData = mockPdbData[pdbId || '1'] || mockPdbData['1'];
@@ -226,6 +229,32 @@ export function PodDisruptionBudgetDetailPage() {
     matchingPodsPage * matchingPodsPerPage
   );
 
+  const filteredRecentEvents = (() => {
+    const q = eventsSearchQuery.trim().toLowerCase();
+    if (!q) return pdbData.recentEvents;
+    return pdbData.recentEvents.filter((event) => {
+      const fields = [
+        event.id,
+        event.lastSeen,
+        event.type,
+        event.reason,
+        event.subobject,
+        event.source,
+        event.message,
+        event.firstSeen,
+        String(event.count),
+        event.name,
+      ];
+      return fields.some((field) => String(field).toLowerCase().includes(q));
+    });
+  })();
+
+  const totalEventsPages = Math.max(1, Math.ceil(filteredRecentEvents.length / EVENTS_PAGE_SIZE));
+  const paginatedEvents = filteredRecentEvents.slice(
+    (eventsPage - 1) * EVENTS_PAGE_SIZE,
+    eventsPage * EVENTS_PAGE_SIZE
+  );
+
   // Table columns for matching pods
   const matchingPodsColumns: TableColumn<MatchingPod>[] = [
     {
@@ -234,13 +263,13 @@ export function PodDisruptionBudgetDetailPage() {
       flex: 1,
       sortable: true,
       render: (value: string) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
-          onClick={() => navigate(`/container/pods/${value}`)}
+        <Link
+          to={`/container/pods/${value}`}
+          className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
           title={value}
         >
           {value}
-        </span>
+        </Link>
       ),
     },
     {
@@ -683,7 +712,7 @@ export function PodDisruptionBudgetDetailPage() {
 
                     <Pagination
                       currentPage={matchingPodsPage}
-                      totalPages={Math.max(totalMatchingPodsPages, 5)}
+                      totalPages={Math.max(1, totalMatchingPodsPages)}
                       onPageChange={setMatchingPodsPage}
                       totalItems={pdbData.matchingPods.length}
                     />
@@ -854,6 +883,11 @@ export function PodDisruptionBudgetDetailPage() {
                     placeholder="Search events by attributes"
                     size="sm"
                     className="w-[280px]"
+                    value={eventsSearchQuery}
+                    onChange={(e) => {
+                      setEventsSearchQuery(e.target.value);
+                      setEventsPage(1);
+                    }}
                   />
                   <div className="w-px h-5 bg-[var(--color-border-default)]" />
                   <HStack gap={1}>
@@ -879,9 +913,9 @@ export function PodDisruptionBudgetDetailPage() {
                 {/* Pagination */}
                 <Pagination
                   currentPage={eventsPage}
-                  totalPages={Math.max(Math.ceil(pdbData.recentEvents.length / 10), 1)}
+                  totalPages={totalEventsPages}
                   onPageChange={setEventsPage}
-                  totalItems={pdbData.recentEvents.length}
+                  totalItems={filteredRecentEvents.length}
                   selectedCount={selectedEvents.length}
                 />
 
@@ -889,11 +923,14 @@ export function PodDisruptionBudgetDetailPage() {
                 {pdbData.recentEvents.length > 0 ? (
                   <Table<RecentEvent>
                     columns={recentEventsColumns}
-                    data={pdbData.recentEvents}
+                    data={paginatedEvents}
                     rowKey="id"
                     selectable
                     selectedKeys={selectedEvents}
                     onSelectionChange={setSelectedEvents}
+                    emptyMessage={
+                      filteredRecentEvents.length === 0 ? 'No matching events.' : undefined
+                    }
                   />
                 ) : (
                   <p className="text-body-md text-[var(--color-text-subtle)]">No recent events.</p>

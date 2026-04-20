@@ -111,7 +111,7 @@ export function EntryPage() {
                 <button
                   type="button"
                   onClick={() => navigate(card.path)}
-                  className="group w-full aspect-[4/3] bg-[var(--color-surface-subtle)] rounded-lg flex items-center justify-center cursor-pointer border-none p-0 transition-all duration-200 hover:shadow-lg hover:brightness-[0.97]"
+                  className="group w-full aspect-[4/3] bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] flex items-center justify-center cursor-pointer border-none p-0 transition-all duration-200 hover:shadow-lg hover:brightness-[0.97]"
                 >
                   <img
                     src={card.iconSrc}

@@ -83,7 +83,7 @@ function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }
   if (status === 'done') {
     return (
       <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
+        <IconCheck size={10} stroke={2} className="text-[var(--color-text-on-primary)]" />
       </div>
     );
   }
@@ -149,9 +149,9 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         {/* Inner subtle-bg container */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
           <VStack gap={4}>
             <span className="text-heading-h5">Summary</span>
             <VStack gap={0}>
@@ -425,7 +425,7 @@ function DataSection({
               <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {dataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -495,7 +495,7 @@ function DataSection({
               <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {stringDataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
@@ -563,7 +563,7 @@ function DataSection({
               <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {tlsDataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
@@ -631,7 +631,7 @@ function DataSection({
               <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {httpBasicAuthDataEntries.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr] gap-1 w-full">
@@ -670,7 +670,7 @@ function DataSection({
               <span className="text-label-lg text-[var(--color-text-default)]">Data</span>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={3}>
                 <VStack gap={2}>
                   <span className="block text-label-sm text-[var(--color-text-default)]">
@@ -756,7 +756,7 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">
@@ -818,7 +818,7 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-1 w-full">

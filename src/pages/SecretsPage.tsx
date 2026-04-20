@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -103,6 +103,7 @@ export function SecretsPage() {
     updateActiveTabLabel,
   } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([
     { key: 'Name', value: 'a' },
@@ -119,6 +120,22 @@ export function SecretsPage() {
   useEffect(() => {
     updateActiveTabLabel('Secrets');
   }, [updateActiveTabLabel]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return secretsData;
+    const q = searchTerm.toLowerCase();
+    return secretsData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.namespace?.toLowerCase().includes(q) ||
+        item.type?.toLowerCase().includes(q) ||
+        item.data?.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -137,8 +154,8 @@ export function SecretsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(secretsData.length / rowsPerPage);
-  const paginatedData = secretsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -376,6 +393,9 @@ export function SecretsPage() {
             <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search secrets by attributes"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 size="sm"
                 className="w-[var(--search-input-width)]"
               />
@@ -421,7 +441,7 @@ export function SecretsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={secretsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

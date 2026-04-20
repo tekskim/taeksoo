@@ -216,9 +216,9 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
   {
-    key: 'type',
+    id: 'type',
     label: 'Type',
     type: 'select',
     options: [
@@ -228,10 +228,10 @@ const filterFields: FilterField[] = [
       { value: 'HDD', label: 'HDD' },
     ],
   },
-  { key: 'diskTag', label: 'Disk tag', type: 'text' },
-  { key: 'attachedTo', label: 'Attached to', type: 'text' },
+  { id: 'diskTag', label: 'Disk tag', type: 'text' },
+  { id: 'attachedTo', label: 'Attached to', type: 'text' },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -329,7 +329,7 @@ export function ComputeAdminVolumesPage() {
 
     return volumes.filter((v) => {
       return appliedFilters.every((filter) => {
-        const value = String(v[filter.field as keyof Volume] || '').toLowerCase();
+        const value = String(v[filter.fieldId as keyof Volume] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

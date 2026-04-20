@@ -381,9 +381,9 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         {/* Scrollable content area */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
           <VStack gap={4}>
             <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
               Summary
@@ -595,7 +595,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {/* Bordered container for labels */}
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -658,7 +658,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {/* Bordered container for annotations */}
-            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
               <VStack gap={1.5}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -1838,7 +1838,7 @@ export function CreateDaemonSetPage() {
                         </VStack>
 
                         {/* Labels container */}
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podLabels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -1906,7 +1906,7 @@ export function CreateDaemonSetPage() {
                         </p>
 
                         {/* Annotations container */}
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {podAnnotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
@@ -2106,7 +2106,7 @@ export function CreateDaemonSetPage() {
                           Nameservers
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {nameservers.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
@@ -2165,7 +2165,7 @@ export function CreateDaemonSetPage() {
                           Search Domains
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {searchDomains.length > 0 && (
                               <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
@@ -2224,7 +2224,7 @@ export function CreateDaemonSetPage() {
                           Resolver Options
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {resolverOptions.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
@@ -2301,7 +2301,7 @@ export function CreateDaemonSetPage() {
                           Host Aliases
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {hostAliases.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
@@ -2387,7 +2387,7 @@ export function CreateDaemonSetPage() {
                         />
                       </RadioGroup>
                       {isV2 && (
-                        <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                        <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                           <VStack gap={6}>
                             <span className="text-label-lg text-[var(--color-text-default)] italic">
                               Specific node(s)
@@ -2430,7 +2430,7 @@ export function CreateDaemonSetPage() {
                         </VStack>
                       )}
                       {isV2 && (
-                        <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                        <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                           <VStack gap={2}>
                             <VStack gap={1}>
                               <span className="text-label-lg text-[var(--color-text-default)] italic">
@@ -2446,7 +2446,7 @@ export function CreateDaemonSetPage() {
                               {nodeAffinityTerms.map((term, termIndex) => (
                                 <div
                                   key={termIndex}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                                 >
                                   <VStack gap={6} className="w-full">
                                     <VStack gap={2} className="w-full">
@@ -2495,7 +2495,7 @@ export function CreateDaemonSetPage() {
                                         width="sm"
                                       />
                                     </VStack>
-                                    <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                       <VStack gap={1.5}>
                                         {term.matchExpressions.length > 0 && (
                                           <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -2626,7 +2626,7 @@ export function CreateDaemonSetPage() {
                           {nodeAffinityTerms.map((term, termIndex) => (
                             <div
                               key={termIndex}
-                              className="relative border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                              className="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                             >
                               <button
                                 onClick={() => {
@@ -2697,7 +2697,7 @@ export function CreateDaemonSetPage() {
                                   </VStack>
                                 </VStack>
 
-                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                   <VStack gap={2}>
                                     {term.matchExpressions.length > 0 && (
                                       <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
@@ -2842,7 +2842,7 @@ export function CreateDaemonSetPage() {
                       {podAffinityTerms.map((term, termIndex) => (
                         <div
                           key={termIndex}
-                          className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
+                          className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full"
                         >
                           <VStack gap={6}>
                             {/* Type Section */}
@@ -3054,7 +3054,7 @@ export function CreateDaemonSetPage() {
                                 />
 
                                 {/* Selected Namespace Chips */}
-                                <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center -mt-1">
+                                <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center -mt-1">
                                   {term.selectedNamespaces.length > 0 ? (
                                     term.selectedNamespaces.map((nsId) => {
                                       const ns = MOCK_NAMESPACES.find((n) => n.id === nsId);
@@ -3086,7 +3086,7 @@ export function CreateDaemonSetPage() {
                             )}
 
                             {/* Match Expressions / Rules Section */}
-                            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {term.matchExpressions.length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
@@ -3319,7 +3319,7 @@ export function CreateDaemonSetPage() {
                           Tolerations
                         </span>
 
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5}>
                             {tolerations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
@@ -3489,7 +3489,7 @@ export function CreateDaemonSetPage() {
                       {volumes.map((volume, index) => (
                         <div
                           key={index}
-                          className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                          className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3 w-full"
                         >
                           <VStack gap={6}>
                             {/* Header with type title and close button */}
@@ -3960,7 +3960,7 @@ export function CreateDaemonSetPage() {
                   const showRequestPath = options?.showRequestPath ?? false;
                   const showHeaders = options?.showHeaders ?? false;
                   return (
-                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                    <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                       <VStack gap={6}>
                         <span className="text-label-lg text-[var(--color-text-default)] italic">
                           {label}
@@ -4316,7 +4316,7 @@ export function CreateDaemonSetPage() {
                             <span className="text-label-lg text-[var(--color-text-default)]">
                               Request Headers
                             </span>
-                            <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                               <VStack gap={1.5}>
                                 {(probe?.httpGet?.httpHeaders || []).length > 0 && (
                                   <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
@@ -4665,7 +4665,7 @@ export function CreateDaemonSetPage() {
                     <SectionCard className="pb-4">
                       <SectionCard.Header title="Environment variables" />
                       <SectionCard.Content>
-                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                        <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                           <VStack gap={1.5} className="w-full">
                             {(config.envVars || []).map((envVar, index) => {
                               const hasFourCols =
@@ -4692,7 +4692,7 @@ export function CreateDaemonSetPage() {
                               return (
                                 <div
                                   key={index}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 py-3 w-full"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                                 >
                                   <VStack gap={1}>
                                     <div className={`grid ${gridCols} gap-2 w-full items-center`}>
@@ -4960,7 +4960,7 @@ export function CreateDaemonSetPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
+                                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 pt-3 pb-4 w-full">
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5056,7 +5056,7 @@ export function CreateDaemonSetPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
-                                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                     <VStack gap={1.5}>
                                       {(
                                         config.lifecycleHooks?.postStart?.httpGet?.httpHeaders || []
@@ -5219,7 +5219,7 @@ export function CreateDaemonSetPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Get
                                   </span>
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full">
+                                  <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] px-4 pt-3 pb-4 w-full">
                                     <VStack gap={3}>
                                       <VStack gap={2}>
                                         <span className="text-label-lg text-[var(--color-text-default)]">
@@ -5315,7 +5315,7 @@ export function CreateDaemonSetPage() {
                                   <span className="text-label-lg text-[var(--color-text-default)]">
                                     HTTP Header
                                   </span>
-                                  <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                     <VStack gap={1.5}>
                                       {(config.lifecycleHooks?.preStop?.httpGet?.httpHeaders || [])
                                         .length > 0 && (
@@ -5505,7 +5505,7 @@ export function CreateDaemonSetPage() {
                               </>
                             )}
                             {!isV2 && config.readinessProbe?.type !== 'none' && (
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                              <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                                 <VStack gap={6}>
                                   {/* Row 1: Check Port/Command + Check Interval */}
                                   <div className="flex gap-6 w-full">
@@ -5826,7 +5826,7 @@ export function CreateDaemonSetPage() {
                                       <span className="text-label-lg text-[var(--color-text-default)]">
                                         Request Headers
                                       </span>
-                                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full">
+                                      <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full">
                                         <VStack gap={1.5}>
                                           {(config.readinessProbe?.httpGet?.httpHeaders || [])
                                             .length > 0 && (
@@ -6015,7 +6015,7 @@ export function CreateDaemonSetPage() {
                             {!isV2 &&
                               config.livenessProbe?.type !== 'none' &&
                               config.livenessProbe?.type && (
-                                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                                   <VStack gap={6}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
@@ -6317,7 +6317,7 @@ export function CreateDaemonSetPage() {
                             {!isV2 &&
                               config.startupProbe?.type !== 'none' &&
                               config.startupProbe?.type && (
-                                <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                                <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-4 w-full">
                                   <VStack gap={6}>
                                     {/* Row 1: Check Port/Command + Check Interval */}
                                     <div className="flex gap-6 w-full">
@@ -6890,7 +6890,7 @@ export function CreateDaemonSetPage() {
                                 ) => (
                                   <div
                                     key={volIndex}
-                                    className="bg-[var(--color-surface-subtle)] rounded-[6px] px-4 py-3 w-full"
+                                    className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 w-full"
                                   >
                                     <VStack gap={2}>
                                       <span className="text-label-lg text-[var(--color-text-default)]">

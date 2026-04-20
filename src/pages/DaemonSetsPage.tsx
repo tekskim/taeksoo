@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -163,12 +163,33 @@ export function DaemonSetsPage() {
     { key: 'Name', value: 'a' },
   ]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
   const navigate = useNavigate();
+
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return daemonSetsData;
+    const q = searchTerm.toLowerCase();
+    return daemonSetsData.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.namespace?.toLowerCase().includes(q) ||
+        item.status?.toLowerCase().includes(q) ||
+        item.image?.toLowerCase().includes(q) ||
+        String(item.ready).includes(q) ||
+        String(item.current).includes(q) ||
+        String(item.desired).includes(q) ||
+        item.createdAt?.toLowerCase().includes(q)
+    );
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   // Update tab label to match the page title (most recent breadcrumb)
   useEffect(() => {
@@ -192,8 +213,8 @@ export function DaemonSetsPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(daemonSetsData.length / rowsPerPage);
-  const paginatedData = daemonSetsData.slice(
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -441,6 +462,9 @@ export function DaemonSetsPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 placeholder="Search DaemonSets by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
@@ -495,7 +519,7 @@ export function DaemonSetsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={daemonSetsData.length}
+          totalItems={filteredData.length}
           selectedCount={selectedRows.length}
         />
 

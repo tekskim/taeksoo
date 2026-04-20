@@ -74,7 +74,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   return (
     <div
-      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-[var(--radius-lg)] shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="text-label-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">

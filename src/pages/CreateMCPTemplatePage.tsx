@@ -402,7 +402,7 @@ export function CreateMCPTemplatePage() {
                           <VStack gap={2} className="w-full">
                             {/* STDIO Option */}
                             <div
-                              className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
+                              className={`w-full p-4 border rounded-[var(--radius-lg)] cursor-pointer transition-colors ${
                                 templateType === 'stdio'
                                   ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
@@ -434,7 +434,7 @@ export function CreateMCPTemplatePage() {
 
                             {/* HTTP Option */}
                             <div
-                              className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
+                              className={`w-full p-4 border rounded-[var(--radius-lg)] cursor-pointer transition-colors ${
                                 templateType === 'http'
                                   ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
@@ -663,7 +663,7 @@ export function CreateMCPTemplatePage() {
                             {envVariables.map((env, index) => (
                               <div
                                 key={env.id}
-                                className="w-full border border-[var(--color-border-default)] rounded-lg p-4"
+                                className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4"
                               >
                                 <VStack gap={4}>
                                   <div className="grid grid-cols-2 gap-4">
@@ -784,7 +784,7 @@ export function CreateMCPTemplatePage() {
                             {availableTools.map((tool) => (
                               <div
                                 key={tool.id}
-                                className="w-full border border-[var(--color-border-default)] rounded-lg p-4"
+                                className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4"
                               >
                                 <VStack gap={4}>
                                   {/* Tool Tags */}
@@ -863,7 +863,7 @@ export function CreateMCPTemplatePage() {
                                     {tool.parameters.map((param, paramIndex) => (
                                       <div
                                         key={paramIndex}
-                                        className="w-full bg-[var(--color-surface-subtle)] rounded-lg p-4"
+                                        className="w-full bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4"
                                       >
                                         <VStack gap={3}>
                                           <div className="grid grid-cols-2 gap-4">
@@ -920,7 +920,7 @@ export function CreateMCPTemplatePage() {
                                     <label className="text-label-lg text-[var(--color-text-default)]">
                                       Preview (JSON Schema)
                                     </label>
-                                    <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-3 font-mono text-body-md text-[var(--color-text-subtle)]">
+                                    <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-3 font-mono text-body-md text-[var(--color-text-subtle)]">
                                       <pre className="whitespace-pre-wrap">
                                         {`{
   "tool": 10,

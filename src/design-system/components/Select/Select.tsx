@@ -75,6 +75,7 @@ export function Select({
   const id = useId();
   const triggerId = `select-trigger-${id}`;
   const listboxId = `select-listbox-${id}`;
+  const optionIdPrefix = `select-option-${id}`;
 
   // State
   const [isOpen, setIsOpen] = useState(false);
@@ -326,6 +327,11 @@ export function Select({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-controls={listboxId}
+        aria-activedescendant={
+          isOpen && focusedIndex >= 0
+            ? `${optionIdPrefix}-${enabledOptions[focusedIndex]?.value}`
+            : undefined
+        }
         aria-invalid={!!error}
         disabled={disabled}
         onClick={() => (isOpen ? closeDropdown() : openDropdown())}
@@ -426,6 +432,7 @@ export function Select({
                 return (
                   <div
                     key={option.value}
+                    id={`${optionIdPrefix}-${option.value}`}
                     role="option"
                     aria-selected={isSelected}
                     aria-disabled={option.disabled}

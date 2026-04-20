@@ -193,7 +193,7 @@ function StatCard({ label, value, variant = 'default' }: StatCardProps) {
     value === '0' || value === 0 ? 'text-[var(--color-text-muted)]' : colorStyles[variant];
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3">
       <div className="flex flex-col gap-1.5">
         <span className={`text-label-sm ${textColor}`}>{label}</span>
         <span className={`text-heading-h3 ${textColor}`}>{value}</span>
@@ -213,7 +213,7 @@ interface ResourceCardProps {
 
 function ResourceCard({ label, value }: ResourceCardProps) {
   return (
-    <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
+    <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 flex flex-col gap-1.5">
       <p className="text-body-sm text-[var(--color-text-subtle)]">{label}</p>
       <p className="text-heading-h3 text-[var(--color-text-default)]">{value}</p>
     </div>
@@ -331,7 +331,7 @@ export function IAMHomePage() {
 
             <div className="grid grid-cols-2 gap-4">
               {/* Today's Sign-ins */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 flex items-start justify-between">
                 <VStack gap={3}>
                   <p className="text-label-lg text-[var(--color-text-default)]">Today's Sign-ins</p>
                   <VStack gap={2}>
@@ -359,7 +359,7 @@ export function IAMHomePage() {
               </div>
 
               {/* MFA Adoption */}
-              <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
+              <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 flex items-start justify-between">
                 <VStack gap={3}>
                   <p className="text-label-lg text-[var(--color-text-default)]">MFA adoption</p>
                   <VStack gap={2}>

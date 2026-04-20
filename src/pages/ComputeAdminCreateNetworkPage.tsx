@@ -92,11 +92,11 @@ function SummarySidebar({
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
 
         {/* Quota Section */}
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--radius-lg)] p-4 flex flex-col gap-4">
           <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
           {/* Network Quota */}
@@ -109,14 +109,14 @@ function SummarySidebar({
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
-                className="bg-[var(--color-state-success)] h-1 rounded-lg shrink-0 -mr-1 z-[3]"
+                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
                 style={{ width: '20%' }}
               />
               <div
-                className="bg-[var(--color-state-success-bg)] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
+                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
                 style={{ width: '10%' }}
               />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-lg -mr-1 z-[1]" />
+              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
             </div>
           </div>
 
@@ -130,14 +130,14 @@ function SummarySidebar({
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
-                className="bg-[var(--color-state-success)] h-1 rounded-lg shrink-0 -mr-1 z-[3]"
+                className="bg-[var(--color-state-success)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[3]"
                 style={{ width: '25%' }}
               />
               <div
-                className="bg-[var(--color-state-success-bg)] h-1 rounded-lg shrink-0 -mr-1 z-[2]"
+                className="bg-[var(--color-state-success-bg)] h-1 rounded-[var(--radius-lg)] shrink-0 -mr-1 z-[2]"
                 style={{ width: '5%' }}
               />
-              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-lg -mr-1 z-[1]" />
+              <div className="bg-[var(--color-border-subtle)] flex-1 h-1 rounded-[var(--radius-lg)] -mr-1 z-[1]" />
             </div>
           </div>
         </div>
@@ -497,7 +497,7 @@ export default function CreateNetworkPage() {
                               key={page}
                               className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
                                 page === tenantPage
-                                  ? 'bg-[var(--color-action-primary)] text-white'
+                                  ? 'bg-[var(--color-action-primary)] text-[var(--color-text-on-primary)]'
                                   : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
                               }`}
                               onClick={() => setTenantPage(page)}

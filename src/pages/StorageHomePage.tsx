@@ -305,7 +305,7 @@ function InventoryStatBox({ value, label }: InventoryStatBoxProps) {
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
       <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -740,7 +740,7 @@ export function StorageHomePage() {
 
       {/* Full Screen Chart Overlay */}
       {fullScreenChart && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-8">
+        <div className="fixed inset-0 z-50 bg-[color-mix(in_srgb,var(--color-text-default)_50%,transparent)] flex items-center justify-center p-8">
           <div className="w-full max-w-[90vw] h-[70vh] flex items-center justify-center">
             <LineChart
               title={fullScreenChart.title}

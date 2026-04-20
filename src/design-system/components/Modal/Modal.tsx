@@ -127,7 +127,7 @@ export function Modal({
 
   const backdropClasses = twMerge(
     'fixed inset-0 z-[var(--z-modal)]',
-    'bg-black/60',
+    'bg-[color-mix(in_srgb,var(--color-text-default)_60%,transparent)]',
     'flex items-center justify-center',
     'transition-opacity duration-200 ease-out',
     isAnimating ? 'opacity-100' : 'opacity-0'
