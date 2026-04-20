@@ -74,14 +74,28 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
 interface SummaryStatBoxProps {
   value: number;
   label: string;
+  onClick?: () => void;
 }
 
-function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
+function SummaryStatBox({ value, label, onClick }: SummaryStatBoxProps) {
   const textColor =
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
+  const isClickable = !!onClick;
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent">
+    <div
+      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
+      onClick={onClick}
+      role={isClickable ? 'button' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={
+        isClickable
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') onClick?.();
+            }
+          : undefined
+      }
+    >
       <div className={`text-heading-h3 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -284,12 +298,28 @@ export function ComputeAdminHomePage() {
             </div>
             <div className="space-y-2 mt-auto">
               <div className="flex gap-2">
-                <SummaryStatBox value={10} label="Active" />
-                <SummaryStatBox value={0} label="Error" />
+                <SummaryStatBox
+                  value={10}
+                  label="Active"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
+                <SummaryStatBox
+                  value={0}
+                  label="Error"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
               </div>
               <div className="flex gap-2">
-                <SummaryStatBox value={0} label="Stopped" />
-                <SummaryStatBox value={3} label="Others" />
+                <SummaryStatBox
+                  value={0}
+                  label="Stopped"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
+                <SummaryStatBox
+                  value={3}
+                  label="Others"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
               </div>
             </div>
           </Card>
@@ -302,12 +332,28 @@ export function ComputeAdminHomePage() {
             </div>
             <div className="space-y-2 mt-auto">
               <div className="flex gap-2">
-                <SummaryStatBox value={6} label="Active" />
-                <SummaryStatBox value={1} label="Error" />
+                <SummaryStatBox
+                  value={6}
+                  label="Active"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
+                <SummaryStatBox
+                  value={1}
+                  label="Error"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
               </div>
               <div className="flex gap-2">
-                <SummaryStatBox value={0} label="Stopped" />
-                <SummaryStatBox value={1} label="Others" />
+                <SummaryStatBox
+                  value={0}
+                  label="Stopped"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
+                <SummaryStatBox
+                  value={1}
+                  label="Others"
+                  onClick={() => navigate('/compute-admin/instances')}
+                />
               </div>
             </div>
           </Card>

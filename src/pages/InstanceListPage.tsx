@@ -1787,7 +1787,6 @@ export function InstanceListPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
-                disabled
               />
             </ListToolbar.Actions>
           }
