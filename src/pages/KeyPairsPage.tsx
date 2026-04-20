@@ -112,8 +112,8 @@ const mockKeyPairs: KeyPair[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'fingerprint', label: 'Fingerprint', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'fingerprint', label: 'Fingerprint', type: 'text' },
 ];
 
 export function KeyPairsPage() {
@@ -183,7 +183,7 @@ export function KeyPairsPage() {
 
     return keyPairs.filter((kp) => {
       return appliedFilters.every((filter) => {
-        const value = String(kp[filter.field as keyof KeyPair] || '').toLowerCase();
+        const value = String(kp[filter.fieldId as keyof KeyPair] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

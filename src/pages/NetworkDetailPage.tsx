@@ -23,8 +23,7 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
-  Popover,
-  Badge,
+  BadgeList,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -318,35 +317,54 @@ const defaultNetworkDetail: NetworkDetail = {
   segmentationId: '-',
 };
 
-const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `29tg234${String(i).padStart(3, '0')}`,
-  name: `subnet-1`,
-  status: 'active' as SubnetStatus,
-  cidr: '192.168.16/24',
-  gatewayIp: '192.168.11',
-  dhcpEnabled: true,
-  portCount: 2,
-  createdAt: 'Jan 15, 2025 12:22:26',
-}));
+/** Private 192.168.n.0/24 subnets (n = 1…115) — gateway .1 */
+const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => {
+  const thirdOctet = i + 1;
+  const cidr = `192.168.${thirdOctet}.0/24`;
+  return {
+    id: `subnet-${String(i + 1).padStart(5, '0')}`,
+    name: `subnet-${thirdOctet}`,
+    status: 'active' as SubnetStatus,
+    cidr,
+    gatewayIp: `192.168.${thirdOctet}.1`,
+    dhcpEnabled: true,
+    portCount: 2 + (i % 8),
+    createdAt: 'Jan 15, 2025 12:22:26',
+  };
+});
 
-const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
-  id: `port-${String(i + 1).padStart(3, '0')}`,
-  name: `port-01`,
-  status: 'active' as const,
-  attachedTo: {
-    name: 'web-01',
-    id: '29tgj234',
-    type: i % 3 === 0 ? ('router' as const) : ('instance' as const),
-  },
-  ownedNetwork: {
-    name: 'net-01',
-    id: '29tgj234',
-  },
-  securityGroups: ['default-sg', 'web-sg', 'db-sg', 'app-sg', 'monitor-sg'],
-  fixedIp: '10760.91',
-  floatingIp: '10765.39',
-  macAddress: 'fa:16:3e:34:85:32',
-}));
+const macForPortIndex = (i: number) => {
+  const b = (i >> 8) & 0xff;
+  const c = i & 0xff;
+  const d = (i * 17) & 0xff;
+  return `fa:16:3e:${b.toString(16).padStart(2, '0')}:${c.toString(16).padStart(2, '0')}:${d.toString(16).padStart(2, '0')}`;
+};
+
+const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => {
+  const thirdOctet = i + 1;
+  const hostOctet = 10 + (i % 240);
+  return {
+    id: `port-${String(i + 1).padStart(5, '0')}`,
+    name: `port-${String(i + 1).padStart(3, '0')}`,
+    status: 'active' as const,
+    attachedTo: {
+      name: i % 3 === 0 ? `router-${i + 1}` : `vm-web-${String(i + 1).padStart(3, '0')}`,
+      id:
+        i % 3 === 0
+          ? `router-${String(i + 1).padStart(5, '0')}`
+          : `inst-${String(i + 1).padStart(5, '0')}`,
+      type: i % 3 === 0 ? ('router' as const) : ('instance' as const),
+    },
+    ownedNetwork: {
+      name: 'net-01',
+      id: 'net-001',
+    },
+    securityGroups: ['default-sg', 'web-sg', 'db-sg', 'app-sg', 'monitor-sg'],
+    fixedIp: `192.168.${thirdOctet}.${hostOctet}`,
+    floatingIp: i % 5 === 0 ? '-' : `203.0.113.${(i % 200) + 1}`,
+    macAddress: macForPortIndex(i),
+  };
+});
 
 /* ----------------------------------------
    Status Mapping
@@ -649,8 +667,8 @@ export default function NetworkDetailPage() {
               <Link
                 to={
                   row.attachedTo.type === 'router'
-                    ? `/routers/${row.attachedTo.id}`
-                    : `/instances/${row.attachedTo.id}`
+                    ? `/compute/routers/${row.attachedTo.id}`
+                    : `/compute/instances/${row.attachedTo.id}`
                 }
                 className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                 onClick={(e) => e.stopPropagation()}
@@ -711,44 +729,15 @@ export default function NetworkDetailPage() {
       key: 'securityGroups',
       label: 'SG',
       flex: 1,
-      render: (_, row) => {
-        const sgCount = row.securityGroups.length;
-        const displaySg = row.securityGroups[0];
-        const additionalCount = sgCount - 1;
-        return (
-          <span className="flex items-center gap-1 text-[var(--color-text-default)]">
-            {displaySg}
-            {additionalCount > 0 && (
-              <span className="ml-auto">
-                <Popover
-                  trigger="hover"
-                  position="bottom"
-                  delay={100}
-                  hideDelay={100}
-                  content={
-                    <div className="p-3 min-w-[120px] max-w-[320px]">
-                      <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                        All Security Groups ({sgCount})
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {row.securityGroups.map((sg, i) => (
-                          <Badge key={i} theme="white" size="sm">
-                            {sg}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                    +{additionalCount}
-                  </span>
-                </Popover>
-              </span>
-            )}
-          </span>
-        );
-      },
+      render: (_, row) => (
+        <BadgeList
+          items={row.securityGroups}
+          maxVisible={2}
+          theme="white"
+          overflowAlign="right"
+          popoverTitle={`All Security Groups (${row.securityGroups.length})`}
+        />
+      ),
     },
     {
       key: 'fixedIp',

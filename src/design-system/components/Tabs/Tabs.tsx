@@ -311,7 +311,7 @@ export function Tab({ value, children, disabled = false, className = '', ...rest
         'cursor-pointer transition-colors duration-[var(--duration-fast)]',
         sizeStyles[size],
         isActive
-          ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_rgba(0,0,0,0.05)] text-[var(--color-action-primary)]'
+          ? 'bg-[var(--color-surface-default)] shadow-[inset_0_0_0_1px_var(--color-border-default),0_1px_2px_0_color-mix(in_srgb,var(--color-text-default)_5%,transparent)] text-[var(--color-action-primary)]'
           : 'bg-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]',
         disabled && 'cursor-not-allowed opacity-50',
         className

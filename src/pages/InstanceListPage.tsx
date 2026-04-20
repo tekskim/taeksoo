@@ -1521,6 +1521,7 @@ export function InstanceListPage() {
               shellPanel.openConsole(row.id, row.name);
             }}
             title="Open console"
+            aria-label="Open console"
           >
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
@@ -1786,6 +1787,7 @@ export function InstanceListPage() {
                 size="sm"
                 icon={<IconDownload size={12} />}
                 aria-label="Download"
+                disabled
               />
             </ListToolbar.Actions>
           }

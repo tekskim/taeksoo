@@ -459,7 +459,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       sortable: true,
       render: (value: string) => (
         <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate min-w-0"
+          className="text-[var(--color-text-default)] font-medium truncate min-w-0"
           title={value}
         >
           {value}
@@ -490,6 +490,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
           <button
+            type="button"
             aria-label="Row actions"
             className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
           >
@@ -595,13 +596,7 @@ function PortsTab({ ports }: PortsTabProps) {
       flex: 1,
       sortable: true,
       render: (value: string | undefined) =>
-        value ? (
-          <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">
-            {value}
-          </span>
-        ) : (
-          '-'
-        ),
+        value ? <span className="text-[var(--color-text-default)]">{value}</span> : '-',
     },
   ];
 

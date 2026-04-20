@@ -39,7 +39,11 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>(isActive: b
       if (focusable.length > 0) {
         focusable[0].focus();
       } else {
-        containerRef.current?.focus();
+        const el = containerRef.current;
+        if (el) {
+          el.tabIndex = -1;
+          el.focus();
+        }
       }
     });
 

@@ -121,7 +121,10 @@ export function Sidebar({ isOpen = true, onToggle, currentAppId }: SidebarProps)
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <nav
+        className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll"
+        aria-label="Compute navigation"
+      >
         <VStack gap={4} className="w-[175px] min-w-0">
           {/* Back to Entry */}
 

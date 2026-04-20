@@ -391,7 +391,7 @@ export function NetworkPolicyDetailPage() {
                   ? Object.entries(networkPolicyData.labels)
                       .map(([k, v]) => `${k}: ${v}`)
                       .join(', ')
-                  : 'labels'
+                  : '—'
               }
             />
             <DetailHeader.InfoCard
@@ -401,7 +401,7 @@ export function NetworkPolicyDetailPage() {
                   ? Object.entries(networkPolicyData.annotations)
                       .map(([k, v]) => `${k}: ${v}`)
                       .join(', ')
-                  : 'annotations'
+                  : '—'
               }
             />
           </DetailHeader.InfoGrid>
@@ -430,6 +430,7 @@ export function NetworkPolicyDetailPage() {
                     <VStack gap={0}>
                       {networkPolicyData.ingressRules.map((rule) => (
                         <button
+                          type="button"
                           key={rule.id}
                           className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
                             selectedRule === rule.id
@@ -448,7 +449,10 @@ export function NetworkPolicyDetailPage() {
                           )}
                         </button>
                       ))}
-                      <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                      <button
+                        type="button"
+                        className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]"
+                      >
                         <IconCirclePlus size={12} stroke={1.5} />
                         Add rule
                       </button>
@@ -673,6 +677,7 @@ export function NetworkPolicyDetailPage() {
                     <VStack gap={0}>
                       {networkPolicyData.egressRules.map((rule) => (
                         <button
+                          type="button"
                           key={rule.id}
                           className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
                             selectedEgressRule === rule.id
@@ -691,7 +696,10 @@ export function NetworkPolicyDetailPage() {
                           )}
                         </button>
                       ))}
-                      <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                      <button
+                        type="button"
+                        className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]"
+                      >
                         <IconCirclePlus size={12} stroke={1.5} />
                         Add rule
                       </button>

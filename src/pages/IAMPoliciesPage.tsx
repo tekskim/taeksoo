@@ -62,7 +62,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -85,7 +85,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: 'Sep 12, 2025',
+    editedAt: 'Sep 12, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -115,7 +115,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute',
     roles: 'admin',
     description: 'Full access to compute resources',
-    editedAt: 'Aug 15, 2025',
+    editedAt: 'Aug 15, 2026',
     permissions: [
       {
         application: 'Compute',
@@ -144,7 +144,7 @@ const mockPolicies: Policy[] = [
     apps: 'storage',
     roles: 'viewer',
     description: 'Read-only access to storage',
-    editedAt: 'Aug 10, 2025',
+    editedAt: 'Aug 10, 2026',
     permissions: [
       { application: 'Storage', partition: '*all', resource: 'Bucket', actions: ['Read', 'List'] },
       { application: 'Storage', partition: '*all', resource: 'Object', actions: ['Read', 'List'] },
@@ -157,7 +157,7 @@ const mockPolicies: Policy[] = [
     apps: 'network',
     roles: 'network-admin',
     description: 'Network administration policy',
-    editedAt: 'Jul 20, 2025',
+    editedAt: 'Jul 20, 2026',
     permissions: [
       {
         application: 'Network',
@@ -186,7 +186,7 @@ const mockPolicies: Policy[] = [
     apps: 'container (+2)',
     roles: 'developer (+1)',
     description: 'Container deployment permissions',
-    editedAt: 'Jul 15, 2025',
+    editedAt: 'Jul 15, 2026',
     permissions: [
       {
         application: 'Container',
@@ -215,7 +215,7 @@ const mockPolicies: Policy[] = [
     apps: 'iam',
     roles: 'viewer',
     description: 'View-only IAM permissions',
-    editedAt: 'Jun 30, 2025',
+    editedAt: 'Jun 30, 2026',
     permissions: [
       { application: 'IAM', partition: '-', resource: 'User', actions: ['Read', 'List'] },
       { application: 'IAM', partition: '-', resource: 'Role', actions: ['Read', 'List'] },
@@ -229,7 +229,7 @@ const mockPolicies: Policy[] = [
     apps: 'security (+3)',
     roles: 'auditor',
     description: 'Security audit permissions',
-    editedAt: 'Jun 25, 2025',
+    editedAt: 'Jun 25, 2026',
     permissions: [
       {
         application: 'Security',
@@ -253,7 +253,7 @@ const mockPolicies: Policy[] = [
     apps: 'database',
     roles: 'db-admin',
     description: 'Database administration policy',
-    editedAt: 'Jun 20, 2025',
+    editedAt: 'Jun 20, 2026',
     permissions: [
       {
         application: 'Database',
@@ -276,7 +276,7 @@ const mockPolicies: Policy[] = [
     apps: 'logging',
     roles: 'support',
     description: 'Access to logging services',
-    editedAt: 'Jun 15, 2025',
+    editedAt: 'Jun 15, 2026',
     permissions: [
       { application: 'Logging', partition: '*all', resource: 'Log', actions: ['Read', 'List'] },
       { application: 'Logging', partition: '*all', resource: 'Metric', actions: ['Read', 'List'] },
@@ -294,7 +294,7 @@ interface PolicyDetailsProps {
 
 function PolicyDetails({ permissions }: PolicyDetailsProps) {
   return (
-    <div className="border-t border-[var(--color-border-subtle)] p-4 bg-[var(--color-surface-default)]">
+    <div className="border-t border-[var(--color-border-subtle)] p-4">
       <div className="flex flex-col gap-[var(--table-row-gap)]">
         {/* Table Header */}
         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
@@ -537,7 +537,7 @@ export default function IAMPoliciesPage() {
           {/* Table Header */}
           <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
             {/* Checkbox column */}
-            <div className="w-[40px] flex items-center justify-center px-3 py-2">
+            <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
               <Checkbox
                 checked={
                   selectedRows.length > 0 && selectedRows.length === paginatedPolicies.length
@@ -623,14 +623,18 @@ export default function IAMPoliciesPage() {
             paginatedPolicies.map((policy) => (
               <div
                 key={policy.id}
-                className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
+                className={`rounded-[var(--table-row-radius)] border transition-colors overflow-hidden ${
+                  selectedRows.includes(policy.id)
+                    ? 'bg-[var(--table-row-selected-bg)] border-[var(--table-row-selected-border)]'
+                    : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)]'
+                }`}
               >
                 {/* Main Row */}
                 <div
                   className={`flex items-stretch min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors`}
                 >
                   {/* Checkbox */}
-                  <div className="w-[40px] flex items-center justify-center px-3 py-2">
+                  <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)]">
                     <Checkbox
                       checked={selectedRows.includes(policy.id)}
                       onChange={() => toggleRowSelection(policy.id)}

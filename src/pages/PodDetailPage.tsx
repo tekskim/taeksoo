@@ -143,6 +143,15 @@ const mockPodData: Record<string, PodData> = {
   },
 };
 
+function getMockPodByRouteParam(podIdOrName: string | undefined): PodData {
+  if (!podIdOrName) return mockPodData['1'];
+  const byKey = mockPodData[podIdOrName];
+  if (byKey) return byKey;
+  const byName = Object.values(mockPodData).find((p) => p.name === podIdOrName);
+  if (byName) return byName;
+  return mockPodData['1'];
+}
+
 const mockContainersData: ContainerRow[] = [
   {
     id: '1',
@@ -595,8 +604,8 @@ export function PodDetailPage() {
   const activeTab = searchParams.get('tab') || 'containers';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
-  // Get pod data
-  const pod = mockPodData[podId || '1'] || mockPodData['1'];
+  // Get pod data (route param may be id or pod name — other pages link by name)
+  const pod = getMockPodByRouteParam(podId);
 
   // Tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =

@@ -235,7 +235,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
     if (nav && savedScrollPosition > 0) {
       nav.scrollTop = savedScrollPosition;
     }
-  });
+  }, [location.pathname]);
 
   // Also restore on mount with a slight delay as backup
   useEffect(() => {

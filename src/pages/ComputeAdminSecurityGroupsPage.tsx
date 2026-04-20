@@ -179,9 +179,9 @@ const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'tenant', label: 'Tenant', type: 'text' },
-  { key: 'description', label: 'Description', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
+  { id: 'description', label: 'Description', type: 'text' },
 ];
 
 export function ComputeAdminSecurityGroupsPage() {
@@ -260,7 +260,7 @@ export function ComputeAdminSecurityGroupsPage() {
 
     return securityGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
-        const value = String(sg[filter.field as keyof SecurityGroup] || '').toLowerCase();
+        const value = String(sg[filter.fieldId as keyof SecurityGroup] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

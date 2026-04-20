@@ -60,7 +60,10 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <nav
+        className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll"
+        aria-label="Storage navigation"
+      >
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
 

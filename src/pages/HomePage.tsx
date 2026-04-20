@@ -25,7 +25,7 @@ function StatCard({ value, label }: StatCardProps) {
     value === 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-default)]';
 
   return (
-    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent">
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 border-2 border-transparent">
       <div className={`text-heading-h4 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
@@ -66,7 +66,9 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   };
 
   return (
-    <div className={`${bgColor} flex flex-1 items-center justify-between px-4 py-3 rounded-lg`}>
+    <div
+      className={`${bgColor} flex flex-1 items-center justify-between px-4 py-3 rounded-[var(--radius-lg)]`}
+    >
       <div className="flex flex-col gap-1">
         <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)]">{count}</span>
@@ -101,7 +103,7 @@ function QuickActionCard({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 text-left transition-colors ${
+      className={`flex-1 bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] ${
         disabled
           ? 'opacity-60 cursor-not-allowed border-2 border-transparent'
           : `hover:bg-[var(--color-surface-muted)] ${

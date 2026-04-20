@@ -30,13 +30,12 @@ import {
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
-import { chartColors as baseChartColors } from '@/pages/design-system-sections/ChartComponents';
+import { chartColors } from '@/pages/design-system-sections/ChartComponents';
 
-const chartColors = {
-  ...baseChartColors,
-  emerald500: '#10b981',
-  amber500: '#f59e0b',
-};
+const resolvedChartColor = (varName: string, fallback: string) =>
+  typeof window === 'undefined'
+    ? fallback
+    : getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || fallback;
 
 /* ----------------------------------------
    Performance Line Chart Component
@@ -114,9 +113,9 @@ function PerformanceChart({
   // Get theme-aware colors
   const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
   const splitLineOpacity = isDarkMode ? 1 : 0.5;
-  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
-  const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
-  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+  const tooltipBg = resolvedChartColor('--color-surface-default', '#ffffff');
+  const tooltipBorder = resolvedChartColor('--color-border-default', chartColors.slate100);
+  const tooltipTextColor = resolvedChartColor('--color-text-default', chartColors.slate800);
 
   // Calculate max value for exactly 5 Y-axis labels
   const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
@@ -698,17 +697,17 @@ export function ImageDetailPage() {
 
   // Chart series
   const iopsSeries: ChartSeries[] = [
-    { name: 'Reads', data: iopsData.reads, color: chartColors.emerald500 },
-    { name: 'Writes', data: iopsData.writes, color: chartColors.amber500 },
+    { name: 'Reads', data: iopsData.reads, color: chartColors.emerald400 },
+    { name: 'Writes', data: iopsData.writes, color: chartColors.amber400 },
   ];
 
   const throughputSeries: ChartSeries[] = [
-    { name: 'Reads', data: throughputData.reads, color: chartColors.emerald500 },
-    { name: 'Writes', data: throughputData.writes, color: chartColors.amber500 },
+    { name: 'Reads', data: throughputData.reads, color: chartColors.emerald400 },
+    { name: 'Writes', data: throughputData.writes, color: chartColors.amber400 },
   ];
 
   const latencySeries: ChartSeries[] = [
-    { name: 'Average latency', data: latencyData.average, color: chartColors.emerald500 },
+    { name: 'Average latency', data: latencyData.average, color: chartColors.emerald400 },
   ];
 
   return (

@@ -62,11 +62,11 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 const themeStyles = {
   // Solid variants (colored bg + light text)
   solid: {
-    blue: 'bg-[var(--color-state-info)] text-white',
-    red: 'bg-[var(--color-state-danger)] text-white',
-    green: 'bg-[var(--color-state-success)] text-white',
-    yellow: 'bg-[var(--color-state-warning)] text-white',
-    gray: 'bg-[var(--color-text-subtle)] text-white',
+    blue: 'bg-[var(--color-state-info)] text-[var(--color-text-on-primary)]',
+    red: 'bg-[var(--color-state-danger)] text-[var(--color-text-on-primary)]',
+    green: 'bg-[var(--color-state-success)] text-[var(--color-text-on-primary)]',
+    yellow: 'bg-[var(--color-state-warning)] text-[var(--color-text-on-primary)]',
+    gray: 'bg-[var(--color-text-subtle)] text-[var(--color-text-on-primary)]',
     white:
       'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-[inset_0_0_0_1px_var(--badge-white-border)]',
   },

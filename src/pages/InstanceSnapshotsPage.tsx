@@ -195,10 +195,10 @@ const mockSnapshots: InstanceSnapshot[] = [
 
 // Filter fields configuration
 const filterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-  { key: 'sourceInstance', label: 'Source instance', type: 'text' },
+  { id: 'name', label: 'Name', type: 'text' },
+  { id: 'sourceInstance', label: 'Source instance', type: 'text' },
   {
-    key: 'diskFormat',
+    id: 'diskFormat',
     label: 'Disk Format',
     type: 'select',
     options: [
@@ -207,7 +207,7 @@ const filterFields: FilterField[] = [
     ],
   },
   {
-    key: 'status',
+    id: 'status',
     label: 'Status',
     type: 'select',
     options: [
@@ -296,7 +296,7 @@ export function InstanceSnapshotsPage() {
 
     return snapshots.filter((s) => {
       return appliedFilters.every((filter) => {
-        const value = String(s[filter.field as keyof InstanceSnapshot] || '').toLowerCase();
+        const value = String(s[filter.fieldId as keyof InstanceSnapshot] || '').toLowerCase();
         return value.includes(filter.value.toLowerCase());
       });
     });

@@ -349,6 +349,7 @@ export function PodsPage() {
         <div className="min-w-0" onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
             <button
+              type="button"
               aria-label="Row actions"
               className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             >

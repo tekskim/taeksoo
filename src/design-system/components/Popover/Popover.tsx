@@ -369,7 +369,7 @@ export function Popover({
             ref={popoverRef}
             id={popoverId}
             role="dialog"
-            aria-label={ariaLabel}
+            aria-label={ariaLabel ?? 'Popover'}
             aria-modal={trigger === 'click'}
             onMouseEnter={handlePopoverMouseEnter}
             onMouseLeave={handlePopoverMouseLeave}

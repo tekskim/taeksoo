@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   VStack,
   HStack,
@@ -169,13 +169,13 @@ export function ContainerHomePage() {
       sortable: true,
       render: (value: string) => (
         <div className="min-w-0">
-          <span
-            className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+          <Link
+            to="/container/dashboard"
+            className="text-[var(--color-action-primary)] font-medium hover:underline truncate block"
             title={value}
-            onClick={() => navigate('/container/dashboard')}
           >
             {value}
-          </span>
+          </Link>
         </div>
       ),
     },

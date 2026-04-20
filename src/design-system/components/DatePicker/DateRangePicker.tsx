@@ -108,7 +108,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             transition-all duration-[var(--duration-fast)]
             ${
               selectingStart
-                ? 'bg-[rgba(37,99,235,0.1)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
+                ? 'bg-[var(--color-action-primary-subtle)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }
           `}
@@ -134,7 +134,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             transition-all duration-[var(--duration-fast)]
             ${
               !selectingStart
-                ? 'bg-[rgba(37,99,235,0.1)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
+                ? 'bg-[var(--color-action-primary-subtle)] shadow-[inset_0_0_0_1px_var(--color-action-primary)]'
                 : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
             }
           `}
