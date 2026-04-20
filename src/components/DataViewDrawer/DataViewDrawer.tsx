@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import './DataViewDrawer.css';
 
@@ -17,6 +17,8 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
   series,
   timeLabels: _timeLabels,
 }) => {
+  const titleId = useId();
+
   // Close on ESC key
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -82,11 +84,18 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
   // Use portal to render at document body level for proper fullscreen positioning
   return createPortal(
     <>
-      <div className="dataViewDrawer-overlay" onClick={onClose} />
-      <div className="dataViewDrawer-drawer">
+      <div className="dataViewDrawer-overlay" onClick={onClose} aria-hidden="true" />
+      <div
+        className="dataViewDrawer-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
         <div className="dataViewDrawer-content">
           <div className="dataViewDrawer-header">
-            <h2 className="dataViewDrawer-title">{title}</h2>
+            <h2 id={titleId} className="dataViewDrawer-title">
+              {title}
+            </h2>
           </div>
 
           <div className="dataViewDrawer-tableContainer">
@@ -114,7 +123,7 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
         </div>
 
         <div className="dataViewDrawer-footer">
-          <button className="dataViewDrawer-closeButton" onClick={onClose}>
+          <button type="button" className="dataViewDrawer-closeButton" onClick={onClose}>
             Close
           </button>
         </div>

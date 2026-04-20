@@ -409,7 +409,7 @@ export function WorkloadDetailPage() {
                 {/* Quick Access Section */}
                 <div>
                   <div className="flex items-center gap-2 mb-4">
-                    <h3 className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    <h3 className="text-heading-h6 text-[var(--color-text-default)]">
                       Quick Access
                     </h3>
                     <Badge variant="default" size="sm">

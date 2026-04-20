@@ -366,8 +366,6 @@ export function OSDsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          showSettings
-          onSettingsClick={() => console.log('Settings clicked')}
           totalItems={filteredOSDs.length}
           itemsPerPage={rowsPerPage}
           showItemCount

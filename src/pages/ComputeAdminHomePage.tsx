@@ -12,7 +12,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconChevronRight, IconCpu, IconServer } from '@tabler/icons-react';
+import { IconCpu, IconServer } from '@tabler/icons-react';
 import { Cpu, MemoryStick, HardDrive } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -149,7 +149,6 @@ function TenantRow({ name, enabled, resources }: TenantRowProps) {
         </Badge>
         <div className="flex items-center gap-1 text-label-md text-[var(--color-text-default)] min-w-0">
           <span className="truncate">{name}</span>
-          <IconChevronRight size={14} className="text-[var(--color-text-muted)] shrink-0" />
         </div>
       </div>
       <div className="grid grid-cols-5 gap-4">
@@ -206,7 +205,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}

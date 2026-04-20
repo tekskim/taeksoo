@@ -696,9 +696,12 @@ export function ComputeAdminBareMetalDetailPage() {
                     size="sm"
                     className="w-[280px]"
                   />
-                  <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                    <IconDownload size={12} stroke={2} className="w-3 h-3" />
-                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconDownload size={12} stroke={1.5} />}
+                    aria-label="Download"
+                  />
                 </div>
 
                 {/* Pagination */}
@@ -713,8 +716,9 @@ export function ComputeAdminBareMetalDetailPage() {
                 <div className="w-full flex flex-col gap-1">
                   {/* Table Header */}
                   <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                    <div
-                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                    <button
+                      type="button"
+                      className="inline-flex flex-1 items-center h-10 px-3 select-none hover:text-[var(--color-action-primary)] transition-colors bg-transparent border-0 font-inherit text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-1 rounded-none"
                       onClick={() => handleActionLogSort('operationName')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -743,9 +747,10 @@ export function ComputeAdminBareMetalDetailPage() {
                           />
                         )}
                       </div>
-                    </div>
-                    <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex flex-1 items-center h-10 px-3 border-0 border-l border-[var(--color-border-default)] select-none hover:text-[var(--color-action-primary)] transition-colors bg-transparent font-inherit text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-1 rounded-none"
                       onClick={() => handleActionLogSort('requestId')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -774,9 +779,10 @@ export function ComputeAdminBareMetalDetailPage() {
                           />
                         )}
                       </div>
-                    </div>
-                    <div
-                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex flex-1 items-center h-10 px-3 border-0 border-l border-[var(--color-border-default)] select-none hover:text-[var(--color-action-primary)] transition-colors bg-transparent font-inherit text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-1 rounded-none"
                       onClick={() => handleActionLogSort('requestedTime')}
                     >
                       <div className="flex items-center gap-1 w-full">
@@ -805,7 +811,7 @@ export function ComputeAdminBareMetalDetailPage() {
                           />
                         )}
                       </div>
-                    </div>
+                    </button>
                   </div>
 
                   {/* Table Rows */}

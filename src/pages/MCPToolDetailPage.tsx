@@ -234,16 +234,21 @@ function ExecutionLogsTabContent() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowsPerPage = 10;
 
-  // Mock data
-  const executionLogs: ExecutionLogRow[] = Array.from({ length: 50 }, (_, i) => ({
-    id: `log-${i + 1}`,
-    timestamp: `Jan ${30 - (i % 30)}, 2026, ${9 + (i % 12)}:${String(i % 60).padStart(2, '0')} ${i % 2 === 0 ? 'AM' : 'PM'}`,
-    status: i % 5 === 0 ? 'failed' : i % 7 === 0 ? 'running' : 'success',
-    duration: `${(Math.random() * 5).toFixed(2)}s`,
-    input: `{"channel": "general", "message": "Hello ${i + 1}"}`,
-    output: i % 5 === 0 ? 'Error: Rate limit exceeded' : `{"ok": true, "ts": "1706..."}`,
-    agent: i % 3 === 0 ? 'Customer Support Agent' : i % 2 === 0 ? 'Sales Agent' : 'Marketing Agent',
-  }));
+  // Mock data (stable durations — no Math.random() to avoid table flicker on re-render)
+  const executionLogs: ExecutionLogRow[] = useMemo(
+    () =>
+      Array.from({ length: 50 }, (_, i) => ({
+        id: `log-${i + 1}`,
+        timestamp: `Jan ${30 - (i % 30)}, 2026, ${9 + (i % 12)}:${String(i % 60).padStart(2, '0')} ${i % 2 === 0 ? 'AM' : 'PM'}`,
+        status: i % 5 === 0 ? 'failed' : i % 7 === 0 ? 'running' : 'success',
+        duration: `${(((i * 7 + 3) % 50) / 10).toFixed(2)}s`,
+        input: `{"channel": "general", "message": "Hello ${i + 1}"}`,
+        output: i % 5 === 0 ? 'Error: Rate limit exceeded' : `{"ok": true, "ts": "1706..."}`,
+        agent:
+          i % 3 === 0 ? 'Customer Support Agent' : i % 2 === 0 ? 'Sales Agent' : 'Marketing Agent',
+      })),
+    []
+  );
 
   const filteredLogs = useMemo(() => {
     if (!searchQuery) return executionLogs;
@@ -292,7 +297,7 @@ function ExecutionLogsTabContent() {
       render: (value: string) => (
         <div className="min-w-0">
           <span
-            className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+            className="text-[var(--color-text-default)] font-medium truncate block"
             title={value}
           >
             {value}

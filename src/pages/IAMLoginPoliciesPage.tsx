@@ -567,44 +567,46 @@ export default function IAMLoginPoliciesPage() {
                               </FormField.Description>
                               <FormField.Control className="mt-[var(--primitive-spacing-3)]">
                                 <VStack className="gap-[var(--radio-group-item-gap)]">
-                                  <HStack
-                                    className="gap-[var(--primitive-spacing-1-5)]"
-                                    align="center"
-                                  >
-                                    <Radio
-                                      checked={waitTimeStrategy === 'linear'}
-                                      onChange={() => setWaitTimeStrategy('linear')}
-                                      disabled={!lockoutEnabled}
-                                    />
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      Linear
-                                    </span>
-                                    <Tooltip content="Wait time increases only when failures are multiples of factor">
-                                      <IconInfoCircle
-                                        size={14}
-                                        className="text-[var(--color-text-subtle)]"
-                                      />
-                                    </Tooltip>
-                                  </HStack>
-                                  <HStack
-                                    className="gap-[var(--primitive-spacing-1-5)]"
-                                    align="center"
-                                  >
-                                    <Radio
-                                      checked={waitTimeStrategy === 'multiple'}
-                                      onChange={() => setWaitTimeStrategy('multiple')}
-                                      disabled={!lockoutEnabled}
-                                    />
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      Multiple
-                                    </span>
-                                    <Tooltip content="Wait time increases after every failure starting from factor">
-                                      <IconInfoCircle
-                                        size={14}
-                                        className="text-[var(--color-text-subtle)]"
-                                      />
-                                    </Tooltip>
-                                  </HStack>
+                                  <Radio
+                                    name="wait-time-strategy"
+                                    value="linear"
+                                    checked={waitTimeStrategy === 'linear'}
+                                    onChange={() => setWaitTimeStrategy('linear')}
+                                    disabled={!lockoutEnabled}
+                                    label={
+                                      <span className="inline-flex items-center gap-[var(--primitive-spacing-1-5)]">
+                                        <span className="text-body-md text-[var(--color-text-default)]">
+                                          Linear
+                                        </span>
+                                        <Tooltip content="Wait time increases only when failures are multiples of factor">
+                                          <IconInfoCircle
+                                            size={14}
+                                            className="text-[var(--color-text-subtle)]"
+                                          />
+                                        </Tooltip>
+                                      </span>
+                                    }
+                                  />
+                                  <Radio
+                                    name="wait-time-strategy"
+                                    value="multiple"
+                                    checked={waitTimeStrategy === 'multiple'}
+                                    onChange={() => setWaitTimeStrategy('multiple')}
+                                    disabled={!lockoutEnabled}
+                                    label={
+                                      <span className="inline-flex items-center gap-[var(--primitive-spacing-1-5)]">
+                                        <span className="text-body-md text-[var(--color-text-default)]">
+                                          Multiple
+                                        </span>
+                                        <Tooltip content="Wait time increases after every failure starting from factor">
+                                          <IconInfoCircle
+                                            size={14}
+                                            className="text-[var(--color-text-subtle)]"
+                                          />
+                                        </Tooltip>
+                                      </span>
+                                    }
+                                  />
                                 </VStack>
                               </FormField.Control>
                             </FormField>

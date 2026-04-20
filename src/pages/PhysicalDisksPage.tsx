@@ -519,8 +519,6 @@ export function PhysicalDisksPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          showSettings
-          onSettingsClick={() => console.log('Settings clicked')}
           totalItems={totalItems}
         />
 

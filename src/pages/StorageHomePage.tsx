@@ -430,7 +430,7 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
 
         {showTooltip && (
           <div
-            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
             style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
           >
             <div className="flex items-center gap-1.5">

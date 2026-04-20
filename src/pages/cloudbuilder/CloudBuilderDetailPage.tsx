@@ -80,7 +80,7 @@ const MONTH_ABBR = [
 
 function seededDateTime(seed: string) {
   const base = stableInt(seed);
-  const yyyy = 2025;
+  const yyyy = 2026;
   const mm = (base % 12) + 1;
   const dd = (base % 28) + 1;
   const hh = base % 24;
@@ -223,7 +223,7 @@ export function CloudBuilderDetailPage() {
 
   const hasDetail = slug !== 'services' && slug !== 'compute-services';
 
-  const isServer = slug === 'servers' || slug === 'severs0.7';
+  const isServer = slug === 'servers';
 
   const serverDerived = useMemo(() => {
     if (!isServer) return null;

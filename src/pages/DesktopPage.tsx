@@ -364,7 +364,16 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
       <Tooltip content={app.name} position="bottom">
         <motion.div
           layoutId={app.id}
+          role="button"
+          tabIndex={0}
+          aria-label={app.name}
           onClick={() => onAppClick(app.id)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onAppClick(app.id);
+            }
+          }}
           className={`
             relative cursor-pointer flex items-center justify-center
             ${isDragging ? 'z-50' : 'z-0'}
@@ -372,7 +381,7 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
           whileDrag={{
             scale: 1.1,
             zIndex: 50,
-            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+            boxShadow: '0 10px 30px color-mix(in srgb, var(--color-text-default) 30%, transparent)',
           }}
           transition={{
             type: 'spring',
@@ -770,7 +779,11 @@ function DesktopTopBar({
         {/* Right Icons */}
         <div className="flex items-center gap-3">
           <ContextMenu items={contextMenuItems} trigger="click" minTop={52}>
-            <button className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors">
+            <button
+              type="button"
+              className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
+              aria-label="Language and theme"
+            >
               <Icons.Finetuning size={20} stroke={1.5} />
             </button>
           </ContextMenu>
@@ -798,14 +811,20 @@ function DesktopTopBar({
             trigger="click"
             minTop={52}
           >
-            <button className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors">
+            <button
+              type="button"
+              className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
+              aria-label="User menu"
+            >
               <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
           <button
+            type="button"
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
             className="w-5 h-5 flex items-center justify-center text-[var(--desktop-text-muted)] hover:text-[var(--desktop-text)] cursor-pointer transition-colors"
+            aria-label="Notifications"
           >
             <Icons.Notification size={20} stroke={1.5} />
           </button>

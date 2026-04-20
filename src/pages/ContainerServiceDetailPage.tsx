@@ -714,7 +714,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
     },
     {
       key: 'status',
-      label: 'Size',
+      label: 'Status',
       flex: 1,
       minWidth: columnMinWidths.size,
       sortable: true,

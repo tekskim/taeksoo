@@ -52,16 +52,16 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'active') {
-      return <IconTarget size={12} stroke={1.5} className="text-white" />;
+      return <IconTarget size={12} stroke={1.5} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'inactive') {
       return (
         <div className="flex flex-col gap-0.5 items-center justify-center">
-          <div className="h-1 w-2 bg-white rounded-sm" />
-          <div className="h-1 w-2 bg-white rounded-sm" />
+          <div className="h-1 w-2 bg-[var(--color-text-on-primary)] rounded-sm" />
+          <div className="h-1 w-2 bg-[var(--color-text-on-primary)] rounded-sm" />
         </div>
       );
     } else if (status === 'draft') {
-      return <IconPencil size={12} stroke={1.5} className="text-white" />;
+      return <IconPencil size={12} stroke={1.5} className="text-[var(--color-text-on-primary)]" />;
     }
   };
 
@@ -130,18 +130,30 @@ interface ChatItemProps {
 }
 
 function ChatItem({ title, description, createdAt, onClick }: ChatItemProps) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)]"
-    >
+  const shellClassName =
+    'm-0 w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)] font-sans';
+
+  const inner = (
+    <>
       <div className="flex flex-col gap-1 mb-3">
-        <p className="text-label-lg text-[var(--color-text-default)]">{title}</p>
-        <p className="text-body-sm text-[var(--color-text-subtle)] line-clamp-2">{description}</p>
+        <span className="block text-label-lg text-[var(--color-text-default)]">{title}</span>
+        <span className="block text-body-sm text-[var(--color-text-subtle)] line-clamp-2">
+          {description}
+        </span>
       </div>
       <div className="text-label-sm text-[var(--color-text-subtle)]">Created at: {createdAt}</div>
-    </div>
+    </>
   );
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={shellClassName}>
+        {inner}
+      </button>
+    );
+  }
+
+  return <div className={shellClassName}>{inner}</div>;
 }
 
 /* ----------------------------------------

@@ -34,6 +34,12 @@ const chartColors = {
   green500: '#00a63e',
 };
 
+function resolvedChartColor(cssVar: string, chartFallback: string): string {
+  if (typeof window === 'undefined') return chartFallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return v || chartFallback;
+}
+
 /* ----------------------------------------
    Monitoring Time Controls Component
    ---------------------------------------- */
@@ -495,7 +501,7 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
 
         {showTooltip && used !== undefined && total !== undefined && (
           <div
-            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+            className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
             style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
           >
             <div className="flex items-center gap-1.5">
@@ -639,9 +645,9 @@ function PerformanceChart({
   // Get theme-aware colors
   const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
   const splitLineOpacity = isDarkMode ? 1 : 0.5;
-  const tooltipBg = isDarkMode ? '#1C1C1C' : 'white';
-  const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
-  const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
+  const tooltipBg = resolvedChartColor('--color-surface-default', '#ffffff');
+  const tooltipBorder = resolvedChartColor('--color-border-default', chartColors.slate100);
+  const tooltipTextColor = resolvedChartColor('--color-text-default', chartColors.slate800);
 
   // Calculate max value for exactly 5 Y-axis labels (4 intervals) with nice numbers
   const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);

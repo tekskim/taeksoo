@@ -344,8 +344,6 @@ export function PoolsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          showSettings
-          onSettingsClick={() => console.log('Settings clicked')}
           totalItems={filteredPools.length}
           selectedCount={selectedPools.length}
         />

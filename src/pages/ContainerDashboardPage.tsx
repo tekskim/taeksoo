@@ -26,7 +26,7 @@ import {
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
-import { IconExternalLink, IconInfoCircle, IconKey } from '@tabler/icons-react';
+import { IconInfoCircle, IconKey } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Capacity Progress bar Component
@@ -193,7 +193,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <div className="flex items-center justify-between mb-4">
         <h6 className="text-heading-h6">{title}</h6>
@@ -263,13 +263,13 @@ const eventsData: EventRow[] = [
   },
   {
     id: '5',
-    reason: 'Failed',
+    reason: 'Unhealthy',
     object: 'Pod object',
-    message: 'Error: ImagePullBackOff',
-    name: 'testpod.1872cb5180493d50',
-    firstSeen: '2d8h',
-    lastSeen: '4s',
-    count: 14495,
+    message: 'Readiness probe failed: connection refused',
+    name: 'api-server.1872cb5180493d50',
+    firstSeen: '1d2h',
+    lastSeen: '12m',
+    count: 892,
   },
 ];
 
@@ -421,17 +421,11 @@ export function ContainerDashboardPage() {
                 <span className="text-body-md text-[var(--color-text-default)]">Nov 9, 2025</span>
               </div>
               <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
-                  Deployments
-                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                </span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Deployments</span>
                 <span className="text-body-md text-[var(--color-text-default)]">15</span>
               </div>
               <div className="flex flex-col gap-1.5">
-                <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
-                  Nodes
-                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                </span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Nodes</span>
                 <span className="text-body-md text-[var(--color-text-default)]">1</span>
               </div>
             </div>

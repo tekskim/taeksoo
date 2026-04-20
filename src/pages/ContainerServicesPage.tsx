@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   VStack,
   TabBar,
@@ -131,6 +131,7 @@ export function ContainerServicesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab } = useTabs();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,7 +140,33 @@ export function ContainerServicesPage() {
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const navigate = useNavigate();
+
+  const filteredServices = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return servicesData;
+    return servicesData.filter((row) => {
+      if (row.name.toLowerCase().includes(q) || row.namespace.toLowerCase().includes(q)) {
+        return true;
+      }
+      if (
+        row.status.toLowerCase().includes(q) ||
+        row.type.toLowerCase().includes(q) ||
+        row.createdAt.toLowerCase().includes(q)
+      ) {
+        return true;
+      }
+      if (row.target.some((t) => t.toLowerCase().includes(q))) return true;
+      if (row.selector.some((s) => s.toLowerCase().includes(q))) return true;
+      if (row.ipAddresses.some((ip) => ip.toLowerCase().includes(q))) return true;
+      return false;
+    });
+  }, [searchTerm]);
 
   // Create menu items
   const createDropdownItems: ContextMenuItem[] = [
@@ -172,8 +199,8 @@ export function ContainerServicesPage() {
 
   // Pagination
   const rowsPerPage = 10;
-  const totalPages = Math.ceil(servicesData.length / rowsPerPage);
-  const paginatedData = servicesData.slice(
+  const totalPages = Math.max(1, Math.ceil(filteredServices.length / rowsPerPage));
+  const paginatedData = filteredServices.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
@@ -515,6 +542,9 @@ export function ContainerServicesPage() {
           primaryActions={
             <ListToolbar.Actions>
               <SearchInput
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm('')}
                 placeholder="Search service by attributes"
                 size="sm"
                 className="w-[var(--search-input-width)]"
@@ -564,7 +594,7 @@ export function ContainerServicesPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          totalItems={servicesData.length}
+          totalItems={filteredServices.length}
           selectedCount={selectedRows.length}
         />
 

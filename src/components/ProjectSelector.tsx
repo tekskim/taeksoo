@@ -116,7 +116,14 @@ export function ProjectSelector({
         : 'w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between';
 
   const buttonElement = (
-    <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)} className={buttonClass}>
+    <button
+      ref={buttonRef}
+      type="button"
+      onClick={() => setIsOpen(!isOpen)}
+      className={buttonClass}
+      aria-expanded={isOpen}
+      aria-haspopup="listbox"
+    >
       {variant === 'sidebar-icon' ? (
         <IconFolder size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />
       ) : (
@@ -141,18 +148,7 @@ export function ProjectSelector({
       {/* Trigger Button with Tooltip for sidebar-icon variant */}
       {variant === 'sidebar-icon' && selectedProject ? (
         <Tooltip
-          content={
-            <div
-              style={{
-                maxWidth: '300px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {selectedProject.name}
-            </div>
-          }
+          content={<div className="max-w-[var(--tooltip-max-width)]">{selectedProject.name}</div>}
           position="right"
         >
           {buttonElement}
@@ -195,6 +191,7 @@ export function ProjectSelector({
 
                 return (
                   <button
+                    type="button"
                     key={project.id}
                     onClick={() => handleProjectClick(project)}
                     disabled={isDisabled}

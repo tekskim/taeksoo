@@ -29,6 +29,7 @@ import {
   fixedColumns,
   StatusIndicator,
   Tooltip,
+  Textarea,
 } from '@/design-system';
 import {
   IconDotsCircleHorizontal,
@@ -47,7 +48,6 @@ import {
   type CloudBuilderSlug,
   type ListColumn,
 } from './consoleListConfig';
-import { Textarea } from '@/design-system';
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -207,7 +207,7 @@ export function CloudBuilderConsolePage() {
   );
 
   // /cloudbuilder 또는 /cloudbuilder/:slug
-  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'severs0.7';
+  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'servers';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
 
   const breadcrumbItems = [{ label: config.title }];

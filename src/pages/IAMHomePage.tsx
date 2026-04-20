@@ -24,6 +24,15 @@ function resolvedChartColor(cssVar: string, chartFallback: string): string {
   return v || chartFallback;
 }
 
+/** Parse a px length from a CSS variable (e.g. `--font-size-11: 11px`) for ECharts numeric options. */
+function resolvedCssPx(cssVar: string, fallbackPx: number): number {
+  if (typeof window === 'undefined') return fallbackPx;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  if (!raw) return fallbackPx;
+  const n = parseFloat(raw);
+  return Number.isFinite(n) ? n : fallbackPx;
+}
+
 /* ----------------------------------------
    Types
    ---------------------------------------- */
@@ -107,15 +116,15 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
       backgroundColor: resolvedChartColor('--color-surface-default', '#ffffff'),
       borderColor: resolvedChartColor('--color-border-default', chartColors.slate100),
       borderWidth: 1,
-      borderRadius: 6,
-      padding: [8, 12],
+      borderRadius: resolvedCssPx('--radius-md', 6),
+      padding: [resolvedCssPx('--spacing-2', 8), resolvedCssPx('--spacing-3', 12)],
       textStyle: {
         color: chartColors.slate800,
-        fontSize: 11,
+        fontSize: resolvedCssPx('--font-size-11', 11),
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
       formatter: (params: { name: string; value: number; percent: number; color: string }) => {
-        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+        return `<span style="display:inline-block;width:var(--spacing-2);height:var(--spacing-2);border-radius:var(--radius-full);background-color:${params.color};margin-right:var(--spacing-1-5);"></span>${params.name}<br/><span style="font-weight:500;margin-left:calc(var(--spacing-3) + var(--spacing-0-5));">${params.value} (${params.percent.toFixed(0)}%)</span>`;
       },
     },
     animation: false,
@@ -131,7 +140,7 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
           formatter: (params: { percent: number }) => {
             return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
           },
-          fontSize: 12,
+          fontSize: resolvedCssPx('--font-size-12', 12),
           fontWeight: 600,
           color: chartColors.slate800,
           fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
@@ -139,11 +148,6 @@ function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
         emphasis: {
           scale: true,
           scaleSize: 5,
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.2)',
-          },
         },
         labelLine: {
           show: false,
@@ -210,7 +214,7 @@ interface ResourceCardProps {
 function ResourceCard({ label, value }: ResourceCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
-      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
+      <p className="text-body-sm text-[var(--color-text-subtle)]">{label}</p>
       <p className="text-heading-h3 text-[var(--color-text-default)]">{value}</p>
     </div>
   );

@@ -11,6 +11,7 @@ import {
   StatusIndicator,
   ContextMenu,
   Badge,
+  BadgeList,
   PageShell,
   TabBar,
   TopBar,
@@ -18,7 +19,6 @@ import {
   Breadcrumb,
   VStack,
   PageHeader,
-  Popover,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -62,11 +62,13 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'active') {
-      return <IconTarget size={12} stroke={1} className="text-white" />;
+      return <IconTarget size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'inactive') {
-      return <IconCircleX size={12} stroke={1.5} className="text-white" />;
+      return <IconCircleX size={12} stroke={1.5} className="text-[var(--color-text-on-primary)]" />;
     } else if (status === 'error') {
-      return <IconAlertTriangle size={12} stroke={1} className="text-white" />;
+      return (
+        <IconAlertTriangle size={12} stroke={1} className="text-[var(--color-text-on-primary)]" />
+      );
     }
   };
 
@@ -570,41 +572,14 @@ export function MCPToolsPage() {
       minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
-        <div className="flex w-full min-w-0 items-center gap-1 overflow-hidden">
-          {row.tags.slice(0, 2).map((tag, idx) => (
-            <Badge key={idx} theme="gray" type="subtle" size="sm">
-              {tag}
-            </Badge>
-          ))}
-          {row.tags.length > 2 && (
-            <span className="ml-auto">
-              <Popover
-                trigger="hover"
-                position="bottom"
-                delay={100}
-                hideDelay={100}
-                content={
-                  <div className="p-3 min-w-[120px] max-w-[320px]">
-                    <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
-                      All Tags ({row.tags.length})
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {row.tags.map((tag, i) => (
-                        <Badge key={i} theme="white" size="sm">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                }
-              >
-                <span className="inline-flex shrink-0 items-center justify-center px-1.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors h-5 cursor-pointer">
-                  +{row.tags.length - 2}
-                </span>
-              </Popover>
-            </span>
-          )}
-        </div>
+        <BadgeList
+          items={row.tags}
+          maxVisible={2}
+          theme="gray"
+          type="subtle"
+          popoverTitle={`All Tags (${row.tags.length})`}
+          overflowAlign="right"
+        />
       ),
     },
     {
@@ -666,10 +641,7 @@ export function MCPToolsPage() {
               Official
             </Badge>
           )}
-          <span
-            className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate"
-            title={row.title}
-          >
+          <span className="text-[var(--color-text-default)] font-medium truncate" title={row.title}>
             {row.title}
           </span>
         </div>
@@ -934,7 +906,7 @@ export function MCPToolsPage() {
                 className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex flex-col gap-3 items-start p-4 rounded-md relative shrink-0"
               >
                 {/* Thumbnail */}
-                <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[6px] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
+                <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-md)] border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-surface-subtle)]">
                   <img
                     src={tool.thumbnail}
                     alt={tool.title}
@@ -983,7 +955,7 @@ export function MCPToolsPage() {
                   {tool.tags.slice(0, 10).map((tag, idx) => (
                     <div
                       key={idx}
-                      className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
+                      className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-[var(--radius-md)] text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
                     >
                       {tag}
                     </div>

@@ -240,7 +240,7 @@ export function EditNodeYamlPage() {
             <button
               type="button"
               onClick={handleDownload}
-              className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+              className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[var(--radius-md)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
               title="Download YAML"
               aria-label="Download YAML"
             >

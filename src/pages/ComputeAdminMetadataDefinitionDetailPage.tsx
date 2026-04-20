@@ -240,114 +240,116 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
 
             {/* Contents Tab */}
             <TabPanel value="contents" className="pt-6">
-              <div className="bg-[var(--primitive-color-blue-gray800)] rounded-lg p-6 font-mono text-[13px] leading-6 overflow-x-auto">
+              <div className="bg-[var(--primitive-color-blue-gray800)] rounded-lg p-6 font-mono text-label-lg overflow-x-auto">
                 <pre className="text-[var(--primitive-color-blue-gray200)]">
-                  <span className="text-[#94a3b8]">{'{'}</span>
+                  <span className="text-[var(--color-text-muted)]">{'{'}</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "namespace"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"${metadata.namespace}"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "namespace"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"${metadata.namespace}"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "display_name"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"${metadata.displayName}"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "display_name"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"${metadata.displayName}"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "description"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"${metadata.description}"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "description"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"${metadata.description}"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "visibility"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"${metadata.isPublic ? 'public' : 'private'}"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "visibility"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"${metadata.isPublic ? 'public' : 'private'}"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "protected"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#7dd3fc]">{metadata.isProtected ? 'true' : 'false'}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "protected"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-info)]">
+                    {metadata.isProtected ? 'true' : 'false'}
+                  </span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "owner"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"admin"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "owner"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"admin"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "created_at"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"2025-05-13T02:48:18Z"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "created_at"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"2025-05-13T02:48:18Z"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "resource_type_associations"`}</span>
-                  <span className="text-[#94a3b8]">: [</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "resource_type_associations"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: [</span>
                   {metadata.resourceTypes.map((rt, index) => (
                     <span key={index}>
                       {'\n'}
-                      <span className="text-[#94a3b8]">{`    {`}</span>
+                      <span className="text-[var(--color-text-muted)]">{`    {`}</span>
                       {'\n'}
-                      <span className="text-[#7dd3fc]">{`      "name"`}</span>
-                      <span className="text-[#94a3b8]">: </span>
-                      <span className="text-[#fde68a]">{`"${rt.resourceType}"`}</span>
-                      <span className="text-[#94a3b8]">,</span>
+                      <span className="text-[var(--color-action-primary)]">{`      "name"`}</span>
+                      <span className="text-[var(--color-text-muted)]">: </span>
+                      <span className="text-[var(--color-state-warning)]">{`"${rt.resourceType}"`}</span>
+                      <span className="text-[var(--color-text-muted)]">,</span>
                       {'\n'}
-                      <span className="text-[#7dd3fc]">{`      "prefix"`}</span>
-                      <span className="text-[#94a3b8]">: </span>
-                      <span className="text-[#fde68a]">{`"${rt.prefix}"`}</span>
-                      <span className="text-[#94a3b8]">,</span>
+                      <span className="text-[var(--color-action-primary)]">{`      "prefix"`}</span>
+                      <span className="text-[var(--color-text-muted)]">: </span>
+                      <span className="text-[var(--color-state-warning)]">{`"${rt.prefix}"`}</span>
+                      <span className="text-[var(--color-text-muted)]">,</span>
                       {'\n'}
-                      <span className="text-[#7dd3fc]">{`      "properties_target"`}</span>
-                      <span className="text-[#94a3b8]">: </span>
-                      <span className="text-[#fde68a]">{`"image"`}</span>
-                      <span className="text-[#94a3b8]">,</span>
+                      <span className="text-[var(--color-action-primary)]">{`      "properties_target"`}</span>
+                      <span className="text-[var(--color-text-muted)]">: </span>
+                      <span className="text-[var(--color-state-warning)]">{`"image"`}</span>
+                      <span className="text-[var(--color-text-muted)]">,</span>
                       {'\n'}
-                      <span className="text-[#7dd3fc]">{`      "created_at"`}</span>
-                      <span className="text-[#94a3b8]">: </span>
-                      <span className="text-[#fde68a]">{`"2025-05-13T02:48:18Z"`}</span>
+                      <span className="text-[var(--color-action-primary)]">{`      "created_at"`}</span>
+                      <span className="text-[var(--color-text-muted)]">: </span>
+                      <span className="text-[var(--color-state-warning)]">{`"2025-05-13T02:48:18Z"`}</span>
                       {'\n'}
-                      <span className="text-[#94a3b8]">
+                      <span className="text-[var(--color-text-muted)]">
                         {`    }`}
                         {index < metadata.resourceTypes.length - 1 ? ',' : ''}
                       </span>
                     </span>
                   ))}
                   {'\n'}
-                  <span className="text-[#94a3b8]">{`  ],`}</span>
+                  <span className="text-[var(--color-text-muted)]">{`  ],`}</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "properties"`}</span>
-                  <span className="text-[#94a3b8]">{`: {`}</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "properties"`}</span>
+                  <span className="text-[var(--color-text-muted)]">{`: {`}</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`    "mem_page_size"`}</span>
-                  <span className="text-[#94a3b8]">{`: {`}</span>
+                  <span className="text-[var(--color-action-primary)]">{`    "mem_page_size"`}</span>
+                  <span className="text-[var(--color-text-muted)]">{`: {`}</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`      "type"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"string"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`      "type"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"string"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`      "title"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"Size of memory page"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`      "title"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"Size of memory page"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`      "description"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"Page size to be used for Guest memory backing. Value can be specified as <number><unit> (i.e.: 2MB, 1GB) or 'any', 'small', 'large'. If this property is set in Image metadata then only 'any' and 'large' values are accepted in Flavor metadata by Nova API."`}</span>
+                  <span className="text-[var(--color-action-primary)]">{`      "description"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"Page size to be used for Guest memory backing. Value can be specified as <number><unit> (i.e.: 2MB, 1GB) or 'any', 'small', 'large'. If this property is set in Image metadata then only 'any' and 'large' values are accepted in Flavor metadata by Nova API."`}</span>
                   {'\n'}
-                  <span className="text-[#94a3b8]">{`    }`}</span>
+                  <span className="text-[var(--color-text-muted)]">{`    }`}</span>
                   {'\n'}
-                  <span className="text-[#94a3b8]">{`  },`}</span>
+                  <span className="text-[var(--color-text-muted)]">{`  },`}</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "self"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"/v2/metadefs/namespaces/${metadata.namespace}"`}</span>
-                  <span className="text-[#94a3b8]">,</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "self"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"/v2/metadefs/namespaces/${metadata.namespace}"`}</span>
+                  <span className="text-[var(--color-text-muted)]">,</span>
                   {'\n'}
-                  <span className="text-[#7dd3fc]">{`  "schema"`}</span>
-                  <span className="text-[#94a3b8]">: </span>
-                  <span className="text-[#fde68a]">{`"/v2/schemas/metadefs/namespace"`}</span>
+                  <span className="text-[var(--color-action-primary)]">{`  "schema"`}</span>
+                  <span className="text-[var(--color-text-muted)]">: </span>
+                  <span className="text-[var(--color-state-warning)]">{`"/v2/schemas/metadefs/namespace"`}</span>
                   {'\n'}
-                  <span className="text-[#94a3b8]">{'}'}</span>
+                  <span className="text-[var(--color-text-muted)]">{'}'}</span>
                 </pre>
               </div>
             </TabPanel>

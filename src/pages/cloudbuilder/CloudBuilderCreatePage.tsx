@@ -102,7 +102,7 @@ export function CloudBuilderCreatePage() {
   const params = useParams();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'severs0.7';
+  const slug: CloudBuilderSlug = isCloudBuilderSlug(params.slug) ? params.slug : 'servers';
   const config = useMemo(() => getCloudBuilderListConfig(slug), [slug]);
 
   const [bmcHost, setBmcHost] = useState('');

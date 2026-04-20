@@ -185,7 +185,7 @@ function Card({
 }: CardProps) {
   return (
     <div
-      className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
+      className={`p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
       <h6 className="text-heading-h6 mb-4">{title}</h6>
       {children}
@@ -436,7 +436,7 @@ export function ComputeHomePage() {
       {/* Bottom Row - Recent Activities + Infrastructure Quota */}
       <div className="grid grid-cols-2 gap-6">
         {/* Recent Activities */}
-        <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+        <div className="p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
           <SectionHeader title="Recent Activities" />
           <Table<RecentActivity>
             columns={recentActivityColumns}
@@ -447,7 +447,7 @@ export function ComputeHomePage() {
         </div>
 
         {/* Infrastructure Quota */}
-        <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
+        <div className="p-4 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col">
           <SectionHeader title="Infrastructure Quota" />
           <div className="grid grid-cols-2 gap-2 flex-1" style={{ gridAutoRows: '1fr' }}>
             <InfraQuotaRow label="Volumes" used={18} total={50} href="/compute/volumes" />

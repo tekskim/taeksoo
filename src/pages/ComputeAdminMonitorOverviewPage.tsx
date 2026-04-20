@@ -31,6 +31,12 @@ import {
 
 const chartColors = { ...baseChartColors, orange400: '#f97316' };
 
+function resolvedChartColor(cssVar: string, chartFallback: string): string {
+  if (typeof window === 'undefined') return chartFallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return v || chartFallback;
+}
+
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
@@ -247,7 +253,7 @@ function GaugeCard({
       {/* Tooltip */}
       {showTooltip && (
         <div
-          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
+          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-sm px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
           style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
         >
           <div className="flex items-center gap-1.5">
@@ -292,13 +298,13 @@ function PieChartCard({
     tooltip: {
       show: true,
       trigger: 'item',
-      backgroundColor: '#ffffff',
-      borderColor: '#e2e8f0',
+      backgroundColor: resolvedChartColor('--color-surface-default', '#ffffff'),
+      borderColor: resolvedChartColor('--color-border-default', '#e2e8f0'),
       borderWidth: 1,
       borderRadius: 6,
       padding: [8, 12],
       textStyle: {
-        color: '#1e293b',
+        color: chartColors.slate800,
         fontSize: 11,
         fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
@@ -331,7 +337,7 @@ function PieChartCard({
           },
           fontSize: 12,
           fontWeight: 600,
-          color: '#ffffff',
+          color: resolvedChartColor('--color-text-on-primary', '#ffffff'),
           fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
         },
         emphasis: {
@@ -518,8 +524,8 @@ function AlarmTrendCard() {
     },
     tooltip: {
       trigger: 'axis' as const,
-      backgroundColor: 'white',
-      borderColor: '#e2e8f0',
+      backgroundColor: resolvedChartColor('--color-surface-default', '#ffffff'),
+      borderColor: resolvedChartColor('--color-border-default', '#e2e8f0'),
       textStyle: { color: chartColors.slate800, fontSize: 11 },
     },
     series: legendLabels

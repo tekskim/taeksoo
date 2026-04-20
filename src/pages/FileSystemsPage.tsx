@@ -231,8 +231,6 @@ export function FileSystemsPage() {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
-          showSettings
-          onSettingsClick={() => console.log('Settings clicked')}
           totalItems={totalItems}
           selectedCount={selectedRows.length}
         />
