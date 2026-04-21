@@ -83,7 +83,7 @@ const badgeListProps: PropDef[] = [
   },
   {
     name: 'type',
-    type: "'solid' | 'subtle'",
+    type: "'subtle'",
     required: false,
     description: 'Badge type',
   },

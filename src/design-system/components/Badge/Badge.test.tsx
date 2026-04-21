@@ -26,44 +26,34 @@ describe('Badge', () => {
     it('applies red theme', () => {
       render(<Badge theme="red">Red</Badge>);
       const badge = screen.getByText('Red');
-      expect(badge).toHaveClass('bg-[var(--color-state-danger)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-red-bg)]');
     });
 
     it('applies green theme', () => {
       render(<Badge theme="green">Green</Badge>);
       const badge = screen.getByText('Green');
-      expect(badge).toHaveClass('bg-[var(--color-state-success)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-green-bg)]');
     });
 
     it('applies yellow theme', () => {
       render(<Badge theme="yellow">Yellow</Badge>);
       const badge = screen.getByText('Yellow');
-      expect(badge).toHaveClass('bg-[var(--color-state-warning)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-yellow-bg)]');
     });
 
     it('applies gray theme', () => {
       render(<Badge theme="gray">Gray</Badge>);
       const badge = screen.getByText('Gray');
-      expect(badge).toHaveClass('bg-[var(--color-text-subtle)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-gray-bg)]');
     });
   });
 
   describe('Types', () => {
-    it('applies solid type by default', () => {
-      render(<Badge theme="blue">Solid</Badge>);
-      const badge = screen.getByText('Solid');
-      expect(badge).toHaveClass('bg-[var(--color-state-info)]');
-      expect(badge).toHaveClass('text-[var(--color-text-on-primary)]');
-    });
-
-    it('applies subtle type', () => {
-      render(
-        <Badge theme="blue" type="subtle">
-          Subtle
-        </Badge>
-      );
+    it('applies subtle type by default', () => {
+      render(<Badge theme="blue">Subtle</Badge>);
       const badge = screen.getByText('Subtle');
       expect(badge).toHaveClass('bg-[var(--badge-subtle-blue-bg)]');
+      expect(badge).toHaveClass('text-[var(--badge-subtle-blue-text)]');
     });
   });
 
@@ -135,7 +125,7 @@ describe('Badge', () => {
         </Badge>
       );
       const badge = screen.getByText('Mixed');
-      expect(badge).toHaveClass('bg-[var(--color-state-danger)]');
+      expect(badge).toHaveClass('bg-[var(--badge-subtle-red-bg)]');
     });
   });
 

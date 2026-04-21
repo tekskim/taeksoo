@@ -21,6 +21,10 @@ import {
   fixedColumns,
   CopyButton,
   MonitoringToolbar,
+  Modal,
+  ConfirmModal,
+  InfoBox,
+  InlineMessage,
   type TimeRangeValue,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
@@ -883,6 +887,70 @@ const diskUsageData = generateWaveData(55, 20);
 const diskIOPSReadData = generateWaveData(600, 200);
 const diskIOPSWriteData = generateWaveData(420, 150);
 
+type SingleInstanceModalType =
+  | 'stop'
+  | 'reboot'
+  | 'softReboot'
+  | 'shelve'
+  | 'unrescue'
+  | 'confirmResize'
+  | 'revertResize'
+  | 'delete';
+
+const SINGLE_INSTANCE_MODAL_COPY: Record<
+  SingleInstanceModalType,
+  { title: string; warning: string; confirmText: string; confirmVariant: 'primary' | 'danger' }
+> = {
+  stop: {
+    title: 'Stop Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Stop',
+    confirmVariant: 'danger',
+  },
+  reboot: {
+    title: 'Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Reboot',
+    confirmVariant: 'danger',
+  },
+  softReboot: {
+    title: 'Soft Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Soft Reboot',
+    confirmVariant: 'primary',
+  },
+  shelve: {
+    title: 'Shelve Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Shelve',
+    confirmVariant: 'primary',
+  },
+  unrescue: {
+    title: 'Unrescue Instance',
+    warning: 'Unrescuing this instance will restart it and may interrupt services running on it.',
+    confirmText: 'Unrescue',
+    confirmVariant: 'primary',
+  },
+  confirmResize: {
+    title: 'Confirm Resize',
+    warning: 'Confirming the resize may affect the services running on the instance.',
+    confirmText: 'Confirm',
+    confirmVariant: 'primary',
+  },
+  revertResize: {
+    title: 'Revert Resize',
+    warning: 'Reverting the resize may affect the services running on the instance.',
+    confirmText: 'Revert',
+    confirmVariant: 'primary',
+  },
+  delete: {
+    title: 'Delete Instance',
+    warning: 'Deleting this instance may interrupt the services running on it.',
+    confirmText: 'Delete',
+    confirmVariant: 'danger',
+  },
+};
+
 /* ----------------------------------------
    Instance Detail Page
    ---------------------------------------- */
@@ -965,6 +1033,10 @@ export function ComputeAdminInstanceDetailPage() {
   >(null);
   const [actionLogSortDirection, setActionLogSortDirection] = useState<'asc' | 'desc'>('asc');
   const actionLogRowsPerPage = 10;
+
+  const [singleInstanceModal, setSingleInstanceModal] = useState<SingleInstanceModalType | null>(
+    null
+  );
   const filteredActionLogs = mockActionLogs
     .filter(
       (log) =>
@@ -1061,16 +1133,7 @@ export function ComputeAdminInstanceDetailPage() {
       <VStack gap={6} className="min-w-[1176px]">
         {/* Instance Header Card */}
         <DetailHeader>
-          <DetailHeader.Title>
-            {instance.locked && (
-              <IconLock
-                size={16}
-                stroke={1.5}
-                className="inline-block mr-1.5 text-[var(--color-text-default)]"
-              />
-            )}
-            {instance.name}
-          </DetailHeader.Title>
+          <DetailHeader.Title>{instance.name}</DetailHeader.Title>
 
           <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconTerminal2 size={12} />}>
@@ -1079,13 +1142,28 @@ export function ComputeAdminInstanceDetailPage() {
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
               Start
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPlayerStop size={12} />}
+              onClick={() => setSingleInstanceModal('stop')}
+            >
               Stop
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPower size={12} />}
+              onClick={() => setSingleInstanceModal('reboot')}
+            >
               Reboot
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setSingleInstanceModal('delete')}
+            >
               Delete
             </Button>
             <ContextMenu
@@ -1097,7 +1175,7 @@ export function ComputeAdminInstanceDetailPage() {
                     {
                       id: 'soft-reboot',
                       label: 'Soft reboot',
-                      onClick: () => console.log('Soft reboot instance'),
+                      onClick: () => setSingleInstanceModal('softReboot'),
                     },
                     {
                       id: 'pause',
@@ -1112,7 +1190,7 @@ export function ComputeAdminInstanceDetailPage() {
                     {
                       id: 'shelve',
                       label: 'Shelve',
-                      onClick: () => console.log('Shelve instance'),
+                      onClick: () => setSingleInstanceModal('shelve'),
                     },
                     {
                       id: 'unpause',
@@ -1137,7 +1215,7 @@ export function ComputeAdminInstanceDetailPage() {
                     {
                       id: 'unrescue',
                       label: 'Unrescue',
-                      onClick: () => console.log('Unrescue instance'),
+                      onClick: () => setSingleInstanceModal('unrescue'),
                     },
                   ],
                 },
@@ -1170,12 +1248,12 @@ export function ComputeAdminInstanceDetailPage() {
                 {
                   id: 'confirm-resize',
                   label: 'Confirm resize',
-                  onClick: () => console.log('Confirm resize'),
+                  onClick: () => setSingleInstanceModal('confirmResize'),
                 },
                 {
                   id: 'revert-resize',
                   label: 'Revert resize',
-                  onClick: () => console.log('Revert resize'),
+                  onClick: () => setSingleInstanceModal('revertResize'),
                 },
               ]}
               trigger="click"
@@ -1574,20 +1652,12 @@ export function ComputeAdminInstanceDetailPage() {
                       key: 'floatingIp',
                       label: 'Floating IP',
                       render: (_value: string, row: FloatingIP) => (
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <Link
-                            to={`/compute-admin/floating-ips/${row.id}`}
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
-                          >
-                            {row.floatingIp}
-                          </Link>
-                          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-                            <span className="truncate" title={row.id}>
-                              ID : {row.id.slice(0, 8)}
-                            </span>
-                            <InlineCopyId value={row.id} />
-                          </span>
-                        </div>
+                        <Link
+                          to={`/compute-admin/floating-ips/${row.id}`}
+                          className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                        >
+                          {row.floatingIp}
+                        </Link>
                       ),
                     },
                     {
@@ -2200,6 +2270,50 @@ export function ComputeAdminInstanceDetailPage() {
           </Tabs>
         </div>
       </VStack>
+
+      {singleInstanceModal &&
+        (SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmVariant === 'danger' ? (
+          <ConfirmModal
+            isOpen
+            onClose={() => setSingleInstanceModal(null)}
+            onConfirm={() => setSingleInstanceModal(null)}
+            title={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].title}
+            description={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].warning}
+            infoLabel="Instance"
+            infoValue={instance.name}
+            confirmText={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmText}
+            cancelText="Cancel"
+            confirmVariant="danger"
+          />
+        ) : (
+          <Modal
+            isOpen
+            onClose={() => setSingleInstanceModal(null)}
+            title={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].title}
+            size="sm"
+          >
+            <InfoBox label="Instance" value={instance.name} />
+            <InlineMessage variant="error">
+              {SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].warning}
+            </InlineMessage>
+            <div className="flex gap-2 w-full">
+              <Button
+                variant="secondary"
+                onClick={() => setSingleInstanceModal(null)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => setSingleInstanceModal(null)}
+                className="flex-1"
+              >
+                {SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmText}
+              </Button>
+            </div>
+          </Modal>
+        ))}
     </PageShell>
   );
 }

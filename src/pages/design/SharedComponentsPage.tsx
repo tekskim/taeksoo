@@ -176,7 +176,7 @@ const COMPONENTS: SharedComponent[] = [
   {
     name: 'Badge',
     path: 'Badge.tsx',
-    description: '뱃지. theme, size, type(solid/subtle), icon 지원.',
+    description: '뱃지. theme, size, icon 지원.',
     tdsEquivalent: 'Badge',
     status: 'migrated',
     category: 'Data Display',

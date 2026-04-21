@@ -99,6 +99,7 @@ import { ComputeAdminBareMetalNodesPage } from '@/pages/ComputeAdminBareMetalNod
 import { ComputeAdminInstanceDetailPage } from '@/pages/ComputeAdminInstanceDetailPage';
 import { ComputeAdminInstanceListPage } from '@/pages/ComputeAdminInstanceListPage';
 import { ComputeAdminCreateInstancePage } from '@/pages/ComputeAdminCreateInstancePage';
+import { ComputeAdminInstanceTemplateDetailViewPage } from '@/pages/ComputeAdminInstanceTemplateDetailViewPage';
 import { ComputeAdminInstanceTemplateDetailPage } from '@/pages/ComputeAdminInstanceTemplateDetailPage';
 import CreateTemplatePage from '@/pages/CreateTemplatePage';
 import { ComputeAdminCreateTemplatePage } from '@/pages/ComputeAdminCreateTemplatePage';
@@ -604,6 +605,10 @@ function AppRoutes() {
       />
       <Route
         path="/compute-admin/instance-templates/:id"
+        element={<ComputeAdminInstanceTemplateDetailViewPage />}
+      />
+      <Route
+        path="/compute-admin/instance-templates/:id/edit"
         element={<ComputeAdminInstanceTemplateDetailPage />}
       />
       <Route
@@ -633,6 +638,7 @@ function AppRoutes() {
         path="/compute-admin/bare-metal-nodes/:id"
         element={<ComputeAdminBareMetalDetailPage />}
       />
+      <Route path="/compute-admin/bare-metal/:id" element={<ComputeAdminBareMetalDetailPage />} />
       <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
       <Route path="/compute-admin/volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
       <Route path="/compute-admin/volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />

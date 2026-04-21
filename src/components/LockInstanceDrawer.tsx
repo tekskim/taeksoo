@@ -49,6 +49,7 @@ export function LockInstanceDrawer({
       isOpen={isOpen}
       onClose={handleClose}
       title="Lock setting"
+      description="Locking an instance prevents it from being deleted or modified. You can unlock it anytime to allow changes again."
       width={360}
       footer={
         <HStack gap={2} className="w-full">
@@ -73,11 +74,7 @@ export function LockInstanceDrawer({
         {instance && <InfoBox label="Instance" value={instance.name} />}
 
         {/* Lock Status */}
-        <FormField
-          label="Lock status"
-          description="When locked, the instance cannot be modified or deleted."
-          spacing="loose"
-        >
+        <FormField label="Lock status" spacing="loose">
           <HStack gap={2} align="center">
             <Toggle checked={isLocked} onChange={setIsLocked} />
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
