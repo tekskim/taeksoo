@@ -780,26 +780,47 @@ function DesktopTopBar({
 
   const prevAutoHideRef = useRef(autoHide);
   const [slideIn, setSlideIn] = useState(false);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
     const wasAutoHide = prevAutoHideRef.current;
     prevAutoHideRef.current = autoHide;
 
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+
     if (autoHide) {
-      setAnimateTransition(true);
-      setTopBarVisible(false);
+      setAnimateTransition(false);
+      setTopBarVisible(true);
       setSlideIn(false);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = requestAnimationFrame(() => {
+          rafRef.current = 0;
+          setAnimateTransition(true);
+          setTopBarVisible(false);
+        });
+      });
     } else if (wasAutoHide && !autoHide) {
       setSlideIn(true);
       setAnimateTransition(false);
       setTopBarVisible(false);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = requestAnimationFrame(() => {
+          rafRef.current = 0;
           setAnimateTransition(true);
           setTopBarVisible(true);
         });
       });
     }
+
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
+      }
+    };
   }, [autoHide]);
 
   const isHidden = slideIn ? !topBarVisible : autoHide && !topBarVisible;
@@ -820,9 +841,6 @@ function DesktopTopBar({
       onTransitionEnd={(e) => {
         if (slideIn && topBarVisible && e.propertyName === 'transform') {
           setSlideIn(false);
-        }
-        if (!slideIn && e.propertyName === 'box-shadow') {
-          setAnimateTransition(false);
         }
       }}
     >
@@ -1160,7 +1178,7 @@ function PageWindow({
   const [isMaximized, setIsMaximized] = useState(false);
   const [position, setPosition] = useState(() => ({
     x: Math.max(0, Math.round((window.innerWidth - 1440) / 2)),
-    y: Math.max(0, Math.round((window.innerHeight - 800) / 2)),
+    y: Math.max(TOP_BAR_HEIGHT, Math.round((window.innerHeight - 800) / 2 + TOP_BAR_HEIGHT / 2)),
   }));
   const [size, setSize] = useState({ width: 1440, height: 800 });
   const [preMaxState, setPreMaxState] = useState<{
@@ -1313,7 +1331,7 @@ function PageWindow({
   if (!isOpen) return null;
 
   const windowTransition =
-    hasMounted.current && !isDragging.current && !isResizing.current
+    hasMounted.current && !isDragging.current && !isResizing.current && !isMinimized
       ? 'width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, border-radius 250ms ease-out'
       : 'none';
 
@@ -1361,11 +1379,15 @@ function PageWindow({
         className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         style={{
           ...windowStyle,
-          transformOrigin: 'bottom left',
+          transformOrigin: isMinimized ? 'top left' : 'center',
           ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
         }}
-        onClick={onFocus}
-        onMouseDown={onFocus}
+        onClick={(e) => {
+          if (!(e.target as HTMLElement).closest('button')) onFocus();
+        }}
+        onMouseDown={(e) => {
+          if (!(e.target as HTMLElement).closest('button')) onFocus();
+        }}
       >
         {/* Window Content — window controls are integrated into TabBar via context */}
         <DesktopWindowProvider value={{ isDesktopWindow: true, controls: windowControls }}>

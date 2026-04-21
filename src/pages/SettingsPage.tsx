@@ -10,6 +10,7 @@ import {
   Table,
   columnMinWidths,
 } from '@/design-system';
+import { CopyButton } from '@/design-system/components/CopyButton/CopyButton';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { IconCheck, IconEye, IconEyeOff, IconEdit, IconLock } from '@tabler/icons-react';
 
@@ -267,7 +268,6 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   const [passwordError, setPasswordError] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [otpError, setOtpError] = useState('');
-  const [secretKeyCopied, setSecretKeyCopied] = useState(false);
 
   // Demo secret key for authenticator
   const demoSecretKey = 'JBSWY3DPEHPK3PXP';
@@ -1017,10 +1017,11 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 </p>
 
                 {/* Secret Key */}
-                <div className="px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                  <code className="font-mono text-body-md tracking-wider text-[var(--color-text-default)] break-all">
+                <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                  <code className="font-mono text-body-md tracking-wider text-[var(--color-text-default)] break-all flex-1">
                     {demoSecretKey}
                   </code>
+                  <CopyButton value={demoSecretKey} size="sm" iconOnly tooltip="Copy secret key" />
                 </div>
 
                 {/* QR Code */}

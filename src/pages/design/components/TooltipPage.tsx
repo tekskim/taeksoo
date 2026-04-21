@@ -79,7 +79,16 @@ const TOOLTIP_GUIDELINES = `## Overview
 | --- | --- |
 | min-width | 60px |
 | max-width | 240px |
-| 텍스트 최대 줄 수 | 2줄 |
+| 텍스트 정렬 | left (왼쪽 정렬) |
+| 텍스트 최대 줄 수 | 2줄 (권장), 3줄 (최대) |
+
+### 문자 제한 가이드라인
+
+| 구분 | 글자 수 | 줄 수 | 설명 |
+| --- | --- | --- | --- |
+| 권장 | 80자 이내 | ~2줄 | 가장 이상적인 길이. 빠르게 읽힌다. |
+| 최대 | 120자 이내 | ~3줄 | 부연 설명이 필요할 때 허용 범위. |
+| 초과 시 | 120자 초과 | 4줄+ | Popover 또는 인라인 텍스트 사용 검토. |
 
 ---
 
@@ -100,6 +109,7 @@ const TOOLTIP_GUIDELINES = `## Overview
 
 - 텍스트는 짧고 명확하게 작성한다. 문장보다는 명사구 또는 간결한 동사구 형태를 권장한다.
   - 예) 설정 저장, 전체 화면으로 보기, 클립보드에 복사
+- **권장 80자, 최대 120자** 이내로 작성한다. 120자를 초과하면 Popover 또는 인라인 텍스트 사용을 검토한다.
 - 트리거 요소에 이미 표시된 텍스트를 그대로 반복하지 않는다.
 - 문장 끝에 마침표를 붙이지 않는다.
 - 아이콘 버튼의 경우 아이콘의 기술적 명칭을 사용하지 말고, 맥락에 맞는 설명으로 재작성한다.
@@ -135,7 +145,7 @@ const ARROW_CLASS: Record<TooltipDir, string> = {
 
 function TooltipShape({ content, direction }: { content: string; direction: TooltipDir }) {
   return (
-    <div className="relative inline-flex items-center justify-center px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-[length:var(--tooltip-font-size)] rounded-[var(--tooltip-radius)] w-max max-w-[var(--tooltip-max-width)]">
+    <div className="relative inline-flex items-center justify-start px-[var(--tooltip-padding-x)] py-[var(--tooltip-padding-y)] bg-[var(--color-text-default)] text-[var(--color-surface-default)] text-[length:var(--tooltip-font-size)] rounded-[var(--tooltip-radius)] w-max max-w-[var(--tooltip-max-width)]">
       {content}
       <div className={ARROW_CLASS[direction]} />
     </div>
@@ -510,6 +520,100 @@ export function TooltipPage() {
             </VStack>
           </VStack>
 
+          {/* ── Max Length ── */}
+          <VStack gap={8}>
+            <VStack gap={2}>
+              <h3 className="text-heading-h4 text-[var(--color-text-default)]">Max Length</h3>
+              <span className="text-body-md text-[var(--color-text-muted)]">
+                Tooltip 텍스트는 max-width 240px 내에서 자동 줄바꿈된다. 권장 80자(약 2줄) 이내,
+                최대 120자(약 3줄) 이내로 작성한다.
+              </span>
+            </VStack>
+
+            <VStack gap={6}>
+              <VStack gap={3}>
+                <VStack gap={1}>
+                  <span className="text-label-md text-[var(--color-text-default)]">
+                    1줄 — 짧은 텍스트 (40자 이내)
+                  </span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    가장 이상적인 길이. 한 줄로 표시되어 빠르게 읽힌다.
+                  </span>
+                </VStack>
+                <div className="flex gap-10 items-start py-4">
+                  <StaticTooltip content="Delete this item permanently" position="top">
+                    <Button variant="secondary" size="sm">
+                      Short (EN)
+                    </Button>
+                  </StaticTooltip>
+                  <StaticTooltip content="이 항목을 영구적으로 삭제합니다" position="top">
+                    <Button variant="secondary" size="sm">
+                      Short (KO)
+                    </Button>
+                  </StaticTooltip>
+                </div>
+              </VStack>
+
+              <VStack gap={3}>
+                <VStack gap={1}>
+                  <span className="text-label-md text-[var(--color-text-default)]">
+                    2줄 — 권장 최대 (80자 이내)
+                  </span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    부연 설명이 필요할 때 허용되는 범위. 2줄 이내로 유지한다.
+                  </span>
+                </VStack>
+                <div className="flex gap-10 items-start py-4">
+                  <StaticTooltip
+                    content="The maximum number of pods that can be created over the desired count"
+                    position="top"
+                  >
+                    <Button variant="secondary" size="sm">
+                      Medium (EN)
+                    </Button>
+                  </StaticTooltip>
+                  <StaticTooltip
+                    content="롤링 업데이트 중 원하는 파드 수 이상으로 생성할 수 있는 최대 파드 수를 설정합니다"
+                    position="top"
+                  >
+                    <Button variant="secondary" size="sm">
+                      Medium (KO)
+                    </Button>
+                  </StaticTooltip>
+                </div>
+              </VStack>
+
+              <VStack gap={3}>
+                <VStack gap={1}>
+                  <span className="text-label-md text-[var(--color-text-default)]">
+                    3줄 — 절대 최대 (120자 이내)
+                  </span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    이 길이를 초과하면 Popover 또는 인라인 텍스트 사용을 검토한다.
+                  </span>
+                </VStack>
+                <div className="flex gap-10 items-start py-4">
+                  <StaticTooltip
+                    content="The maximum number of additional pods that can be created over the desired number of pods during a rolling update process"
+                    position="top"
+                  >
+                    <Button variant="secondary" size="sm">
+                      Long (EN)
+                    </Button>
+                  </StaticTooltip>
+                  <StaticTooltip
+                    content="롤링 업데이트 과정에서 원하는 파드 수를 초과하여 추가로 생성할 수 있는 최대 파드 수를 지정하는 설정입니다. 기본값은 25%입니다."
+                    position="top"
+                  >
+                    <Button variant="secondary" size="sm">
+                      Long (KO)
+                    </Button>
+                  </StaticTooltip>
+                </div>
+              </VStack>
+            </VStack>
+          </VStack>
+
           {/* ── Badge Tooltip ── */}
           <VStack gap={8}>
             <VStack gap={2}>
@@ -533,7 +637,7 @@ export function TooltipPage() {
               doItems={[
                 '아이콘 전용 버튼에는 반드시 Tooltip으로 기능 설명을 제공한다.',
                 '말줄임(truncate) 처리된 텍스트에 hover 시 전체 텍스트를 Tooltip으로 표시한다.',
-                'Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (최대 2줄)',
+                'Tooltip 텍스트는 핵심만 담아 간결하게 작성한다. (권장 80자, 최대 120자)',
                 '표시 지연(delay)을 적절히 설정하여 불필요한 노출을 방지한다. (기본 200ms)',
                 '기본 위치를 top으로 하되, 화면 가장자리에서는 자동 반전을 허용한다.',
               ]}
@@ -542,6 +646,7 @@ export function TooltipPage() {
                 '이미 충분히 설명된 요소에 중복 Tooltip을 추가하지 않는다.',
                 '사용자가 반드시 확인해야 하는 필수 정보를 Tooltip에만 담지 않는다.',
                 '비활성화(disabled) 버튼에 Tooltip을 붙이지 않는다.',
+                '120자를 초과하는 긴 텍스트를 Tooltip에 담지 않는다. Popover 또는 인라인 텍스트를 사용한다.',
               ]}
             />
           </VStack>

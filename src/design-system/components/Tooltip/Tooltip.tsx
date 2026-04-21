@@ -231,7 +231,7 @@ export function Tooltip({
                   rounded-[var(--tooltip-radius)]
                   text-[length:var(--tooltip-font-size)]
                   leading-[var(--tooltip-line-height)]
-                  text-center
+                  text-left
                   min-w-[var(--tooltip-min-width)]
                   max-w-[var(--tooltip-max-width)]
                   w-max
