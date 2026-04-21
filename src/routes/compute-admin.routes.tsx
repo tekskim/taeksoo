@@ -13,6 +13,9 @@ const ComputeAdminCreateInstancePage = lazy(() => import('@/pages/ComputeAdminCr
 const ComputeAdminInstanceTemplatesPage = lazy(
   () => import('@/pages/ComputeAdminInstanceTemplatesPage')
 );
+const ComputeAdminInstanceTemplateDetailViewPage = lazy(
+  () => import('@/pages/ComputeAdminInstanceTemplateDetailViewPage')
+);
 const ComputeAdminInstanceTemplateDetailPage = lazy(
   () => import('@/pages/ComputeAdminInstanceTemplateDetailPage')
 );
@@ -132,6 +135,10 @@ export const computeAdminRoutes = (
     />
     <Route
       path="/compute-admin/instance-templates/:id"
+      element={<ComputeAdminInstanceTemplateDetailViewPage />}
+    />
+    <Route
+      path="/compute-admin/instance-templates/:id/edit"
       element={<ComputeAdminInstanceTemplateDetailPage />}
     />
 
@@ -168,6 +175,7 @@ export const computeAdminRoutes = (
       path="/compute-admin/bare-metal-nodes/:id"
       element={<ComputeAdminBareMetalDetailPage />}
     />
+    <Route path="/compute-admin/bare-metal/:id" element={<ComputeAdminBareMetalDetailPage />} />
 
     {/* Storage - Volumes */}
     <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />

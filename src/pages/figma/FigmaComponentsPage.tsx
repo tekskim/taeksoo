@@ -326,7 +326,7 @@ const buttonHoverClasses: Record<string, string> = {
 };
 
 const badgeThemes = ['blue', 'red', 'green', 'yellow', 'gray', 'white'] as const;
-const badgeTypes = ['solid', 'subtle'] as const;
+const badgeTypes = ['subtle'] as const;
 const badgeSizes = ['sm', 'md', 'lg'] as const;
 
 const statusTypes = [
@@ -1391,7 +1391,7 @@ export function FigmaComponentsPage() {
               type: 'Variant',
               values: 'blue | red | green | yellow | gray | white',
             },
-            { name: 'Type', type: 'Variant', values: 'solid | subtle' },
+            { name: 'Type', type: 'Variant', values: 'subtle' },
             { name: 'Size', type: 'Variant', values: 'sm | md | lg' },
             { name: 'Dot', type: 'Boolean', values: 'true | false' },
             { name: 'LeftIcon', type: 'Instance swap', values: 'icon slot' },

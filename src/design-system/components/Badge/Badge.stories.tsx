@@ -29,10 +29,6 @@ const meta: Meta<typeof Badge> = {
 | **red** | 오류, 위험, 삭제 |
 | **gray** | 비활성, 초안 |
 
-### 타입
-- **solid**: 채워진 배경 (강조)
-- **subtle**: 연한 배경 (덜 강조)
-
 ### 예시
 \`\`\`tsx
 import { Badge } from '@thaki/tds';
@@ -47,9 +43,6 @@ import { Badge } from '@thaki/tds';
 <Badge theme="green" leftIcon={<IconCheck />}>
   Approved
 </Badge>
-
-// Subtle 스타일
-<Badge theme="red" type="subtle">Error</Badge>
 \`\`\`
         `,
       },
@@ -73,13 +66,7 @@ import { Badge } from '@thaki/tds';
       },
     },
     type: {
-      control: 'select',
-      options: ['solid', 'subtle'],
-      description: '배지 스타일 타입',
-      table: {
-        type: { summary: '"solid" | "subtle"' },
-        defaultValue: { summary: '"solid"' },
-      },
+      table: { disable: true },
     },
     size: {
       control: 'select',
@@ -114,7 +101,6 @@ import { Badge } from '@thaki/tds';
   args: {
     children: 'Badge',
     theme: 'white',
-    type: 'solid',
     size: 'md',
   },
 };

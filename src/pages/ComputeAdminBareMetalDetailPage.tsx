@@ -18,8 +18,13 @@ import {
   StatusIndicator,
   ContextMenu,
   PageShell,
+  Tooltip,
+  Chip,
+  type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
   CopyButton,
+  ConfirmModal,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -29,29 +34,19 @@ import {
   IconPlayerStop,
   IconTrash,
   IconChevronDown,
-  IconChevronUp,
   IconChevronRight,
+  IconSquarePlus,
   IconDownload,
-  IconSelector,
   IconLock,
+  IconLockOpen,
   IconPower,
+  IconDotsCircleHorizontal,
 } from '@tabler/icons-react';
 import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
-
-interface AttachedVolume {
-  id: string;
-  name: string;
-  status: 'active' | 'in-use' | 'available' | 'error';
-  size: string;
-  type: string;
-  diskTag: string;
-  bootable: boolean;
-  access: string;
-}
 
 interface AttachedInterface {
   id: string;
@@ -81,167 +76,134 @@ interface BareMetalDetail {
   locked: boolean;
   host: string;
   createdAt: string;
+  origin: string;
   availabilityZone: string;
   description: string;
   flavor: {
     name: string;
-    cpu: number;
+    vcpu: number;
     ram: string;
     disk: string;
-    gpu: string;
+    gpu: number;
   };
-  imageName: string;
   image: string;
-  interfaces: number;
+  os: string;
   keyPair: string;
-  serverGroup: string;
-  userData: string;
+  tags: { key: string; value: string }[];
 }
 
 /* ----------------------------------------
    Mock Data
    ---------------------------------------- */
 
-// Bare Metal data map by ID
 const mockBareMetalMap: Record<string, BareMetalDetail> = {
-  '12345678': {
-    id: '12345678',
+  'bm-001': {
+    id: 'bm-001',
     name: 'web-server-1',
     status: 'active',
-    locked: true,
-    host: 'rack-01-node-01',
-    createdAt: 'Jul 25, 2026 10:32:16',
+    host: 'compute-03',
+    createdAt: 'Dec 25, 2026 09:12:20',
+    origin: 'Container cluster (k8s-prod)',
     availabilityZone: 'zone-a',
-    description: 'Production web server',
-    flavor: { name: 'BM flavor', cpu: 8, ram: '16 GiB', disk: '10 GiB', gpu: '-' },
-    imageName: 'bm-image-01',
-    image: 'BM image',
-    interfaces: 2,
-    keyPair: 'bm-key',
-    serverGroup: 'web-group',
-    userData: 'Provided at creation',
+    description: '-',
+    flavor: { name: 'BM flavor', vcpu: 8, ram: '16 GiB', disk: '10 GiB', gpu: 0 },
+    image: 'image-01',
+    os: 'Ubuntu 22.04',
+    locked: false,
+    keyPair: 'web-server-10',
+    tags: [
+      { key: 'Team', value: 'dev' },
+      { key: 'Env', value: 'production' },
+    ],
   },
-  '12345679': {
-    id: '12345679',
+  'bm-002': {
+    id: 'bm-002',
     name: 'web-server-2',
     status: 'active',
-    locked: false,
-    host: 'rack-01-node-02',
-    createdAt: 'Jul 24, 2026 03:19:59',
+    host: 'compute-04',
+    createdAt: 'Dec 20, 2026 14:30:00',
+    origin: 'Container cluster (k8s-prod)',
     availabilityZone: 'zone-a',
-    description: 'Production web server backup',
-    flavor: { name: 'BM flavor', cpu: 8, ram: '16 GiB', disk: '10 GiB', gpu: '-' },
-    imageName: 'bm-image-01',
-    image: 'BM image',
-    interfaces: 2,
-    keyPair: 'bm-key',
-    serverGroup: 'web-group',
-    userData: 'Provided at creation',
+    description: 'Secondary web server',
+    flavor: { name: 'BM flavor', vcpu: 8, ram: '16 GiB', disk: '10 GiB', gpu: 0 },
+    image: 'image-01',
+    os: 'Ubuntu 22.04',
+    locked: false,
+    keyPair: 'web-server-10',
+    tags: [{ key: 'Team', value: 'dev' }],
   },
-  '12345680': {
-    id: '12345680',
+  'bm-003': {
+    id: 'bm-003',
     name: 'db-server-1',
     status: 'active',
-    locked: true,
-    host: 'rack-02-node-01',
-    createdAt: 'Jul 20, 2026 23:27:51',
+    host: 'compute-05',
+    createdAt: 'Nov 15, 2026 08:45:00',
+    origin: 'Manual deployment',
     availabilityZone: 'zone-b',
-    description: 'Database server',
-    flavor: { name: 'BM large', cpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: '-' },
-    imageName: 'bm-image-02',
-    image: 'BM image',
-    interfaces: 2,
+    description: 'Primary database server',
+    flavor: { name: 'BM large', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
+    image: 'image-03',
+    os: 'Rocky Linux 9',
+    locked: true,
     keyPair: 'db-key',
-    serverGroup: 'db-group',
-    userData: 'Provided at creation',
+    tags: [
+      { key: 'Team', value: 'infra' },
+      { key: 'Role', value: 'database' },
+    ],
   },
   'bm-004': {
     id: 'bm-004',
     name: 'db-server-2',
     status: 'shutoff',
-    locked: true,
-    host: 'rack-02-node-02',
-    createdAt: 'Jul 15, 2026 12:22:26',
-    availabilityZone: 'zone-b',
-    description: 'Database server standby',
-    flavor: { name: 'BM large', cpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: '-' },
-    imageName: 'bm-image-02',
-    image: 'BM image',
-    interfaces: 2,
-    keyPair: 'db-key',
-    serverGroup: 'db-group',
-    userData: 'Provided at creation',
+    host: 'compute-gpu-01',
+    createdAt: 'Oct 10, 2026 17:20:00',
+    origin: 'Container cluster (ml-cluster)',
+    availabilityZone: 'zone-a',
+    description: 'Machine learning compute node',
+    flavor: { name: 'BM GPU', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
+    image: 'image-04',
+    os: 'Ubuntu 22.04',
+    locked: false,
+    keyPair: 'ml-key',
+    tags: [{ key: 'Team', value: 'ml' }],
   },
   'bm-005': {
     id: 'bm-005',
     name: 'gpu-node-1',
     status: 'active',
-    locked: false,
-    host: 'rack-03-node-01',
-    createdAt: 'Jul 10, 2026 01:17:01',
-    availabilityZone: 'zone-c',
-    description: 'GPU compute node',
-    flavor: { name: 'BM GPU', cpu: 32, ram: '128 GiB', disk: '1 TiB', gpu: 'A100 x4' },
-    imageName: 'bm-gpu-image',
-    image: 'BM GPU',
-    interfaces: 2,
-    keyPair: 'gpu-key',
-    serverGroup: 'gpu-group',
-    userData: 'Provided at creation',
+    host: 'compute-06',
+    createdAt: 'Sep 5, 2026 11:00:00',
+    origin: 'Manual deployment',
+    availabilityZone: 'zone-b',
+    description: 'Distributed storage node',
+    flavor: { name: 'BM storage', vcpu: 8, ram: '32 GiB', disk: '2000 GiB', gpu: 0 },
+    image: 'image-02',
+    os: 'Rocky Linux 9',
+    locked: true,
+    keyPair: 'storage-key',
+    tags: [
+      { key: 'Team', value: 'infra' },
+      { key: 'Role', value: 'storage' },
+    ],
   },
 };
 
-// Default bare metal detail for unknown IDs
 const defaultBareMetalDetail: BareMetalDetail = {
   id: 'unknown',
-  name: 'Unknown Bare Metal',
+  name: 'Unknown Instance',
   status: 'active',
-  locked: false,
-  host: 'unknown-host',
-  createdAt: 'Jul 25, 2026 10:32:16',
-  availabilityZone: 'zone-a',
+  host: 'compute-03',
+  createdAt: 'Dec 25, 2026 09:12:20',
+  origin: '-',
+  availabilityZone: 'nova',
   description: '-',
-  flavor: { name: 'BM flavor', cpu: 8, ram: '16 GiB', disk: '10 GiB', gpu: '-' },
-  imageName: 'unknown-image',
+  flavor: { name: 'BM flavor', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 0 },
   image: 'Unknown',
-  interfaces: 0,
+  os: 'Unknown',
+  locked: false,
   keyPair: '-',
-  serverGroup: '-',
-  userData: '-',
+  tags: [],
 };
-
-const mockAttachedVolumes: AttachedVolume[] = [
-  {
-    id: 'vol-001',
-    name: 'boot-vol',
-    status: 'active',
-    size: '500GiB',
-    type: 'SSD',
-    diskTag: 'OS Disk',
-    bootable: true,
-    access: 'Nov 11, 2026',
-  },
-  {
-    id: 'vol-002',
-    name: 'data-vol-01',
-    status: 'active',
-    size: '1000GiB',
-    type: 'SSD',
-    diskTag: 'Data disk',
-    bootable: false,
-    access: 'Nov 10, 2026',
-  },
-  {
-    id: 'vol-003',
-    name: 'backup-vol',
-    status: 'active',
-    size: '2000GiB',
-    type: '_DEFAULT_',
-    diskTag: 'Backup',
-    bootable: false,
-    access: 'Nov 9, 2026',
-  },
-];
 
 const mockAttachedInterfaces: AttachedInterface[] = [
   {
@@ -296,6 +258,29 @@ const mockActionLogs: ActionLog[] = [
   },
 ];
 
+type BareMetalActionModal = 'stop' | 'reboot' | 'delete';
+
+const BARE_METAL_ACTION_MODAL_COPY: Record<
+  BareMetalActionModal,
+  { title: string; warning: string; confirmText: string }
+> = {
+  stop: {
+    title: 'Stop Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Stop',
+  },
+  reboot: {
+    title: 'Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Reboot',
+  },
+  delete: {
+    title: 'Delete Instance',
+    warning: 'Deleting this instance may interrupt the services running on it.',
+    confirmText: 'Delete',
+  },
+};
+
 /* ----------------------------------------
    Bare Metal Detail Page
    ---------------------------------------- */
@@ -345,38 +330,22 @@ export function ComputeAdminBareMetalDetailPage() {
     }
   }, [interfaceTotalPages, interfaceCurrentPage]);
 
-  // Action Logs tab state
   const [actionLogCurrentPage, setActionLogCurrentPage] = useState(1);
   const [actionLogSearchQuery, setActionLogSearchQuery] = useState('');
   const [expandedLogIds, setExpandedLogIds] = useState<Set<string>>(new Set());
-  const [actionLogSortKey, setActionLogSortKey] = useState<
-    'operationName' | 'requestId' | 'requestedTime' | null
-  >(null);
-  const [actionLogSortDirection, setActionLogSortDirection] = useState<'asc' | 'desc'>('asc');
   const actionLogRowsPerPage = 10;
-  const filteredActionLogs = mockActionLogs
-    .filter(
-      (log) =>
-        log.operationName.toLowerCase().includes(actionLogSearchQuery.toLowerCase()) ||
-        log.requestId.toLowerCase().includes(actionLogSearchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (!actionLogSortKey) return 0;
-      const aValue = a[actionLogSortKey];
-      const bValue = b[actionLogSortKey];
-      const comparison = aValue.localeCompare(bValue);
-      return actionLogSortDirection === 'asc' ? comparison : -comparison;
-    });
-  const actionLogTotalPages = Math.ceil(filteredActionLogs.length / actionLogRowsPerPage);
 
-  const handleActionLogSort = (key: 'operationName' | 'requestId' | 'requestedTime') => {
-    if (actionLogSortKey === key) {
-      setActionLogSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setActionLogSortKey(key);
-      setActionLogSortDirection('asc');
-    }
-  };
+  const filteredActionLogs = mockActionLogs.filter((log) => {
+    if (!actionLogSearchQuery) return true;
+    const q = actionLogSearchQuery.toLowerCase();
+    return (
+      log.operationName.toLowerCase().includes(q) ||
+      log.requestId.toLowerCase().includes(q) ||
+      log.requestedTime.toLowerCase().includes(q)
+    );
+  });
+
+  const actionLogTotalPages = Math.ceil(filteredActionLogs.length / actionLogRowsPerPage);
 
   const toggleLogExpansion = (logId: string) => {
     setExpandedLogIds((prev) => {
@@ -390,8 +359,48 @@ export function ComputeAdminBareMetalDetailPage() {
     });
   };
 
-  // Get bare metal data based on the ID from URL
   const bareMetal = id ? mockBareMetalMap[id] || defaultBareMetalDetail : defaultBareMetalDetail;
+
+  const [bareMetalActionModal, setBareMetalActionModal] = useState<BareMetalActionModal | null>(
+    null
+  );
+
+  const moreActionsItems: ContextMenuItem[] = [
+    {
+      id: 'instance-status',
+      label: 'Instance status',
+      submenu: [
+        { id: 'start-sub', label: 'Start', onClick: () => {} },
+        {
+          id: 'stop-sub',
+          label: 'Stop',
+          status: 'danger',
+          onClick: () => setBareMetalActionModal('stop'),
+        },
+        {
+          id: 'reboot-sub',
+          label: 'Reboot',
+          status: 'danger',
+          onClick: () => setBareMetalActionModal('reboot'),
+        },
+      ],
+    },
+    {
+      id: 'configuration',
+      label: 'Configuration',
+      submenu: [
+        { id: 'lock-setting', label: 'Lock setting', onClick: () => {} },
+        { id: 'manage-tags', label: 'Manage tags', onClick: () => {} },
+        { id: 'edit', label: 'Edit', onClick: () => {} },
+      ],
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => setBareMetalActionModal('delete'),
+    },
+  ];
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
@@ -438,7 +447,7 @@ export function ComputeAdminBareMetalDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Bare Metal Nodes', href: '/compute-admin/bare-metal-nodes' },
+                { label: 'Instances', href: '/compute-admin/instances' },
                 { label: bareMetal.name },
               ]}
             />
@@ -448,43 +457,51 @@ export function ComputeAdminBareMetalDetailPage() {
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={6} className="min-w-[1176px]">
-        {/* Bare Metal Header Card */}
         <DetailHeader>
           <DetailHeader.Title>
-            {bareMetal.locked && (
-              <IconLock
-                size={16}
-                stroke={1.5}
-                className="inline-block mr-1.5 text-[var(--color-text-default)]"
-              />
-            )}
-            {bareMetal.name}
+            <span className="inline-flex items-center gap-2">
+              {bareMetal.locked ? (
+                <Tooltip content="This instance is locked">
+                  <IconLock size={16} className="text-[var(--color-text-muted)]" />
+                </Tooltip>
+              ) : (
+                <Tooltip content="This instance is unlocked">
+                  <IconLockOpen size={16} className="text-[var(--color-text-disabled)]" />
+                </Tooltip>
+              )}
+              {bareMetal.name}
+            </span>
           </DetailHeader.Title>
 
           <DetailHeader.Actions>
             <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
               Start
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPlayerStop size={12} />}
+              onClick={() => setBareMetalActionModal('stop')}
+            >
               Stop
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconPower size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconPower size={12} />}
+              onClick={() => setBareMetalActionModal('reboot')}
+            >
               Reboot
             </Button>
-            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} />}
+              onClick={() => setBareMetalActionModal('delete')}
+            >
               Delete
             </Button>
-            <ContextMenu
-              items={[
-                {
-                  id: 'lock-setting',
-                  label: 'Lock setting',
-                  onClick: () => console.log('Lock setting'),
-                },
-                { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
-              ]}
-              trigger="click"
-            >
+            <ContextMenu items={moreActionsItems} trigger="click">
               <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
                 More actions
               </Button>
@@ -495,6 +512,7 @@ export function ComputeAdminBareMetalDetailPage() {
             <DetailHeader.InfoCard label="Status" value="Active" status="active" />
             <DetailHeader.InfoCard label="ID" value={bareMetal.id} copyable />
             <DetailHeader.InfoCard label="Host" value={bareMetal.host} />
+            <DetailHeader.InfoCard label="Origin" value={bareMetal.origin} />
             <DetailHeader.InfoCard label="Created at" value={bareMetal.createdAt} />
           </DetailHeader.InfoGrid>
         </DetailHeader>
@@ -508,14 +526,12 @@ export function ComputeAdminBareMetalDetailPage() {
               <Tab value="action-logs">Action logs</Tab>
             </TabList>
 
-            {/* Details Tab Panel */}
             <TabPanel value="details" className="pt-0">
               <VStack gap={4} className="pt-4">
-                {/* Basic information */}
                 <SectionCard>
                   <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Name" value={bareMetal.name} />
+                    <SectionCard.DataRow label="Instance name" value={bareMetal.name} />
                     <SectionCard.DataRow
                       label="Availability zone"
                       value={bareMetal.availabilityZone}
@@ -524,99 +540,92 @@ export function ComputeAdminBareMetalDetailPage() {
                   </SectionCard.Content>
                 </SectionCard>
 
-                {/* Flavor */}
                 <SectionCard>
                   <SectionCard.Header title="Flavor" />
                   <SectionCard.Content>
                     <SectionCard.DataRow
-                      label="Flavor name"
+                      label="Flavor"
                       value={bareMetal.flavor.name}
                       isLink
                       linkHref="/compute-admin/flavors"
                     />
                     <SectionCard.DataRow
                       label="Spec"
-                      value={`CPU : ${bareMetal.flavor.cpu} / RAM : ${bareMetal.flavor.ram} / Disk : ${bareMetal.flavor.disk} / GPU : ${bareMetal.flavor.gpu}`}
+                      value={`vCPU : ${bareMetal.flavor.vcpu} / RAM : ${bareMetal.flavor.ram} / Disk : ${bareMetal.flavor.disk} / GPU : ${bareMetal.flavor.gpu}`}
                     />
                   </SectionCard.Content>
                 </SectionCard>
 
-                {/* Source */}
                 <SectionCard>
                   <SectionCard.Header title="Source" />
                   <SectionCard.Content>
                     <SectionCard.DataRow
                       label="Image"
-                      value={bareMetal.imageName}
+                      value={bareMetal.image}
                       isLink
                       linkHref="/compute-admin/images"
                     />
-                    <SectionCard.DataRow label="OS" value={bareMetal.image} />
+                    <SectionCard.DataRow label="OS" value={bareMetal.os} />
                   </SectionCard.Content>
                 </SectionCard>
 
-                {/* Authentication */}
                 <SectionCard>
                   <SectionCard.Header title="Authentication" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow label="Key pair" value={bareMetal.keyPair} />
+                    <SectionCard.DataRow
+                      label="Key pair"
+                      value={bareMetal.keyPair}
+                      isLink
+                      linkHref="/compute-admin/key-pairs"
+                    />
                   </SectionCard.Content>
                 </SectionCard>
 
-                {/* Advanced */}
                 <SectionCard>
                   <SectionCard.Header title="Advanced" />
                   <SectionCard.Content>
-                    <SectionCard.DataRow
-                      label="Tags"
-                      value={
-                        <div className="flex gap-1.5">
-                          <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
-                            <span className="text-[var(--color-text-default)]">Type</span>
-                            <span className="text-[var(--color-border-default)]">|</span>
-                            <span className="text-[var(--color-text-default)]">bare-metal</span>
-                          </span>
-                          <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
-                            <span className="text-[var(--color-text-default)]">Env</span>
-                            <span className="text-[var(--color-border-default)]">|</span>
-                            <span className="text-[var(--color-text-default)]">prod</span>
-                          </span>
+                    <SectionCard.DataRow label="Tags">
+                      {bareMetal.tags.length > 0 ? (
+                        <div className="flex flex-wrap items-center gap-1">
+                          {bareMetal.tags.map((tag, idx) => (
+                            <Chip key={idx} label={tag.key} value={tag.value} />
+                          ))}
                         </div>
-                      }
-                    />
+                      ) : (
+                        <span className="text-body-md text-[var(--color-text-default)]">-</span>
+                      )}
+                    </SectionCard.DataRow>
                   </SectionCard.Content>
                 </SectionCard>
               </VStack>
             </TabPanel>
 
-            {/* Interfaces Tab Panel */}
             <TabPanel value="interfaces" className="pt-0">
               <VStack gap={4} className="pt-4">
-                {/* Header */}
-                <div className="flex items-center h-7">
+                <div className="flex items-center justify-between w-full">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconSquarePlus size={12} />}>
+                    Attach interface
+                  </Button>
                 </div>
 
-                {/* Search */}
-                <div className="flex items-center gap-1">
-                  <SearchInput
-                    placeholder="Search interface by attributes"
-                    value={interfaceSearchQuery}
-                    onChange={(e) => setInterfaceSearchQuery(e.target.value)}
-                    size="sm"
-                    className="w-[280px]"
-                  />
-                </div>
+                <SearchInput
+                  placeholder="Search interface by attributes"
+                  value={interfaceSearchQuery}
+                  onChange={(e) => setInterfaceSearchQuery(e.target.value)}
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
 
-                {/* Pagination */}
                 <Pagination
                   currentPage={interfaceCurrentPage}
                   totalPages={interfaceTotalPages}
                   totalItems={filteredInterfaces.length}
                   onPageChange={setInterfaceCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
 
-                {/* Table */}
                 <Table
                   columns={[
                     {
@@ -645,12 +654,14 @@ export function ComputeAdminBareMetalDetailPage() {
                     {
                       key: 'name',
                       label: 'Name',
+                      flex: 1,
+                      minWidth: columnMinWidths.name,
                       sortable: true,
                       render: (_value: string, iface: AttachedInterface) => (
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/ports/${iface.id}`}
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {iface.name}
                           </Link>
@@ -666,12 +677,14 @@ export function ComputeAdminBareMetalDetailPage() {
                     {
                       key: 'network',
                       label: 'Network',
+                      flex: 1,
+                      minWidth: columnMinWidths.network,
                       sortable: true,
                       render: (_value: string, iface: AttachedInterface) => (
                         <div className="flex flex-col gap-0.5 min-w-0">
                           <Link
                             to={`/compute-admin/networks/${iface.id}`}
-                            className="text-label-md text-[var(--color-action-primary)] hover:underline"
+                            className="inline-flex items-center gap-1.5 min-w-0 text-label-md text-[var(--color-action-primary)] hover:underline truncate"
                           >
                             {iface.network}
                           </Link>
@@ -687,24 +700,54 @@ export function ComputeAdminBareMetalDetailPage() {
                     {
                       key: 'fixedIp',
                       label: 'Fixed IP',
-                      render: (_value: string, iface: AttachedInterface) => (
-                        <span className="text-[var(--color-text-default)]">{iface.fixedIp}</span>
-                      ),
+                      flex: 1,
+                      minWidth: columnMinWidths.fixedIp,
                     },
                     {
                       key: 'macAddress',
                       label: 'Mac address',
-                      render: (_value: string, iface: AttachedInterface) => (
-                        <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
-                      ),
+                      flex: 1,
+                      minWidth: columnMinWidths.macAddress,
                     },
                     {
                       key: 'createdAt',
                       label: 'Created at',
+                      flex: 1,
+                      minWidth: columnMinWidths.createdAt,
                       sortable: true,
-                      render: (_value: string, iface: AttachedInterface) => (
-                        <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
-                      ),
+                    },
+                    {
+                      key: 'action',
+                      label: 'Action',
+                      width: fixedColumns.actions,
+                      align: 'center' as const,
+                      sticky: 'right',
+                      render: (_: unknown, iface: AttachedInterface) => {
+                        const interfaceMenuItems: ContextMenuItem[] = [
+                          {
+                            id: 'detach',
+                            label: 'Detach',
+                            status: 'danger',
+                            onClick: () => {},
+                          },
+                        ];
+                        return (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <ContextMenu items={interfaceMenuItems} trigger="click" align="right">
+                              <button
+                                aria-label="Row actions"
+                                className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
+                              >
+                                <IconDotsCircleHorizontal
+                                  size={16}
+                                  stroke={1.5}
+                                  className="text-[var(--action-icon-color)]"
+                                />
+                              </button>
+                            </ContextMenu>
+                          </div>
+                        );
+                      },
                     },
                   ]}
                   data={filteredInterfaces.slice(
@@ -716,15 +759,12 @@ export function ComputeAdminBareMetalDetailPage() {
               </VStack>
             </TabPanel>
 
-            {/* Action Logs Tab Panel */}
             <TabPanel value="action-logs" className="pt-0">
               <VStack gap={4} className="pt-4">
-                {/* Header */}
                 <div className="flex items-center h-7">
                   <h2 className="text-heading-h5 text-[var(--color-text-default)]">Action logs</h2>
                 </div>
 
-                {/* Search and Download */}
                 <div className="flex items-center gap-1">
                   <SearchInput
                     placeholder="Search action logs by attributes"
@@ -733,8 +773,7 @@ export function ComputeAdminBareMetalDetailPage() {
                       setActionLogSearchQuery(e.target.value);
                       setActionLogCurrentPage(1);
                     }}
-                    size="sm"
-                    className="w-[280px]"
+                    className="w-[var(--search-input-width)]"
                   />
                   <Button
                     variant="secondary"
@@ -744,195 +783,115 @@ export function ComputeAdminBareMetalDetailPage() {
                   />
                 </div>
 
-                {/* Pagination */}
                 <Pagination
                   currentPage={actionLogCurrentPage}
                   totalPages={actionLogTotalPages}
                   onPageChange={setActionLogCurrentPage}
                   totalItems={filteredActionLogs.length}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
                 />
 
-                {/* Action Logs Table */}
-                <div className="w-full flex flex-col gap-1">
-                  {/* Table Header */}
-                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                    <button
-                      type="button"
-                      className="inline-flex flex-1 items-center h-10 px-3 select-none hover:text-[var(--color-action-primary)] transition-colors bg-transparent border-0 font-inherit text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-1 rounded-none"
-                      onClick={() => handleActionLogSort('operationName')}
-                    >
-                      <div className="flex items-center gap-1 w-full">
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Action
-                        </span>
-                        {actionLogSortKey === 'operationName' ? (
-                          actionLogSortDirection === 'asc' ? (
-                            <IconChevronUp
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          ) : (
-                            <IconChevronDown
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          )
-                        ) : (
-                          <IconSelector
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)]"
-                          />
-                        )}
-                      </div>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex flex-1 items-center h-10 px-3 border-0 border-l border-[var(--color-border-default)] select-none hover:text-[var(--color-action-primary)] transition-colors bg-transparent font-inherit text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-1 rounded-none"
-                      onClick={() => handleActionLogSort('requestId')}
-                    >
-                      <div className="flex items-center gap-1 w-full">
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Request ID
-                        </span>
-                        {actionLogSortKey === 'requestId' ? (
-                          actionLogSortDirection === 'asc' ? (
-                            <IconChevronUp
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          ) : (
-                            <IconChevronDown
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          )
-                        ) : (
-                          <IconSelector
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)]"
-                          />
-                        )}
-                      </div>
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex flex-1 items-center h-10 px-3 border-0 border-l border-[var(--color-border-default)] select-none hover:text-[var(--color-action-primary)] transition-colors bg-transparent font-inherit text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-1 rounded-none"
-                      onClick={() => handleActionLogSort('requestedTime')}
-                    >
-                      <div className="flex items-center gap-1 w-full">
-                        <span className="text-label-sm text-[var(--color-text-default)]">
-                          Requested Time
-                        </span>
-                        {actionLogSortKey === 'requestedTime' ? (
-                          actionLogSortDirection === 'asc' ? (
-                            <IconChevronUp
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          ) : (
-                            <IconChevronDown
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-action-primary)]"
-                            />
-                          )
-                        ) : (
-                          <IconSelector
-                            size={14}
-                            stroke={1.5}
-                            className="text-[var(--color-text-disabled)]"
-                          />
-                        )}
-                      </div>
-                    </button>
-                  </div>
-
-                  {/* Table Rows */}
-                  {filteredActionLogs
-                    .slice(
-                      (actionLogCurrentPage - 1) * actionLogRowsPerPage,
-                      actionLogCurrentPage * actionLogRowsPerPage
-                    )
-                    .map((log) => {
-                      const isExpanded = expandedLogIds.has(log.id);
-                      return (
-                        <div
-                          key={log.id}
-                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                        >
-                          {/* Main Row */}
-                          <div className="flex items-center w-full">
-                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
-                              <button
-                                onClick={() => toggleLogExpansion(log.id)}
-                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                {isExpanded ? (
-                                  <IconChevronDown
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-default)]"
-                                  />
-                                ) : (
-                                  <IconChevronRight
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-text-default)]"
-                                  />
-                                )}
-                              </button>
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.operationName}
-                              </span>
-                            </div>
-                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.requestId}
-                              </span>
-                              <CopyButton value={log.requestId} size="sm" iconOnly />
-                            </div>
-                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.requestedTime}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Expanded Details */}
-                          {isExpanded && (
-                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                <span className="font-medium">Result :</span>
-                                <span>{log.result}</span>
-                              </div>
-                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                <span className="font-medium">Start Time :</span>
-                                <span>{log.startTime}</span>
-                              </div>
-                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                <span className="font-medium">End Time :</span>
-                                <span>{log.endTime}</span>
-                              </div>
-                            </div>
-                          )}
+                <Table<ActionLog>
+                  columns={[
+                    {
+                      key: 'operationName',
+                      label: 'Action',
+                      flex: 1,
+                      sortable: true,
+                      render: (_value: string, row: ActionLog) => (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleLogExpansion(row.id);
+                            }}
+                            className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            {expandedLogIds.has(row.id) ? (
+                              <IconChevronDown
+                                size={12}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            ) : (
+                              <IconChevronRight
+                                size={12}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            )}
+                          </button>
+                          <span>{row.operationName}</span>
                         </div>
-                      );
-                    })}
-                </div>
+                      ),
+                    },
+                    {
+                      key: 'requestId',
+                      label: 'Request ID',
+                      flex: 1,
+                      sortable: true,
+                      render: (_value: string, row: ActionLog) => (
+                        <div className="flex items-center gap-1.5">
+                          <span>{row.requestId}</span>
+                          <CopyButton value={row.requestId} size="sm" iconOnly />
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'requestedTime',
+                      label: 'Requested time',
+                      flex: 1,
+                      sortable: true,
+                    },
+                  ]}
+                  data={filteredActionLogs.slice(
+                    (actionLogCurrentPage - 1) * actionLogRowsPerPage,
+                    actionLogCurrentPage * actionLogRowsPerPage
+                  )}
+                  rowKey="id"
+                  onRowClick={(row) => toggleLogExpansion(row.id)}
+                  expandedContent={(row) =>
+                    expandedLogIds.has(row.id) ? (
+                      <div className="flex items-center gap-4 px-8 py-3">
+                        <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                          <span className="font-medium">Result :</span>
+                          <span>{row.result}</span>
+                        </div>
+                        <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                        <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                          <span className="font-medium">Start Time :</span>
+                          <span>{row.startTime}</span>
+                        </div>
+                        <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                        <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                          <span className="font-medium">End Time :</span>
+                          <span>{row.endTime}</span>
+                        </div>
+                      </div>
+                    ) : null
+                  }
+                />
               </VStack>
             </TabPanel>
           </Tabs>
         </div>
       </VStack>
+
+      {bareMetalActionModal && (
+        <ConfirmModal
+          isOpen
+          onClose={() => setBareMetalActionModal(null)}
+          onConfirm={() => setBareMetalActionModal(null)}
+          title={BARE_METAL_ACTION_MODAL_COPY[bareMetalActionModal].title}
+          description={BARE_METAL_ACTION_MODAL_COPY[bareMetalActionModal].warning}
+          infoLabel="Instance"
+          infoValue={bareMetal.name}
+          confirmText={BARE_METAL_ACTION_MODAL_COPY[bareMetalActionModal].confirmText}
+          cancelText="Cancel"
+          confirmVariant="danger"
+        />
+      )}
     </PageShell>
   );
 }

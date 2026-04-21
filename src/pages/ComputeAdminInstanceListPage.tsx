@@ -25,6 +25,11 @@ import {
   type ContextMenuItem,
   fixedColumns,
   columnMinWidths,
+  Tooltip,
+  Modal,
+  ConfirmModal,
+  InfoBox,
+  InlineMessage,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -39,6 +44,7 @@ import {
   IconLock,
   IconTerminal2,
   IconPower,
+  IconExclamationCircle,
 } from '@tabler/icons-react';
 import containerIcon from '@/assets/appIcon/container.png';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -83,14 +89,19 @@ interface Instance {
   gpu: string;
   az: string;
   description?: string;
+  hasContainer?: boolean;
 }
 
 interface BareMetalInstance {
   id: string;
   name: string;
   status: InstanceStatus;
+  locked: boolean;
+  tenant: string;
+  tenantId: string;
+  host: string;
   ip: string;
-  image: string;
+  os: string;
   flavor: string;
   flavorId: string;
   cpu: number;
@@ -98,6 +109,7 @@ interface BareMetalInstance {
   disk: string;
   gpu: string;
   az: string;
+  hasContainer?: boolean;
 }
 
 /* ----------------------------------------
@@ -123,6 +135,7 @@ const mockInstances: Instance[] = [
     disk: '100GB',
     gpu: '1',
     az: 'keystone',
+    hasContainer: true,
   },
   {
     id: 'vm-002',
@@ -142,6 +155,7 @@ const mockInstances: Instance[] = [
     disk: '100GB',
     gpu: '1',
     az: 'keystone',
+    hasContainer: true,
   },
   {
     id: 'vm-003',
@@ -161,6 +175,7 @@ const mockInstances: Instance[] = [
     disk: '200GB',
     gpu: '-',
     az: 'nova',
+    hasContainer: true,
   },
   {
     id: 'vm-004',
@@ -313,6 +328,7 @@ const mockInstances: Instance[] = [
     disk: '100GB',
     gpu: '-',
     az: 'nova',
+    hasContainer: true,
   },
   {
     id: 'vm-012',
@@ -598,6 +614,7 @@ const mockInstances: Instance[] = [
     disk: '2TB',
     gpu: '8',
     az: 'nova',
+    hasContainer: true,
   },
   {
     id: 'vm-027',
@@ -682,8 +699,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-001',
     name: 'web-server-1',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-01',
     ip: '10.62.0.30',
-    image: 'BM image',
+    os: 'CentOS 7',
     flavor: 'BM flavor',
     flavorId: 'flavor-bm-flavor-001',
     cpu: 8,
@@ -691,13 +712,18 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     disk: '10GiB',
     gpu: '-',
     az: 'zone-a',
+    hasContainer: true,
   },
   {
     id: 'bm-002',
     name: 'web-server-2',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-01',
     ip: '10.62.0.31',
-    image: 'BM image',
+    os: 'CentOS 7',
     flavor: 'BM flavor',
     flavorId: 'flavor-bm-flavor-001',
     cpu: 8,
@@ -710,8 +736,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-003',
     name: 'db-server-1',
     status: 'running',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-02',
     ip: '10.62.0.40',
-    image: 'BM image',
+    os: 'Ubuntu 22.04',
     flavor: 'BM large',
     flavorId: 'flavor-bm-large-001',
     cpu: 16,
@@ -724,8 +754,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-004',
     name: 'db-server-2',
     status: 'stopped',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-02',
     ip: '10.62.0.41',
-    image: 'BM image',
+    os: 'Ubuntu 22.04',
     flavor: 'BM large',
     flavorId: 'flavor-bm-large-001',
     cpu: 16,
@@ -738,8 +772,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-005',
     name: 'gpu-node-1',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant C',
+    tenantId: 'tenant-003',
+    host: 'bm-host-03',
     ip: '10.62.0.50',
-    image: 'BM GPU',
+    os: 'Ubuntu 22.04',
     flavor: 'BM GPU',
     flavorId: 'flavor-bm-gpu-001',
     cpu: 32,
@@ -747,13 +785,18 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     disk: '1TiB',
     gpu: 'A100 x4',
     az: 'zone-c',
+    hasContainer: true,
   },
   {
     id: 'bm-006',
     name: 'gpu-node-2',
     status: 'running',
+    locked: false,
+    tenant: 'Tenant C',
+    tenantId: 'tenant-003',
+    host: 'bm-host-03',
     ip: '10.62.0.51',
-    image: 'BM GPU',
+    os: 'Ubuntu 22.04',
     flavor: 'BM GPU',
     flavorId: 'flavor-bm-gpu-001',
     cpu: 32,
@@ -761,13 +804,18 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     disk: '1TiB',
     gpu: 'A100 x4',
     az: 'zone-c',
+    hasContainer: true,
   },
   {
     id: 'bm-007',
     name: 'compute-1',
     status: 'pending',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-04',
     ip: '—',
-    image: 'BM image',
+    os: 'Rocky Linux 9',
     flavor: 'BM xlarge',
     flavorId: 'flavor-bm-xlarge-001',
     cpu: 64,
@@ -780,8 +828,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-008',
     name: 'compute-2',
     status: 'building',
+    locked: false,
+    tenant: 'Tenant A',
+    tenantId: 'tenant-001',
+    host: 'bm-host-04',
     ip: '—',
-    image: 'BM image',
+    os: 'Rocky Linux 9',
     flavor: 'BM xlarge',
     flavorId: 'flavor-bm-xlarge-001',
     cpu: 64,
@@ -794,8 +846,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-009',
     name: 'storage-node-1',
     status: 'running',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-05',
     ip: '10.62.0.60',
-    image: 'BM storage',
+    os: 'CentOS 7',
     flavor: 'BM storage',
     flavorId: 'flavor-bm-storage-001',
     cpu: 8,
@@ -808,8 +864,12 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     id: 'bm-010',
     name: 'storage-node-2',
     status: 'error',
+    locked: true,
+    tenant: 'Tenant B',
+    tenantId: 'tenant-002',
+    host: 'bm-host-05',
     ip: '10.62.0.61',
-    image: 'BM storage',
+    os: 'CentOS 7',
     flavor: 'BM storage',
     flavorId: 'flavor-bm-storage-001',
     cpu: 8,
@@ -892,6 +952,139 @@ const filterFields: FilterField[] = [
   },
 ];
 
+type InstanceLike = { id: string; name: string; status: InstanceStatus; locked: boolean };
+
+function partitionBulkInstances(
+  kind: 'start' | 'stop' | 'reboot' | 'delete',
+  items: InstanceLike[]
+) {
+  const can: InstanceLike[] = [];
+  const cannot: InstanceLike[] = [];
+  for (const item of items) {
+    let eligible = false;
+    if (kind === 'start') {
+      eligible = item.status === 'stopped' || item.status === 'error';
+    } else if (kind === 'stop' || kind === 'reboot') {
+      eligible = item.status === 'running';
+    } else {
+      eligible = !item.locked && item.status !== 'building';
+    }
+    (eligible ? can : cannot).push(item);
+  }
+  return { can, cannot };
+}
+
+type SingleInstanceModalType =
+  | 'stop'
+  | 'reboot'
+  | 'softReboot'
+  | 'shelve'
+  | 'unrescue'
+  | 'confirmResize'
+  | 'revertResize'
+  | 'delete';
+
+type BulkInstanceModalType = 'start' | 'stop' | 'reboot' | 'delete';
+
+const SINGLE_INSTANCE_MODAL_COPY: Record<
+  SingleInstanceModalType,
+  { title: string; warning: string; confirmText: string; confirmVariant: 'primary' | 'danger' }
+> = {
+  stop: {
+    title: 'Stop Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Stop',
+    confirmVariant: 'danger',
+  },
+  reboot: {
+    title: 'Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Reboot',
+    confirmVariant: 'danger',
+  },
+  softReboot: {
+    title: 'Soft Reboot Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Soft Reboot',
+    confirmVariant: 'primary',
+  },
+  shelve: {
+    title: 'Shelve Instance',
+    warning: 'This action may interrupt the services running on the instance.',
+    confirmText: 'Shelve',
+    confirmVariant: 'primary',
+  },
+  unrescue: {
+    title: 'Unrescue Instance',
+    warning: 'Unrescuing this instance will restart it and may interrupt services running on it.',
+    confirmText: 'Unrescue',
+    confirmVariant: 'primary',
+  },
+  confirmResize: {
+    title: 'Confirm Resize',
+    warning: 'Confirming the resize may affect the services running on the instance.',
+    confirmText: 'Confirm',
+    confirmVariant: 'primary',
+  },
+  revertResize: {
+    title: 'Revert Resize',
+    warning: 'Reverting the resize may affect the services running on the instance.',
+    confirmText: 'Revert',
+    confirmVariant: 'primary',
+  },
+  delete: {
+    title: 'Delete Instance',
+    warning: 'Deleting this instance may interrupt the services running on it.',
+    confirmText: 'Delete',
+    confirmVariant: 'danger',
+  },
+};
+
+const BULK_INSTANCE_MODAL_COPY: Record<
+  BulkInstanceModalType,
+  {
+    title: string;
+    canLabel: string;
+    cannotLabel: string;
+    warning: string;
+    confirmText: string;
+    confirmVariant: 'primary' | 'danger';
+  }
+> = {
+  start: {
+    title: 'Start Instances',
+    canLabel: 'Instances that can be delete',
+    cannotLabel: 'Instances that cannot be delete',
+    warning: 'Starting these instances may affect the services running on them.',
+    confirmText: 'Start',
+    confirmVariant: 'primary',
+  },
+  stop: {
+    title: 'Stop Instances',
+    canLabel: 'Instances that can be stop',
+    cannotLabel: 'Instances that cannot be stop',
+    warning: 'Stopping these instances may interrupt the services running on them.',
+    confirmText: 'Stop',
+    confirmVariant: 'danger',
+  },
+  reboot: {
+    title: 'Reboot Instances',
+    canLabel: 'Instances that can be reboot',
+    cannotLabel: 'Instances that cannot be reboot',
+    warning: 'Rebooting these instances may interrupt the services running on them.',
+    confirmText: 'Reboot',
+    confirmVariant: 'danger',
+  },
+  delete: {
+    title: 'Delete Instances',
+    canLabel: 'Instances that can be delete',
+    cannotLabel: 'Instances that cannot be delete',
+    warning: 'Deleting these instances may interrupt the services running on them.',
+    confirmText: 'Delete',
+    confirmVariant: 'danger',
+  },
+};
+
 export function ComputeAdminInstanceListPage() {
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const sidebarWidth = sidebarOpen ? 200 : 0;
@@ -947,6 +1140,14 @@ export function ComputeAdminInstanceListPage() {
   // Table selection state
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
   const [selectedBareMetalInstances, setSelectedBareMetalInstances] = useState<string[]>([]);
+
+  const [singleInstanceModal, setSingleInstanceModal] = useState<SingleInstanceModalType | null>(
+    null
+  );
+  const [targetInstanceName, setTargetInstanceName] = useState('');
+  const [bulkInstanceModal, setBulkInstanceModal] = useState<BulkInstanceModalType | null>(null);
+  const [bulkCanRows, setBulkCanRows] = useState<InstanceLike[]>([]);
+  const [bulkCannotRows, setBulkCannotRows] = useState<InstanceLike[]>([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -1126,6 +1327,42 @@ export function ComputeAdminInstanceListPage() {
     setIsEditDrawerOpen(true);
   };
 
+  const openSingleInstanceModal = (type: SingleInstanceModalType, name: string) => {
+    setTargetInstanceName(name);
+    setSingleInstanceModal(type);
+  };
+
+  const closeSingleInstanceModal = () => {
+    setSingleInstanceModal(null);
+    setTargetInstanceName('');
+  };
+
+  const openBulkInstanceModal = (kind: BulkInstanceModalType) => {
+    const rows: InstanceLike[] =
+      activeTab === 'vm'
+        ? mockInstances.filter((i) => selectedInstances.includes(i.id))
+        : mockBareMetalInstances.filter((i) => selectedBareMetalInstances.includes(i.id));
+    const { can, cannot } = partitionBulkInstances(kind, rows);
+    setBulkCanRows(can);
+    setBulkCannotRows(cannot);
+    setBulkInstanceModal(kind);
+  };
+
+  const closeBulkInstanceModal = () => {
+    setBulkInstanceModal(null);
+    setBulkCanRows([]);
+    setBulkCannotRows([]);
+  };
+
+  const handleBulkInstanceConfirm = () => {
+    if (activeTab === 'vm') {
+      setSelectedInstances([]);
+    } else {
+      setSelectedBareMetalInstances([]);
+    }
+    closeBulkInstanceModal();
+  };
+
   // Context menu items for instances
   const getInstanceContextMenuItems = (instance: Instance): ContextMenuItem[] => [
     {
@@ -1133,17 +1370,39 @@ export function ComputeAdminInstanceListPage() {
       label: 'Instance status',
       submenu: [
         { id: 'start', label: 'Start' },
-        { id: 'stop', label: 'Stop', status: 'danger' },
-        { id: 'reboot', label: 'Reboot', status: 'danger' },
-        { id: 'soft-reboot', label: 'Soft reboot' },
+        {
+          id: 'stop',
+          label: 'Stop',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('stop', instance.name),
+        },
+        {
+          id: 'reboot',
+          label: 'Reboot',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('reboot', instance.name),
+        },
+        {
+          id: 'soft-reboot',
+          label: 'Soft reboot',
+          onClick: () => openSingleInstanceModal('softReboot', instance.name),
+        },
         { id: 'pause', label: 'Pause' },
         { id: 'suspend', label: 'Suspend' },
-        { id: 'shelve', label: 'Shelve' },
+        {
+          id: 'shelve',
+          label: 'Shelve',
+          onClick: () => openSingleInstanceModal('shelve', instance.name),
+        },
         { id: 'unpause', label: 'Unpause' },
         { id: 'resume', label: 'Resume' },
         { id: 'unshelve', label: 'Unshelve' },
         { id: 'rescue', label: 'Rescue' },
-        { id: 'unrescue', label: 'Unrescue' },
+        {
+          id: 'unrescue',
+          label: 'Unrescue',
+          onClick: () => openSingleInstanceModal('unrescue', instance.name),
+        },
       ],
     },
     {
@@ -1164,19 +1423,42 @@ export function ComputeAdminInstanceListPage() {
     },
     { id: 'migrate', label: 'Migrate' },
     { id: 'live-migrate', label: 'Live migrate' },
-    { id: 'confirm-resize', label: 'Confirm resize' },
-    { id: 'revert-resize', label: 'Revert resize' },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    {
+      id: 'confirm-resize',
+      label: 'Confirm resize',
+      onClick: () => openSingleInstanceModal('confirmResize', instance.name),
+    },
+    {
+      id: 'revert-resize',
+      label: 'Revert resize',
+      onClick: () => openSingleInstanceModal('revertResize', instance.name),
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => openSingleInstanceModal('delete', instance.name),
+    },
   ];
 
-  const getBareMetalContextMenuItems = (_instance: BareMetalInstance): ContextMenuItem[] => [
+  const getBareMetalContextMenuItems = (instance: BareMetalInstance): ContextMenuItem[] => [
     {
       id: 'instance-status',
       label: 'Instance status',
       submenu: [
         { id: 'start-sub', label: 'Start' },
-        { id: 'stop-sub', label: 'Stop', status: 'danger' },
-        { id: 'reboot-sub', label: 'Reboot', status: 'danger' },
+        {
+          id: 'stop-sub',
+          label: 'Stop',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('stop', instance.name),
+        },
+        {
+          id: 'reboot-sub',
+          label: 'Reboot',
+          status: 'danger',
+          onClick: () => openSingleInstanceModal('reboot', instance.name),
+        },
       ],
     },
     {
@@ -1188,7 +1470,12 @@ export function ComputeAdminInstanceListPage() {
         { id: 'edit', label: 'Edit' },
       ],
     },
-    { id: 'delete', label: 'Delete', status: 'danger' },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => openSingleInstanceModal('delete', instance.name),
+    },
   ];
 
   // Table columns definition
@@ -1210,13 +1497,23 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) => (
         <div className="flex items-center gap-2 min-w-0">
           <div className="flex flex-col gap-0.5 min-w-0">
-            <Link
-              to={`/compute-admin/instances/${row.id}`}
-              className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
+            <span className="flex items-center gap-1 min-w-0">
+              <Link
+                to={`/compute-admin/instances/${row.id}`}
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.name}
+              </Link>
+              {row.status === 'error' && (
+                <Tooltip content="The instance is in an error state. Detailed information is available on the instance detail page.">
+                  <IconExclamationCircle
+                    size={12}
+                    className="text-[var(--color-state-danger)] shrink-0"
+                  />
+                </Tooltip>
+              )}
+            </span>
             <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
               <span className="truncate" title={row.id}>
                 ID : {row.id.slice(0, 8)}
@@ -1224,9 +1521,11 @@ export function ComputeAdminInstanceListPage() {
               <InlineCopyId value={row.id} />
             </span>
           </div>
-          <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ml-auto">
-            <img src={containerIcon} alt="Container" className="w-4 h-4" />
-          </div>
+          {row.hasContainer && (
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ml-auto">
+              <img src={containerIcon} alt="Container" className="w-4 h-4" />
+            </div>
+          )}
         </div>
       ),
     },
@@ -1422,52 +1721,92 @@ export function ComputeAdminInstanceListPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="flex items-center gap-1 min-w-0">
+              <Link
+                to={`/compute-admin/bare-metal/${row.id}`}
+                className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.name}
+              </Link>
+              {row.status === 'error' && (
+                <Tooltip content="The instance is in an error state. Detailed information is available on the instance detail page.">
+                  <IconExclamationCircle
+                    size={12}
+                    className="text-[var(--color-state-danger)] shrink-0"
+                  />
+                </Tooltip>
+              )}
+            </span>
+            <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+              <span className="truncate" title={row.id}>
+                ID : {row.id.slice(0, 8)}
+              </span>
+              <InlineCopyId value={row.id} />
+            </span>
+          </div>
+          {row.hasContainer && (
+            <div className="flex items-center justify-center w-6 h-6 shrink-0 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] ml-auto">
+              <img src={containerIcon} alt="Container" className="w-4 h-4" />
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'locked',
+      label: 'Locked',
+      width: fixedColumns.locked,
+      align: 'center',
+      sortable: false,
+      render: (_, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      minWidth: columnMinWidths.user,
+      sortable: true,
+      render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Link
-            to={`/compute-admin/bare-metal/${row.id}`}
+            to={`/compute-admin/tenants/${row.tenantId}`}
             className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {row.name}
+            {row.tenant}
           </Link>
           <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-            <span className="truncate" title={row.id}>
-              ID : {row.id.slice(0, 8)}
+            <span className="truncate" title={row.tenantId}>
+              ID : {row.tenantId.slice(0, 8)}
             </span>
-            <InlineCopyId value={row.id} />
+            <InlineCopyId value={row.tenantId} />
           </span>
         </div>
       ),
     },
     {
-      key: 'ip',
-      label: 'Fixed IP',
+      key: 'host',
+      label: 'Host',
       flex: 1,
-      minWidth: columnMinWidths.fixedIp,
-      sortable: false,
+      minWidth: columnMinWidths.hostname,
+      sortable: true,
     },
     {
-      key: 'image',
-      label: 'Image',
+      key: 'os',
+      label: 'OS',
       flex: 1,
       minWidth: columnMinWidths.image,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Link
-            to={`/compute-admin/images/${row.id}`}
-            className="text-label-md text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.image}
-          </Link>
-          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
-            <span className="truncate" title={row.id}>
-              ID : {row.id.slice(0, 8)}
-            </span>
-            <InlineCopyId value={row.id} />
-          </span>
-        </div>
+        <span className="truncate block w-full" title={row.os}>
+          {row.os}
+        </span>
       ),
     },
     {
@@ -1656,6 +1995,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('start')}
               >
                 Start
               </Button>
@@ -1668,6 +2008,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('stop')}
               >
                 Stop
               </Button>
@@ -1680,6 +2021,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('reboot')}
               >
                 Reboot
               </Button>
@@ -1692,6 +2034,7 @@ export function ComputeAdminInstanceListPage() {
                     ? selectedInstances.length === 0
                     : selectedBareMetalInstances.length === 0
                 }
+                onClick={() => openBulkInstanceModal('delete')}
               >
                 Delete
               </Button>
@@ -1837,6 +2180,94 @@ export function ComputeAdminInstanceListPage() {
           // TODO: Implement actual edit API call
         }}
       />
+
+      {singleInstanceModal &&
+        (SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmVariant === 'danger' ? (
+          <ConfirmModal
+            isOpen
+            onClose={closeSingleInstanceModal}
+            onConfirm={closeSingleInstanceModal}
+            title={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].title}
+            description={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].warning}
+            infoLabel="Instance"
+            infoValue={targetInstanceName}
+            confirmText={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmText}
+            cancelText="Cancel"
+            confirmVariant="danger"
+          />
+        ) : (
+          <Modal
+            isOpen
+            onClose={closeSingleInstanceModal}
+            title={SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].title}
+            size="sm"
+          >
+            <InfoBox label="Instance" value={targetInstanceName} />
+            <InlineMessage variant="error">
+              {SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].warning}
+            </InlineMessage>
+            <div className="flex gap-2 w-full">
+              <Button variant="secondary" onClick={closeSingleInstanceModal} className="flex-1">
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={closeSingleInstanceModal} className="flex-1">
+                {SINGLE_INSTANCE_MODAL_COPY[singleInstanceModal].confirmText}
+              </Button>
+            </div>
+          </Modal>
+        ))}
+
+      {bulkInstanceModal && (
+        <Modal
+          isOpen
+          onClose={closeBulkInstanceModal}
+          title={BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].title}
+          size="sm"
+        >
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px] overflow-y-auto">
+            <p className="text-label-sm text-[var(--color-text-subtle)]">
+              {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].canLabel}
+            </p>
+            <ul className="list-disc pl-[18px] mt-1.5">
+              {bulkCanRows.map((row) => (
+                <li key={row.id} className="text-body-md text-[var(--color-text-default)]">
+                  {row.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {bulkCannotRows.length > 0 && (
+            <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] px-4 py-3 max-h-[96px] overflow-y-auto">
+              <p className="text-label-sm text-[var(--color-text-subtle)]">
+                {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].cannotLabel}
+              </p>
+              <ul className="list-disc pl-[18px] mt-1.5">
+                {bulkCannotRows.map((row) => (
+                  <li key={row.id} className="text-body-md text-[var(--color-text-default)]">
+                    {row.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <InlineMessage variant="error">
+            {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].warning}
+          </InlineMessage>
+          <div className="flex gap-2 w-full">
+            <Button variant="secondary" onClick={closeBulkInstanceModal} className="flex-1">
+              Cancel
+            </Button>
+            <Button
+              variant={BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].confirmVariant}
+              onClick={handleBulkInstanceConfirm}
+              className="flex-1"
+              disabled={bulkCanRows.length === 0}
+            >
+              {BULK_INSTANCE_MODAL_COPY[bulkInstanceModal].confirmText}
+            </Button>
+          </div>
+        </Modal>
+      )}
     </PageShell>
   );
 }

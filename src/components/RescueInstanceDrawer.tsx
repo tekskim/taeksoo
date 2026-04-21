@@ -25,6 +25,7 @@ import {
 import type { TableColumn } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconExternalLink, IconDots, IconEye, IconEyeOff } from '@tabler/icons-react';
+import { InlineCopyId } from '@/components/InlineCopyId';
 
 /* ----------------------------------------
    Types
@@ -70,7 +71,6 @@ const mockImages: ImageItem[] = Array.from({ length: 115 }, (_, i) => ({
   visibility: 'Private',
 }));
 
-type ImageTab = 'image' | 'snapshot' | 'bootable';
 type OSFilter = 'ubuntu' | 'windows' | 'rocky' | 'other';
 
 /* ----------------------------------------
@@ -90,7 +90,6 @@ export function RescueInstanceDrawer({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Image selection state
-  const [imageTab, setImageTab] = useState<ImageTab>('image');
   const [osFilter, setOsFilter] = useState<OSFilter>('ubuntu');
   const [imageSearchQuery, setImageSearchQuery] = useState('');
   const [imageCurrentPage, setImageCurrentPage] = useState(1);
@@ -145,8 +144,11 @@ export function RescueInstanceDrawer({
             </span>
             <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
-            {row.bootable}
+          <span className="flex items-center gap-1 text-body-sm text-[var(--color-text-subtle)] min-w-0">
+            <span className="truncate" title={row.id}>
+              ID : {row.id.slice(0, 8)}
+            </span>
+            <InlineCopyId value={row.id} />
           </span>
         </div>
       ),
@@ -253,20 +255,6 @@ export function RescueInstanceDrawer({
         {/* Image Selection Table (shown when "Another image" is selected) */}
         {imageOption === 'another' && (
           <VStack gap={3}>
-            {/* Tabs */}
-            <Tabs
-              variant="underline"
-              size="sm"
-              value={imageTab}
-              onChange={(value) => setImageTab(value as ImageTab)}
-            >
-              <TabList>
-                <Tab value="image">Image</Tab>
-                <Tab value="snapshot">Instance snapshot</Tab>
-                <Tab value="bootable">Bootable volume</Tab>
-              </TabList>
-            </Tabs>
-
             {/* OS Filter Capsule Tabs */}
             <Tabs
               variant="boxed"
@@ -372,7 +360,7 @@ export function RescueInstanceDrawer({
                         className="flex items-center justify-center text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] cursor-pointer"
                         aria-label={showPassword ? 'Hide password' : 'Show password'}
                       >
-                        {showPassword ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                        {showPassword ? <IconEye size={14} /> : <IconEyeOff size={14} />}
                       </button>
                     }
                   />
