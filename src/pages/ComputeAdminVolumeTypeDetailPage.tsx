@@ -521,7 +521,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Delete extra spec"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected extra specs is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"
       />

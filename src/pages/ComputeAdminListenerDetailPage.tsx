@@ -298,7 +298,12 @@ export default function ListenerDetailPage() {
 
   const breadcrumbItems = [
     { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
-    { label: listener.loadBalancer?.name || 'Unknown' },
+    {
+      label: listener.loadBalancer?.name || 'Unknown',
+      href: listener.loadBalancer?.id
+        ? `/compute-admin/load-balancers/${listener.loadBalancer.id}`
+        : undefined,
+    },
     { label: listener.name },
   ];
 

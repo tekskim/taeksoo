@@ -252,6 +252,9 @@ export function ConfigMapDetailPage() {
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -265,14 +268,15 @@ export function ConfigMapDetailPage() {
       }
       bottomPanel={
         <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
           tabs={shellPanel.tabs}
           activeTabId={shellPanel.activeTabId}
-          isExpanded={shellPanel.isExpanded}
-          onTabChange={shellPanel.setActiveTabId}
-          onTabClose={shellPanel.closeTab}
-          onToggleExpand={() => shellPanel.setIsExpanded(!shellPanel.isExpanded)}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
           onOpenInNewTab={handleOpenInNewTab}
-          sidebarOpen={sidebarOpen}
           sidebarWidth={sidebarWidth}
         />
       }

@@ -547,7 +547,7 @@ function DesktopTopGNBGuidelines() {
             <tr>
               <Td>transformOrigin</Td>
               <Td>
-                <code>top left</code>
+                <code>top center</code>
               </Td>
               <Td>
                 <code>center</code>
@@ -692,6 +692,14 @@ function DesktopTopGNBGuidelines() {
             <tr>
               <Td>여러 창 모두 Maximize 후 하나 Restore</Td>
               <Td>Top GNB 여전히 숨김 (다른 창이 아직 Maximize)</Td>
+            </tr>
+            <tr>
+              <Td>Maximize 상태에서 최소화(Minimize)</Td>
+              <Td>
+                <code>maximizedWindows</code> Set에서 해당 창 제거 → Top GNB 복원. 복원(Restore from
+                Minimize) 시 여전히 Maximize 상태이면 <code>onMaximizeChange</code>를 다시 호출하여
+                auto-hide 재활성화
+              </Td>
             </tr>
             <tr>
               <Td>Maximize된 창을 닫기(X)</Td>
@@ -985,7 +993,7 @@ export function DesktopTopGNBPage() {
               <tr>
                 <Td>minimize</Td>
                 <Td>
-                  scale 1→0.3, opacity 1→0, <strong>250ms</strong> ease-in, origin: top left
+                  scale 1→0.3, opacity 1→0, <strong>250ms</strong> ease-in, origin: top center
                 </Td>
               </tr>
               <tr>

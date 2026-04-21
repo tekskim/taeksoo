@@ -15,6 +15,7 @@ import {
   Radio,
   Textarea,
   PageShell,
+  PageHeader,
   WizardSectionStatusIcon,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -1080,10 +1081,7 @@ export default function CreateBucketPage() {
       contentClassName="pt-4 px-8 pb-20"
     >
       <VStack gap={3} className="min-w-[1176px]">
-        {/* Page Title */}
-        <div className="flex items-center justify-between h-8">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create bucket</h1>
-        </div>
+        <PageHeader title="Create bucket" />
 
         {/* Content Area */}
         <HStack gap={6} align="start" className="w-full">

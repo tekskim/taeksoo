@@ -596,6 +596,7 @@ export function ComputeAdminNetworksPage() {
           selectable
           selectedKeys={selectedNetworks}
           onSelectionChange={setSelectedNetworks}
+          emptyMessage="No networks found"
           loading={loading}
         />
       </VStack>
@@ -608,7 +609,7 @@ export function ComputeAdminNetworksPage() {
           setNetworkToDelete(null);
         }}
         title="Delete network"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected networks is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

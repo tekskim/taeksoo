@@ -419,7 +419,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Delete extra spec"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected QoS specs is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"
       />

@@ -291,9 +291,6 @@ export function FlavorsPage() {
   const activeTab = searchParams.get('tab') || 'cpu';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
 
-  // Selection state
-  const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
-
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -584,7 +581,6 @@ export function FlavorsPage() {
           showSettings
           onSettingsClick={() => setIsPreferencesOpen(true)}
           totalItems={filteredFlavors.length}
-          selectedCount={selectedFlavors.length}
         />
 
         {/* Flavor Table */}

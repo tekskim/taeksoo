@@ -12,7 +12,9 @@ import {
   Tabs,
   TabList,
   Tab,
+  EmptyState,
 } from '@/design-system';
+import { IconSearch } from '@tabler/icons-react';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ContainerTopBarActions } from '@/components/ContainerTopBarActions';
 import { useTabs } from '@/contexts/TabContext';
@@ -184,53 +186,62 @@ export default function CatalogPage() {
           </Tabs>
         </VStack>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredApps.map((app) => (
-            <div
-              key={app.id}
-              className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
-            >
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-[var(--radius-lg)] shrink-0 border border-[var(--color-border-default)] flex items-center justify-center">
-                  <img src={app.iconSrc} alt={app.name} className="w-6 h-6 object-contain" />
-                </div>
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <span className="text-heading-h6 text-[var(--color-text-default)]">
-                    {app.name}
-                  </span>
-                  {app.version && (
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      {app.version}
+        {filteredApps.length === 0 ? (
+          <EmptyState
+            variant="inline"
+            icon={<IconSearch size={48} stroke={1} />}
+            title="No apps found"
+            description="Try adjusting your search or filter criteria."
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredApps.map((app) => (
+              <div
+                key={app.id}
+                className="flex flex-col gap-3 p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)]"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-[var(--radius-lg)] shrink-0 border border-[var(--color-border-default)] flex items-center justify-center">
+                    <img src={app.iconSrc} alt={app.name} className="w-6 h-6 object-contain" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="text-heading-h6 text-[var(--color-text-default)]">
+                      {app.name}
                     </span>
+                    {app.version && (
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        {app.version}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-body-md text-[var(--color-text-muted)] m-0 line-clamp-3 flex-1">
+                  {app.description}
+                </p>
+
+                <div className="flex items-center justify-between mt-auto">
+                  <Badge variant={categoryBadgeVariant[app.category] || 'info'} size="sm">
+                    {app.category}
+                  </Badge>
+                  {app.installed ? (
+                    <Button variant="outline" size="sm" disabled>
+                      Installed
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => navigate(`/container/catalog/${app.id}/install`)}
+                    >
+                      Install
+                    </Button>
                   )}
                 </div>
               </div>
-
-              <p className="text-body-md text-[var(--color-text-muted)] m-0 line-clamp-3 flex-1">
-                {app.description}
-              </p>
-
-              <div className="flex items-center justify-between mt-auto">
-                <Badge variant={categoryBadgeVariant[app.category] || 'info'} size="sm">
-                  {app.category}
-                </Badge>
-                {app.installed ? (
-                  <Button variant="outline" size="sm" disabled>
-                    Installed
-                  </Button>
-                ) : (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => navigate(`/container/catalog/${app.id}/install`)}
-                  >
-                    Install
-                  </Button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </VStack>
     </PageShell>
   );

@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 
 const ContainerHomePage = lazy(() => import('@/pages/ContainerHomePage'));
 const ContainerDashboardPage = lazy(() => import('@/pages/ContainerDashboardPage'));
@@ -333,6 +333,6 @@ export const containerRoutes = (
     <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/create-v2" element={<CreateClusterPage />} />
     <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
-    <Route path="/container/*" element={<ContainerDashboardPage />} />
+    <Route path="/container/*" element={<Navigate to="/container" replace />} />
   </>
 );

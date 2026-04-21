@@ -623,7 +623,7 @@ export function ComputeImagesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete image"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected images is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

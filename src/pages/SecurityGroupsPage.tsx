@@ -471,6 +471,7 @@ export function SecurityGroupsPage() {
           selectable
           selectedKeys={selectedGroups}
           onSelectionChange={setSelectedGroups}
+          emptyMessage="No security groups found"
           loading={loading}
         />
       </VStack>
@@ -483,7 +484,7 @@ export function SecurityGroupsPage() {
           setGroupToDelete(null);
         }}
         title="Delete security group"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected security groups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

@@ -217,14 +217,15 @@ export default function PoolDetailPage() {
   const breadcrumbItems = [
     { label: 'Load Balancers', href: '/compute-admin/load-balancers' },
     {
-      label:
-        pool.listener?.id === '38fk29dk'
-          ? 'lb-002'
-          : pool.listener?.id === '9dk38fj2'
-            ? 'lb-003'
-            : 'lb-001',
+      label: pool.loadBalancer?.name ?? 'Unknown',
+      href: pool.loadBalancer?.id
+        ? `/compute-admin/load-balancers/${pool.loadBalancer.id}`
+        : undefined,
     },
-    { label: pool.listener?.id ?? '' },
+    {
+      label: pool.listener?.name ?? pool.listener?.id ?? '-',
+      href: pool.listener?.id ? `/compute-admin/listeners/${pool.listener.id}` : undefined,
+    },
     { label: pool.name },
   ];
 

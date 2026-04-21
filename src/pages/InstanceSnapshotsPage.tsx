@@ -610,7 +610,7 @@ export function InstanceSnapshotsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete snapshot"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected instance snapshots is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

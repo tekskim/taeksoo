@@ -14,6 +14,7 @@ import {
   Breadcrumb,
   Tooltip,
   PageShell,
+  PageHeader,
 } from '@/design-system';
 import {
   IconX,
@@ -3043,10 +3044,7 @@ export function TopologyD3Page() {
       contentClassName="pt-4 px-8 pb-6 flex flex-col"
     >
       <VStack gap={3} className="flex-1 min-h-0">
-        {/* Page Header */}
-        <div className="flex justify-between items-center h-8 w-full">
-          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Topology</h1>
-        </div>
+        <PageHeader title="Topology" />
 
         {/* Filters */}
         <div className="flex items-center gap-3 flex-wrap bg-[var(--color-surface-default)] rounded-[var(--radius-lg)] border border-[var(--color-border-default)] p-3">

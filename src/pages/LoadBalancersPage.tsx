@@ -660,6 +660,7 @@ export function LoadBalancersPage() {
           selectable
           selectedKeys={selectedLBs}
           onSelectionChange={setSelectedLBs}
+          emptyMessage="No load balancers found"
           loading={loading}
         />
       </VStack>
@@ -672,7 +673,7 @@ export function LoadBalancersPage() {
           setLbToDelete(null);
         }}
         title="Delete load balancer"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected load balancers is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

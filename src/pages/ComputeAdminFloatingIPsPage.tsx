@@ -617,6 +617,7 @@ export function ComputeAdminFloatingIPsPage() {
           selectable
           selectedKeys={selectedFloatingIPs}
           onSelectionChange={setSelectedFloatingIPs}
+          emptyMessage="No floating IPs found"
           loading={loading}
         />
       </VStack>

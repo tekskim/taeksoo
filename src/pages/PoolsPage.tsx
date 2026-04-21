@@ -163,7 +163,6 @@ export function PoolsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedPools, setSelectedPools] = useState<string[]>([]);
   const rowsPerPage = 10;
   const [loading, setLoading] = useState(true);
 
@@ -345,7 +344,6 @@ export function PoolsPage() {
           totalPages={totalPages}
           onPageChange={setCurrentPage}
           totalItems={filteredPools.length}
-          selectedCount={selectedPools.length}
         />
 
         {/* Pools Table */}
@@ -354,9 +352,6 @@ export function PoolsPage() {
           data={paginatedPools}
           rowKey="id"
           emptyMessage="No pools found"
-          selectable
-          selectedKeys={selectedPools}
-          onSelectionChange={setSelectedPools}
           loading={loading}
         />
       </VStack>

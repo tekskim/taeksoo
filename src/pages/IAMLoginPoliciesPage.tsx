@@ -433,14 +433,15 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Action Buttons */}
                       <HStack gap={2} justify="end" className="w-full pt-3">
-                        <button
-                          type="button"
+                        <Button
+                          variant="link"
+                          size="md"
+                          leftIcon={<IconRefresh size={12} />}
                           onClick={handleResetPasswordPolicy}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          className="mr-4"
                         >
-                          <IconRefresh size={12} stroke={1.5} />
                           Reset to default
-                        </button>
+                        </Button>
                         <Button variant="secondary" size="md" onClick={handleResetPasswordPolicy}>
                           Reload
                         </Button>
@@ -704,14 +705,15 @@ export default function IAMLoginPoliciesPage() {
 
                       {/* Action Buttons */}
                       <HStack gap={2} justify="end" className="w-full pt-3">
-                        <button
-                          type="button"
+                        <Button
+                          variant="link"
+                          size="md"
+                          leftIcon={<IconRefresh size={12} />}
                           onClick={handleResetLockoutPolicy}
-                          className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline mr-4"
+                          className="mr-4"
                         >
-                          <IconRefresh size={12} stroke={1.5} />
                           Reset to default
-                        </button>
+                        </Button>
                         <Button variant="secondary" size="md" onClick={handleResetLockoutPolicy}>
                           Reload
                         </Button>

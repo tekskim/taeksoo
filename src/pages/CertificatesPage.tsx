@@ -536,7 +536,7 @@ export function CertificatesPage() {
           setCertToDelete(null);
         }}
         title="Delete certificate"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected certificates is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

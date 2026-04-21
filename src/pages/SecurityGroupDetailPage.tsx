@@ -461,7 +461,7 @@ export default function SecurityGroupDetailPage() {
             </Button>
           </DetailHeader.Actions>
           <DetailHeader.InfoGrid>
-            <DetailHeader.InfoCard label="Status" value="" status="active" />
+            <DetailHeader.InfoCard label="Status" status="active" />
             <DetailHeader.InfoCard label="ID" value={securityGroup.id} copyable />
             <DetailHeader.InfoCard label="Description" value={securityGroup.description} />
             <DetailHeader.InfoCard label="Origin" value="Container" />

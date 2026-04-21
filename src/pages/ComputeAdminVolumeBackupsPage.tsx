@@ -582,6 +582,7 @@ export function ComputeAdminVolumeBackupsPage() {
           selectable
           selectedKeys={selectedBackups}
           onSelectionChange={setSelectedBackups}
+          emptyMessage="No volume backups found"
           loading={loading}
         />
       </VStack>
@@ -591,7 +592,7 @@ export function ComputeAdminVolumeBackupsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         title="Delete volume backup"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected volume backups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

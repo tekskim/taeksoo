@@ -712,7 +712,7 @@ export function VolumesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete volume"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected volumes is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

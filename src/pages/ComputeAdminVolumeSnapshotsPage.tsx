@@ -567,6 +567,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
           selectable
           selectedKeys={selectedSnapshots}
           onSelectionChange={setSelectedSnapshots}
+          emptyMessage="No volume snapshots found"
           loading={loading}
         />
       </VStack>
@@ -576,7 +577,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         title="Delete volume snapshot"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected volume snapshots is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

@@ -503,7 +503,7 @@ export function ServerGroupsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete server group"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected server groups is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

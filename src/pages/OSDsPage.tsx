@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   SearchInput,
+  ListToolbar,
   Table,
   Pagination,
   VStack,
@@ -338,28 +339,27 @@ export function OSDsPage() {
         {/* Page Header */}
         <PageHeader title="OSDs" />
 
-        {/* Search and Actions */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <div className="w-[var(--search-input-width)]">
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
               <SearchInput
                 placeholder="Search OSDs by attributes"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClear={() => setSearchQuery('')}
                 size="sm"
-                fullWidth
+                className="w-[var(--search-input-width)]"
               />
-            </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<IconRefresh size={12} stroke={1.5} />}
-              aria-label="Refresh"
-              onClick={() => console.log('Refresh clicked')}
-            />
-          </div>
-        </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={12} stroke={1.5} />}
+                aria-label="Refresh"
+                onClick={() => console.log('Refresh clicked')}
+              />
+            </ListToolbar.Actions>
+          }
+        />
 
         {/* Pagination */}
         <Pagination

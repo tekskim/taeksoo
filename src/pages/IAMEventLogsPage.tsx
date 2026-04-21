@@ -10,11 +10,11 @@ import {
   Button,
   Pagination,
   SearchInput,
+  ListToolbar,
   Badge,
   TopBar,
   Breadcrumb,
   VStack,
-  HStack,
   TabBar,
   PageShell,
   PageHeader,
@@ -472,24 +472,24 @@ export default function IAMEventLogsPage() {
 
         {/* Table Content */}
         <VStack gap={3} className="w-full">
-          {/* Action Bar */}
-          <HStack gap={2} align="center">
-            {/* Search */}
-            <HStack gap={1} align="center">
-              <SearchInput
-                placeholder="Search logs by attributes"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-[var(--search-input-width)]"
-              />
-              <Button
-                variant="secondary"
-                size="sm"
-                icon={<IconDownload size={12} />}
-                aria-label="Download"
-              />
-            </HStack>
-          </HStack>
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <SearchInput
+                  placeholder="Search logs by attributes"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                />
+              </ListToolbar.Actions>
+            }
+          />
 
           {/* Pagination */}
           <Pagination
@@ -547,6 +547,8 @@ export default function IAMEventLogsPage() {
                         <button
                           type="button"
                           className="p-0.5 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
+                          aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                          aria-expanded={isExpanded}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleExpanded(log.id);

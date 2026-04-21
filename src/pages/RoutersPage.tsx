@@ -539,6 +539,7 @@ export function RoutersPage() {
           selectable
           selectedKeys={selectedRouters}
           onSelectionChange={setSelectedRouters}
+          emptyMessage="No routers found"
           loading={loading}
         />
       </VStack>
@@ -551,7 +552,7 @@ export function RoutersPage() {
           setRouterToDelete(null);
         }}
         title="Delete router"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected routers is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

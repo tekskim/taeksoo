@@ -612,7 +612,7 @@ export function InstanceTemplatesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete template"
-        description="Removing the selected instances is permanent and cannot be undone."
+        description="Removing the selected templates is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

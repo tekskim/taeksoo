@@ -645,6 +645,12 @@ export default function IAMPoliciesPage() {
                     <button
                       onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
                       className={`shrink-0 flex items-center justify-center w-4 h-4 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                      aria-label={
+                        expandedPolicies.has(policy.id)
+                          ? `Collapse permissions for ${policy.name}`
+                          : `Expand permissions for ${policy.name}`
+                      }
+                      aria-expanded={expandedPolicies.has(policy.id)}
                     >
                       {expandedPolicies.has(policy.id) ? (
                         <IconChevronDown size={12} strokeWidth={2} />

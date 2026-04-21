@@ -306,6 +306,9 @@ export default function ListenerDetailPage() {
     { label: 'Load Balancers', href: '/compute/load-balancers' },
     {
       label: listener.loadBalancer?.name ?? listener.loadBalancer?.id ?? 'Unknown',
+      href: listener.loadBalancer?.id
+        ? `/compute/load-balancers/${listener.loadBalancer.id}`
+        : undefined,
     },
     { label: listener.name },
   ];

@@ -922,6 +922,7 @@ function DesktopTopBar({
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}
             title="AI Chatbot"
+            aria-label="AI Chatbot"
           >
             <img src={appIconAIChat} alt="AI Chatbot" className="w-8 h-8 object-contain" />
           </button>
@@ -1205,6 +1206,15 @@ function PageWindow({
     }
   }, [isActive]);
 
+  const prevMinimizedRef = useRef(isMinimized);
+  useEffect(() => {
+    const wasMinimized = prevMinimizedRef.current;
+    prevMinimizedRef.current = isMinimized;
+    if (wasMinimized && !isMinimized && isMaximized) {
+      onMaximizeChange?.(windowId, true);
+    }
+  }, [isMinimized, isMaximized, onMaximizeChange, windowId]);
+
   // Drag handler
   const handleDragStart = useCallback(
     (e: React.MouseEvent) => {
@@ -1379,7 +1389,7 @@ function PageWindow({
         className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
         style={{
           ...windowStyle,
-          transformOrigin: isMinimized ? 'top left' : 'center',
+          transformOrigin: isMinimized ? 'top center' : 'center',
           ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
         }}
         onClick={(e) => {
@@ -1650,6 +1660,12 @@ export function DesktopPage() {
     setWindows((prev) =>
       prev.map((w) => (w.id === windowId ? { ...w, isMinimized: true, isActive: false } : w))
     );
+    setMaximizedWindows((prev) => {
+      if (!prev.has(windowId)) return prev;
+      const next = new Set(prev);
+      next.delete(windowId);
+      return next;
+    });
   }, []);
 
   const focusWindow = useCallback(

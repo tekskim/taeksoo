@@ -591,13 +591,13 @@ export function StorageHomePage() {
           showNavigation={true}
           onBack={() => navigate(-1)}
           onForward={() => navigate(1)}
-          breadcrumb={<Breadcrumb items={[{ label: 'Dashboard' }]} />}
+          breadcrumb={<Breadcrumb items={[{ label: 'Storage Overview' }]} />}
         />
       }
     >
       {/* EntryPage Content */}
       <div className="py-2">
-        <PageHeader title="Dashboard" />
+        <PageHeader title="Storage Overview" />
         {/* Top Row - 2 Cards: Inventory and Capacity */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* INVENTORY */}

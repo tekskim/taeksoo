@@ -235,7 +235,12 @@ export function KeyPairDetailPage() {
                         <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                           {keyPair.userId}
                         </span>
-                        <CopyButton value={keyPair.userId} size="sm" iconOnly />
+                        <CopyButton
+                          value={keyPair.userId}
+                          size="sm"
+                          iconOnly
+                          label="Copy user ID"
+                        />
                       </div>
                     </div>
                   </SectionCard.Content>
@@ -253,7 +258,12 @@ export function KeyPairDetailPage() {
                         <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                           {keyPair.fingerprint}
                         </span>
-                        <CopyButton value={keyPair.fingerprint} size="sm" iconOnly />
+                        <CopyButton
+                          value={keyPair.fingerprint}
+                          size="sm"
+                          iconOnly
+                          label="Copy fingerprint"
+                        />
                       </div>
                     </div>
                     <div className="flex flex-col gap-1.5 w-full">
@@ -264,7 +274,12 @@ export function KeyPairDetailPage() {
                         <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                           {keyPair.publicKey}
                         </span>
-                        <CopyButton value={keyPair.publicKey} size="sm" iconOnly />
+                        <CopyButton
+                          value={keyPair.publicKey}
+                          size="sm"
+                          iconOnly
+                          label="Copy public key"
+                        />
                       </div>
                     </div>
                   </SectionCard.Content>

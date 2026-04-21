@@ -176,8 +176,14 @@ export default function L7PolicyDetailPage() {
     {
       label:
         l7Policy.listener?.loadBalancer?.name ?? l7Policy.listener?.loadBalancer?.id ?? 'Unknown',
+      href: l7Policy.listener?.loadBalancer?.id
+        ? `/compute/load-balancers/${l7Policy.listener.loadBalancer.id}`
+        : undefined,
     },
-    { label: l7Policy.listener?.name ?? 'Unknown' },
+    {
+      label: l7Policy.listener?.name ?? 'Unknown',
+      href: l7Policy.listener?.id ? `/compute/listeners/${l7Policy.listener.id}` : undefined,
+    },
     { label: l7Policy.name },
   ];
 
