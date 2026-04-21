@@ -242,6 +242,12 @@ const feedbackItems: NavItem[] = [
 
 const navigationItems: NavItem[] = [
   {
+    id: 'desktop-top-gnb',
+    label: 'Desktop Top GNB',
+    icon: IconDeviceDesktop,
+    path: '/design/components/desktop-top-gnb',
+  },
+  {
     id: 'topbar',
     label: 'Top Navigation Bar',
     icon: IconLayoutNavbar,
@@ -583,6 +589,7 @@ export const pageLastUpdated: Record<string, string> = {
 
   '/design/components/global-notification-panel': '2026-04-17',
   // Navigation
+  '/design/components/desktop-top-gnb': '2026-04-20',
   '/design/components/topbar': '2026-03-09',
   '/design/components/tabbar': '2026-03-09',
   '/design/components/tabs': '2026-03-09',

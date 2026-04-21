@@ -363,7 +363,7 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
     <ContextMenu trigger="contextmenu" items={getContextMenuItems(app)}>
       <Tooltip content={app.name} position="bottom">
         <motion.div
-          layoutId={app.id}
+          {...(isDragging ? { layoutId: app.id } : {})}
           role="button"
           tabIndex={0}
           aria-label={app.name}
@@ -383,11 +383,9 @@ function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: Dock
             zIndex: 50,
             boxShadow: '0 10px 30px color-mix(in srgb, var(--color-text-default) 30%, transparent)',
           }}
-          transition={{
-            type: 'spring',
-            stiffness: 400,
-            damping: 25,
-          }}
+          transition={
+            isDragging ? { type: 'spring', stiffness: 400, damping: 25 } : { duration: 0 }
+          }
         >
           <div
             className={`
@@ -518,12 +516,10 @@ function DockIcons({
             dragListener={true}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.1}
-            layout
-            transition={{
-              type: 'spring',
-              stiffness: 400,
-              damping: 25,
-            }}
+            layout={isDragging}
+            transition={
+              isDragging ? { type: 'spring', stiffness: 400, damping: 25 } : { duration: 0 }
+            }
             whileDrag={{
               scale: 1.15,
               zIndex: 50,
@@ -554,6 +550,7 @@ interface TopBarProps {
   onNotificationToggle?: () => void;
   notificationButtonRef?: React.RefObject<HTMLButtonElement>;
   dockIcons?: React.ReactNode;
+  autoHide?: boolean;
 }
 
 /* ----------------------------------------
@@ -603,7 +600,7 @@ function GlassDomainSelect({ value, onChange, options }: GlassDomainSelectProps)
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-[var(--desktop-dropdown-bg)] backdrop-blur-xl border border-[var(--desktop-glass-border)] rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
+        <div className="absolute top-full right-0 mt-1.5 min-w-[160px] py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] shadow-2xl z-[1100] overflow-hidden">
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -638,9 +635,13 @@ function DesktopTopBar({
   onNotificationToggle,
   notificationButtonRef,
   dockIcons,
+  autoHide = false,
 }: TopBarProps) {
   const [selectedDomain, setSelectedDomain] = useState('domain-a');
   const { theme, isDark, setTheme } = useDarkMode();
+  const [topBarVisible, setTopBarVisible] = useState(false);
+  const [animateTransition, setAnimateTransition] = useState(false);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const [language, setLanguage] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('tds-language') || 'en';
@@ -753,10 +754,77 @@ function DesktopTopBar({
     },
   ];
 
-  return (
+  const handleWrapperMouseEnter = useCallback(() => {
+    if (!autoHide) return;
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+    setAnimateTransition(true);
+    setTopBarVisible(true);
+  }, [autoHide]);
+
+  const handleWrapperMouseLeave = useCallback(() => {
+    if (!autoHide) return;
+    hideTimeoutRef.current = setTimeout(() => {
+      setAnimateTransition(true);
+      setTopBarVisible(false);
+    }, 200);
+  }, [autoHide]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    };
+  }, []);
+
+  const prevAutoHideRef = useRef(autoHide);
+  const [slideIn, setSlideIn] = useState(false);
+
+  useEffect(() => {
+    const wasAutoHide = prevAutoHideRef.current;
+    prevAutoHideRef.current = autoHide;
+
+    if (autoHide) {
+      setAnimateTransition(true);
+      setTopBarVisible(false);
+      setSlideIn(false);
+    } else if (wasAutoHide && !autoHide) {
+      setSlideIn(true);
+      setAnimateTransition(false);
+      setTopBarVisible(false);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimateTransition(true);
+          setTopBarVisible(true);
+        });
+      });
+    }
+  }, [autoHide]);
+
+  const isHidden = slideIn ? !topBarVisible : autoHide && !topBarVisible;
+
+  const topBarContent = (
     <div
-      className="fixed top-0 left-0 right-0 h-[52px] bg-[var(--desktop-topbar-bg)] backdrop-blur-xl flex items-center justify-between pl-4 z-[1000] border-b border-[var(--desktop-glass-border)]"
-      style={{ boxShadow: 'var(--desktop-topbar-shadow)' }}
+      className={`fixed top-0 left-0 right-0 h-[52px] bg-[var(--desktop-topbar-bg)] backdrop-blur-xl flex items-center justify-between pl-4 border-b border-[var(--desktop-glass-border)] ${autoHide || slideIn ? 'z-[9999]' : 'z-[1000]'}`}
+      style={{
+        boxShadow:
+          (autoHide && topBarVisible) || slideIn
+            ? '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03)'
+            : 'none',
+        transform: isHidden ? 'translateY(-100%)' : 'translateY(0)',
+        transition: animateTransition
+          ? 'transform 300ms ease-out, box-shadow 300ms ease-out'
+          : 'none',
+      }}
+      onTransitionEnd={(e) => {
+        if (slideIn && topBarVisible && e.propertyName === 'transform') {
+          setSlideIn(false);
+        }
+        if (!slideIn && e.propertyName === 'box-shadow') {
+          setAnimateTransition(false);
+        }
+      }}
     >
       {/* Left Section - Logo + Dock Icons */}
       <div className="flex items-center gap-8 h-full">
@@ -867,6 +935,18 @@ function DesktopTopBar({
       </Modal>
     </div>
   );
+
+  if (autoHide) {
+    return (
+      <div onMouseEnter={handleWrapperMouseEnter} onMouseLeave={handleWrapperMouseLeave}>
+        {/* Hot zone: thin invisible strip at top to trigger TopBar reveal */}
+        <div className="fixed top-0 left-0 right-0 h-[6px] z-[10000]" />
+        {topBarContent}
+      </div>
+    );
+  }
+
+  return topBarContent;
 }
 
 /* ----------------------------------------
@@ -1054,6 +1134,7 @@ interface PageWindowProps {
   onClose: () => void;
   onMinimize: () => void;
   onFocus: () => void;
+  onMaximizeChange?: (windowId: string, isMaximized: boolean) => void;
   title: string;
   children: React.ReactNode;
   zIndex: number;
@@ -1071,13 +1152,17 @@ function PageWindow({
   onClose,
   onMinimize,
   onFocus,
+  onMaximizeChange,
   title,
   children,
   zIndex,
 }: PageWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
-  const [position, setPosition] = useState({ x: 100, y: 100 });
-  const [size, setSize] = useState({ width: 1200, height: 800 });
+  const [position, setPosition] = useState(() => ({
+    x: Math.max(0, Math.round((window.innerWidth - 1440) / 2)),
+    y: Math.max(0, Math.round((window.innerHeight - 800) / 2)),
+  }));
+  const [size, setSize] = useState({ width: 1440, height: 800 });
   const [preMaxState, setPreMaxState] = useState<{
     x: number;
     y: number;
@@ -1088,6 +1173,13 @@ function PageWindow({
   const isDragging = useRef(false);
   const isResizing = useRef<string | null>(null);
   const dragStart = useRef({ x: 0, y: 0, posX: 0, posY: 0, w: 0, h: 0 });
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      hasMounted.current = true;
+    });
+  }, []);
 
   useEffect(() => {
     if (isActive && windowRef.current) {
@@ -1196,14 +1288,16 @@ function PageWindow({
     if (!isMaximized) {
       setPreMaxState({ x: position.x, y: position.y, w: size.width, h: size.height });
       setIsMaximized(true);
+      onMaximizeChange?.(windowId, true);
     } else {
       if (preMaxState) {
         setPosition({ x: preMaxState.x, y: preMaxState.y });
         setSize({ width: preMaxState.w, height: preMaxState.h });
       }
       setIsMaximized(false);
+      onMaximizeChange?.(windowId, false);
     }
-  }, [isMaximized, position, size, preMaxState]);
+  }, [isMaximized, position, size, preMaxState, onMaximizeChange, windowId]);
 
   const windowControls = useMemo(
     () => ({
@@ -1218,14 +1312,20 @@ function PageWindow({
 
   if (!isOpen) return null;
 
+  const windowTransition =
+    hasMounted.current && !isDragging.current && !isResizing.current
+      ? 'width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, border-radius 250ms ease-out'
+      : 'none';
+
   const windowStyle: React.CSSProperties = isMaximized
     ? {
         width: '100vw',
-        height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
-        top: `${TOP_BAR_HEIGHT}px`,
+        height: '100vh',
+        top: 0,
         left: 0,
         zIndex: zIndex,
         borderRadius: 0,
+        transition: windowTransition,
       }
     : {
         width: `${size.width}px`,
@@ -1233,22 +1333,37 @@ function PageWindow({
         top: `${position.y}px`,
         left: `${position.x}px`,
         zIndex: zIndex,
+        transition: windowTransition,
       };
 
   const resizeHandleBase = 'absolute pointer-events-auto z-10';
   const edgeThickness = '4px';
   const cornerSize = '12px';
 
+  const minimizeAnimation = isMinimized ? { scale: 0.3, opacity: 0 } : { scale: 1, opacity: 1 };
+
   return (
-    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2000 + zIndex }}>
+    <div
+      className="fixed inset-0 pointer-events-none"
+      style={{
+        zIndex: 2000 + zIndex,
+        ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
+      }}
+    >
       <motion.div
         ref={windowRef}
         initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        animate={minimizeAnimation}
         exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
+        transition={
+          isMinimized ? { duration: 0.25, ease: 'easeIn' } : { duration: 0.2, ease: 'easeOut' }
+        }
         className="absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl flex flex-col overflow-hidden pointer-events-auto"
-        style={windowStyle}
+        style={{
+          ...windowStyle,
+          transformOrigin: 'bottom left',
+          ...(isMinimized ? { pointerEvents: 'none' as const } : {}),
+        }}
         onClick={onFocus}
         onMouseDown={onFocus}
       >
@@ -1441,6 +1556,17 @@ export function DesktopPage() {
 
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [nextZIndex, setNextZIndex] = useState(1);
+  const [maximizedWindows, setMaximizedWindows] = useState<Set<string>>(new Set());
+  const hasMaximizedWindow = maximizedWindows.size > 0;
+
+  const handleMaximizeChange = useCallback((windowId: string, isMax: boolean) => {
+    setMaximizedWindows((prev) => {
+      const next = new Set(prev);
+      if (isMax) next.add(windowId);
+      else next.delete(windowId);
+      return next;
+    });
+  }, []);
   const appConfigs: Record<AppId, { name: string; icon: string; initialPath: string }> = {
     compute: { name: 'Compute', icon: imgCompute, initialPath: '/compute' },
     storage: { name: 'Storage', icon: imgStorage, initialPath: '/storage' },
@@ -1491,6 +1617,11 @@ export function DesktopPage() {
 
   const closeWindow = useCallback((windowId: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== windowId));
+    setMaximizedWindows((prev) => {
+      const next = new Set(prev);
+      next.delete(windowId);
+      return next;
+    });
   }, []);
 
   const minimizeWindow = useCallback((windowId: string) => {
@@ -1739,11 +1870,20 @@ export function DesktopPage() {
               if (isSimulationMode) {
                 console.log(`[Simulation] Quit app: ${appId}`);
               }
+              const closingIds = windows.filter((w) => w.appId === appId).map((w) => w.id);
               setWindows((prev) => prev.filter((w) => w.appId !== appId));
+              if (closingIds.length > 0) {
+                setMaximizedWindows((prev) => {
+                  const next = new Set(prev);
+                  closingIds.forEach((id) => next.delete(id));
+                  return next;
+                });
+              }
             }}
             onReorderApps={setDockAppOrder}
           />
         }
+        autoHide={hasMaximizedWindow}
       />
 
       {/* Desktop Icons — absolute positioned on grid */}
@@ -1876,29 +2016,28 @@ export function DesktopPage() {
       {/* App Windows */}
       <AnimatePresence>
         {!isSimulationMode &&
-          windows
-            .filter((w) => !w.isMinimized)
-            .map((window) => {
-              const config = appConfigs[window.appId];
-              if (!config || window.appId === 'settings') return null;
+          windows.map((window) => {
+            const config = appConfigs[window.appId];
+            if (!config || window.appId === 'settings') return null;
 
-              return (
-                <PageWindow
-                  key={window.id}
-                  windowId={window.id}
-                  isOpen={true}
-                  isMinimized={false}
-                  isActive={window.isActive}
-                  onClose={() => closeWindow(window.id)}
-                  onMinimize={() => minimizeWindow(window.id)}
-                  onFocus={() => focusWindow(window.id)}
-                  title={window.title}
-                  zIndex={window.zIndex}
-                >
-                  <IsolatedRouter initialPath={config.initialPath} appId={window.appId} />
-                </PageWindow>
-              );
-            })}
+            return (
+              <PageWindow
+                key={window.id}
+                windowId={window.id}
+                isOpen={true}
+                isMinimized={window.isMinimized}
+                isActive={window.isActive}
+                onClose={() => closeWindow(window.id)}
+                onMinimize={() => minimizeWindow(window.id)}
+                onFocus={() => focusWindow(window.id)}
+                onMaximizeChange={handleMaximizeChange}
+                title={window.title}
+                zIndex={window.zIndex}
+              >
+                <IsolatedRouter initialPath={config.initialPath} appId={window.appId} />
+              </PageWindow>
+            );
+          })}
       </AnimatePresence>
 
       {/* Main Page Navigation Button - Bottom Left */}
