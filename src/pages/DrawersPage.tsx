@@ -204,6 +204,35 @@ import {
   UpdateVolumeStatusDrawer,
   type UpdateVolumeStatusInfo,
 } from '@/components/UpdateVolumeStatusDrawer';
+import {
+  UpdateSnapshotStatusDrawer,
+  type UpdateSnapshotStatusInfo,
+} from '@/components/UpdateSnapshotStatusDrawer';
+import { CreateVolumeTypeDrawer } from '@/components/CreateVolumeTypeDrawer';
+import { EditVolumeTypeDrawer, type VolumeTypeInfo } from '@/components/EditVolumeTypeDrawer';
+import {
+  ManageQosSpecDrawer,
+  type ManageQosSpecVolumeTypeInfo,
+} from '@/components/ManageQosSpecDrawer';
+import {
+  ManageAccessDrawer,
+  type ManageAccessVolumeTypeInfo,
+} from '@/components/ManageAccessDrawer';
+import {
+  CreateEncryptionDrawer,
+  type CreateEncryptionVolumeTypeInfo,
+} from '@/components/CreateEncryptionDrawer';
+import { CreateQosSpecDrawer } from '@/components/CreateQosSpecDrawer';
+import { EditConsumerDrawer, type EditConsumerQosSpecInfo } from '@/components/EditConsumerDrawer';
+import {
+  CreateExtraSpecDrawer,
+  type CreateExtraSpecVolumeTypeInfo,
+} from '@/components/CreateExtraSpecDrawer';
+import { EditExtraSpecDrawer, type EditExtraSpecInfo } from '@/components/EditExtraSpecDrawer';
+import {
+  CreateQosExtraSpecDrawer,
+  type CreateQosExtraSpecInfo,
+} from '@/components/CreateQosExtraSpecDrawer';
 import { ManageRulesDrawer, type FirewallPolicyInfo } from '@/components/ManageRulesDrawer';
 import {
   ModifyQuotasDrawer,
@@ -444,6 +473,56 @@ const mockUpdateVolumeStatus: UpdateVolumeStatusInfo = {
   id: 'vol-001',
   name: 'name',
   currentStatus: 'Error',
+};
+
+const mockUpdateSnapshotStatus: UpdateSnapshotStatusInfo = {
+  id: 'snap-001',
+  name: 'name',
+  currentStatus: 'Error',
+};
+
+const mockEditVolumeType: VolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'type',
+  description: '',
+};
+
+const mockManageQosVolumeType: ManageQosSpecVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockManageAccessVolumeType: ManageAccessVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockCreateEncryptionVolumeType: CreateEncryptionVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockEditConsumerQosSpec: EditConsumerQosSpecInfo = {
+  id: 'qos-001',
+  name: 'spec',
+  currentConsumer: 'Frontend',
+};
+
+const mockCreateExtraSpecVolumeType: CreateExtraSpecVolumeTypeInfo = {
+  id: 'vt-001',
+  name: 'name',
+};
+
+const mockEditExtraSpec: EditExtraSpecInfo = {
+  volumeTypeId: 'vt-001',
+  volumeTypeName: 'name',
+  parameter: 'parameter',
+  value: 'value',
+};
+
+const mockCreateQosExtraSpec: CreateQosExtraSpecInfo = {
+  id: 'qos-001',
+  name: 'spec',
 };
 
 const mockFirewallPolicy: FirewallPolicyInfo = {
@@ -1066,6 +1145,64 @@ const COMPUTE_ADMIN_VOLUME_ITEMS: DrawerSearchItem[] = [
     title: 'Update volume status',
     description:
       'Manually update the administrative status of a volume when automatic management is insufficient.',
+    category: 'Volume',
+  },
+  {
+    title: 'Update snapshot status',
+    description:
+      'Manually update the administrative status of a volume snapshot when automatic management is insufficient.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create volume type',
+    description: 'Creates a new volume type and configures its basic properties.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit volume type',
+    description:
+      "Edit the volume type's name and description. These changes update basic information only.",
+    category: 'Volume',
+  },
+  {
+    title: 'Manage QoS spec',
+    description:
+      'Adds or updates QoS specifications to configure quality policies for the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Manage access',
+    description: 'Manages public access settings and tenant permissions for the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create encryption',
+    description: 'Creates the encryption settings to apply to the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create QoS spec',
+    description: 'Creates a new QoS specification and configures its attributes.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit consumer',
+    description: 'Modifies the consumer scope applied to the QoS specification.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create extra spec',
+    description: 'Creates an extra spec to apply to the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Edit extra spec',
+    description: 'Edit an extra spec to apply to the volume type.',
+    category: 'Volume',
+  },
+  {
+    title: 'Create extra spec (QoS spec)',
+    description: 'Creates an extra spec to apply to the QoS spec.',
     category: 'Volume',
   },
 ];
@@ -1959,7 +2096,7 @@ export function DrawersPage() {
                         Drawers{' '}
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
-                        (8 drawers)
+                        (19 drawers)
                       </span>
                     </div>
                   </div>
@@ -2015,6 +2152,94 @@ export function DrawersPage() {
                         onOpen={() => openDrawerFn('update-volume-status')}
                         linked
                         linkedTo="Volume list"
+                      />
+                      <DrawerCard
+                        title="Update snapshot status"
+                        description="Manually update the administrative status of a volume snapshot when automatic management is insufficient."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('update-snapshot-status')}
+                        linked
+                        linkedTo="Volume snapshot list"
+                      />
+                      <DrawerCard
+                        title="Create volume type"
+                        description="Creates a new volume type and configures its basic properties."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-volume-type')}
+                        linked
+                        linkedTo="Volume type list"
+                      />
+                      <DrawerCard
+                        title="Edit volume type"
+                        description="Edit the volume type's name and description. These changes update basic information only."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('edit-volume-type')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Manage QoS spec"
+                        description="Adds or updates QoS specifications to configure quality policies for the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('manage-qos-spec')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Manage access"
+                        description="Manages public access settings and tenant permissions for the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('manage-access')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Create encryption"
+                        description="Creates the encryption settings to apply to the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-encryption')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Create QoS spec"
+                        description="Creates a new QoS specification and configures its attributes."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-qos-spec')}
+                        linked
+                        linkedTo="QoS spec list"
+                      />
+                      <DrawerCard
+                        title="Edit consumer"
+                        description="Modifies the consumer scope applied to the QoS specification."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('edit-consumer')}
+                        linked
+                        linkedTo="QoS spec detail"
+                      />
+                      <DrawerCard
+                        title="Create extra spec"
+                        description="Creates an extra spec to apply to the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-extra-spec')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Edit extra spec"
+                        description="Edit an extra spec to apply to the volume type."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('edit-extra-spec')}
+                        linked
+                        linkedTo="Volume type detail"
+                      />
+                      <DrawerCard
+                        title="Create extra spec (QoS spec)"
+                        description="Creates an extra spec to apply to the QoS spec."
+                        category="Volume"
+                        onOpen={() => openDrawerFn('create-qos-extra-spec')}
+                        linked
+                        linkedTo="QoS spec detail"
                       />
                     </FilteredGroup>
 
@@ -3461,6 +3686,114 @@ export function DrawersPage() {
         volume={mockUpdateVolumeStatus}
         onSubmit={(status) => {
           console.log('Update volume status:', status);
+        }}
+      />
+
+      {/* Update Snapshot Status Drawer */}
+      <UpdateSnapshotStatusDrawer
+        isOpen={openDrawer === 'update-snapshot-status'}
+        onClose={closeDrawer}
+        snapshot={mockUpdateSnapshotStatus}
+        onSubmit={(status) => {
+          console.log('Update snapshot status:', status);
+        }}
+      />
+
+      {/* Create Volume Type Drawer */}
+      <CreateVolumeTypeDrawer
+        isOpen={openDrawer === 'create-volume-type'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create volume type:', data);
+        }}
+      />
+
+      {/* Edit Volume Type Drawer */}
+      <EditVolumeTypeDrawer
+        isOpen={openDrawer === 'edit-volume-type'}
+        onClose={closeDrawer}
+        volumeType={mockEditVolumeType}
+        onSubmit={(name, description) => {
+          console.log('Edit volume type:', { name, description });
+        }}
+      />
+
+      {/* Manage QoS Spec Drawer */}
+      <ManageQosSpecDrawer
+        isOpen={openDrawer === 'manage-qos-spec'}
+        onClose={closeDrawer}
+        volumeType={mockManageQosVolumeType}
+        onSubmit={(qosSpecId) => {
+          console.log('Manage QoS spec:', qosSpecId);
+        }}
+      />
+
+      {/* Manage Access Drawer */}
+      <ManageAccessDrawer
+        isOpen={openDrawer === 'manage-access'}
+        onClose={closeDrawer}
+        volumeType={mockManageAccessVolumeType}
+        onSubmit={(data) => {
+          console.log('Manage access:', data);
+        }}
+      />
+
+      {/* Create Encryption Drawer */}
+      <CreateEncryptionDrawer
+        isOpen={openDrawer === 'create-encryption'}
+        onClose={closeDrawer}
+        volumeType={mockCreateEncryptionVolumeType}
+        onSubmit={(data) => {
+          console.log('Create encryption:', data);
+        }}
+      />
+
+      {/* Create QoS Spec Drawer */}
+      <CreateQosSpecDrawer
+        isOpen={openDrawer === 'create-qos-spec'}
+        onClose={closeDrawer}
+        onSubmit={(data) => {
+          console.log('Create QoS spec:', data);
+        }}
+      />
+
+      {/* Edit Consumer Drawer */}
+      <EditConsumerDrawer
+        isOpen={openDrawer === 'edit-consumer'}
+        onClose={closeDrawer}
+        qosSpec={mockEditConsumerQosSpec}
+        onSubmit={(consumer) => {
+          console.log('Edit consumer:', consumer);
+        }}
+      />
+
+      {/* Create Extra Spec Drawer */}
+      <CreateExtraSpecDrawer
+        isOpen={openDrawer === 'create-extra-spec'}
+        onClose={closeDrawer}
+        volumeType={mockCreateExtraSpecVolumeType}
+        onSubmit={(data) => {
+          console.log('Create extra spec:', data);
+        }}
+      />
+
+      {/* Edit Extra Spec Drawer */}
+      <EditExtraSpecDrawer
+        isOpen={openDrawer === 'edit-extra-spec'}
+        onClose={closeDrawer}
+        extraSpec={mockEditExtraSpec}
+        onSubmit={(parameter, value) => {
+          console.log('Edit extra spec:', { parameter, value });
+        }}
+      />
+
+      {/* Create QoS Extra Spec Drawer */}
+      <CreateQosExtraSpecDrawer
+        isOpen={openDrawer === 'create-qos-extra-spec'}
+        onClose={closeDrawer}
+        qosSpec={mockCreateQosExtraSpec}
+        onSubmit={(data) => {
+          console.log('Create QoS extra spec:', data);
         }}
       />
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ComponentPageTemplate } from '../_shared/ComponentPageTemplate';
 import { DosDonts } from '../_shared/DosDonts';
 import { NotionRenderer } from '../_shared/NotionRenderer';
@@ -31,6 +32,7 @@ interface PanelNotification {
   appIcon: string;
   isRead?: boolean;
   detail?: { code?: string | number; message?: string };
+  href?: string;
 }
 
 /* ----------------------------------------
@@ -78,6 +80,10 @@ function StaticPanelCard({
               </span>
             </div>
 
+            {partition && (
+              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
+            )}
+
             {hasDetail && (
               <div className="flex flex-col gap-2 rounded-[var(--radius-sm)]">
                 <button type="button" className="group flex items-center gap-1">
@@ -101,18 +107,14 @@ function StaticPanelCard({
 
                 {isExpanded && (
                   <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
                       {detail.code !== undefined && <p>code: {detail.code}</p>}
                       {detail.message && <p>{detail.message}</p>}
                     </div>
-                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                   </>
                 )}
               </div>
-            )}
-
-            {partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">{partition}</span>
             )}
           </div>
         </div>
@@ -257,6 +259,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: false,
+    href: '/compute/volumes',
   },
   {
     id: '2',
@@ -267,6 +270,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: false,
+    href: '/compute/volumes',
     detail: {
       code: 400,
       message: "Flavor's disk is smaller than the minimum size specified in image metadata.",
@@ -281,6 +285,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     app: 'Compute',
     appIcon: AppIconCompute,
     isRead: true,
+    href: '/compute/volumes',
   },
   {
     id: '4',
@@ -291,6 +296,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     app: 'IAM',
     appIcon: AppIconIAM,
     isRead: false,
+    href: '/iam/api-keys',
   },
   {
     id: '5',
@@ -301,6 +307,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     app: 'IAM',
     appIcon: AppIconIAM,
     isRead: true,
+    href: '/iam/policies',
   },
   {
     id: '6',
@@ -311,6 +318,7 @@ const INITIAL_NOTIFICATIONS: PanelNotification[] = [
     app: 'Container',
     appIcon: AppIconContainer,
     isRead: false,
+    href: '/container/pods',
     detail: { code: 'ERR_CRASH_LOOP', message: 'Container exited with code 137 (OOMKilled).' },
   },
 ];
@@ -440,22 +448,29 @@ function InteractiveNotificationCard({
   notification: PanelNotification;
   onMarkAsRead: () => void;
 }) {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const hasDetail =
     notification.detail && (notification.detail.code || notification.detail.message);
   const isUnread = !notification.isRead;
 
+  const handleBodyClick = () => {
+    if (notification.href) {
+      navigate(notification.href);
+    }
+  };
+
   return (
     <div
-      className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3 cursor-pointer"
+      className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] flex flex-col py-3"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => {
-        if (isUnread) onMarkAsRead();
-      }}
     >
-      <div className="flex items-start justify-between px-3">
+      <div
+        className={`flex items-start justify-between px-3${notification.href ? ' cursor-pointer' : ''}`}
+        onClick={handleBodyClick}
+      >
         <div className="flex gap-2 items-start w-[256px]">
           <img src={notification.appIcon} alt="" className="size-5 shrink-0 object-contain" />
           <div className="flex flex-col gap-2 flex-1 min-w-[1px]">
@@ -470,14 +485,20 @@ function InteractiveNotificationCard({
               </span>
             </div>
 
+            {notification.partition && (
+              <span className="text-body-xs text-[var(--color-text-subtle)]">
+                {notification.partition}
+              </span>
+            )}
+
             {hasDetail && (
-              <div className="flex flex-col gap-2 rounded-[var(--radius-sm)]">
+              <div
+                className="flex flex-col gap-2 rounded-[var(--radius-sm)]"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsExpanded(!isExpanded);
-                  }}
+                  onClick={() => setIsExpanded(!isExpanded)}
                   className="group flex items-center gap-1"
                 >
                   <span className="text-body-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] whitespace-nowrap">
@@ -500,22 +521,16 @@ function InteractiveNotificationCard({
 
                 {isExpanded && (
                   <>
+                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                     <div className="flex flex-col gap-1 text-body-sm text-[var(--color-text-muted)]">
                       {notification.detail?.code !== undefined && (
                         <p>code: {notification.detail.code}</p>
                       )}
                       {notification.detail?.message && <p>{notification.detail.message}</p>}
                     </div>
-                    <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                   </>
                 )}
               </div>
-            )}
-
-            {notification.partition && (
-              <span className="text-body-xs text-[var(--color-text-subtle)]">
-                {notification.partition}
-              </span>
             )}
           </div>
         </div>

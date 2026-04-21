@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   VStack,
+  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -16,6 +17,10 @@ import {
   PageShell,
   InfoBox,
   InlineMessage,
+  Modal,
+  FormField,
+  Select,
+  CopyButton,
   ConfirmModal,
   type ContextMenuItem,
   type StatusType,
@@ -30,6 +35,8 @@ import {
   IconExternalLink,
   IconRefresh,
   IconTrash,
+  IconCirclePlus,
+  IconAffiliate,
 } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
 import { getContainerStatusTheme } from './containerStatusUtils';
@@ -260,9 +267,46 @@ export function ClusterDetailPage() {
   const { clusterId } = useParams<{ clusterId: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isDeleteTokenOpen, setIsDeleteTokenOpen] = useState(false);
+  const [isGenerateTokenOpen, setIsGenerateTokenOpen] = useState(false);
+  const [tokenExpiration, setTokenExpiration] = useState('24h');
+  const [generatedToken, setGeneratedToken] = useState<string | null>(null);
+  const [hasToken, setHasToken] = useState(false);
+  const [tokenCreatedAt, setTokenCreatedAt] = useState('');
+  const [tokenExpiresAt, setTokenExpiresAt] = useState('');
+  const [isRegenerateTokenOpen, setIsRegenerateTokenOpen] = useState(false);
+  const [regeneratedToken, setRegeneratedToken] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'networking';
   const setActiveTab = (tab: string) => setSearchParams({ tab }, { replace: true });
+
+  const computeTokenDates = (expiration: string) => {
+    const now = new Date();
+    const dateOnly: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    };
+    const dateTime: Intl.DateTimeFormatOptions = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    };
+    const isHours = ['1h', '6h', '24h'].includes(expiration);
+    const created = now.toLocaleDateString('en-US', isHours ? dateTime : dateOnly);
+    const durationMs: Record<string, number> = {
+      '1h': 60 * 60 * 1000,
+      '6h': 6 * 60 * 60 * 1000,
+      '24h': 24 * 60 * 60 * 1000,
+      '7d': 7 * 24 * 60 * 60 * 1000,
+      '30d': 30 * 24 * 60 * 60 * 1000,
+    };
+    const expiresDate = new Date(now.getTime() + (durationMs[expiration] || 0));
+    const expires = expiresDate.toLocaleDateString('en-US', isHours ? dateTime : dateOnly);
+    setTokenCreatedAt(created);
+    setTokenExpiresAt(expires);
+  };
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
     useTabs();
 
@@ -296,7 +340,22 @@ export function ClusterDetailPage() {
       flavor: 'th.tiny (1vCPU, 2.00 GiB RAM, 10.00 GiB Disk)',
       nodeCount: 1,
     },
+    iconText: '',
   };
+
+  const [clusterIconText, setClusterIconText] = useState(clusterData.iconText || '');
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { clusterId, iconText } = (e as CustomEvent<{ clusterId: string; iconText: string }>)
+        .detail;
+      if (clusterId === clusterData.id) {
+        setClusterIconText(iconText);
+      }
+    };
+    window.addEventListener('cluster-appearance-changed', handler);
+    return () => window.removeEventListener('cluster-appearance-changed', handler);
+  }, [clusterData.id]);
 
   // Update tab label to match the cluster name
   useEffect(() => {
@@ -536,7 +595,7 @@ export function ClusterDetailPage() {
           <TabList>
             <Tab value="networking">Networking</Tab>
             <Tab value="node-config">Node configuration</Tab>
-            <Tab value="access-token">Access token</Tab>
+            <Tab value="service-account-token">Access token</Tab>
           </TabList>
 
           <TabPanel value="networking">
@@ -600,38 +659,76 @@ export function ClusterDetailPage() {
             </VStack>
           </TabPanel>
 
-          <TabPanel value="access-token">
-            <VStack gap={6}>
-              <SectionCard>
-                <SectionCard.Header
-                  title="Access token"
-                  actions={
-                    <>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconTrash size={12} />}
-                        onClick={() => setIsDeleteTokenOpen(true)}
-                      >
-                        Delete
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconRefresh size={12} />}
-                        onClick={() => console.log('Regenerate token')}
-                      >
-                        Regenerate
-                      </Button>
-                    </>
-                  }
-                />
-                <SectionCard.Content>
-                  <SectionCard.DataRow label="Cluster" value={clusterData.name} />
-                  <SectionCard.DataRow label="Created on" value="Mar 20, 2026" />
-                  <SectionCard.DataRow label="Expires on" value="Apr 19, 2026" />
-                </SectionCard.Content>
-              </SectionCard>
+          <TabPanel value="service-account-token">
+            <VStack gap={4}>
+              <div className="flex items-center justify-between w-full p-3 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center size-9 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+                    {clusterIconText ? (
+                      <span className="text-body-sm font-semibold text-[var(--color-text-default)] uppercase">
+                        {clusterIconText}
+                      </span>
+                    ) : (
+                      <IconAffiliate
+                        size={16}
+                        stroke={1.5}
+                        className="text-[var(--color-text-muted)]"
+                      />
+                    )}
+                  </div>
+                  {hasToken ? (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-label-sm text-[var(--color-text-default)]">
+                        {clusterData.name}
+                      </span>
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Created on: {tokenCreatedAt} | Expires on: {tokenExpiresAt}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-label-sm text-[var(--color-text-default)]">
+                      {clusterData.name}
+                    </span>
+                  )}
+                </div>
+                {hasToken ? (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      onClick={() => setIsDeleteTokenOpen(true)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconRefresh size={12} />}
+                      onClick={() => {
+                        setTokenExpiration('24h');
+                        setRegeneratedToken(null);
+                        setIsRegenerateTokenOpen(true);
+                      }}
+                    >
+                      Regenerate token
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} />}
+                    onClick={() => {
+                      setTokenExpiration('24h');
+                      setGeneratedToken(null);
+                      setIsGenerateTokenOpen(true);
+                    }}
+                  >
+                    Generate new token
+                  </Button>
+                )}
+              </div>
             </VStack>
           </TabPanel>
         </Tabs>
@@ -642,6 +739,7 @@ export function ClusterDetailPage() {
         onClose={() => setIsDeleteTokenOpen(false)}
         onConfirm={() => {
           console.log('Delete access token');
+          setHasToken(false);
           setIsDeleteTokenOpen(false);
         }}
         title="Delete token"
@@ -651,6 +749,192 @@ export function ClusterDetailPage() {
         confirmText="Delete"
         confirmVariant="danger"
       />
+
+      <Modal
+        isOpen={isGenerateTokenOpen}
+        onClose={() => {
+          if (generatedToken) setHasToken(true);
+          setIsGenerateTokenOpen(false);
+          setGeneratedToken(null);
+        }}
+        title="Generate new token"
+        size="sm"
+      >
+        {generatedToken ? (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="warning">
+                Make sure to copy your token now as you will not be able to see it again.
+              </InlineMessage>
+              <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] w-full">
+                <span className="flex-1 min-w-0 truncate font-mono text-body-sm text-[var(--color-text-default)]">
+                  {generatedToken}
+                </span>
+                <CopyButton value={generatedToken} size="sm" variant="ghost" iconOnly />
+              </div>
+            </VStack>
+
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setHasToken(true);
+                setIsGenerateTokenOpen(false);
+                setGeneratedToken(null);
+              }}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </>
+        ) : (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="info">
+                Generating a new token grants kubectl access to this cluster for the selected
+                period.
+              </InlineMessage>
+            </VStack>
+
+            <FormField
+              label="Expiration"
+              helperText="Expired tokens cannot be renewed — generate a new token instead."
+            >
+              <Select
+                options={[
+                  { value: '1h', label: '1 hour' },
+                  { value: '6h', label: '6 hours' },
+                  { value: '24h', label: '24 hours (recommended)' },
+                  { value: '7d', label: '7 days' },
+                  { value: '30d', label: '30 days' },
+                ]}
+                value={tokenExpiration}
+                onChange={(val) => setTokenExpiration(val)}
+                fullWidth
+              />
+            </FormField>
+
+            <HStack gap={2} className="w-full">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsGenerateTokenOpen(false);
+                  setGeneratedToken(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  computeTokenDates(tokenExpiration);
+                  setGeneratedToken(
+                    'tk-demo-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.mock-signature'
+                  );
+                }}
+                className="flex-1"
+              >
+                Generate
+              </Button>
+            </HStack>
+          </>
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={isRegenerateTokenOpen}
+        onClose={() => {
+          if (regeneratedToken) setHasToken(true);
+          setIsRegenerateTokenOpen(false);
+          setRegeneratedToken(null);
+        }}
+        title="Regenerate token"
+        size="sm"
+      >
+        {regeneratedToken ? (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="warning">
+                Make sure to copy your token now as you will not be able to see it again.
+              </InlineMessage>
+              <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] w-full">
+                <span className="flex-1 min-w-0 truncate font-mono text-body-sm text-[var(--color-text-default)]">
+                  {regeneratedToken}
+                </span>
+                <CopyButton value={regeneratedToken} size="sm" variant="ghost" iconOnly />
+              </div>
+            </VStack>
+
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setHasToken(true);
+                setIsRegenerateTokenOpen(false);
+                setRegeneratedToken(null);
+              }}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </>
+        ) : (
+          <>
+            <VStack gap={2}>
+              <InfoBox label="Cluster" value={clusterData.name} />
+              <InlineMessage variant="warning">
+                The existing token will be revoked immediately. Any kubectl sessions using it will
+                lose access.
+              </InlineMessage>
+            </VStack>
+
+            <FormField
+              label="Expiration"
+              helperText="Expired tokens cannot be renewed — generate a new token instead."
+            >
+              <Select
+                options={[
+                  { value: '1h', label: '1 hour' },
+                  { value: '6h', label: '6 hours' },
+                  { value: '24h', label: '24 hours (recommended)' },
+                  { value: '7d', label: '7 days' },
+                  { value: '30d', label: '30 days' },
+                ]}
+                value={tokenExpiration}
+                onChange={(val) => setTokenExpiration(val)}
+                fullWidth
+              />
+            </FormField>
+
+            <HStack gap={2} className="w-full">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsRegenerateTokenOpen(false);
+                  setRegeneratedToken(null);
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  computeTokenDates(tokenExpiration);
+                  setRegeneratedToken(
+                    'tk-demo-token-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.regen-signature'
+                  );
+                }}
+                className="flex-1"
+              >
+                Regenerate
+              </Button>
+            </HStack>
+          </>
+        )}
+      </Modal>
     </PageShell>
   );
 }
