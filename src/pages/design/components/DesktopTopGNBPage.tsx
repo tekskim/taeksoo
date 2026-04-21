@@ -324,7 +324,15 @@ function DesktopTopGNBGuidelines() {
           </tbody>
         </TableWrapper>
 
-        <SubSectionTitle>슬라이딩 애니메이션</SubSectionTitle>
+        <SubSectionTitle>슬라이딩 애니메이션 (통일 사양)</SubSectionTitle>
+        <Prose>
+          <p>
+            모든 auto-hide 관련 전환(maximize → 숨김, unmaximize/종료 → 표시, 호버 → 표시/숨김)은{' '}
+            <strong>동일한 300ms ease-out 슬라이딩</strong>을 사용한다. double{' '}
+            <code>requestAnimationFrame</code> 패턴으로 브라우저 렌더 사이클을 보장하며,{' '}
+            <code>rafRef</code>로 연속 클릭 시 이전 프레임을 취소한다.
+          </p>
+        </Prose>
         <TableWrapper>
           <thead>
             <tr>
@@ -347,7 +355,9 @@ function DesktopTopGNBGuidelines() {
             </tr>
             <tr>
               <Td>전환 시간</Td>
-              <Td>300ms</Td>
+              <Td>
+                <strong>300ms</strong> (maximize, unmaximize, 호버 모두 동일)
+              </Td>
             </tr>
             <tr>
               <Td>이징</Td>
@@ -372,58 +382,242 @@ function DesktopTopGNBGuidelines() {
             <tr>
               <Td>일반 모드</Td>
               <Td>
-                <code>var(--desktop-topbar-shadow)</code>
+                <code>none</code>
               </Td>
             </tr>
             <tr>
               <Td>Auto-hide 슬라이딩 표시</Td>
               <Td>
-                <code>
-                  var(--desktop-topbar-shadow), 0 4px 16px rgba(0,0,0,0.08), 0 1px 3px
-                  rgba(0,0,0,0.05)
-                </code>
+                <code>0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)</code>
               </Td>
             </tr>
           </tbody>
         </TableWrapper>
       </VStack>
 
-      {/* 5. 상태 흐름 */}
+      {/* 5. 앱 창 애니메이션 */}
       <VStack gap={4}>
-        <SectionTitle>5. 상태 흐름</SectionTitle>
+        <SectionTitle>5. 앱 창 애니메이션</SectionTitle>
+
+        <SubSectionTitle>초기 크기 / 위치</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>초기 크기</Td>
+              <Td>
+                <code>1440 × 800</code> px
+              </Td>
+            </tr>
+            <tr>
+              <Td>초기 위치 (X)</Td>
+              <Td>
+                <code>Math.max(0, (viewport.width − 1440) / 2)</code> — 수평 중앙
+              </Td>
+            </tr>
+            <tr>
+              <Td>초기 위치 (Y)</Td>
+              <Td>
+                <code>Math.max(52, (viewport.height − 800) / 2 + 26)</code> — TopBar 아래 수직 중앙
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>열기 / 닫기 (Open / Close)</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>Open</Th>
+              <Th>Close</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>라이브러리</Td>
+              <Td colSpan={2}>framer-motion (AnimatePresence)</Td>
+            </tr>
+            <tr>
+              <Td>initial / exit</Td>
+              <Td>
+                <code>scale: 0.95, opacity: 0</code>
+              </Td>
+              <Td>
+                <code>scale: 0.95, opacity: 0</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>animate</Td>
+              <Td colSpan={2}>
+                <code>scale: 1, opacity: 1</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>duration</Td>
+              <Td>200ms (ease-out)</Td>
+              <Td>200ms (ease-out)</Td>
+            </tr>
+            <tr>
+              <Td>transformOrigin</Td>
+              <Td colSpan={2}>
+                <code>center</code>
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>최대화 / 복원 (Maximize / Restore)</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>값</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>방식</Td>
+              <Td>CSS transition (position + size)</Td>
+            </tr>
+            <tr>
+              <Td>전환 속성</Td>
+              <Td>
+                <code>width, height, top, left, border-radius</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>duration</Td>
+              <Td>250ms</Td>
+            </tr>
+            <tr>
+              <Td>이징</Td>
+              <Td>ease-out</Td>
+            </tr>
+            <tr>
+              <Td>Maximize 값</Td>
+              <Td>
+                <code>100vw × 100vh, top: 0, left: 0, border-radius: 0</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>Restore 값</Td>
+              <Td>이전 position/size로 복원</Td>
+            </tr>
+            <tr>
+              <Td>비활성 조건</Td>
+              <Td>드래그/리사이즈/최소화 중에는 transition: none</Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>최소화 / 복원 (Minimize / Restore)</SubSectionTitle>
+        <TableWrapper>
+          <thead>
+            <tr>
+              <Th className="w-[200px]">속성</Th>
+              <Th>Minimize</Th>
+              <Th>Restore</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>라이브러리</Td>
+              <Td colSpan={2}>framer-motion (animate)</Td>
+            </tr>
+            <tr>
+              <Td>animate</Td>
+              <Td>
+                <code>scale: 0.3, opacity: 0</code>
+              </Td>
+              <Td>
+                <code>scale: 1, opacity: 1</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>duration</Td>
+              <Td>250ms (ease-in)</Td>
+              <Td>200ms (ease-out)</Td>
+            </tr>
+            <tr>
+              <Td>transformOrigin</Td>
+              <Td>
+                <code>top left</code>
+              </Td>
+              <Td>
+                <code>center</code>
+              </Td>
+            </tr>
+            <tr>
+              <Td>pointerEvents</Td>
+              <Td colSpan={2}>
+                최소화 시 <code>pointerEvents: none</code> (클릭 차단)
+              </Td>
+            </tr>
+          </tbody>
+        </TableWrapper>
+
+        <SubSectionTitle>DockIcons 레이아웃 정책</SubSectionTitle>
+        <Prose>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>
+              framer-motion의 <code>layoutId</code> / <code>layout</code> 속성은{' '}
+              <strong>드래그 중일 때만</strong> 활성화한다.
+            </li>
+            <li>
+              TopBar 슬라이딩(translateY) 시 DockIcons가 별도로 반응하지 않도록,{' '}
+              <code>isDragging</code> 조건으로 layout 애니메이션을 제한한다.
+            </li>
+            <li>DockIcons는 TopBar와 함께 하나의 단위로 이동한다.</li>
+          </ul>
+        </Prose>
+      </VStack>
+
+      {/* 6. 상태 흐름 */}
+      <VStack gap={4}>
+        <SectionTitle>6. 상태 흐름</SectionTitle>
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-lg)] p-4">
-          <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`                    앱 Maximize
-  [항상 표시] ─────────────────────> [숨김]
-       ^                              │  ^
-       │                   상단 호버  │  │  마우스 이탈 (200ms)
-       │                              v  │
-       │                         [슬라이드 표시]
-       │                              │
-       │         앱 Unmaximize        │
-       <──────────────────────────────┘`}</pre>
+          <pre className="text-body-sm text-[var(--color-text-muted)] whitespace-pre font-[var(--font-family-mono)]">{`                    앱 Maximize (slide up 300ms)
+  [항상 표시] ─────────────────────────────────> [숨김]
+       ^                                          │  ^
+       │                           상단 호버      │  │  마우스 이탈 (200ms delay)
+       │                     (slide down 300ms)   v  │  (slide up 300ms)
+       │                                     [슬라이드 표시]
+       │                                          │
+       │      앱 Unmaximize / 종료                │
+       │        (slide down 300ms)                │
+       <──────────────────────────────────────────┘`}</pre>
         </div>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
-              <strong>항상 표시</strong> → 앱 Maximize → <strong>숨김</strong>
+              <strong>항상 표시</strong> → 앱 Maximize → <strong>slide up 300ms</strong> →{' '}
+              <strong>숨김</strong>
             </li>
             <li>
-              <strong>숨김</strong> → 마우스 상단 호버 → <strong>슬라이드 표시</strong>
+              <strong>숨김</strong> → 마우스 상단 호버 → <strong>slide down 300ms</strong> →{' '}
+              <strong>슬라이드 표시</strong>
             </li>
             <li>
-              <strong>슬라이드 표시</strong> → 마우스 이탈 (200ms 후) → <strong>숨김</strong>
+              <strong>슬라이드 표시</strong> → 마우스 이탈 (200ms 딜레이) →{' '}
+              <strong>slide up 300ms</strong> → <strong>숨김</strong>
             </li>
             <li>
-              <strong>숨김</strong> / <strong>슬라이드 표시</strong> → 앱 Unmaximize →{' '}
-              <strong>항상 표시</strong>
+              <strong>숨김</strong> / <strong>슬라이드 표시</strong> → 앱 Unmaximize / 종료 →{' '}
+              <strong>slide down 300ms</strong> → <strong>항상 표시</strong>
             </li>
           </ul>
         </Prose>
       </VStack>
 
-      {/* 6. Domain 드롭다운 */}
+      {/* 7. Domain 드롭다운 */}
       <VStack gap={4}>
-        <SectionTitle>6. Domain 드롭다운</SectionTitle>
+        <SectionTitle>7. Domain 드롭다운</SectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>
@@ -439,9 +633,9 @@ function DesktopTopGNBGuidelines() {
         </Prose>
       </VStack>
 
-      {/* 7. Z-index 레이어 체계 */}
+      {/* 8. Z-index 레이어 체계 */}
       <VStack gap={4}>
-        <SectionTitle>7. Z-index 레이어 체계</SectionTitle>
+        <SectionTitle>8. Z-index 레이어 체계</SectionTitle>
         <TableWrapper>
           <thead>
             <tr>
@@ -480,9 +674,9 @@ function DesktopTopGNBGuidelines() {
         </TableWrapper>
       </VStack>
 
-      {/* 8. 엣지 케이스 */}
+      {/* 9. 엣지 케이스 */}
       <VStack gap={4}>
-        <SectionTitle>8. 엣지 케이스</SectionTitle>
+        <SectionTitle>9. 엣지 케이스</SectionTitle>
         <TableWrapper>
           <thead>
             <tr>
@@ -515,13 +709,56 @@ function DesktopTopGNBGuidelines() {
               <Td>Top GNB 표시 중 Unmaximize</Td>
               <Td>즉시 항상 표시 모드로 전환 (auto-hide 해제)</Td>
             </tr>
+            <tr>
+              <Td>Maximize/Restore 연속 클릭</Td>
+              <Td>
+                <code>cancelAnimationFrame(rafRef)</code>로 이전 프레임 취소 후 새 애니메이션 시작.
+                double <code>requestAnimationFrame</code>으로 렌더 사이클 보장
+              </Td>
+            </tr>
+            <tr>
+              <Td>최소화 버튼 클릭 시 onFocus 충돌</Td>
+              <Td>
+                <code>onClick</code> / <code>onMouseDown</code>에서{' '}
+                <code>e.target.closest(&apos;button&apos;)</code> 체크로 제어 버튼 클릭 시 onFocus
+                무시
+              </Td>
+            </tr>
+            <tr>
+              <Td>최소화 상태에서 CSS transition 충돌</Td>
+              <Td>
+                <code>isMinimized</code> 시 CSS <code>windowTransition</code>을 <code>none</code>
+                으로 비활성화. framer-motion animate만 담당
+              </Td>
+            </tr>
+            <tr>
+              <Td>최소화 상태에서 pointerEvents</Td>
+              <Td>
+                최소화 창의 wrapper + motion.div 모두 <code>pointerEvents: none</code> 적용하여 클릭
+                차단
+              </Td>
+            </tr>
+            <tr>
+              <Td>TopBar 슬라이딩 중 DockIcons 이탈</Td>
+              <Td>
+                framer-motion <code>layoutId</code> / <code>layout</code>을 <code>isDragging</code>{' '}
+                조건으로 제한. TopBar transform에 반응하지 않음
+              </Td>
+            </tr>
+            <tr>
+              <Td>호버 포커스아웃 시 간헐적 즉시 숨김</Td>
+              <Td>
+                <code>handleWrapperMouseLeave</code>에서 명시적으로{' '}
+                <code>setAnimateTransition(true)</code> 호출하여 항상 슬라이딩 보장
+              </Td>
+            </tr>
           </tbody>
         </TableWrapper>
       </VStack>
 
-      {/* 9. 접근성 */}
+      {/* 10. 접근성 */}
       <VStack gap={4}>
-        <SectionTitle>9. 접근성</SectionTitle>
+        <SectionTitle>10. 접근성</SectionTitle>
         <Prose>
           <ul className="list-disc pl-5 space-y-1">
             <li>Hot Zone은 마우스 기반 인터랙션이므로 키보드 접근성은 별도 고려가 필요하다.</li>
@@ -684,16 +921,13 @@ export function DesktopTopGNBPage() {
               <tr>
                 <Td>box-shadow (일반)</Td>
                 <Td>
-                  <code>var(--desktop-topbar-shadow)</code>
+                  <code>none</code>
                 </Td>
               </tr>
               <tr>
                 <Td>box-shadow (auto-hide 표시)</Td>
                 <Td>
-                  <code>
-                    var(--desktop-topbar-shadow), 0 4px 16px rgba(0,0,0,0.08), 0 1px 3px
-                    rgba(0,0,0,0.05)
-                  </code>
+                  <code>0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)</code>
                 </Td>
               </tr>
               <tr>
@@ -719,6 +953,46 @@ export function DesktopTopGNBPage() {
               <tr>
                 <Td>hide delay</Td>
                 <Td>200ms</Td>
+              </tr>
+            </tbody>
+          </TableWrapper>
+
+          <SubSectionTitle>앱 창 애니메이션 토큰</SubSectionTitle>
+          <TableWrapper>
+            <thead>
+              <tr>
+                <Th className="w-[220px]">토큰</Th>
+                <Th>값</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>초기 크기</Td>
+                <Td>1440 × 800 px</Td>
+              </tr>
+              <tr>
+                <Td>open / close</Td>
+                <Td>
+                  scale 0.95→1, opacity 0→1, <strong>200ms</strong> ease-out (framer-motion)
+                </Td>
+              </tr>
+              <tr>
+                <Td>maximize / restore</Td>
+                <Td>
+                  position + size, <strong>250ms</strong> ease-out (CSS transition)
+                </Td>
+              </tr>
+              <tr>
+                <Td>minimize</Td>
+                <Td>
+                  scale 1→0.3, opacity 1→0, <strong>250ms</strong> ease-in, origin: top left
+                </Td>
+              </tr>
+              <tr>
+                <Td>restore (from minimize)</Td>
+                <Td>
+                  scale 0.3→1, opacity 0→1, <strong>200ms</strong> ease-out, origin: center
+                </Td>
               </tr>
             </tbody>
           </TableWrapper>

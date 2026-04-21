@@ -49,7 +49,7 @@ export function EntryPage() {
     <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-default)] flex flex-col min-h-screen">
       {/* Header — Cargo-style flat bar */}
       <header className="w-full bg-[var(--color-surface-default)]">
-        <div className="w-full px-10 h-12 flex items-center justify-between relative">
+        <div className="w-full px-10 h-[60px] flex items-center justify-between relative">
           <div className="flex items-center">
             <img
               src={isDark ? ThakiLogoDark : ThakiLogoLight}
@@ -104,7 +104,7 @@ export function EntryPage() {
 
       {/* Main — 3-column grid with generous whitespace */}
       <main className="flex-1">
-        <div className="w-full px-10 pt-20 pb-24">
+        <div className="w-full px-10 pt-8 pb-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {appCards.map((card) => (
               <div key={card.id} className="flex flex-col">
