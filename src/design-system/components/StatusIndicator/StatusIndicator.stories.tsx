@@ -20,8 +20,7 @@ import { StatusIndicator, type StatusType } from './StatusIndicator';
  * - **Muted (회색)**: suspended, shelved, shelved-offloaded, mounted, shutoff, paused, draft, deactivated, in-use
  *
  * ## 레이아웃
- * - **icon-only**: 아이콘만 표시 (원형 배경)
- * - **default**: 아이콘 + 라벨 (pill 형태)
+ * - **icon-only** (기본): 아이콘만 표시 (원형 배경)
  * - **badge**: 아이콘 + 라벨 (사각형 배지)
  *
  * ## 접근성
@@ -68,7 +67,7 @@ const meta = {
     },
     layout: {
       control: 'select',
-      options: ['icon-only', 'default', 'badge'],
+      options: ['icon-only', 'badge'],
       description: '레이아웃 유형',
     },
     size: {
@@ -179,7 +178,7 @@ export const SuccessStatuses: Story = {
   name: 'Category - Success (Green)',
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
-      <StatusIndicator status="active" layout="default" />
+      <StatusIndicator status="active" layout="badge" />
     </div>
   ),
 };
@@ -188,7 +187,7 @@ export const DangerStatuses: Story = {
   name: 'Category - Danger (Red)',
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
-      <StatusIndicator status="error" layout="default" />
+      <StatusIndicator status="error" layout="badge" />
     </div>
   ),
 };
@@ -197,9 +196,9 @@ export const InfoStatuses: Story = {
   name: 'Category - Info (Blue)',
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
-      <StatusIndicator status="building" layout="default" />
-      <StatusIndicator status="deleting" layout="default" />
-      <StatusIndicator status="pending" layout="default" />
+      <StatusIndicator status="building" layout="badge" />
+      <StatusIndicator status="deleting" layout="badge" />
+      <StatusIndicator status="pending" layout="badge" />
     </div>
   ),
 };
@@ -208,11 +207,11 @@ export const WarningStatuses: Story = {
   name: 'Category - Warning (Orange)',
   render: () => (
     <div className="flex flex-col gap-[var(--primitive-spacing-3)]">
-      <StatusIndicator status="verify-resized" layout="default" />
-      <StatusIndicator status="degraded" layout="default" />
-      <StatusIndicator status="no-monitor" layout="default" />
-      <StatusIndicator status="down" layout="default" />
-      <StatusIndicator status="maintenance" layout="default" />
+      <StatusIndicator status="verify-resized" layout="badge" />
+      <StatusIndicator status="degraded" layout="badge" />
+      <StatusIndicator status="no-monitor" layout="badge" />
+      <StatusIndicator status="down" layout="badge" />
+      <StatusIndicator status="maintenance" layout="badge" />
     </div>
   ),
 };
@@ -221,15 +220,15 @@ export const MutedStatuses: Story = {
   name: 'Category - Muted (Gray)',
   render: () => (
     <div className="flex flex-wrap gap-[var(--primitive-spacing-3)]">
-      <StatusIndicator status="suspended" layout="default" />
-      <StatusIndicator status="shelved" layout="default" />
-      <StatusIndicator status="shelved-offloaded" layout="default" />
-      <StatusIndicator status="mounted" layout="default" />
-      <StatusIndicator status="shutoff" layout="default" />
-      <StatusIndicator status="paused" layout="default" />
-      <StatusIndicator status="draft" layout="default" />
-      <StatusIndicator status="deactivated" layout="default" />
-      <StatusIndicator status="in-use" layout="default" />
+      <StatusIndicator status="suspended" layout="badge" />
+      <StatusIndicator status="shelved" layout="badge" />
+      <StatusIndicator status="shelved-offloaded" layout="badge" />
+      <StatusIndicator status="mounted" layout="badge" />
+      <StatusIndicator status="shutoff" layout="badge" />
+      <StatusIndicator status="paused" layout="badge" />
+      <StatusIndicator status="draft" layout="badge" />
+      <StatusIndicator status="deactivated" layout="badge" />
+      <StatusIndicator status="in-use" layout="badge" />
     </div>
   ),
 };
@@ -269,7 +268,7 @@ export const AllStatuses: Story = {
           {statuses.map((status) => (
             <div key={status} className="flex items-center gap-[var(--primitive-spacing-3)]">
               <StatusIndicator status={status} layout="icon-only" size="md" />
-              <StatusIndicator status={status} layout="default" />
+              <StatusIndicator status={status} layout="badge" />
             </div>
           ))}
         </div>
@@ -286,7 +285,7 @@ export const CustomLabel: Story = {
   name: 'With Custom Label',
   args: {
     status: 'active',
-    layout: 'default',
+    layout: 'badge',
     label: 'Running',
   },
 };

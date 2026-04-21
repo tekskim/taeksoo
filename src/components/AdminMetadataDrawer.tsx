@@ -145,7 +145,6 @@ export function AdminMetadataDrawer({ isOpen, onClose, image, onSave }: AdminMet
       isOpen={isOpen}
       onClose={handleClose}
       title="Manage metadata"
-      description="Select existing metadata or define new metadata to apply to the image."
       width={1032}
       footer={
         <HStack gap={2} justify="center" className="w-full">
@@ -168,6 +167,9 @@ export function AdminMetadataDrawer({ isOpen, onClose, image, onSave }: AdminMet
         <VStack gap={3} className="w-full">
           <VStack gap={1}>
             <span className="text-label-lg text-[var(--color-text-default)]">Metadata</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">
+              Select existing metadata or define new metadata to apply to the image.
+            </span>
           </VStack>
 
           {/* Two Column Layout */}

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Drawer,
   Button,
-  Radio,
   SearchInput,
   Pagination,
   ProgressBar,
@@ -104,22 +103,11 @@ export function AdminVolumeMigrateDrawer({
     if (backendError) setBackendError(false);
   };
 
+  const disabledBackendIds = paginatedBackends
+    .filter((b) => b.capacityUsed >= b.capacityTotal)
+    .map((b) => b.id);
+
   const backendColumns: TableColumn<StorageBackendItem>[] = [
-    {
-      key: 'id' as keyof StorageBackendItem,
-      label: '',
-      width: '40px',
-      render: (_value, row) => (
-        <div onClick={(e) => e.stopPropagation()}>
-          <Radio
-            name="backend-select"
-            value={row.id}
-            checked={selectedBackendId === row.id}
-            onChange={() => handleSelectBackend(row.id)}
-          />
-        </div>
-      ),
-    },
     {
       key: 'name',
       label: 'Name',
@@ -263,7 +251,18 @@ export function AdminVolumeMigrateDrawer({
               columns={backendColumns}
               data={paginatedBackends}
               rowKey="id"
-              onRowClick={(row) => handleSelectBackend(row.id)}
+              selectable
+              selectionType="radio"
+              selectedKeys={selectedBackendId ? [selectedBackendId] : []}
+              onSelectionChange={(keys) => {
+                const id = keys[0] ?? null;
+                if (id) handleSelectBackend(id);
+                else setSelectedBackendId(null);
+              }}
+              disabledKeys={disabledBackendIds}
+              onRowClick={(row) => {
+                if (row.capacityUsed < row.capacityTotal) handleSelectBackend(row.id);
+              }}
               emptyMessage="No storage backends found"
             />
 

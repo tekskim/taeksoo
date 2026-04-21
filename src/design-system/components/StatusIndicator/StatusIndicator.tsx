@@ -66,7 +66,7 @@ const IconInUse = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-export type StatusLayout = 'icon-only' | 'default' | 'badge';
+export type StatusLayout = 'icon-only' | 'badge';
 export type StatusSize = 'sm' | 'md' | 'lg';
 
 export interface StatusConfig {
@@ -200,8 +200,8 @@ export type ThakiColorScheme = 'success' | 'danger' | 'warning' | 'info' | 'mute
 export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** Status type */
   status: StatusType;
-  /** Layout variant (also accepts thaki-ui 'leftIcon', 'iconOnly') */
-  layout?: StatusLayout | 'leftIcon' | 'iconOnly';
+  /** Layout variant (also accepts thaki-ui 'iconOnly', 'default', 'leftIcon' for compat) */
+  layout?: StatusLayout | 'default' | 'leftIcon' | 'iconOnly';
   /** Size variant (only applies to icon-only layout) */
   size?: StatusSize;
   /** Custom label (overrides default) */
@@ -220,7 +220,7 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 
 export const StatusIndicator = memo(function StatusIndicator({
   status,
-  layout: rawLayout = 'default',
+  layout: rawLayout = 'icon-only',
   size = 'md',
   label,
   className = '',
@@ -230,13 +230,11 @@ export const StatusIndicator = memo(function StatusIndicator({
   tooltip,
   ...props
 }: StatusIndicatorProps) {
-  // thaki-ui compatibility: map layout aliases
+  // Map deprecated layout aliases to current values
   const layout: StatusLayout =
-    rawLayout === 'leftIcon'
-      ? 'default'
-      : rawLayout === 'iconOnly'
-        ? 'icon-only'
-        : (rawLayout as StatusLayout);
+    rawLayout === 'leftIcon' || rawLayout === 'default' || rawLayout === 'iconOnly'
+      ? 'icon-only'
+      : (rawLayout as StatusLayout);
 
   const config = statusConfig[status] ?? statusConfig.error;
 
@@ -331,31 +329,31 @@ export const StatusIndicator = memo(function StatusIndicator({
     );
   }
 
-  // Default layout with label (rounded pill shape)
-  const baseStyles = [
-    'inline-flex items-center',
-    'gap-[var(--status-gap)]',
-    'font-medium',
-    'rounded-[var(--status-radius)]',
+  // Fallback to icon-only (should not reach here, but safety net)
+  const iconSize = iconSizes[size];
+  const containerSize = sizeStyles[size];
+  const fallbackIcon = isValidElement(displayIcon)
+    ? cloneElement(displayIcon as React.ReactElement<{ size?: number }>, { size: iconSize })
+    : displayIcon;
+  const fallbackClasses = twMerge(
+    'inline-flex items-center justify-center',
+    'rounded-full',
     'text-[var(--status-text)]',
-    'text-[length:var(--status-font-size)]',
-    'leading-[var(--status-line-height)]',
-  ].join(' ');
-
-  const paddingStyles = 'px-[var(--status-padding-x)] py-[var(--status-padding-y)]';
-
-  const classes = twMerge(baseStyles, paddingStyles, config.bgColor, className);
-
+    containerSize,
+    config.bgColor,
+    className
+  );
   return (
-    <span
-      data-figma-name="[TDS] StatusIndicator"
-      className={classes}
-      role="status"
-      aria-label={displayLabel}
-      {...props}
-    >
-      <span className="shrink-0">{displayIcon}</span>
-      <span>{displayLabel}</span>
-    </span>
+    <Tooltip content={displayLabel} position="top">
+      <span
+        data-figma-name="[TDS] StatusIndicator"
+        className={fallbackClasses}
+        role="status"
+        aria-label={displayLabel}
+        {...props}
+      >
+        <span className="shrink-0">{fallbackIcon}</span>
+      </span>
+    </Tooltip>
   );
 });

@@ -212,6 +212,9 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
   const handleSaveAppearance = (clusterId: string, iconText: string) => {
     setClusters((prev) => prev.map((c) => (c.id === clusterId ? { ...c, iconText } : c)));
+    window.dispatchEvent(
+      new CustomEvent('cluster-appearance-changed', { detail: { clusterId, iconText } })
+    );
   };
 
   // Listen for external "open appearance" events from other pages
